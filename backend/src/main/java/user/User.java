@@ -1,5 +1,10 @@
 package user;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+//import java.util.UUID;
+//import java.util.LocalDateTime;
 public class User {
     /* Attributes */
     private UUID id;
@@ -31,6 +36,10 @@ public class User {
         this.isAdmin = isAdmin;
         this.isActive = isActive;
         this.phoneNumber = phoneNumber;
+    }
+
+    public User() {
+
     }
 
     /* Getters and Setters */

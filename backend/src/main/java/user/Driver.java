@@ -6,6 +6,7 @@ public class Driver extends User{
     private GeoPoint currentAddress;
 
     public Driver(double rating, GeoPoint currentAddress) {
+        super();
         this.rating = rating;
         this.currentAddress = currentAddress;
     }

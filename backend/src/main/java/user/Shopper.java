@@ -6,6 +6,7 @@ public class Shopper extends User{
     //private Shop shop;
 
     public Shopper(double rating) {
+        super();
         this.rating = rating;
     }
 

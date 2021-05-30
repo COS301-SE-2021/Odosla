@@ -4,6 +4,7 @@ public class Customer extends User{
     private GeoPoint address;
 
     public Customer(GeoPoint address) {
+        super();
         this.address = address;
     }
 

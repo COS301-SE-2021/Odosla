@@ -1,15 +1,19 @@
 package order;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 public class Order {
     /* Attributes */
     private UUID orderNumber;
-    private DateTime creationDateTime;
+    private LocalDateTime creationDateTime;
     private double totalCost;
     private boolean delivery;
     private String couponCode;
     private List<Item> listOfItems;
     /* Constructor */
-    public Order(DateTime creationDateTime, boolean delivery, Item[] listOfItems, String couponCode=null) {
+    public Order(LocalDateTime creationDateTime, boolean delivery, List<Item> listOfItems, String couponCode) {
         this.creationDateTime = creationDateTime;
         this.delivery = delivery;
         this.listOfItems=listOfItems;
@@ -22,11 +26,11 @@ public class Order {
     }
 
     /* Getters and Setters */
-    public DateTime getCreationDateTime() {
+    public LocalDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(DateTime creationDateTime) {
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 
@@ -54,11 +58,11 @@ public class Order {
         this.couponCode = couponCode;
     }
 
-    public Item[] getListOfItems() {
+    public List<Item> getListOfItems() {
         return listOfItems;
     }
 
-    public void setListOfItems(Item[] listOfItems) {
+    public void setListOfItems(List<Item> listOfItems) {
         this.listOfItems = listOfItems;
     }
 }
