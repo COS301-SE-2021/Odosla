@@ -1,17 +1,18 @@
 package user;
 
 public class Customer extends User{
-    private String address;
+    private GeoPoint address;
 
-    public Customer(String address) {
+    public Customer(GeoPoint address) {
+        super();
         this.address = address;
     }
 
-    public String getAddress() {
+    public GeoPoint getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(GeoPoint address) {
         this.address = address;
     }
 }
