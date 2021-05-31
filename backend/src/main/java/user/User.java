@@ -3,53 +3,47 @@ package user;
 import java.util.Calendar;
 import java.util.UUID;
 
-//import java.util.UUID;
-//import java.util.LocalDateTime;
 public class User {
+
     /* Attributes */
-    private UUID id;
+
     private String name;
     private String surname;
-    private String contact;
     private String username;
+    private UUID id;
     private String email;
+    private String phoneNumber;
     private String password;
+    private Calendar activationDate;
     private String activationCode;
     private String resetCode;
-    private Calendar resetExpiration;
-    private Boolean isAdmin;
+    private String resetExpiration;
     private boolean isActive;
-    private String phoneNumber;
+    private UserType accountType;
+
     /* Constructor  */
 
-    public User(UUID id, String name, String surname, String contact, String username, String email, String password, String activationCode, String resetCode, Calendar resetExpiration, Boolean isAdmin, boolean isActive, String phoneNumber) {
-        this.id = id;
+    public User(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType) {
         this.name = name;
         this.surname = surname;
-        this.contact = contact;
         this.username = username;
+        this.id = id;
         this.email = email;
+        this.phoneNumber = phoneNumber;
         this.password = password;
+        this.activationDate = activationDate;
         this.activationCode = activationCode;
         this.resetCode = resetCode;
         this.resetExpiration = resetExpiration;
-        this.isAdmin = isAdmin;
         this.isActive = isActive;
-        this.phoneNumber = phoneNumber;
+        this.accountType = accountType;
     }
 
-    public User() {
+    public User(){
 
     }
 
     /* Getters and Setters */
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -67,20 +61,20 @@ public class User {
         this.surname = surname;
     }
 
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -91,12 +85,28 @@ public class User {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Calendar getActivationDate() {
+        return activationDate;
+    }
+
+    public void setActivationDate(Calendar activationDate) {
+        this.activationDate = activationDate;
     }
 
     public String getActivationCode() {
@@ -115,20 +125,12 @@ public class User {
         this.resetCode = resetCode;
     }
 
-    public Calendar getResetExpiration() {
+    public String getResetExpiration() {
         return resetExpiration;
     }
 
-    public void setResetExpiration(Calendar resetExpiration) {
+    public void setResetExpiration(String resetExpiration) {
         this.resetExpiration = resetExpiration;
-    }
-
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
     }
 
     public boolean isActive() {
@@ -139,11 +141,33 @@ public class User {
         isActive = active;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public UserType getAccountType() {
+        return accountType;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setAccountType(UserType accountType) {
+        this.accountType = accountType;
+    }
+
+    /* Functions */
+
+    public boolean login(){
+        return true;
+    }
+
+    public boolean logout(){
+        return true;
+    }
+
+    public boolean registerUser(){
+        return true;
+    }
+
+    public boolean resetPassword(){
+        return true;
+    }
+
+    public boolean updateAccountDetails(){
+        return true;
     }
 }
