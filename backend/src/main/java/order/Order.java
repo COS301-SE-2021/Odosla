@@ -1,20 +1,29 @@
 package order;
 
+import user.GeoPoint;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 public class Order {
     /* Attributes */
-    private UUID orderNumber;
-    private LocalDateTime creationDateTime;
-    private double totalCost;
+    private UUID orderID;
+    private String storeID;
+    private float totalCost;
     private boolean delivery;
-    private String couponCode;
     private List<Item> listOfItems;
+    private float discount;
+    private LocalDateTime orderDate;
+    private GeoPoint deliveryAddress;
+    private GeoPoint storeAddress;
+    private boolean reuiresPharmacy;
+
+    private String couponCode;
+
     /* Constructor */
-    public Order(LocalDateTime creationDateTime, boolean delivery, List<Item> listOfItems, String couponCode) {
-        this.creationDateTime = creationDateTime;
+    public Order(LocalDateTime orderDate, boolean delivery, List<Item> listOfItems, String couponCode) {
+        this.orderDate = orderDate;
         this.delivery = delivery;
         this.listOfItems=listOfItems;
         this.couponCode = couponCode;
@@ -26,19 +35,19 @@ public class Order {
     }
 
     /* Getters and Setters */
-    public LocalDateTime getCreationDateTime() {
-        return creationDateTime;
+    public LocalDateTime getOrderDate() {
+        return orderDate;
     }
 
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
-        this.creationDateTime = creationDateTime;
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 
-    public double getTotalCost() {
+    public float getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(double cost) {
+    public void setTotalCost(float cost) {
         this.totalCost= totalCost;
     }
 
