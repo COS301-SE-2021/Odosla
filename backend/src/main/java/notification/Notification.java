@@ -4,11 +4,16 @@ import java.util.Calendar;
 import java.util.Map;
 
 public class Notification {
+
+    /* Attributes */
+
     private String payload;
     private Calendar readDateTime;
     private Calendar createdDateTime;
     private Map<String, String> map;
     private NotificationType type;
+
+    /* Constructor  */
 
     public Notification(String payload, Calendar readDateTime, Calendar createdDateTime, Map<String, String> map, NotificationType type) {
         this.payload = payload;
@@ -17,6 +22,8 @@ public class Notification {
         this.map = map;
         this.type = type;
     }
+
+    /* Getters and Setters */
 
     public String getPayload() {
         return payload;
