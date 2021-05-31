@@ -2,7 +2,7 @@ package order;
 
 import user.GeoPoint;
 
-import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,7 +14,7 @@ public class Order {
     private boolean delivery;
     private List<Item> listOfItems;
     private float discount;
-    private LocalDateTime orderDate;
+    private Calendar orderDate;
     private GeoPoint deliveryAddress;
     private GeoPoint storeAddress;
     private boolean reuiresPharmacy;
@@ -22,7 +22,7 @@ public class Order {
     private String couponCode;
 
     /* Constructor */
-    public Order(LocalDateTime orderDate, boolean delivery, List<Item> listOfItems, String couponCode) {
+    public Order(Calendar orderDate, boolean delivery, List<Item> listOfItems, String couponCode) {
         this.orderDate = orderDate;
         this.delivery = delivery;
         this.listOfItems=listOfItems;
@@ -35,11 +35,11 @@ public class Order {
     }
 
     /* Getters and Setters */
-    public LocalDateTime getOrderDate() {
+    public Calendar getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(LocalDateTime orderDate) {
+    public void setOrderDate(Calendar orderDate) {
         this.orderDate = orderDate;
     }
 

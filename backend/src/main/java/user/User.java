@@ -1,6 +1,6 @@
 package user;
 
-import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.UUID;
 
 //import java.util.UUID;
@@ -16,13 +16,13 @@ public class User {
     private String password;
     private String activationCode;
     private String resetCode;
-    private LocalDateTime resetExpiration;
+    private Calendar resetExpiration;
     private Boolean isAdmin;
     private boolean isActive;
     private String phoneNumber;
     /* Constructor  */
 
-    public User(UUID id, String name, String surname, String contact, String username, String email, String password, String activationCode, String resetCode, LocalDateTime resetExpiration, Boolean isAdmin, boolean isActive, String phoneNumber) {
+    public User(UUID id, String name, String surname, String contact, String username, String email, String password, String activationCode, String resetCode, Calendar resetExpiration, Boolean isAdmin, boolean isActive, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -115,11 +115,11 @@ public class User {
         this.resetCode = resetCode;
     }
 
-    public LocalDateTime getResetExpiration() {
+    public Calendar getResetExpiration() {
         return resetExpiration;
     }
 
-    public void setResetExpiration(LocalDateTime resetExpiration) {
+    public void setResetExpiration(Calendar resetExpiration) {
         this.resetExpiration = resetExpiration;
     }
 
