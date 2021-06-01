@@ -1,6 +1,4 @@
-package order;
-
-public class Item {
+public static class Item {
     /* Attributes */
     private String name;
     private double cost;
@@ -9,6 +7,7 @@ public class Item {
     private String imageUrl;
     private boolean texExempt;
     /* Constructor */
+
     public Item(String name, double cost, int quantity, String description, String imageUrl, boolean texExempt) {
         this.name = name;
         this.cost = cost;
