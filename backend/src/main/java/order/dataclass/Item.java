@@ -1,22 +1,33 @@
-public static class Item {
-    /* Attributes */
+package order.dataclass;
+
+import java.util.UUID;
+
+public class Item {
+
     private String name;
-    private double cost;
+    private String productID;
+    private String barcode;
+    private UUID storeID;
+    private double price;
     private int quantity;
     private String description;
     private String imageUrl;
-    private boolean texExempt;
-    /* Constructor */
 
-    public Item(String name, double cost, int quantity, String description, String imageUrl, boolean texExempt) {
+    public Item(){
+
+    }
+
+    public Item(String name, String productID, String barcode, UUID storeID, double price, int quantity, String description, String imageUrl) {
         this.name = name;
-        this.cost = cost;
+        this.productID = productID;
+        this.barcode = barcode;
+        this.storeID = storeID;
+        this.price = price;
         this.quantity = quantity;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.texExempt = texExempt;
     }
-    /* Getters and Setters */
+
     public String getName() {
         return name;
     }
@@ -25,12 +36,36 @@ public static class Item {
         this.name = name;
     }
 
-    public double getCost() {
-        return cost;
+    public String getProductID() {
+        return productID;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public int getQuantity() {
@@ -55,13 +90,5 @@ public static class Item {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public boolean isTexExempt() {
-        return texExempt;
-    }
-
-    public void setTexExempt(boolean texExempt) {
-        this.texExempt = texExempt;
     }
 }
