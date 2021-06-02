@@ -9,7 +9,7 @@ import shopping.responses.ScanItemResponse;
 public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
-    public GetCatalogueResponse getStockList() {
+    public GetCatalogueResponse getCatalogue() {
         return null;
     }
 

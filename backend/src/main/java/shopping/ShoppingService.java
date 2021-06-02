@@ -4,7 +4,7 @@ import shopping.responses.*;
 
 public interface ShoppingService {
 
-    GetCatalogueResponse getStockList();
+    GetCatalogueResponse getCatalogue();
 
     AssignOrderResponse assignOrder(AssignOrderRequest request);
 
