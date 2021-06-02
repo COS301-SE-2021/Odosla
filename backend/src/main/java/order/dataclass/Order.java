@@ -1,5 +1,8 @@
 package order.dataclass;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +19,6 @@ public class Order {
     private UUID shopperID;
     private Calendar createDate;
     private double totalCost;
-    private List<Item> items;
     private double discount;
     private boolean requiresPharmacy;
 
@@ -31,6 +33,11 @@ public class Order {
 
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
+
+    @ManyToMany
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Item> items;
 
     public Order(){
 
