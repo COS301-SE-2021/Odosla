@@ -13,7 +13,7 @@ public interface PaymentService {
 
     ResetOrderResponse resetOrder();
 
-    CancelOrderResponse cancelOrder();
+    CancelOrderResponse cancelOrder(CancelOrderRequest req);
 
     // TRANSACTION
 

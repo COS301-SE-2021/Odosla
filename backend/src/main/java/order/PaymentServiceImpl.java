@@ -1,7 +1,12 @@
 package order;
 
+import order.dataclass.Order;
+import order.dataclass.OrderStatus;
 import order.requests.*;
 import order.responses.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaymentServiceImpl implements PaymentService {
 
@@ -28,8 +33,38 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public CancelOrderResponse cancelOrder() {
-        return null;
+    public CancelOrderResponse cancelOrder(CancelOrderRequest req) {
+        // get list of orders somewhere (mock or database)
+        List<Order> orders = new ArrayList<Order>();
+        Order order = null;
+        double cancelationFee = 0;
+
+        //find the order by id
+        for (Order o: orders) {
+            if(o.getOrderID() == req.getOrderID()){
+                order = o;
+                break;
+            }
+        }
+
+
+        if(order == null || order.getStatus() == OrderStatus.DELIVERED ||
+        order.getStatus() == OrderStatus.CUSTOMER_COLLECTED){
+            return new CancelOrderResponse(false);
+        }
+
+        if(order.getStatus() != OrderStatus.AWAITING_PAYMENT ||
+                order.getStatus() != OrderStatus.PURCHASED){
+            cancelationFee = 1000;
+        }
+
+        // refund customers ordertotal - cancellation fee
+
+
+        // remove Order from DB.
+        orders.remove(order);
+
+        return new CancelOrderResponse(true);
     }
 
     // TRANSACTION IMPLEMENTATION
