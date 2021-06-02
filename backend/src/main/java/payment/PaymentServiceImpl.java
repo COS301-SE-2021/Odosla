@@ -2,7 +2,9 @@ package payment;
 
 import shopping.dataclass.Item;
 import payment.dataclass.*;
+import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
+import payment.mock.CancelOrdersMock;
 import payment.repos.OrderRepo;
 import payment.requests.*;
 import payment.responses.*;
@@ -11,6 +13,7 @@ import payment.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     // ORDER IMPLEMENTATION
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -72,12 +75,12 @@ public class PaymentServiceImpl implements PaymentService {
                 int quantiy = item.getQuantity();
                 double itemPrice = item.getPrice();
                 for (int j = 0; j < quantiy; j++) {
-                    finalTotalCost.updateAndGet(v -> new Double((double) (v + itemPrice)));
+                    finalTotalCost.updateAndGet(v ->((double) (v + itemPrice)));
                 }
             });
 
             /* Take off discount */
-            finalTotalCost.updateAndGet(v -> new Double((double) (v - discount)));
+            finalTotalCost.updateAndGet(v -> ((double) (v - discount)));
 
             //meant to use assign order request in shop - Mock Data
             UUID shopperID = null;
@@ -90,7 +93,15 @@ public class PaymentServiceImpl implements PaymentService {
             OrderType orderType = request.getOrderType();
             double totalC = Double.parseDouble(totalCost.toString());
             Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
+            Order alreadyExists=null;
+            try{
+                alreadyExists=orderRepo.findById(orderID).orElse(null);
+            }
+            catch (Exception e){}
 
+            if(alreadyExists==null){
+                throw new PaymentException("Order is already in the database with same ID");
+            }
 
             if (o != null) {
                 orderRepo.save(o);
@@ -106,8 +117,64 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public CancelOrderResponse cancelOrder() {
-        return null;
+    public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist {
+        CancelOrderResponse response=null;
+        Order order = null;
+        double cancelationFee = 0;
+        String message;
+
+        /*
+         *
+         * AWAITING_PAYMENT - cancel
+         * PURCHASED - cancel
+         * COLLECT - charge
+         * DELIVERY_COLLECTED
+         * CUSTOMER_COLLECTED
+         * DELIVERED
+         *
+         * */
+
+        if(req == null){
+            throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
+        }
+
+        if(req.getOrderID()==null){
+            throw new InvalidRequestException("orderID in request object can't be null - couldn't cancel order ");
+        }
+        Order o=null;
+        //find the order by id
+        try {
+           o=orderRepo.findById(req.getOrderID()).orElse(null);
+        }
+        catch (Exception e){
+            throw new OrderDoesNotExist("Order doesn't exist in database - can't cancel order");
+        }
+        List<Order> orders=new ArrayList<>();
+        orders=orderRepo.findAll();
+
+
+        if(o.getStatus() == OrderStatus.DELIVERED ||
+                o.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
+                o.getStatus() == OrderStatus.DELIVERY_COLLECTED){
+            message = "Cannot cancel an order that has been delivered/collected.";
+            return new CancelOrderResponse(false,orders, message);
+        }
+
+        if(o.getStatus() != OrderStatus.AWAITING_PAYMENT ||
+                o.getStatus() != OrderStatus.PURCHASED){
+            cancelationFee = 1000;
+            message = "Order successfully cancelled. Customer has been charged " + cancelationFee;
+        }else
+            message = "Order has been successfully cancelled";
+
+        // refund customers ordertotal - cancellation fee
+
+
+        // remove Order from DB.
+        orders.remove(o);
+
+        response= new CancelOrderResponse(true, orders, message);
+        return response;
     }
 
     // TRANSACTION IMPLEMENTATION
