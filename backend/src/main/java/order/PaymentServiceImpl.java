@@ -50,7 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         if(order == null || order.getStatus() == OrderStatus.DELIVERED ||
         order.getStatus() == OrderStatus.CUSTOMER_COLLECTED){
-            return new CancelOrderResponse(false);
+            return new CancelOrderResponse(false, orders);
         }
 
         if(order.getStatus() != OrderStatus.AWAITING_PAYMENT ||
@@ -64,7 +64,7 @@ public class PaymentServiceImpl implements PaymentService {
         // remove Order from DB.
         orders.remove(order);
 
-        return new CancelOrderResponse(true);
+        return new CancelOrderResponse(true, orders);
     }
 
     // TRANSACTION IMPLEMENTATION
