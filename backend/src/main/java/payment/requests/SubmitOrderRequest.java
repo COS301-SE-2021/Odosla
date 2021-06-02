@@ -1,8 +1,8 @@
 package payment.requests;
 
-import order.dataclass.GeoPoint;
-import order.dataclass.Item;
-import order.dataclass.OrderType;
+import payment.dataclass.GeoPoint;
+import payment.dataclass.Item;
+import payment.dataclass.OrderType;
 
 import java.util.List;
 import java.util.UUID;

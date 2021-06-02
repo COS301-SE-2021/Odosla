@@ -1,11 +1,11 @@
-package order;
-
-import order.dataclass.*;
-import order.repos.OrderRepo;
-import order.requests.*;
-import order.responses.*;
-import order.dataclass.GeoPoint;
-import order.exceptions.*;
+package payment;
+import payment.dataclass.*;
+import payment.dataclass.OrderStatus;
+import payment.repos.OrderRepo;
+import payment.requests.*;
+import payment.responses.*;
+import payment.dataclass.GeoPoint;
+import payment.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,10 +102,6 @@ public class PaymentServiceImpl implements PaymentService {
         return response;
     }
 
-    @Override
-    public ResetOrderResponse resetOrder() {
-        return null;
-    }
 
     @Override
     public CancelOrderResponse cancelOrder() {

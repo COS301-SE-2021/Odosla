@@ -1,6 +1,6 @@
 package delivery;
 
-import order.dataclass.GeoPoint;
+import payment.dataclass.GeoPoint;
 
 import java.util.UUID;
 

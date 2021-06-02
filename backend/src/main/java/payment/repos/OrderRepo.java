@@ -1,6 +1,6 @@
-package order.repos;
+package payment.repos;
 
-import order.dataclass.Order;
+import payment.dataclass.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

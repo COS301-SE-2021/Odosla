@@ -1,4 +1,4 @@
-package order.mock;
+package payment.mock;
 
 public class submitOrderMock {
 }

@@ -1,4 +1,4 @@
-package order.exceptions;
+package payment.exceptions;
 
 import java.security.PrivilegedActionException;
 

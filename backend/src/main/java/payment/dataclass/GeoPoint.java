@@ -1,4 +1,4 @@
-package order.dataclass;
+package payment.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
