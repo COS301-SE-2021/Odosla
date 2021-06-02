@@ -1,15 +1,12 @@
 package order;
+import order.exceptions.InvalidRequestException;
 import order.requests.*;
 import order.responses.*;
 public interface PaymentService {
 
     // ORDER
 
-    AddItemResponse addItem(AddItemRequest request);
-
-    RemoveItemResponse removeItem(RemoveItemRequest request);
-
-    SubmitOrderResponse submitOrder();
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException;
 
     ResetOrderResponse resetOrder();
 

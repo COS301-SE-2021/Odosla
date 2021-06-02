@@ -1,9 +1,18 @@
-package user;
+package order.dataclass;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "geoPointTable")
 public class GeoPoint {
     private Double latitude;
     private Double longitude;
     private String address;
+    @Id
+    @GeneratedValue
     private Long geoID;
 
     public GeoPoint(Double latitude, Double longitude, String address) {
@@ -47,4 +56,5 @@ public class GeoPoint {
     public void setAddress(String address) {
         this.address = address;
     }
+
 }

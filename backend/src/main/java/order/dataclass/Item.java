@@ -1,11 +1,17 @@
 package order.dataclass;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.UUID;
 
+@Entity
+@Table
 public class Item {
-
-    private String name;
+    @Id
     private String productID;
+    private String name;
+
     private String barcode;
     private UUID storeID;
     private double price;

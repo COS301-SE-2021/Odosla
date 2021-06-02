@@ -1,17 +1,45 @@
 package order.responses;
 
+import order.dataclass.OrderStatus;
+
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.UUID;
+
 public class SubmitOrderResponse {
-    private boolean success;
+    /** attributes */
+    private final UUID orderId;
+    private final OrderStatus status;
+    private final Date timestamp;
+    private final String message;
 
-    public SubmitOrderResponse(boolean success) {
-        this.success = success;
+    /** CONSTRUCTOR
+     * @param orderId - unique order identifier
+     * @param status - status of order throughout it's lifetime
+     * @param timestamp - time that the system sends the response object
+     * @param message - message returned after response
+     */
+    public SubmitOrderResponse(UUID orderId, OrderStatus status, Date timestamp, String message) {
+        this.orderId = orderId;
+        this.status = status;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
-    public boolean isSuccess() {
-        return success;
+    public UUID getOrderId() {
+        return orderId;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
