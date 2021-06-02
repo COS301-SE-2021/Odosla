@@ -1,14 +1,12 @@
 package shopping;
 
-
-import order.dataclass.Order;
-import order.dataclass.OrderStatus;
+import payment.dataclass.Order;
+import payment.dataclass.OrderStatus;
 import shopping.exceptions.InvalidRequestException;
 import shopping.requests.AddToQueueRequest;
 import shopping.requests.ScanItemRequest;
 import shopping.responses.AddToQueueResponse;
 import shopping.responses.GetCatalogueResponse;
-
 import shopping.responses.ScanItemResponse;
 
 import java.util.Calendar;
@@ -16,9 +14,8 @@ import java.util.Calendar;
 public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
-    public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) {
-
-       return null;
+    public GetCatalogueResponse getCatalogue() {
+        return null;
     }
 
     @Override
