@@ -1,6 +1,8 @@
 package user;
 
-public class Customer extends User{
+import user.dataclass.User;
+
+public class Customer extends User {
     private GeoPoint address;
 
     public Customer(GeoPoint address) {
