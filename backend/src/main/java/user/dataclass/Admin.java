@@ -1,4 +1,4 @@
-package user;
+package user.dataclass;
 
 import user.dataclass.User;
 
