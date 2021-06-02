@@ -5,7 +5,7 @@ import shopping.responses.*;
 
 public interface ShoppingService {
 
-    GetCatalogueResponse getCatalogue(GetCatalogueRequest request);
+    GetCatalogueResponse getCatalogue();
 
     AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException;
 
