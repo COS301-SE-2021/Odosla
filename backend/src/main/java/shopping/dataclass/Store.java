@@ -1,6 +1,6 @@
 package shopping.dataclass;
 
-import order.dataclass.Order;
+import payment.dataclass.Order;
 import user.dataclass.Shopper;
 import java.util.List;
 import java.util.UUID;
