@@ -1,6 +1,6 @@
-package order;
-import order.requests.*;
-import order.responses.*;
+package payment;
+import payment.requests.*;
+import payment.responses.*;
 public interface PaymentService {
 
     // ORDER

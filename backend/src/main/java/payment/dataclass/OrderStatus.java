@@ -1,4 +1,4 @@
-package order.dataclass;
+package payment.dataclass;
 
 public enum OrderStatus {
     AWAITING_PAYMENT,

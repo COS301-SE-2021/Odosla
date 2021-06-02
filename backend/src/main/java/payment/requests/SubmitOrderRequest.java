@@ -1,4 +1,4 @@
-package order.requests;
+package payment.requests;
 
 public class SubmitOrderRequest {
 }

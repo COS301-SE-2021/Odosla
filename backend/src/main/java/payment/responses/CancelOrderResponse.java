@@ -1,4 +1,4 @@
-package order.responses;
+package payment.responses;
 
 public class CancelOrderResponse {
     private boolean success;

@@ -1,11 +1,7 @@
-package order;
+package payment;
 
-import order.dataclass.Item;
-import order.requests.*;
-import order.responses.*;
-import java.util.ArrayList;
-
-import java.util.List;
+import payment.requests.*;
+import payment.responses.*;
 
 public class PaymentServiceImpl implements PaymentService {
 

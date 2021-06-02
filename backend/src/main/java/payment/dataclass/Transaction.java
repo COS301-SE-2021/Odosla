@@ -1,4 +1,4 @@
-package order.dataclass;
+package payment.dataclass;
 
 import java.util.Calendar;
 
