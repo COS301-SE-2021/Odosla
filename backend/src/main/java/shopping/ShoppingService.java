@@ -8,6 +8,6 @@ public interface ShoppingService {
 
     AssignOrderResponse assignOrder(AssignOrderRequest request);
 
-    ScanItemResponse scanItem(ScanItemRequest request);
+    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request);
 
 }

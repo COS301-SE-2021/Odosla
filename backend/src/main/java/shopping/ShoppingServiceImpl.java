@@ -1,10 +1,12 @@
 package shopping;
 
 import shopping.requests.AssignOrderRequest;
-import shopping.requests.ScanItemRequest;
+import shopping.requests.GetNextQueuedRequest;
 import shopping.responses.AssignOrderResponse;
+import shopping.responses.GetNextQueuedResponse;
 import shopping.responses.GetStockListResponse;
-import shopping.responses.ScanItemResponse;
+
+import java.util.UUID;
 
 public class ShoppingServiceImpl implements ShoppingService {
 
@@ -19,7 +21,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public ScanItemResponse scanItem(ScanItemRequest request) {
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) {
         return null;
     }
 }
