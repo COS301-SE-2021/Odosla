@@ -13,6 +13,7 @@ import payment.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -74,12 +75,12 @@ public class PaymentServiceImpl implements PaymentService {
                 int quantiy = item.getQuantity();
                 double itemPrice = item.getPrice();
                 for (int j = 0; j < quantiy; j++) {
-                    finalTotalCost.updateAndGet(v -> new Double((double) (v + itemPrice)));
+                    finalTotalCost.updateAndGet(v ->((double) (v + itemPrice)));
                 }
             });
 
             /* Take off discount */
-            finalTotalCost.updateAndGet(v -> new Double((double) (v - discount)));
+            finalTotalCost.updateAndGet(v -> ((double) (v - discount)));
 
             //meant to use assign order request in shop - Mock Data
             UUID shopperID = null;
@@ -108,8 +109,8 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public CancelOrderResponse cancelOrder(CancelOrderRequest req) {
-        List<Order> orders = new CancelOrdersMock().getOrders(); // temp placeholder
+    public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist {
+        CancelOrderResponse response=null;
         Order order = null;
         double cancelationFee = 0;
         String message;
@@ -126,33 +127,33 @@ public class PaymentServiceImpl implements PaymentService {
          * */
 
         if(req == null){
-            message = "request object cannot be null";
-            return new CancelOrderResponse(false, orders, message);
+            throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
         }
 
+        if(req.getOrderID()==null){
+            throw new InvalidRequestException("orderID in request object can't be null - couldn't cancel order ");
+        }
+        Order o=null;
         //find the order by id
-        for (Order o: orders) {
-            if(o.getOrderID() == req.getOrderID()){
-                order = o;
-                break;
-            }
+        try {
+           o=orderRepo.findById(req.getOrderID()).orElse(null);
         }
-
-        if(order == null){
-            message = "An order with id: " + req.getOrderID() + " does not exist";
-            return new CancelOrderResponse(false, orders, message);
+        catch (Exception e){
+            throw new OrderDoesNotExist("Order doesn't exist in database - can't cancel order");
         }
+        List<Order> orders=new ArrayList<>();
+        orders=orderRepo.findAll();
 
 
-        if(order.getStatus() == OrderStatus.DELIVERED ||
-                order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
-                order.getStatus() == OrderStatus.DELIVERY_COLLECTED){
+        if(o.getStatus() == OrderStatus.DELIVERED ||
+                o.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
+                o.getStatus() == OrderStatus.DELIVERY_COLLECTED){
             message = "Cannot cancel an order that has been delivered/collected.";
-            return new CancelOrderResponse(false, orders, message);
+            return new CancelOrderResponse(false,orders, message);
         }
 
-        if(order.getStatus() != OrderStatus.AWAITING_PAYMENT ||
-                order.getStatus() != OrderStatus.PURCHASED){
+        if(o.getStatus() != OrderStatus.AWAITING_PAYMENT ||
+                o.getStatus() != OrderStatus.PURCHASED){
             cancelationFee = 1000;
             message = "Order successfully cancelled. Customer has been charged " + cancelationFee;
         }else
@@ -162,9 +163,10 @@ public class PaymentServiceImpl implements PaymentService {
 
 
         // remove Order from DB.
-        orders.remove(order);
+        orders.remove(o);
 
-        return new CancelOrderResponse(true, orders, message);
+        response= new CancelOrderResponse(true, orders, message);
+        return response;
     }
 
     // TRANSACTION IMPLEMENTATION

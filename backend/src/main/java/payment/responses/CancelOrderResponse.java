@@ -9,7 +9,7 @@ public class CancelOrderResponse {
     private String message;
     private List<Order> orders;
 
-    public CancelOrderResponse(boolean success, List<Order> orders, String message) {
+    public CancelOrderResponse(boolean success,List<Order> orders, String message) {
         this.success = success;
         this.orders = orders;
         this.message = message;

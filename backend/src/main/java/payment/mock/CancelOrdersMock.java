@@ -1,7 +1,7 @@
 package payment.mock;
 
 import payment.dataclass.GeoPoint;
-import payment.dataclass.Item;
+import shopping.dataclass.Item;
 import payment.dataclass.Order;
 
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ public class CancelOrdersMock {
         order.setStoreID(store1ID);
         order.setShopperID(shoper1PnP);
         order.setCreateDate(Calendar.getInstance());
-        order.setTotalCost((float)totalCost);
+        order.setTotalCost((Double) totalCost);
 //        order.Type(OrderType.DELIVERY);
 //        order.setStatus(OrderStatus.AWAITING_PAYMENT);
         order.setItems(items);

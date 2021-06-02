@@ -1,7 +1,7 @@
 package payment.requests;
 
-import order.dataclass.Order;
-import order.dataclass.OrderStatus;
+import payment.dataclass.Order;
+import payment.dataclass.OrderStatus;
 
 import java.util.UUID;
 

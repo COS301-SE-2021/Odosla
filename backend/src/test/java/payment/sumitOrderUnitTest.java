@@ -158,6 +158,12 @@ public class sumitOrderUnitTest {
         assertEquals(deliveryAddress,request.getDeliveryAddress());
         assertEquals(storeAddress,request.getStoreAddress());
     }
+    @Test
+    @Description("When Order with same ID already exists in database")
+    @DisplayName("When Order is alredy in database")
+    void UnitTest_OrderID_alreadyInDatabase(){
+
+    }
 
     @Test
     @Description("This test is to check order is created correctly- should return valid data stored in order entity")

@@ -1,5 +1,6 @@
 package payment;
 import payment.exceptions.InvalidRequestException;
+import payment.exceptions.OrderDoesNotExist;
 import payment.requests.*;
 import payment.responses.*;
 public interface PaymentService {
@@ -9,7 +10,7 @@ public interface PaymentService {
 
 
     SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException;
-    CancelOrderResponse cancelOrder(CancelOrderRequest req);
+    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist;
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
