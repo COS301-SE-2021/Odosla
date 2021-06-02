@@ -7,11 +7,7 @@ public interface PaymentService {
     // ORDER
 
     SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException;
-
-    ResetOrderResponse resetOrder();
-
     CancelOrderResponse cancelOrder();
-
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
