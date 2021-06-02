@@ -1,16 +1,29 @@
 package order;
 
 import order.dataclass.*;
+import order.repos.OrderRepo;
 import order.requests.*;
 import order.responses.*;
 import order.dataclass.GeoPoint;
 import order.exceptions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Service("paymentServiceImpl")
 public class PaymentServiceImpl implements PaymentService {
+
+    private final OrderRepo orderRepo;
+
+    @Autowired
+    public PaymentServiceImpl(OrderRepo orderRepo) {
+        this.orderRepo = orderRepo;
+    }
+
 
     // ORDER IMPLEMENTATION
     @Override
@@ -24,20 +37,27 @@ public class PaymentServiceImpl implements PaymentService {
 
             /* checking for invalid requests */
             if(request.getUserID()==null){
-                throw new InvalidRequestException("UserID cannot be null in request object");
+                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully created.");
             }
             else if(request.getListOfItems()==null){
-                throw new InvalidRequestException("List of items cannot be null in request object");
+                throw new InvalidRequestException("List of items cannot be null in request object - order unsuccessfully created.");
             }
             else if(request.getDiscount()==null){
-                throw new InvalidRequestException("Discount cannot be null in request object");
+                throw new InvalidRequestException("Discount cannot be null in request object - order unsuccessfully created.");
             }
             else if(request.getStoreID()==null){
-                throw new InvalidRequestException("Store ID cannot be null in request object");
+                throw new InvalidRequestException("Store ID cannot be null in request object - order unsuccessfully created.");
             }
-            else if (request.getOrderType()==null){
-                throw new InvalidRequestException("Order type cannot be null in request object");
+            else if(request.getOrderType()==null){
+                throw new InvalidRequestException("Order type cannot be null in request object - order unsuccessfully created.");
             }
+            else if(request.getDeliveryAddress()==null){
+                throw new InvalidRequestException("Delivery Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+            }
+            else if (request.getStoreAddress()==null){
+                throw new InvalidRequestException("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+            }
+
 
             double discount=request.getDiscount();
             List<Item> listOfItems=request.getListOfItems();
@@ -58,26 +78,26 @@ public class PaymentServiceImpl implements PaymentService {
             finalTotalCost.updateAndGet(v -> new Double((double) (v - discount)));
 
             //meant to use assign order request in shop - Mock Data
-            UUID shoperperID = UUID.randomUUID();
-            //meant to get delivery address from current user logged in - Mock Data
-            GeoPoint deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-            //meant to get storeAddress from shop order id is - Mock Data
-            GeoPoint storeAddress = new GeoPoint(3.0, 3.0, "Woolworthes, Hillcrest Boulevard");
-            //Mock Data
+            UUID shopperID = null;
+
+            GeoPoint deliveryAddress = request.getDeliveryAddress();
+            GeoPoint storeAddress = request.getStoreAddress();
+            //Mock Data - still have to find out how this is going to work
             Boolean requiresPharmacy = false;
 
             OrderType orderType = request.getOrderType();
             double totalC = Double.parseDouble(totalCost.toString());
-            Order o = new Order(UUID.randomUUID(), userID, storeID, shoperperID, Calendar.getInstance(), totalC, orderType, OrderStatus.AWAITING_PAYMENT, listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
+            Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
 
 
             if (o != null) {
+                orderRepo.save(o);
                 System.out.println("Order has been created");
                 response = new SubmitOrderResponse(orderID, OrderStatus.AWAITING_PAYMENT,Calendar.getInstance().getTime(), "Order successfully created.");
             }
 
         }else{
-            throw new InvalidRequestException("Invalid order request received - order unsuccessfully created.");
+            throw new InvalidRequestException("Invalid submit order request received - order unsuccessfully created.");
         }
         return response;
     }
