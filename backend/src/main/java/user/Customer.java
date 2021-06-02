@@ -1,5 +1,7 @@
 package user;
 
+import payment.dataclass.GeoPoint;
+
 public class Customer extends User{
     private GeoPoint address;
 

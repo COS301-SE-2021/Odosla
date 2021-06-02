@@ -1,5 +1,7 @@
 package user;
 
+import payment.dataclass.GeoPoint;
+
 public class Address {
     private String street;
     private String number;
