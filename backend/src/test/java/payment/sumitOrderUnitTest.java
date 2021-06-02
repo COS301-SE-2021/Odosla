@@ -1,6 +1,7 @@
 package payment;
 
 import payment.dataclass.*;
+import shopping.dataclass.Item;
 import payment.dataclass.Order;
 import payment.dataclass.OrderType;
 import payment.dataclass.OrderStatus;

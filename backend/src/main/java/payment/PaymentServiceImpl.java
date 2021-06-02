@@ -1,4 +1,6 @@
 package payment;
+
+import shopping.dataclass.Item;
 import payment.dataclass.*;
 import payment.dataclass.OrderStatus;
 import payment.repos.OrderRepo;
