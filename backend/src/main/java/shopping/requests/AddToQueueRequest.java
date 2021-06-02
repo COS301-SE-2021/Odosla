@@ -2,11 +2,12 @@ package shopping.requests;
 
 import order.dataclass.Order;
 
-public class AssignOrderRequest {
+public class AddToQueueRequest {
     private Order order;
 
-    public AssignOrderRequest(Order order) {
+    public AddToQueueRequest(Order order) {
         this.order = order;
+
     }
 
     public Order getOrder() {

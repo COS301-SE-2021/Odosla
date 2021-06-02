@@ -2,6 +2,7 @@ package order.dataclass;
 
 import user.GeoPoint;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,8 +13,8 @@ public class Order {
     private UUID storeID;
     private UUID shopperID;
     private Calendar createDate;
-    private Calendar orderDate;
-    private float totalCost;
+    private Calendar processDate;
+    private Double totalCost;
     private OrderType type;
     private OrderStatus status;
     private List<Item> items;
@@ -26,13 +27,13 @@ public class Order {
 
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar orderDate, float totalCost, OrderType type, OrderStatus status, List<Item> items, float discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, float discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
         this.shopperID = shopperID;
         this.createDate = createDate;
-        this.orderDate = orderDate;
+        this.processDate = processDate;
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
@@ -83,19 +84,11 @@ public class Order {
         this.createDate = createDate;
     }
 
-    public Calendar getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Calendar orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public float getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(float totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -154,4 +147,14 @@ public class Order {
     public void setRequiresPharmacy(boolean requiresPharmacy) {
         this.requiresPharmacy = requiresPharmacy;
     }
+
+    public Calendar getProcessDate() {
+        return processDate;
+    }
+
+    public void setProcessDate(Calendar processDate) {
+        this.processDate = processDate;
+    }
+
+
 }
