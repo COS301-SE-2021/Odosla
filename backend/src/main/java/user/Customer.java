@@ -2,7 +2,8 @@ package user;
 
 import payment.dataclass.GeoPoint;
 
-public class Customer extends User{
+public class Customer extends User {
+
     private GeoPoint address;
 
     public Customer(GeoPoint address) {

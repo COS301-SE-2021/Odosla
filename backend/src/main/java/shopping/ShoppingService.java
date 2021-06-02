@@ -1,4 +1,13 @@
 package shopping;
+import shopping.requests.*;
+import shopping.responses.*;
 
-public class ShoppingService {
+public interface ShoppingService {
+
+    GetStockListResponse getStockList();
+
+    AssignOrderResponse assignOrder(AssignOrderRequest request);
+
+    ScanItemResponse scanItem(ScanItemRequest request);
+
 }
