@@ -12,7 +12,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
     public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) {
 
-        return null;
+       return null;
     }
 
     @Override
