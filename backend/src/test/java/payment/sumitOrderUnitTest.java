@@ -1,6 +1,7 @@
 package payment;
 
 import payment.dataclass.*;
+import payment.exceptions.PaymentException;
 import shopping.dataclass.Item;
 import payment.dataclass.Order;
 import payment.dataclass.OrderType;
@@ -24,6 +25,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class sumitOrderUnitTest {
@@ -36,6 +38,9 @@ public class sumitOrderUnitTest {
     Item I1;
     Item I2;
     Order o;
+    Order o2;
+    UUID o1UUID=UUID.randomUUID();
+    UUID o2UUID=UUID.randomUUID();
     UUID expectedU1=UUID.randomUUID();
     UUID expectedS1=UUID.randomUUID();
     UUID expectedShopper1=UUID.randomUUID();
@@ -47,6 +52,7 @@ public class sumitOrderUnitTest {
     GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
     GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworthes, Hillcrest Boulevard");
     List<Item> expectedListOfItems=new ArrayList<>();
+    List<Order> listOfOrders=new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -59,7 +65,10 @@ public class sumitOrderUnitTest {
         expectedType= OrderType.DELIVERY;
         expectedListOfItems.add(I1);
         expectedListOfItems.add(I2);
-        o=new Order(UUID.randomUUID(), expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        listOfOrders.add(o);
+        listOfOrders.add(o2);
     }
 
     @AfterEach
@@ -158,17 +167,22 @@ public class sumitOrderUnitTest {
         assertEquals(deliveryAddress,request.getDeliveryAddress());
         assertEquals(storeAddress,request.getStoreAddress());
     }
+
+    /* need to still implement this */
     @Test
     @Description("When Order with same ID already exists in database")
     @DisplayName("When Order is alredy in database")
-    void UnitTest_OrderID_alreadyInDatabase(){
-
+    void UnitTest_OrderID_alreadyInDatabase() throws PaymentException {
+        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.submitOrder(request));
+        assertEquals("Order is already in the database with same ID",thrown.getMessage());
     }
 
     @Test
     @Description("This test is to check order is created correctly- should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
-    void UnitTest_StartOrderConstruction() throws InvalidRequestException{
+    void UnitTest_StartOrderConstruction() throws PaymentException {
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
         SubmitOrderResponse response=paymentService.submitOrder(request);
 

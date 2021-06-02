@@ -32,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     // ORDER IMPLEMENTATION
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -93,7 +93,15 @@ public class PaymentServiceImpl implements PaymentService {
             OrderType orderType = request.getOrderType();
             double totalC = Double.parseDouble(totalCost.toString());
             Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
+            Order alreadyExists=null;
+            try{
+                alreadyExists=orderRepo.findById(orderID).orElse(null);
+            }
+            catch (Exception e){}
 
+            if(alreadyExists==null){
+                throw new PaymentException("Order is already in the database with same ID");
+            }
 
             if (o != null) {
                 orderRepo.save(o);
