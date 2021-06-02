@@ -1,22 +1,19 @@
 package payment;
 
-import order.dataclass.GeoPoint;
-import order.dataclass.Item;
-import order.dataclass.Order;
-import order.dataclass.OrderStatus;
-import order.dataclass.OrderType;
-import order.exceptions.InvalidRequestException;
-import order.repos.OrderRepo;
-import order.requests.SubmitOrderRequest;
-import order.responses.SubmitOrderResponse;
-import org.aspectj.weaver.ast.Or;
+import payment.dataclass.GeoPoint;
+import payment.dataclass.Item;
+import payment.dataclass.Order;
+import payment.dataclass.OrderStatus;
+import payment.dataclass.OrderType;
+import payment.exceptions.InvalidRequestException;
+import payment.repos.OrderRepo;
+import payment.requests.SubmitOrderRequest;
+import payment.responses.SubmitOrderResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import order.*;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 
