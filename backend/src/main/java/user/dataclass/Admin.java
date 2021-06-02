@@ -1,6 +1,8 @@
-package user;
+package user.dataclass;
 
-public class Admin extends User{
+import user.dataclass.User;
+
+public class Admin extends User {
 
     /* Functions */
     public boolean deleteUser(){

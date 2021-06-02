@@ -1,4 +1,4 @@
-package payment.dataclass;
+package shopping.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,10 +8,10 @@ import java.util.UUID;
 @Entity
 @Table
 public class Item {
+
     @Id
     private String productID;
     private String name;
-
     private String barcode;
     private UUID storeID;
     private double price;
@@ -19,9 +19,7 @@ public class Item {
     private String description;
     private String imageUrl;
 
-    public Item(){
-
-    }
+    public Item(){ }
 
     public Item(String name, String productID, String barcode, UUID storeID, double price, int quantity, String description, String imageUrl) {
         this.name = name;

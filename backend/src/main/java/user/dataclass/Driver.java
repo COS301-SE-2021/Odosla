@@ -1,8 +1,9 @@
-package user;
+package user.dataclass;
 
 import payment.dataclass.GeoPoint;
+import user.dataclass.User;
 
-public class Driver extends User{
+public class Driver extends User {
     /* Attributes */
     private double rating;
     private GeoPoint currentAddress;
