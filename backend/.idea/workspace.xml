@@ -4,15 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="GetStoreByUUIDUnitTest">
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="Testing for Cancel Order">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/ShoppingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shopping/ShoppingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shopping/ShoppingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/responses/GetCatalogueResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/shopping/responses/GetCatalogueResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/GetCatalogueUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/shopping/GetCatalogueUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/GetStoreByUUIDUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/shopping/GetStoreByUUIDUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/shopping/ShoppingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/shopping/ShoppingService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/shopping/ShoppingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/shopping/ShoppingServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/payment/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/payment/PaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/payment/PaymentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/payment/PaymentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/payment/sumitOrderUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/payment/sumitOrderUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/payment/sumitOrderUnitTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/payment/sumitOrderUnitTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,91 +57,93 @@
   <component name="ReaderModeSettings">
     <option name="enabled" value="false" />
   </component>
-  <component name="RunManager" selected="JUnit.GetStoreByUUIDUnitTest">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.sumitOrderUnitTest.UnitTest_OrderID_alreadyInDatabase">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CancelOrderUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="payment.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="payment" />
+      <option name="MAIN_CLASS_NAME" value="payment.CancelOrderUnitTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GetCatalogueUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CancelOrderUnitTest.cancelOrderStatusPurchased" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="shopping.*" />
+          <option name="PATTERN" value="payment.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="shopping" />
-      <option name="MAIN_CLASS_NAME" value="shopping.GetCatalogueUnitTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GetCatalogueUnitTest.UnitTest_Store_does_exist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="shopping.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="shopping" />
-      <option name="MAIN_CLASS_NAME" value="shopping.GetCatalogueUnitTest" />
-      <option name="METHOD_NAME" value="UnitTest_Store_does_exist" />
+      <option name="PACKAGE_NAME" value="payment" />
+      <option name="MAIN_CLASS_NAME" value="payment.CancelOrderUnitTest" />
+      <option name="METHOD_NAME" value="cancelOrderStatusPurchased" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GetCatalogueUnitTest.UnitTest_Store_doesnt_exist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="CancelOrderUnitTest.cancelOrderWhenOrderRequest_OrderID_IsNull" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="shopping.*" />
+          <option name="PATTERN" value="payment.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="shopping" />
-      <option name="MAIN_CLASS_NAME" value="shopping.GetCatalogueUnitTest" />
-      <option name="METHOD_NAME" value="UnitTest_Store_doesnt_exist" />
+      <option name="PACKAGE_NAME" value="payment" />
+      <option name="MAIN_CLASS_NAME" value="payment.CancelOrderUnitTest" />
+      <option name="METHOD_NAME" value="cancelOrderWhenOrderRequest_OrderID_IsNull" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GetStoreByUUIDUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="sumitOrderUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="shopping.*" />
+          <option name="PATTERN" value="payment.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="shopping" />
-      <option name="MAIN_CLASS_NAME" value="shopping.GetStoreByUUIDUnitTest" />
+      <option name="PACKAGE_NAME" value="payment" />
+      <option name="MAIN_CLASS_NAME" value="payment.sumitOrderUnitTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GetStoreByUUIDUnitTest.UnitTest_Store_does_exist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="sumitOrderUnitTest.UnitTest_OrderID_alreadyInDatabase" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="shopping.*" />
+          <option name="PATTERN" value="payment.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="shopping" />
-      <option name="MAIN_CLASS_NAME" value="shopping.GetStoreByUUIDUnitTest" />
-      <option name="METHOD_NAME" value="UnitTest_Store_does_exist" />
+      <option name="PACKAGE_NAME" value="payment" />
+      <option name="MAIN_CLASS_NAME" value="payment.sumitOrderUnitTest" />
+      <option name="METHOD_NAME" value="UnitTest_OrderID_alreadyInDatabase" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -152,11 +151,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.GetStoreByUUIDUnitTest" />
-        <item itemvalue="JUnit.GetCatalogueUnitTest" />
-        <item itemvalue="JUnit.GetCatalogueUnitTest.UnitTest_Store_does_exist" />
-        <item itemvalue="JUnit.GetStoreByUUIDUnitTest.UnitTest_Store_does_exist" />
-        <item itemvalue="JUnit.GetCatalogueUnitTest.UnitTest_Store_doesnt_exist" />
+        <item itemvalue="JUnit.sumitOrderUnitTest.UnitTest_OrderID_alreadyInDatabase" />
+        <item itemvalue="JUnit.sumitOrderUnitTest" />
+        <item itemvalue="JUnit.CancelOrderUnitTest" />
+        <item itemvalue="JUnit.CancelOrderUnitTest.cancelOrderWhenOrderRequest_OrderID_IsNull" />
+        <item itemvalue="JUnit.CancelOrderUnitTest.cancelOrderStatusPurchased" />
       </list>
     </recent_temporary>
   </component>
@@ -233,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1622666501908</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Testing for Cancel Order">
+      <created>1622675937211</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1622675937211</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,6 +263,7 @@
     <MESSAGE value="merging" />
     <MESSAGE value="merging completed" />
     <MESSAGE value="GetStoreByUUIDUnitTest" />
-    <option name="LAST_COMMIT_MESSAGE" value="GetStoreByUUIDUnitTest" />
+    <MESSAGE value="Testing for Cancel Order" />
+    <option name="LAST_COMMIT_MESSAGE" value="Testing for Cancel Order" />
   </component>
 </project>
