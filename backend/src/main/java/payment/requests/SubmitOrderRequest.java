@@ -1,7 +1,7 @@
 package payment.requests;
 
 import payment.dataclass.GeoPoint;
-import payment.dataclass.Item;
+import shopping.dataclass.Item;
 import payment.dataclass.OrderType;
 
 import java.util.List;

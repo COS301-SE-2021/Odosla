@@ -2,6 +2,7 @@ package payment.dataclass;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import shopping.dataclass.Item;
 
 import java.util.Calendar;
 import java.util.List;
