@@ -1,38 +1,54 @@
 package payment.dataclass;
 
-import user.GeoPoint;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "orderTable")
 public class Order {
 
+    @Id
     private UUID orderID;
     private UUID userID;
     private UUID storeID;
     private UUID shopperID;
     private Calendar createDate;
-    private Calendar orderDate;
-    private float totalCost;
-    private OrderType type;
-    private OrderStatus status;
-    private List<Item> items;
-    private float discount;
-    private GeoPoint deliveryAddress;
-    private GeoPoint storeAddress;
+    private double totalCost;
+    private double discount;
     private boolean requiresPharmacy;
+
+    @Enumerated(EnumType.STRING)
+    private OrderType type;
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    @OneToOne (cascade={CascadeType.ALL})
+    private GeoPoint deliveryAddress;
+
+    @OneToOne (cascade={CascadeType.ALL})
+    private GeoPoint storeAddress;
+
+    @ManyToMany
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Item> items;
 
     public Order(){
 
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar orderDate, float totalCost, OrderType type, OrderStatus status, List<Item> items, float discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
         this.shopperID = shopperID;
         this.createDate = createDate;
-        this.orderDate = orderDate;
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
@@ -83,19 +99,11 @@ public class Order {
         this.createDate = createDate;
     }
 
-    public Calendar getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(Calendar orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public float getTotalCost() {
+    public double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(float totalCost) {
+    public void setTotalCost(double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -123,11 +131,11 @@ public class Order {
         this.items = items;
     }
 
-    public float getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(float discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 

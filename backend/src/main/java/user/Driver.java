@@ -1,5 +1,7 @@
 package user;
 
+import payment.dataclass.GeoPoint;
+
 public class Driver extends User{
     /* Attributes */
     private double rating;

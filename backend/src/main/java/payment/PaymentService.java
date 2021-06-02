@@ -1,14 +1,13 @@
 package payment;
+import payment.exceptions.InvalidRequestException;
 import payment.requests.*;
 import payment.responses.*;
 public interface PaymentService {
 
     // ORDER
 
-    SubmitOrderResponse submitOrder();
-
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException;
     CancelOrderResponse cancelOrder();
-
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
