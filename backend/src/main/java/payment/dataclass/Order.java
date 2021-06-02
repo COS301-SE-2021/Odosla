@@ -1,4 +1,4 @@
-package order.dataclass;
+package payment.dataclass;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;

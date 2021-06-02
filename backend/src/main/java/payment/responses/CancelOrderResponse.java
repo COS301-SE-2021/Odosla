@@ -1,9 +1,9 @@
-package order.responses;
+package payment.responses;
 
-public class ResetOrderResponse {
+public class CancelOrderResponse {
     private boolean success;
 
-    public ResetOrderResponse(boolean success) {
+    public CancelOrderResponse(boolean success) {
         this.success = success;
     }
 

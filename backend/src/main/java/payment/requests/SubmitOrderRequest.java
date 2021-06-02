@@ -1,4 +1,4 @@
-package order.requests;
+package payment.requests;
 
 import order.dataclass.GeoPoint;
 import order.dataclass.Item;
