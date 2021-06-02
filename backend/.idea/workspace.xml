@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="merging completed" />
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="Changes to get development to compile" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -145,6 +145,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Changed file name to payment" />
