@@ -1,4 +1,4 @@
-package user;
+package order.dataclass;
 
 public class GeoPoint {
     private Double latitude;
