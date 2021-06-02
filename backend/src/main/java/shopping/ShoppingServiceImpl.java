@@ -4,6 +4,7 @@ import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
 import shopping.exceptions.InvalidRequestException;
 import shopping.requests.AddToQueueRequest;
+import shopping.requests.GetCatalogueRequest;
 import shopping.requests.ScanItemRequest;
 import shopping.responses.AddToQueueResponse;
 import shopping.responses.GetCatalogueResponse;
@@ -14,7 +15,7 @@ import java.util.Calendar;
 public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
-    public GetCatalogueResponse getCatalogue() {
+    public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) {
         return null;
     }
 
