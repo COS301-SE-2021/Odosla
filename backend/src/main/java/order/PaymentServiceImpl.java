@@ -13,17 +13,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PaymentServiceImpl implements PaymentService {
 
     // ORDER IMPLEMENTATION
-
-    @Override
-    public AddItemResponse addItem(AddItemRequest request) {
-        return null;
-    }
-
-    @Override
-    public RemoveItemResponse removeItem(RemoveItemRequest request) {
-        return null;
-    }
-
     @Override
     public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException {
 

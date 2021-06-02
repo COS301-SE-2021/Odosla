@@ -6,10 +6,6 @@ public interface PaymentService {
 
     // ORDER
 
-    AddItemResponse addItem(AddItemRequest request);
-
-    RemoveItemResponse removeItem(RemoveItemRequest request);
-
     SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws InvalidRequestException;
 
     ResetOrderResponse resetOrder();
