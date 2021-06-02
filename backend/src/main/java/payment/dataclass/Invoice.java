@@ -1,5 +1,7 @@
 package payment.dataclass;
 
+import shopping.dataclass.Item;
+
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;

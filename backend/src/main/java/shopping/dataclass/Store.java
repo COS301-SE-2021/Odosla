@@ -1,23 +1,43 @@
 package shopping.dataclass;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import payment.dataclass.Order;
 import user.dataclass.Shopper;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table
 public class Store {
 
+    @Id
     private UUID storeID;
     private String storeBrand;
-    private Catalogue stock;
     private int maxShoppers = 2;
-    private List<Shopper> shoppers;
-    private List<Order> currentOrders;
-    private List<Order> orderQueue;
     private int maxOrders;
 
-    public Store() {
-    }
+    @OneToOne(cascade={CascadeType.ALL})
+    private Catalogue stock;
+
+    @ManyToMany
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Shopper> shoppers;
+
+    @ManyToMany
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Order> currentOrders;
+
+    @ManyToMany
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<Order> orderQueue;
+
+    public Store() { }
 
     public Store(UUID storeID, String storeBrand, Catalogue stock, int maxShoppers, List<Order> currentOrders, List<Order> orderQueue, int maxOrders) {
         this.storeID = storeID;
