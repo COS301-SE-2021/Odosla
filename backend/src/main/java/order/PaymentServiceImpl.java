@@ -2,6 +2,7 @@ package order;
 
 import order.dataclass.Order;
 import order.dataclass.OrderStatus;
+import order.mock.OrdersMock;
 import order.requests.*;
 import order.responses.*;
 
@@ -11,6 +12,7 @@ import java.util.List;
 public class PaymentServiceImpl implements PaymentService {
 
     // ORDER IMPLEMENTATION
+
 
     @Override
     public AddItemResponse addItem(AddItemRequest request) {
@@ -35,9 +37,26 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest req) {
         // get list of orders somewhere (mock or database)
-        List<Order> orders = new ArrayList<Order>();
+        List<Order> orders = new OrdersMock().getOrders(); // temp placeholder
         Order order = null;
         double cancelationFee = 0;
+        String message;
+
+        /*
+        *
+        * AWAITING_PAYMENT - cancel
+        * PURCHASED - cancel
+        * COLLECT - charge
+        * DELIVERY_COLLECTED
+        * CUSTOMER_COLLECTED
+        * DELIVERED
+        *
+        * */
+
+        if(req == null){
+            message = "request object cannot be null";
+            return new CancelOrderResponse(false, orders, message);
+        }
 
         //find the order by id
         for (Order o: orders) {
@@ -47,16 +66,25 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
 
+        if(order == null){
+            message = "An order with id: " + req.getOrderID() + " does not exist";
+            return new CancelOrderResponse(false, orders, message);
+        }
 
-        if(order == null || order.getStatus() == OrderStatus.DELIVERED ||
-        order.getStatus() == OrderStatus.CUSTOMER_COLLECTED){
-            return new CancelOrderResponse(false, orders);
+
+        if(order.getStatus() == OrderStatus.DELIVERED ||
+        order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
+        order.getStatus() == OrderStatus.DELIVERY_COLLECTED){
+            message = "Cannot cancel an order that has been delivered/collected.";
+            return new CancelOrderResponse(false, orders, message);
         }
 
         if(order.getStatus() != OrderStatus.AWAITING_PAYMENT ||
                 order.getStatus() != OrderStatus.PURCHASED){
             cancelationFee = 1000;
-        }
+            message = "Order successfully cancelled. Customer has been charged " + cancelationFee;
+        }else
+            message = "Order has been successfully cancelled";
 
         // refund customers ordertotal - cancellation fee
 
@@ -64,7 +92,7 @@ public class PaymentServiceImpl implements PaymentService {
         // remove Order from DB.
         orders.remove(order);
 
-        return new CancelOrderResponse(true, orders);
+        return new CancelOrderResponse(true, orders, message);
     }
 
     // TRANSACTION IMPLEMENTATION
