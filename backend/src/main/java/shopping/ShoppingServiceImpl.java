@@ -3,13 +3,13 @@ package shopping;
 import shopping.requests.AssignOrderRequest;
 import shopping.requests.ScanItemRequest;
 import shopping.responses.AssignOrderResponse;
-import shopping.responses.GetStockListResponse;
+import shopping.responses.GetCatalogueResponse;
 import shopping.responses.ScanItemResponse;
 
 public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
-    public GetStockListResponse getStockList() {
+    public GetCatalogueResponse getStockList() {
         return null;
     }
 
