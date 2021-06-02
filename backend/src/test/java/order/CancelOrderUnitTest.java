@@ -8,13 +8,37 @@ import order.responses.CancelOrderResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.List;
 import java.util.UUID;
+import order.dataclass.Item;
+import order.dataclass.Order;
+import order.dataclass.OrderStatus;
+import order.dataclass.OrderType;
+import order.requests.SubmitOrderRequest;
+import order.responses.SubmitOrderResponse;
+import org.aspectj.weaver.ast.Or;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import order.*;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Description;
 
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@ExtendWith(MockitoExtension.class)
 class CancelOrderUnitTest {
 
-    //@InjectMocks
+
+    @InjectMocks
     private PaymentServiceImpl paymentService;
 
     private List<Order> orders = new CancelOrdersMock().getOrders();
@@ -37,7 +61,7 @@ class CancelOrderUnitTest {
         int ordersSize = orders.size();
         CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(orderID);
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
-        Assertions.assertEquals("An order with id: " + orderID + " does not exist\"", cancelOrderResponse.getMessage());
+        Assertions.assertEquals("An order with id: " + orderID + " does not exist", cancelOrderResponse.getMessage());
         Assertions.assertEquals(false, cancelOrderResponse.isSuccess());
         // order size does not change
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);

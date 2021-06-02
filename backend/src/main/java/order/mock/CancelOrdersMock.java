@@ -6,6 +6,7 @@ import order.dataclass.OrderStatus;
 import order.dataclass.OrderType;
 import user.GeoPoint;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +18,9 @@ public class CancelOrdersMock {
 
     public List<Order> getOrders() {
         // will add mock orders here
+        items = new ArrayList<>();
+        orders = new ArrayList<>();
+
         UUID store1ID = UUID.randomUUID();
         UUID shoper1PnP = UUID.randomUUID();
         UUID shoper2PnP = UUID.randomUUID();
