@@ -2,11 +2,10 @@ package order;
 
 import order.dataclass.Order;
 import order.dataclass.OrderStatus;
-import order.mock.OrdersMock;
+import order.mock.CancelOrdersMock;
 import order.requests.*;
 import order.responses.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PaymentServiceImpl implements PaymentService {
@@ -37,7 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest req) {
         // get list of orders somewhere (mock or database)
-        List<Order> orders = new OrdersMock().getOrders(); // temp placeholder
+        List<Order> orders = new CancelOrdersMock().getOrders(); // temp placeholder
         Order order = null;
         double cancelationFee = 0;
         String message;
