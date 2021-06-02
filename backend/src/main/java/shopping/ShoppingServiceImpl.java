@@ -1,7 +1,7 @@
 package shopping;
 
-import order.dataclass.Order;
-import order.dataclass.OrderStatus;
+import payment.dataclass.Order;
+import payment.dataclass.OrderStatus;
 import shopping.exceptions.InvalidRequestException;
 import shopping.requests.AddToQueueRequest;
 import shopping.requests.ScanItemRequest;

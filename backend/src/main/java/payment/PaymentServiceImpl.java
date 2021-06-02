@@ -87,7 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             OrderType orderType = request.getOrderType();
             double totalC = Double.parseDouble(totalCost.toString());
-            Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
+            Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
 
 
             if (o != null) {

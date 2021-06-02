@@ -57,7 +57,7 @@ public class ShoppingException extends Exception {
      *                           be writable
      * @since 1.7
      */
-//    public ShoppingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-//        super(message, cause, enableSuppression, writableStackTrace);
-//    }
+    public ShoppingException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

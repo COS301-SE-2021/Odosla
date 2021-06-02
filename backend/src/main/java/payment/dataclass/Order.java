@@ -18,8 +18,9 @@ public class Order {
     private UUID storeID;
     private UUID shopperID;
     private Calendar createDate;
-    private double totalCost;
-    private double discount;
+    private Calendar processDate;
+    private Double totalCost;
+    private Double discount;
     private boolean requiresPharmacy;
 
     @Enumerated(EnumType.STRING)
@@ -43,12 +44,13 @@ public class Order {
 
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar processDate, double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
         this.shopperID = shopperID;
         this.createDate = createDate;
+        this.processDate = processDate;
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
@@ -99,11 +101,15 @@ public class Order {
         this.createDate = createDate;
     }
 
-    public double getTotalCost() {
+    public Calendar getProcessDate() {return processDate; }
+
+    public void setProcessDate(Calendar processDate){this.processDate = processDate; }
+
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(double totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -131,11 +137,11 @@ public class Order {
         this.items = items;
     }
 
-    public double getDiscount() {
+    public Double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(Double discount) {
         this.discount = discount;
     }
 

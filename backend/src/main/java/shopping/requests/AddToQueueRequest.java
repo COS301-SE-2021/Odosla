@@ -1,6 +1,6 @@
 package shopping.requests;
 
-import order.dataclass.Order;
+import payment.dataclass.Order;
 
 public class AddToQueueRequest {
     private Order order;
