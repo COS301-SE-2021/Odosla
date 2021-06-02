@@ -23,14 +23,16 @@ import java.util.Calendar;
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
+    private final ShoppingServiceImpl shoppingService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ShoppingServiceImpl shoppingService) {
         this.storeRepo = storeRepo;
+        this.shoppingService = shoppingService;
     }
 
     @Override
-    public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException {
+    public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetCatalogueResponse response=null;
 
         if(request!=null){
@@ -38,8 +40,15 @@ public class ShoppingServiceImpl implements ShoppingService {
             if (request.getStoreID()==null) {
                 throw new InvalidRequestException("The Store ID in GetCatalogueRequest parameter is null - Could not get catalogue from shop");
             }
-            GetStoreByUUIDRequest getStoreRequest=new GetStoreByUUIDRequest(request.getStoreID());
-            //GetStoreByUUIDResponse getStoreResponse=Shipping
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+            }
+            response=new GetCatalogueResponse(storeEntity.getStock(),Calendar.getInstance().getTime(), "Catalogue entity from store was correctly returned");
+
         }
         else{
             throw new InvalidRequestException("The request object for GetCatalaogueRequest is null - Could not get catalogue from shop");

@@ -93,7 +93,7 @@ public class GetStoreByUUIDUnitTest {
         GetStoreByUUIDResponse response= shoppingService.getStoreByUUID(request);
         assertNotNull(response);
         assertEquals(s,response.getStore());
-        assertEquals(response.getMessage(),"Store entity with corresponding id was returned");
+        assertEquals("Store entity with corresponding id was returned",response.getMessage());
     }
 
 }
