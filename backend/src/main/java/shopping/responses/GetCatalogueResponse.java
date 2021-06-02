@@ -2,22 +2,30 @@ package shopping.responses;
 
 import shopping.dataclass.Catalogue;
 
+import java.util.Date;
+
 public class GetCatalogueResponse {
 
-    Catalogue catalogue;
+    private final Catalogue catalogue;
+    private final String message;
+    private final Date timestamp;
 
-    public GetCatalogueResponse(Catalogue catalogue)
+    public GetCatalogueResponse(Catalogue catalogue, Date timestamp, String message)
     {
         this.catalogue= catalogue;
+        this.message = message;
+        this.timestamp = timestamp;
     }
 
     public Catalogue getCatalogue() {
         return catalogue;
     }
 
-    public void setCatalogue(Catalogue catalogue) {
-        this.catalogue = catalogue;
+    public String getMessage() {
+        return message;
     }
 
-
+    public Date getTimestamp() {
+        return timestamp;
+    }
 }
