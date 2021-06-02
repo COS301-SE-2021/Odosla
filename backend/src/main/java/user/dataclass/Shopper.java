@@ -1,6 +1,8 @@
-package user;
+package user.dataclass;
 
-public class Shopper extends User{
+import user.dataclass.User;
+
+public class Shopper extends User {
     /* Attributes */
     private double rating;
     //private Shop shop;
