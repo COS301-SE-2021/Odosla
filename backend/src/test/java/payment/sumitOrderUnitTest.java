@@ -1,6 +1,7 @@
 package payment;
 
 import payment.dataclass.*;
+import shopping.dataclass.Item;
 import payment.dataclass.Order;
 import payment.dataclass.OrderType;
 import payment.dataclass.OrderStatus;
@@ -58,7 +59,7 @@ public class sumitOrderUnitTest {
         expectedType= OrderType.DELIVERY;
         expectedListOfItems.add(I1);
         expectedListOfItems.add(I2);
-        o=new Order(UUID.randomUUID(), expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        o=new Order(UUID.randomUUID(), expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
     }
 
     @AfterEach

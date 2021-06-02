@@ -1,4 +1,4 @@
-package user;
+package user.dataclass;
 
 import payment.dataclass.GeoPoint;
 import user.dataclass.User;
