@@ -16,7 +16,11 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+<<<<<<< HEAD
         <entry key="$PROJECT_DIR$/.." value="feature_shopping_addToQueue" />
+=======
+        <entry key="$PROJECT_DIR$/.." value="Development" />
+>>>>>>> Shopping_development
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -31,6 +35,10 @@
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+<<<<<<< HEAD
+=======
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+>>>>>>> Shopping_development
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -44,6 +52,22 @@
     <option name="enabled" value="false" />
   </component>
   <component name="RunManager">
+<<<<<<< HEAD
+=======
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+>>>>>>> Shopping_development
     <configuration name="sumitOrderUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
@@ -135,6 +159,7 @@
       <option name="project" value="LOCAL" />
       <updated>1622656387256</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00009" summary="merging completed">
       <created>1622657427238</created>
       <option name="number" value="00009" />
@@ -143,6 +168,9 @@
       <updated>1622657427238</updated>
     </task>
     <option name="localTasksCounter" value="10" />
+=======
+    <option name="localTasksCounter" value="9" />
+>>>>>>> Shopping_development
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
