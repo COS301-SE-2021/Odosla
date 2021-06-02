@@ -1,29 +1,18 @@
 package order;
 
+import order.dataclass.Item;
 import order.requests.*;
 import order.responses.*;
+import java.util.ArrayList;
+
+import java.util.List;
 
 public class PaymentServiceImpl implements PaymentService {
 
     // ORDER IMPLEMENTATION
 
     @Override
-    public AddItemResponse addItem(AddItemRequest request) {
-        return null;
-    }
-
-    @Override
-    public RemoveItemResponse removeItem(RemoveItemRequest request) {
-        return null;
-    }
-
-    @Override
     public SubmitOrderResponse submitOrder() {
-        return null;
-    }
-
-    @Override
-    public ResetOrderResponse resetOrder() {
         return null;
     }
 

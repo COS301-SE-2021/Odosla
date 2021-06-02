@@ -5,13 +5,7 @@ public interface PaymentService {
 
     // ORDER
 
-    AddItemResponse addItem(AddItemRequest request);
-
-    RemoveItemResponse removeItem(RemoveItemRequest request);
-
     SubmitOrderResponse submitOrder();
-
-    ResetOrderResponse resetOrder();
 
     CancelOrderResponse cancelOrder();
 
