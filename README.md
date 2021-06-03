@@ -14,7 +14,7 @@ Odosla uses technology to build a reliable grocery and home essentials delivery 
 
 ### Our Team
 
-##### Adam Isenberg
+##### <b>Adam Isenberg</b>
 I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years. Some of my major interests include renewable energy and
 artificial intelligence.
 
