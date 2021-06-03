@@ -1,6 +1,5 @@
 package shopping;
 
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
-import org.springframework.format.datetime.joda.LocalDateParser;
 import payment.dataclass.GeoPoint;
 import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
@@ -133,6 +131,23 @@ public class GetNextQueuedUnitTest {
         assertEquals(false,response.isResponse());
     }
 
+    @Test
+    @Description("Test for when order and removes previous order from order queue")
+    @DisplayName("Removes and returns correct order")
+    void UnitTest_order_is_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException {
 
+        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
+        s.setOrderQueue(listOfOrders);
+        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(s));
+        GetNextQueuedResponse response=shoppingService.getNextQueued(request);
+        listOfOrders.remove(o2);
 
+        assertNotNull(response);
+        assertEquals(true,response.isResponse());
+        assertEquals(listOfOrders.size(),response.getQueueOfOrders().size());
+        assertEquals("Queue was successfully updated for store",response.getMessage());
+        assertEquals(listOfOrders,response.getQueueOfOrders());
+        assertEquals(o,response.getNewCurrentOrder());
+
+    }
 }

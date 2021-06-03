@@ -129,7 +129,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             List<Order> orderqueue=store.getOrderQueue();
 
             if(orderqueue.size()==0){
-                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty");
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);
                 return response;
             }
 
@@ -146,7 +146,17 @@ public class ShoppingServiceImpl implements ShoppingService {
             orderqueue.remove(correspondingOrder);
             store.setOrderQueue(orderqueue);
 
-            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store");
+            oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
+            correspondingOrder=orderqueue.get(0);
+
+            for (Order o: orderqueue){
+                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
+                    oldestProcssedDate=o.getProcessDate().getTime();
+                    correspondingOrder=o;
+                }
+            }
+
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderqueue,correspondingOrder);
 
         }
         else{
