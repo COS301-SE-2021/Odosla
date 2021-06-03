@@ -18,7 +18,7 @@ Odosla uses technology to build a reliable grocery and home essentials delivery 
 I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years. Some of my major interests include renewable energy and
 artificial intelligence.
 
-<a href="https://github.com/Adam4920" target="blank"><img align="center" src="https://image.flaticon.com/icons/png/512/25/25231.png" alt="adam isenberg" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
+<a href="https://github.com/Adam4920" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="adam isenberg" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
 
 ##### Kelly Morrison
 My exposure varies greatly from desktop applications to web based technologies. I have a lot of experience in Java and enjoy working with front-end technologies and
