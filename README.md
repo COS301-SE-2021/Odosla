@@ -3,7 +3,7 @@
 <h3 align="center"> Project Description </h3>
 <p align="center">Odosla uses technology to build a reliable grocery and home essentials delivery experience. It is a platform that offers an innovative approach to delivering of goods to your door. Odosla aims to approach this objective by providing a dynamic service that incorporates a user intuitive interface which promotes a satisfactory experience, with the integration of payment platforms. Not only can home essentials be bought from respective stores but this software also offers users the ability to get medicine through a pharmacist. It will recommend certain items to Odosla's users based on user personalities. There will be two different user interfaces, one for the users of Odosla and one for the drivers and shoppers of Odosla.</p>
 
-<kbd>
+<kbd width="300">
 <h4 align="center">You can watch our demo 1 here: </h4>
 <div align="center"><a href="https://www.youtube.com/watch?v=0yBnIUX0QAE" target="blank">Demo 1</a></div>
 
@@ -13,10 +13,11 @@
 <h4 align="center"> Our GitHub Project Board:</h4>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">Project Board</a></div>
 
+</kbd>
+
+
 <br>
 <h3 align="center"> Our Team </h3>
-
-</kbd>
 
 <br>
 <h4 align="center"> Adam Isenberg </h4>
