@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
+import payment.repos.OrderRepo;
 import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
@@ -18,16 +19,20 @@ import shopping.responses.GetNextQueuedResponse;
 import shopping.responses.GetStoreByUUIDResponse;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service("shippingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
+    private final OrderRepo orderRepo;
     private final ShoppingServiceImpl shoppingService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ShoppingServiceImpl shoppingService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShoppingServiceImpl shoppingService) {
         this.storeRepo = storeRepo;
+        this.orderRepo = orderRepo;
         this.shoppingService = shoppingService;
     }
 
@@ -104,8 +109,50 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) {
-        return null;
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        GetNextQueuedResponse response=null;
+
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID paramter in request can't be null - can't get next queued");
+            }
+            Store store;
+
+            try {
+                store = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch(Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
+
+            List<Order> orderqueue=store.getOrderQueue();
+
+            if(orderqueue.size()==0){
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty");
+                return response;
+            }
+
+            Date oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
+            Order correspondingOrder=orderqueue.get(0);
+
+            for (Order o: orderqueue){
+                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
+                    oldestProcssedDate=o.getProcessDate().getTime();
+                    correspondingOrder=o;
+                }
+            }
+
+            orderqueue.remove(correspondingOrder);
+            store.setOrderQueue(orderqueue);
+
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store");
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for GetNextQueuedRequest can't be null - can't get next queued");
+        }
+        return response;
     }
 
 

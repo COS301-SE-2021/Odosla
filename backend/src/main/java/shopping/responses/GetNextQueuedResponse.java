@@ -1,23 +1,24 @@
 package shopping.responses;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class GetNextQueuedResponse {
-    private Calendar timeStamp;
+    private Date timeStamp;
     private boolean response;
     private String message;
 
-    public GetNextQueuedResponse(Calendar timeStamp, boolean response, String message) {
+    public GetNextQueuedResponse(Date timeStamp, boolean response, String message) {
         this.timeStamp = timeStamp;
         this.response = response;
         this.message = message;
     }
 
-    public Calendar getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(Calendar timeStamp) {
+    public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
 

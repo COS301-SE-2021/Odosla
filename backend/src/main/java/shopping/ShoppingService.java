@@ -10,7 +10,7 @@ public interface ShoppingService {
 
     AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException;
 
-    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request);
+    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
