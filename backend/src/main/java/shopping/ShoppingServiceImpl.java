@@ -31,6 +31,11 @@ public class ShoppingServiceImpl implements ShoppingService {
         this.shoppingService = shoppingService;
     }
 
+    /*
+    * getCatalogue accepts a GetCatalogueRequest object which is used to get the storeID
+    * in order to find the corresponding Store so that we can access that store's Catalogue
+    * and store it in the new GetCatalogueResponse object.
+    * */
     @Override
     public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetCatalogueResponse response=null;
