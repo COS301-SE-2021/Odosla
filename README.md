@@ -17,7 +17,7 @@
 <h5 align="center"> Adam Isenberg </h5>
 <p align="center">I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years. Some of my major interests include renewable energy and artificial intelligence. </p>
 
-<a href="https://github.com/Adam4920" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="adam isenberg" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
+<a href="https://github.com/Adam4920" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="adam isenberg" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
 
 
 <h5 align="center"> Kelly Morrison </h5>
@@ -25,13 +25,13 @@
 anything to do with designing User Interfaces. I enjoy solving problems and I adapt easily to any changes or problems. I am great team player and enjoy working with
 people to achieve the goal at hand. I always keep the end goal in mind and ensure to meet project’s needs.</p>
 
-<a href="https://github.com/kelly-morr" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="kelly morrison" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/kelly-morrison-0a111a210/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="kelly morrison" height="50" width="50" /></a>
+<a href="https://github.com/kelly-morr" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="kelly morrison" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/kelly-morrison-0a111a210/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="kelly morrison" height="50" width="50" /></a>
 
 
 <h5 align="center"> Seamus Brennan </h5>
 <p align="center">I have been coding for many years and have gained a lot of experience in the process. I am always interested in learning new technologies to help solve problems in the most efficient way possible. I have experience in all the technologies listed and this makes me very confident that our final product will be able to meet the requirements and to exceed them.</p>
 
-<a href="https://github.com/Seamus-Brennan" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/s%C3%A9amus-brennan-b0357318a/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a>
+<a href="https://github.com/Seamus-Brennan" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/s%C3%A9amus-brennan-b0357318a/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a>
 
 
 <h5 align="center"r> Zivan Haripershad </h5>
@@ -39,11 +39,11 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 something I pride myself on. I am adaptable to different situations and always wanting to learn about new technologies as I encounter new projects. My interests include game development, software engineering, and web development. I have lots of experience with multiple high-level languages as well as digital design and
 photoshop.</p>
 
-<a href="https://github.com/ZivanHaripershad" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/zivan-haripershad-4368061b2/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a>
+<a href="https://github.com/ZivanHaripershad" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/zivan-haripershad-4368061b2/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a>
 
 
 <h5 align="center"> Ofentse Mogoatlhe </h5>
 <p align="center">I am a final year BSc IT student, aspiring to be a software engineer as it has always been interesting to me how something can go from being an idea, to becoming a fully-fledged product for the world to use. I have experience in various technologies, and I am always willing to learn ones that I have not yet come across
 to achieve the objective. I am most passionate about using my programming and designing skills to solve real world problems. </p>
 
-<a href="https://github.com/mogoatlhe" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/moeketsi-mogoatlhe-6b7807194/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a>
+<a href="https://github.com/mogoatlhe" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/moeketsi-mogoatlhe-6b7807194/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a>
