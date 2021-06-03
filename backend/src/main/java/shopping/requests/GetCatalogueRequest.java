@@ -11,10 +11,16 @@ public class GetCatalogueRequest {
         this.storeID= storeID;
     }
 
+    /*
+     * setStoreID accepts a UUID object which is used to set the storeID
+     * */
     public void setStoreID(UUID storeID) {
         this.storeID = storeID;
     }
 
+    /*
+     * getStoreID returns the storeID variable
+     * */
     public UUID getStoreID() {
         return storeID;
     }
