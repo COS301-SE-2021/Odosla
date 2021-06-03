@@ -1,7 +1,6 @@
 package payment.responses;
 
 import payment.dataclass.Order;
-import payment.dataclass.OrderStatus;
 
 import java.util.Date;
 import java.util.UUID;
@@ -9,31 +8,32 @@ import java.util.UUID;
 public class SubmitOrderResponse {
 
     /** attributes */
-    private final Order order;
-    private final boolean status;
+    private final boolean success;
     private final Date timestamp;
     private final String message;
+    private final Order order;
 
     /** constructor
      * @param order - order object that haas been created
-     * @param status - status of response object, whether successful or not
+     * @param success - success of response object, whether successful or not
      * @param timestamp - time that the system sends the response object
      * @param message - message returned after response
      */
-    public SubmitOrderResponse(Order order, Boolean status, Date timestamp, String message) {
+    public SubmitOrderResponse(Order order, Boolean success, Date timestamp, String message) {
         this.order = order;
-        this.status = status;
+        this.success = success;
         this.timestamp = timestamp;
         this.message = message;
     }
 
 
+    /** getters */
     public Order getOrder() {
         return order;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public Boolean getsuccess() {
+        return success;
     }
 
     public Date getTimestamp() {

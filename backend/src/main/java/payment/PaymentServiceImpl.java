@@ -14,14 +14,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static java.lang.Math.round;
 
 @Service("paymentServiceImpl")
 public class PaymentServiceImpl implements PaymentService {
@@ -63,10 +60,10 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * Response object (SubmitOrderResponse)
      * {
-     *                "orderID":"8b337604-b0f6-11eb-8529-0242ac130003"
-     *                "orderStatus": "OrderStatus.AWAITING_PAYMENT"
-     *                "timestamp": "Thu Dec 05 09:29:39 UTC 1996"
-     *                "message":"Order successfully submitted"
+     *    success: true // boolean
+     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *    message: "Order created successfully"
+     *    order:  order / orderObject
      *
      * }
      * @return
@@ -184,6 +181,40 @@ public class PaymentServiceImpl implements PaymentService {
         return response;
     }
 
+    /** WHAT TO DO: cancelOrder
+     *
+     * @param //request is used to bring in:
+     *-   private UUID orderID // The order ID for the order that is to be cancelled
+     *
+     *
+     * cancelOrder should: This function allows for an order to be cancelled based on the status of the particular order
+     *   1.Check that the request object and the orderID are not null, if they are an invalidOrderRequest is thrown\
+     *   2. Check if the orderID passed in exists in the DB if it does not, the OrderDoesNotExistException is thrown
+     *   3. Checks the order status of the order
+     *   3.1 if the order status is AWAITING_PAYMENT or PURCHASED the order can easily be cancelled without
+     *       charging the customer.
+     *   3.2 Once an order has reached the COLLECT status the customer will be charged a fee to cancel the order
+     *   3.3 Lastly if the order has changed to collected, either by the driver or the customer the order
+     *      can no longer be cancelled
+     *
+     * Request Object: (CancelOrderRequest)
+     * {
+     *    "orderID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     * }
+     *
+     * Response object: (CancelOrderResponse)
+     * {
+     *    success: true // boolean
+     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *    message: "Cannot cancel an order that has been delivered/collected."
+     *    orders:  //List<Orders>
+     *
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws OrderDoesNotExist
+     */
 
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist {
@@ -220,7 +251,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             if(o.getStatus() == OrderStatus.DELIVERED || o.getStatus() == OrderStatus.CUSTOMER_COLLECTED || o.getStatus() == OrderStatus.DELIVERY_COLLECTED){
                 message = "Cannot cancel an order that has been delivered/collected.";
-                return new CancelOrderResponse(false,orders, message);
+                return new CancelOrderResponse(false,Calendar.getInstance().getTime(), message,orders);
             }
 
             // remove Order from DB.
@@ -234,7 +265,7 @@ public class PaymentServiceImpl implements PaymentService {
                 message = "Order has been successfully cancelled";
             }
 
-            response= new CancelOrderResponse(true, orders, message);
+            response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
         }
         else{
 
