@@ -10,12 +10,12 @@ import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
 import shopping.requests.AddToQueueRequest;
 import shopping.requests.GetCatalogueRequest;
+import shopping.requests.GetNextQueuedRequest;
 import shopping.requests.GetStoreByUUIDRequest;
-import shopping.requests.ScanItemRequest;
 import shopping.responses.AddToQueueResponse;
 import shopping.responses.GetCatalogueResponse;
+import shopping.responses.GetNextQueuedResponse;
 import shopping.responses.GetStoreByUUIDResponse;
-import shopping.responses.ScanItemResponse;
 
 import java.util.Calendar;
 
@@ -104,9 +104,10 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public ScanItemResponse scanItem(ScanItemRequest request) {
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) {
         return null;
     }
+
 
     @Override
     public GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException {
