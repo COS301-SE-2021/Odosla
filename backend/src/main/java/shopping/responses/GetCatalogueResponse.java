@@ -17,14 +17,23 @@ public class GetCatalogueResponse {
         this.timestamp = timestamp;
     }
 
+    /*
+     * getCatalogue returns the catalogue object
+     * */
     public Catalogue getCatalogue() {
         return catalogue;
     }
 
+    /*
+     * getMessage returns the message variable
+     * */
     public String getMessage() {
         return message;
     }
 
+    /*
+     * getTimestamp returns the timestamp object
+     * */
     public Date getTimestamp() {
         return timestamp;
     }
