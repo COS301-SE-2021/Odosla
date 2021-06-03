@@ -31,6 +31,47 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     // ORDER IMPLEMENTATION
+
+    /** What to do
+     *
+     * @param request is used to bring in:
+     *                - userID - the user ID creating the order
+     *                - list of items - items order should hold
+     *                - discount - discount for the order if applicable, if not the discount will be 0
+     *                - storeID - the Store the order is being created with
+     *                - OrderType - whether the order is for collection or delivery
+     *                - DeliveryAddress - this is the address the order will be delivered to, the address of user
+     *                - StoreAddress - address of store the order is created at
+     *
+     * SubmitOrder should do the following:
+     *               - Check the request object is not null and all corresponding parameters else throw InvalidRequestException
+     *               - Add up cost of items and subract total for total order price
+     *               - If order with same ID already exists in database, then return object without success
+     *               - If the order is created successfully, then order gets added to order repository and success
+     *
+     * Request object (SubmitOrderRequest)
+     * {
+     *                "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *                "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
+     *                "discount": "30.50"
+     *                "storeID": "8b337604-b0f6-11eb-8529-0242ac130023"
+     *                "orderType": "OrderType.DELIVERY"
+     *                "DeliveryAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
+     *                "StoreAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
+     * }
+     *
+     * Response object (SubmitOrderResponse)
+     * {
+     *                "orderID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *                "orderStatus": "OrderStatus.AWAITING_PAYMENT"
+     *                "timestamp": "Thu Dec 05 09:29:39 UTC 1996"
+     *                "message":"Order successfully submitted"
+     *
+     * }
+     * @return
+     * @throws PaymentException
+     * @throws InvalidRequestException
+     */
     @Override
     public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException {
 
