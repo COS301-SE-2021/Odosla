@@ -2,7 +2,6 @@ package payment;
 
 import payment.dataclass.*;
 import payment.exceptions.PaymentException;
-import shopping.dataclass.Item;
 import payment.dataclass.Order;
 import payment.dataclass.OrderType;
 import payment.dataclass.OrderStatus;
@@ -10,6 +9,8 @@ import payment.exceptions.InvalidRequestException;
 import payment.repos.OrderRepo;
 import payment.requests.SubmitOrderRequest;
 import payment.responses.SubmitOrderResponse;
+import shopping.dataclass.Item;
+import shopping.dataclass.Catalogue;
 import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.*;
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class sumitOrderUnitTest {
+public class SubmitOrderUnitTest {
     @Mock
     private OrderRepo orderRepo;
 
