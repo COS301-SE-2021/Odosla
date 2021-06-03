@@ -185,6 +185,7 @@ public class SubmitOrderUnitTest {
     @DisplayName("When Order is created correctly")
     void UnitTest_StartOrderConstruction() throws PaymentException {
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
         SubmitOrderResponse response=paymentService.submitOrder(request);
 
         assertNotNull(response);
