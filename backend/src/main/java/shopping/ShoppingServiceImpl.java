@@ -76,16 +76,22 @@ public class ShoppingServiceImpl implements ShoppingService {
             Order order = request.getOrder();
             if (order.getOrderID() == null){
                 invalidMessage = "Invalid request: Missing order ID";
+                invalidReq = true;
             } else if (order.getUserID() == null){
                 invalidMessage = "Invalid request: missing user ID";
+                invalidReq = true;
             } else if (order.getStoreID() == null){
                 invalidMessage = "Invalid request: missing store ID";
+                invalidReq = true;
             } else if (order.getTotalCost() == null){
                 invalidMessage = "Invalid request: missing order cost";
+                invalidReq = true;
             } else if (order.getStatus() != OrderStatus.PURCHASED){
                 invalidMessage = "Invalid request: order has incompatible status";
+                invalidReq = true;
             } else if (order.getItems() == null || order.getItems().isEmpty()){
                 invalidMessage = "Invalid request: item list is empty or null";
+                invalidReq = true;
             }
         }
 
