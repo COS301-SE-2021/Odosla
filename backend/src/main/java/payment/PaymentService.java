@@ -8,10 +8,11 @@ public interface PaymentService {
 
     // ORDER
 
-
-
     SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException;
+
     CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist;
+
+
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
@@ -20,11 +21,11 @@ public interface PaymentService {
 
     ReverseTransactionResponse  reverseTransaction(ReverseTransactionRequest request);
 
+
     // INVOICE
 
     GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request);
 
     GetInvoiceResponse getInvoice(GetInvoiceRequest request);
-
 
 }

@@ -38,30 +38,48 @@ public class PaymentServiceImpl implements PaymentService {
         UUID orderID=UUID.randomUUID();
         AtomicReference<Double> totalCost= new AtomicReference<>((double) 0);
 
+        boolean invalidReq = false;
+        String invalidMessage = "";
+
         if (request!=null) {
 
             /* checking for invalid requests */
             if(request.getUserID()==null){
-                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("UserID cannot be null in request object - order unsuccessfully created.");
             }
+
             else if(request.getListOfItems()==null){
-                throw new InvalidRequestException("List of items cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
             }
+
             else if(request.getDiscount()==null){
-                throw new InvalidRequestException("Discount cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("Discount cannot be null in request object - order unsuccessfully created.");
             }
+
             else if(request.getStoreID()==null){
-                throw new InvalidRequestException("Store ID cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("Store ID cannot be null in request object - order unsuccessfully created.");
             }
+
             else if(request.getOrderType()==null){
-                throw new InvalidRequestException("Order type cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("Order type cannot be null in request object - order unsuccessfully created.");
             }
+
             else if(request.getDeliveryAddress()==null){
-                throw new InvalidRequestException("Delivery Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("Delivery Address GeoPoint cannot be null in request object - order unsuccessfully created.");
             }
+
             else if (request.getStoreAddress()==null){
-                throw new InvalidRequestException("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                invalidReq = true;
+                invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
             }
+
+            if (invalidReq) throw new InvalidRequestException(invalidMessage);
 
 
             double discount=request.getDiscount();
