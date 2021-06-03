@@ -199,7 +199,6 @@ public class SubmitOrderUnitTest {
         assertEquals(request.getStoreAddress(),o.getStoreAddress());
 
         assertEquals("Order successfully created.", response.getMessage());
-        assertEquals(response.getStatus(), o.getStatus());
         UUID orderID=response.getOrderId();
         if (orderID!=null) {
             /* FOllOWING ISN'T FUNCTIONAL YET - but basic idea of how it should be */

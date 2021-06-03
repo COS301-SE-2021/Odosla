@@ -6,30 +6,32 @@ import java.util.Date;
 import java.util.UUID;
 
 public class SubmitOrderResponse {
+
     /** attributes */
     private final UUID orderId;
-    private final OrderStatus status;
+    private final boolean status;
     private final Date timestamp;
     private final String message;
 
-    /** CONSTRUCTOR
+    /** constructor
      * @param orderId - unique order identifier
-     * @param status - status of order throughout it's lifetime
+     * @param status - status of response object, whether successful or not
      * @param timestamp - time that the system sends the response object
      * @param message - message returned after response
      */
-    public SubmitOrderResponse(UUID orderId, OrderStatus status, Date timestamp, String message) {
+    public SubmitOrderResponse(UUID orderId, Boolean status, Date timestamp, String message) {
         this.orderId = orderId;
         this.status = status;
         this.timestamp = timestamp;
         this.message = message;
     }
 
+
     public UUID getOrderId() {
         return orderId;
     }
 
-    public OrderStatus getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 

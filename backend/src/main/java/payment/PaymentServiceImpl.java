@@ -4,7 +4,6 @@ import shopping.dataclass.Item;
 import payment.dataclass.*;
 import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
-import payment.mock.CancelOrdersMock;
 import payment.repos.OrderRepo;
 import payment.requests.*;
 import payment.responses.*;
@@ -28,9 +27,6 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentServiceImpl(OrderRepo orderRepo) {
         this.orderRepo = orderRepo;
     }
-
-
-    // ORDER IMPLEMENTATION
 
     /** What to do
      *
@@ -165,7 +161,7 @@ public class PaymentServiceImpl implements PaymentService {
             if (o != null) {
                 orderRepo.save(o);
                 System.out.println("Order has been created");
-                response = new SubmitOrderResponse(orderID, OrderStatus.AWAITING_PAYMENT,Calendar.getInstance().getTime(), "Order successfully created.");
+                response = new SubmitOrderResponse(orderID, true,Calendar.getInstance().getTime(), "Order successfully created.");
             }
 
         }else{
@@ -182,57 +178,54 @@ public class PaymentServiceImpl implements PaymentService {
         double cancelationFee = 0;
         String message;
 
-        /*
-         *
+        /**
          * AWAITING_PAYMENT - cancel
          * PURCHASED - cancel
          * COLLECT - charge
          * DELIVERY_COLLECTED
          * CUSTOMER_COLLECTED
          * DELIVERED
-         *
-         * */
+         */
 
-        if(req == null){
+        if(req != null){
+
+            if(req.getOrderID()==null){
+                throw new InvalidRequestException("orderID in request object can't be null - couldn't cancel order ");
+            }
+            Order o=null;
+            //find the order by id
+            try {
+                o=orderRepo.findById(req.getOrderID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new OrderDoesNotExist("Order doesn't exist in database - can't cancel order");
+            }
+
+            List<Order> orders=new ArrayList<>();
+            orders=orderRepo.findAll();
+
+            if(o.getStatus() == OrderStatus.DELIVERED || o.getStatus() == OrderStatus.CUSTOMER_COLLECTED || o.getStatus() == OrderStatus.DELIVERY_COLLECTED){
+                message = "Cannot cancel an order that has been delivered/collected.";
+                return new CancelOrderResponse(false,orders, message);
+            }
+
+            // remove Order from DB.
+            orders.remove(o);
+
+            // refund customers ordertotal - cancellation fee
+            if(o.getStatus() != OrderStatus.AWAITING_PAYMENT || o.getStatus() != OrderStatus.PURCHASED){
+                cancelationFee = 1000;
+                message = "Order successfully cancelled. Customer has been charged " + cancelationFee;
+            }else {
+                message = "Order has been successfully cancelled";
+            }
+
+            response= new CancelOrderResponse(true, orders, message);
+        }
+        else{
+
             throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
         }
-
-        if(req.getOrderID()==null){
-            throw new InvalidRequestException("orderID in request object can't be null - couldn't cancel order ");
-        }
-        Order o=null;
-        //find the order by id
-        try {
-           o=orderRepo.findById(req.getOrderID()).orElse(null);
-        }
-        catch (Exception e){
-            throw new OrderDoesNotExist("Order doesn't exist in database - can't cancel order");
-        }
-        List<Order> orders=new ArrayList<>();
-        orders=orderRepo.findAll();
-
-
-        if(o.getStatus() == OrderStatus.DELIVERED ||
-                o.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
-                o.getStatus() == OrderStatus.DELIVERY_COLLECTED){
-            message = "Cannot cancel an order that has been delivered/collected.";
-            return new CancelOrderResponse(false,orders, message);
-        }
-
-        if(o.getStatus() != OrderStatus.AWAITING_PAYMENT ||
-                o.getStatus() != OrderStatus.PURCHASED){
-            cancelationFee = 1000;
-            message = "Order successfully cancelled. Customer has been charged " + cancelationFee;
-        }else
-            message = "Order has been successfully cancelled";
-
-        // refund customers ordertotal - cancellation fee
-
-
-        // remove Order from DB.
-        orders.remove(o);
-
-        response= new CancelOrderResponse(true, orders, message);
         return response;
     }
 
