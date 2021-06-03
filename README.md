@@ -3,14 +3,14 @@
 ### Project Description
 Odosla uses technology to build a reliable grocery and home essentials delivery experience. It is a platform that offers an innovative approach to delivering of goods to your door. Odosla aims to approach this objective by providing a dynamic service that incorporates a user intuitive interface which promotes a satisfactory experience, with the integration of payment platforms. Not only can home essentials be bought from respective stores but this software also offers users the ability to get medicine through a pharmacist. It will recommend certain items to Odosla's users based on user personalities. There will be two different user interfaces, one for the users of Odosla and one for the drivers and shoppers of Odosla.
 
-You can watch our demo 1 here:
-#### [SuperLeague-Demo1](https://www.youtube.com/watch?v=0yBnIUX0QAE)
+#### You can watch our demo 1 here:
+* [Super League Demo1](https://www.youtube.com/watch?v=0yBnIUX0QAE)
 
-Our SRS document:
-#### [SRS Document](https://www.overleaf.com/project/60b112f6f641dc5b797018ed)
+#### Our SRS document:
+* [SRS Document](https://www.overleaf.com/project/60b112f6f641dc5b797018ed)
 
-Our GitHub Project Board:
-#### [GitHub Project Board](https://github.com/COS301-SE-2021/Odosla/projects/2)
+#### Our GitHub Project Board:
+* [GitHub Project Board](https://github.com/COS301-SE-2021/Odosla/projects/2)
 
 ### Our Team
 
@@ -18,7 +18,7 @@ Our GitHub Project Board:
 I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years. Some of my major interests include renewable energy and
 artificial intelligence.
 
-[GitHub Profile](https://github.com/Adam4920) | [LinkedIn Profile](https://www.linkedin.com/in/adam-isenberg/) 
+[GitHub Profile](https://github.com/Adam4920) |<a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
 
 ##### Kelly Morrison
 My exposure varies greatly from desktop applications to web based technologies. I have a lot of experience in Java and enjoy working with front-end technologies and
@@ -43,4 +43,5 @@ photoshop.
 I am a final year BSc IT student, aspiring to be a software engineer as it has always been interesting to me how something can go from being an idea, to becoming a
 fully-fledged product for the world to use. I have experience in various technologies, and I am always willing to learn ones that I have not yet come across
 to achieve the objective. I am most passionate about using my programming and designing skills to solve real world problems.
+
 [GitHub Profile](https://github.com/mogoatlhe) | [LinkedIn Profile](https://www.linkedin.com/in/moeketsi-mogoatlhe-6b7807194/)
