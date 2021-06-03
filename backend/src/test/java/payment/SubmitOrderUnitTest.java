@@ -27,9 +27,10 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
-
+/** Testing use cases with JUnit testing and Mockito */
 @ExtendWith(MockitoExtension.class)
 public class SubmitOrderUnitTest {
+
     @Mock
     private OrderRepo orderRepo;
 
@@ -61,7 +62,7 @@ public class SubmitOrderUnitTest {
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         expectedMessage="Order successfully created.";
         expectedDiscount=0.0;
-        totalC=66.97;
+        totalC=81.96;
         expectedStatus = OrderStatus.AWAITING_PAYMENT;
         expectedType= OrderType.DELIVERY;
         expectedListOfItems.add(I1);
@@ -77,6 +78,7 @@ public class SubmitOrderUnitTest {
         orderRepo.deleteAll();
     }
 
+    /** InvalidRequest tests */
     @Test
     @Description("Tests for whether an order is submited with a null request object- exception should be thrown")
     @DisplayName("When request object is not specificed")
@@ -154,11 +156,14 @@ public class SubmitOrderUnitTest {
         assertEquals("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
 
+    /** Checking response object is created correctly */
     @Test
     @Description("Tests whether the SubmitOrderRequest object was created correctly")
     @DisplayName("SubmitOrderRequest correctly constructed")
     void UnitTest_SubmitOrderRequestConstruction() {
+
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+
         assertNotNull(request);
         assertEquals(expectedU1,request.getUserID());
         assertEquals(expectedListOfItems,request.getListOfItems());
@@ -169,25 +174,13 @@ public class SubmitOrderUnitTest {
         assertEquals(storeAddress,request.getStoreAddress());
     }
 
-    /* need to still implement this */
-    @Test
-    @Description("When Order with same ID already exists in database")
-    @DisplayName("When Order is alredy in database")
-    void UnitTest_OrderID_alreadyInDatabase() throws PaymentException {
-        when(orderRepo.findById(Mockito.any())).thenReturn(null);
-        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
-        Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.submitOrder(request));
-        assertEquals("Order is already in the database with same ID",thrown.getMessage());
-    }
-
     @Test
     @Description("This test is to check order is created correctly- should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
     void UnitTest_StartOrderConstruction() throws PaymentException {
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        when(orderRepo.findById(Mockito.any())).thenReturn(null);
         SubmitOrderResponse response=paymentService.submitOrder(request);
-
         assertNotNull(response);
         assertNotNull(o);
         assertEquals(request.getUserID(),o.getUserID());
@@ -199,25 +192,16 @@ public class SubmitOrderUnitTest {
         assertEquals(request.getStoreAddress(),o.getStoreAddress());
 
         assertEquals("Order successfully created.", response.getMessage());
-        UUID orderID=response.getOrderId();
-        if (orderID!=null) {
-            /* FOllOWING ISN'T FUNCTIONAL YET - but basic idea of how it should be */
-             List<Order> orderList= orderRepo.findAll();
-             for (Order order:orderList) {
-                 if(order.getOrderID()==response.getOrderId()) {
-                     System.out.println("Checking order in database to what it should be");
+        Order order=response.getOrder();
+        if (order!=null) {
                      assertEquals(o.getTotalCost(), order.getTotalCost());
-                     assertEquals(o.getOrderID(), order.getOrderID());
                      assertEquals(o.getDiscount(), order.getDiscount());
                      assertEquals(o.getItems(), order.getItems());
                      assertEquals(o.getStatus(), order.getStatus());
-                     assertEquals(o.getCreateDate(), order.getCreateDate());
                      assertEquals(o.getDeliveryAddress(), order.getDeliveryAddress());
                      assertEquals(o.getStoreAddress(), order.getStoreAddress());
-                     assertEquals(o.getShopperID(), order.getShopperID());
+                     assertEquals(null, order.getShopperID());
                      assertEquals(o.getType(), order.getType());
-                 }
-             }
         }
     }
 }

@@ -12,11 +12,16 @@ import payment.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static java.lang.Math.round;
 
 @Service("paymentServiceImpl")
 public class PaymentServiceImpl implements PaymentService {
@@ -146,22 +151,31 @@ public class PaymentServiceImpl implements PaymentService {
             Boolean requiresPharmacy = false;
 
             OrderType orderType = request.getOrderType();
-            double totalC = Double.parseDouble(totalCost.toString());
+
+            BigDecimal bd = BigDecimal.valueOf(Double.parseDouble(totalCost.toString()));
+            bd = bd.setScale(2, RoundingMode.HALF_UP);
+            double totalC=bd.doubleValue();
+
             Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
+
             Order alreadyExists=null;
-            try{
-                alreadyExists=orderRepo.findById(orderID).orElse(null);
-            }
-            catch (Exception e){}
+            while (true) {
+                try {
+                    alreadyExists = orderRepo.findById(orderID).orElse(null);
+                }
+                catch (Exception e){}
 
-            if(alreadyExists==null){
-                throw new PaymentException("Order is already in the database with same ID");
+                if(alreadyExists != null){
+                    orderID=UUID.randomUUID();
+                }
+                else{
+                    break;
+                }
             }
-
             if (o != null) {
                 orderRepo.save(o);
                 System.out.println("Order has been created");
-                response = new SubmitOrderResponse(orderID, true,Calendar.getInstance().getTime(), "Order successfully created.");
+                response = new SubmitOrderResponse(o, true,Calendar.getInstance().getTime(), "Order successfully created.");
             }
 
         }else{
