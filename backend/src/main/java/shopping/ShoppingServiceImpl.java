@@ -31,11 +31,35 @@ public class ShoppingServiceImpl implements ShoppingService {
         this.shoppingService = shoppingService;
     }
 
-    /*
-    * getCatalogue accepts a GetCatalogueRequest object which is used to get the storeID
-    * in order to find the corresponding Store so that we can access that store's Catalogue
-    * and store it in the new GetCatalogueResponse object.
-    * */
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *
+     * getCatalogue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID is not null, else throw an InvalidRequestException
+     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               4. Use the found Store object's getters to initialize the response object's constructor.
+     *               5. Return the response object.
+     *
+     * Request Object (GetCatalogueRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * Response Object (GetCatalogueResponse):
+     * {
+     *                "catalogue":storeEntity.getStock()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Catalogue entity from store was correctly returned"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
     @Override
     public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetCatalogueResponse response=null;
