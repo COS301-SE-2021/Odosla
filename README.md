@@ -14,7 +14,7 @@
 
 <h4 align="center"> Our GitHub Project Board:</h4>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">Project Board</a></div>
-
+<br>
 </kbd>
 </div>
 
