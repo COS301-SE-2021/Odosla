@@ -1,13 +1,17 @@
 package shopping;
+import shopping.exceptions.InvalidRequestException;
+import shopping.exceptions.StoreDoesNotExistException;
 import shopping.requests.*;
 import shopping.responses.*;
 
 public interface ShoppingService {
 
-    GetStockListResponse getStockList();
+    GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    AssignOrderResponse assignOrder(AssignOrderRequest request);
+    AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException;
 
     GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request);
+
+    GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
 }
