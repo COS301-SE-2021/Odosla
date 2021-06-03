@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class submitOrderUnitTest {
+public class SubmitOrderUnitTest {
     @Mock
     private OrderRepo orderRepo;
 
