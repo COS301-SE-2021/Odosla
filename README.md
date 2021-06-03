@@ -18,14 +18,14 @@ Odosla uses technology to build a reliable grocery and home essentials delivery 
 I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years. Some of my major interests include renewable energy and
 artificial intelligence.
 
-[GitHub Profile](https://github.com/Adam4920) |<a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
+<a href="https://github.com/Adam4920" target="blank"><img align="center" src="https://image.flaticon.com/icons/png/512/25/25231.png" alt="adam isenberg" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a>
 
 ##### Kelly Morrison
 My exposure varies greatly from desktop applications to web based technologies. I have a lot of experience in Java and enjoy working with front-end technologies and
 anything to do with designing User Interfaces. I enjoy solving problems and I adapt easily to any changes or problems. I am great team player and enjoy working with
 people to achieve the goal at hand. I always keep the end goal in mind and ensure to meet project’s needs.
 
-[GitHub Profile](https://github.com/kelly-morr) | [LinkedIn Profile](https://www.linkedin.com/in/kelly-morrison-0a111a210/)
+[GitHub Profile](https://github.com/kelly-morr) | <a href=https://www.linkedin.com/in/kelly-morrison-0a111a210/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="kelly morrison" height="50" width="50" /></a>
 
 ##### Seamus Brennan
 I have been coding for many years and have gained a lot of experience in the process. I am always interested in learning new technologies to help solve problems in the most efficient way possible. I have experience in all the technologies listed and this makes me very confident that our final product will be able to meet the requirements and to exceed them.
