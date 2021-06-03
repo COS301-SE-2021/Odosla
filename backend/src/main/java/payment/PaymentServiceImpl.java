@@ -116,8 +116,43 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
+    /** WHAT TO DO: cancelOrder
+     *
+     * @param //request is used to bring in:
+     *-   private UUID orderID // The order ID for the order that is to be cancelled
+     *
+     *
+     * cancelOrder should: This function allows for an order to be cancelled based on the status of the particular order
+     *   1.Check that the request object and the orderID are not null, if they are an invalidOrderRequest is thrown\
+     *   2. Check if the orderID passed in exists in the DB if it does not, the OrderDoesNotExistException is thrown
+     *   3. Checks the order status of the order
+     *   3.1 if the order status is AWAITING_PAYMENT or PURCHASED the order can easily be cancelled without
+     *       charging the customer.
+     *   3.2 Once an order has reached the COLLECT status the customer will be charged a fee to cancel the order
+     *   3.3 Lastly if the order has changed to collected, either by the driver or the customer the order
+     *      can no longer be cancelled
+     *
+     * Request Object: (CancelOrderRequest)
+     * {
+     *    "orderID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     * }
+     *
+     * Response object: (CancelOrderResponse)
+     * {
+     *    success: true // boolean
+     *    message: "Cannot cancel an order that has been delivered/collected."
+     *    orders:  //List<Orders>
+     *
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws OrderDoesNotExist
+     */
+
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist {
+
         CancelOrderResponse response=null;
         Order order = null;
         double cancelationFee = 0;
