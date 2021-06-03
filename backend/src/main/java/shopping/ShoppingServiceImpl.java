@@ -4,30 +4,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
+import payment.repos.OrderRepo;
 import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
 import shopping.requests.AddToQueueRequest;
 import shopping.requests.GetCatalogueRequest;
+import shopping.requests.GetNextQueuedRequest;
 import shopping.requests.GetStoreByUUIDRequest;
-import shopping.requests.ScanItemRequest;
 import shopping.responses.AddToQueueResponse;
 import shopping.responses.GetCatalogueResponse;
+import shopping.responses.GetNextQueuedResponse;
 import shopping.responses.GetStoreByUUIDResponse;
-import shopping.responses.ScanItemResponse;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service("shippingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
+    private final OrderRepo orderRepo;
     private final ShoppingServiceImpl shoppingService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ShoppingServiceImpl shoppingService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShoppingServiceImpl shoppingService) {
         this.storeRepo = storeRepo;
+        this.orderRepo = orderRepo;
         this.shoppingService = shoppingService;
     }
 
@@ -104,9 +109,62 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public ScanItemResponse scanItem(ScanItemRequest request) {
-        return null;
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        GetNextQueuedResponse response=null;
+
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID paramter in request can't be null - can't get next queued");
+            }
+            Store store;
+
+            try {
+                store = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch(Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
+
+            List<Order> orderqueue=store.getOrderQueue();
+
+            if(orderqueue.size()==0){
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);
+                return response;
+            }
+
+            Date oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
+            Order correspondingOrder=orderqueue.get(0);
+
+            for (Order o: orderqueue){
+                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
+                    oldestProcssedDate=o.getProcessDate().getTime();
+                    correspondingOrder=o;
+                }
+            }
+
+            orderqueue.remove(correspondingOrder);
+            store.setOrderQueue(orderqueue);
+
+            oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
+            correspondingOrder=orderqueue.get(0);
+
+            for (Order o: orderqueue){
+                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
+                    oldestProcssedDate=o.getProcessDate().getTime();
+                    correspondingOrder=o;
+                }
+            }
+
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderqueue,correspondingOrder);
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for GetNextQueuedRequest can't be null - can't get next queued");
+        }
+        return response;
     }
+
 
     @Override
     public GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException {
