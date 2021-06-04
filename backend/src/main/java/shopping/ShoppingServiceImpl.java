@@ -105,16 +105,15 @@ public class ShoppingServiceImpl implements ShoppingService {
      *                "Order": {"orderID":"903420394i", "storeID":"d09832893", "items":....., ...}
      * }
      *
-     * Response Object (GetCatalogueResponse):
+     * Response Object (AddToQueueResponse):
      * {
      *                "success":true
      *                "timestamp":"2021-01-05T11:50:55"
-     *                "message":"Order was correctly added to queue"
+     *                "message":"Order successfuly created"
      * }
      *
      * @return
      * @throws InvalidRequestException
-     * @throws StoreCloseException
      * */
 
     @Override
@@ -169,6 +168,35 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         return response;
     }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private storeID
+     *
+     * getNextQueued should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the store exists, else throw a StoreDoesNotExistException
+     *               4. Find the next order to be processed in the queue
+     *               5. Return the response object.
+     *
+     * Request Object (GetNextQueuedRequest):
+     * {
+     *                "storeID": {"d09832893"}
+     * }
+     *
+     * Response Object (GetNextQueuedResponse):
+     * {
+     *                "success":true
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Order was correctly added to queue"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
 
     @Override
     public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException {
@@ -227,6 +255,33 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private storeID
+     *
+     * getStoreByUUID should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the store exists, else throw a StoreDoesNotExistException
+     *               4. Return the response object
+     *
+     * Request Object (GetStoreByUUIDRequest):
+     * {
+     *                "storeID": {"d09832893"}
+     * }
+     *
+     * Response Object (GetStoreByUUIDResponse):
+     * {
+     *                "storeEntity": {"storeID":"903420394i", "storeBrand":"Woolworths Food", "maxShoppers":....., ...}
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Store entity with corresponding id was returned"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
 
     @Override
     public GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException {
