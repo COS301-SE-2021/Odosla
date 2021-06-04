@@ -15,6 +15,7 @@ import shopping.dataclass.*;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
+import shopping.requests.AddToQueueRequest;
 import shopping.requests.GetStoreByUUIDRequest;
 import shopping.responses.GetStoreByUUIDResponse;
 
@@ -94,6 +95,18 @@ public class GetStoreByUUIDUnitTest {
         assertNotNull(response);
         assertEquals(s,response.getStore());
         assertEquals("Store entity with corresponding id was returned",response.getMessage());
+    }
+
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the GetStoreByUUID request object was created correctly")
+    @DisplayName("GetStoreByUUIDRequest correctly constructed")
+    void UnitTest_GetStoreByUUIDRequestConstruction() {
+
+        GetStoreByUUIDRequest request = new GetStoreByUUIDRequest(storeUUID1);
+
+        assertNotNull(request);
+        assertEquals(storeUUID1, request.getStoreID());
     }
 
 }
