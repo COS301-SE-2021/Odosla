@@ -76,3 +76,6 @@ to achieve the objective. I am most passionate about using my programming and de
 
 <div align="center"><a href="https://github.com/mogoatlhe" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/moeketsi-mogoatlhe-6b7807194/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a></div>
 <hr>
+
+<h3 align="center" text-decoration="underline"> GitHub Structure</h3>
+
