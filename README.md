@@ -101,4 +101,4 @@ to achieve the objective. I am most passionate about using my programming and de
 </ul>
 <br>
    
-https://img.shields.io/coveralls/github/ZivanHaripershad/Odosla?style=plastic
+<img alt="Coveralls" src="https://img.shields.io/coveralls/github/ZivanHaripershad/Odosla?style=plastic">
