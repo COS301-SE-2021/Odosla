@@ -1,5 +1,6 @@
 package payment;
 
+import shopping.ShoppingService;
 import shopping.dataclass.Item;
 import payment.dataclass.*;
 import payment.dataclass.Order;
@@ -11,6 +12,10 @@ import payment.dataclass.GeoPoint;
 import payment.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import shopping.exceptions.StoreClosedException;
+import shopping.exceptions.StoreDoesNotExistException;
+import shopping.requests.GetStoreByUUIDRequest;
+import shopping.responses.GetStoreByUUIDResponse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -24,10 +29,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderRepo orderRepo;
+    private final ShoppingService shoppingService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo) {
+    public PaymentServiceImpl(OrderRepo orderRepo, ShoppingService shoppingService) {
         this.orderRepo = orderRepo;
+        this.shoppingService = shoppingService;
     }
 
     /** What to do
@@ -71,7 +78,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws InvalidRequestException
      */
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -170,9 +177,18 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
             if (o != null) {
-                orderRepo.save(o);
-                System.out.println("Order has been created");
-                response = new SubmitOrderResponse(o, true,Calendar.getInstance().getTime(), "Order successfully created.");
+                GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(storeID);
+                GetStoreByUUIDResponse shop=shoppingService.getStoreByUUID(getShopRequest);
+                if (shop != null) {
+                    if(shop.getStore().getOpen()==true) {
+                        orderRepo.save(o);
+                        System.out.println("Order has been created");
+                        response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                    }
+                    else{
+                        throw new StoreClosedException("Store is currently closed - could not create order");
+                    }
+                }
             }
 
         }else{

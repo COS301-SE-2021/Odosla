@@ -68,7 +68,7 @@ public class GetNextQueuedUnitTest {
         listOfItems.add(i1);
         listOfItems.add(i2);
         c=new Catalogue(listOfItems);
-        s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4);
+        s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4,true);
         Date d1=new Date(2021,06,1,14,30);
         Date d2=new Date(2021,06,1,14,23);
         totalC=133.99;

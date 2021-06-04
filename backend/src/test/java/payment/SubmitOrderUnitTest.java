@@ -9,6 +9,7 @@ import payment.exceptions.InvalidRequestException;
 import payment.repos.OrderRepo;
 import payment.requests.SubmitOrderRequest;
 import payment.responses.SubmitOrderResponse;
+import shopping.ShoppingService;
 import shopping.dataclass.Item;
 import shopping.dataclass.Catalogue;
 import org.aspectj.weaver.ast.Or;
@@ -21,11 +22,18 @@ import payment.*;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
+import shopping.dataclass.Store;
+import shopping.exceptions.StoreClosedException;
+import shopping.exceptions.StoreDoesNotExistException;
+import shopping.repos.StoreRepo;
+import shopping.requests.GetStoreByUUIDRequest;
+import shopping.responses.GetStoreByUUIDResponse;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 /** Testing use cases with JUnit testing and Mockito */
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +41,12 @@ public class SubmitOrderUnitTest {
 
     @Mock
     private OrderRepo orderRepo;
+
+    @Mock
+    private StoreRepo storeRepo;
+
+    @Mock(name = "ShoppingServiceImpl")
+    private ShoppingService shoppingService;
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
@@ -55,6 +69,8 @@ public class SubmitOrderUnitTest {
     GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworthes, Hillcrest Boulevard");
     List<Item> expectedListOfItems=new ArrayList<>();
     List<Order> listOfOrders=new ArrayList<>();
+    Store expectedStore;
+    Catalogue c;
 
     @BeforeEach
     void setUp() {
@@ -71,6 +87,8 @@ public class SubmitOrderUnitTest {
         o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
         listOfOrders.add(o2);
+        c=new Catalogue(expectedListOfItems);
+        expectedStore=new Store(expectedS1,"Woolworthes",c,3,listOfOrders,null,4,true);
     }
 
     @AfterEach
@@ -156,7 +174,7 @@ public class SubmitOrderUnitTest {
         assertEquals("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
 
-    /** Checking response object is created correctly */
+    /** Checking request object is created correctly */
     @Test
     @Description("Tests whether the SubmitOrderRequest object was created correctly")
     @DisplayName("SubmitOrderRequest correctly constructed")
@@ -175,9 +193,53 @@ public class SubmitOrderUnitTest {
     }
 
     @Test
+    @Description("This test is to check if the invalid request exception for finding store by UUID - throw Invalid exception from shoppingService")
+    @DisplayName("Exception for Store doesn't exist")
+    void UnitTest_IvalidRequest_ShoppingService() throws shopping.exceptions.InvalidRequestException, StoreDoesNotExistException {
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        when(shoppingService.getStoreByUUID(Mockito.any())).thenThrow(new shopping.exceptions.InvalidRequestException("Invalid submit order request received - order unsuccessfully created."));
+        Throwable thrown = Assertions.assertThrows(shopping.exceptions.InvalidRequestException.class, ()-> paymentService.submitOrder(request));
+        assertEquals("Invalid submit order request received - order unsuccessfully created.",thrown.getMessage());
+    }
+    /** Checking if Store Does not exist exception */
+    @Test
+    @Description("This test is to check if the store with ID does not exist - throw Store Does Not exist exception")
+    @DisplayName("Exception for Store doesn't exist")
+    void UnitTest_StoreDoesNotExist() throws shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, PaymentException, StoreClosedException {
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        GetStoreByUUIDRequest storeRequest=new GetStoreByUUIDRequest(expectedS1);
+        when(shoppingService.getStoreByUUID(Mockito.any())).thenThrow(new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity"));
+        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> paymentService.submitOrder(request));
+        assertEquals("Store with ID does not exist in repository - could not get Store entity",thrown.getMessage());
+
+    }
+
+    @Test
+    @Description("This test is to check if the store with ID is returned but closed - throw Store Closed exception")
+    @DisplayName("Exception for Store is closed")
+    void UnitTest_StoreIsClosed() throws shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, PaymentException, StoreClosedException {
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        GetStoreByUUIDRequest storeRequest=new GetStoreByUUIDRequest(expectedS1);
+        expectedStore.setOpen(false);
+        GetStoreByUUIDResponse storeResponse=new GetStoreByUUIDResponse(expectedStore,Calendar.getInstance().getTime(), "Store successfully returned");
+        when(shoppingService.getStoreByUUID(Mockito.any())).thenReturn(storeResponse);
+        Throwable thrown = Assertions.assertThrows(StoreClosedException.class, ()-> paymentService.submitOrder(request));
+        assertEquals("Store is currently closed - could not create order",thrown.getMessage());
+
+
+    }
+
+
+
+
+    /** Checking response object is created correctly */
+    @Test
     @Description("This test is to check order is created correctly- should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
-    void UnitTest_StartOrderConstruction() throws PaymentException {
+    void UnitTest_StartOrderConstruction() throws PaymentException, StoreClosedException, shopping.exceptions.InvalidRequestException, StoreDoesNotExistException {
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
         SubmitOrderResponse response=paymentService.submitOrder(request);

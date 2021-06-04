@@ -51,7 +51,7 @@ public class AddToQueueUnitTest {
         listOfItems.add(i1);
         listOfItems.add(i2);
         cat = new Catalogue(listOfItems);
-        store = new Store(uuid,"Checkers",cat,2,null,null,4);
+        store = new Store(uuid,"Checkers",cat,2,null,null,4,true);
         order = new Order(uuid, uuid, uuid, uuid, Calendar.getInstance(), Calendar.getInstance(), 30.0, OrderType.DELIVERY, OrderStatus.PURCHASED, listOfItems, 0.0, null, null, false);
     }
     @AfterEach
