@@ -78,4 +78,16 @@ to achieve the objective. I am most passionate about using my programming and de
 <hr>
 
 <h3 align="center" text-decoration="underline"> GitHub Structure</h3>
+<p align="center">Monorepo</p>
 
+<h3 align="center" text-decoration="underline"> Branching Strategy</h3>
+<li>
+  <ol>master
+    <ol>Developmemt
+      <ol>Shopping_development
+       <ol>feature_shopping_getCatalogue</ol>
+     </ol>
+   </ol>
+   </ol>
+ </ol>
+</li>
