@@ -82,7 +82,7 @@ to achieve the objective. I am most passionate about using my programming and de
 
 <br>
 <br>
-<h3 align="center" text-decoration="underline"> Branching Strategy</h3>
+<h3 align="left" text-decoration="underline"> Branching Strategy</h3>
 
 <ul>
   <li>master
