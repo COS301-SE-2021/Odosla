@@ -110,6 +110,18 @@ public class AddToQueueUnitTest {
         assertEquals("Invalid request: missing order cost", thrown.getMessage());
     }
 
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the AddToQueue request object was created correctly")
+    @DisplayName("AddToQueue correctly constructed")
+    void UnitTest_AddToQueueRequestConstruction() {
+
+        AddToQueueRequest request = new AddToQueueRequest(order);
+
+        assertNotNull(request);
+        assertEquals(order, request.getOrder());
+    }
+
     @Test
     @Description("Test for checking if correct status value was passed in the order object when calling AddToQueue - exception should be thrown")
     @DisplayName("Incorrect OrderStatus object value in passed in request")
