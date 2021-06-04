@@ -81,13 +81,18 @@ to achieve the objective. I am most passionate about using my programming and de
 <p align="center">Monorepo</p>
 
 <h3 align="center" text-decoration="underline"> Branching Strategy</h3>
-<li>
-  <ol>master
-    <ol>Developmemt
-      <ol>Shopping_development
-       <ol>feature_shopping_getCatalogue</ol>
-     </ol>
-   </ol>
-   </ol>
- </ol>
-</li>
+<ul>
+  <li>master
+   <ul>
+    <li>Developmemt
+      <ul>
+       <li>Shopping_development
+        <ul>
+         <li>feature_shopping_getCatalogue</li>
+         </ul>
+       </li>
+     </ul>
+   </li
+  </ul>
+ </li>
+</ul>
