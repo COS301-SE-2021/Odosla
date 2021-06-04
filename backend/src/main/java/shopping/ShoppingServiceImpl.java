@@ -89,6 +89,34 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private order
+     *
+     * addToQueue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Add the order to the correct stores queue
+     *               4. Return the response object.
+     *
+     * Request Object (AddToQueueRequest):
+     * {
+     *                "Order": {"orderID":"903420394i", "storeID":"d09832893", "items":....., ...}
+     * }
+     *
+     * Response Object (GetCatalogueResponse):
+     * {
+     *                "success":true
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Order was correctly added to queue"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreCloseException
+     * */
+
     @Override
     public AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException {
 
