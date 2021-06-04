@@ -3,6 +3,8 @@
 <h3 align="center"> Project Description </h3>
 <p align="center">Odosla uses technology to build a reliable grocery and home essentials delivery experience. It is a platform that offers an innovative approach to delivering of goods to your door. Odosla aims to approach this objective by providing a dynamic service that incorporates a user intuitive interface which promotes a satisfactory experience, with the integration of payment platforms. Not only can home essentials be bought from respective stores but this software also offers users the ability to get medicine through a pharmacist. It will recommend certain items to Odosla's users based on user personalities. There will be two different user interfaces, one for the users of Odosla and one for the drivers and shoppers of Odosla.</p>
 <br>
+
+<hr>
 <div align="center">
 <kbd>
  
@@ -17,12 +19,14 @@
 <br>
 </kbd>
 </div>
+<hr>
+
 
 <br>
 <h3 align="center"> Our Team </h3>
 <br>
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQGAUCOKb9PhDA/profile-displayphoto-shrink_800_800/0/1618571932130?e=1628121600&v=beta&t=sDbJVH6XRwmu504sdqUijfi2ZXcnscajWpLVfEFAjTo" height="150" border="solid" border-radius="10px"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5603AQGAUCOKb9PhDA/profile-displayphoto-shrink_800_800/0/1618571932130?e=1628121600&v=beta&t=sDbJVH6XRwmu504sdqUijfi2ZXcnscajWpLVfEFAjTo" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Adam Isenberg </h4>
 <p align="center">I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years. Some of my major interests include renewable energy and artificial intelligence. </p>
