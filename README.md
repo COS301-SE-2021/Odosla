@@ -101,4 +101,4 @@ to achieve the objective. I am most passionate about using my programming and de
 </ul>
 <br>
    
-c883aeb3-4747-4cd4-aa15-dd139e67ff0e
+https://img.shields.io/coveralls/github/ZivanHaripershad/Odosla?style=plastic
