@@ -101,5 +101,3 @@ to achieve the objective. I am most passionate about using my programming and de
  </li>
 </ul>
 <br>
-   
-<img alt="Coveralls" src="https://img.shields.io/coveralls/github/ZivanHaripershad/Odosla?style=plastic">
