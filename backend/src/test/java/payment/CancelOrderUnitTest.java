@@ -3,6 +3,7 @@ package payment;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.context.annotation.Description;
 import payment.dataclass.GeoPoint;
 import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
@@ -11,6 +12,7 @@ import payment.exceptions.InvalidRequestException;
 import payment.exceptions.OrderDoesNotExist;
 import payment.repos.OrderRepo;
 import payment.requests.CancelOrderRequest;
+import payment.requests.SubmitOrderRequest;
 import payment.responses.CancelOrderResponse;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +23,7 @@ import shopping.exceptions.StoreDoesNotExistException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,6 +97,17 @@ class CancelOrderUnitTest {
         CancelOrderRequest req=new CancelOrderRequest(UUID.randomUUID());
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.cancelOrder(req));
         assertEquals("Order doesn't exist in database - can't cancel order", thrown.getMessage());
+    }
+
+
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the CancelOrderRequest object was created correctly")
+    @DisplayName("CancelOrderRequest correctly constructed")
+    void UnitTest_CancelOrderRequestConstruction() {
+        CancelOrderRequest request=new CancelOrderRequest(o1UUID);
+        assertNotNull(request);
+        assertEquals(o1UUID,request.getOrderID());
     }
 
     @Test
