@@ -9,13 +9,13 @@
 <kbd>
  
 <h4 align="center">You can watch our demo 1 here: </h4>
-<div align="center"><a href="https://www.youtube.com/watch?v=0yBnIUX0QAE" target="blank">Demo 1</a></div>
+<div align="center"><a href="https://www.youtube.com/watch?v=0yBnIUX0QAE" target="blank">📺Demo 1</a></div>
 
 <h4 align="center"> Our SRS document:</h4>
-<div align="center"><a href="https://www.overleaf.com/project/60b112f6f641dc5b797018ed" target="blank">SRS Document</a></div>
+<div align="center"><a href="https://www.overleaf.com/project/60b112f6f641dc5b797018ed" target="blank">📄SRS Document</a></div>
 
 <h4 align="center"> Our GitHub Project Board:</h4>
-<div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">Project Board</a></div>
+<div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
 <br>
 </kbd>
 </div>
@@ -23,7 +23,7 @@
 <br>
 
 
-<h3 align="center" text-decoration="underline"> <ins>Our Team</ins> </h3>
+<h3 align="center" text-decoration="underline"> Our Team</h3>
 <br>
 
 <div align="center">
@@ -75,3 +75,4 @@ photoshop.</p>
 to achieve the objective. I am most passionate about using my programming and designing skills to solve real world problems. </p>
 
 <div align="center"><a href="https://github.com/mogoatlhe" align="center" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"  height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/moeketsi-mogoatlhe-6b7807194/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" height="50" width="50" /></a></div>
+<hr>
