@@ -33,7 +33,7 @@
 <div align="center"> <a href="https://github.com/Adam4920" target="blank"><img align="center" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="adam isenberg" height="50" width="50" /></a> | <a href="https://www.linkedin.com/in/adam-isenberg/" target="blank"><img align="center" src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-512.png" alt="adam isenberg" height="50" width="50" /></a> </div>
 <br>
 <br>
-
+<hr height="2">
 <div align="center">
 <img src="https://media-exp1.licdn.com/dms/image/C4D03AQEVrM6EYgZ9OA/profile-displayphoto-shrink_800_800/0/1621694142349?e=1628121600&v=beta&t=AQ_Vnks-BnYQFf3Lf_XNTqb-bdu6M7BxwxO1tpoSaWg" height="150" border-radius="50%"></img>
 </div>
