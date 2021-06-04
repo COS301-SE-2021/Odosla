@@ -80,6 +80,8 @@ to achieve the objective. I am most passionate about using my programming and de
 <h3 align="center" text-decoration="underline"> GitHub Structure</h3>
 <p align="center">Monorepo</p>
 
+<br>
+<br>
 <h3 align="center" text-decoration="underline"> Branching Strategy</h3>
 
 <ul>
