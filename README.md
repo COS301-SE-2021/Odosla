@@ -81,7 +81,7 @@ to achieve the objective. I am most passionate about using my programming and de
 <p align="center">Monorepo</p>
 
 <h3 align="center" text-decoration="underline"> Branching Strategy</h3>
-<div align="center">
+
 <ul>
   <li>master
    <ul>
@@ -97,4 +97,4 @@ to achieve the objective. I am most passionate about using my programming and de
   </ul>
  </li>
 </ul>
- </div>
+
