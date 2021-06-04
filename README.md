@@ -23,7 +23,7 @@
 <br>
 
 
-<h3 align="center" text-decoration="underline"> Our Team </h3>
+<h3 align="center" text-decoration="underline"> <ins>Our Team</ins> </h3>
 <br>
 
 <div align="center">
