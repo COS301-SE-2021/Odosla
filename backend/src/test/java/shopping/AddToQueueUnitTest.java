@@ -113,7 +113,7 @@ public class AddToQueueUnitTest {
     /** Checking request object is created correctly */
     @Test
     @Description("Tests whether the AddToQueue request object was created correctly")
-    @DisplayName("AddToQueue correctly constructed")
+    @DisplayName("AddToQueueRequest correctly constructed")
     void UnitTest_AddToQueueRequestConstruction() {
 
         AddToQueueRequest request = new AddToQueueRequest(order);

@@ -13,6 +13,7 @@ import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
+import shopping.requests.AddToQueueRequest;
 import shopping.requests.GetCatalogueRequest;
 import shopping.requests.GetStoreByUUIDRequest;
 import shopping.responses.GetCatalogueResponse;
@@ -93,6 +94,18 @@ public class GetCatalogueUnitTest {
         assertNotNull(response);
         assertEquals(s.getStock(),response.getCatalogue());
         assertEquals("Catalogue entity from store was correctly returned",response.getMessage());
+    }
+
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the GetCatalogue request object was created correctly")
+    @DisplayName("GetCatalogueRequest correctly constructed")
+    void UnitTest_GetCatalogueRequestConstruction() {
+
+        GetCatalogueRequest request = new GetCatalogueRequest(storeUUID1);
+
+        assertNotNull(request);
+        assertEquals(storeUUID1, request.getStoreID());
     }
 
 }
