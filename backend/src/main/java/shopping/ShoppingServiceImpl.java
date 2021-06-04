@@ -35,7 +35,35 @@ public class ShoppingServiceImpl implements ShoppingService {
         this.orderRepo = orderRepo;
         this.shoppingService = shoppingService;
     }
-
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *
+     * getCatalogue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID is not null, else throw an InvalidRequestException
+     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               4. Use the found Store object's getters to initialize the response object's constructor.
+     *               5. Return the response object.
+     *
+     * Request Object (GetCatalogueRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * Response Object (GetCatalogueResponse):
+     * {
+     *                "catalogue":storeEntity.getStock()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Catalogue entity from store was correctly returned"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
     @Override
     public GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetCatalogueResponse response=null;
@@ -60,6 +88,34 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private order
+     *
+     * addToQueue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Add the order to the correct stores queue
+     *               4. Return the response object.
+     *
+     * Request Object (AddToQueueRequest):
+     * {
+     *                "Order": {"orderID":"903420394i", "storeID":"d09832893", "items":....., ...}
+     * }
+     *
+     * Response Object (GetCatalogueResponse):
+     * {
+     *                "success":true
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Order was correctly added to queue"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreCloseException
+     * */
 
     @Override
     public AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException {
