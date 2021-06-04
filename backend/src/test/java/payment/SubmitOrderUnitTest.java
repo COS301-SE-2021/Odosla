@@ -242,6 +242,8 @@ public class SubmitOrderUnitTest {
     void UnitTest_StartOrderConstruction() throws PaymentException, StoreClosedException, shopping.exceptions.InvalidRequestException, StoreDoesNotExistException {
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        GetStoreByUUIDResponse storeResponse=new GetStoreByUUIDResponse(expectedStore,Calendar.getInstance().getTime(), "Store successfully returned");
+        when(shoppingService.getStoreByUUID(Mockito.any())).thenReturn(storeResponse);
         SubmitOrderResponse response=paymentService.submitOrder(request);
         assertNotNull(response);
         assertNotNull(o);
