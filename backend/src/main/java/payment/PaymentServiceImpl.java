@@ -352,14 +352,13 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
         }
 
-        try{
-            order = orderRepo.findById(request.getOrderID()).orElse(null);
-        }catch(Exception e){
-            throw new OrderDoesNotExist("Order doesn't exist in database - can't update order");
+        order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if(order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - can't update order.");
         }
 
         if(request.getUserID() != order.getUserID()){
-            throw new NotAuthorisedException("Not Authorised to update an order you did not place");
+            throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
         }
 
         OrderStatus status = order.getStatus();

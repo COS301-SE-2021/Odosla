@@ -3,6 +3,7 @@ package payment;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import payment.exceptions.NotAuthorisedException;
 import payment.exceptions.PaymentException;
 import payment.exceptions.InvalidRequestException;
 import org.mockito.Mockito;
@@ -90,6 +91,24 @@ public class UpdateOrderUnitTest {
         UpdateOrderRequest request = new UpdateOrderRequest(null, expectedU1, expectedListOfItems, expectedDiscount, expectedS1, expectedType, storeAddress);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(request));
         assertEquals("OrderID cannot be null in request object - order unsuccessfully updated.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when an order is updated with a null userID in the request object- exception should be thrown")
+    @DisplayName("When userID in the request object is not specified")
+    void UnitTest_testingNull_UserID_Parameter_RequestObject(){
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, null, expectedListOfItems, expectedDiscount, expectedS1, expectedType, storeAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(request));
+        assertEquals("UserID cannot be null in request object - order unsuccessfully updated.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when an order is updated with an nonexistent orderID in the request object- exception should be thrown")
+    @DisplayName("When orderID in the request object does not exist")
+    void UnitTest_OrderID_Parameter_RequestObject_Not_In_DB(){
+        UpdateOrderRequest request = new UpdateOrderRequest(UUID.randomUUID(), expectedU1, expectedListOfItems, expectedDiscount, expectedS1, expectedType, storeAddress);
+        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.updateOrder(request));
+        assertEquals("Order doesn't exist in database - can't update order.", thrown.getMessage());
     }
 
 }
