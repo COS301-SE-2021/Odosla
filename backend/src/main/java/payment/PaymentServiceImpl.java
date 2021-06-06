@@ -290,6 +290,80 @@ public class PaymentServiceImpl implements PaymentService {
         return response;
     }
 
+    @Override
+    public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
+        String message = null;
+        Order order = null;
+        double discount = 0;
+        double cost = 0;
+
+        if(request == null || request.getOrderID() == null || request.getUserID() == null){
+            throw new InvalidRequestException("Invalid update order request received - order unsuccessfully updated.");
+        }
+
+        try{
+            order = orderRepo.findById(request.getOrderID()).orElse(null);
+        }catch(Exception e){
+            throw new OrderDoesNotExist("Order doesn't exist in database - can't update order");
+        }
+
+        if(request.getUserID() != order.getUserID()){
+            // throw NotAuthorisedException
+        }
+
+        OrderStatus status = order.getStatus();
+        // order has not been processed by shopper
+        // nor has it been accepted by driver. customer can change type
+        if(status == OrderStatus.AWAITING_PAYMENT){
+            if(request.getOrderType() != null) {
+                order.setType(request.getOrderType());
+            }
+
+            if(request.getStoreAddress() != null){
+                order.setStoreAddress(request.getStoreAddress());
+            }
+
+            if(request.getStoreID() != null){
+                order.setStoreID(request.getStoreID());
+            }
+        }
+
+        // once the order has been paid for and sent to the driver and shoppers
+        // if the order has not yet been delivered, collected and process by the shoppers
+        if(status != OrderStatus.AWAITING_COLLECTION &&
+                status != OrderStatus.CUSTOMER_COLLECTED &&
+                status != OrderStatus.DELIVERY_COLLECTED &&
+                status != OrderStatus.DELIVERED &&
+                status != OrderStatus.PACKING){ // statuses which do not allow for the updating of an order
+
+
+            if(request.getDiscount() != 0){
+                discount = request.getDiscount();
+            }
+
+            if(request.getListOfItems() != null){
+                order.setItems(request.getListOfItems());
+
+                for (Item item : order.getItems()) {
+                    cost += item.getPrice();
+                }
+
+                order.setTotalCost(cost - discount);
+            } // else refer them to cancel order
+
+            if(request.getDiscount() != null){
+                order.setDiscount(request.getDiscount());
+            }
+
+        }else{
+            message = "Can no longer update the order - UpdateOrder Unsuccessful";
+            return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message );
+        }
+
+        orderRepo.save(order);
+        message = "Order successfully updated";
+        return new UpdateOrderResponse(order, true, Calendar.getInstance().getTime(), message);
+    }
     // TRANSACTION IMPLEMENTATION
 
     @Override
