@@ -291,14 +291,22 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
+    public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException{
         String message = null;
         Order order = null;
         double discount = 0;
         double cost = 0;
 
-        if(request == null || request.getOrderID() == null || request.getUserID() == null){
+        if(request == null){
             throw new InvalidRequestException("Invalid update order request received - order unsuccessfully updated.");
+        }
+
+        if(request.getOrderID() == null){
+            throw new InvalidRequestException("OrderID cannot be null in request object - order unsuccessfully updated.");
+        }
+
+        if(request.getUserID() == null){
+            throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
         }
 
         try{
@@ -308,7 +316,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         if(request.getUserID() != order.getUserID()){
-            // throw NotAuthorisedException
+            throw new NotAuthorisedException("Not Authorised to update an order you did not place");
         }
 
         OrderStatus status = order.getStatus();
