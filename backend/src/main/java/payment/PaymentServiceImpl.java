@@ -290,6 +290,49 @@ public class PaymentServiceImpl implements PaymentService {
         return response;
     }
 
+   /** WHAT TO DO: updateOrder
+     *
+     * @param request is used to bring in:
+     *            - userID - the user ID of person who placed the order
+     *            - orderID - the unique identifier of the order placed
+     *            - listOfItems - list of items in the order of object type Item
+     *            - discount - the amount of the discount
+     *            - storeID - the store id of where the order will be placed
+     *            - orderType - the type of order it is, whether it is a delivery or collection
+     *            - storeAddress - the GeoPoint address of the store where order is being placed
+     *
+     * updateOrder should:
+     *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
+     *            - check that the order id passed in in exists in the database or not.
+     *            - if the order is found in the database use its status to determine whether it can be updated or not, then proceed accordingly
+     *              - e.g if the order status say that the order has been delivered, the order cannot be updated.
+     *
+     * Request Object: (UpdateOrderRequest)
+     * {
+     *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *            "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
+     *            "discount": "30.50"
+     *            "storeID": "8b337604-b0f6-11eb-8529-0242ac130023"
+     *            "orderType": "OrderType.DELIVERY"
+     *            "StoreAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
+     * }
+     *
+     * Response object: (UpdateOrderResponse)
+     * {
+     *    success: true // boolean
+     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *    message: "Order successfully updated"
+     *    order:  // order object
+     *
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws OrderDoesNotExist
+     * @throws NotAuthorisedException
+     */
+
     @Override
     public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException{
         String message = null;
