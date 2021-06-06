@@ -16,6 +16,7 @@ import payment.repos.OrderRepo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import payment.requests.UpdateOrderRequest;
 import shopping.dataclass.Item;
 
 import java.util.ArrayList;
@@ -80,6 +81,15 @@ public class UpdateOrderUnitTest {
     void UnitTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(null));
         assertEquals("Invalid update order request received - order unsuccessfully updated.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when an order is updated with a null orderID in the request object- exception should be thrown")
+    @DisplayName("When orderID in the request object is not specified")
+    void UnitTest_testingNull_OrderID_Parameter_RequestObject(){
+        UpdateOrderRequest request = new UpdateOrderRequest(null, expectedU1, expectedListOfItems, expectedDiscount, expectedS1, expectedType, storeAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(request));
+        assertEquals("OrderID cannot be null in request object - order unsuccessfully updated.", thrown.getMessage());
     }
 
 }
