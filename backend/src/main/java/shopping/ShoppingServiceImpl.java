@@ -340,4 +340,138 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    @Override
+    public AddShopperResponse addShoper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        AddShopperResponse response=null;
+
+        if(request!=null){
+
+            boolean invalidReq = false;
+            String invalidMessage = "";
+
+            if(request.getShopperID()==null){
+                invalidReq=true;
+                invalidMessage="Shopper ID in request object for remove shopper is null";
+
+            }
+            else if(request.getStoreID()==null){
+                invalidReq=true;
+                invalidMessage="Store ID in request object for remove shopper is null";
+            }
+
+            if (invalidReq) throw new InvalidRequestException(invalidMessage);
+
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+            }
+            List<Shopper> listOfShoppers=storeEntity.getShoppers();
+            /* Get Shopper by UUID- get Shopper Object */
+            /* Shopper shopper */
+            if(listOfShoppers!=null){
+                /* Get Shopper by UUID- get Shopper Object */
+                /* Shopper shopper */
+//                Shopper shopper=null;
+//                if(shopper)
+//                    listOfShoppers.remove(shopper);
+            }
+            else{
+                response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for addShopper");
+        }
+
+        return response;
+
+    }
+
+    @Override
+    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        RemoveShopperResponse response=null;
+
+        if(request!=null){
+
+            boolean invalidReq = false;
+            String invalidMessage = "";
+
+            if(request.getShopperID()==null){
+                invalidReq=true;
+                invalidMessage="Shopper ID in request object for remove shopper is null";
+
+            }
+            else if(request.getStoreID()==null){
+                invalidReq=true;
+                invalidMessage="Store ID in request object for remove shopper is null";
+            }
+
+            if (invalidReq) throw new InvalidRequestException(invalidMessage);
+
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+            }
+
+            List<Shopper> listOfShoppers=storeEntity.getShoppers();
+
+            if(listOfShoppers!=null){
+                /* Get Shopper by UUID- get Shopper Object */
+                /* Shopper shopper */
+//                Shopper shopper=null;
+//                if(shopper)
+//                listOfShoppers.remove(shopper);
+            }
+            else{
+                response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for removeShopper");
+        }
+
+        return response;
+    }
+
+    @Override
+    public ClearShoppersResponse clearShoppers(ClearShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        ClearShoppersResponse response=null;
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID in request object for clearShoppers can't be null");
+            }
+
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+            }
+
+            List<Shopper> listOfShoppers=storeEntity.getShoppers();
+
+            listOfShoppers.clear();
+
+            storeEntity.setShoppers(listOfShoppers);
+
+            response=new ClearShoppersResponse(true,Calendar.getInstance().getTime(), "List of Shopper successfuly cleared");
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for clearShoppers");
+        }
+
+        return response;
+    }
 }

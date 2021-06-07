@@ -3,6 +3,7 @@ package shopping.responses;
 import java.util.Date;
 
 public class AddToQueueResponse {
+
     private final boolean success;
     private final String message;
     private final Date timestamp;
