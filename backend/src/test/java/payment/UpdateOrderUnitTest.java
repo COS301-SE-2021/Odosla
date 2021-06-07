@@ -4,7 +4,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import payment.exceptions.NotAuthorisedException;
-import payment.exceptions.PaymentException;
 import payment.exceptions.InvalidRequestException;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Description;
@@ -14,9 +13,7 @@ import payment.dataclass.OrderStatus;
 import payment.dataclass.OrderType;
 import payment.exceptions.OrderDoesNotExist;
 import payment.repos.OrderRepo;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 import payment.requests.UpdateOrderRequest;
 import payment.responses.UpdateOrderResponse;
 import shopping.dataclass.Item;
@@ -44,6 +41,7 @@ public class UpdateOrderUnitTest {
     UUID newStoreId = UUID.randomUUID();
     UUID expectedShopper1=UUID.randomUUID();
     Double expectedDiscount;
+    Double newDiscount;
     double totalC;
     String expectedMessage;
     OrderStatus expectedStatus;
@@ -52,6 +50,7 @@ public class UpdateOrderUnitTest {
     GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
     GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworthes, Hillcrest Boulevard");
     List<Item> expectedListOfItems=new ArrayList<>();
+    List<Item> newListOfItems = new ArrayList<>();
     List<Order> listOfOrders=new ArrayList<>();
 
     @BeforeEach
@@ -60,11 +59,14 @@ public class UpdateOrderUnitTest {
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         expectedMessage="Order successfully created.";
         expectedDiscount=0.0;
+        newDiscount = 13.68;
         totalC=66.97;
         expectedStatus = OrderStatus.AWAITING_PAYMENT;
         expectedType= OrderType.DELIVERY;
         expectedListOfItems.add(I1);
         expectedListOfItems.add(I2);
+        newListOfItems.add(I2);
+        newListOfItems.add(I1);
         o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
@@ -178,7 +180,7 @@ public class UpdateOrderUnitTest {
     void UnitTest_testingOrderStatus_AWAITING_COLLECTION() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
         when(orderRepo.findAll()).thenReturn(listOfOrders);
         when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, expectedListOfItems, expectedDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, newListOfItems, newDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
         o.setStatus(OrderStatus.AWAITING_COLLECTION);
         UpdateOrderResponse response = paymentService.updateOrder(request);
         assertEquals("Can no longer update the order - UpdateOrder Unsuccessful.",response.getMessage());
@@ -186,6 +188,8 @@ public class UpdateOrderUnitTest {
         assertNotEquals(newStoreId, response.getOrder().getStoreID());
         assertNotEquals(newStoreAddress, response.getOrder().getStoreAddress());
         assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertNotEquals(newListOfItems.get(0), response.getOrder().getItems().get(0));
+        assertNotEquals(newDiscount, response.getOrder().getDiscount());
     }
 
     // cannot update order anymore
@@ -195,7 +199,7 @@ public class UpdateOrderUnitTest {
     void UnitTest_testingOrderStatus_DELIVERY_COLLECTED() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
         when(orderRepo.findAll()).thenReturn(listOfOrders);
         when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, expectedListOfItems, expectedDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, newListOfItems, newDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
         o.setStatus(OrderStatus.DELIVERY_COLLECTED);
         UpdateOrderResponse response = paymentService.updateOrder(request);
         assertEquals("Can no longer update the order - UpdateOrder Unsuccessful.",response.getMessage());
@@ -203,6 +207,45 @@ public class UpdateOrderUnitTest {
         assertNotEquals(newStoreId, response.getOrder().getStoreID());
         assertNotEquals(newStoreAddress, response.getOrder().getStoreAddress());
         assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertNotEquals(newListOfItems.get(0), response.getOrder().getItems().get(0));
+        assertNotEquals(newDiscount, response.getOrder().getDiscount());
     }
 
+    // cannot update order anymore
+    @Test
+    @Description("Tests for when the order status is CUSTOMER_COLLECTED (order has been processed) - All but storeId, storeAddress, and type should change")
+    @DisplayName("When the order status is CUSTOMER_COLLECTED")
+    void UnitTest_testingOrderStatus_CUSTOMER_COLLECTED() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, newListOfItems, newDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
+        o.setStatus(OrderStatus.CUSTOMER_COLLECTED);
+        UpdateOrderResponse response = paymentService.updateOrder(request);
+        assertEquals("Can no longer update the order - UpdateOrder Unsuccessful.",response.getMessage());
+        assertFalse(response.isSuccess());
+        assertNotEquals(newStoreId, response.getOrder().getStoreID());
+        assertNotEquals(newStoreAddress, response.getOrder().getStoreAddress());
+        assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertNotEquals(newListOfItems.get(0), response.getOrder().getItems().get(0));
+        assertNotEquals(newDiscount, response.getOrder().getDiscount());
+    }
+
+    // cannot update order anymore
+    @Test
+    @Description("Tests for when the order status is DELIVERED - All but storeId, storeAddress, and type should change")
+    @DisplayName("When the order status is DELIVERED")
+    void UnitTest_testingOrderStatus_DELIVERED() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, newListOfItems, newDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
+        o.setStatus(OrderStatus.DELIVERED);
+        UpdateOrderResponse response = paymentService.updateOrder(request);
+        assertEquals("Can no longer update the order - UpdateOrder Unsuccessful.",response.getMessage());
+        assertFalse(response.isSuccess());
+        assertNotEquals(newStoreId, response.getOrder().getStoreID());
+        assertNotEquals(newStoreAddress, response.getOrder().getStoreAddress());
+        assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertNotEquals(newListOfItems.get(0), response.getOrder().getItems().get(0));
+        assertNotEquals(newDiscount, response.getOrder().getDiscount());
+    }
 }
