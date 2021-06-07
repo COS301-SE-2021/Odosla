@@ -18,14 +18,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import payment.requests.UpdateOrderRequest;
+import payment.responses.UpdateOrderResponse;
 import shopping.dataclass.Item;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 public class UpdateOrderUnitTest {
     @InjectMocks
@@ -42,12 +41,14 @@ public class UpdateOrderUnitTest {
     UUID o2UUID=UUID.randomUUID();
     UUID expectedU1=UUID.randomUUID();
     UUID expectedS1=UUID.randomUUID();
+    UUID newStoreId = UUID.randomUUID();
     UUID expectedShopper1=UUID.randomUUID();
     Double expectedDiscount;
     double totalC;
     String expectedMessage;
     OrderStatus expectedStatus;
     OrderType expectedType;
+    GeoPoint newStoreAddress = new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083");
     GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
     GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworthes, Hillcrest Boulevard");
     List<Item> expectedListOfItems=new ArrayList<>();
@@ -110,5 +111,18 @@ public class UpdateOrderUnitTest {
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.updateOrder(request));
         assertEquals("Order doesn't exist in database - can't update order.", thrown.getMessage());
     }
+
+    @Test
+    @Description("Tests for when an unauthorised userID is passed in the request object- exception should be thrown")
+    @DisplayName("When user in the request object is not Authorised")
+    void UnitTest_testingInvalidUser(){
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, UUID.randomUUID(), expectedListOfItems, expectedDiscount, expectedS1, expectedType, storeAddress);
+        Throwable thrown = Assertions.assertThrows(NotAuthorisedException.class, ()-> paymentService.updateOrder(request));
+        assertEquals("Not Authorised to update an order you did not place.", thrown.getMessage());
+    }
+
+
 
 }

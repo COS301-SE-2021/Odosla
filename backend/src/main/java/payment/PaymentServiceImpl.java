@@ -362,21 +362,6 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         OrderStatus status = order.getStatus();
-        // order has not been processed by shopper
-        // nor has it been accepted by driver. customer can change type
-        if(status == OrderStatus.AWAITING_PAYMENT){
-            if(request.getOrderType() != null) {
-                order.setType(request.getOrderType());
-            }
-
-            if(request.getStoreAddress() != null){
-                order.setStoreAddress(request.getStoreAddress());
-            }
-
-            if(request.getStoreID() != null){
-                order.setStoreID(request.getStoreID());
-            }
-        }
 
         // once the order has been paid for and sent to the driver and shoppers
         // if the order has not yet been delivered, collected and process by the shoppers
@@ -411,7 +396,25 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         orderRepo.save(order);
-        message = "Order successfully updated";
+        // order has not been processed by shopper
+        // nor has it been accepted by driver. customer can change type
+        if(status == OrderStatus.AWAITING_PAYMENT){
+            if(request.getOrderType() != null) {
+                order.setType(request.getOrderType());
+            }
+
+            if(request.getStoreAddress() != null){
+                order.setStoreAddress(request.getStoreAddress());
+            }
+
+            if(request.getStoreID() != null){
+                order.setStoreID(request.getStoreID());
+            }
+            message = "Order successfully updated.";
+        }else {
+            message = "Store details and OrderType could not be updated. Other details updated successfully.";
+        }
+
         return new UpdateOrderResponse(order, true, Calendar.getInstance().getTime(), message);
     }
     // TRANSACTION IMPLEMENTATION
