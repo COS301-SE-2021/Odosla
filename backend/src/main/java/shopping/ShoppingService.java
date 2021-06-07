@@ -14,4 +14,5 @@ public interface ShoppingService {
 
     GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
+    GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException;
 }

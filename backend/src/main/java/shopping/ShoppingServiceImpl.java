@@ -9,14 +9,8 @@ import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
-import shopping.requests.AddToQueueRequest;
-import shopping.requests.GetCatalogueRequest;
-import shopping.requests.GetNextQueuedRequest;
-import shopping.requests.GetStoreByUUIDRequest;
-import shopping.responses.AddToQueueResponse;
-import shopping.responses.GetCatalogueResponse;
-import shopping.responses.GetNextQueuedResponse;
-import shopping.responses.GetStoreByUUIDResponse;
+import shopping.requests.*;
+import shopping.responses.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -303,6 +297,24 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         else{
             throw new InvalidRequestException("GetStoreByUUID request is null - could not return store entity");
+        }
+        return response;
+    }
+
+    @Override
+    public GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException {
+        GetShoppersResponse response=null;
+
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID in request object can't be null");
+            }
+
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for get Shoppers can't be null");
         }
         return response;
     }
