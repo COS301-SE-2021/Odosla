@@ -391,7 +391,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
         }else{
-            message = "Can no longer update the order - UpdateOrder Unsuccessful";
+            message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message );
         }
 
