@@ -11,7 +11,9 @@ import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
 import shopping.requests.*;
 import shopping.responses.*;
+import user.dataclass.Shopper;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -302,7 +304,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException {
+    public GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetShoppersResponse response=null;
 
         if(request!=null){
@@ -311,7 +313,27 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new InvalidRequestException("Store ID in request object can't be null");
             }
 
+            Store storeEntity=null;
 
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Shoppers");
+            }
+
+            List<Shopper> listOfShoppers=null;
+
+            if(storeEntity!=null){
+               listOfShoppers=storeEntity.getShoppers();
+            }
+
+            if(listOfShoppers!=null) {
+                response = new GetShoppersResponse(listOfShoppers, true, Calendar.getInstance().getTime(), "List of Shoppers successfully returned");
+            }
+            else{
+                response = new GetShoppersResponse(null, true, Calendar.getInstance().getTime(), "List of Shoppers is null");
+            }
         }
         else{
             throw new InvalidRequestException("Request object for get Shoppers can't be null");
