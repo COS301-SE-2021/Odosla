@@ -9,14 +9,8 @@ import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
-import shopping.requests.AddToQueueRequest;
-import shopping.requests.GetCatalogueRequest;
-import shopping.requests.GetNextQueuedRequest;
-import shopping.requests.GetStoreByUUIDRequest;
-import shopping.responses.AddToQueueResponse;
-import shopping.responses.GetCatalogueResponse;
-import shopping.responses.GetNextQueuedResponse;
-import shopping.responses.GetStoreByUUIDResponse;
+import shopping.requests.*;
+import shopping.responses.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -192,6 +186,31 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         else{
             throw new InvalidRequestException("GetStoreByUUID request is null - could not return store entity");
+        }
+        return response;
+    }
+
+    @Override
+    public ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        ToggleStoreOpenResponse response=null;
+
+        if(request!=null){
+
+            if (request.getStoreID()==null) {
+                throw new InvalidRequestException("The Store ID in ToggleStoreOpenRequest parameter is null - Could not set store to open");
+            }
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository");
+            }
+            response=new ToggleStoreOpenResponse(Calendar.getInstance().getTime(), "Store is now set to open");
+
+        }
+        else{
+            throw new InvalidRequestException("The ToggleStoreOpenRequest parameter is null - Could not set store to open");
         }
         return response;
     }
