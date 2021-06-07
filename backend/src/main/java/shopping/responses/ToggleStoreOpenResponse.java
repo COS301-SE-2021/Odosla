@@ -4,13 +4,23 @@ import java.util.Date;
 
 public class ToggleStoreOpenResponse {
 
+    Boolean isOpen = false;
     String message;
     Date timestamp;
 
-    public ToggleStoreOpenResponse(Date timestamp, String message)
+    public ToggleStoreOpenResponse(Boolean isOpen, Date timestamp, String message)
     {
+        this.isOpen= isOpen;
         this.timestamp=timestamp;
         this.message=message;
+    }
+
+    public void setOpen(Boolean open) {
+        isOpen = open;
+    }
+
+    public Boolean getOpen() {
+        return isOpen;
     }
 
     public void setMessage(String message)

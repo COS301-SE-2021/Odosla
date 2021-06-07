@@ -1,5 +1,6 @@
 package shopping;
 import shopping.exceptions.InvalidRequestException;
+import shopping.exceptions.StoreClosedException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.requests.*;
 import shopping.responses.*;
@@ -14,5 +15,5 @@ public interface ShoppingService {
 
     GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException;
+    ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 }

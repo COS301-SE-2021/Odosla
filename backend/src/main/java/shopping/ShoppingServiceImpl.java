@@ -7,6 +7,7 @@ import payment.dataclass.OrderStatus;
 import payment.repos.OrderRepo;
 import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
+import shopping.exceptions.StoreClosedException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
 import shopping.requests.*;
@@ -300,7 +301,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+    public ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
         ToggleStoreOpenResponse response=null;
 
         if(request!=null){
@@ -315,7 +316,18 @@ public class ShoppingServiceImpl implements ShoppingService {
             catch (Exception e){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository");
             }
-            response=new ToggleStoreOpenResponse(Calendar.getInstance().getTime(), "Store is now set to open");
+
+            Calendar calendar= Calendar.getInstance();
+            if(calendar.get(Calendar.HOUR_OF_DAY) >= 7 && calendar.get(Calendar.HOUR_OF_DAY) < 22)
+            {
+                storeEntity.setOpen(true);
+                response=new ToggleStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
+            }
+            else
+            {
+                storeEntity.setOpen(false);
+                throw new StoreClosedException("The store is currently not open for business");
+            }
 
         }
         else{
