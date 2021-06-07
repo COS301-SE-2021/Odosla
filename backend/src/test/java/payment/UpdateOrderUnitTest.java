@@ -123,6 +123,20 @@ public class UpdateOrderUnitTest {
         assertEquals("Not Authorised to update an order you did not place.", thrown.getMessage());
     }
 
-
+    @Test
+    @Description("Tests for when the order status is AWAITING_PAYMENT (order has not been processed yet) - update should be successful for all fields")
+    @DisplayName("when the order status is AWAITING_PAYMENT")
+    void UnitTest_testingOrderStatus_AWAITING_PAYMENT() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, expectedListOfItems, expectedDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
+        o.setStatus(OrderStatus.AWAITING_PAYMENT);
+        UpdateOrderResponse response = paymentService.updateOrder(request);
+        assertEquals("Order successfully updated.",response.getMessage());
+        assertTrue(response.isSuccess());
+        assertEquals(newStoreId, response.getOrder().getStoreID());
+        assertEquals(newStoreAddress, response.getOrder().getStoreAddress());
+        assertEquals(OrderType.COLLECTION, response.getOrder().getType());
+    }
 
 }
