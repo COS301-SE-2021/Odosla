@@ -6,16 +6,19 @@ import payment.dataclass.OrderStatus;
 import java.util.UUID;
 
 public class CancelOrderRequest {
+
+    /** attributes */
     private UUID orderID;
 
-    public CancelOrderRequest(){
-
-    }
-
+    /** constructor
+     *
+     * @param orderID //orderId that needs to be cancelled
+     */
     public CancelOrderRequest(UUID orderID){
         this.orderID = orderID;
     }
 
+    /** getters */
     public UUID getOrderID() {
         return orderID;
     }

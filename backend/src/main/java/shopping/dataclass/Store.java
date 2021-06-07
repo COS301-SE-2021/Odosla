@@ -18,6 +18,7 @@ public class Store {
     private String storeBrand;
     private int maxShoppers = 2;
     private int maxOrders;
+    private Boolean isOpen;
 
     @OneToOne(cascade={CascadeType.ALL})
     private Catalogue stock;
@@ -39,7 +40,7 @@ public class Store {
 
     public Store() { }
 
-    public Store(UUID storeID, String storeBrand, Catalogue stock, int maxShoppers, List<Order> currentOrders, List<Order> orderQueue, int maxOrders) {
+    public Store(UUID storeID, String storeBrand, Catalogue stock, int maxShoppers, List<Order> currentOrders, List<Order> orderQueue, int maxOrders, Boolean isOpen) {
         this.storeID = storeID;
         this.storeBrand = storeBrand;
         this.stock = stock;
@@ -47,6 +48,7 @@ public class Store {
         this.currentOrders = currentOrders;
         this.orderQueue = orderQueue;
         this.maxOrders = maxOrders;
+        this.isOpen = isOpen;
     }
 
     public UUID getStoreID() {
@@ -111,6 +113,14 @@ public class Store {
 
     public void setMaxOrders(int maxOrders) {
         this.maxOrders = maxOrders;
+    }
+
+    public Boolean getOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(Boolean open) {
+        isOpen = open;
     }
 }
 

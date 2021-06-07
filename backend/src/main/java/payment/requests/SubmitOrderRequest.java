@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class SubmitOrderRequest {
-    /* Attrbiutes */
+
+    /** attrbiutes */
     private UUID userID;
     private List<Item> listOfItems;
     private Double discount;
@@ -17,6 +18,15 @@ public class SubmitOrderRequest {
     private GeoPoint deliveryAddress;
     private GeoPoint storeAddress;
 
+    /** constructor
+     * @param userID - unique order identifier of user creating order
+     * @param listOfItems - list of items in the order of object type Item
+     * @param discount - the amount of the discount
+     * @param storeID - the store id of where the order will be placed
+     * @param orderType - the type of order it is, whether it is a delivery or collection
+     * @param deliveryAddress - the GeoPoint address of where the order is to be shipped if order type is delivery
+     * @param storeAddress - the GeoPoint address of the store where order is being placed
+     */
     public SubmitOrderRequest(UUID userID, List<Item> listOfItems, Double discount, UUID storeID, OrderType orderType, GeoPoint deliveryAddress, GeoPoint storeAddress) {
         this.userID = userID;
         this.listOfItems = listOfItems;
@@ -27,6 +37,7 @@ public class SubmitOrderRequest {
         this.storeAddress=storeAddress;
     }
 
+    /* getters */
     public UUID getUserID() {
         return userID;
     }

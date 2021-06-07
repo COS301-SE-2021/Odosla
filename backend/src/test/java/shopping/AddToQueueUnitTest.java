@@ -51,7 +51,7 @@ public class AddToQueueUnitTest {
         listOfItems.add(i1);
         listOfItems.add(i2);
         cat = new Catalogue(listOfItems);
-        store = new Store(uuid,"Checkers",cat,2,null,null,4);
+        store = new Store(uuid,"Checkers",cat,2,null,null,4,true);
         order = new Order(uuid, uuid, uuid, uuid, Calendar.getInstance(), Calendar.getInstance(), 30.0, OrderType.DELIVERY, OrderStatus.PURCHASED, listOfItems, 0.0, null, null, false);
     }
     @AfterEach
@@ -108,6 +108,18 @@ public class AddToQueueUnitTest {
         AddToQueueRequest request=new AddToQueueRequest(order);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addToQueue(request));
         assertEquals("Invalid request: missing order cost", thrown.getMessage());
+    }
+
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the AddToQueue request object was created correctly")
+    @DisplayName("AddToQueueRequest correctly constructed")
+    void UnitTest_AddToQueueRequestConstruction() {
+
+        AddToQueueRequest request = new AddToQueueRequest(order);
+
+        assertNotNull(request);
+        assertEquals(order, request.getOrder());
     }
 
     @Test

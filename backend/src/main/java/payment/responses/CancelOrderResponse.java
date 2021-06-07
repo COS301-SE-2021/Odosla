@@ -2,25 +2,33 @@ package payment.responses;
 
 import payment.dataclass.Order;
 
+import java.util.Date;
 import java.util.List;
 
 public class CancelOrderResponse {
-    private boolean success;
-    private String message;
+    /** attributes */
     private List<Order> orders;
+    private final boolean success;
+    private final Date timestamp;
+    private final String message;
 
-    public CancelOrderResponse(boolean success,List<Order> orders, String message) {
-        this.success = success;
+
+    /** constructor
+     *
+     * @param success //success of the response object - true/false
+     * @param timestamp // time that response was created
+     * @param message //message corresponding to response object
+     * @param orders //list of orders in database
+     */
+    public CancelOrderResponse(boolean success, Date timestamp, String message,List<Order> orders) {
         this.orders = orders;
+        this.success = success;
+        this.timestamp = timestamp;
         this.message = message;
     }
 
-    public boolean isSuccess() {
+    public boolean getSuccess() {
         return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
     }
 
     public void setOrders(List<Order> orders) {
@@ -29,10 +37,6 @@ public class CancelOrderResponse {
 
     public List<Order> getOrders() {
         return orders;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public String getMessage() {

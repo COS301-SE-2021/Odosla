@@ -3,6 +3,7 @@ package payment;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.context.annotation.Description;
 import payment.dataclass.GeoPoint;
 import payment.dataclass.Order;
 import payment.dataclass.OrderStatus;
@@ -11,6 +12,7 @@ import payment.exceptions.InvalidRequestException;
 import payment.exceptions.OrderDoesNotExist;
 import payment.repos.OrderRepo;
 import payment.requests.CancelOrderRequest;
+import payment.requests.SubmitOrderRequest;
 import payment.responses.CancelOrderResponse;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,6 +23,7 @@ import shopping.exceptions.StoreDoesNotExistException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -96,11 +99,21 @@ class CancelOrderUnitTest {
         assertEquals("Order doesn't exist in database - can't cancel order", thrown.getMessage());
     }
 
+
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the CancelOrderRequest object was created correctly")
+    @DisplayName("CancelOrderRequest correctly constructed")
+    void UnitTest_CancelOrderRequestConstruction() {
+        CancelOrderRequest request=new CancelOrderRequest(o1UUID);
+        assertNotNull(request);
+        assertEquals(o1UUID,request.getOrderID());
+    }
+
     @Test
     @DisplayName("When Order Status is Invalid: Delivered")
     void cancelOrderStatusDelivered() throws InvalidRequestException, OrderDoesNotExist {
         List<Order> orders = listOfOrders;
-        System.out.println(orders.size());
         Order order = orders.get(0);
         int ordersSize = orders.size();
         o.setStatus(OrderStatus.DELIVERED);
@@ -110,7 +123,7 @@ class CancelOrderUnitTest {
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
-        Assertions.assertEquals(false, cancelOrderResponse.isSuccess());
+        Assertions.assertEquals(false, cancelOrderResponse.getSuccess());
         // order size does not change
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
     }
@@ -119,7 +132,6 @@ class CancelOrderUnitTest {
     @DisplayName("When Order Status is Invalid: DeliveryCollected")
     void cancelOrderStatusDeliveryCollected() throws InvalidRequestException, OrderDoesNotExist {
         List<Order> orders = listOfOrders;
-        System.out.println(orders.size());
         Order order = orders.get(0);
         int ordersSize = orders.size();
         o.setStatus(OrderStatus.DELIVERY_COLLECTED);
@@ -129,7 +141,7 @@ class CancelOrderUnitTest {
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
-        Assertions.assertEquals(false, cancelOrderResponse.isSuccess());
+        Assertions.assertEquals(false, cancelOrderResponse.getSuccess());
         // order size does not change
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
     }
@@ -138,7 +150,6 @@ class CancelOrderUnitTest {
     @DisplayName("When Order Status is Invalid: CustomerCollected")
     void cancelOrderStatusCustomerCollected() throws InvalidRequestException, OrderDoesNotExist {
         List<Order> orders = listOfOrders;
-        System.out.println(orders.size());
         Order order = orders.get(0);
         int ordersSize = orders.size();
         o.setStatus(OrderStatus.CUSTOMER_COLLECTED);
@@ -148,7 +159,7 @@ class CancelOrderUnitTest {
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
-        Assertions.assertEquals(false, cancelOrderResponse.isSuccess());
+        Assertions.assertEquals(false, cancelOrderResponse.getSuccess());
         // order size does not change
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
     }
@@ -157,7 +168,6 @@ class CancelOrderUnitTest {
     @DisplayName("When Order Status is Valid: AWAITING_PAYMENT")
     void cancelOrderStatusAwaitingPayment() throws InvalidRequestException, OrderDoesNotExist {
         List<Order> orders = listOfOrders;
-        System.out.println(orders.size());
         Order order = orders.get(0);
         int ordersSize = orders.size();
         o.setStatus(OrderStatus.AWAITING_PAYMENT);
@@ -167,7 +177,7 @@ class CancelOrderUnitTest {
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         Assertions.assertEquals("Order successfully cancelled. Customer has been charged 1000.0", cancelOrderResponse.getMessage());
-        Assertions.assertEquals(true, cancelOrderResponse.isSuccess());
+        Assertions.assertEquals(true, cancelOrderResponse.getSuccess());
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         orders.remove(o);
         Assertions.assertEquals(cancelOrderResponse.getOrders(),orders);
@@ -177,7 +187,6 @@ class CancelOrderUnitTest {
     @DisplayName("When Order Status is Valid: PURCHASED")
     void cancelOrderStatusPurchased() throws InvalidRequestException, OrderDoesNotExist {
         List<Order> orders = listOfOrders;
-        System.out.println(orders.size());
         Order order = orders.get(0);
         int ordersSize = orders.size();
         o.setStatus(OrderStatus.PURCHASED);
@@ -187,7 +196,7 @@ class CancelOrderUnitTest {
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         Assertions.assertEquals("Order successfully cancelled. Customer has been charged 1000.0", cancelOrderResponse.getMessage());
-        Assertions.assertEquals(true, cancelOrderResponse.isSuccess());
+        Assertions.assertEquals(true, cancelOrderResponse.getSuccess());
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         orders.remove(o);
         Assertions.assertEquals(cancelOrderResponse.getOrders(),orders);

@@ -17,6 +17,7 @@ import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
+import shopping.requests.AddToQueueRequest;
 import shopping.requests.GetCatalogueRequest;
 import shopping.requests.GetNextQueuedRequest;
 import shopping.requests.GetStoreByUUIDRequest;
@@ -68,7 +69,7 @@ public class GetNextQueuedUnitTest {
         listOfItems.add(i1);
         listOfItems.add(i2);
         c=new Catalogue(listOfItems);
-        s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4);
+        s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4,true);
         Date d1=new Date(2021,06,1,14,30);
         Date d2=new Date(2021,06,1,14,23);
         totalC=133.99;
@@ -149,5 +150,17 @@ public class GetNextQueuedUnitTest {
         assertEquals(listOfOrders,response.getQueueOfOrders());
         assertEquals(o,response.getNewCurrentOrder());
 
+    }
+
+    /** Checking request object is created correctly */
+    @Test
+    @Description("Tests whether the GetNextQueued request object was created correctly")
+    @DisplayName("GetNextQueueRequest correctly constructed")
+    void UnitTest_AddToQueueRequestConstruction() {
+
+        GetNextQueuedRequest request = new GetNextQueuedRequest(storeUUID1);
+
+        assertNotNull(request);
+        assertEquals(storeUUID1, request.getStoreID());
     }
 }

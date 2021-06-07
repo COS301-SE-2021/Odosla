@@ -4,14 +4,18 @@ import payment.exceptions.OrderDoesNotExist;
 import payment.exceptions.PaymentException;
 import payment.requests.*;
 import payment.responses.*;
+import shopping.exceptions.StoreClosedException;
+import shopping.exceptions.StoreDoesNotExistException;
+
 public interface PaymentService {
 
     // ORDER
 
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 
-
-    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException;
     CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist;
+
+
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
@@ -20,11 +24,11 @@ public interface PaymentService {
 
     ReverseTransactionResponse  reverseTransaction(ReverseTransactionRequest request);
 
+
     // INVOICE
 
     GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request);
 
     GetInvoiceResponse getInvoice(GetInvoiceRequest request);
-
 
 }
