@@ -16,18 +16,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@Service("shippingServiceImpl")
+@Service("shoppingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
     private final OrderRepo orderRepo;
-    private final ShoppingServiceImpl shoppingService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShoppingServiceImpl shoppingService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo) {
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
-        this.shoppingService = shoppingService;
     }
     /**
      *
