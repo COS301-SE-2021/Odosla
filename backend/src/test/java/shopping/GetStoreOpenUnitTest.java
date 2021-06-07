@@ -18,9 +18,10 @@ import shopping.exceptions.StoreClosedException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
 import shopping.requests.GetCatalogueRequest;
-import shopping.requests.ToggleStoreOpenRequest;
+import shopping.requests.GetStoreOpenRequest;
 import shopping.responses.GetCatalogueResponse;
-import shopping.responses.ToggleStoreOpenResponse;
+import shopping.responses.GetStoreOpenResponse;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ToggleStoreOpenUnitTest {
+public class GetStoreOpenUnitTest {
 
     @Mock
     private StoreRepo storeRepo;
@@ -65,9 +66,9 @@ public class ToggleStoreOpenUnitTest {
     @Description("Test for when Store with storeID does exist in database - should return correct store entity")
     @DisplayName("When Store with ID does exist")
     void UnitTest_Store_does_exist() throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
-        ToggleStoreOpenRequest request=new ToggleStoreOpenRequest(storeUUID1);
+        GetStoreOpenRequest request=new GetStoreOpenRequest(storeUUID1);
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(s));
-        ToggleStoreOpenResponse response= shoppingService.toggleStoreOpen(request);
+        GetStoreOpenResponse response= shoppingService.getStoreOpen(request);
         assertNotNull(response);
         assertEquals(s.getOpen(),response.getOpen());
         assertEquals("Store is now open for business",response.getMessage());

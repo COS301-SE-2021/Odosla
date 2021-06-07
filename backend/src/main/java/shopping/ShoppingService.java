@@ -15,5 +15,5 @@ public interface ShoppingService {
 
     GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
+    GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 }

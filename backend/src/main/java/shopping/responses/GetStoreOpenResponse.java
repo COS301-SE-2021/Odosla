@@ -2,13 +2,13 @@ package shopping.responses;
 
 import java.util.Date;
 
-public class ToggleStoreOpenResponse {
+public class GetStoreOpenResponse {
 
     Boolean isOpen = false;
     String message;
     Date timestamp;
 
-    public ToggleStoreOpenResponse(Boolean isOpen, Date timestamp, String message)
+    public GetStoreOpenResponse(Boolean isOpen, Date timestamp, String message)
     {
         this.isOpen= isOpen;
         this.timestamp=timestamp;

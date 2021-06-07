@@ -2,11 +2,10 @@ package shopping.requests;
 
 import java.util.UUID;
 
-public class ToggleStoreOpenRequest {
-
+public class GetStoreOpenRequest {
     UUID storeID;
 
-    public ToggleStoreOpenRequest(UUID storeID)
+    public GetStoreOpenRequest(UUID storeID)
     {
         this.storeID=storeID;
     }

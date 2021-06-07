@@ -301,8 +301,8 @@ public class ShoppingServiceImpl implements ShoppingService {
     }
 
     @Override
-    public ToggleStoreOpenResponse toggleStoreOpen(ToggleStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
-        ToggleStoreOpenResponse response=null;
+    public GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
+        GetStoreOpenResponse response=null;
 
         if(request!=null){
 
@@ -321,7 +321,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             if(calendar.get(Calendar.HOUR_OF_DAY) >= 7 && calendar.get(Calendar.HOUR_OF_DAY) < 22)
             {
                 storeEntity.setOpen(true);
-                response=new ToggleStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
+                response=new GetStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
             }
             else
             {
