@@ -188,4 +188,21 @@ public class UpdateOrderUnitTest {
         assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
     }
 
+    // cannot update order anymore
+    @Test
+    @Description("Tests for when the order status is DELIVERY_COLLECTED (order has been processed) - All but storeId, storeAddress, and type should change")
+    @DisplayName("When the order status is DELIVERY_COLLECTED")
+    void UnitTest_testingOrderStatus_DELIVERY_COLLECTED() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, expectedListOfItems, expectedDiscount, newStoreId, OrderType.COLLECTION, newStoreAddress);
+        o.setStatus(OrderStatus.DELIVERY_COLLECTED);
+        UpdateOrderResponse response = paymentService.updateOrder(request);
+        assertEquals("Can no longer update the order - UpdateOrder Unsuccessful.",response.getMessage());
+        assertFalse(response.isSuccess());
+        assertNotEquals(newStoreId, response.getOrder().getStoreID());
+        assertNotEquals(newStoreAddress, response.getOrder().getStoreAddress());
+        assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+    }
+
 }
