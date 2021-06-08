@@ -300,6 +300,39 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *
+     * getStoreOpen should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID is not null, else throw an InvalidRequestException
+     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               4. Use the found Store object's getOpeningTime and getClosingTime to check against
+     *                the current hour of day.
+     *               5. If it meets the conditions then initialize the response object's constructor to true,
+     *                else, to false.
+     *               6. Return the response object.
+     *
+     * Request Object (GetStoreOpenRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * Response Object (GetStoreOpenResponse):
+     * {
+     *                "isOpen":storeEntity.getOpen()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Store is now open for business"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+
     @Override
     public GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
         GetStoreOpenResponse response=null;
@@ -326,8 +359,10 @@ public class ShoppingServiceImpl implements ShoppingService {
             else
             {
                 storeEntity.setOpen(false);
-                throw new StoreClosedException("The store is currently not open for business");
+                response=new GetStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is closed for business");
             }
+            response.setOpeningTime(storeEntity.getOpeningTime());
+            response.setClosingTime(storeEntity.getClosingTime());
 
         }
         else{
@@ -335,6 +370,36 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *
+     * getItems should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID is not null, else throw an InvalidRequestException
+     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               4. Initialize the response object's constructor to the store entity's getStock().getItems()
+     *               5. Return the response object.
+     *
+     * Request Object (GetItemsRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * Response Object (GetItemsResponse):
+     * {
+     *                "items":storeEntity.getStock().getItems()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"Store items have been retrieved"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
 
     @Override
     public GetItemsResponse getItems(GetItemsRequest request) throws InvalidRequestException, StoreDoesNotExistException {
@@ -353,14 +418,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository");
             }
 
-            if(storeEntity.getStock().getItems().equals(null))
-            {
-                throw new InvalidRequestException("The store found has no items in its catalogue");
-            }
-            else
-            {
-                response = new GetItemsResponse(storeEntity.getStock().getItems(), Calendar.getInstance().getTime(), "Store items have been retrieved");
-            }
+            response = new GetItemsResponse(storeEntity.getStock().getItems(), Calendar.getInstance().getTime(), "Store items have been retrieved");
 
         }
         else{

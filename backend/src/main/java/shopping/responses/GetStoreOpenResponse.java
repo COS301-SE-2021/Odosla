@@ -7,6 +7,8 @@ public class GetStoreOpenResponse {
     Boolean isOpen = false;
     String message;
     Date timestamp;
+    int openingTime;
+    int closingTime;
 
     public GetStoreOpenResponse(Boolean isOpen, Date timestamp, String message)
     {
@@ -38,5 +40,21 @@ public class GetStoreOpenResponse {
 
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    public void setOpeningTime(int openingTime) {
+        this.openingTime = openingTime;
+    }
+
+    public int getOpeningTime() {
+        return openingTime;
+    }
+
+    public void setClosingTime(int closingTime) {
+        this.closingTime = closingTime;
+    }
+
+    public int getClosingTime() {
+        return closingTime;
     }
 }
