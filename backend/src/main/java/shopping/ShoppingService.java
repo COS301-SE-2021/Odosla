@@ -1,12 +1,12 @@
 package shopping;
 
-import shopping.exceptions.*;
+import shopping.exceptions.InvalidRequestException;
+import shopping.exceptions.StoreClosedException;
+import shopping.exceptions.StoreDoesNotExistException;
 import shopping.requests.*;
 import shopping.responses.*;
-import shopping.requests.GetNextQueuedRequest;
 
 public interface ShoppingService {
-
     GetCatalogueResponse getCatalogue(GetCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException;
@@ -17,3 +17,4 @@ public interface ShoppingService {
 
     GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 }
+

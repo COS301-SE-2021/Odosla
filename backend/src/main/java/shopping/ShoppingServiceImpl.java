@@ -307,7 +307,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(request!=null){
 
             if (request.getStoreID()==null) {
-                throw new InvalidRequestException("The Store ID in ToggleStoreOpenRequest parameter is null - Could not set store to open");
+                throw new InvalidRequestException("The Store ID in GetStoreOpenRequest parameter is null - Could not set store to open");
             }
             Store storeEntity=null;
             try {
@@ -331,7 +331,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         }
         else{
-            throw new InvalidRequestException("The ToggleStoreOpenRequest parameter is null - Could not set store to open");
+            throw new InvalidRequestException("The GetStoreOpenRequest parameter is null - Could not set store to open");
         }
         return response;
     }
