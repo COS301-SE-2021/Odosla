@@ -318,7 +318,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             Calendar calendar= Calendar.getInstance();
-            if(calendar.get(Calendar.HOUR_OF_DAY) >= 7 && calendar.get(Calendar.HOUR_OF_DAY) < 22)
+            if(calendar.get(Calendar.HOUR_OF_DAY) >= storeEntity.getOpeningTime() && calendar.get(Calendar.HOUR_OF_DAY) < storeEntity.getClosingTime())
             {
                 storeEntity.setOpen(true);
                 response=new GetStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");

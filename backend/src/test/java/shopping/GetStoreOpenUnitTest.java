@@ -54,6 +54,8 @@ public class GetStoreOpenUnitTest {
         listOfItems.add(i2);
         c=new Catalogue(listOfItems);
         s=new Store(storeUUID1,"Woolworths",c,2,null,null,4,false);
+        s.setOpeningTime(7);
+        s.setClosingTime(22);
     }
 
     @AfterEach
