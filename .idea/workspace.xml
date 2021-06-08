@@ -5,8 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/shopping/requests/GetShoppersRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/shopping/responses/GetShoppersResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/shopping/ShoppingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/Address.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/GroceryList.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/GroceryList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserType.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/UserType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/Shopper.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/Shopper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/shopping/GetNextQueuedUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/shopping/GetNextQueuedUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/test-classes/shopping/GetStoreByUUIDUnitTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/test-classes/shopping/GetStoreByUUIDUnitTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +49,15 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/test/java/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -56,6 +75,19 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -65,6 +97,7 @@
       <option name="presentableId" value="Default" />
       <updated>1623010297313</updated>
       <workItem from="1623010298859" duration="2376000" />
+      <workItem from="1623141611335" duration="954000" />
     </task>
     <servers />
   </component>
@@ -81,5 +114,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

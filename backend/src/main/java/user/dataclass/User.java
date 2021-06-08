@@ -1,7 +1,5 @@
 package user.dataclass;
 
-import user.UserType;
-
 import java.util.Calendar;
 import java.util.UUID;
 

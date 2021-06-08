@@ -216,7 +216,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
 
-            List<Order> orderqueue=store.getOrderQueue();
+            List<Order> orderqueue= store.getOrderQueue();
 
             if(orderqueue.size()==0){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);

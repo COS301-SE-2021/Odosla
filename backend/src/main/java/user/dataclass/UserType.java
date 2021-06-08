@@ -1,4 +1,4 @@
-package user;
+package user.dataclass;
 
 public enum UserType {
     SHOPPER,
