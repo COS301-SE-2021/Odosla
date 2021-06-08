@@ -11,12 +11,12 @@ import cs.superleague.user.requests.*;
 public class UserServiceImpl implements UserService{
 
     private final ShopperRepo shopperRepo;
-    private final UserService userService;
+    //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo){//, UserService userService) {
         this.shopperRepo = shopperRepo;
-        this.userService = userService;
+        //this.userService = userService;
     }
 
     @Override //unfinished

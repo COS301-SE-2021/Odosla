@@ -1,6 +1,7 @@
 package cs.superleague.shopping;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -22,7 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@Service("shippingServiceImpl")
+@Service("shoppingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
@@ -30,7 +31,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     private final ShoppingServiceImpl shoppingService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShoppingServiceImpl shoppingService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, @Lazy ShoppingServiceImpl shoppingService) {
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
         this.shoppingService = shoppingService;
