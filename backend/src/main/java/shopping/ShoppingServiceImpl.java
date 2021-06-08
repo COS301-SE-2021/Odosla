@@ -7,16 +7,11 @@ import payment.dataclass.OrderStatus;
 import payment.repos.OrderRepo;
 import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
+import shopping.exceptions.StoreClosedException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
-import shopping.requests.AddToQueueRequest;
-import shopping.requests.GetCatalogueRequest;
-import shopping.requests.GetNextQueuedRequest;
-import shopping.requests.GetStoreByUUIDRequest;
-import shopping.responses.AddToQueueResponse;
-import shopping.responses.GetCatalogueResponse;
-import shopping.responses.GetNextQueuedResponse;
-import shopping.responses.GetStoreByUUIDResponse;
+import shopping.requests.*;
+import shopping.responses.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -301,6 +296,42 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         else{
             throw new InvalidRequestException("GetStoreByUUID request is null - could not return store entity");
+        }
+        return response;
+    }
+
+    @Override
+    public GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
+        GetStoreOpenResponse response=null;
+
+        if(request!=null){
+
+            if (request.getStoreID()==null) {
+                throw new InvalidRequestException("The Store ID in GetStoreOpenRequest parameter is null - Could not set store to open");
+            }
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository");
+            }
+
+            Calendar calendar= Calendar.getInstance();
+            if(calendar.get(Calendar.HOUR_OF_DAY) >= storeEntity.getOpeningTime() && calendar.get(Calendar.HOUR_OF_DAY) < storeEntity.getClosingTime())
+            {
+                storeEntity.setOpen(true);
+                response=new GetStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
+            }
+            else
+            {
+                storeEntity.setOpen(false);
+                throw new StoreClosedException("The store is currently not open for business");
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("The GetStoreOpenRequest parameter is null - Could not set store to open");
         }
         return response;
     }
