@@ -1,0 +1,56 @@
+Index: backend/src/main/java/shopping/requests/GetShoppersRequest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/shopping/requests/GetShoppersRequest.java b/backend/src/main/java/shopping/requests/GetShoppersRequest.java
+new file mode 100644
+--- /dev/null	(date 1623021866823)
++++ b/backend/src/main/java/shopping/requests/GetShoppersRequest.java	(date 1623021866823)
+@@ -0,0 +1,15 @@
++package shopping.requests;
++
++import java.util.UUID;
++
++public class GetShoppersRequest {
++    private UUID userID;
++
++    public UUID getUserID() {
++        return userID;
++    }
++
++    public void setUserID(UUID userID) {
++        this.userID = userID;
++    }
++}
+Index: backend/src/main/java/shopping/responses/GetShoppersResponse.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/shopping/responses/GetShoppersResponse.java b/backend/src/main/java/shopping/responses/GetShoppersResponse.java
+new file mode 100644
+--- /dev/null	(date 1623022165055)
++++ b/backend/src/main/java/shopping/responses/GetShoppersResponse.java	(date 1623022165055)
+@@ -0,0 +1,21 @@
++package shopping.responses;
++
++import user.dataclass.Shopper;
++
++import java.util.List;
++
++public class GetShoppersResponse {
++
++    private final List<Shopper> listOfShoppers;
++    private boolean success;
++    private String message;
++
++    public GetShoppersResponse(List<Shopper> listOfShoppers) {
++
++        this.listOfShoppers = listOfShoppers;
++    }
++
++    public List<Shopper> getListOfShoppers() {
++        return listOfShoppers;
++    }
++}
