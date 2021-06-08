@@ -1,9 +1,9 @@
 package shopping;
-import shopping.exceptions.InvalidRequestException;
-import shopping.exceptions.StoreClosedException;
-import shopping.exceptions.StoreDoesNotExistException;
+
+import shopping.exceptions.*;
 import shopping.requests.*;
 import shopping.responses.*;
+import shopping.requests.GetNextQueuedRequest;
 
 public interface ShoppingService {
 
