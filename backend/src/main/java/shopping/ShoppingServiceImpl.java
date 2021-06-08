@@ -335,4 +335,37 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    @Override
+    public GetItemsResponse getItems(GetItemsRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        GetItemsResponse response=null;
+
+        if(request!=null){
+
+            if (request.getStoreID()==null) {
+                throw new InvalidRequestException("The Store ID in GetItemsRequest parameter is null - Could not get items from store");
+            }
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository");
+            }
+
+            if(storeEntity.getStock().getItems().equals(null))
+            {
+                throw new InvalidRequestException("The store found has no items in its catalogue");
+            }
+            else
+            {
+                response = new GetItemsResponse(storeEntity.getStock().getItems(), Calendar.getInstance().getTime(), "Store items have been retrieved");
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("The GetItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
+    }
 }

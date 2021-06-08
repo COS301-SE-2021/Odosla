@@ -11,7 +11,7 @@ public class GetItemsResponse {
     Date timestamp;
     String message;
 
-    GetItemsResponse(List<Item> items, Date timestamp, String message)
+    public GetItemsResponse(List<Item> items, Date timestamp, String message)
     {
         this.items = items;
         this.timestamp= timestamp;
