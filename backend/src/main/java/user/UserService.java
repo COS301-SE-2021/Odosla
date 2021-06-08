@@ -7,7 +7,8 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    public ScanItemResponse scanItem(ScanItemRequest request);
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request);
+    public ScanItemResponse scanItem(ScanItemRequest request);
+
 
 }

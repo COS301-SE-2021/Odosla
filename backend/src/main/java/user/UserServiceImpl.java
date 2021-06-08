@@ -21,12 +21,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) {
+
+
+
+        return null;
+
+    }
+
+    @Override
     public ScanItemResponse scanItem(ScanItemRequest request) {
         return null;
     }
 
-    @Override
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) {
-        return null;
-    }
+
 }

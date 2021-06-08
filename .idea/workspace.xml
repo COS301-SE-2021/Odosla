@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Setup shopper structure and request objects">
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added ShopperRepo">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/user/exceptions/InvalidRequestException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/user/exceptions/UserException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/requests/CompletePackagingOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/requests/CompletePackagingOrderRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/classes/shopping/ShoppingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/shopping/ShoppingServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/Address.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/GroceryList.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/user/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/user/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/UserType.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/dataclass/Shopper.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/user/dataclass/Shopper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/user/dataclass/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/user/dataclass/User.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,11 +69,20 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/main/java/user/exceptions" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Code\Capstone\backend\src\main\java\user\exceptions" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="user.repos" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
@@ -89,7 +106,7 @@
       <option name="presentableId" value="Default" />
       <updated>1623010297313</updated>
       <workItem from="1623010298859" duration="2376000" />
-      <workItem from="1623141611335" duration="2788000" />
+      <workItem from="1623141611335" duration="4107000" />
     </task>
     <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
       <created>1623142688992</created>
@@ -98,7 +115,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623142688992</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Added ShopperRepo">
+      <created>1623145467967</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1623145467967</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +142,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Setup shopper structure and request objects" />
-    <option name="LAST_COMMIT_MESSAGE" value="Setup shopper structure and request objects" />
+    <MESSAGE value="Added ShopperRepo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added ShopperRepo" />
   </component>
 </project>
