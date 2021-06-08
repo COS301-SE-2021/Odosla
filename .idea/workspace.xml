@@ -4,19 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" afterDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Setup shopper structure and request objects">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/shopping/ShoppingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/Address.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/Address.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/GroceryList.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/GroceryList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/UserType.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/UserType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/Shopper.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/Shopper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/dataclass/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/shopping/GetNextQueuedUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/shopping/GetNextQueuedUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/target/test-classes/shopping/GetStoreByUUIDUnitTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/test-classes/shopping/GetStoreByUUIDUnitTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/user/requests/CompletePackagingOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/user/requests/CompletePackagingOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/shopping/ShoppingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/shopping/ShoppingServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,8 +89,16 @@
       <option name="presentableId" value="Default" />
       <updated>1623010297313</updated>
       <workItem from="1623010298859" duration="2376000" />
-      <workItem from="1623141611335" duration="954000" />
+      <workItem from="1623141611335" duration="2788000" />
     </task>
+    <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
+      <created>1623142688992</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1623142688992</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -115,5 +115,9 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Setup shopper structure and request objects" />
+    <option name="LAST_COMMIT_MESSAGE" value="Setup shopper structure and request objects" />
   </component>
 </project>
