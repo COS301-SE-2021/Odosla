@@ -1,14 +1,13 @@
-package shopping.requests;
+package cs.superleague.shopping.requests;
 
 import java.util.UUID;
 
-public class GetItemsRequest {
-
+public class GetStoreOpenRequest {
     UUID storeID;
 
-    public GetItemsRequest(UUID storeID)
+    public GetStoreOpenRequest(UUID storeID)
     {
-        this.storeID= storeID;
+        this.storeID=storeID;
     }
 
     public void setStoreID(UUID storeID) {

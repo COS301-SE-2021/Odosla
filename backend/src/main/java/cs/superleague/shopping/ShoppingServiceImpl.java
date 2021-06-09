@@ -1,5 +1,8 @@
 package cs.superleague.shopping;
 
+import cs.superleague.shopping.exceptions.StoreClosedException;
+import cs.superleague.shopping.requests.*;
+import cs.superleague.shopping.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -10,14 +13,6 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.shopping.requests.AddToQueueRequest;
-import cs.superleague.shopping.requests.GetCatalogueRequest;
-import cs.superleague.shopping.requests.GetNextQueuedRequest;
-import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
-import cs.superleague.shopping.responses.AddToQueueResponse;
-import cs.superleague.shopping.responses.GetCatalogueResponse;
-import cs.superleague.shopping.responses.GetNextQueuedResponse;
-import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 
 import java.util.Calendar;
 import java.util.Date;

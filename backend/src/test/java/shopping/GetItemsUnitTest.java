@@ -1,5 +1,6 @@
 package shopping;
 
+import cs.superleague.shopping.ShoppingServiceImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,18 +8,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
-import shopping.dataclass.Catalogue;
-import shopping.dataclass.Item;
-import shopping.dataclass.Store;
-import shopping.exceptions.InvalidRequestException;
-import shopping.exceptions.StoreClosedException;
-import shopping.exceptions.StoreDoesNotExistException;
-import shopping.repos.StoreRepo;
-import shopping.requests.GetItemsRequest;
-import shopping.requests.GetStoreByUUIDRequest;
-import shopping.requests.GetStoreOpenRequest;
-import shopping.responses.GetItemsResponse;
-import shopping.responses.GetStoreOpenResponse;
+import cs.superleague.shopping.dataclass.Catalogue;
+import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.InvalidRequestException;
+import cs.superleague.shopping.exceptions.StoreClosedException;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.shopping.requests.GetItemsRequest;
+import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
+import cs.superleague.shopping.responses.GetItemsResponse;
 
 import java.util.ArrayList;
 import java.util.List;

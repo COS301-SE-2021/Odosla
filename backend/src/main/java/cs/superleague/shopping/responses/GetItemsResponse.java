@@ -1,6 +1,7 @@
-package shopping.responses;
+package cs.superleague.shopping.responses;
 
-import shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Item;
 
 import java.util.Date;
 import java.util.List;

@@ -1,4 +1,4 @@
-package shopping.responses;
+package cs.superleague.shopping.responses;
 
 import java.util.Date;
 
