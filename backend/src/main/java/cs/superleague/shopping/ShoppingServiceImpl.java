@@ -429,4 +429,43 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+
+    public RemoveQueuedOrderResponse removeQueuedOrder(RemoveQueuedOrderRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        if(request != null){
+            if(request.getOrderID() == null) {
+                throw new InvalidRequestException("Order ID parameter in request can't be null - can't remove from queue");
+            }else if(request.getStoreID() == null){
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't remove from queue");
+            }else{
+                Store store;
+                try {
+                    store = storeRepo.findById(request.getStoreID()).orElse(null);
+                }
+                catch(Exception e){
+                    throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+                }
+                List<Order> orderqueue=store.getOrderQueue();
+                if(orderqueue.size()==0) {
+                    return new RemoveQueuedOrderResponse(false, "The order queue of shop is empty", null);
+                }
+                Order correspondingOrder=null;
+
+                for (Order o: orderqueue){
+                    if(o.getOrderID().equals(request.getOrderID())){
+                        correspondingOrder=o;
+                    }
+                }
+                if(correspondingOrder == null){
+                    return new RemoveQueuedOrderResponse(false, "Order not found in shop queue", null);
+                }
+                orderqueue.remove(correspondingOrder);
+                store.setOrderQueue(orderqueue);
+                
+                return new RemoveQueuedOrderResponse(true, "Order successfully removed from the queue", correspondingOrder.getOrderID());
+            }
+        }else{
+            throw new InvalidRequestException("Request object for RemoveQueuedOrderRequest can't be null - can't get next queued");
+        }
+    }
 }
