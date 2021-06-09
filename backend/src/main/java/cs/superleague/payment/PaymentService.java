@@ -15,7 +15,7 @@ public interface PaymentService {
 
     CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist;
 
-
+    UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException;
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
