@@ -27,7 +27,7 @@ public class GetOrderResponse {
         return order;
     }
 
-    public boolean getSuccess() {
+    public boolean isSuccess() {
         return success;
     }
 
