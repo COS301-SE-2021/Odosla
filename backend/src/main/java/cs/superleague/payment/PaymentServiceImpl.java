@@ -407,7 +407,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             message = "Order successfully updated.";
         }else {
-            message = "Store details and OrderType could not be updated. Other details updated successfully.";
+            message = "Delivery address and OrderType could not be updated. Other details updated successfully.";
         }
 
         return new UpdateOrderResponse(order, true, Calendar.getInstance().getTime(), message);
