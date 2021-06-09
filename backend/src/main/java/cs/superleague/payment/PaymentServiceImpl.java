@@ -296,16 +296,16 @@ public class PaymentServiceImpl implements PaymentService {
         Order order = null;
 
         if(request == null){
-            throw new InvalidRequestException("Invalid update order request received - order unsuccessfully updated.");
+            throw new InvalidRequestException("Invalid update order request received - cannot get order.");
         }
 
         if(request.getOrderID() == null){
-            throw new InvalidRequestException("OrderID cannot be null in request object - order unsuccessfully updated.");
+            throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
         order = orderRepo.findById(request.getOrderID()).orElse(null);
         if(order == null){
-            throw new OrderDoesNotExist("Order doesn't exist in database - can't update order.");
+            throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
 
         message = "Order retrieval successful.";
