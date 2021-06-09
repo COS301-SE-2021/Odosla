@@ -430,7 +430,39 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
-
+    /**
+     *
+     * @param request is used to bring in:
+     *                private orderID
+     *                private storeID
+     *
+     * removeQueuedOrder should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID or OrderID is not null, else throw an InvalidRequestException
+     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               4. Find the corresponding order in the Store object, if it is empty or not there return false
+     *               6. Remove the corresponding item from the Store object.
+     *               5. Return the response object with the corresponding orderID that has been removed.
+     *
+     * Request Object (RemoveQueuedOrderRequest):
+     * {
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * Response Object (RemoveQueuedOrderResponse):
+     * {
+     *                "isRemoved":true
+     *                "message":"Order successfully removed from the queue"
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+    @Override
     public RemoveQueuedOrderResponse removeQueuedOrder(RemoveQueuedOrderRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         if(request != null){
             if(request.getOrderID() == null) {
@@ -445,13 +477,13 @@ public class ShoppingServiceImpl implements ShoppingService {
                 catch(Exception e){
                     throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
                 }
-                List<Order> orderqueue=store.getOrderQueue();
-                if(orderqueue.size()==0) {
+                List<Order> orderQueue=store.getOrderQueue();
+                if(orderQueue.size()==0) {
                     return new RemoveQueuedOrderResponse(false, "The order queue of shop is empty", null);
                 }
                 Order correspondingOrder=null;
 
-                for (Order o: orderqueue){
+                for (Order o: orderQueue){
                     if(o.getOrderID().equals(request.getOrderID())){
                         correspondingOrder=o;
                     }
@@ -459,8 +491,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 if(correspondingOrder == null){
                     return new RemoveQueuedOrderResponse(false, "Order not found in shop queue", null);
                 }
-                orderqueue.remove(correspondingOrder);
-                store.setOrderQueue(orderqueue);
+                orderQueue.remove(correspondingOrder);
+                store.setOrderQueue(orderQueue);
                 
                 return new RemoveQueuedOrderResponse(true, "Order successfully removed from the queue", correspondingOrder.getOrderID());
             }
