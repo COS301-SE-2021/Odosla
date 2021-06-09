@@ -18,4 +18,6 @@ public interface ShoppingService {
     GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException, StoreClosedException;
 
     GetItemsResponse getItems(GetItemsRequest request) throws InvalidRequestException, StoreDoesNotExistException;
+
+    UpdateCatalogueResponse updateCatalogue(UpdateCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 }

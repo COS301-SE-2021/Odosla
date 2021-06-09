@@ -429,4 +429,68 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *                private catalogue
+     *
+     * updateCatalogue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID is not null, else throw an InvalidRequestException
+     *               3. Check if the request's catalogue is not null, else throw an InvalidRequestException
+     *               4. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               5. Initialize the response object's constructor to the storeID and response message
+     *               6. Return the response object.
+     *
+     * Request Object (UpdateCatalogueRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                "catalogue":{
+     *                          "item1":{
+     *                                  "productID":"123456"
+     *                                  ...
+     *                          }
+     *                          ...
+     *                }
+     * }
+     *
+     * Response Object (UpdateCatalogueResponse):
+     * {
+     *                "response":true
+     *                "message":"Catalogue updated for the store"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+    @Override
+    public UpdateCatalogueResponse updateCatalogue(UpdateCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        UpdateCatalogueResponse response=null;
+
+        if(request!=null){
+            if (request.getStoreID()==null) {
+                throw new InvalidRequestException("The Store ID in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop");
+            }else if(request.getCatalogue() == null){
+                throw new InvalidRequestException("The Catalogue in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop");
+            }
+            Store storeEntity=null;
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Catalog entity");
+            }
+            storeEntity.setStock(request.getCatalogue());
+            storeRepo.save(storeEntity);
+            response=new UpdateCatalogueResponse(true, "Catalogue updated for the store", storeEntity.getStoreID());
+        } else{
+            throw new InvalidRequestException("The request object for GetCatalogueRequest is null - Could not update catalogue for the shop");
+        }
+        return response;
+    }
 }
