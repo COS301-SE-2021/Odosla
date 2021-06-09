@@ -290,6 +290,27 @@ public class PaymentServiceImpl implements PaymentService {
         return response;
     }
 
+    @Override
+    public GetOrderResponse getOrder(GetOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
+        String message = null;
+        Order order = null;
+
+        if(request == null){
+            throw new InvalidRequestException("Invalid update order request received - cannot get order.");
+        }
+
+        if(request.getOrderID() == null){
+            throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
+        }
+
+        order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if(order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
+        }
+
+        message = "Order retrieval successful.";
+        return new GetOrderResponse(order, true, Calendar.getInstance().getTime(), message);
+    }
     // TRANSACTION IMPLEMENTATION
 
     @Override
