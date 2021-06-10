@@ -6,7 +6,6 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.user.dataclass.Shopper;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,8 +19,6 @@ public class Store {
     private int maxShoppers = 2;
     private int maxOrders;
     private Boolean isOpen;
-    private int openingTime;
-    private int closingTime;
 
     @OneToOne(cascade={CascadeType.ALL})
     private Catalogue stock;
@@ -124,22 +121,6 @@ public class Store {
 
     public void setOpen(Boolean open) {
         isOpen = open;
-    }
-
-    public void setOpeningTime(int openingTime) {
-        this.openingTime = openingTime;
-    }
-
-    public int getOpeningTime() {
-        return openingTime;
-    }
-
-    public void setClosingTime(int closingTime) {
-        this.closingTime = closingTime;
-    }
-
-    public int getClosingTime() {
-        return closingTime;
     }
 }
 
