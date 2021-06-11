@@ -361,6 +361,9 @@ public class PaymentServiceImpl implements PaymentService {
                 status != OrderStatus.DELIVERED &&
                 status != OrderStatus.PACKING) { // statuses which do not allow for the updating of an order
 
+            if (request.getOrderType() != null) {
+                order.setType(request.getOrderType());
+            }
 
             if (request.getDiscount() != 0) {
                 discount = request.getDiscount();
@@ -380,23 +383,13 @@ public class PaymentServiceImpl implements PaymentService {
                 order.setDeliveryAddress(request.getDeliveryAddress());
             }
 
+            message = "Order successfully updated.";
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
         }
 
         orderRepo.save(order);
-        // order has not been processed by shopper
-        // nor has it been accepted by driver. customer can change type
-        if (status == OrderStatus.AWAITING_PAYMENT) {
-            if (request.getOrderType() != null) {
-                order.setType(request.getOrderType());
-            }
-
-            message = "Order successfully updated.";
-        } else {
-            message = "Delivery address and OrderType could not be updated. Other details updated successfully.";
-        }
 
         return new UpdateOrderResponse(order, true, Calendar.getInstance().getTime(), message);
     }
