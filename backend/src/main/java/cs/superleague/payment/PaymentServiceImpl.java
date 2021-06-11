@@ -449,7 +449,7 @@ public class PaymentServiceImpl implements PaymentService {
         double cost = 0;
 
         for (Item item : items) {
-            cost += item.getPrice();
+            cost += item.getPrice() * item.getQuantity();
         }
 
         return cost;
