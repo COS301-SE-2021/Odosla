@@ -333,10 +333,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
-        String message = null;
-        Order order = null;
+        String message;
+        Order order;
         double discount = 0;
-        double cost = 0;
+        double cost;
 
         if(request == null){
             order = getOrder(null).getOrder();
@@ -368,11 +368,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (request.getListOfItems() != null) {
                 order.setItems(request.getListOfItems());
-
-                for (Item item : order.getItems()) {
-                    cost += item.getPrice();
-                }
-
+                cost = getCost(order.getItems());
                 order.setTotalCost(cost - discount);
             } // else refer them to cancel order
 
@@ -453,5 +449,16 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public GetInvoiceResponse getInvoice(GetInvoiceRequest request) {
         return null;
+    }
+
+    // Helper
+    private double getCost(List<Item> items){
+        double cost = 0;
+
+        for (Item item : items) {
+            cost += item.getPrice();
+        }
+
+        return cost;
     }
 }
