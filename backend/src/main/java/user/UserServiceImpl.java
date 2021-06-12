@@ -13,4 +13,15 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDResponse request){
+        GetShopperByUUIDResponse response=null;
+
+        if(request!=null){
+
+        }
+        else{
+            return new
+        }
+    }
+
 }

@@ -32,4 +32,16 @@ public class GetShoppersResponse {
     public List<Shopper> getListOfShoppers() {
         return listOfShoppers;
     }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

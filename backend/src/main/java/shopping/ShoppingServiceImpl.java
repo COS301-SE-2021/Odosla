@@ -323,16 +323,14 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             List<Shopper> listOfShoppers=null;
+            listOfShoppers=storeEntity.getShoppers();
 
-            if(storeEntity!=null){
-               listOfShoppers=storeEntity.getShoppers();
-            }
 
             if(listOfShoppers!=null) {
                 response = new GetShoppersResponse(listOfShoppers, true, Calendar.getInstance().getTime(), "List of Shoppers successfully returned");
             }
             else{
-                response = new GetShoppersResponse(null, true, Calendar.getInstance().getTime(), "List of Shoppers is null");
+                response = new GetShoppersResponse(null, false, Calendar.getInstance().getTime(), "List of Shoppers is null");
             }
         }
         else{
