@@ -1,0 +1,194 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description: The library service
+
+tags:
+  - name: "Library"
+
+
+paths:
+
+  /library/books:
+    get:
+      summary: This is summary
+      tags:
+        - "Library"
+      description: This is a description
+      operationId: getAllBooksInLibrary
+      responses:
+        "200":
+          description: This means its ok
+          content:
+            application/json:
+              schema:
+                type: string
+
+components:
+
+  schemas:
+
+#    Book:
+#      description: This is the book model
+#      type: object
+#      properties:
+#        name:
+#          description: The name of book
+#          type: string
+#        bookAuthor:
+#          description: name of author
+#          type: string
+
+
+
+
+
+
+
+#openapi: 3.0.0
+#
+#info:
+#  version: 0.0.1
+#  title: Odosla
+#  description: OpenAPI specs for Odosla Controllers
+#
+#tags:
+#  - name: "Payments"
+#  - name: "Shopping"
+#
+#
+#paths:
+#
+#  #
+#  # Shopping SubSys Pathing
+#  #
+#  #########################
+#
+#  /shopping/getCatalogue:
+#    post:
+#      summary: Endpoint for Get Catalogue use case
+#      tags:
+#        - "Shopping"
+#      description: Refer to summary
+#      operationId: getCatalogue
+#      requestBody:
+#        description: The input body required by this request
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/shopping_GetCatalogueRequest"
+#      responses:
+#        "200":
+#          description: Returns catalogue of store
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/shopping_GetCatalogueRequest"
+
+#  /library/books:
+#    get:
+#      summary: This is summary
+#      tags:
+#        - "Library"
+#      description: This is a description
+#      operationId: getAllBooksInLibrary
+#      responses:
+#        "200":
+#          description: This means its ok
+#          content:
+#            application/json:
+#              schema:
+#                type: array
+#                items:
+#                  $ref: '#/components/schemas/Book'
+
+#components:
+#
+#  schemas:
+#
+#    Book:
+#      description: This is the book model
+#      type: object
+#      properties:
+#        name:
+#          description: The name of book
+#          type: string
+#        bookAuthor:
+#          description: name of author
+#          type: string
+
+    #
+    # Shopping SubSys Components
+    #
+    ############################
+
+    # - Requests
+
+#    shopping_GetCatalogueRequest:
+#      description: Request object for GetCatalogue
+#      type: object
+#      properties:
+#        jwtToken:
+#          type: string
+#          description: Generated token used to identify the caller of the endpoint
+#        storeId:
+#          type: string
+
+    # - Objects
+
+#    CatalogueObject:
+#      description: Generic schema for catalogue returned by use cases
+#      type: object
+#      properties:
+#        storeId:
+#          type: string
+#        items:
+#          type: array
+#          items:
+#            $ref: "#/components/schemas/ItemObject"
+
+#    ItemObject:
+#      description: "Generic schema for an item"
+#      type: object
+#      properties:
+#        productId:
+#          type: string
+#        name:
+#          type: string
+#        barcode:
+#          type: string
+#        storeId:
+#          type: string
+#        price:
+#          type: number
+#        quantity:
+#          type: integer
+#        description:
+#          type: string
+#        imageUrl:
+#          type: string
+
+
+
+
+
+
+
+
+
+
+    #test#####
+#
+#    Book:
+#      description: This is the book model
+#      type: object
+#      properties:
+#        name:
+#          description: The name of book
+#          type: string
+#        bookAuthor:
+#          description: name of author
+#          type: string
