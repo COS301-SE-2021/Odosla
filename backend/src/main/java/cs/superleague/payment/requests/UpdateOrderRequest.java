@@ -30,6 +30,15 @@ public class UpdateOrderRequest {
      * @param deliveryAddress - the GeoPoint address of where the order is to be shipped if order type is delivery
      */
     public UpdateOrderRequest(UUID orderID, UUID userID, List<Item> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.listOfItems = listOfItems;
+        this.discount = discount;
+        this.orderType = orderType;
+        this.deliveryAddress=deliveryAddress;
+    }
+
+    public UpdateOrderRequest(UUID userID, List<Item> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
         this.userID = userID;
         this.listOfItems = listOfItems;
         this.discount = discount;
