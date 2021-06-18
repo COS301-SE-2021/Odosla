@@ -37,7 +37,7 @@ public class Order {
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @ManyToMany (cascade = {CascadeType.MERGE})
+    @ManyToMany
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items;

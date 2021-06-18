@@ -1,4 +1,4 @@
-package cs.superleague.payment.integrationTests;
+package cs.superleague.payment.integration;
 
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
@@ -13,6 +13,7 @@ import cs.superleague.payment.requests.UpdateOrderRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.payment.responses.UpdateOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,8 @@ public class UpdateOrderIntegrationTest {
     @Autowired
     StoreRepo storeRepo;
 
+    @Autowired
+    ItemRepo itemRepo;
 
     // Global variables
     double expectedDiscount, expectedtotalCost;
@@ -111,6 +114,9 @@ public class UpdateOrderIntegrationTest {
         // Assigning Item objects
         I1 = new Item("Heinz Tamatoe Sauce", "123456", "123456", expectedStoreId, 36.99, 1, "description", "img/");
         I2 = new Item("Bar one", "012345", "012345", expectedStoreId, 14.99, 3, "description", "img/");
+
+        itemRepo.save(I1);
+        itemRepo.save(I2);
 
         // Assigning Order objects
         expectedListOfItems.add(I1);

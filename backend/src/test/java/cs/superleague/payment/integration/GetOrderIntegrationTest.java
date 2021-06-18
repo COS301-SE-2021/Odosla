@@ -1,4 +1,4 @@
-package cs.superleague.payment.integrationTests;
+package cs.superleague.payment.integration;
 
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.Order;
