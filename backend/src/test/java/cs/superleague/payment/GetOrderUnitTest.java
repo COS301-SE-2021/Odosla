@@ -79,7 +79,7 @@ public class GetOrderUnitTest {
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject() {
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.getOrder(null));
-        assertEquals("Invalid update order request received - cannot get order.", thrown.getMessage());
+        assertEquals("Invalid order request received - cannot get order.", thrown.getMessage());
     }
 
     @Test

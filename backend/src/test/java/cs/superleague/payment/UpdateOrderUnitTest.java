@@ -81,7 +81,7 @@ public class UpdateOrderUnitTest {
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(null));
-        assertEquals("Invalid update order request received - order unsuccessfully updated.", thrown.getMessage());
+        assertEquals("Invalid order request received - cannot get order.", thrown.getMessage());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class UpdateOrderUnitTest {
     void UnitTest_testingNull_OrderID_Parameter_RequestObject(){
         UpdateOrderRequest request = new UpdateOrderRequest(null, expectedU1, expectedListOfItems, expectedDiscount, expectedType, deliveryAddress);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(request));
-        assertEquals("OrderID cannot be null in request object - order unsuccessfully updated.", thrown.getMessage());
+        assertEquals("OrderID cannot be null in request object - cannot get order.", thrown.getMessage());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class UpdateOrderUnitTest {
         UpdateOrderRequest request = new UpdateOrderRequest(null, expectedU1, expectedListOfItems, expectedDiscount, expectedType, deliveryAddress);
         request.setOrderID(UUID.randomUUID());
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.updateOrder(request));
-        assertEquals("Order doesn't exist in database - can't update order.", thrown.getMessage());
+        assertEquals("Order doesn't exist in database - cannot get order.", thrown.getMessage());
     }
 
     @Test
