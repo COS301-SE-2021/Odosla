@@ -1,11 +1,5 @@
 package cs.superleague.shopping.integration;
 
-import cs.superleague.payment.PaymentServiceImpl;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.payment.requests.SubmitOrderRequest;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -25,12 +19,6 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.payment.PaymentServiceImpl;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.payment.requests.SubmitOrderRequest;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.UserServiceImpl;
 import org.junit.jupiter.api.AfterEach;
