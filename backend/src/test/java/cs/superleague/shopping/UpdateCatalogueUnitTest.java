@@ -50,12 +50,12 @@ public class UpdateCatalogueUnitTest {
         i4=new Item("Bread","890123","890123",storeUUID1,36.99,1,"description","img/");
         listOfItems.add(i1);
         listOfItems.add(i2);
-        c=new Catalogue(listOfItems);
+        c=new Catalogue(storeUUID1, listOfItems);
         listOfItems2.add(i1);
         listOfItems2.add(i2);
         listOfItems2.add(i3);
         listOfItems2.add(i4);
-        c2=new Catalogue(listOfItems2);
+        c2=new Catalogue(storeUUID1, listOfItems2);
         s=new Store(storeUUID1,"Woolworths",c,2,null,null,4,true);
     }
 
