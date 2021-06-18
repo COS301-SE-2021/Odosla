@@ -37,54 +37,54 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 public class GetItemsIntegrationTest {
-        @Autowired
-        ShoppingServiceImpl shoppingService;
+    @Autowired
+    ShoppingServiceImpl shoppingService;
 
-        //OPTIONAL SERVICES
-        @Autowired
-        UserServiceImpl userService;
+    //OPTIONAL SERVICES
+    @Autowired
+    UserServiceImpl userService;
 
-        /* Requests */
-        GetItemsRequest getItemsRequest;
+    /* Requests */
+    GetItemsRequest getItemsRequest;
 
-        /* Store Ids */
-        UUID storeID=UUID.randomUUID();
+    /* Store Ids */
+    UUID storeID=UUID.randomUUID();
 
-        /*Items */
-        Item item1,item2;
-        List<Item> listOfItems=new ArrayList<>();
+    /*Items */
+    Item item1,item2;
+    List<Item> listOfItems=new ArrayList<>();
 
-        /*Store*/
-        Store store;
+    /*Store*/
+    Store store;
 
-        /*Catalogue*/
-        Catalogue catalogue;
+    /*Catalogue*/
+    Catalogue catalogue;
 
-        @BeforeEach
-        void setup(){
-            item1=new Item("Heinz Tomato Sauce","123456","123456",storeID,36.99,1,"description","img/");
-            item2=new Item("Bar one","012345","012345",storeID,14.99,3,"description","img/");
-            listOfItems.add(item1);
-            listOfItems.add(item2);
-            catalogue=new Catalogue(listOfItems);
-            store=new Store(storeID,"Woolworths",catalogue,2,null,null,4,false);
-            store.setOpeningTime(7);
-            store.setClosingTime(22);
-        }
+    @BeforeEach
+    void setup(){
+        item1=new Item("Heinz Tomato Sauce","123456","123456",storeID,36.99,1,"description","img/");
+        item2=new Item("Bar one","012345","012345",storeID,14.99,3,"description","img/");
+        listOfItems.add(item1);
+        listOfItems.add(item2);
+        catalogue=new Catalogue(listOfItems);
+        store=new Store(storeID,"Woolworths",catalogue,2,null,null,4,false);
+        store.setOpeningTime(7);
+        store.setClosingTime(22);
+    }
 
-        @AfterEach
-        void tearDown() {
-        }
+    @AfterEach
+    void tearDown() {
+    }
 
-        @Test
-        @Description("Tests whether the GetItemsRequest object is constructed correctly")
-        @DisplayName("GetItemsRequest correct construction")
-        void IntegrationTest_GetItemsRequestConstruction() {
+    @Test
+    @Description("Tests whether the GetItemsRequest object is constructed correctly")
+    @DisplayName("GetItemsRequest correct construction")
+    void IntegrationTest_GetItemsRequestConstruction() {
 
-            getItemsRequest=new GetItemsRequest(storeID);
-            assertNotNull(getItemsRequest);
-            assertEquals(storeID, getItemsRequest.getStoreID());
-        }
+        getItemsRequest=new GetItemsRequest(storeID);
+        assertNotNull(getItemsRequest);
+        assertEquals(storeID, getItemsRequest.getStoreID());
+    }
 
 }
 
