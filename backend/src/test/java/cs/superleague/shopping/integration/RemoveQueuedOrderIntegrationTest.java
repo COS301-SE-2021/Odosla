@@ -41,8 +41,6 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class RemoveQueuedOrderIntegrationTest {
-    @Autowired
-    ShoppingServiceImpl shoppingService;
 
     @Autowired
     OrderRepo orderRepo;
