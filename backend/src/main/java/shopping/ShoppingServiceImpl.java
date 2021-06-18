@@ -9,11 +9,15 @@ import shopping.dataclass.Store;
 import shopping.exceptions.InvalidRequestException;
 import shopping.exceptions.StoreDoesNotExistException;
 import shopping.repos.StoreRepo;
-import shopping.requests.*;
-import shopping.responses.*;
-import user.dataclass.Shopper;
+import shopping.requests.AddToQueueRequest;
+import shopping.requests.GetCatalogueRequest;
+import shopping.requests.GetNextQueuedRequest;
+import shopping.requests.GetStoreByUUIDRequest;
+import shopping.responses.AddToQueueResponse;
+import shopping.responses.GetCatalogueResponse;
+import shopping.responses.GetNextQueuedResponse;
+import shopping.responses.GetStoreByUUIDResponse;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -302,7 +306,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
-
     @Override
     public GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetShoppersResponse response=null;
@@ -474,4 +477,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         return response;
     }
+}
+
 }

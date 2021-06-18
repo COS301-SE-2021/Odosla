@@ -1,7 +1,5 @@
 package user;
 
-import user.exceptions.InvalidRequestException;
-import user.exceptions.UserDoesNotExistException;
 import user.requests.*;
 import user.responses.*;
 

@@ -30,33 +30,4 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
-    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException {
-        GetShopperByUUIDResponse response=null;
-
-        if(request!=null){
-
-            if(request.getUserID()==null){
-                throw new InvalidRequestException("User ID in request object for get can't be null");
-            }
-
-            User userEntity=null;
-
-            userEntity = userRepo.findById(request.getUserID()).orElse(null);
-
-            if(userEntity==null){
-                throw new UserDoesNotExistException("User with id given doesn't exist in repository");
-            }
-
-
-            response=new GetShopperByUUIDResponse(userEntity,Calendar.getInstance().getTime(), "User was returned succesfully");
-
-        }
-        else{
-            throw new InvalidRequestException("Request object can't be null for getShopperByUUID");
-        }
-
-        return response;
-    }
-
-
 }
