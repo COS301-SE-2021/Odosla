@@ -47,7 +47,7 @@ public class GetCatalogueUnitTest {
         i2=new Item("Bar one","012345","012345",storeUUID1,14.99,3,"description","img/");
         listOfItems.add(i1);
         listOfItems.add(i2);
-        c=new Catalogue(listOfItems);
+        c=new Catalogue(storeUUID1,listOfItems);
         s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4,true);
     }
 

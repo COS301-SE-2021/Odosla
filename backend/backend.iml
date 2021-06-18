@@ -171,5 +171,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.2.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.7.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.7.1" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.200" level="project" />
+    <orderEntry type="library" name="Maven: me.paulschwarz:spring-dotenv:2.3.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: io.github.cdimascio:dotenv-java:2.2.0" level="project" />
   </component>
 </module>

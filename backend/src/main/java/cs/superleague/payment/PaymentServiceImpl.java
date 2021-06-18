@@ -129,13 +129,12 @@ public class PaymentServiceImpl implements PaymentService {
 
 
             double discount=request.getDiscount();
-            List<Item> listOfItems=request.getListOfItems();
             UUID userID=request.getUserID();
             UUID storeID=request.getStoreID();
 
             /* Get total cost of order*/
             AtomicReference<Double> finalTotalCost = totalCost;
-            listOfItems.stream().parallel().forEach(item -> {
+            request.getListOfItems().stream().parallel().forEach(item -> {
                 int quantiy = item.getQuantity();
                 double itemPrice = item.getPrice();
                 for (int j = 0; j < quantiy; j++) {
@@ -149,8 +148,7 @@ public class PaymentServiceImpl implements PaymentService {
             //meant to use assign order request in shop - Mock Data
             UUID shopperID = null;
 
-            GeoPoint deliveryAddress = request.getDeliveryAddress();
-            GeoPoint storeAddress = request.getStoreAddress();
+
             //Mock Data - still have to find out how this is going to work
             Boolean requiresPharmacy = false;
 
@@ -160,7 +158,7 @@ public class PaymentServiceImpl implements PaymentService {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             double totalC=bd.doubleValue();
 
-            Order o = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,listOfItems, discount, deliveryAddress, storeAddress, requiresPharmacy);
+            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), request.getDeliveryAddress(), request.getStoreAddress(), requiresPharmacy);
 
             Order alreadyExists=null;
             while (true) {
