@@ -114,7 +114,28 @@
             <version>5.7.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+        </dependency>
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>corp1</id>
+            <name>Corporate Repository</name>
+            <url>scp://repo/maven2</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 
 
 </project>

@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="fixed application file, added dependencies and properties">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Shopping_development" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,13 +44,13 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
   <component name="ProjectViewState">
@@ -65,7 +67,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/main/java/user/exceptions" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -80,14 +82,32 @@
       <recent name="user.repos" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+  <component name="RunManager" selected="Spring Boot.Application">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.SubmitOrderIntegrationTest" />
+      <option name="METHOD_NAME" value="IntegrationTest_SubmitOrderRequestConstruction" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -107,6 +127,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" />
         <item itemvalue="Spring Boot.Application" />
       </list>
     </recent_temporary>
@@ -123,6 +144,7 @@
       <workItem from="1623141611335" duration="8017000" />
       <workItem from="1623180903552" duration="4637000" />
       <workItem from="1623191294647" duration="3549000" />
+      <workItem from="1623957879008" duration="1768000" />
     </task>
     <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
       <created>1623142688992</created>
