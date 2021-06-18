@@ -192,7 +192,7 @@ public class RemoveQueuedOrderIntegrationTest {
     @Test
     @Description("Test for when order is correctly removed from the order queue")
     @DisplayName("Removes and returns correct orderID")
-    void UnitTest_order_is_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException {
+    void IntegrationTest_order_is_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException {
 
         RemoveQueuedOrderRequest request=new RemoveQueuedOrderRequest(orderID2, storeID);
         RemoveQueuedOrderResponse response=ServiceSelector.getShoppingService().removeQueuedOrder(request);
