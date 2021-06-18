@@ -84,7 +84,7 @@ public class SubmitOrderUnitTest {
         o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
         listOfOrders.add(o2);
-        c=new Catalogue(expectedListOfItems);
+        c=new Catalogue(expectedS1,expectedListOfItems);
         expectedStore=new Store(expectedS1,"Woolworthes",c,3,listOfOrders,null,4,true);
     }
 
