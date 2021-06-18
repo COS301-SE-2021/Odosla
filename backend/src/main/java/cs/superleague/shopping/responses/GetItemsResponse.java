@@ -5,18 +5,21 @@ import cs.superleague.shopping.dataclass.Item;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class GetItemsResponse {
 
     List<Item> items;
     Date timestamp;
     String message;
+    UUID storeID;
 
-    public GetItemsResponse(List<Item> items, Date timestamp, String message)
+    public GetItemsResponse(UUID storeID, List<Item> items, Date timestamp, String message)
     {
         this.items = items;
         this.timestamp= timestamp;
         this.message= message;
+        this.storeID= storeID;
     }
 
     public void setTimestamp(Date timestamp) {
@@ -41,5 +44,13 @@ public class GetItemsResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
     }
 }
