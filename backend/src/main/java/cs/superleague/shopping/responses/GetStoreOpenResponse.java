@@ -1,6 +1,7 @@
 package cs.superleague.shopping.responses;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class GetStoreOpenResponse {
 
@@ -9,12 +10,22 @@ public class GetStoreOpenResponse {
     Date timestamp;
     int openingTime;
     int closingTime;
+    UUID storeID;
 
-    public GetStoreOpenResponse(Boolean isOpen, Date timestamp, String message)
+    public GetStoreOpenResponse(UUID storeID, Boolean isOpen, Date timestamp, String message)
     {
         this.isOpen= isOpen;
         this.timestamp=timestamp;
         this.message=message;
+        this.storeID=storeID;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
     }
 
     public void setOpen(Boolean open) {

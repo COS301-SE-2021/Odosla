@@ -356,16 +356,21 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository");
             }
 
+            if(storeEntity==null)
+            {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository");
+            }
+
             Calendar calendar= Calendar.getInstance();
             if(calendar.get(Calendar.HOUR_OF_DAY) >= storeEntity.getOpeningTime() && calendar.get(Calendar.HOUR_OF_DAY) < storeEntity.getClosingTime())
             {
                 storeEntity.setOpen(true);
-                response=new GetStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
+                response=new GetStoreOpenResponse(request.getStoreID(),storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
             }
             else
             {
                 storeEntity.setOpen(false);
-                response=new GetStoreOpenResponse(storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is closed for business");
+                response=new GetStoreOpenResponse(request.getStoreID(),storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is closed for business");
             }
             response.setOpeningTime(storeEntity.getOpeningTime());
             response.setClosingTime(storeEntity.getClosingTime());
