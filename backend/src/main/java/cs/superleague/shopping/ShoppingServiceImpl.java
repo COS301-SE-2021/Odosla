@@ -559,7 +559,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
                 orderQueue.remove(correspondingOrder);
                 store.setOrderQueue(orderQueue);
-
+                storeRepo.save(store);
                 return new RemoveQueuedOrderResponse(true, "Order successfully removed from the queue", correspondingOrder.getOrderID());
             }
         }else{
