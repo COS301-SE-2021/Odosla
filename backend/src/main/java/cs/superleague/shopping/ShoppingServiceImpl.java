@@ -471,30 +471,28 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
 
     public UpdateCatalogueResponse updateCatalogue(UpdateCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
-        UpdateCatalogueResponse response=null;
+        UpdateCatalogueResponse response = null;
 
-        if(request!=null){
-            if (request.getStoreID()==null) {
+        if (request != null) {
+            if (request.getStoreID() == null) {
                 throw new InvalidRequestException("The Store ID in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop");
-            }else if(request.getCatalogue() == null){
+            } else if (request.getCatalogue() == null) {
                 throw new InvalidRequestException("The Catalogue in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop");
             }
-            Store storeEntity=null;
+            Store storeEntity = null;
             try {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Catalog entity");
             }
             storeEntity.setStock(request.getCatalogue());
             storeRepo.save(storeEntity);
-            response=new UpdateCatalogueResponse(true, "Catalogue updated for the store", storeEntity.getStoreID());
-        } else{
+            response = new UpdateCatalogueResponse(true, "Catalogue updated for the store", storeEntity.getStoreID());
+        } else {
             throw new InvalidRequestException("The request object for GetCatalogueRequest is null - Could not update catalogue for the shop");
         }
         return response;
-      
-      
+    }
       
      /**
      *
