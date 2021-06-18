@@ -469,63 +469,62 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Override
 
     public UpdateCatalogueResponse updateCatalogue(UpdateCatalogueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
-        UpdateCatalogueResponse response=null;
+        UpdateCatalogueResponse response = null;
 
-        if(request!=null){
-            if (request.getStoreID()==null) {
+        if (request != null) {
+            if (request.getStoreID() == null) {
                 throw new InvalidRequestException("The Store ID in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop");
-            }else if(request.getCatalogue() == null){
+            } else if (request.getCatalogue() == null) {
                 throw new InvalidRequestException("The Catalogue in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop");
             }
-            Store storeEntity=null;
+            Store storeEntity = null;
             try {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Catalog entity");
             }
             storeEntity.setStock(request.getCatalogue());
             storeRepo.save(storeEntity);
-            response=new UpdateCatalogueResponse(true, "Catalogue updated for the store", storeEntity.getStoreID());
-        } else{
+            response = new UpdateCatalogueResponse(true, "Catalogue updated for the store", storeEntity.getStoreID());
+        } else {
             throw new InvalidRequestException("The request object for GetCatalogueRequest is null - Could not update catalogue for the shop");
         }
         return response;
-      
-      
-      
-     /**
-     *
-     * @param request is used to bring in:
-     *                private orderID
-     *                private storeID
-     *
-     * removeQueuedOrder should:
-     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
-     *               2. Check if the request's storeID or OrderID is not null, else throw an InvalidRequestException
-     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
-     *               it doesn't exist then throw a StoreDoesNotExistException.
-     *               4. Find the corresponding order in the Store object, if it is empty or not there return false
-     *               6. Remove the corresponding item from the Store object.
-     *               5. Return the response object with the corresponding orderID that has been removed.
-     *
-     * Request Object (RemoveQueuedOrderRequest):
-     * {
-     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
-     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
-     * }
-     *
-     * Response Object (RemoveQueuedOrderResponse):
-     * {
-     *                "isRemoved":true
-     *                "message":"Order successfully removed from the queue"
-     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
-     * }
-     *
-     * @return
-     * @throws InvalidRequestException
-     * @throws StoreDoesNotExistException
-     * */
+
+    }
+        /**
+         *
+         * @param request is used to bring in:
+         *                private orderID
+         *                private storeID
+         *
+         * removeQueuedOrder should:
+         *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+         *               2. Check if the request's storeID or OrderID is not null, else throw an InvalidRequestException
+         *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+         *               it doesn't exist then throw a StoreDoesNotExistException.
+         *               4. Find the corresponding order in the Store object, if it is empty or not there return false
+         *               6. Remove the corresponding item from the Store object.
+         *               5. Return the response object with the corresponding orderID that has been removed.
+         *
+         * Request Object (RemoveQueuedOrderRequest):
+         * {
+         *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+         *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+         * }
+         *
+         * Response Object (RemoveQueuedOrderResponse):
+         * {
+         *                "isRemoved":true
+         *                "message":"Order successfully removed from the queue"
+         *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+         * }
+         *
+         * @return
+         * @throws InvalidRequestException
+         * @throws StoreDoesNotExistException
+         * */
+
 
     public RemoveQueuedOrderResponse removeQueuedOrder(RemoveQueuedOrderRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         if(request != null){

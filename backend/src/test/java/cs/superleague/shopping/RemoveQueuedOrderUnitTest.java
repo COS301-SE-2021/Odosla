@@ -61,7 +61,7 @@ public class RemoveQueuedOrderUnitTest {
         i2=new Item("Bar one","012345","012345",storeUUID1,14.99,3,"description","img/");
         listOfItems.add(i1);
         listOfItems.add(i2);
-        c=new Catalogue(listOfItems);
+        c=new Catalogue(storeUUID1, listOfItems);
         s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4,true);
         Date d1=new Date(2021,06,1,14,30);
         Date d2=new Date(2021,06,1,14,23);
