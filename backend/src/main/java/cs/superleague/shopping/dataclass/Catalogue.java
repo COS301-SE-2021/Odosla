@@ -20,7 +20,8 @@ public class Catalogue {
 
     public Catalogue() { }
 
-    public Catalogue(List<Item> items) {
+    public Catalogue(UUID storeID,List<Item> items) {
+        this.storeID=storeID;
         this.items = items;
     }
 
