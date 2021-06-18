@@ -1,8 +1,8 @@
-package user.repos;
+package cs.superleague.user.repos;
 
+import cs.superleague.user.dataclass.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import user.dataclass.User;
 
 
 import java.util.UUID;

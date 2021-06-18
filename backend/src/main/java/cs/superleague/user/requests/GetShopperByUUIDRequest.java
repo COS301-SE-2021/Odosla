@@ -1,6 +1,5 @@
-package user.requests;
+package cs.superleague.user.requests;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class GetShopperByUUIDRequest {
@@ -13,6 +12,5 @@ public class GetShopperByUUIDRequest {
     public UUID getUserID() {
         return userID;
     }
-
 
 }

@@ -1,8 +1,9 @@
-package shopping.responses;
+package cs.superleague.shopping.responses;
 
 import java.util.Date;
 
-public class AddShopperResponse {
+public class RemoveShopperResponse {
+
     /** attributes */
     private final boolean success;
     private final Date timestamp;
@@ -10,17 +11,16 @@ public class AddShopperResponse {
 
     /** constructor
      *
-     * @param success whether shopper was added or not
-     * @param timestamp timestamp the response was created
-     * @param message message associated response object
+     * @param success - whether shopper was succesfully removed from list or not
+     * @param timestamp - time the response was created
+     * @param message - message associated with response
      */
-    public AddShopperResponse(boolean success, Date timestamp, String message) {
+    public RemoveShopperResponse(boolean success, Date timestamp, String message) {
         this.success = success;
         this.timestamp = timestamp;
         this.message = message;
     }
 
-    /** getter */
     public boolean isSuccess() {
         return success;
     }

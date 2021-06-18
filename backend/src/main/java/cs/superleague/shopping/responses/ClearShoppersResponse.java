@@ -1,8 +1,8 @@
-package shopping.responses;
+package cs.superleague.shopping.responses;
 
 import java.util.Date;
 
-public class RemoveShopperResponse {
+public class ClearShoppersResponse {
 
     /** attributes */
     private final boolean success;
@@ -11,16 +11,17 @@ public class RemoveShopperResponse {
 
     /** constructor
      *
-     * @param success - whether shopper was succesfully removed from list or not
-     * @param timestamp - time the response was created
+     * @param success - whether all shoppers were successfully cleared
+     * @param timestamp - timestamp the response was created
      * @param message - message associated with response
      */
-    public RemoveShopperResponse(boolean success, Date timestamp, String message) {
+    public ClearShoppersResponse(boolean success, Date timestamp, String message) {
         this.success = success;
         this.timestamp = timestamp;
         this.message = message;
     }
 
+    /** getter */
     public boolean isSuccess() {
         return success;
     }

@@ -1,4 +1,4 @@
-package shopping.requests;
+package cs.superleague.shopping.requests;
 
 import java.util.UUID;
 

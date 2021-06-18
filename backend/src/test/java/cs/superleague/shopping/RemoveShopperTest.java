@@ -1,5 +1,6 @@
-package shopping;
+package cs.superleague.shopping;
 
+import cs.superleague.shopping.exceptions.InvalidRequestException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -7,14 +8,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
-import shopping.dataclass.Store;
-import shopping.exceptions.InvalidRequestException;
-import shopping.exceptions.StoreDoesNotExistException;
-import shopping.repos.StoreRepo;
-import shopping.requests.GetShoppersRequest;
-import shopping.requests.RemoveShopperRequest;
-import shopping.responses.GetShoppersResponse;
-import user.dataclass.Shopper;
+import cs.superleague.shopping.ShoppingServiceImpl;
+import cs.superleague.shopping.dataclass.*;
+import cs.superleague.shopping.exceptions.*;
+import cs.superleague.shopping.requests.*;
+import cs.superleague.shopping.responses.*;
+import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.user.dataclass.Shopper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,15 +88,15 @@ public class RemoveShopperTest {
         assertEquals(shopperID,request.getShopperID());
     }
 
-//    @Test
-//    @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
-//    @DisplayName("When Store with ID doesn't exist")
-//    void UnitTest_Store_doesnt_exist(){
-//        GetShoppersRequest request=new GetShoppersRequest(storeUUID1);
-//        when(storeRepo.findById(Mockito.any())).thenReturn(null);
-//        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.getShoppers(request));
-//        assertEquals("Store with ID does not exist in repository - could not get Shoppers", thrown.getMessage());
-//    }
+    @Test
+    @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
+    @DisplayName("When Store with ID doesn't exist")
+    void UnitTest_Store_doesnt_exist(){
+        GetShoppersRequest request=new GetShoppersRequest(storeUUID1);
+        when(storeRepo.findById(Mockito.any())).thenReturn(null);
+        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.getShoppers(request));
+        assertEquals("Store with ID does not exist in repository - could not get Shoppers", thrown.getMessage());
+    }
 //
 //    @Test
 //    @Description("Test for when list of shoppers is null")

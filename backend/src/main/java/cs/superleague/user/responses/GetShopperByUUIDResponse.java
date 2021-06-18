@@ -1,24 +1,23 @@
-package user.responses;
+package cs.superleague.user.responses;
 
-
-import user.dataclass.User;
+import cs.superleague.user.dataclass.Shopper;
 
 import java.util.Date;
 
 public class GetShopperByUUIDResponse {
-    private final User userEntity;
+    private final Shopper shopperEntity;
     private final Date timestamp;
     private final String message;
 
-    public GetShopperByUUIDResponse(User userEntity, Date timestamp, String message) {
-        this.userEntity = userEntity;
+    public GetShopperByUUIDResponse(Shopper shopperEntity, Date timestamp, String message) {
+        this.shopperEntity = shopperEntity;
         this.timestamp = timestamp;
         this.message = message;
     }
 
 
-    public User getUser() {
-        return userEntity;
+    public Shopper getShopper() {
+        return shopperEntity;
     }
 
     public Date getTimestamp() {
@@ -28,5 +27,4 @@ public class GetShopperByUUIDResponse {
     public String getMessage() {
         return message;
     }
-
 }
