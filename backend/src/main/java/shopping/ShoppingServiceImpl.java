@@ -315,10 +315,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             Store storeEntity=null;
 
-            try {
-                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-            }
-            catch (Exception e){
+            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+
+            if(storeEntity==null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Shoppers");
             }
 
@@ -361,12 +360,14 @@ public class ShoppingServiceImpl implements ShoppingService {
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
 
             Store storeEntity=null;
-            try {
-                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-            }
-            catch (Exception e){
+
+            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+
+            if(storeEntity==null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
             }
+
+
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
             /* Get Shopper by UUID- get Shopper Object */
             /* Shopper shopper */
@@ -412,12 +413,13 @@ public class ShoppingServiceImpl implements ShoppingService {
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
 
             Store storeEntity=null;
-            try {
-                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-            }
-            catch (Exception e){
+
+            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+
+            if(storeEntity==null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
             }
+
 
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
 
