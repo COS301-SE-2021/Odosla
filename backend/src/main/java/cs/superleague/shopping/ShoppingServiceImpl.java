@@ -544,6 +544,9 @@ public class ShoppingServiceImpl implements ShoppingService {
                 catch(Exception e){
                     throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
                 }
+                if(store==null){
+                    throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+                }
                 List<Order> orderQueue=store.getOrderQueue();
                 if(orderQueue.size()==0) {
                     return new RemoveQueuedOrderResponse(false, "The order queue of shop is empty", null);
@@ -560,7 +563,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
                 orderQueue.remove(correspondingOrder);
                 store.setOrderQueue(orderQueue);
-                
+                storeRepo.save(store);
                 return new RemoveQueuedOrderResponse(true, "Order successfully removed from the queue", correspondingOrder.getOrderID());
             }
         }else{
