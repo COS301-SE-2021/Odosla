@@ -347,7 +347,7 @@ public class PaymentServiceImpl implements PaymentService {
             order = getOrder(new GetOrderRequest(request.getOrderID())).getOrder();
         }
 
-        if (request.getUserID() != order.getUserID()) {
+        if (!request.getUserID().equals(order.getUserID())) {
             throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
         }
 
