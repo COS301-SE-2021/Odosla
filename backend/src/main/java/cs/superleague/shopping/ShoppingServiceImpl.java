@@ -76,7 +76,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             catch (Exception e){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
             }
-            response=new GetCatalogueResponse(storeEntity.getStock(),Calendar.getInstance().getTime(), "Catalogue entity from store was correctly returned");
+
+            if(storeEntity==null)
+            {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+            }
+            response=new GetCatalogueResponse(request.getStoreID(),storeEntity.getStock(),Calendar.getInstance().getTime(), "Catalogue entity from store was correctly returned");
 
         }
         else{
