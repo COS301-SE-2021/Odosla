@@ -1,4 +1,4 @@
-package shopping;
+package cs.superleague.shopping;
 
 import cs.superleague.shopping.ShoppingServiceImpl;
 import org.junit.jupiter.api.*;

@@ -89,7 +89,7 @@ public class AddToQueueUnitTest {
         order.setUserID(null);
         AddToQueueRequest request=new AddToQueueRequest(order);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addToQueue(request));
-        assertEquals("Invalid request: missing cs.superleague.user ID", thrown.getMessage());
+        assertEquals("Invalid request: missing user ID", thrown.getMessage());
     }
 
     @Test
