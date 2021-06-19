@@ -685,12 +685,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             if(request.getShopperID()==null){
                 invalidReq=true;
-                invalidMessage="Shopper ID in request object for remove shopper is null";
+                invalidMessage="Shopper ID in request object for add shopper is null";
 
             }
             else if(request.getStoreID()==null){
                 invalidReq=true;
-                invalidMessage="Store ID in request object for remove shopper is null";
+                invalidMessage="Store ID in request object for add shopper is null";
             }
 
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
@@ -812,7 +812,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             Store storeEntity=null;
 
-            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }catch(Exception e){}
 
             if(storeEntity==null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not remove Shopper");
@@ -832,15 +834,22 @@ public class ShoppingServiceImpl implements ShoppingService {
                     response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "Shopper in GetShopperByUUID response is null");
                 }
                 else{
+                    Boolean inList=false;
                     for(Shopper shopper:listOfShoppers){
                         if(shopper.getId()==request.getShopperID()){
                             listOfShoppers.remove(shopper);
+                            inList=true;
                         }
                     }
-                    storeRepo.delete(storeEntity);
-                    storeEntity.setShoppers(listOfShoppers);
-                    storeRepo.save(storeEntity);
-                    response=new RemoveShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully removed");
+                    if(inList==true) {
+                        storeRepo.delete(storeEntity);
+                        storeEntity.setShoppers(listOfShoppers);
+                        storeRepo.save(storeEntity);
+                        response = new RemoveShopperResponse(true, Calendar.getInstance().getTime(), "Shopper was successfully removed");
+                    }
+                    else{
+                        response = new RemoveShopperResponse(false, Calendar.getInstance().getTime(), "Shopper isn't in list of shoppers in store entity");
+                    }
                 }
             }
             else{

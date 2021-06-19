@@ -52,6 +52,7 @@ public class AddShopperUnitTest {
     UUID shopperID3=UUID.randomUUID();
     UUID storeID=UUID.randomUUID();
     List<Shopper> shopperList=new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         store=new Store();
@@ -83,7 +84,7 @@ public class AddShopperUnitTest {
     void UnitTest_StoreID_inRequest_NullRequestObject(){
         AddShopperRequest request=new AddShopperRequest(shopperID,null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(request));
-        assertEquals("Store ID in request object for remove shopper is null", thrown.getMessage());
+        assertEquals("Store ID in request object for add shopper is null", thrown.getMessage());
     }
     @Test
     @Description("Tests for when addShoppers is submited shopper ID in request object being null- exception should be thrown")
@@ -91,12 +92,12 @@ public class AddShopperUnitTest {
     void UnitTest_ShopperID_inRequest_NullRequestObject(){
         AddShopperRequest request=new AddShopperRequest(null,storeID);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(request));
-        assertEquals("Shopper ID in request object for remove shopper is null", thrown.getMessage());
+        assertEquals("Shopper ID in request object for add shopper is null", thrown.getMessage());
     }
 
     @Test
     @Description("Tests whether the addShoppers request object was created correctly")
-    @DisplayName("GetShoppers correctly constructed")
+    @DisplayName("AddShopper request correctly constructed")
     void UnitTest_AddShoppersRequestConstruction() {
         AddShopperRequest request=new AddShopperRequest(shopperID,storeID);
         assertNotNull(request);
