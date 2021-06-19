@@ -1,9 +1,11 @@
 package cs.superleague.shopping;
 
+import cs.superleague.user.exceptions.UserDoesNotExistException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 import cs.superleague.shopping.ShoppingServiceImpl;
@@ -20,6 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ClearShopperTest {
@@ -31,14 +34,23 @@ public class ClearShopperTest {
     private ShoppingServiceImpl shoppingService;
     UUID storeUUID1= UUID.randomUUID();
     Store store;
+    Shopper shopper;
     Shopper shopper1;
     Shopper shopper2;
+    UUID shopperID=UUID.randomUUID();
+    UUID shopperID2=UUID.randomUUID();
+    UUID shopperID3=UUID.randomUUID();
+    UUID storeID=UUID.randomUUID();
     List<Shopper> shopperList=new ArrayList<>();
     @BeforeEach
     void setUp() {
         store=new Store();
+        shopper=new Shopper();
+        shopper.setId(shopperID);
         shopper1=new Shopper();
+        shopper1.setId(shopperID2);
         shopper2=new Shopper();
+        shopper2.setId(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
     }
@@ -73,44 +85,40 @@ public class ClearShopperTest {
         assertEquals(storeUUID1, request.getStoreID());
     }
 
-//    @Test
-//    @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
-//    @DisplayName("When Store with ID doesn't exist")
-//    void UnitTest_Store_doesnt_exist(){
-//        GetShoppersRequest request=new GetShoppersRequest(storeUUID1);
-//        when(storeRepo.findById(Mockito.any())).thenReturn(null);
-//        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.getShoppers(request));
-//        assertEquals("Store with ID does not exist in repository - could not get Shoppers", thrown.getMessage());
-//    }
-//
-//    @Test
-//    @Description("Test for when list of shoppers is null")
-//    @DisplayName("List of Shoppers is null")
-//    void Stores_shoppers_null() throws InvalidRequestException, StoreDoesNotExistException {
-//        store.setStoreID(storeUUID1);
-//        store.setShoppers(null);
-//        GetShoppersRequest request=new GetShoppersRequest(storeUUID1);
-//        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-//        GetShoppersResponse response=shoppingService.getShoppers(request);
-//        assertNotNull(response);
-//        assertEquals(null,response.getListOfShoppers());
-//        assertEquals(false,response.isSuccess());
-//        assertEquals("List of Shoppers is null",response.getMessage());
-//    }
-//
-//    @Test
-//    @Description("Test for when list of shoppers is correct")
-//    @DisplayName("Correct shoppers list")
-//    void Correct_shoppers_list() throws InvalidRequestException, StoreDoesNotExistException {
-//        store.setStoreID(storeUUID1);
-//        store.setShoppers(shopperList);
-//        GetShoppersRequest request=new GetShoppersRequest(storeUUID1);
-//        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-//        GetShoppersResponse response=shoppingService.getShoppers(request);
-//        assertNotNull(response);
-//        assertEquals(shopperList,response.getListOfShoppers());
-//        assertEquals(true,response.isSuccess());
-//        assertEquals("List of Shoppers successfully returned",response.getMessage());
-//    }
+    @Test
+    @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
+    @DisplayName("When Store with ID doesn't exist")
+    void UnitTest_Store_doesnt_exist(){
+        ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
+        when(storeRepo.findById(Mockito.any())).thenReturn(null);
+        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.clearShoppers(request));
+        assertEquals("Store with ID does not exist in repository - could not clear shoppers", thrown.getMessage());
+    }
+    @Test
+    @Description("Test for when store is return with list of shoppers being null")
+    @DisplayName("List of Shoppers in Store entity is null")
+    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+        store.setStoreID(storeUUID1);
+        store.setShoppers(null);
+        ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
+        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
+        ClearShoppersResponse response=shoppingService.clearShoppers(request);
+        assertEquals(false,response.isSuccess());
+        assertEquals("List of shoppers is null",response.getMessage());
+    }
+
+    @Test
+    @Description("Test for when clear shoppers was sucessful")
+    @DisplayName("Sucessfully cleared shoppers")
+    void UnitTest_successfully_clearedShoppers() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+        store.setStoreID(storeUUID1);
+        store.setShoppers(shopperList);
+        ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
+        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
+        ClearShoppersResponse response=shoppingService.clearShoppers(request);
+        assertEquals(true,response.isSuccess());
+        assertEquals("List of Shopper successfuly cleared",response.getMessage());
+    }
+
 
 }

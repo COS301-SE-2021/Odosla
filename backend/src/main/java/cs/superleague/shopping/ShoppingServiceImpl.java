@@ -864,6 +864,31 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
+    /**
+     *
+     * @param request used to bring in:
+     *                storeID - storeId where the shopper list should be cleared
+     * clearShopper should:
+     *                1. Check is request object is correct else throw InvalidRequestException
+     *                2. Take in store Id and get corresponding store entity
+     *                3. If Store doesn't exist -throw StoreDoesNotExistException
+     *                4. Gets listofshoppers - if null return response with false success and stating list is null
+     *                5. If list isn't null - clear list and return response with success being true
+     * Request Object (ClearShoppersRequest)
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     * Response Object (ClearShoppersResponse)
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"List of Shopper successfuly cleared"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     */
     @Override
     public ClearShoppersResponse clearShoppers(ClearShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         ClearShoppersResponse response=null;
@@ -878,17 +903,21 @@ public class ShoppingServiceImpl implements ShoppingService {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
             }
             catch (Exception e){
-                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not clear shoppers");
             }
 
+
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
+            if(listOfShoppers!=null) {
+                listOfShoppers.clear();
 
-            listOfShoppers.clear();
+                storeEntity.setShoppers(listOfShoppers);
 
-            storeEntity.setShoppers(listOfShoppers);
-
-            response=new ClearShoppersResponse(true,Calendar.getInstance().getTime(), "List of Shopper successfuly cleared");
-
+                response = new ClearShoppersResponse(true, Calendar.getInstance().getTime(), "List of Shopper successfuly cleared");
+            }
+            else{
+                response=new ClearShoppersResponse(false,Calendar.getInstance().getTime(), "List of shoppers is null");
+            }
         }
         else{
             throw new InvalidRequestException("Request object can't be null for clearShoppers");
