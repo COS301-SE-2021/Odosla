@@ -1,16 +1,13 @@
 package cs.superleague.integration;
 
-import cs.superleague.api.LibraryApi;
+import cs.superleague.api.ShoppingApi;
+import cs.superleague.models.Book;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-public class TestController implements LibraryApi {
+import java.util.List;
 
+public class TestController {
 
-    @Override
-    public ResponseEntity<String> getAllBooksInLibrary() {
-        return new ResponseEntity<String>(new String("test"), HttpStatus.OK);
-    }
 }

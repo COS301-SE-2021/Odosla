@@ -289,7 +289,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             Store storeEntity=null;
-            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            } catch (Exception e){
+                //
+            }
             if(storeEntity==null) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity");
             }
@@ -496,6 +501,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
 
     }
+
         /**
          *
          * @param request is used to bring in:
