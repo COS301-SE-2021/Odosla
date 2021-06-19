@@ -648,11 +648,12 @@ public class ShoppingServiceImpl implements ShoppingService {
      *                1. Check is request object is correct else throw InvalidRequestException
      *                2. Take in store Id and get corresponding store entity
      *                3. If Store doesn't exist -throw StoreDoesNotExistException
-     *                4. Get ShopperEntity with corresponding shopperID
-     *                5. If shopper doesn't exist throw return response object stating shopper could not be retrieved from databse
-     *                6. If shopper does exist then check not current;y in list of shoppers
-     *                7. If shopper already exists in list of shoppers, return response with success being false
-     *                8. Else add shopper to shopper list and return response with success being true
+     *                4. Check if listOfshoppers in Store is null - if true return response with sucess being false
+     *                5. Get ShopperEntity with corresponding shopperID
+     *                6. If shopper doesn't exist throw return response object stating shopper could not be retrieved from databse
+     *                7. If shopper does exist then check not currently in list of shoppers
+     *                8. If shopper already exists in list of shoppers, return response with success being false
+     *                9. Else add shopper to shopper list and return response with success being true
      * Request Object
      * {
      *                "shopperID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
@@ -754,6 +755,40 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                ShopperID - Id of shopper that should be addes to list of shoppers in Store
+     *                StoreID - StoreID of which store to add the shopper to
+     * removeShopper should:
+     *                1.Check is request object is correct else throw InvalidRequestException
+     *                2.Take in store Id and get corresponding store entity
+     *                3.If Store doesn't exist -throw StoreDoesNotExistException
+     *                4.Check if listOfshoppers in Store is null - if true return response with sucess being false
+     *                5.Get ShopperEntity with corresponding shopperID
+     *                6.If shopper doesn't exist throw return response object stating shopper could not be retrieved from databse
+     *                7.If shopper does exist then check not currently in list of shoppers
+     *                8. If not in list return response with success being false and that the shopper doesn't exist in the list
+     *                9. If Shopper is in list then remove shopper from list
+     * Request Object (RemoveShopperRequest)
+     * {
+     *                "shopperID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Shopper was successfully removed"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * @throws cs.superleague.user.exceptions.InvalidRequestException
+     * @throws UserDoesNotExistException
+     */
     @Override
     public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
         RemoveShopperResponse response=null;
@@ -780,7 +815,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
 
             if(storeEntity==null){
-                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not remove Shopper");
             }
 
 
