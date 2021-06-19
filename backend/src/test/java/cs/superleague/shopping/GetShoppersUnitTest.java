@@ -1,12 +1,12 @@
 package cs.superleague.shopping;
 
-import cs.superleague.shopping.ShoppingServiceImpl;
+import cs.superleague.shopping.*;
 import cs.superleague.shopping.dataclass.*;
 import cs.superleague.shopping.exceptions.*;
+import cs.superleague.shopping.repos.*;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,12 +25,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AddShopperTest {
+public class GetShoppersUnitTest {
+
     @Mock
     private StoreRepo storeRepo;
 
     @InjectMocks
     private ShoppingServiceImpl shoppingService;
+
     UUID storeUUID1= UUID.randomUUID();
     Store store;
     Shopper shopper1;
@@ -115,5 +117,6 @@ public class AddShopperTest {
         assertEquals(true,response.isSuccess());
         assertEquals("List of Shoppers successfully returned",response.getMessage());
     }
+
 
 }

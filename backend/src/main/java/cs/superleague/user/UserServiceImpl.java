@@ -79,7 +79,9 @@ public class UserServiceImpl implements UserService{
             }
 
             Shopper shopperEntity=null;
-            shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
+            try {
+                shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){}
             if(shopperEntity==null) {
                 throw new UserDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
             }

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RemoveShopperTest {
+public class RemoveShopperUnitTest {
 
     @Mock
     private StoreRepo storeRepo;

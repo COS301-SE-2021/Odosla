@@ -3,6 +3,7 @@ package cs.superleague.shopping;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
+import cs.superleague.user.UserService;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
@@ -28,10 +29,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
     private final OrderRepo orderRepo;
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, UserServiceImpl userService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, UserService userService) {
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
         this.userService = userService;
@@ -571,6 +572,36 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException("Request object for RemoveQueuedOrderRequest can't be null - can't get next queued");
         }
     }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                StoreID - store ID where want to get shoppers from
+     *  getShoppers should:
+     *                1. Check request object is correct - else throw InvalidRequestException
+     *                2. Take in the store ID from request object
+     *                3. Get corresponding store from databse with ID
+     *                4. If it store doesn't exist - throw StoreDoesNotException
+     *                5. Get list of shoppers at current store
+     *                6. If list of shoppers is null return response with success being false
+     *                7. If list of shoppers is not null return response with list of shoppers and success status being true
+     * Request object (GetShoppersRequest)
+     * {
+     *               "storeID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     *
+     * Response object (GetShoppersResponse)
+     * {
+     *                "listOfShoppers": storeEntity.getShoppers()
+     *                "success": "true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"List of Shoppers successfully returned"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     */
     @Override
     public GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
         GetShoppersResponse response=null;
@@ -608,8 +639,42 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
+    /**
+     *
+     * @param request used to bring in:
+     *                ShopperID - Id of shopper that should be addes to list of shoppers in Store
+     *                StoreID - StoreID of which store to add the shopper to
+     * addShopper should:
+     *                1. Check is request object is correct else throw InvalidRequestException
+     *                2. Take in store Id and get corresponding store entity
+     *                3. If Store doesn't exist -throw StoreDoesNotExistException
+     *                4. Get ShopperEntity with corresponding shopperID
+     *                5. If shopper doesn't exist throw return response object stating shopper could not be retrieved from databse
+     *                6. If shopper does exist then check not current;y in list of shoppers
+     *                7. If shopper already exists in list of shoppers, return response with success being false
+     *                8. Else add shopper to shopper list and return response with success being true
+     * Request Object
+     * {
+     *                "shopperID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Shopper was successfully added"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * @throws cs.superleague.user.exceptions.InvalidRequestException
+     * @throws UserDoesNotExistException
+     */
+
     @Override
-    public AddShopperResponse addShoper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
         AddShopperResponse response=null;
 
         if(request!=null){
@@ -631,10 +696,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             Store storeEntity=null;
 
-            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }catch (Exception e){}
 
             if(storeEntity==null){
-                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Catalog entity");
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not add Shopper");
             }
 
 
@@ -645,7 +712,9 @@ public class ShoppingServiceImpl implements ShoppingService {
                 /* Get Shopper by UUID- get Shopper Object */
                 /* Shopper shopper */
                 GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-                GetShopperByUUIDResponse shopperResponse=userService.getShopperByUUIDRequest(shoppersRequest);
+                GetShopperByUUIDResponse shopperResponse;
+                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
+
 
                 if(shopperResponse==null){
                     response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "GetShopperByUUID response is null");
