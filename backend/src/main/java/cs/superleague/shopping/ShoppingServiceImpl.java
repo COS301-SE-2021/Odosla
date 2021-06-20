@@ -303,7 +303,6 @@ public class ShoppingServiceImpl implements ShoppingService {
             try {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
 
-            }
             } catch (NullPointerException e){
                 e.printStackTrace();
             }
