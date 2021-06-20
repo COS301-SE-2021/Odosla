@@ -72,19 +72,10 @@ public class UpdateCatalogueUnitTest {
     }
 
     @Test
-    @Description("Tests for whether a request is submitted with a null parameter for storeID in request object- exception should be thrown")
-    @DisplayName("When request object parameter -storeID - is not specified")
-    void UnitTest_testingNull_storeID_Parameter_RequestObject(){
-        UpdateCatalogueRequest request=new UpdateCatalogueRequest(null, c2);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.updateCatalogue(request));
-        assertEquals("The Store ID in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop", thrown.getMessage());
-    }
-
-    @Test
     @Description("Tests for whether a request is submitted with a null parameter for catalogue in request object- exception should be thrown")
     @DisplayName("When request object parameter -catalogue - is not specified")
     void UnitTest_testingNull_catalogue_Parameter_RequestObject(){
-        UpdateCatalogueRequest request=new UpdateCatalogueRequest(storeUUID1, null);
+        UpdateCatalogueRequest request=new UpdateCatalogueRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.updateCatalogue(request));
         assertEquals("The Catalogue in UpdateCatalogueRequest parameter is null - Could not update catalogue for the shop", thrown.getMessage());
     }
@@ -93,7 +84,8 @@ public class UpdateCatalogueUnitTest {
     @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
     @DisplayName("When Store with ID doesn't exist")
     void UnitTest_Store_doesnt_exist(){
-        UpdateCatalogueRequest request=new UpdateCatalogueRequest(storeUUID1, c2);
+        c2.setStoreID(UUID.randomUUID());
+        UpdateCatalogueRequest request=new UpdateCatalogueRequest(c2);
         when(storeRepo.findById(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.updateCatalogue(request));
         assertEquals("Store with ID does not exist in repository - could not update Catalog entity", thrown.getMessage());
@@ -103,7 +95,7 @@ public class UpdateCatalogueUnitTest {
     @Description("Test for when Store with storeID does exist in database - should return correct store entity")
     @DisplayName("When Store with ID does exist and catalogue changes")
     void UnitTest_Store_does_exist_changing_catalogue() throws InvalidRequestException, StoreDoesNotExistException {
-        UpdateCatalogueRequest request=new UpdateCatalogueRequest(storeUUID1, c2);
+        UpdateCatalogueRequest request=new UpdateCatalogueRequest(c2);
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(s));
         UpdateCatalogueResponse response= shoppingService.updateCatalogue(request);
         assertNotNull(response);
@@ -117,7 +109,7 @@ public class UpdateCatalogueUnitTest {
     @Description("Test for when Store with storeID does exist in database - should return correct store entity")
     @DisplayName("When Store with ID does exist but catalogue is not changing")
     void UnitTest_Store_does_exist_updating_to_same_catalogue() throws InvalidRequestException, StoreDoesNotExistException {
-        UpdateCatalogueRequest request=new UpdateCatalogueRequest(storeUUID1, c);
+        UpdateCatalogueRequest request=new UpdateCatalogueRequest(c);
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(s));
         UpdateCatalogueResponse response= shoppingService.updateCatalogue(request);
         assertNotNull(response);
@@ -132,9 +124,8 @@ public class UpdateCatalogueUnitTest {
     @Description("Tests whether the UpdateCatalogue request object was created correctly")
     @DisplayName("UpdateCatalogueRequest correctly constructed")
     void UnitTest_UpdateCatalogueRequestConstruction() {
-        UpdateCatalogueRequest request = new UpdateCatalogueRequest(storeUUID1, c);
+        UpdateCatalogueRequest request = new UpdateCatalogueRequest(c);
         assertNotNull(request);
-        assertEquals(storeUUID1, request.getStoreID());
         assertEquals(c, request.getCatalogue());
     }
 }

@@ -33,6 +33,14 @@ public class Catalogue {
         this.items = items;
     }
 
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
+    }
     public void setStoreID(UUID storeID) {
         this.storeID = storeID;
     }

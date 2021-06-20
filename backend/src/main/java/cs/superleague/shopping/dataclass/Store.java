@@ -1,5 +1,6 @@
 package cs.superleague.shopping.dataclass;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import cs.superleague.payment.dataclass.Order;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table
+@DynamicUpdate
 public class Store {
 
     @Id
@@ -29,7 +31,7 @@ public class Store {
     @ManyToMany
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Shopper> shoppers;
+    private List<Shopper> shoppers=null;
 
     @ManyToMany
     @JoinTable
