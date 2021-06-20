@@ -1,9 +1,7 @@
 package cs.superleague.shopping.controller;
 
-import cs.superleague.api.LibraryApi;
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.Book;
 import cs.superleague.models.ItemObject;
 import cs.superleague.models.ShoppingGetItemsRequest;
 import cs.superleague.models.ShoppingGetItemsResponse;
