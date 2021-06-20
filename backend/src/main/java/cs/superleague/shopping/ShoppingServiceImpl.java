@@ -302,11 +302,11 @@ public class ShoppingServiceImpl implements ShoppingService {
             Store storeEntity=null;
             try {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }catch (NullPointerException e){
+                //Catching nullPointerException from mockito unit test, when(storeRepo.findById(mockito.any())) return null - which will return null pointer exception
 
             }
-             catch (NullPointerException e){
-                e.printStackTrace();
-            }
+
 
             if(storeEntity==null) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity");
