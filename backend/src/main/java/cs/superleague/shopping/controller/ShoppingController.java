@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin
 @RestController
 public class ShoppingController implements ShoppingApi{
 
@@ -36,11 +37,14 @@ public class ShoppingController implements ShoppingApi{
             ItemObject a = new ItemObject();
             a.setName("mockA");
             ItemObject b = new ItemObject();
-            a.setName("mockB");
+            b.setName("mockB");
+            mockItems.add(a);
             mockItems.add(b);
 
             response.setItems(mockItems);
         }
+
+
 
         return new ResponseEntity<>(response, httpStatus);
     }
