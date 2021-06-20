@@ -6,7 +6,7 @@ public class GetShopperByUUIDRequest {
     private UUID userID;
 
     public GetShopperByUUIDRequest(UUID userID) {
-        userID = userID;
+        this.userID = userID;
     }
 
     public UUID getUserID() {

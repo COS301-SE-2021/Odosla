@@ -730,33 +730,26 @@ public class ShoppingServiceImpl implements ShoppingService {
                 /* Shopper shopper */
                 GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
                 GetShopperByUUIDResponse shopperResponse;
-                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
-
-
-                if(shopperResponse==null){
-                    response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "GetShopperByUUID response is null");
+                try {
+                    shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
+                }catch(Exception e){
+                    throw e;
                 }
-                else if(shopperResponse.getShopper()==null){
-                    response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "Shopper in GetShopperByUUID response is null");
-                }
-                else{
-                    Boolean notPresent=true;
-                    for(Shopper shopper:listOfShoppers){
 
-                        if(shopper.getId()==request.getShopperID()){
-                            response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "Shopper already is already in listOfShoppers");
-                            notPresent=false;
-                        }
+
+                Boolean notPresent=true;
+                for(Shopper shopper:listOfShoppers){
+                    if(shopper.getId().equals(request.getShopperID())){
+                        response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "Shopper already is already in listOfShoppers");
+                        notPresent=false;
                     }
-                    if(notPresent){
-                        listOfShoppers.add(shopperResponse.getShopper());
-                        storeEntity.setShoppers(listOfShoppers);
-                        response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
-                    }
-
-
                 }
-
+                if(notPresent){
+                    listOfShoppers.add(shopperResponse.getShopper());
+                    storeEntity.setShoppers(listOfShoppers);
+                    storeRepo.save(storeEntity);
+                    response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
+                }
             }
             else{
                 response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
@@ -843,30 +836,22 @@ public class ShoppingServiceImpl implements ShoppingService {
                 GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
                 GetShopperByUUIDResponse shopperResponse=userService.getShopperByUUIDRequest(shoppersRequest);
 
-                if(shopperResponse==null){
-                    response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "GetShopperByUUID response is null");
-                }
-                else if(shopperResponse.getShopper()==null){
-                    response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "Shopper in GetShopperByUUID response is null");
-                }
-                else{
-                    Boolean inList=false;
-                    for(Shopper shopper:listOfShoppers){
-                        if(shopper.getId()==request.getShopperID()){
-                            listOfShoppers.remove(shopper);
-                            inList=true;
-                        }
-                    }
-                    if(inList==true) {
-                        storeRepo.delete(storeEntity);
-                        storeEntity.setShoppers(listOfShoppers);
-                        storeRepo.save(storeEntity);
-                        response = new RemoveShopperResponse(true, Calendar.getInstance().getTime(), "Shopper was successfully removed");
-                    }
-                    else{
-                        response = new RemoveShopperResponse(false, Calendar.getInstance().getTime(), "Shopper isn't in list of shoppers in store entity");
-                    }
-                }
+                 Boolean inList=false;
+                 for(Shopper shopper:listOfShoppers){
+                     if(shopper.getId().equals(request.getShopperID())){
+                         listOfShoppers.remove(shopper);
+                         inList=true;
+                     }
+                 }
+                 if(inList==true) {
+                     storeEntity.setShoppers(listOfShoppers);
+                     storeRepo.save(storeEntity);
+                     response = new RemoveShopperResponse(true, Calendar.getInstance().getTime(), "Shopper was successfully removed");
+                 }
+                 else{
+                     response = new RemoveShopperResponse(false, Calendar.getInstance().getTime(), "Shopper isn't in list of shoppers in store entity");
+                 }
+
             }
             else{
                 response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
@@ -918,7 +903,9 @@ public class ShoppingServiceImpl implements ShoppingService {
             try {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
             }
-            catch (Exception e){
+            catch (Exception e){ }
+
+            if(storeEntity==null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not clear shoppers");
             }
 
@@ -928,7 +915,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 listOfShoppers.clear();
 
                 storeEntity.setShoppers(listOfShoppers);
-
+                storeRepo.save(storeEntity);
                 response = new ClearShoppersResponse(true, Calendar.getInstance().getTime(), "List of Shopper successfuly cleared");
             }
             else{

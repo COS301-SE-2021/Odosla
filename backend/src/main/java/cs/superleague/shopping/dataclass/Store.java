@@ -31,7 +31,7 @@ public class Store {
     @ManyToMany
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Shopper> shoppers;
+    private List<Shopper> shoppers=null;
 
     @ManyToMany
     @JoinTable
