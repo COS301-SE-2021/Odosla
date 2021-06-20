@@ -304,7 +304,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
 
             }
-            } catch (NullPointerException e){
+             catch (NullPointerException e){
                 e.printStackTrace();
             }
 

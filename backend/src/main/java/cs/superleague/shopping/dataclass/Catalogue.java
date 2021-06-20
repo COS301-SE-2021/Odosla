@@ -41,11 +41,5 @@ public class Catalogue {
     public void setStoreID(UUID storeID) {
         this.storeID = storeID;
     }
-    public void setStoreID(UUID storeID) {
-        this.storeID = storeID;
-    }
 
-    public UUID getStoreID() {
-        return storeID;
-    }
 }
