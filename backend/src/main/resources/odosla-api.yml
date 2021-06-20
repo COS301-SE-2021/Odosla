@@ -73,8 +73,10 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
+        errorMessage:
           type: string
-          description: generated token used to identify the caller of the endpoint
-        storeID:
-          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/itemObject"
