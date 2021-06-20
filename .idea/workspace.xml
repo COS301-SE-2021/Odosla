@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="fixed application file, added dependencies and properties">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33_[Default_Changelist]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" beforeDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="unfinished but functional endpoint call to mem:db">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Catalogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Catalogue.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="devlop_integration" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -44,13 +41,13 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
   <component name="ProjectViewState">
@@ -67,47 +64,66 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/src/test/java/cs/superleague" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.5065666" />
+    <property name="settings.editor.selected.configurable" value="terminal" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Code\Capstone\backend\src\main\java\user\exceptions" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="cs.superleague.shopping" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="user.repos" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.Application">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
+    <configuration name="C:/Code/CrowdBook_Gamma/Odosla" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
     </configuration>
-    <configuration name="SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="all tests" type="JUnit" factoryName="JUnit">
       <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
       </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.SubmitOrderIntegrationTest" />
-      <option name="METHOD_NAME" value="IntegrationTest_SubmitOrderRequestConstruction" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="ALTERNATIVE_JRE_PATH" value="11" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/backend/src/test/java/cs/superleague" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -120,15 +136,65 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <extension name="net.ashald.envfile">
+        <option name="IS_ENABLED" value="false" />
+        <option name="IS_SUBST" value="false" />
+        <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
+        <option name="IS_IGNORE_MISSING_FILES" value="false" />
+        <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
+        <ENTRIES>
+          <ENTRY IS_ENABLED="true" PARSER="runconfig" />
+        </ENTRIES>
+      </extension>
       <option name="SPRING_BOOT_MAIN_CLASS" value="cs.superleague.Application" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration default="true" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="C:\Code\CrowdBook_Gamma\Odosla\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="Default" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="C:\Code\CrowdBook_Gamma\Odosla\backend\src\main\resources\odosla-api.yml" />
+      <method v="2" />
+    </configuration>
+    <configuration name="odosla-api.yaml" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="C:\Code\CrowdBook_Gamma\Odosla\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="Default" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="C:\Code\CrowdBook_Gamma\Odosla\backend\src\main\resources\odosla-api.yml" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.C:/Code/CrowdBook_Gamma/Odosla" />
+      <item itemvalue="JUnit.all tests" />
+      <item itemvalue="Spring Boot.Application" />
+      <item itemvalue="Swagger Codegen.odosla-api.yaml" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" />
         <item itemvalue="Spring Boot.Application" />
+        <item itemvalue="Gradle.C:/Code/CrowdBook_Gamma/Odosla" />
       </list>
     </recent_temporary>
   </component>
@@ -144,7 +210,16 @@
       <workItem from="1623141611335" duration="8017000" />
       <workItem from="1623180903552" duration="4637000" />
       <workItem from="1623191294647" duration="3549000" />
-      <workItem from="1623957879008" duration="1768000" />
+      <workItem from="1623234412996" duration="470000" />
+      <workItem from="1623317237177" duration="2447000" />
+      <workItem from="1623450553866" duration="599000" />
+      <workItem from="1623505752921" duration="11133000" />
+      <workItem from="1623575816114" duration="10233000" />
+      <workItem from="1623981920303" duration="1363000" />
+      <workItem from="1624009784137" duration="6725000" />
+      <workItem from="1624020682643" duration="7214000" />
+      <workItem from="1624106744326" duration="13958000" />
+      <workItem from="1624194815445" duration="7800000" />
     </task>
     <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
       <created>1623142688992</created>
@@ -181,7 +256,70 @@
       <option name="project" value="LOCAL" />
       <updated>1623194178991</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="payments subsystem structure">
+      <created>1623198049141</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1623198049141</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Swagger code gen error">
+      <created>1623585638273</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1623585638274</updated>
+    </task>
+    <task id="LOCAL-00008" summary="added test controller">
+      <created>1623983276591</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1623983276591</updated>
+    </task>
+    <task id="LOCAL-00009" summary="-removed security dependency to test endpoints quickly&#10;-added items to yml file&#10;-implemented basic controller">
+      <created>1624146676879</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1624146676879</updated>
+    </task>
+    <task id="LOCAL-00010" summary="-added item list to response body&#10;-fixed responseEntity in controller function">
+      <created>1624148882877</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1624148882877</updated>
+    </task>
+    <task id="LOCAL-00011" summary="-testing mock">
+      <created>1624149138196</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1624149138196</updated>
+    </task>
+    <task id="LOCAL-00012" summary="-fixed mock test">
+      <created>1624151029137</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1624151029137</updated>
+    </task>
+    <task id="LOCAL-00013" summary="-added structure for non-mock endpoint call &amp; created repo mock and autowiring.">
+      <created>1624198114115</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1624198114116</updated>
+    </task>
+    <task id="LOCAL-00014" summary="unfinished but functional endpoint call to mem:db">
+      <created>1624201810917</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1624201810917</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,6 +344,25 @@
     <MESSAGE value="Created application file" />
     <MESSAGE value="Restructured project and created application file" />
     <MESSAGE value="fixed application file, added dependencies and properties" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed application file, added dependencies and properties" />
+    <MESSAGE value="payments subsystem structure" />
+    <MESSAGE value="Swagger code gen error" />
+    <MESSAGE value="added test controller" />
+    <MESSAGE value="-removed security dependency to test endpoints quickly&#10;-added items to yml file&#10;-implemented basic controller" />
+    <MESSAGE value="-added item list to response body&#10;-fixed responseEntity in controller function" />
+    <MESSAGE value="-testing mock" />
+    <MESSAGE value="-fixed mock test" />
+    <MESSAGE value="-added structure for non-mock endpoint call &amp; created repo mock and autowiring." />
+    <MESSAGE value="unfinished but functional endpoint call to mem:db" />
+    <option name="LAST_COMMIT_MESSAGE" value="unfinished but functional endpoint call to mem:db" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
