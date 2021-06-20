@@ -331,10 +331,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
-        String message = null;
-        Order order = null;
+        String message;
+        Order order;
         double discount = 0;
-        double cost = 0;
+        double cost;
 
         if(request == null){
             order = getOrder(null).getOrder();
@@ -345,7 +345,7 @@ public class PaymentServiceImpl implements PaymentService {
             order = getOrder(new GetOrderRequest(request.getOrderID())).getOrder();
         }
 
-        if (request.getUserID() != order.getUserID()) {
+        if (!request.getUserID().equals(order.getUserID())) {
             throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
         }
 
@@ -359,6 +359,9 @@ public class PaymentServiceImpl implements PaymentService {
                 status != OrderStatus.DELIVERED &&
                 status != OrderStatus.PACKING) { // statuses which do not allow for the updating of an order
 
+            if (request.getOrderType() != null) {
+                order.setType(request.getOrderType());
+            }
 
             if (request.getDiscount() != 0) {
                 discount = request.getDiscount();
@@ -366,11 +369,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (request.getListOfItems() != null) {
                 order.setItems(request.getListOfItems());
-
-                for (Item item : order.getItems()) {
-                    cost += item.getPrice();
-                }
-
+                cost = getCost(order.getItems());
                 order.setTotalCost(cost - discount);
             } // else refer them to cancel order
 
@@ -382,23 +381,13 @@ public class PaymentServiceImpl implements PaymentService {
                 order.setDeliveryAddress(request.getDeliveryAddress());
             }
 
+            message = "Order successfully updated.";
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
         }
 
         orderRepo.save(order);
-        // order has not been processed by shopper
-        // nor has it been accepted by driver. customer can change type
-        if (status == OrderStatus.AWAITING_PAYMENT) {
-            if (request.getOrderType() != null) {
-                order.setType(request.getOrderType());
-            }
-
-            message = "Order successfully updated.";
-        } else {
-            message = "Delivery address and OrderType could not be updated. Other details updated successfully.";
-        }
 
         return new UpdateOrderResponse(order, true, Calendar.getInstance().getTime(), message);
     }
@@ -451,5 +440,16 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public GetInvoiceResponse getInvoice(GetInvoiceRequest request) {
         return null;
+    }
+
+    // Helper
+    private double getCost(List<Item> items){
+        double cost = 0;
+
+        for (Item item : items) {
+            cost += item.getPrice() * item.getQuantity();
+        }
+
+        return cost;
     }
 }

@@ -142,7 +142,7 @@ public class UpdateOrderUnitTest {
     }
 
     @Test
-    @Description("Tests for when the order status is PURCHASED (order has been processed) - All but deliveryAddress, and type should change")
+    @Description("Tests for when the order status is PURCHASED (order has not been processed yet) - update should be successful for all fields")
     @DisplayName("When the order status is purchased")
     void UnitTest_testingOrderStatus_PURCHASED() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
         when(orderRepo.findAll()).thenReturn(listOfOrders);
@@ -151,14 +151,14 @@ public class UpdateOrderUnitTest {
         request.setOrderID(o1UUID);
         o.setStatus(OrderStatus.PURCHASED);
         UpdateOrderResponse response = paymentService.updateOrder(request);
-        assertEquals("Delivery address and OrderType could not be updated. Other details updated successfully.",response.getMessage());
+        assertEquals("Order successfully updated.",response.getMessage());
         assertTrue(response.isSuccess());
         assertEquals(newDeliveryAddress, response.getOrder().getDeliveryAddress());
-        assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertEquals(OrderType.COLLECTION, response.getOrder().getType());
     }
 
     @Test
-    @Description("Tests for when the order status is IN_QUEUE (order has been processed) - All but deliveryAddress, and type should change")
+    @Description("Tests for when the order status is IN_QUEUE (order has not been processed yet) - update should be successful for all fields")
     @DisplayName("When the order status is IN_QUEUE")
     void UnitTest_testingOrderStatus_IN_QUEUE() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
         when(orderRepo.findAll()).thenReturn(listOfOrders);
@@ -167,13 +167,31 @@ public class UpdateOrderUnitTest {
         request.setOrderID(o1UUID);
         o.setStatus(OrderStatus.IN_QUEUE);
         UpdateOrderResponse response = paymentService.updateOrder(request);
-        assertEquals("Delivery address and OrderType could not be updated. Other details updated successfully.",response.getMessage());
+        assertEquals("Order successfully updated.",response.getMessage());
         assertTrue(response.isSuccess());
         assertEquals(newDeliveryAddress, response.getOrder().getDeliveryAddress());
-        assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertEquals(OrderType.COLLECTION, response.getOrder().getType());
     }
 
     // cannot update order anymore
+    @Test
+    @Description("Tests for when the order status is PACKING (order has been processed) - All updates should be unsuccessful")
+    @DisplayName("When the order status is PACKING")
+    void UnitTest_testingOrderStatus_PACKING() throws NotAuthorisedException, InvalidRequestException, OrderDoesNotExist{
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        UpdateOrderRequest request = new UpdateOrderRequest(o1UUID, expectedU1, newListOfItems, newDiscount, OrderType.COLLECTION, newDeliveryAddress);
+        request.setOrderID(o1UUID);
+        o.setStatus(OrderStatus.PACKING);
+        UpdateOrderResponse response = paymentService.updateOrder(request);
+        assertEquals("Can no longer update the order - UpdateOrder Unsuccessful.",response.getMessage());
+        assertFalse(response.isSuccess());
+        assertNotEquals(newDeliveryAddress, response.getOrder().getDeliveryAddress());
+        assertNotEquals(OrderType.COLLECTION, response.getOrder().getType());
+        assertNotEquals(newListOfItems.get(0), response.getOrder().getItems().get(0));
+        assertNotEquals(newDiscount, response.getOrder().getDiscount());
+    }
+
     @Test
     @Description("Tests for when the order status is AWAITING_COLLECTION (order has been processed) - All updates should be unsuccessful")
     @DisplayName("When the order status is AWAITING_COLLECTION")
