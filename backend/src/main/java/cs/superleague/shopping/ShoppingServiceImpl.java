@@ -294,7 +294,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             Store storeEntity=null;
-            storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             if(storeEntity==null) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity");
             }
