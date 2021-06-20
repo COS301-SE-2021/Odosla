@@ -35,7 +35,9 @@ public class ShoppingController implements ShoppingApi{
             List<ItemObject> mockItems = new ArrayList<>();
             ItemObject a = new ItemObject();
             a.setName("mockA");
-            mockItems.add(a);
+            ItemObject b = new ItemObject();
+            a.setName("mockB");
+            mockItems.add(b);
 
             response.setItems(mockItems);
         }
