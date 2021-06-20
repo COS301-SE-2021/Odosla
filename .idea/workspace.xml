@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="-testing mock">
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="-fixed mock test">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" afterDir="false" />
     </list>
@@ -217,7 +217,8 @@
       <workItem from="1623981920303" duration="1363000" />
       <workItem from="1624009784137" duration="6725000" />
       <workItem from="1624020682643" duration="7214000" />
-      <workItem from="1624106744326" duration="13787000" />
+      <workItem from="1624106744326" duration="13958000" />
+      <workItem from="1624194815445" duration="2344000" />
     </task>
     <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
       <created>1623142688992</created>
@@ -296,7 +297,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624149138196</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="-fixed mock test">
+      <created>1624151029137</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1624151029137</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -327,6 +335,7 @@
     <MESSAGE value="-removed security dependency to test endpoints quickly&#10;-added items to yml file&#10;-implemented basic controller" />
     <MESSAGE value="-added item list to response body&#10;-fixed responseEntity in controller function" />
     <MESSAGE value="-testing mock" />
-    <option name="LAST_COMMIT_MESSAGE" value="-testing mock" />
+    <MESSAGE value="-fixed mock test" />
+    <option name="LAST_COMMIT_MESSAGE" value="-fixed mock test" />
   </component>
 </project>
