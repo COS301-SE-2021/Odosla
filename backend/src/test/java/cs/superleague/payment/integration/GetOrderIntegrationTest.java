@@ -10,6 +10,7 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.GetOrderRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.repos.ItemRepo;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class GetOrderIntegrationTest {
     // Repos
     @Autowired
     OrderRepo orderRepo;
+
+    @Autowired
+    ItemRepo itemRepo;
 
     // Global variables
     double expectedDiscount, expectedtotalCost;
@@ -99,7 +103,11 @@ public class GetOrderIntegrationTest {
 
         expectedDiscount = 0.0;
         expectedListOfItems.add(I1);
-        expectedListOfItems.add(I2);O1 = new Order(expectedOrderId, expectedUserId, expectedStoreId, expectedShopperId, Calendar.getInstance(), null, expectedtotalCost, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, null, null, false);
+        expectedListOfItems.add(I2);
+
+        itemRepo.saveAll(expectedListOfItems);
+
+        O1 = new Order(expectedOrderId, expectedUserId, expectedStoreId, expectedShopperId, Calendar.getInstance(), null, expectedtotalCost, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, null, null, false);
         listOfOrders.add(O1);
         orderRepo.saveAll(listOfOrders);
     }
@@ -107,6 +115,9 @@ public class GetOrderIntegrationTest {
     @AfterEach
     void tearDown(){
         orderRepo.delete(O1);
+
+        itemRepo.delete(I1);
+        itemRepo.delete(I2);
     }
 
     // Integration Tests
