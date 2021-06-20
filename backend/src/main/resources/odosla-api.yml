@@ -104,7 +104,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/itemObject"
+            $ref: "#/components/schemas/ItemObject"
 
     ShopperObject:
       description: "Generic schema for a shopper"
@@ -125,24 +125,24 @@ components:
         ordersCompleted:
           type: integer
 
-      shopping_GetShoppersRequest:
-        description: This object is expected as input
-        type: object
-        properties:
-          jwtToken:
-            type: string
-            description: generated token used to identify the caller of the endpoint
-          storeID:
-            type: string
+    shopping_GetShoppersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        storeID:
+          type: string
 
-      shopping_GetShoppersResponse:
-        description: This object is expected as input
-        type: object
-        properties:
-          errorMessage:
-            type: string
-            description: Will contain a descriptive error message if response code is not 200, else will be empty
-          shoppers:
-            type: array
-            shoppers:
-              $ref: "#/components/schemas/shopperObject"
+    shopping_GetShoppersResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
