@@ -8,10 +8,14 @@ import cs.superleague.models.ItemObject;
 import cs.superleague.models.ShoppingGetItemsRequest;
 import cs.superleague.models.ShoppingGetItemsResponse;
 import cs.superleague.shopping.ShoppingServiceImpl;
+import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.GetItemsRequest;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,24 +39,44 @@ public class ShoppingController implements ShoppingApi{
     ShoppingServiceImpl shoppingService;
 
     @Autowired
+    StoreRepo storeRepo;
+
+    @Autowired
+    CatalogueRepo catalogueRepo;
+
+    @Autowired
     ItemRepo itemRepo;
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 
 
 
-    private boolean mockMode = true;
+    private boolean mockMode = false;
 
     //getItems endpoint
     @Override
     public ResponseEntity<ShoppingGetItemsResponse> getItems(ShoppingGetItemsRequest body) {
 
         //add mock data to repo
+        List<Item> mockItemList = new ArrayList<>();
         Item item1, item2;
-        item1=new Item("Heinz Tomato Sauce","123456","123456",storeID,36.99,1,"description","img/");
-        item2=new Item("Bar one","012345","012345", storeID,14.99,3,"description","img/");
+        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
+        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
         itemRepo.save(item1); itemRepo.save(item2);
+        mockItemList.add(item1); mockItemList.add(item2);
 
+        Catalogue c = new Catalogue();
+        c.setStoreID(storeID);
+        c.setItems(mockItemList);
+        catalogueRepo.save(c);
+
+        Store store1 = new Store();
+        store1.setStock(c);
+
+        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+        store1.setStock(c);
+        storeRepo.save(store1);
+        ///
 
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
@@ -70,7 +95,7 @@ public class ShoppingController implements ShoppingApi{
         } else {
 
             try {
-                GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString("123456")));
+                GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0")));
                 try {
 
                     response.setItems(populateItems(getItemsResponse.getItems()));
@@ -87,7 +112,9 @@ public class ShoppingController implements ShoppingApi{
 
         }
 
-
+        storeRepo.deleteAll();
+        catalogueRepo.deleteAll();
+        itemRepo.deleteAll();
 
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -107,6 +134,12 @@ public class ShoppingController implements ShoppingApi{
 
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
+            currentItem.setBarcode(responseItems.get(i).getBarcode());
+            currentItem.setProductId(responseItems.get(i).getProductID());
+            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
+            currentItem.setQuantity(responseItems.get(i).getQuantity());
+            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
 
             responseBody.add(currentItem);
 

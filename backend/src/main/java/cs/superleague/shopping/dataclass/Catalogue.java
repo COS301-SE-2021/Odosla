@@ -32,4 +32,12 @@ public class Catalogue {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
 }
