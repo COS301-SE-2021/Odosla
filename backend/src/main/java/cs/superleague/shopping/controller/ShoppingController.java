@@ -36,7 +36,7 @@ public class ShoppingController implements ShoppingApi{
     @Autowired
     ItemRepo itemRepo;
 
-
+    UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 
 
 
@@ -48,8 +48,8 @@ public class ShoppingController implements ShoppingApi{
 
         //add mock data to repo
         Item item1, item2;
-        item1=new Item("Heinz Tomato Sauce","123456","123456",UUID.fromString("store1"),36.99,1,"description","img/");
-        item2=new Item("Bar one","012345","012345", UUID.fromString("store1"),14.99,3,"description","img/");
+        item1=new Item("Heinz Tomato Sauce","123456","123456",storeID,36.99,1,"description","img/");
+        item2=new Item("Bar one","012345","012345", storeID,14.99,3,"description","img/");
         itemRepo.save(item1); itemRepo.save(item2);
 
 
@@ -71,8 +71,14 @@ public class ShoppingController implements ShoppingApi{
 
             try {
                 GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString("123456")));
-                //ItemObject
-                //response.setItems();
+                try {
+
+                    response.setItems(populateItems(getItemsResponse.getItems()));
+
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
             } catch (StoreDoesNotExistException e) {
 
             } catch (InvalidRequestException e) {
@@ -86,6 +92,27 @@ public class ShoppingController implements ShoppingApi{
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    //////////////////////
+    // helper functions //
+    //////////////////////
 
+    //Populate ItemObject list from items returned by use case
+    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
+
+        List<ItemObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseItems.size(); i++){
+
+            ItemObject currentItem = new ItemObject();
+
+            currentItem.setName(responseItems.get(i).getName());
+            currentItem.setDescription(responseItems.get(i).getDescription());
+
+            responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
 
 }
