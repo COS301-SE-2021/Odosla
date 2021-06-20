@@ -1,0 +1,82 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description: The library service
+
+tags:
+  - name: "Shopping"
+
+
+paths:
+
+  /shopping/getItems:
+    post:
+      summary: Endpoint for Get Items use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetItemsRequest"
+      responses:
+        "200":
+          description: Returns items upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetItemsResponse"
+
+components:
+
+  schemas:
+
+
+    ItemObject:
+      description: "Generic schema for an item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeId:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+
+    shopping_GetItemsRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        storeID:
+          type: string
+
+    shopping_GetItemsResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/itemObject"

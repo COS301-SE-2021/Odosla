@@ -223,7 +223,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
 
-            List<Order> orderqueue=store.getOrderQueue();
+            List<Order> orderqueue= store.getOrderQueue();
 
             if(orderqueue.size()==0){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);
@@ -302,8 +302,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             Store storeEntity=null;
             try {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+
             }
-            catch (Exception e){}
+            } catch (NullPointerException e){
+                e.printStackTrace();
+            }
+
             if(storeEntity==null) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity");
             }
@@ -314,39 +318,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
-
-    /**
-     *
-     * @param request is used to bring in:
-     *                private storeID
-     *
-     * getStoreOpen should:
-     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
-     *               2. Check if the request's storeID is not null, else throw an InvalidRequestException
-     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
-     *               it doesn't exist then throw a StoreDoesNotExistException.
-     *               4. Use the found Store object's getOpeningTime and getClosingTime to check against
-     *                the current hour of day.
-     *               5. If it meets the conditions then initialize the response object's constructor to true,
-     *                else, to false.
-     *               6. Return the response object.
-     *
-     * Request Object (GetStoreOpenRequest):
-     * {
-     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
-     * }
-     *
-     * Response Object (GetStoreOpenResponse):
-     * {
-     *                "isOpen":storeEntity.getOpen()
-     *                "timestamp":"2021-01-05T11:50:55"
-     *                "message":"Store is now open for business"
-     * }
-     *
-     * @return
-     * @throws InvalidRequestException
-     * @throws StoreDoesNotExistException
-     * */
 
     @Override
     public GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
@@ -514,38 +485,39 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
-        /**
-         *
-         * @param request is used to bring in:
-         *                private orderID
-         *                private storeID
-         *
-         * removeQueuedOrder should:
-         *               1. Check that the request object is not null, if so then throw an InvalidRequestException
-         *               2. Check if the request's storeID or OrderID is not null, else throw an InvalidRequestException
-         *               3. Use the request's storeID to find the corresponding Store object in the repo. If
-         *               it doesn't exist then throw a StoreDoesNotExistException.
-         *               4. Find the corresponding order in the Store object, if it is empty or not there return false
-         *               6. Remove the corresponding item from the Store object.
-         *               5. Return the response object with the corresponding orderID that has been removed.
-         *
-         * Request Object (RemoveQueuedOrderRequest):
-         * {
-         *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
-         *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
-         * }
-         *
-         * Response Object (RemoveQueuedOrderResponse):
-         * {
-         *                "isRemoved":true
-         *                "message":"Order successfully removed from the queue"
-         *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
-         * }
-         *
-         * @return
-         * @throws InvalidRequestException
-         * @throws StoreDoesNotExistException
-         * */
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private orderID
+     *                private storeID
+     *
+     * removeQueuedOrder should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's storeID or OrderID is not null, else throw an InvalidRequestException
+     *               3. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               4. Find the corresponding order in the Store object, if it is empty or not there return false
+     *               6. Remove the corresponding item from the Store object.
+     *               5. Return the response object with the corresponding orderID that has been removed.
+     *
+     * Request Object (RemoveQueuedOrderRequest):
+     * {
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * Response Object (RemoveQueuedOrderResponse):
+     * {
+     *                "isRemoved":true
+     *                "message":"Order successfully removed from the queue"
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
 
 
     public RemoveQueuedOrderResponse removeQueuedOrder(RemoveQueuedOrderRequest request) throws InvalidRequestException, StoreDoesNotExistException {
