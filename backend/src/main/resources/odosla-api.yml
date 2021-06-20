@@ -9,6 +9,7 @@ tags:
   - name: "Shopping"
 
 
+
 paths:
 
   /shopping/getItems:
@@ -32,6 +33,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsResponse"
+
+  /shopping/getShoppers:
+    post:
+      summary: Endpoint for Get Shoppers use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getShoppers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetShoppersRequest"
+      responses:
+        "200":
+          description: Returns shoppers upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetShoppersResponse"
+
+
 
 components:
 
@@ -80,3 +105,44 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/itemObject"
+
+    ShopperObject:
+      description: "Generic schema for a shopper"
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        storeID:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        ordersCompleted:
+          type: integer
+
+      shopping_GetShoppersRequest:
+        description: This object is expected as input
+        type: object
+        properties:
+          jwtToken:
+            type: string
+            description: generated token used to identify the caller of the endpoint
+          storeID:
+            type: string
+
+      shopping_GetShoppersResponse:
+        description: This object is expected as input
+        type: object
+        properties:
+          errorMessage:
+            type: string
+            description: Will contain a descriptive error message if response code is not 200, else will be empty
+          shoppers:
+            type: array
+            shoppers:
+              $ref: "#/components/schemas/shopperObject"
