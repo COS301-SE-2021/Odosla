@@ -1,20 +1,22 @@
-package cs.superleague.shopping;
+package cs.superleague.shopping.integration;
 
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Description;
+import cs.superleague.integration.ServiceSelector;
 import cs.superleague.shopping.ShoppingServiceImpl;
-import cs.superleague.shopping.dataclass.*;
-import cs.superleague.shopping.exceptions.*;
-import cs.superleague.shopping.requests.*;
-import cs.superleague.shopping.responses.*;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.InvalidRequestException;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.shopping.requests.ClearShoppersRequest;
+import cs.superleague.shopping.responses.ClearShoppersResponse;
+import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.repos.ShopperRepo;
+import org.junit.jupiter.api.*;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Description;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +26,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class ClearShopperTest {
+@SpringBootTest
+public class ClearShoppersIntegrationTest {
 
-    @Mock
-    private StoreRepo storeRepo;
+    @Autowired
+    ShoppingServiceImpl shoppingService;
+    //OPTIONAL SERVICES
+    @Autowired
+    UserServiceImpl userService;
 
-    @InjectMocks
-    private ShoppingServiceImpl shoppingService;
+    @Autowired
+    StoreRepo storeRepo;
+
+    @Autowired
+    ShopperRepo shopperRepo;
+
     UUID storeUUID1= UUID.randomUUID();
     Store store;
     Shopper shopper;
@@ -42,6 +51,7 @@ public class ClearShopperTest {
     UUID shopperID3=UUID.randomUUID();
     UUID storeID=UUID.randomUUID();
     List<Shopper> shopperList=new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         store=new Store();
@@ -53,33 +63,38 @@ public class ClearShopperTest {
         shopper2.setId(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
+        shopperRepo.save(shopper1);
+        shopperRepo.save(shopper2);
     }
 
     @AfterEach
     void tearDown() {
+
+        storeRepo.deleteAll();
+        shopperRepo.deleteAll();
     }
 
     @Test
     @Description("Tests for when clearShoppers is submited with a null request object- exception should be thrown")
     @DisplayName("When request object is not specificed")
-    void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.clearShoppers(null));
+    void IntegratioonTest_testingNullRequestObject(){
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getShoppingService().clearShoppers(null));
         assertEquals("Request object can't be null for clearShoppers", thrown.getMessage());
     }
 
     @Test
     @Description("Tests for when clearShoppers is submited store ID in request object being null- exception should be thrown")
     @DisplayName("When request object has null parameter")
-    void UnitTest_StoreID_inRequest_NullRequestObject(){
+    void IntegrationTest_StoreID_inRequest_NullRequestObject(){
         ClearShoppersRequest request=new ClearShoppersRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.clearShoppers(request));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getShoppingService().clearShoppers(request));
         assertEquals("Store ID in request object for clearShoppers can't be null", thrown.getMessage());
     }
 
     @Test
     @Description("Tests whether the clearShoppers request object was created correctly")
     @DisplayName("GetShoppers correctly constructed")
-    void UnitTest_GetShoppersRequestConstruction() {
+    void IntegrationTest_GetShoppersRequestConstruction() {
         ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
         assertNotNull(request);
         assertEquals(storeUUID1, request.getStoreID());
@@ -88,37 +103,25 @@ public class ClearShopperTest {
     @Test
     @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
     @DisplayName("When Store with ID doesn't exist")
-    void UnitTest_Store_doesnt_exist(){
+    void IntegrationTest_Store_doesnt_exist(){
         ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.clearShoppers(request));
+        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().clearShoppers(request));
         assertEquals("Store with ID does not exist in repository - could not clear shoppers", thrown.getMessage());
-    }
-    @Test
-    @Description("Test for when store is return with list of shoppers being null")
-    @DisplayName("List of Shoppers in Store entity is null")
-    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
-        store.setStoreID(storeUUID1);
-        store.setShoppers(null);
-        ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-        ClearShoppersResponse response=shoppingService.clearShoppers(request);
-        assertEquals(false,response.isSuccess());
-        assertEquals("List of shoppers is null",response.getMessage());
     }
 
     @Test
     @Description("Test for when clear shoppers was sucessful")
     @DisplayName("Sucessfully cleared shoppers")
-    void UnitTest_successfully_clearedShoppers() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void IntegrationTest_successfully_clearedShoppers() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         ClearShoppersRequest request=new ClearShoppersRequest(storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-        ClearShoppersResponse response=shoppingService.clearShoppers(request);
+        storeRepo.save(store);
+        ClearShoppersResponse response=ServiceSelector.getShoppingService().clearShoppers(request);
         assertEquals(true,response.isSuccess());
         assertEquals("List of Shopper successfuly cleared",response.getMessage());
+        Store storeResponse=storeRepo.findById(store.getStoreID()).orElse(null);
+        assertEquals(0,storeResponse.getShoppers().size());
     }
-
 
 }
