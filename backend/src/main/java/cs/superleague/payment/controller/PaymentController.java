@@ -125,7 +125,6 @@ public class PaymentController implements PaymentApi {
         try{
             OrderType orderType = null;
             if(body.getOrderType().equals("Collection")){
-                System.out.println(body.getOrderType());
                 orderType = OrderType.COLLECTION;
             }else if(body.getOrderType().equals("Delivery")){
                 orderType = OrderType.DELIVERY;
