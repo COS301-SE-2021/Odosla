@@ -33,6 +33,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsResponse"
 
+  /shopping/addShopper:
+    post:
+      summary: Endpoint for adding shopper to shopper list
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: addShopper
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_AddShopperRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_AddShopperResponse"
+
+  /shopping/removeQueuedOrder:
+    post:
+      summary: Endpoint for removing a queued order.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: removeQueuedOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
+
 components:
 
   schemas:
@@ -70,7 +114,7 @@ components:
           type: string
 
     shopping_GetItemsResponse:
-      description: This object is expected as input
+      description: This object is returned as output
       type: object
       properties:
         errorMessage:
@@ -80,3 +124,48 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/itemObject"
+
+
+
+    shopping_AddShopperRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        shopperID:
+          type: string
+        storeID:
+          type: string
+
+    shopping_AddShopperResponse:
+      description: This object is output
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: generated token used to identify the caller of the endpoint
+        date:
+          type: string
+        message:
+          type: string
+
+    shopping_RemoveQueuedOrderRequest:
+      description: this object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+        storeID:
+          type: string
+
+    shopping_RemoveQueuedOrderResponse:
+      description: this object is output
+      type: object
+      properties:
+        isRemoved:
+          type: boolean
+        message:
+          type: string
+        orderID:
+          type: string
+
+
