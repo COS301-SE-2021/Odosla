@@ -42,7 +42,7 @@ public class PaymentController implements PaymentApi {
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
     UUID shopperID = UUID.randomUUID();
     UUID userID = UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586");
-    UUID orderId_AWAITNG_PAYMENT = UUID.fromString("b5e2ef07-865c-4025-b393-045b0a0abe62");
+    UUID orderId_AWAITNG_PAYMENT = UUID.fromString("8d8fe4d6-492b-453e-8ef1-214d0e897e2d");
     UUID orderId_PURCHASED = UUID.fromString("b809b6a4-f5c6-425b-a70b-dc941f3b9dad");
     UUID orderId_IN_QUEUE = UUID.fromString("84681571-c046-4811-8b20-b22e25a4084c");
     UUID orderID_PACKING = UUID.fromString("95ca0860-d2d5-4f85-a65f-54942110a363");
@@ -51,10 +51,12 @@ public class PaymentController implements PaymentApi {
     UUID orderID_CUSTOMER_COLLECTED = UUID.fromString("b43aefcc-a8f9-40a6-a8ba-71f4d137a40e");
     UUID orderID_DELIVERED = UUID.fromString("a8f54965-5c09-4748-b28f-e6a106985ff1");
 
+    List<Order> orders = new ArrayList<>();
     @Override
     public ResponseEntity<PaymentUpdateOrderResponse> updateOrder(PaymentUpdateOrderRequest body) {
 
 
+        System.out.println(UUID.randomUUID());
         //add mock data to repo
         List<Item> mockItemList = new ArrayList<>();
         Item item1, item2;
@@ -78,35 +80,42 @@ public class PaymentController implements PaymentApi {
         order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
         totalCost = 0;
 
+        orders.add(order);
         orderRepo.save(order);
 
         order.setOrderID(orderId_PURCHASED);
         order.setStatus(OrderStatus.PURCHASED);
         orderRepo.save(order);
+        orders.add(order);
 
         order.setOrderID(orderId_IN_QUEUE);
         order.setStatus(OrderStatus.IN_QUEUE);
         orderRepo.save(order);
+        orders.add(order);
 
         order.setOrderID(orderID_PACKING);
         order.setStatus(OrderStatus.PACKING);
         orderRepo.save(order);
-
+        orders.add(order);
 
         order.setOrderID(orderID_COLLECTION);
         order.setStatus(OrderStatus.AWAITING_COLLECTION);
         orderRepo.save(order);
+        orders.add(order);
 
         order.setOrderID(orderID_DELIVERY_COLLECTED);
         order.setStatus(OrderStatus.DELIVERY_COLLECTED);
         orderRepo.save(order);
+        orders.add(order);
 
         order.setOrderID(orderID_CUSTOMER_COLLECTED);
         order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
         orderRepo.save(order);
+        orders.add(order);
 
         order.setOrderID(orderID_DELIVERED);
         order.setStatus(OrderStatus.DELIVERED);
+        orders.add(order);
         orderRepo.save(order);
 
 
@@ -121,19 +130,17 @@ public class PaymentController implements PaymentApi {
                 orderType = OrderType.DELIVERY;
             }
 
-            System.out.println(body.getOrderId());
-//                GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0")));
-            System.out.println("Ta");
             double discount = 0.00;
             if(body.getDiscount() != null)
                 discount = body.getDiscount().doubleValue();
 
-            UpdateOrderRequest request = new UpdateOrderRequest(order.getOrderID(), order.getUserID(), body.getItems(), discount, orderType, order.getDeliveryAddress());
+            System.out.println(body.getOrderId());
+            UUID orderID = UUID.fromString(body.getOrderId());
+            UUID userID = UUID.fromString(body.getUserId());
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, userID, body.getItems(), discount, orderType, order.getDeliveryAddress());
 
             UpdateOrderResponse updateOrderResponse = ServiceSelector.getPaymentService().updateOrder(request);
-            System.out.println("ola");
             try {
-                System.out.println("hello");
                 response.setMessage(updateOrderResponse.getMessage());
                 response.setOrder(updateOrderResponse.getOrder());
                 response.setSuccess(updateOrderResponse.isSuccess());
