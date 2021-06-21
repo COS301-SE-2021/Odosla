@@ -56,7 +56,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_AddShopperResponse"
-              
+
 
   /shopping/getShoppers:
     post:
@@ -101,8 +101,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
-              
-                
+
+
 
   /payment/updateOrder:
     post:

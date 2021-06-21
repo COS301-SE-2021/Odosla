@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,134 +56,134 @@ public class PaymentController implements PaymentApi {
     @Override
     public ResponseEntity<PaymentUpdateOrderResponse> updateOrder(PaymentUpdateOrderRequest body) {
 
-//
-//        System.out.println(UUID.randomUUID());
-//        //add mock data to repo
-//        List<Item> mockItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-//        itemRepo.save(item1); itemRepo.save(item2);
-//        mockItemList.add(item1); mockItemList.add(item2);
-//
-//        double totalCost = 14.99 + 36.99;
-//        Order order = new Order();
-//        order.setOrderID(orderId_AWAITNG_PAYMENT);
-//        order.setUserID(userID);
-//        order.setStoreID(storeID);
-//        order.setShopperID(shopperID);
-//        order.setCreateDate(Calendar.getInstance());
-//        order.setTotalCost(totalCost);
-//        order.setType(OrderType.DELIVERY);
-//        order.setStatus(OrderStatus.AWAITING_PAYMENT);
-//        order.setItems(mockItemList);
-//        order.setStoreAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-//        order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-//        totalCost = 0;
-//
-//        orders.add(order);
-//        orderRepo.save(order);
-//
-//        order.setOrderID(orderId_PURCHASED);
-//        order.setStatus(OrderStatus.PURCHASED);
-//        orderRepo.save(order);
-//        orders.add(order);
-//
-//        order.setOrderID(orderId_IN_QUEUE);
-//        order.setStatus(OrderStatus.IN_QUEUE);
-//        orderRepo.save(order);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_PACKING);
-//        order.setStatus(OrderStatus.PACKING);
-//        orderRepo.save(order);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_COLLECTION);
-//        order.setStatus(OrderStatus.AWAITING_COLLECTION);
-//        orderRepo.save(order);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_DELIVERY_COLLECTED);
-//        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-//        orderRepo.save(order);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_CUSTOMER_COLLECTED);
-//        order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
-//        orderRepo.save(order);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_DELIVERED);
-//        order.setStatus(OrderStatus.DELIVERED);
-//        orders.add(order);
-//        orderRepo.save(order);
-//
-//
-//        PaymentUpdateOrderResponse response = new PaymentUpdateOrderResponse();
-//        HttpStatus httpStatus = HttpStatus.OK;
-//
-//        try{
-//            OrderType orderType = null;
-//            if(body.getOrderType() == "Collection"){
-//                orderType = OrderType.COLLECTION;
-//            }else if(body.getOrderType() == "Delivery"){
-//                orderType = OrderType.DELIVERY;
-//            }
-//
-//            double discount = 0.00;
-//            if(body.getDiscount() != null)
-//                discount = body.getDiscount().doubleValue();
-//
-//            System.out.println(body.getOrderId());
-//            UUID orderID = UUID.fromString(body.getOrderId());
-//            UUID userID = UUID.fromString(body.getUserId());
-//            UpdateOrderRequest request = new UpdateOrderRequest(orderID, userID, populateItems(body.getItems()), discount, orderType, order.getDeliveryAddress());
-//
-//            UpdateOrderResponse updateOrderResponse = ServiceSelector.getPaymentService().updateOrder(request);
-//            try {
-//                response.setMessage(updateOrderResponse.getMessage());
-//                response.setOrder(updateOrderResponse.getOrder());
-//                response.setSuccess(updateOrderResponse.isSuccess());
-//                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(updateOrderResponse.getTimestamp()));
-//            }catch(Exception e){
-//
-//            }
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        orderRepo.deleteAll();
-//        itemRepo.deleteAll();
-//
-//        return new ResponseEntity<>(response, httpStatus);
-        return null;
-    }
+
+        //add mock data to repo
+        List<Item> mockItemList = new ArrayList<>();
+        Item item1, item2;
+        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
+        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
+        itemRepo.save(item1); itemRepo.save(item2);
+        mockItemList.add(item1); mockItemList.add(item2);
+
+        double totalCost = 14.99 + 36.99;
+        Order order = new Order();
+        order.setOrderID(orderId_AWAITNG_PAYMENT);
+        order.setUserID(userID);
+        order.setStoreID(storeID);
+        order.setShopperID(shopperID);
+        order.setCreateDate(Calendar.getInstance());
+        order.setTotalCost(totalCost);
+        order.setType(OrderType.DELIVERY);
+        order.setStatus(OrderStatus.AWAITING_PAYMENT);
+        order.setItems(mockItemList);
+        order.setStoreAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
+        order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
+        totalCost = 0;
+
+        orders.add(order);
+        orderRepo.save(order);
+
+        order.setOrderID(orderId_PURCHASED);
+        order.setStatus(OrderStatus.PURCHASED);
+        orderRepo.save(order);
+        orders.add(order);
+
+        order.setOrderID(orderId_IN_QUEUE);
+        order.setStatus(OrderStatus.IN_QUEUE);
+        orderRepo.save(order);
+        orders.add(order);
+
+        order.setOrderID(orderID_PACKING);
+        order.setStatus(OrderStatus.PACKING);
+        orderRepo.save(order);
+        orders.add(order);
+
+        order.setOrderID(orderID_COLLECTION);
+        order.setStatus(OrderStatus.AWAITING_COLLECTION);
+        orderRepo.save(order);
+        orders.add(order);
+
+        order.setOrderID(orderID_DELIVERY_COLLECTED);
+        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
+        orderRepo.save(order);
+        orders.add(order);
+
+        order.setOrderID(orderID_CUSTOMER_COLLECTED);
+        order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
+        orderRepo.save(order);
+        orders.add(order);
+
+        order.setOrderID(orderID_DELIVERED);
+        order.setStatus(OrderStatus.DELIVERED);
+        orders.add(order);
+        orderRepo.save(order);
 
 
+        PaymentUpdateOrderResponse response = new PaymentUpdateOrderResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
 
+        try{
+            OrderType orderType = null;
+            if(body.getOrderType().equals("Collection")){
+                orderType = OrderType.COLLECTION;
+            }else if(body.getOrderType().equals("Delivery")){
+                orderType = OrderType.DELIVERY;
+            }
 
-    private List<Item> populateItems(List<ItemObject> responseItems) throws NullPointerException{
+            double discount = 0.00;
+            if(body.getDiscount() != null)
+                discount = body.getDiscount().doubleValue();
 
-        List<Item> responseBody = new ArrayList<>();
+            UUID orderID = UUID.fromString(body.getOrderId());
+            UUID userID = UUID.fromString(body.getUserId());
 
-        for(int i = 0; i < responseItems.size(); i++){
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, userID, assignItems(body.getItems()), discount, orderType, order.getDeliveryAddress());
 
-            Item currentItem = new Item();
+            UpdateOrderResponse updateOrderResponse = ServiceSelector.getPaymentService().updateOrder(request);
+            try {
+                response.setMessage(updateOrderResponse.getMessage());
+                response.setOrder(updateOrderResponse.getOrder());
+                response.setSuccess(updateOrderResponse.isSuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(updateOrderResponse.getTimestamp()));
+            }catch(Exception e){
 
-            currentItem.setName(responseItems.get(i).getName());
-            currentItem.setDescription(responseItems.get(i).getDescription());
-            currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductID(responseItems.get(i).getProductId());
-            currentItem.setStoreID(UUID.fromString(responseItems.get(i).getStoreId().toString()));
-            currentItem.setPrice((responseItems.get(i).getPrice()).doubleValue());
-            currentItem.setQuantity(responseItems.get(i).getQuantity());
-            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
-
-            responseBody.add(currentItem);
-
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
-        return responseBody;
+        orderRepo.deleteAll();
+        itemRepo.deleteAll();
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    // helper
+    List<Item> assignItems(List<ItemObject> itemObjectList){
+
+        double price = 0.00;
+        Item item = new Item();
+        List<Item> items = new ArrayList<>();
+
+        if(itemObjectList == null){
+            return null;
+        }
+
+        for (ItemObject i: itemObjectList) {
+            item.setProductID(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreID(UUID.fromString(i.getStoreId()));
+            if(i.getPrice() != null)
+                price = i.getPrice().doubleValue();
+
+            item.setPrice(price);
+            item.setImageUrl(i.getImageUrl());
+
+            items.add(itemRepo.save(item));
+
+        }
+        return items;
     }
 }
