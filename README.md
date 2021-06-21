@@ -12,7 +12,7 @@
 <div align="center"><a href="https://drive.google.com/file/d/1aXYEfV5T6ZS2eNX6-06WfX7_ZoTsxiF_/view">📺Demo 1</a></div>
  
 <h4 align="center">You can watch our demo 2 here: </h4>
-<div align="center"><a href="https://youtu.be/jw0Xpkpmffs">📺Demo 2</a></div>
+<div align="center"><a href="https://youtu.be/XCzTA11hocs">📺Demo 2</a></div>
 
 <h4 align="center"> Our SRS document:</h4>
 <div align="center"><a href="https://www.overleaf.com/read/gmnfnhvhddnc" target="blank">📄SRS Document</a></div>
