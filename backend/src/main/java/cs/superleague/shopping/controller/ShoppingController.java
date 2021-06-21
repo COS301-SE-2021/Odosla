@@ -2,9 +2,7 @@ package cs.superleague.shopping.controller;
 
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.ItemObject;
-import cs.superleague.models.ShoppingGetItemsRequest;
-import cs.superleague.models.ShoppingGetItemsResponse;
+import cs.superleague.models.*;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -15,7 +13,12 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.GetItemsRequest;
+import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.GetItemsResponse;
+import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.repos.ShopperRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,9 @@ public class ShoppingController implements ShoppingApi{
 
     @Autowired
     ItemRepo itemRepo;
+
+    @Autowired
+    ShopperRepo shopperRepo;
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 
@@ -117,6 +123,82 @@ public class ShoppingController implements ShoppingApi{
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
+        //add mock data to repo
+        List<Shopper> mockShopperList = new ArrayList<>();
+        Shopper shopper1, shopper2;
+        shopper1=new Shopper();
+        shopper2=new Shopper();
+
+        shopper1.setId(UUID.randomUUID());
+        shopper1.setName("Peter");
+        shopper1.setSurname("Parker");
+        shopper1.setUsername("PeterParker2021!");
+        shopper1.setPassword("DontTellMaryJane2021!");
+        shopper1.setOrdersCompleted(5);
+        shopper1.setAccountType(UserType.SHOPPER);
+        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+
+        shopper2.setId(UUID.randomUUID());
+        shopper2.setName("Mary");
+        shopper2.setSurname("Jane");
+        shopper2.setUsername("MaryJane2021!");
+        shopper2.setPassword("IKnowWhoPeterIs2021!");
+        shopper2.setOrdersCompleted(4);
+        shopper2.setAccountType(UserType.SHOPPER);
+        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+
+        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
+        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
+
+        Store store1 = new Store();
+        store1.setShoppers(mockShopperList);
+        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+        storeRepo.save(store1);
+
+        //creating response object and default return status:
+        ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        if (mockMode){
+            List<ShopperObject> mockShoppers = new ArrayList<>();
+            ShopperObject a = new ShopperObject();
+            a.setName("mockA");
+            ShopperObject b = new ShopperObject();
+            b.setName("mockB");
+            mockShoppers.add(a);
+            mockShoppers.add(b);
+
+            response.setShoppers(mockShoppers);
+        } else {
+
+            try {
+                GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(new GetShoppersRequest(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0")));
+                try {
+                    response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
+
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } catch (StoreDoesNotExistException e) {
+
+            } catch (InvalidRequestException e) {
+
+            }
+
+        }
+
+        storeRepo.deleteAll();
+        catalogueRepo.deleteAll();
+        itemRepo.deleteAll();
+        shopperRepo.deleteAll();
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+
     //////////////////////
     // helper functions //
     //////////////////////
@@ -140,6 +222,30 @@ public class ShoppingController implements ShoppingApi{
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
 
             responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
+    //Populate ItemObject list from items returned by use case
+    private List<ShopperObject> populateShoppers(List<Shopper> responseShoppers) throws NullPointerException{
+
+        List<ShopperObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseShoppers.size(); i++){
+
+            ShopperObject currentShopper = new ShopperObject();
+
+            currentShopper.setName(responseShoppers.get(i).getName());
+            currentShopper.setId(responseShoppers.get(i).getId().toString());
+            currentShopper.setSurname(responseShoppers.get(i).getSurname());
+            currentShopper.setUsername(responseShoppers.get(i).getUsername());
+            currentShopper.setPassword(responseShoppers.get(i).getPassword());
+            currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
+            currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
+
+            responseBody.add(currentShopper);
 
         }
 
