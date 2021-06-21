@@ -12,7 +12,8 @@ public class Shopper extends User {
     /* Attributes */
     private UUID storeID;
     private int ordersCompleted;
-    //payOption..
+
+//payOption..
 
     public Shopper() {
     }
@@ -23,6 +24,21 @@ public class Shopper extends User {
         this.ordersCompleted = ordersCompleted;
     }
 
+    public int getOrdersCompleted() {
+        return ordersCompleted;
+    }
+
+    public void setOrdersCompleted(int ordersCompleted) {
+        this.ordersCompleted = ordersCompleted;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
+    }
 
 
 }

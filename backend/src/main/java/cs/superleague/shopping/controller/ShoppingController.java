@@ -2,9 +2,10 @@ package cs.superleague.shopping.controller;
 
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.ItemObject;
-import cs.superleague.models.ShoppingGetItemsRequest;
-import cs.superleague.models.ShoppingGetItemsResponse;
+import cs.superleague.models.*;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -14,8 +15,20 @@ import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.shopping.requests.AddShopperRequest;
 import cs.superleague.shopping.requests.GetItemsRequest;
+import cs.superleague.shopping.requests.RemoveQueuedOrderRequest;
+import cs.superleague.shopping.responses.AddShopperResponse;
 import cs.superleague.shopping.responses.GetItemsResponse;
+import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.shopping.requests.GetShoppersRequest;
+import cs.superleague.shopping.responses.GetItemsResponse;
+import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.repos.ShopperRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,11 +59,67 @@ public class ShoppingController implements ShoppingApi{
     @Autowired
     ItemRepo itemRepo;
 
+    @Autowired
+    ShopperRepo shopperRepo;
+
+    @Autowired
+    OrderRepo orderRepo;
+
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 
 
+    UUID userID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+
+    UUID orderID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+
 
     private boolean mockMode = false;
+
+
+    @Override
+    public ResponseEntity<ShoppingAddShopperResponse> addShopper(ShoppingAddShopperRequest body) {
+
+        //mock mem:db
+        Store store1 = new Store();
+        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+        store1.setShoppers(new ArrayList<>());
+        storeRepo.save(store1);
+
+        Shopper sh1 = new Shopper();
+        sh1.setId(userID);
+        shopperRepo.save(sh1);
+
+        //creating response object  and default return status
+        ShoppingAddShopperResponse response = new ShoppingAddShopperResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+
+            AddShopperRequest req = new AddShopperRequest(userID, storeID);
+            AddShopperResponse addShopperResponse = ServiceSelector.getShoppingService().addShopper(req);
+
+            try {
+                response.setDate(addShopperResponse.getTimestamp().toString());
+                response.setMessage(addShopperResponse.getMessage());
+                response.setSuccess(addShopperResponse.isSuccess());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        } catch (cs.superleague.user.exceptions.InvalidRequestException e) {
+            e.printStackTrace();
+        } catch (UserDoesNotExistException e) {
+            e.printStackTrace();
+        } catch (StoreDoesNotExistException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, status);
+
+    }
 
     //getItems endpoint
     @Override
@@ -117,6 +187,123 @@ public class ShoppingController implements ShoppingApi{
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingRemoveQueuedOrderResponse> removeQueuedOrder(ShoppingRemoveQueuedOrderRequest body) {
+        //mock mem:db
+
+        List<Order> oq = new ArrayList<>();
+        Order o1 = new Order(); o1.setOrderID(orderID); o1.setType(OrderType.DELIVERY);
+        Order o2 = new Order(); o2.setOrderID(UUID.randomUUID()); o2.setType(OrderType.DELIVERY);
+        oq.add(o1); oq.add(o2);
+        orderRepo.save(o1);
+        orderRepo.save(o2);
+
+        Store store1 = new Store();
+        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+        store1.setOrderQueue(oq);
+        storeRepo.save(store1);
+
+        //creating response object and default return status:
+        ShoppingRemoveQueuedOrderResponse response = new ShoppingRemoveQueuedOrderResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            RemoveQueuedOrderRequest req = new RemoveQueuedOrderRequest(orderID, storeID);
+            RemoveQueuedOrderResponse removeQueuedOrderResponse = ServiceSelector.getShoppingService().removeQueuedOrder(req);
+
+            try {
+                response.setOrderID(removeQueuedOrderResponse.getOrderID().toString());
+                response.setIsRemoved(removeQueuedOrderResponse.isRemoved());
+                response.setMessage(removeQueuedOrderResponse.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        } catch (StoreDoesNotExistException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+
+    }
+
+    public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
+        //add mock data to repo
+        List<Shopper> mockShopperList = new ArrayList<>();
+        Shopper shopper1, shopper2;
+        shopper1=new Shopper();
+        shopper2=new Shopper();
+
+        shopper1.setId(UUID.randomUUID());
+        shopper1.setName("Peter");
+        shopper1.setSurname("Parker");
+        shopper1.setUsername("PeterParker2021!");
+        shopper1.setPassword("DontTellMaryJane2021!");
+        shopper1.setOrdersCompleted(5);
+        shopper1.setAccountType(UserType.SHOPPER);
+        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+
+        shopper2.setId(UUID.randomUUID());
+        shopper2.setName("Mary");
+        shopper2.setSurname("Jane");
+        shopper2.setUsername("MaryJane2021!");
+        shopper2.setPassword("IKnowWhoPeterIs2021!");
+        shopper2.setOrdersCompleted(4);
+        shopper2.setAccountType(UserType.SHOPPER);
+        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+
+        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
+        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
+
+        Store store1 = new Store();
+        store1.setShoppers(mockShopperList);
+        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+        storeRepo.save(store1);
+
+        //creating response object and default return status:
+        ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        if (mockMode){
+            List<ShopperObject> mockShoppers = new ArrayList<>();
+            ShopperObject a = new ShopperObject();
+            a.setName("mockA");
+            ShopperObject b = new ShopperObject();
+            b.setName("mockB");
+            mockShoppers.add(a);
+            mockShoppers.add(b);
+
+            response.setShoppers(mockShoppers);
+        } else {
+
+            try {
+                GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(new GetShoppersRequest(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0")));
+                try {
+                    response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
+
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } catch (StoreDoesNotExistException e) {
+
+            } catch (InvalidRequestException e) {
+
+            }
+
+        }
+
+        storeRepo.deleteAll();
+        catalogueRepo.deleteAll();
+        itemRepo.deleteAll();
+        shopperRepo.deleteAll();
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+
     //////////////////////
     // helper functions //
     //////////////////////
@@ -140,6 +327,30 @@ public class ShoppingController implements ShoppingApi{
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
 
             responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
+    //Populate ItemObject list from items returned by use case
+    private List<ShopperObject> populateShoppers(List<Shopper> responseShoppers) throws NullPointerException{
+
+        List<ShopperObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseShoppers.size(); i++){
+
+            ShopperObject currentShopper = new ShopperObject();
+
+            currentShopper.setName(responseShoppers.get(i).getName());
+            currentShopper.setId(responseShoppers.get(i).getId().toString());
+            currentShopper.setSurname(responseShoppers.get(i).getSurname());
+            currentShopper.setUsername(responseShoppers.get(i).getUsername());
+            currentShopper.setPassword(responseShoppers.get(i).getPassword());
+            currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
+            currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
+
+            responseBody.add(currentShopper);
 
         }
 
