@@ -66,7 +66,7 @@ public class PaymentController implements PaymentApi {
         double totalCost = 14.99 + 36.99;
         Order order = new Order();
         order.setOrderID(orderId_AWAITNG_PAYMENT);
-        order.setUserID(storeID);
+        order.setUserID(userID);
         order.setStoreID(storeID);
         order.setShopperID(shopperID);
         order.setCreateDate(Calendar.getInstance());
