@@ -7,6 +7,7 @@ info:
 
 tags:
   - name: "Shopping"
+  - name: "Payment"
 
 
 paths:
@@ -33,6 +34,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsResponse"
 
+
   /shopping/addShopper:
     post:
       summary: Endpoint for adding shopper to shopper list
@@ -54,6 +56,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_AddShopperResponse"
+              
+
+  /shopping/getShoppers:
+    post:
+      summary: Endpoint for Get Shoppers use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getShoppers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetShoppersRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetShoppersResponse"
 
   /shopping/removeQueuedOrder:
     post:
@@ -68,7 +93,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
+               $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
       responses:
         "200":
           description: Returns upon success
@@ -76,6 +101,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
+              
+                
+
+  /payment/updateOrder:
+    post:
+      summary: Endpoint for the Update Order use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: updateOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_UpdateOrderRequest"
+      responses:
+        "200":
+          description: Returns updated order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
 components:
 
@@ -126,7 +175,6 @@ components:
             $ref: "#/components/schemas/itemObject"
 
 
-
     shopping_AddShopperRequest:
       description: This object is expected as input
       type: object
@@ -168,4 +216,107 @@ components:
         orderID:
           type: string
 
+    ShopperObject:
+      description: "Generic schema for a shopper"
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        storeID:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        ordersCompleted:
+          type: integer
 
+    shopping_GetShoppersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        storeID:
+          type: string
+
+    shopping_GetShoppersResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+
+    OrderObject:
+      description: "Generic schema for an Order"
+      type: object
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        storeId:
+          type: string
+        shopperId:
+          type: string
+        createDate:
+          type: string
+        processDate:
+          type: string
+        totalPrice:
+          type: number
+        status:
+          type: string
+        items:
+          type: array
+        discount:
+          type: number
+        deliveryAddress:
+          type: string
+        storeAddress:
+          type: string
+        requiresPharmacy:
+          type: boolean
+
+    payment_UpdateOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: the id of the order to be generated
+        userId:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        items:
+          type: array
+        discount:
+          type: number
+        orderType:
+          type: string
+        deliveryAddress:
+          type: string
+
+    payment_UpdateOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        order:
+          type: object
