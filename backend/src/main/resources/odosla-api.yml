@@ -7,6 +7,7 @@ info:
 
 tags:
   - name: "Shopping"
+  - name: "Payment"
 
 
 paths:
@@ -32,6 +33,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsResponse"
+
+  /payment/updateOrder:
+    post:
+      summary: Endpoint for the Update Order use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: updateOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_UpdateOrderRequest"
+      responses:
+        "200":
+          description: Returns updated order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
 components:
 
@@ -80,3 +103,67 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/itemObject"
+
+    OrderObject:
+      description: "Generic schema for an Order"
+      type: object
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        storeId:
+          type: string
+        shopperId:
+          type: string
+        createDate:
+          type: string
+        processDate:
+          type: string
+        totalPrice:
+          type: number
+        status:
+          type: string
+        items:
+          type: array
+        discount:
+          type: number
+        deliveryAddress:
+          type: string
+        storeAddress:
+          type: string
+        requiresPharmacy:
+          type: boolean
+
+    payment_UpdateOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: the id of the order to be generated
+        userId:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        items:
+          type: array
+        discount:
+          type: number
+        orderType:
+          type: string
+        deliveryAddress:
+          type: string
+
+    payment_UpdateOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        order:
+          type: object
