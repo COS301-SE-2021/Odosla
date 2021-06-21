@@ -210,6 +210,8 @@ components:
           description: generated token used to identify the caller of the endpoint
         items:
           type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
         orderType:

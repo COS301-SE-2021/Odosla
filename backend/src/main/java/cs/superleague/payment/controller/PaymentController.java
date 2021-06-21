@@ -2,6 +2,7 @@ package cs.superleague.payment.controller;
 
 import cs.superleague.api.PaymentApi;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.models.ItemObject;
 import cs.superleague.models.PaymentUpdateOrderRequest;
 import cs.superleague.models.PaymentUpdateOrderResponse;
 import cs.superleague.payment.PaymentServiceImpl;
@@ -56,7 +57,6 @@ public class PaymentController implements PaymentApi {
     public ResponseEntity<PaymentUpdateOrderResponse> updateOrder(PaymentUpdateOrderRequest body) {
 
 
-        System.out.println(UUID.randomUUID());
         //add mock data to repo
         List<Item> mockItemList = new ArrayList<>();
         Item item1, item2;
@@ -124,9 +124,10 @@ public class PaymentController implements PaymentApi {
 
         try{
             OrderType orderType = null;
-            if(body.getOrderType() == "Collection"){
+            if(body.getOrderType().equals("Collection")){
+                System.out.println(body.getOrderType());
                 orderType = OrderType.COLLECTION;
-            }else if(body.getOrderType() == "Delivery"){
+            }else if(body.getOrderType().equals("Delivery")){
                 orderType = OrderType.DELIVERY;
             }
 
@@ -134,10 +135,10 @@ public class PaymentController implements PaymentApi {
             if(body.getDiscount() != null)
                 discount = body.getDiscount().doubleValue();
 
-            System.out.println(body.getOrderId());
             UUID orderID = UUID.fromString(body.getOrderId());
             UUID userID = UUID.fromString(body.getUserId());
-            UpdateOrderRequest request = new UpdateOrderRequest(orderID, userID, body.getItems(), discount, orderType, order.getDeliveryAddress());
+
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, userID, assignItems(body.getItems()), discount, orderType, order.getDeliveryAddress());
 
             UpdateOrderResponse updateOrderResponse = ServiceSelector.getPaymentService().updateOrder(request);
             try {
@@ -156,5 +157,34 @@ public class PaymentController implements PaymentApi {
         itemRepo.deleteAll();
 
         return new ResponseEntity<>(response, httpStatus);
+    }
+
+    // helper
+    List<Item> assignItems(List<ItemObject> itemObjectList){
+
+        double price = 0.00;
+        Item item = new Item();
+        List<Item> items = new ArrayList<>();
+
+        if(itemObjectList == null){
+            return null;
+        }
+
+        for (ItemObject i: itemObjectList) {
+            item.setProductID(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreID(UUID.fromString(i.getStoreId()));
+            if(i.getPrice() != null)
+                price = i.getPrice().doubleValue();
+
+            item.setPrice(price);
+            item.setImageUrl(i.getImageUrl());
+
+            items.add(itemRepo.save(item));
+
+        }
+        return items;
     }
 }
