@@ -456,7 +456,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         order = request.getOrder();
         order.setStatus(request.getOrderStatus());
-
+        orderRepo.save(order);
         return new SetStatusResponse(order, true, Calendar.getInstance().getTime(), message);
     }
 
