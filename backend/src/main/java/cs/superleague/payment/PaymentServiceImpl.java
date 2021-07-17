@@ -413,6 +413,57 @@ public class PaymentServiceImpl implements PaymentService {
         message = "Order retrieval successful.";
         return new GetOrderResponse(order, true, Calendar.getInstance().getTime(), message);
     }
+
+    /** WHAT TO DO: setStatus
+     *
+     * @param request is used to bring in:
+     *            - order - order whose status is to be updated
+     *            - orderStatus - the order status that we want the order to be changed to
+     *
+     * setStatus should:
+     *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
+     *            - it should then set the status of the order object passed in to that of the orderstatus passed in
+     *
+     * Request Object: (setStatusRequest)
+     * {
+     *
+     * }
+     *
+     * Response object: (setStatusResponse)
+     * {
+     *    success: true // boolean
+     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *    message: "Order status successfully set"
+     *    order:  // order object
+     *
+     * }
+     *
+     * @return
+     * @throws PaymentException
+     */
+    @Override
+    public SetStatusResponse setStatus(SetStatusRequest request) throws PaymentException{
+        Order order;
+        String message = "Order status successfully set";
+
+        if(request == null){
+            throw new InvalidRequestException("Invalid request received - request cannot be null");
+        }
+
+        if(request.getOrderStatus() == null){
+            throw new InvalidRequestException("Invalid request received - order status cannot be null");
+        }
+
+        if(request.getOrder() == null){
+            throw new InvalidRequestException("Invalid request received - order object cannot be null");
+        }
+
+        order = request.getOrder();
+        order.setStatus(request.getOrderStatus());
+        orderRepo.save(order);
+        return new SetStatusResponse(order, true, Calendar.getInstance().getTime(), message);
+    }
+
     // TRANSACTION IMPLEMENTATION
 
     @Override
