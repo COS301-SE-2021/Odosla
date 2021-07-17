@@ -231,13 +231,13 @@ public class PaymentServiceImpl implements PaymentService {
      */
 
     @Override
-    public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist {
-        CancelOrderResponse response=null;
-        Order order = null;
-        double cancelationFee = 0;
+    public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
+        CancelOrderResponse response;
+        Order order;
+        double cancellationFee;
         String message;
 
-        /**
+        /*
          * AWAITING_PAYMENT - cancel
          * PURCHASED - cancel
          * COLLECT - charge
@@ -247,34 +247,32 @@ public class PaymentServiceImpl implements PaymentService {
          */
 
         if(req != null){
-
-            if(req.getOrderID()==null){
-                throw new InvalidRequestException("orderID in request object can't be null - couldn't cancel order ");
-            }
-            Order o=null;
-            //find the order by id
-            try {
-                o=orderRepo.findById(req.getOrderID()).orElse(null);
-            }
-            catch (Exception e){
-                throw new OrderDoesNotExist("Order doesn't exist in database - can't cancel order");
+            if (req.getUserID() == null) {
+                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
             }
 
-            List<Order> orders=new ArrayList<>();
-            orders=orderRepo.findAll();
+            order = getOrder(new GetOrderRequest(req.getOrderID())).getOrder();
 
-            if(o.getStatus() == OrderStatus.DELIVERED || o.getStatus() == OrderStatus.CUSTOMER_COLLECTED || o.getStatus() == OrderStatus.DELIVERY_COLLECTED){
+            if (!req.getUserID().equals(order.getUserID())) {
+                throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
+            }
+
+            List<Order> orders = orderRepo.findAll();
+
+            if(order.getStatus() == OrderStatus.DELIVERED ||
+                order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
+                    order.getStatus() == OrderStatus.DELIVERY_COLLECTED){
                 message = "Cannot cancel an order that has been delivered/collected.";
                 return new CancelOrderResponse(false,Calendar.getInstance().getTime(), message,orders);
             }
 
             // remove Order from DB.
-            orders.remove(o);
+            orders.remove(order);
 
-            // refund customers ordertotal - cancellation fee
-            if(o.getStatus() != OrderStatus.AWAITING_PAYMENT || o.getStatus() != OrderStatus.PURCHASED){
-                cancelationFee = 1000;
-                message = "Order successfully cancelled. Customer has been charged " + cancelationFee;
+            // refund customers order total - cancellation fee
+            if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
+                cancellationFee = 1000;
+                message = "Order successfully cancelled. Customer has been charged " + cancellationFee;
             }else {
                 message = "Order has been successfully cancelled";
             }
@@ -282,7 +280,6 @@ public class PaymentServiceImpl implements PaymentService {
             response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
         }
         else{
-
             throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
         }
         return response;

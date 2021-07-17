@@ -1,5 +1,6 @@
 package cs.superleague.payment;
 
+import cs.superleague.payment.exceptions.NotAuthorisedException;
 import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -34,9 +35,11 @@ class CancelOrderUnitTest {
 
     Item I1;
     Item I2;
-    Order o;
+    Order order;
     Order o2;
-    UUID o1UUID=UUID.randomUUID();
+
+    UUID userID;
+    UUID orderID;
     UUID o2UUID=UUID.randomUUID();
     UUID expectedU1=UUID.randomUUID();
     UUID expectedS1=UUID.randomUUID();
@@ -53,6 +56,9 @@ class CancelOrderUnitTest {
 
     @BeforeEach
     void setUp() {
+        userID = UUID.randomUUID();
+        orderID = UUID.randomUUID();
+
         I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         expectedMessage="Order successfully created.";
@@ -62,9 +68,9 @@ class CancelOrderUnitTest {
         expectedType= OrderType.DELIVERY;
         expectedListOfItems.add(I1);
         expectedListOfItems.add(I2);
-        o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        order =new Order(orderID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
-        listOfOrders.add(o);
+        listOfOrders.add(order);
         listOfOrders.add(o2);
     }
 
@@ -84,15 +90,24 @@ class CancelOrderUnitTest {
     @Test
     @DisplayName("When cancelOrderRequest orderID Paramter is null")
     void cancelOrderWhenOrderRequest_OrderID_IsNull() {
-        CancelOrderRequest req=new CancelOrderRequest(null);
+        CancelOrderRequest req=new CancelOrderRequest(null, userID);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.cancelOrder(req));
         assertEquals("orderID in request object can't be null - couldn't cancel order ", thrown.getMessage());
     }
+
+    @Test
+    @DisplayName("When cancelOrderRequest userID Paramter is null")
+    void cancelOrderWhenOrderRequest_UserID_IsNull() {
+        CancelOrderRequest req=new CancelOrderRequest(orderID, null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.cancelOrder(req));
+        assertEquals("UserID cannot be null in request object - order unsuccessfully updated.", thrown.getMessage());
+    }
+
     @Test
     @DisplayName("When order does not exist")
     void cancelOrderWhenOrderDoesNotExist() {
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
-        CancelOrderRequest req=new CancelOrderRequest(UUID.randomUUID());
+        CancelOrderRequest req=new CancelOrderRequest(UUID.randomUUID(), userID);
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.cancelOrder(req));
         assertEquals("Order doesn't exist in database - can't cancel order", thrown.getMessage());
     }
@@ -103,21 +118,22 @@ class CancelOrderUnitTest {
     @Description("Tests whether the CancelOrderRequest object was created correctly")
     @DisplayName("CancelOrderRequest correctly constructed")
     void UnitTest_CancelOrderRequestConstruction() {
-        CancelOrderRequest request=new CancelOrderRequest(o1UUID);
+        CancelOrderRequest request=new CancelOrderRequest(orderID, userID);
         assertNotNull(request);
-        assertEquals(o1UUID,request.getOrderID());
+        assertEquals(orderID,request.getOrderID());
+        assertEquals(userID, request.getUserID());
     }
 
     @Test
     @DisplayName("When Order Status is Invalid: Delivered")
-    void cancelOrderStatusDelivered() throws InvalidRequestException, OrderDoesNotExist {
+    void cancelOrderStatusDelivered() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
         List<Order> orders = listOfOrders;
         Order order = orders.get(0);
         int ordersSize = orders.size();
-        o.setStatus(OrderStatus.DELIVERED);
+        this.order.setStatus(OrderStatus.DELIVERED);
         when(orderRepo.findAll()).thenReturn(orders);
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID());
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(this.order));
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
@@ -128,14 +144,14 @@ class CancelOrderUnitTest {
 
     @Test
     @DisplayName("When Order Status is Invalid: DeliveryCollected")
-    void cancelOrderStatusDeliveryCollected() throws InvalidRequestException, OrderDoesNotExist {
+    void cancelOrderStatusDeliveryCollected() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
         List<Order> orders = listOfOrders;
         Order order = orders.get(0);
         int ordersSize = orders.size();
-        o.setStatus(OrderStatus.DELIVERY_COLLECTED);
+        this.order.setStatus(OrderStatus.DELIVERY_COLLECTED);
         when(orderRepo.findAll()).thenReturn(orders);
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID());
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(this.order));
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
@@ -146,14 +162,14 @@ class CancelOrderUnitTest {
 
     @Test
     @DisplayName("When Order Status is Invalid: CustomerCollected")
-    void cancelOrderStatusCustomerCollected() throws InvalidRequestException, OrderDoesNotExist {
+    void cancelOrderStatusCustomerCollected() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
         List<Order> orders = listOfOrders;
         Order order = orders.get(0);
         int ordersSize = orders.size();
-        o.setStatus(OrderStatus.CUSTOMER_COLLECTED);
+        this.order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
         when(orderRepo.findAll()).thenReturn(orders);
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID());
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(this.order));
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
@@ -164,39 +180,39 @@ class CancelOrderUnitTest {
 
     @Test
     @DisplayName("When Order Status is Valid: AWAITING_PAYMENT")
-    void cancelOrderStatusAwaitingPayment() throws InvalidRequestException, OrderDoesNotExist {
+    void cancelOrderStatusAwaitingPayment() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
         List<Order> orders = listOfOrders;
         Order order = orders.get(0);
         int ordersSize = orders.size();
-        o.setStatus(OrderStatus.AWAITING_PAYMENT);
+        this.order.setStatus(OrderStatus.AWAITING_PAYMENT);
         when(orderRepo.findAll()).thenReturn(orders);
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID());
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(this.order));
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         Assertions.assertEquals("Order successfully cancelled. Customer has been charged 1000.0", cancelOrderResponse.getMessage());
         Assertions.assertEquals(true, cancelOrderResponse.getSuccess());
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
-        orders.remove(o);
+        orders.remove(this.order);
         Assertions.assertEquals(cancelOrderResponse.getOrders(),orders);
     }
 
     @Test
     @DisplayName("When Order Status is Valid: PURCHASED")
-    void cancelOrderStatusPurchased() throws InvalidRequestException, OrderDoesNotExist {
+    void cancelOrderStatusPurchased() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
         List<Order> orders = listOfOrders;
         Order order = orders.get(0);
         int ordersSize = orders.size();
-        o.setStatus(OrderStatus.PURCHASED);
+        this.order.setStatus(OrderStatus.PURCHASED);
         when(orderRepo.findAll()).thenReturn(orders);
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID());
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(this.order));
+        CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         Assertions.assertEquals("Order successfully cancelled. Customer has been charged 1000.0", cancelOrderResponse.getMessage());
         Assertions.assertEquals(true, cancelOrderResponse.getSuccess());
         Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
-        orders.remove(o);
+        orders.remove(this.order);
         Assertions.assertEquals(cancelOrderResponse.getOrders(),orders);
     }
 }
