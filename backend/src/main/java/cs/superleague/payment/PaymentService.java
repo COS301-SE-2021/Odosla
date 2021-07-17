@@ -18,6 +18,8 @@ public interface PaymentService {
     UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException;
 
     GetOrderResponse getOrder(GetOrderRequest req) throws PaymentException;
+
+    SetStatusResponse setStatus(SetStatusRequest request) throws PaymentException;
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
