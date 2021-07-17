@@ -1,177 +1,213 @@
 package cs.superleague.payment;
 
-import cs.superleague.shopping.ShoppingServiceImpl;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.exceptions.InvalidRequestException;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.shopping.requests.AddShopperRequest;
-import cs.superleague.shopping.responses.AddShopperResponse;
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.responses.GetShopperByUUIDResponse;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.requests.SetStatusRequest;
+import cs.superleague.payment.responses.SetStatusResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Description;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class SetStatusUnitTest {
-    @Mock
-    private StoreRepo storeRepo;
 
     @Mock
-    private ShopperRepo shopperRepo;
-
-    @Mock(name = "UserServiceImpl")
-    private UserService userService;
+    OrderRepo orderRepo;
 
     @InjectMocks
-    private ShoppingServiceImpl shoppingService;
+    private PaymentServiceImpl paymentService;
 
-    UUID storeUUID1= UUID.randomUUID();
-    Store store;
-    Shopper shopper;
-    Shopper shopper1;
-    Shopper shopper2;
-    UUID shopperID=UUID.randomUUID();
-    UUID shopperID2=UUID.randomUUID();
-    UUID shopperID3=UUID.randomUUID();
-    UUID storeID=UUID.randomUUID();
-    List<Shopper> shopperList=new ArrayList<>();
+    // Order
+    Order order;
+
+    UUID orderID;
+    UUID userID;
+    UUID storeID;
+    UUID shopperID;
+
+    // Order statuses
+    OrderStatus awaitingPayment;
+    OrderStatus purchased;
+    OrderStatus inQueue;
+    OrderStatus packing;
+    OrderStatus awaitingCollection;
+    OrderStatus deliveryCollected;
+    OrderStatus customerCollected;
+    OrderStatus delivered;
 
     @BeforeEach
     void setUp() {
-        store=new Store();
-        shopper=new Shopper();
-        shopper.setId(shopperID);
-        shopper1=new Shopper();
-        shopper1.setId(shopperID2);
-        shopper2=new Shopper();
-        shopper2.setId(shopperID3);
-        shopperList.add(shopper1);
-        shopperList.add(shopper2);
+        orderID = UUID.randomUUID();
+        userID = UUID.randomUUID();
+        storeID = UUID.randomUUID();
+        shopperID = UUID.randomUUID();
+
+        awaitingPayment = OrderStatus.AWAITING_PAYMENT;
+        purchased = OrderStatus.PURCHASED;
+        inQueue = OrderStatus.IN_QUEUE;
+        packing = OrderStatus.PACKING;
+        awaitingCollection = OrderStatus.AWAITING_COLLECTION;
+        deliveryCollected = OrderStatus.DELIVERY_COLLECTED;
+        customerCollected = OrderStatus.CUSTOMER_COLLECTED;
+        delivered = OrderStatus.DELIVERED;
+
+        order = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, 0.0, OrderType.DELIVERY, awaitingPayment, null, 0.0, null, null, false);
     }
 
     @AfterEach
     void tearDown() {
+        orderRepo.delete(order);
     }
 
     @Test
-    @Description("Tests for when addShoppers is submited with a null request object- exception should be thrown")
-    @DisplayName("When request object is not specificed")
+    @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(null));
-        assertEquals("Request object can't be null for addShopper", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.setStatus(null));
+        assertEquals("Invalid request received - request cannot be null", thrown.getMessage());
     }
 
     @Test
-    @Description("Tests for when addShoppers is submited store ID in request object being null- exception should be thrown")
-    @DisplayName("When request object has null parameter")
-    void UnitTest_StoreID_inRequest_NullRequestObject(){
-        AddShopperRequest request=new AddShopperRequest(shopperID,null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(request));
-        assertEquals("Store ID in request object for add shopper is null", thrown.getMessage());
-    }
-    @Test
-    @Description("Tests for when addShoppers is submited shopper ID in request object being null- exception should be thrown")
-    @DisplayName("When request object has null parameter")
-    void UnitTest_ShopperID_inRequest_NullRequestObject(){
-        AddShopperRequest request=new AddShopperRequest(null,storeID);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(request));
-        assertEquals("Shopper ID in request object for add shopper is null", thrown.getMessage());
+    @DisplayName("When request object has null orderStatus parameter")
+    void UnitTest_OrderStatus_inRequest_NullRequestObject(){
+        SetStatusRequest request = new SetStatusRequest(order, null);
+        Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.setStatus(request));
+        assertEquals("Invalid request received - order status cannot be null", thrown.getMessage());
     }
 
     @Test
-    @Description("Tests whether the addShoppers request object was created correctly")
-    @DisplayName("AddShopper request correctly constructed")
-    void UnitTest_AddShoppersRequestConstruction() {
-        AddShopperRequest request=new AddShopperRequest(shopperID,storeID);
-        assertNotNull(request);
-        assertEquals(storeID,request.getStoreID());
-        assertEquals(shopperID,request.getShopperID());
+    @DisplayName("When request object has null order parameter")
+    void UnitTest_Order_inRequest_NullRequestObject(){
+        SetStatusRequest request = new SetStatusRequest(null, awaitingCollection);
+        Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.setStatus(request));
+        assertEquals("Invalid request received - order object cannot be null", thrown.getMessage());
     }
 
     @Test
-    @Description("Test for when Store with storeID does not exist in database - StoreDoesNotExist Exception should be thrown")
-    @DisplayName("When Store with ID doesn't exist")
-    void UnitTest_Store_doesnt_exist(){
-        AddShopperRequest request=new AddShopperRequest(shopperID,storeID);
-        when(storeRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.addShopper(request));
-        assertEquals("Store with ID does not exist in repository - could not add Shopper", thrown.getMessage());
+    @DisplayName("When request object has null order and orderStatus parameters")
+    void UnitTest_OrderAndOrderStatus_inRequest_NullRequestObject(){
+        SetStatusRequest request = new SetStatusRequest(null, null);
+        Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.setStatus(request));
+        assertEquals("Invalid request received - order status cannot be null", thrown.getMessage());
     }
 
     @Test
-    @Description("Test for when store is return with list of shoppers being null")
-    @DisplayName("List of Shoppers in Store entity is null")
-    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
-        store.setStoreID(storeUUID1);
-        store.setShoppers(null);
-        AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-        AddShopperResponse response=shoppingService.addShopper(request);
-        assertEquals(false,response.isSuccess());
-        assertEquals("list of Shoppers is null",response.getMessage());
+    @DisplayName("The order status successfully updates - AWAITING_PAYMENT")
+    void UnitTest_OrderStatus_Success_AWATING_PAYMENT() {
+        SetStatusRequest request = new SetStatusRequest(order, awaitingPayment);
+
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(awaitingPayment, response.getOrder().getStatus());
+        }catch(Exception e){
+            Assertions.fail();
+        }
     }
 
     @Test
-    @Description("Test for when Shopper with shopperID does not exist in shopper database ")
-    @DisplayName("When Shopper with ID doesn't exist")
-    void UnitTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
-        store.setStoreID(storeUUID1);
-        store.setShoppers(shopperList);
-        AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-        when(userService.getShopperByUUIDRequest(Mockito.any())).thenThrow(new cs.superleague.user.exceptions.InvalidRequestException("User does not exist in database"));
-        Throwable thrown = Assertions.assertThrows(cs.superleague.user.exceptions.InvalidRequestException.class, ()-> shoppingService.addShopper(request));
-        assertEquals("User does not exist in database", thrown.getMessage());
+    @DisplayName("The order status successfully updates - PURCHASED")
+    void UnitTest_OrderStatus_Success_PURCHASED() {
+        SetStatusRequest request = new SetStatusRequest(order, purchased);
+
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(purchased, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
     }
 
     @Test
-    @Description("Test for when list of shoppers already has Shopper in its list")
-    @DisplayName("Shopper Id already in list of Shoppers")
-    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
-        store.setStoreID(storeUUID1);
-        store.setShoppers(shopperList);
-        AddShopperRequest request=new AddShopperRequest(shopper1.getId(),storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-        GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper1,null,null);
-        when(userService.getShopperByUUIDRequest(Mockito.any())).thenReturn(shopperResponse);
-        AddShopperResponse response=shoppingService.addShopper(request);
-        assertNotNull(response);
-        assertEquals(false,response.isSuccess());
-        assertEquals("Shopper already is already in listOfShoppers",response.getMessage());
+    @DisplayName("The order status successfully updates - IN_QUEUE")
+    void UnitTest_OrderStatus_Success_IN_QUEUE() {
+        SetStatusRequest request = new SetStatusRequest(order, inQueue);
+
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(inQueue, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
     }
 
     @Test
-    @Description("Test for when shopper is correctly added to the list")
-    @DisplayName("Shopper was correctly added list of shoppers in store")
-    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
-        store.setStoreID(storeUUID1);
-        store.setShoppers(shopperList);
-        AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-        GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper,null,null);
-        when(userService.getShopperByUUIDRequest(Mockito.any())).thenReturn(shopperResponse);
-        AddShopperResponse response=shoppingService.addShopper(request);
-        assertNotNull(response);
-        assertEquals(true,response.isSuccess());
-        assertEquals("Shopper was successfully added",response.getMessage());
+    @DisplayName("The order status successfully updates - PACKING")
+    void UnitTest_OrderStatus_Success_PACKING() {
+        SetStatusRequest request = new SetStatusRequest(order, packing);
+
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(packing, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
     }
 
+    @Test
+    @DisplayName("The order status successfully updates - AWAITING_COLLECTION")
+    void UnitTest_OrderStatus_Success_AWAITING_COLLECTION() {
+        SetStatusRequest request = new SetStatusRequest(order, awaitingCollection);
 
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(awaitingCollection, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    @DisplayName("The order status successfully updates - DELIVERY_COLLECTED")
+    void UnitTest_OrderStatus_Success_DELIVERY_COLLECTED() {
+        SetStatusRequest request = new SetStatusRequest(order, deliveryCollected);
+
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(deliveryCollected, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    @DisplayName("The order status successfully updates - CUSTOMER_COLLECTED")
+    void UnitTest_OrderStatus_Success_CUSTOMER_COLLECTED() {
+        SetStatusRequest request = new SetStatusRequest(order, customerCollected);
+
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(customerCollected, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
+    }
+
+    @Test
+    @DisplayName("The order status successfully updates - DELIVERED")
+    void UnitTest_OrderStatus_DELIVERED() {
+        SetStatusRequest request = new SetStatusRequest(order, delivered);
+
+        assertEquals(order.getStatus(), awaitingPayment); // before
+        try {
+            SetStatusResponse response = paymentService.setStatus(request);
+            assertEquals(delivered, response.getOrder().getStatus()); // after
+        }catch(Exception e){
+            Assertions.fail();
+        }
+    }
 }

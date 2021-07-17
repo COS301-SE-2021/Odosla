@@ -448,9 +448,13 @@ public class PaymentServiceImpl implements PaymentService {
 
         if(request == null){
             throw new InvalidRequestException("Invalid request received - request cannot be null");
-        }else if(request.getOrderStatus() == null){
+        }
+
+        if(request.getOrderStatus() == null){
             throw new InvalidRequestException("Invalid request received - order status cannot be null");
-        }else if(request.getOrder() == null){
+        }
+
+        if(request.getOrder() == null){
             throw new InvalidRequestException("Invalid request received - order object cannot be null");
         }
 
