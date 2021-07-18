@@ -170,6 +170,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         // // Add order to respective store order queue in db // //
         // ...
+        GetStoreByUUIDRequest getStoreByUUIDRequest = new GetStoreByUUIDRequest(updatedOrder.getStoreID());
+        GetStoreByUUIDResponse getStoreByUUIDResponse = null;
+        try {
+            getStoreByUUIDResponse = getStoreByUUID(getStoreByUUIDRequest);
+        }catch(Exception e){
+            throw new InvalidRequestException(e.getMessage());
+        }
+
+        getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
 
         response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
 
