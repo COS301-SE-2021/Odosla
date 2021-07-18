@@ -909,5 +909,34 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         return response;
     }
+
+    @Override
+    public UpdateStoreResponse updateStore(UpdateStoreRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+
+        UpdateStoreResponse response = null;
+        if (request != null) {
+            if (request.getStore() == null) {
+                throw new InvalidRequestException("The Store object in UpdateStoreRequest parameter is null - Could not update store");
+            }
+            Store storeEntity = null;
+            try {
+                storeEntity = storeRepo.findById(request.getStore().getStoreID()).orElse(null);
+            } catch (Exception e) {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
+            }
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
+            }
+            //TODO update the paramets of the storeEntity
+            storeEntity.setStock(request.getStore().getStock());
+            storeRepo.save(storeEntity);
+
+            response = new UpdateStoreResponse(true, "Store updated successfully", storeEntity.getStoreID());
+        }
+        else {
+            throw new InvalidRequestException("The request object for UpdateStoreRequest is null - Could not update store");
+        }
+        return response;
+    }
 }
 
