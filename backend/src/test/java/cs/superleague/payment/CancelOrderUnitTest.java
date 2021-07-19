@@ -88,15 +88,15 @@ class CancelOrderUnitTest {
         assertEquals("request object cannot be null - couldn't cancel order", thrown.getMessage());
     }
     @Test
-    @DisplayName("When cancelOrderRequest orderID Paramter is null")
+    @DisplayName("When cancelOrderRequest orderID Parameter is null")
     void cancelOrderWhenOrderRequest_OrderID_IsNull() {
         CancelOrderRequest req=new CancelOrderRequest(null, userID);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.cancelOrder(req));
-        assertEquals("orderID in request object can't be null - couldn't cancel order ", thrown.getMessage());
+        assertEquals("OrderID cannot be null in request object - cannot get order.", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When cancelOrderRequest userID Paramter is null")
+    @DisplayName("When cancelOrderRequest userID Parameter is null")
     void cancelOrderWhenOrderRequest_UserID_IsNull() {
         CancelOrderRequest req=new CancelOrderRequest(orderID, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.cancelOrder(req));
@@ -105,11 +105,20 @@ class CancelOrderUnitTest {
 
     @Test
     @DisplayName("When order does not exist")
-    void cancelOrderWhenOrderDoesNotExist() {
-        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+    void cancelOrderWhenOrderDoesNotExist(){
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
         CancelOrderRequest req=new CancelOrderRequest(UUID.randomUUID(), userID);
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.cancelOrder(req));
-        assertEquals("Order doesn't exist in database - can't cancel order", thrown.getMessage());
+        assertEquals("Order doesn't exist in database - cannot get order.", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When a user who didn't place the order tries to cancel")
+    void cancelOrderWhenOrderRequest_UserID_IsUnauthorised() {
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
+        CancelOrderRequest req=new CancelOrderRequest(orderID, UUID.randomUUID());
+        Throwable thrown = Assertions.assertThrows(NotAuthorisedException.class, ()-> paymentService.cancelOrder(req));
+        assertEquals("Not Authorised to update an order you did not place.", thrown.getMessage());
     }
 
 
