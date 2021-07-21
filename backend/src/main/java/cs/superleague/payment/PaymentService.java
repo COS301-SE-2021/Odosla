@@ -1,5 +1,6 @@
 package cs.superleague.payment;
 import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.requests.*;
@@ -13,7 +14,7 @@ public interface PaymentService {
 
     SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 
-    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist;
+    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException;
 
     UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException;
 
