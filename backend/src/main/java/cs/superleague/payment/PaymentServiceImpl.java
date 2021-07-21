@@ -267,7 +267,8 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             // remove Order from DB.
-            orders.remove(order);
+            orderRepo.delete(order);
+            orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee
             if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
