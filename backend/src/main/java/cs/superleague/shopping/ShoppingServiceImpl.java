@@ -910,6 +910,47 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *                private String storeBrand;
+                      private int maxShoppers;
+                      private int maxOrders;
+                      private Boolean isOpen;
+                      private int openingTime;
+                      private int closingTime;
+     *
+     * updateStore should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's store object is not null, else throw an InvalidRequestException
+     *               3. Check if the request's storeID is not null, else throw an StoreDoesNotExistException
+     *               4. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               5. Update the found store object's fields with the request object store's data.
+     *               6. Initialize the response object's constructor to the storeID and response message
+     *               7. Return the response object.
+     *
+     * Request Object (UpdateStoreRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                "store":{
+     *                          "storeBrand":"PnP"
+     *                          ...
+     *                }
+     * }
+     *
+     * Response Object (UpdateStoreResponse):
+     * {
+     *                "response":true
+     *                "message":"Store updated successfully"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
     @Override
     public UpdateStoreResponse updateStore(UpdateStoreRequest request) throws InvalidRequestException, StoreDoesNotExistException {
 
