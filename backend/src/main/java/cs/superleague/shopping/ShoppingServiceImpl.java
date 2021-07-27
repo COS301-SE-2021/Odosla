@@ -927,8 +927,25 @@ public class ShoppingServiceImpl implements ShoppingService {
             if(storeEntity==null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
             }
-            //TODO update the paramets of the storeEntity
-            storeEntity.setStock(request.getStore().getStock());
+
+            if(request.getStore().getOpen()!=null){
+                storeEntity.setOpen(request.getStore().getOpen());
+            }
+            if(request.getStore().getOpeningTime()!=-1){
+                storeEntity.setOpeningTime(request.getStore().getOpeningTime());
+            }
+            if(request.getStore().getClosingTime()!=-1){
+                storeEntity.setClosingTime(request.getStore().getClosingTime());
+            }
+            if(request.getStore().getStoreBrand()!=null){
+                storeEntity.setStoreBrand(request.getStore().getStoreBrand());
+            }
+            if(request.getStore().getMaxShoppers()!=-1){
+                storeEntity.setMaxShoppers(request.getStore().getMaxShoppers());
+            }
+            if(request.getStore().getMaxOrders()!=-1){
+                storeEntity.setMaxOrders(request.getStore().getMaxOrders());
+            }
             storeRepo.save(storeEntity);
 
             response = new UpdateStoreResponse(true, "Store updated successfully", storeEntity.getStoreID());
