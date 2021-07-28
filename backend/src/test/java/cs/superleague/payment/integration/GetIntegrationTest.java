@@ -1,90 +1,127 @@
-package cs.superleague.payment;
+package cs.superleague.payment.integration;
 
-import cs.superleague.payment.dataclass.Invoice;
+import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.repos.TransactionRepo;
+import cs.superleague.payment.requests.GenerateInvoiceRequest;
 import cs.superleague.payment.requests.GetInvoiceRequest;
+import cs.superleague.payment.responses.GenerateInvoiceResponse;
 import cs.superleague.payment.responses.GetInvoiceResponse;
 import cs.superleague.shopping.dataclass.Item;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import cs.superleague.shopping.repos.ItemRepo;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@ExtendWith(MockitoExtension.class)
-public class GetInvoiceUnitTest {
+@SpringBootTest
+public class GetIntegrationTest {
 
-    @Mock
-    InvoiceRepo invoiceRepo;
+    @Autowired
+    PaymentServiceImpl paymentService;
 
-    @Mock
+    @Autowired
+    TransactionRepo transactionRepo;
+
+    @Autowired
     OrderRepo orderRepo;
 
-    @InjectMocks
-    private PaymentServiceImpl paymentService;
+    @Autowired
+    InvoiceRepo invoiceRepo;
 
-    // Order
-    Order order;
+    @Autowired
+    ItemRepo itemRepo;
 
-    // Invoice
-    Invoice invoice;
-
-    // Item
     Item item;
 
-    UUID orderID;
+    Order order;
+
+    Invoice invoice;
+
+    // IDs
     UUID userID;
+    UUID orderID;
     UUID storeID;
     UUID shopperID;
     UUID invoiceID;
 
-    // Order statuses
-    OrderStatus awaitingPayment;
+    // total cost
+    double totalCost;
 
+    // Items List
     List<Item> listOfItems=new ArrayList<>();
+
+    // Order List
+    List<Order> listOfOrders=new ArrayList<>();
+
+    // Addresses
+    GeoPoint deliveryAddress;
+    GeoPoint storeAddress;
 
     @BeforeEach
     void setUp() {
+
+        // Assigning IDs
         orderID = UUID.randomUUID();
         userID = UUID.randomUUID();
         storeID = UUID.randomUUID();
         shopperID = UUID.randomUUID();
         invoiceID = UUID.randomUUID();
 
-        awaitingPayment = OrderStatus.AWAITING_PAYMENT;
+        // Assigning total cost
+        totalCost = 66.97;
 
-        item = new Item("Heinz Tamatoe Sauce","123456","123456",storeID,36.99,1,"description","img/");
+        // Assigning items
+        item=new Item("Heinz Tamatoe Sauce","123456","123456",storeID,36.99,1,"description","img/");
+
+        itemRepo.save(item);
+
+        // Adding items to the items list
         listOfItems.add(item);
-        order = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, 0.0, OrderType.DELIVERY, awaitingPayment, listOfItems, 0.0, null, null, false);
+
+        // Assigning addresses
+        deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+        storeAddress = new GeoPoint(3.0, 3.0, "Woolworth's, Hillcrest Boulevard");
+
+        // Assigning order
+        order =new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalCost, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, 0.0, deliveryAddress, storeAddress, false);
+
         invoice = new Invoice(invoiceID, userID, Calendar.getInstance(), "Invoice Successfully Retrieved", 0.0, listOfItems);
+        // adding orders to the orders list
+        listOfOrders.add(order);
+
+        orderRepo.save(order);
+        invoiceRepo.save(invoice);
+    }
+
+    @AfterEach
+    void tearDown() {
+
+        orderRepo.delete(order);
+        invoiceRepo.delete(invoice);
     }
 
     @Test
     @DisplayName("When request object is not specified")
-    void UnitTest_testingNullRequestObject(){
+    void Integration_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.getInvoice(null));
         assertEquals("Get Invoice Request cannot be null - Invoice retrieval unsuccessful", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When request object has null invoiceID attribute")
-    void UnitTest_InvoiceID_inRequest_NullRequestObject(){
+    void IntegrationTest_InvoiceID_inRequest_NullRequestObject(){
         GetInvoiceRequest request = new GetInvoiceRequest(null, userID);
         Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.getInvoice(request));
         assertEquals("Invoice ID cannot be null - Invoice retrieval unsuccessful.", thrown.getMessage());
@@ -92,7 +129,7 @@ public class GetInvoiceUnitTest {
 
     @Test
     @DisplayName("When request object has null user id attribute")
-    void UnitTest_UserID_inRequest_NullRequestObject(){
+    void Integration_UserID_inRequest_NullRequestObject(){
         GetInvoiceRequest request = new GetInvoiceRequest(invoiceID, null);
         Throwable thrown = Assertions.assertThrows(PaymentException.class, ()-> paymentService.getInvoice(request));
         assertEquals("User ID cannot be null - Invoice retrieval unsuccessful.", thrown.getMessage());
@@ -100,20 +137,17 @@ public class GetInvoiceUnitTest {
 
     @Test
     @DisplayName("When the invoiceID does not exist")
-    void UnitTest_Invalid_InvoiceID(){
+    void IntegrationTest_Invalid_InvoiceID(){
         GetInvoiceRequest request = new GetInvoiceRequest(UUID.randomUUID(), userID);
-
-        Mockito.when(invoiceRepo.findById(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.getInvoice(request));
         assertEquals("Invalid invoiceID passed in - invoice does not exist.", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When the invoice exists")
-    void UnitTest_Valid_InvoiceID(){
+    @DisplayName("When the Invoice exists")
+    void IntegrationTest_Valid_InvoiceID(){
         GetInvoiceRequest request = new GetInvoiceRequest(invoiceID, userID);
 
-        Mockito.when(invoiceRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(invoice));
         try{
             GetInvoiceResponse response =  paymentService.getInvoice(request);
             assertEquals("Invoice Successfully Retrieved", response.getMessage());
@@ -125,10 +159,9 @@ public class GetInvoiceUnitTest {
 
     @Test
     @DisplayName("When an unauthorised user attempts to getInvoice")
-    void UnitTest_Unauthorised_User(){
+    void IntegrationTest_Unauthorised_User(){
         GetInvoiceRequest request = new GetInvoiceRequest(invoiceID, UUID.randomUUID());
 
-        Mockito.when(invoiceRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(invoice));
         Throwable thrown = Assertions.assertThrows(NotAuthorisedException.class, () -> paymentService.getInvoice(request));
         assertEquals("Invalid customerID passed in - customer did not place this order.", thrown.getMessage());
     }

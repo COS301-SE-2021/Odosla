@@ -561,7 +561,7 @@ import java.util.List;50"
             invoice = optionalInvoice.get();
         }
 
-        if(invoice.getCustomerID() != request.getUserID()){
+        if(!invoice.getCustomerID().equals(request.getUserID())){
             throw new NotAuthorisedException("Invalid customerID passed in - customer did not place this order.");
         }
 
