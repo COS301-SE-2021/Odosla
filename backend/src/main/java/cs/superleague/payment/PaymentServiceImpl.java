@@ -1,5 +1,8 @@
 package cs.superleague.payment;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
+import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
@@ -17,6 +20,9 @@ import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -29,11 +35,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderRepo orderRepo;
+    private final InvoiceRepo invoiceRepo;
     private final ShoppingService shoppingService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, ShoppingService shoppingService) {
         this.orderRepo = orderRepo;
+        this.invoiceRepo = invoiceRepo;
         this.shoppingService = shoppingService;
     }
 
@@ -307,7 +315,8 @@ public class PaymentServiceImpl implements PaymentService {
      *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
      *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
      *            "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
-     *            "discount": "30.50"
+     *            "discount": "30.
+import java.util.List;50"
      *            "orderType": "OrderType.DELIVERY"
      *            "deliveryAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
      * }
@@ -483,12 +492,47 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) {
+
+        if(request == null){
+
+        }
+
         return null;
     }
 
     @Override
-    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) {
-        return null;
+    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException{
+        UUID invoiceID;
+        UUID userID;
+        Invoice invoice;
+
+        if(request == null){
+            throw new InvalidRequestException("Get Invoice Request cannot be null - Invoice unsuccessfully retrieved");
+        }
+
+        if(request.getInvoiceID() == null){
+            throw new InvalidRequestException("Invoice ID cannot be null - invoice unsuccessfully retrieved.");
+        }
+
+        if(request.getUserID() == null){
+            throw new InvalidRequestException("User ID cannot be null - invoice unsuccessfully retrieved.");
+        }
+
+        // get user
+
+        invoiceID = request.getInvoiceID();
+
+        if(!invoiceRepo.findById(invoiceID).isPresent()){
+            throw new InvalidRequestException("Invalid invoiceID passed in - invoice unsuccessfully retrieved.");
+        }
+
+        invoice = invoiceRepo.findById(invoiceID).get();
+
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), invoice.getItem(), invoice.getTotalCost());
+
+        // send email
+
+        return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
     }
 
     // Helper
@@ -500,5 +544,38 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         return cost;
+    }
+
+    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<Item> ITEM, double TOTAL_PRICE) {
+        String home = System.getProperty("user.home");
+        String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
+        Document pdf = new Document();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));//when i finish the function put (, output)
+            pdf.open();
+            com.itextpdf.text.Font header = FontFactory.getFont(FontFactory.COURIER, 24, Font.BOLD);
+            com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
+            pdf.add(new Paragraph("This is an invoice from Odosla", header));
+
+            for (Item item: ITEM) {
+                pdf.add(new Paragraph("Item: " + item.getName(), body));
+                pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
+                pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
+            }
+
+            //pdf.add(new Paragraph("BuyerID: " + BuyerID, body));
+            pdf.add(new Paragraph("Date: " + INVOICED_DATE, body));
+            pdf.add(new Paragraph("Details: " + DETAILS, body));
+            pdf.add(new Paragraph("Price: " + TOTAL_PRICE, body));
+            //pdf.add(new Paragraph("ShippingID: " + SHIPMENT.getShipmentId(), body));
+            pdf.add(new Paragraph("InvoiceID: " + invoiceID, body));
+            pdf.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("PDF Error");
+        }
+        return output.toByteArray();
     }
 }
