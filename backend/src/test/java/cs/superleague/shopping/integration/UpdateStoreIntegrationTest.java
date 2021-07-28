@@ -107,7 +107,7 @@ public class UpdateStoreIntegrationTest {
 
     @Test
     @Description("Tests for whether a request is submitted with a null parameter for store in request object- exception should be thrown")
-    @DisplayName("When request object parameter -catalogue - is not specified")
+    @DisplayName("When request object parameter -store - is not specified")
     void IntegrationTest_testingNull_store_Parameter_RequestObject() {
         updateStoreRequest = new UpdateStoreRequest(null);
         assertThrows(cs.superleague.shopping.exceptions.InvalidRequestException.class, ()-> {
