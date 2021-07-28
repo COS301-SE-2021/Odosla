@@ -1,21 +1,34 @@
 package cs.superleague.payment.dataclass;
 
 import cs.superleague.shopping.dataclass.Item;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "invoiceTable")
 public class Invoice {
+
+    @Id
     private UUID invoiceID;
     private UUID customerID;
     private Calendar date;
     private String details;
     private Double totalCost;
+
+    @ManyToMany
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> item;
     //private DeliveryDetail deliveryDetail;
 
+    public Invoice(){
 
+    }
 
     public Invoice(UUID invoiceID, UUID customerID, Calendar date, String details, Double totalCost, List<Item> item) {
         this.invoiceID = invoiceID;

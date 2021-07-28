@@ -516,7 +516,7 @@ import java.util.List;50"
 
         invoiceID = UUID.randomUUID();
 
-        Optional<Transaction> OptionalTransaction = transactionRepo.findById(invoiceID);
+        Optional<Transaction> OptionalTransaction = transactionRepo.findById(transactionID);
 
         if(OptionalTransaction == null || !OptionalTransaction.isPresent()) {
             throw new InvalidRequestException("Invalid transactionID passed in - transaction does not exist.");
@@ -536,7 +536,7 @@ import java.util.List;50"
         // send email
         // notificationService.sendEmail(PDF);
 
-        return new GenerateInvoiceResponse(invoiceID, timestamp, "");
+        return new GenerateInvoiceResponse(invoiceID, timestamp, "Invoice successfully generated.");
     }
 
     @Override
