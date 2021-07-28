@@ -32,7 +32,7 @@ public interface PaymentService {
 
     // INVOICE
 
-    GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request);
+    GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) throws InvalidRequestException;
 
     GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException;
 

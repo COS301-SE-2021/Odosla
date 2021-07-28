@@ -8,18 +8,18 @@ import java.util.UUID;
 
 public class Invoice {
     private UUID invoiceID;
+    private UUID customerID;
     private Calendar date;
     private String details;
-    private float totalCost;
+    private Double totalCost;
     private List<Item> item;
     //private DeliveryDetail deliveryDetail;
 
 
-    public Invoice() {
-    }
 
-    public Invoice(UUID invoiceID, Calendar date, String details, float totalCost, List<Item> item) {
+    public Invoice(UUID invoiceID, UUID customerID, Calendar date, String details, Double totalCost, List<Item> item) {
         this.invoiceID = invoiceID;
+        this.customerID = customerID;
         this.date = date;
         this.details = details;
         this.totalCost = totalCost;
@@ -50,11 +50,11 @@ public class Invoice {
         this.details = details;
     }
 
-    public float getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(float totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -64,5 +64,9 @@ public class Invoice {
 
     public void setItem(List<Item> item) {
         this.item = item;
+    }
+
+    public UUID getCustomerID() {
+        return customerID;
     }
 }

@@ -3,6 +3,7 @@ package cs.superleague.payment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.payment.repos.InvoiceRepo;
+import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
@@ -25,10 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("paymentServiceImpl")
@@ -36,14 +35,17 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final OrderRepo orderRepo;
     private final InvoiceRepo invoiceRepo;
+    private final TransactionRepo transactionRepo;
     private final ShoppingService shoppingService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService) {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
+        this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
     }
+
 
     /** What to do
      *
@@ -491,13 +493,50 @@ import java.util.List;50"
     // INVOICE IMPLEMENTATION
 
     @Override
-    public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) {
+    public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request)  throws InvalidRequestException{
+        UUID invoiceID;
+        UUID transactionID;
+        Order order;
+        Invoice invoice;
+        Transaction transaction;
 
         if(request == null){
-
+            throw new InvalidRequestException("Generate Invoice Request cannot be null - Invoice generation unsuccessful");
         }
 
-        return null;
+        if(request.getTransactionID() == null){
+            throw new InvalidRequestException("Transaction ID cannot be null - Invoice generation unsuccessful");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("Customer ID cannot be null - Invoice generation unsuccessful");
+        }
+
+        transactionID = request.getTransactionID();
+
+        invoiceID = UUID.randomUUID();
+
+        Optional<Transaction> OptionalTransaction = transactionRepo.findById(invoiceID);
+
+        if(OptionalTransaction == null || !OptionalTransaction.isPresent()) {
+            throw new InvalidRequestException("Invalid transactionID passed in - transaction does not exist.");
+        }
+
+        Calendar timestamp = Calendar.getInstance();
+
+        transaction = transactionRepo.findById(transactionID).get();
+        order = transaction.getOrder();
+
+
+        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getItems());
+        invoiceRepo.save(invoice);
+
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getItems(), invoice.getTotalCost());
+
+        // send email
+        // notificationService.sendEmail(PDF);
+
+        return new GenerateInvoiceResponse(invoiceID, timestamp, "");
     }
 
     @Override
@@ -523,7 +562,7 @@ import java.util.List;50"
         invoiceID = request.getInvoiceID();
 
         if(!invoiceRepo.findById(invoiceID).isPresent()){
-            throw new InvalidRequestException("Invalid invoiceID passed in - invoice unsuccessfully retrieved.");
+            throw new InvalidRequestException("Invalid invoiceID passed in - invoice does not exist.");
         }
 
         invoice = invoiceRepo.findById(invoiceID).get();
@@ -531,6 +570,7 @@ import java.util.List;50"
         byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), invoice.getItem(), invoice.getTotalCost());
 
         // send email
+        // notificationService.sendEmail(PDF);
 
         return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
     }
