@@ -909,5 +909,92 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         return response;
     }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *                private String storeBrand;
+                      private int maxShoppers;
+                      private int maxOrders;
+                      private Boolean isOpen;
+                      private int openingTime;
+                      private int closingTime;
+     *
+     * updateStore should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's store object is not null, else throw an InvalidRequestException
+     *               3. Check if the request's storeID is not null, else throw an StoreDoesNotExistException
+     *               4. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               5. Update the found store object's fields with the request object store's data.
+     *               6. Initialize the response object's constructor to the storeID and response message
+     *               7. Return the response object.
+     *
+     * Request Object (UpdateStoreRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                "store":{
+     *                          "storeBrand":"PnP"
+     *                          ...
+     *                }
+     * }
+     *
+     * Response Object (UpdateStoreResponse):
+     * {
+     *                "response":true
+     *                "message":"Store updated successfully"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+    @Override
+    public UpdateStoreResponse updateStore(UpdateStoreRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+
+        UpdateStoreResponse response = null;
+        if (request != null) {
+            if (request.getStore() == null) {
+                throw new InvalidRequestException("The Store object in UpdateStoreRequest parameter is null - Could not update store");
+            }
+            Store storeEntity = null;
+            try {
+                storeEntity = storeRepo.findById(request.getStore().getStoreID()).orElse(null);
+            } catch (Exception e) {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
+            }
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
+            }
+
+            if(request.getStore().getOpen()!=null){
+                storeEntity.setOpen(request.getStore().getOpen());
+            }
+            if(request.getStore().getOpeningTime()!=-1){
+                storeEntity.setOpeningTime(request.getStore().getOpeningTime());
+            }
+            if(request.getStore().getClosingTime()!=-1){
+                storeEntity.setClosingTime(request.getStore().getClosingTime());
+            }
+            if(request.getStore().getStoreBrand()!=null){
+                storeEntity.setStoreBrand(request.getStore().getStoreBrand());
+            }
+            if(request.getStore().getMaxShoppers()!=-1){
+                storeEntity.setMaxShoppers(request.getStore().getMaxShoppers());
+            }
+            if(request.getStore().getMaxOrders()!=-1){
+                storeEntity.setMaxOrders(request.getStore().getMaxOrders());
+            }
+            storeRepo.save(storeEntity);
+
+            response = new UpdateStoreResponse(true, "Store updated successfully", storeEntity.getStoreID());
+        }
+        else {
+            throw new InvalidRequestException("The request object for UpdateStoreRequest is null - Could not update store");
+        }
+        return response;
+    }
 }
 
