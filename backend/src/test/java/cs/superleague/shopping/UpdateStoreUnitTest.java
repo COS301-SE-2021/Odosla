@@ -116,6 +116,6 @@ public class UpdateStoreUnitTest {
     void UnitTest_UpdateStoreRequestConstruction() {
         UpdateStoreRequest request = new UpdateStoreRequest(s2);
         assertNotNull(request);
-        assertEquals(s, request.getStore());
+        assertEquals(s2, request.getStore());
     }
 }
