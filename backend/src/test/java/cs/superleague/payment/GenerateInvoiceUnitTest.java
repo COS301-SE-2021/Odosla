@@ -119,7 +119,7 @@ public class GenerateInvoiceUnitTest {
         Mockito.when(transactionRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(transaction));
         try{
             GenerateInvoiceResponse response =  paymentService.generateInvoice(request);
-            assertEquals("", response.getMessage());
+            assertEquals("Invoice successfully generated.", response.getMessage());
         }catch(Exception e){
             e.printStackTrace();
             fail();
