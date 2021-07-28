@@ -98,7 +98,7 @@ public class UpdateStoreUnitTest {
 
     @Test
     @Description("Test for when Store with storeID does exist in database - should return correct store entity")
-    @DisplayName("When Store with ID does exist and catalogue changes")
+    @DisplayName("When Store with ID does exist and store updates")
     void UnitTest_Store_does_exist_changing_Store() throws InvalidRequestException, StoreDoesNotExistException {
         UpdateStoreRequest request=new UpdateStoreRequest(s2);
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(s));
@@ -107,6 +107,24 @@ public class UpdateStoreUnitTest {
         assertEquals(true,response.getResponse());
         assertEquals("Store updated successfully",response.getMessage());
         assertEquals(storeUUID1, response.getStoreID());
+        if(s2.getOpen()!=null){
+            assertEquals(s.getOpen(), s2.getOpen());
+        }
+        if(s2.getOpeningTime()!=-1){
+            assertEquals(s.getOpeningTime(), s2.getOpeningTime());
+        }
+        if(s2.getClosingTime()!=-1){
+            assertEquals(s.getClosingTime(), s2.getClosingTime());
+        }
+        if(s2.getStoreBrand()!=null){
+            assertEquals(s.getStoreBrand(), s2.getStoreBrand());
+        }
+        if(s2.getMaxShoppers()!=-1){
+            assertEquals(s.getMaxShoppers(), s2.getMaxShoppers());
+        }
+        if(s2.getMaxOrders()!=-1){
+            assertEquals(s.getMaxOrders(), s2.getMaxOrders());
+        }
     }
 
     /** Checking request object is created correctly */
