@@ -78,7 +78,7 @@ public class UpdateStoreUnitTest {
 
     @Test
     @Description("Tests for whether a request is submitted with a null parameter for store in request object- exception should be thrown")
-    @DisplayName("When request object parameter -store - is not specified")
+    @DisplayName("When request object parameter -Store - is not specified")
     void UnitTest_testingNull_store_Parameter_RequestObject(){
         UpdateStoreRequest request=new UpdateStoreRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.updateStore(request));
