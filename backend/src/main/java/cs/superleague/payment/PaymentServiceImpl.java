@@ -60,7 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * SubmitOrder should do the following:
      *               - Check the request object is not null and all corresponding parameters else throw InvalidRequestException
-     *               - Add up cost of items and subract total for total order price
+     *               - Add up cost of items and subtract total for total order price
      *               - If order with same ID already exists in database, then return object without success
      *               - If the order is created successfully, then order gets added to order repository and success
      *
@@ -139,15 +139,14 @@ public class PaymentServiceImpl implements PaymentService {
 
 
             double discount=request.getDiscount();
-            UUID userID=request.getUserID();
             UUID storeID=request.getStoreID();
 
             /* Get total cost of order*/
             AtomicReference<Double> finalTotalCost = totalCost;
             request.getListOfItems().stream().parallel().forEach(item -> {
-                int quantiy = item.getQuantity();
+                int quantity = item.getQuantity();
                 double itemPrice = item.getPrice();
-                for (int j = 0; j < quantiy; j++) {
+                for (int j = 0; j < quantity; j++) {
                     finalTotalCost.updateAndGet(v ->((double) (v + itemPrice)));
                 }
             });
@@ -218,7 +217,7 @@ public class PaymentServiceImpl implements PaymentService {
      *   3.1 if the order status is AWAITING_PAYMENT or PURCHASED the order can easily be cancelled without
      *       charging the customer.
      *   3.2 Once an order has reached the COLLECT status the customer will be charged a fee to cancel the order
-     *   3.3 Lastly if the order has changed to collected, either by the driver or the customer the order
+     *   3.3 Lastly if the order has changed to "collected", either by the driver or the customer the order
      *      can no longer be cancelled
      *
      * Request Object: (CancelOrderRequest)
@@ -232,7 +231,6 @@ public class PaymentServiceImpl implements PaymentService {
      *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
      *    message: "Cannot cancel an order that has been delivered/collected."
      *    orders:  //List<Orders>
-     *
      * }
      *
      * @return
@@ -308,9 +306,9 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * updateOrder should:
      *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
-     *            - check that the order id passed in in exists in the database or not.
+     *            - check that the order id passed in exists in the database or not.
      *            - if the order is found in the database use its status to determine whether it can be updated or not, then proceed accordingly
-     *              - e.g if the order status say that the order has been delivered, the order cannot be updated.
+     *              - e.g. if the order status say that the order has been delivered, the order cannot be updated.
      *
      * Request Object: (UpdateOrderRequest)
      * {
@@ -329,7 +327,6 @@ import java.util.List;50"
      *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
      *    message: "Order successfully updated"
      *    order:  // order object
-     *
      * }
      *
      * @return
@@ -404,7 +401,7 @@ import java.util.List;50"
     @Override
     public GetOrderResponse getOrder(GetOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
         String message = null;
-        Order order = null;
+        Order order;
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
@@ -431,7 +428,7 @@ import java.util.List;50"
      *
      * setStatus should:
      *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
-     *            - it should then set the status of the order object passed in to that of the orderstatus passed in
+     *            - it should then set the status of the order object passed in to that of the orderStatus passed in
      *
      * Request Object: (setStatusRequest)
      * {
@@ -520,13 +517,11 @@ import java.util.List;50"
 
         if(OptionalTransaction == null || !OptionalTransaction.isPresent()) {
             throw new InvalidRequestException("Invalid transactionID passed in - transaction does not exist.");
+        }else {
+            transaction = OptionalTransaction.get();
         }
-
-        Calendar timestamp = Calendar.getInstance();
-
-        transaction = transactionRepo.findById(transactionID).get();
         order = transaction.getOrder();
-
+        Calendar timestamp = Calendar.getInstance();
 
         invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getItems());
         invoiceRepo.save(invoice);
@@ -540,32 +535,35 @@ import java.util.List;50"
     }
 
     @Override
-    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException{
+    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException{
         UUID invoiceID;
-        UUID userID;
         Invoice invoice;
 
         if(request == null){
-            throw new InvalidRequestException("Get Invoice Request cannot be null - Invoice unsuccessfully retrieved");
+            throw new InvalidRequestException("Get Invoice Request cannot be null - Invoice retrieval unsuccessful");
         }
 
         if(request.getInvoiceID() == null){
-            throw new InvalidRequestException("Invoice ID cannot be null - invoice unsuccessfully retrieved.");
+            throw new InvalidRequestException("Invoice ID cannot be null - Invoice retrieval unsuccessful.");
         }
 
         if(request.getUserID() == null){
-            throw new InvalidRequestException("User ID cannot be null - invoice unsuccessfully retrieved.");
+            throw new InvalidRequestException("User ID cannot be null - Invoice retrieval unsuccessful.");
         }
-
-        // get user
 
         invoiceID = request.getInvoiceID();
 
-        if(!invoiceRepo.findById(invoiceID).isPresent()){
+        Optional<Invoice> optionalInvoice = invoiceRepo.findById(invoiceID);
+
+        if(optionalInvoice == null || !optionalInvoice.isPresent()){
             throw new InvalidRequestException("Invalid invoiceID passed in - invoice does not exist.");
+        }else{
+            invoice = optionalInvoice.get();
         }
 
-        invoice = invoiceRepo.findById(invoiceID).get();
+        if(invoice.getCustomerID() != request.getUserID()){
+            throw new NotAuthorisedException("Invalid customerID passed in - customer did not place this order.");
+        }
 
         byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), invoice.getItem(), invoice.getTotalCost());
 
@@ -592,7 +590,7 @@ import java.util.List;50"
         Document pdf = new Document();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));//when i finish the function put (, output)
+            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
             pdf.open();
             com.itextpdf.text.Font header = FontFactory.getFont(FontFactory.COURIER, 24, Font.BOLD);
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);

@@ -34,6 +34,6 @@ public interface PaymentService {
 
     GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) throws InvalidRequestException;
 
-    GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException;
+    GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException;
 
 }
