@@ -1113,6 +1113,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }catch (Exception e){}
 
             if(storeEntity!=null) {
+
                 response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
             }
             else{
