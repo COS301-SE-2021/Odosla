@@ -1075,5 +1075,55 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *
+     *  getStores should:
+     *                1. Check if there are any stores in the store database
+     *                2. If there are stores, store them in a list
+     *                3. If there aren't any stores in the database, return response with success being false
+     *                4. If list of shoppers is not null return response with list of shoppers and success status being true
+     *
+     * Request object (GetStoresRequest)
+     * {
+     *
+     *
+     * }
+     *
+     * Response object (GetStoresResponse)
+     * {
+     *                "stores": storeEntity.findAll()
+     *                "success": "true"
+     *                "message":"List of Stores successfully returned"
+     * }
+     * @return
+     */
+    @Override
+    public GetStoresResponse getStores(GetStoresRequest request) throws InvalidRequestException{
+        GetStoresResponse response=null;
+
+        if(request!=null){
+
+            List<Store> storeEntity=null;
+
+            try {
+                storeEntity = storeRepo.findAll();
+            }catch (Exception e){}
+
+            if(storeEntity!=null) {
+                response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
+            }
+            else{
+                response = new GetStoresResponse(false,"List of Stores is null", null);
+            }
+        }
+        else{
+            throw new InvalidRequestException("Request object for getStores can't be null");
+        }
+        return response;
+
+    }
 }
 
