@@ -1110,9 +1110,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             try {
                 storeEntity = storeRepo.findAll();
+
             }catch (Exception e){}
 
-            if(storeEntity!=null) {
+            if(storeRepo.count()!=0) {
 
                 response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
             }

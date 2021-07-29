@@ -88,15 +88,24 @@ public class GetStoresUnitTest {
     }
 
     @Test
-    @Description("Test for when stores exist in the database - should return correct store entity")
-    @DisplayName("When Stores exist in database and get returned in list")
-    void UnitTest_Stores_does_exist_fetching_Stores() throws InvalidRequestException {
+    @Description("Test for when stores dont exist in the database - should return null")
+    @DisplayName("When Stores dont exist in database and return null")
+    void UnitTest_Stores_dont_exist_fetching_Stores() throws InvalidRequestException {
         GetStoresRequest request=new GetStoresRequest();
 
         GetStoresResponse response= shoppingService.getStores(request);
         assertNotNull(response);
-        assertEquals(true,response.getResponse());
-        assertEquals("List of Stores successfully returned",response.getMessage());
+        assertEquals(false,response.getResponse());
+        assertEquals("List of Stores is null",response.getMessage());
+        assertEquals(null, response.getStores());
+
+
+    }
+
+    @Test
+    @Description("Test for when stores exist in the database - should return correct store entity")
+    @DisplayName("When Stores exist in database and get returned in list")
+    void UnitTest_Stores_does_exist_fetching_Stores() throws InvalidRequestException {
 
         assertEquals(stores.get(0).getStoreID(), s.getStoreID());
         assertEquals(stores.get(1).getStoreID(), s2.getStoreID());
