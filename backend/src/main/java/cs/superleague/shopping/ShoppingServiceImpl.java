@@ -1140,7 +1140,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         }
         else{
-            throw new InvalidRequestException("Request object for GetNextQueuedRequest can't be null - can't get next queued");
+            throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
         }
     }
 }
