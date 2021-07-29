@@ -10,7 +10,7 @@ public class UpdateShoppersRequest {
     Store store;
     List<Shopper> newShoppers;
 
-    public void UpdateShoppersRequest(Store store, List<Shopper> newShoppers)
+    public UpdateShoppersRequest(Store store, List<Shopper> newShoppers)
     {
         this.store=store;
         this.newShoppers= newShoppers;
