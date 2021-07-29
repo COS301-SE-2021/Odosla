@@ -996,5 +996,84 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *                private List<Shopper> newShoppers;
+     *
+     * updateShoppers should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's store object is not null, else throw an InvalidRequestException
+     *               3. Check if the request's newShoppers object is not null, else throw an InvalidRequestException
+     *               4. Check if the request's storeID is not null, else throw an StoreDoesNotExistException
+     *               5. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               6. Update the found store object's list of shoppers with the request object store's shopper list.
+     *               7. Initialize the response object's constructor to the storeID and response message
+     *               8. Return the response object.
+     *
+     * Request Object (UpdateShoppersRequest):
+     * {
+     *
+     *                "store":{
+     *                          "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                          ...
+     *                }
+     *                "newShoppers":{
+     *                          "shopper":{
+     *                                  "id":"1fa96449-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                                  ...
+     *                          }
+     *                          "shopper":{
+     *                                  "id":"2fa96449-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                                  ...
+     *                          }
+     *                }
+     * }
+     *
+     * Response Object (UpdateShoppersResponse):
+     * {
+     *                "response":true
+     *                "message":"Shoppers updated successfully"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+    @Override
+    public UpdateShoppersResponse updateShoppers(UpdateShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+
+        UpdateShoppersResponse response = null;
+        if (request != null) {
+            if (request.getStore() == null) {
+                throw new InvalidRequestException("The Store object in UpdateShoppersRequest parameter is null - Could not update shoppers");
+            }
+            if (request.getNewShoppers() == null) {
+                throw new InvalidRequestException("The newShoppers object in UpdateShoppersRequest parameter is null - Could not update shoppers");
+            }
+            Store storeEntity = null;
+            try {
+                storeEntity = storeRepo.findById(request.getStore().getStoreID()).orElse(null);
+            } catch (Exception e) {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Shoppers entity");
+            }
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Shoppers entity");
+            }
+
+            storeEntity.setShoppers(request.getNewShoppers());
+            storeRepo.save(storeEntity);
+
+            response = new UpdateShoppersResponse(true, "Shoppers updated successfully", storeEntity.getStoreID());
+        }
+        else {
+            throw new InvalidRequestException("The request object for UpdateShoppersRequest is null - Could not update shoppers");
+        }
+        return response;
+    }
 }
 
