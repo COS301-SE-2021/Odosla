@@ -88,9 +88,9 @@ public class UpdateShoppersUnitTest {
     }
 
     @Test
-    @Description("Tests for whether a request is submitted with a null parameter for shop in request object- exception should be thrown")
-    @DisplayName("When request object parameter -shop - is not specified")
-    void UnitTest_testingNull_shop_Parameter_RequestObject(){
+    @Description("Tests for whether a request is submitted with a null parameter for store in request object- exception should be thrown")
+    @DisplayName("When request object parameter -store - is not specified")
+    void UnitTest_testingNull_store_Parameter_RequestObject(){
         UpdateShoppersRequest request=new UpdateShoppersRequest(null, updatedShopperList);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.updateShoppers(request));
         assertEquals("The Store object in UpdateShoppersRequest parameter is null - Could not update shoppers", thrown.getMessage());
@@ -119,7 +119,7 @@ public class UpdateShoppersUnitTest {
     @Test
     @Description("Test for when Store with storeID does exist in database - should return correct store entity")
     @DisplayName("When Store with ID does exist and shoppers list changes")
-    void UnitTest_Store_does_exist_changing_shoppers() throws InvalidRequestException, StoreDoesNotExistException {
+    void UnitTest_Store_does_exist_updating_shoppers() throws InvalidRequestException, StoreDoesNotExistException {
         UpdateShoppersRequest request=new UpdateShoppersRequest(s, updatedShopperList);
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(s));
         UpdateShoppersResponse response= shoppingService.updateShoppers(request);
