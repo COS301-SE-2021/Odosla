@@ -63,5 +63,25 @@ public class UserServiceImpl implements UserService{
         return null;
     }
 
+    @Override
+    public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) {
+        return null;
+    }
+
+    @Override
+    public RegisterDriverResponse registerDriver(RegisterDriverRequest request) {
+        return null;
+    }
+
+    @Override
+    public RegisterShopperResponse registerShopper(RegisterShopperRequest request) {
+        return null;
+    }
+
+    @Override
+    public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) {
+        return null;
+    }
+
 
 }

@@ -1,6 +1,7 @@
 package cs.superleague.user.requests;
 
 public class AccountVerifyRequest {
+
     /* Attributes */
     private String username;
     private String activationCode;

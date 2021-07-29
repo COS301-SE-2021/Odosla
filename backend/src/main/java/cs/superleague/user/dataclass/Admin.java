@@ -1,21 +1,14 @@
 package cs.superleague.user.dataclass;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.UUID;
+
+@Entity
+@Table
 public class Admin extends User {
 
-    /* Functions */
-    public boolean deleteUser(){
-        return true;
-    }
-
-    public boolean registerUser(){
-        return true;
-    }
-
-    public boolean addAdmin(){
-        return true;
-    }
-
-//    public ReportType generateReports(){
-//
-//    }
+    @Id
+    private UUID adminID;
 }

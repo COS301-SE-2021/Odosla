@@ -1,20 +1,18 @@
 package cs.superleague.user.dataclass;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class User {
 
     /* Attributes */
-
     private String name;
     private String surname;
     private String username;
-    private UUID id;
     private String email;
     private String phoneNumber;
     private String password;
-    private Calendar activationDate;
+    private Date activationDate;
     private String activationCode;
     private String resetCode;
     private String resetExpiration;
@@ -23,11 +21,10 @@ public class User {
 
     /* Constructor  */
 
-    public User(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType) {
+    public User(String name, String surname, String username, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType) {
         this.name = name;
         this.surname = surname;
         this.username = username;
-        this.id = id;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
@@ -69,14 +66,6 @@ public class User {
         this.username = username;
     }
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -101,11 +90,11 @@ public class User {
         this.password = password;
     }
 
-    public Calendar getActivationDate() {
+    public Date getActivationDate() {
         return activationDate;
     }
 
-    public void setActivationDate(Calendar activationDate) {
+    public void setActivationDate(Date activationDate) {
         this.activationDate = activationDate;
     }
 
@@ -147,27 +136,5 @@ public class User {
 
     public void setAccountType(UserType accountType) {
         this.accountType = accountType;
-    }
-
-    /* Functions */
-
-    public boolean login(){
-        return true;
-    }
-
-    public boolean logout(){
-        return true;
-    }
-
-    public boolean registerUser(){
-        return true;
-    }
-
-    public boolean resetPassword(){
-        return true;
-    }
-
-    public boolean updateAccountDetails(){
-        return true;
     }
 }
