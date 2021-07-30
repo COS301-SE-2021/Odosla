@@ -1,5 +1,6 @@
 package cs.superleague.payment;
 
+import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
@@ -30,11 +31,13 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final OrderRepo orderRepo;
     private final ShoppingService shoppingService;
+    private final TransactionRepo transactionRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, ShoppingService shoppingService, TransactionRepo transactionRepo) {
         this.orderRepo = orderRepo;
         this.shoppingService = shoppingService;
+        this.transactionRepo = transactionRepo;
     }
 
     /** What to do
@@ -465,8 +468,44 @@ public class PaymentServiceImpl implements PaymentService {
     // TRANSACTION IMPLEMENTATION
 
     @Override
-    public CreateTransactionResponse createTransaction(CreateTransactionRequest request) {
-        return null;
+    public CreateTransactionResponse createTransaction(CreateTransactionRequest request) throws InvalidRequestException, OrderDoesNotExist, StatusCodeException {
+        Order order = null;
+        if (request == null){
+            throw new InvalidRequestException("Null request.");
+        }else{
+            if(request.getOrderID() == null || request.getTransactionAddress() == null){
+                throw new InvalidRequestException("Null parameters.");
+            }else{
+                order = orderRepo.findById(request.getOrderID()).orElse(null);
+                if(order == null){
+                    throw new OrderDoesNotExist("Invalid orderID");
+                }else{
+                    if(order.getStatus() == null){
+                        throw new StatusCodeException("Invalid statusCode.");
+                    }else{
+                        if(order.getStatus() == OrderStatus.AWAITING_PAYMENT){
+                            UUID transactionID = UUID.randomUUID();
+                            while(transactionRepo.findById(transactionID).isPresent()){
+                                transactionID = UUID.randomUUID();
+                            }
+                            order.setStatus(OrderStatus.VERIFYING);
+                            orderRepo.save(order);
+                            Calendar date = Calendar.getInstance();
+                            Transaction transaction = new Transaction(transactionID,
+                                    date,
+                                    order,
+                                    order.getTotalCost(),
+                                    request.getTransactionAddress());
+                            transactionRepo.save(transaction);
+                            CreateTransactionResponse response = new CreateTransactionResponse(transactionID, date);
+                            return response;
+                        }else{
+                            throw new StatusCodeException("Invalid statusCode.");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
