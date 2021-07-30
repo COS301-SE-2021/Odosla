@@ -1078,70 +1078,54 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     /**
      *
-     * @param request object is used to bring in:
-     *                private storeID
+     * @param request is used to bring in:
      *
-     * getQueue should:
-     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
-     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
-     *               3. Check that the store exists, else throw a StoreDoesNotExistException
-     *               4. Find and store the order list from that store in the response object
-     *               5. Return the response object.
+     *  getStores should:
+     *                1. Check if there are any stores in the store database
+     *                2. If there are stores, store them in a list
+     *                3. If there aren't any stores in the database, return response with success being false
+     *                4. If list of shoppers is not null return response with list of shoppers and success status being true
      *
-     * Request Object (GetQueueRequest):
+     * Request object (GetStoresRequest)
      * {
-     *                "storeID": {"d09832893"}
+     *
+     *
      * }
      *
-     * Response Object (GetQueueResponse):
+     * Response object (GetStoresResponse)
      * {
-     *                "success":true
-     *                "message":"Order was correctly added to queue"
-     *                "queueOfOrders": store.getOrderQueue
+     *                "stores": storeEntity.findAll()
+     *                "success": "true"
+     *                "message":"List of Stores successfully returned"
      * }
-     *
      * @return
-     * @throws InvalidRequestException
-     * @throws StoreDoesNotExistException
-     * */
-
+     */
     @Override
-    public GetQueueResponse getQueue(GetQueueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
-        GetQueueResponse response=null;
+    public GetStoresResponse getStores(GetStoresRequest request) throws InvalidRequestException{
+        GetStoresResponse response=null;
 
         if(request!=null){
 
-            if(request.getStoreID()==null){
-                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get queue of orders");
-            }
-            Store store=null;
+            List<Store> storeEntity=null;
 
             try {
-                store = storeRepo.findById(request.getStoreID()).orElse(null);
-            }
-            catch(Exception e){
-                throw new StoreDoesNotExistException("Store with ID does not exist in repository - can't get queue of orders");
-            }
+                storeEntity = storeRepo.findAll();
 
-            if(store==null){
-                throw new StoreDoesNotExistException("Store with ID does not exist in repository - can't get queue of orders");
-            }
-            List<Order> orderQueue= store.getOrderQueue();
+            }catch (Exception e){}
 
-            if(orderQueue.size()==0){
-                response=new GetQueueResponse(false,"The order queue of shop is empty",null);
+            if(storeRepo.count()!=0) {
 
+                response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
             }
-            else
-            {
-                response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
+            else{
+                response = new GetStoresResponse(false,"List of Stores is null", null);
             }
-            return response;
-
         }
         else{
-            throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
+            throw new InvalidRequestException("Request object for getStores can't be null");
         }
+        return response;
+
     }
 }
 
