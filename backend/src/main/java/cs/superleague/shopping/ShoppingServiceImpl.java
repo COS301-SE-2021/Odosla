@@ -1127,5 +1127,73 @@ public class ShoppingServiceImpl implements ShoppingService {
         return response;
 
     }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private storeID
+     *
+     * getQueue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the store exists, else throw a StoreDoesNotExistException
+     *               4. Find and store the order list from that store in the response object
+     *               5. Return the response object.
+     *
+     * Request Object (GetQueueRequest):
+     * {
+     *                "storeID": {"d09832893"}
+     * }
+     *
+     * Response Object (GetQueueResponse):
+     * {
+     *                "success":true
+     *                "message":"Order was correctly added to queue"
+     *                "queueOfOrders": store.getOrderQueue
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+
+    @Override
+    public GetQueueResponse getQueue(GetQueueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        GetQueueResponse response=null;
+
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get queue of orders");
+            }
+            Store store=null;
+
+            try {
+                store = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch(Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - can't get queue of orders");
+            }
+
+            if(store==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - can't get queue of orders");
+            }
+            List<Order> orderQueue= store.getOrderQueue();
+
+            if(orderQueue.size()!=0){
+                response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
+            }
+            else
+            {
+                response=new GetQueueResponse(false,"The order queue of shop is empty",null);
+
+            }
+            return response;
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
+        }
+    }
 }
 
