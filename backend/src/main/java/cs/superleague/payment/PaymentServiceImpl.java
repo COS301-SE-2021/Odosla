@@ -1,5 +1,9 @@
 package cs.superleague.payment;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
+import cs.superleague.payment.repos.InvoiceRepo;
+import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
@@ -17,25 +21,31 @@ import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("paymentServiceImpl")
 public class PaymentServiceImpl implements PaymentService {
 
     private final OrderRepo orderRepo;
+    private final InvoiceRepo invoiceRepo;
+    private final TransactionRepo transactionRepo;
     private final ShoppingService shoppingService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService) {
         this.orderRepo = orderRepo;
+        this.invoiceRepo = invoiceRepo;
+        this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
     }
+
 
     /** What to do
      *
@@ -50,7 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * SubmitOrder should do the following:
      *               - Check the request object is not null and all corresponding parameters else throw InvalidRequestException
-     *               - Add up cost of items and subract total for total order price
+     *               - Add up cost of items and subtract total for total order price
      *               - If order with same ID already exists in database, then return object without success
      *               - If the order is created successfully, then order gets added to order repository and success
      *
@@ -129,15 +139,14 @@ public class PaymentServiceImpl implements PaymentService {
 
 
             double discount=request.getDiscount();
-            UUID userID=request.getUserID();
             UUID storeID=request.getStoreID();
 
             /* Get total cost of order*/
             AtomicReference<Double> finalTotalCost = totalCost;
             request.getListOfItems().stream().parallel().forEach(item -> {
-                int quantiy = item.getQuantity();
+                int quantity = item.getQuantity();
                 double itemPrice = item.getPrice();
-                for (int j = 0; j < quantiy; j++) {
+                for (int j = 0; j < quantity; j++) {
                     finalTotalCost.updateAndGet(v ->((double) (v + itemPrice)));
                 }
             });
@@ -208,7 +217,7 @@ public class PaymentServiceImpl implements PaymentService {
      *   3.1 if the order status is AWAITING_PAYMENT or PURCHASED the order can easily be cancelled without
      *       charging the customer.
      *   3.2 Once an order has reached the COLLECT status the customer will be charged a fee to cancel the order
-     *   3.3 Lastly if the order has changed to collected, either by the driver or the customer the order
+     *   3.3 Lastly if the order has changed to "collected", either by the driver or the customer the order
      *      can no longer be cancelled
      *
      * Request Object: (CancelOrderRequest)
@@ -222,7 +231,6 @@ public class PaymentServiceImpl implements PaymentService {
      *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
      *    message: "Cannot cancel an order that has been delivered/collected."
      *    orders:  //List<Orders>
-     *
      * }
      *
      * @return
@@ -298,16 +306,17 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * updateOrder should:
      *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
-     *            - check that the order id passed in in exists in the database or not.
+     *            - check that the order id passed in exists in the database or not.
      *            - if the order is found in the database use its status to determine whether it can be updated or not, then proceed accordingly
-     *              - e.g if the order status say that the order has been delivered, the order cannot be updated.
+     *              - e.g. if the order status say that the order has been delivered, the order cannot be updated.
      *
      * Request Object: (UpdateOrderRequest)
      * {
      *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
      *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
      *            "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
-     *            "discount": "30.50"
+     *            "discount": "30.
+import java.util.List;50"
      *            "orderType": "OrderType.DELIVERY"
      *            "deliveryAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
      * }
@@ -318,7 +327,6 @@ public class PaymentServiceImpl implements PaymentService {
      *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
      *    message: "Order successfully updated"
      *    order:  // order object
-     *
      * }
      *
      * @return
@@ -393,7 +401,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public GetOrderResponse getOrder(GetOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
         String message = null;
-        Order order = null;
+        Order order;
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
@@ -420,7 +428,7 @@ public class PaymentServiceImpl implements PaymentService {
      *
      * setStatus should:
      *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
-     *            - it should then set the status of the order object passed in to that of the orderstatus passed in
+     *            - it should then set the status of the order object passed in to that of the orderStatus passed in
      *
      * Request Object: (setStatusRequest)
      * {
@@ -482,13 +490,87 @@ public class PaymentServiceImpl implements PaymentService {
     // INVOICE IMPLEMENTATION
 
     @Override
-    public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) {
-        return null;
+    public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request)  throws InvalidRequestException{
+        UUID invoiceID;
+        UUID transactionID;
+        Order order;
+        Invoice invoice;
+        Transaction transaction;
+
+        if(request == null){
+            throw new InvalidRequestException("Generate Invoice Request cannot be null - Invoice generation unsuccessful");
+        }
+
+        if(request.getTransactionID() == null){
+            throw new InvalidRequestException("Transaction ID cannot be null - Invoice generation unsuccessful");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("Customer ID cannot be null - Invoice generation unsuccessful");
+        }
+
+        transactionID = request.getTransactionID();
+
+        invoiceID = UUID.randomUUID();
+
+        Optional<Transaction> OptionalTransaction = transactionRepo.findById(transactionID);
+
+        if(OptionalTransaction == null || !OptionalTransaction.isPresent()) {
+            throw new InvalidRequestException("Invalid transactionID passed in - transaction does not exist.");
+        }else {
+            transaction = OptionalTransaction.get();
+        }
+        order = transaction.getOrder();
+        Calendar timestamp = Calendar.getInstance();
+
+        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getItems());
+        invoiceRepo.save(invoice);
+
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getItems(), invoice.getTotalCost());
+
+        // send email
+        // notificationService.sendEmail(PDF);
+
+        return new GenerateInvoiceResponse(invoiceID, timestamp, "Invoice successfully generated.");
     }
 
     @Override
-    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) {
-        return null;
+    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException{
+        UUID invoiceID;
+        Invoice invoice;
+
+        if(request == null){
+            throw new InvalidRequestException("Get Invoice Request cannot be null - Invoice retrieval unsuccessful");
+        }
+
+        if(request.getInvoiceID() == null){
+            throw new InvalidRequestException("Invoice ID cannot be null - Invoice retrieval unsuccessful.");
+        }
+
+        if(request.getUserID() == null){
+            throw new InvalidRequestException("User ID cannot be null - Invoice retrieval unsuccessful.");
+        }
+
+        invoiceID = request.getInvoiceID();
+
+        Optional<Invoice> optionalInvoice = invoiceRepo.findById(invoiceID);
+
+        if(optionalInvoice == null || !optionalInvoice.isPresent()){
+            throw new InvalidRequestException("Invalid invoiceID passed in - invoice does not exist.");
+        }else{
+            invoice = optionalInvoice.get();
+        }
+
+        if(!invoice.getCustomerID().equals(request.getUserID())){
+            throw new NotAuthorisedException("Invalid customerID passed in - customer did not place this order.");
+        }
+
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), invoice.getItem(), invoice.getTotalCost());
+
+        // send email
+        // notificationService.sendEmail(PDF);
+
+        return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
     }
 
     // Helper
@@ -500,5 +582,38 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         return cost;
+    }
+
+    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<Item> ITEM, double TOTAL_PRICE) {
+        String home = System.getProperty("user.home");
+        String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
+        Document pdf = new Document();
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
+            pdf.open();
+            com.itextpdf.text.Font header = FontFactory.getFont(FontFactory.COURIER, 24, Font.BOLD);
+            com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
+            pdf.add(new Paragraph("This is an invoice from Odosla", header));
+
+            for (Item item: ITEM) {
+                pdf.add(new Paragraph("Item: " + item.getName(), body));
+                pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
+                pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
+            }
+
+            //pdf.add(new Paragraph("BuyerID: " + BuyerID, body));
+            pdf.add(new Paragraph("Date: " + INVOICED_DATE, body));
+            pdf.add(new Paragraph("Details: " + DETAILS, body));
+            pdf.add(new Paragraph("Price: " + TOTAL_PRICE, body));
+            //pdf.add(new Paragraph("ShippingID: " + SHIPMENT.getShipmentId(), body));
+            pdf.add(new Paragraph("InvoiceID: " + invoiceID, body));
+            pdf.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("PDF Error");
+        }
+        return output.toByteArray();
     }
 }
