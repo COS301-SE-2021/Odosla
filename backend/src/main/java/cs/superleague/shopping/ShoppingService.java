@@ -38,4 +38,6 @@ public interface ShoppingService {
     UpdateShoppersResponse updateShoppers(UpdateShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     GetStoresResponse getStores(GetStoresRequest request) throws InvalidRequestException;
+
+    GetQueueResponse getQueue(GetQueueRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 }
