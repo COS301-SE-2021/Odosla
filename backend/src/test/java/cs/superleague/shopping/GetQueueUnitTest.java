@@ -100,7 +100,7 @@ public class GetQueueUnitTest {
 
     @Test
     @Description("Tests for when storeID in request object is null- exception should be thrown")
-    @DisplayName("When request object parameter -storeID - is not specificed")
+    @DisplayName("When request object parameter -storeID - is not specified")
     void UnitTest_testingNull_storeID_Parameter_RequestObject(){
         GetQueueRequest request=new GetQueueRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.getQueue(request));
