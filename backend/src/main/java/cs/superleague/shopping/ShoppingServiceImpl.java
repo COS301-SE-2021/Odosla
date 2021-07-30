@@ -221,7 +221,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(request!=null){
 
             if(request.getStoreID()==null){
-                throw new InvalidRequestException("Store ID paramter in request can't be null - can't get next queued");
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
             Store store;
 
@@ -229,6 +229,10 @@ public class ShoppingServiceImpl implements ShoppingService {
                 store = storeRepo.findById(request.getStoreID()).orElse(null);
             }
             catch(Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
+
+            if(store == null){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
 
