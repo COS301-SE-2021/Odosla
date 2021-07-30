@@ -1128,13 +1128,13 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderQueue.size()==0){
-                response=new GetQueueResponse(false,"The order queue of shop is empty",null);
-
+            if(orderQueue.size()!=0){
+                response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
             }
             else
             {
-                response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
+                response=new GetQueueResponse(false,"The order queue of shop is empty",null);
+
             }
             return response;
 
