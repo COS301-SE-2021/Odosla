@@ -144,7 +144,7 @@ public class GetNextQueuedUnitTest {
         assertEquals(listOfOrders.size(),response.getQueueOfOrders().size());
         assertEquals("Queue was successfully updated for store",response.getMessage());
         assertEquals(listOfOrders,response.getQueueOfOrders());
-        assertEquals(o,response.getNewCurrentOrder());
+        assertEquals(o2,response.getNewCurrentOrder());
 
     }
 

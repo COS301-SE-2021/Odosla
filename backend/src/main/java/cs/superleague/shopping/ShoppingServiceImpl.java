@@ -232,37 +232,27 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
 
-            List<Order> orderqueue= store.getOrderQueue();
+            List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderqueue.size()==0){
-                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);
+            if(orderQueue.size()==0){
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
 
-            Date oldestProcessedDate=orderqueue.get(0).getProcessDate().getTime();
-            Order correspondingOrder=orderqueue.get(0);
+            Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
+            Order correspondingOrder=orderQueue.get(0);
 
-            for (Order o: orderqueue){
+            for (Order o: orderQueue){
                 if(oldestProcessedDate.after(o.getProcessDate().getTime())){
                     oldestProcessedDate=o.getProcessDate().getTime();
                     correspondingOrder=o;
                 }
             }
 
-            orderqueue.remove(correspondingOrder);
-            store.setOrderQueue(orderqueue);
+            orderQueue.remove(correspondingOrder);
+            store.setOrderQueue(orderQueue);
 
-            oldestProcessedDate=orderqueue.get(0).getProcessDate().getTime();
-            correspondingOrder=orderqueue.get(0);
-
-            for (Order o: orderqueue){
-                if(oldestProcessedDate.after(o.getProcessDate().getTime())){
-                    oldestProcessedDate=o.getProcessDate().getTime();
-                    correspondingOrder=o;
-                }
-            }
-
-            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderqueue,correspondingOrder);
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderQueue,correspondingOrder);
 
         }
         else{
