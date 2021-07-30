@@ -37,5 +37,5 @@ public interface ShoppingService {
 
     UpdateShoppersResponse updateShoppers(UpdateShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    GetQueueResponse getQueue(GetQueueRequest request) throws InvalidRequestException, StoreDoesNotExistException;
+    GetStoresResponse getStores(GetStoresRequest request) throws InvalidRequestException;
 }
