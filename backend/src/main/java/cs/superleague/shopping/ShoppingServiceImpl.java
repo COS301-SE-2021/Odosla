@@ -239,12 +239,12 @@ public class ShoppingServiceImpl implements ShoppingService {
                 return response;
             }
 
-            Date oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
+            Date oldestProcessedDate=orderqueue.get(0).getProcessDate().getTime();
             Order correspondingOrder=orderqueue.get(0);
 
             for (Order o: orderqueue){
-                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
-                    oldestProcssedDate=o.getProcessDate().getTime();
+                if(oldestProcessedDate.after(o.getProcessDate().getTime())){
+                    oldestProcessedDate=o.getProcessDate().getTime();
                     correspondingOrder=o;
                 }
             }
@@ -252,12 +252,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             orderqueue.remove(correspondingOrder);
             store.setOrderQueue(orderqueue);
 
-            oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
+            oldestProcessedDate=orderqueue.get(0).getProcessDate().getTime();
             correspondingOrder=orderqueue.get(0);
 
             for (Order o: orderqueue){
-                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
-                    oldestProcssedDate=o.getProcessDate().getTime();
+                if(oldestProcessedDate.after(o.getProcessDate().getTime())){
+                    oldestProcessedDate=o.getProcessDate().getTime();
                     correspondingOrder=o;
                 }
             }
