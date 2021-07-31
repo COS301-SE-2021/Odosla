@@ -10,13 +10,13 @@ public class MakeGroceryListRequest {
 
     private final UUID userID;
     private final List<Item> items;
-    private final String message;
+    private final String name;
 
 
-    public MakeGroceryListRequest(UUID userID, List<Item> items, String message) { //if multiple items are parsed in
+    public MakeGroceryListRequest(UUID userID, List<Item> items, String name) { //if multiple items are parsed in
         this.userID = userID;
         this.items = items;
-        this.message = message;
+        this.name = name;
     }
 
     public MakeGroceryListRequest(UUID userID, Item item, String message){ // if one item is passed in
@@ -25,7 +25,7 @@ public class MakeGroceryListRequest {
 
         this.items = items;
         this.userID = userID;
-        this.message = message;
+        this.name = message;
     }
 
     public UUID getUserID() {
@@ -36,7 +36,7 @@ public class MakeGroceryListRequest {
         return items;
     }
 
-    public String getMessage() {
-        return message;
+    public String getName() {
+        return name;
     }
 }
