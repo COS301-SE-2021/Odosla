@@ -1,7 +1,6 @@
 package cs.superleague.user.requests;
 
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.user.dataclass.GroceryList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,27 +9,34 @@ import java.util.UUID;
 public class MakeGroceryListRequest {
 
     private final UUID userID;
-    private final List<GroceryList> groceryList;
+    private final List<Item> items;
+    private final String message;
 
 
-    public MakeGroceryListRequest(UUID userID, List<GroceryList> groceryList) { //if multiple items are parsed in
+    public MakeGroceryListRequest(UUID userID, List<Item> items, String message) { //if multiple items are parsed in
         this.userID = userID;
-        this.groceryList = groceryList;
+        this.items = items;
+        this.message = message;
     }
 
-    public MakeGroceryListRequest(UUID userID, GroceryList item){ // if one item is passed in
-        List<GroceryList> groceryList = new ArrayList();
-        groceryList.add(item);
+    public MakeGroceryListRequest(UUID userID, Item item, String message){ // if one item is passed in
+        List<Item> items = new ArrayList();
+        items.add(item);
 
-        this.groceryList = groceryList;
+        this.items = items;
         this.userID = userID;
+        this.message = message;
     }
 
     public UUID getUserID() {
         return userID;
     }
 
-    public List<GroceryList> getGroceryList() {
-        return groceryList;
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
