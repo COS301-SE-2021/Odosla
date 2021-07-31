@@ -6,17 +6,17 @@ import java.util.List;
 
 public class MakeGroceryListResponse {
 
-    private final List<GroceryList> groceryList;
+    private final GroceryList groceryList;
     private final boolean success;
     private final String message;
 
-    public MakeGroceryListResponse(List<GroceryList> groceryList, boolean success, String message) {
+    public MakeGroceryListResponse(GroceryList groceryList, boolean success, String message) {
         this.groceryList = groceryList;
         this.success = success;
         this.message = message;
     }
 
-    public List<GroceryList> getGroceryList() {
+    public GroceryList getGroceryList() {
         return groceryList;
     }
 
