@@ -8,6 +8,6 @@ import java.util.UUID;
 
 @Repository
 public interface GroceryListRepo extends JpaRepository<GroceryList, UUID> {
-    public GroceryList findGroceryListByName(String name);
+    public GroceryList findGroceryListByNameAndUserID(String name, UUID groceryListID);
 }
 

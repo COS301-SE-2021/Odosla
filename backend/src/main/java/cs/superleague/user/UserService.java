@@ -13,5 +13,6 @@ public interface UserService {
     public ScanItemResponse scanItem(ScanItemRequest request);
     public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException;
 
-
+    /* Customer  */
+    MakeGroceryListResponse MakeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException;
 }

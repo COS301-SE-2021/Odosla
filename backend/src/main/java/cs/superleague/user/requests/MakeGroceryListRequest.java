@@ -21,7 +21,10 @@ public class MakeGroceryListRequest {
 
     public MakeGroceryListRequest(UUID userID, Item item, String message){ // if one item is passed in
         List<Item> items = new ArrayList();
-        items.add(item);
+
+        if(item != null) {
+            items.add(item);
+        }
 
         this.items = items;
         this.userID = userID;
