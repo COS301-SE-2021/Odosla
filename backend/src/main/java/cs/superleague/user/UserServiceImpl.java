@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -114,6 +115,7 @@ public class UserServiceImpl implements UserService{
         String name;
         String message;
         Optional<Customer> customerOptional;
+        Customer customer;
         GroceryList groceryList;
 
         if(request == null){
@@ -138,17 +140,20 @@ public class UserServiceImpl implements UserService{
             throw new UserDoesNotExistException("User with given userID does not exist - could not make the grocery list");
         }
 
+        customer = customerOptional.get();
         name = request.getName();
-        groceryList = groceryListRepo.findGroceryListByNameAndUserID(name, userID);
-
-        if(groceryList == null){
-            groceryList = new GroceryList(UUID.randomUUID(), name, request.getItems(), request.getUserID());
-            message = "Grocery List successfully created";
-        }else{ // or update the groceryList with new list?
-            throw new InvalidRequestException("Grocery List Name exists - could not make the grocery list");
+        for (GroceryList list: customer.getGroceryLists()) { // if name exists throw exception
+            if(list.getName().equals(name)){
+                throw new InvalidRequestException("Grocery List Name exists - could not make the grocery list");
+            }
         }
 
+        groceryList = new GroceryList(UUID.randomUUID(), name, request.getItems());
+        message = "Grocery List successfully created";
+
         groceryList = groceryListRepo.save(groceryList);
+        customer.getGroceryLists().add(groceryList);
+        customerRepo.save(customer);
 
         return new MakeGroceryListResponse(groceryList, true, message);
     }

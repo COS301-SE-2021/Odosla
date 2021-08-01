@@ -46,15 +46,17 @@ public class MakeGroceryListUnitTest {
 
     UUID userID;
     UUID groceryListID;
+    UUID expectedS1;
 
-    UUID expectedS1=UUID.randomUUID();
     GeoPoint deliveryAddress;
-    List<Item> listOfItems=new ArrayList<>();
 
+    List<Item> listOfItems = new ArrayList<>();
+    List<GroceryList> groceryLists = new ArrayList<>();
     @BeforeEach
     void setUp() {
         userID = UUID.randomUUID();
         groceryListID = UUID.randomUUID();
+        expectedS1 = UUID.randomUUID();
 
         I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
@@ -65,8 +67,9 @@ public class MakeGroceryListUnitTest {
 
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
-        customer = new Customer(deliveryAddress);
-        groceryList = new GroceryList(groceryListID, "Seamus' Party", listOfItems, userID);
+        groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
+        groceryLists.add(groceryList);
+        customer = new Customer(deliveryAddress, groceryLists);
     }
 
     @AfterEach
@@ -127,7 +130,6 @@ public class MakeGroceryListUnitTest {
     void UnitTest_testingExistingGroceryList(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        when(groceryListRepo.findGroceryListByNameAndUserID(request.getName(), userID)).thenReturn(groceryList);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
         assertEquals("Grocery List Name exists - could not make the grocery list", thrown.getMessage());
     }
@@ -135,9 +137,8 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' bachelor party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        when(groceryListRepo.findGroceryListByNameAndUserID(request.getName(), userID)).thenReturn(null);
 
         try{
             MakeGroceryListResponse response = userService.MakeGroceryList(request);
