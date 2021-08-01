@@ -80,8 +80,116 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) {
-        return null;
+    public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException {
+        RegisterCustomerResponse response=null;
+
+        if(request!=null){
+
+            boolean isException=false;
+            String errorMessage="";
+
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterCustomerRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterCustomerRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterCustomerRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterCustomerRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterCustomerRequest is null";
+            }
+
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
+
+            assert customerRepo!=null;
+
+            errorMessage="";
+            Boolean isError=false;
+            if(!emailMatcher.matches()){
+                isError=true;
+                errorMessage+="Email is not valid";
+            }
+            if(!passwordMatcher.matches()){
+                isError=true;
+                if (errorMessage!=""){
+                    errorMessage+=" and ";
+                }
+                errorMessage+="Password is not valid";
+            }
+
+            if(isError) {
+                return new RegisterCustomerResponse(false, Calendar.getInstance().getTime(), errorMessage);
+            }
+
+            if(customerRepo.findByEmail(request.getEmail())){
+                return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
+            }
+            else{
+
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
+
+                UUID userID = UUID.randomUUID();
+
+                while(customerRepo.findById(userID).isPresent()){
+                    userID=UUID.randomUUID();
+                }
+
+                Customer newCustomer=new Customer(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.CUSTOMER,userID);
+                customerRepo.save(newCustomer);
+
+                if(customerRepo.findById(userID).isPresent()){
+                    /* send a notification with email */
+                    return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
+                }
+                else{
+                    return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Could not save Customer to database");
+                }
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for RegisterCustomerRequest");
+        }
     }
 
     @Override

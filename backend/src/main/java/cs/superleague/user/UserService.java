@@ -10,7 +10,7 @@ public interface UserService {
 
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException;
     public ScanItemResponse scanItem(ScanItemRequest request);
-    public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request);
+    public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
     public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
     public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
