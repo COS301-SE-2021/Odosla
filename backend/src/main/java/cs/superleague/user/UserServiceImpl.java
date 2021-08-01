@@ -1,7 +1,8 @@
 package cs.superleague.user;
 
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.repos.AdminRepo;
+import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,13 +23,16 @@ public class UserServiceImpl implements UserService{
 
     private final ShopperRepo shopperRepo;
     private final DriverRepo driverRepo;
+    private final AdminRepo adminRepo;
+    private final CustomerRepo customerRepo;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo,DriverRepo driverRepo){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
-        //this.userService = userService;
+        this.adminRepo=adminRepo;
+        this.customerRepo=customerRepo;
     }
 
     @Override //unfinished
@@ -194,13 +198,229 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public RegisterShopperResponse registerShopper(RegisterShopperRequest request) {
-        return null;
+    public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException {
+        RegisterShopperResponse response=null;
+
+        if(request!=null){
+
+            boolean isException=false;
+            String errorMessage="";
+
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterShopperRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterShopperRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterShopperRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterShopperRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterShopperRequest is null";
+            }
+
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
+
+            assert shopperRepo!=null;
+
+            errorMessage="";
+            Boolean isError=false;
+            if(!emailMatcher.matches()){
+                isError=true;
+                errorMessage+="Email is not valid";
+            }
+            if(!passwordMatcher.matches()){
+                isError=true;
+                if (errorMessage!=""){
+                    errorMessage+=" and ";
+                }
+                errorMessage+="Password is not valid";
+            }
+
+            if(isError) {
+                return new RegisterShopperResponse(false, Calendar.getInstance().getTime(), errorMessage);
+            }
+
+            if(shopperRepo.findByEmail(request.getEmail())){
+                return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
+            }
+            else{
+
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
+
+                UUID userID = UUID.randomUUID();
+
+                while(shopperRepo.findById(userID).isPresent()){
+                    userID=UUID.randomUUID();
+                }
+
+                Shopper newShopper=new Shopper(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.SHOPPER,userID);
+                shopperRepo.save(newShopper);
+
+                if(driverRepo.findById(userID).isPresent()){
+                    /* send a notification with email */
+                    return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
+                }
+                else{
+                    return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Could not save Shopper to database");
+                }
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for RegisterDriverRequest");
+        }
     }
 
     @Override
-    public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) {
-        return null;
+    public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException {
+        RegisterAdminResponse response=null;
+
+        if(request!=null){
+
+            boolean isException=false;
+            String errorMessage="";
+
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterAdminRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterAdminRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterAdminRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterAdminRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterAdminRequest is null";
+            }
+
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
+
+            assert adminRepo!=null;
+
+            errorMessage="";
+            Boolean isError=false;
+            if(!emailMatcher.matches()){
+                isError=true;
+                errorMessage+="Email is not valid";
+            }
+            if(!passwordMatcher.matches()){
+                isError=true;
+                if (errorMessage!=""){
+                    errorMessage+=" and ";
+                }
+                errorMessage+="Password is not valid";
+            }
+
+            if(isError) {
+                return new RegisterAdminResponse(false, Calendar.getInstance().getTime(), errorMessage);
+            }
+
+            if(adminRepo.findByEmail(request.getEmail())){
+                return new RegisterAdminResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
+            }
+            else{
+
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
+
+                UUID userID = UUID.randomUUID();
+
+                while(adminRepo.findById(userID).isPresent()){
+                    userID=UUID.randomUUID();
+                }
+
+                Admin newAdmin=new Admin(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.ADMIN,userID);
+                adminRepo.save(newAdmin);
+
+                if(adminRepo.findById(userID).isPresent()){
+                    /* send a notification with email */
+                    return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
+                }
+                else{
+                    return new RegisterAdminResponse(false,Calendar.getInstance().getTime(), "Could not save Admin to database");
+                }
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for RegisterAdminRequest");
+        }
     }
 
     @Override

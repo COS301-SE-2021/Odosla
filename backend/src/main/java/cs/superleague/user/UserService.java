@@ -12,8 +12,8 @@ public interface UserService {
     public ScanItemResponse scanItem(ScanItemRequest request);
     public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request);
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
-    public RegisterShopperResponse registerShopper(RegisterShopperRequest request);
-    public RegisterAdminResponse registerAdmin(RegisterAdminRequest request);
+    public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
+    public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
     public LoginResponse loginUser(LoginRequest request);
 
 
