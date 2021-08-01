@@ -506,7 +506,7 @@ import java.util.List;50"
         order.setStatus(OrderStatus.PURCHASED);
         orderRepo.save(order);
         VerifyPaymentResponse response = new VerifyPaymentResponse(Calendar.getInstance(), transaction.getTransactionID());
-        return null;
+        return response;
     }
 
     @Override
