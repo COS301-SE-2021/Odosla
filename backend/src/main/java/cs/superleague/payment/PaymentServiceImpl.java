@@ -471,14 +471,14 @@ public class PaymentServiceImpl implements PaymentService {
     public CreateTransactionResponse createTransaction(CreateTransactionRequest request) throws InvalidRequestException, OrderDoesNotExist, StatusCodeException {
         Order order = null;
         if (request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }else{
             if(request.getOrderID() == null || request.getTransactionAddress() == null){
                 throw new InvalidRequestException("Null parameters.");
             }else{
                 order = orderRepo.findById(request.getOrderID()).orElse(null);
                 if(order == null){
-                    throw new OrderDoesNotExist("Invalid orderID");
+                    throw new OrderDoesNotExist("Invalid orderID.");
                 }else{
                     if(order.getStatus() == null){
                         throw new StatusCodeException("Invalid statusCode.");
