@@ -10,20 +10,16 @@ public class RegisterDriverRequest {
 
     private String name;
     private String surname;
-    private String username;
     private String email;
     private String phoneNumber;
     private String password;
-    private Date activationDate;
 
-    public RegisterDriverRequest(String name, String surname, String username, String email, String phoneNumber, String password, Date activationDate) {
+    public RegisterDriverRequest(String name, String surname,String email, String phoneNumber, String password) {
         this.name = name;
         this.surname = surname;
-        this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
-        this.activationDate = activationDate;
     }
 
     public String getName() {
@@ -40,14 +36,6 @@ public class RegisterDriverRequest {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {
@@ -72,13 +60,5 @@ public class RegisterDriverRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Date getActivationDate() {
-        return activationDate;
-    }
-
-    public void setActivationDate(Date activationDate) {
-        this.activationDate = activationDate;
     }
 }

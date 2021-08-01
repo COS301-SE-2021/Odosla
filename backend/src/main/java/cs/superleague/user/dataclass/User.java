@@ -8,7 +8,6 @@ public class User {
     /* Attributes */
     private String name;
     private String surname;
-    private String username;
     private String email;
     private String phoneNumber;
     private String password;
@@ -21,10 +20,9 @@ public class User {
 
     /* Constructor  */
 
-    public User(String name, String surname, String username, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType) {
+    public User(String name, String surname,String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType) {
         this.name = name;
         this.surname = surname;
-        this.username = username;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
@@ -34,6 +32,16 @@ public class User {
         this.resetExpiration = resetExpiration;
         this.isActive = isActive;
         this.accountType = accountType;
+    }
+
+    public User(String name, String surname, String email, String phoneNumber, String password, String activationCode,UserType accountType) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.activationCode=activationCode;
+        this.accountType=accountType;
     }
 
     public User(){
@@ -56,14 +64,6 @@ public class User {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {

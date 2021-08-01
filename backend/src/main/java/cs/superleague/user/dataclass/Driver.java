@@ -4,6 +4,7 @@ import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -19,17 +20,14 @@ public class Driver extends User {
     private GeoPoint currentAddress;
 
 
-    public Driver(String name, String surname, String username, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID driverID, double rating, GeoPoint currentAddress) {
-        super(name, surname, username, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+    public Driver(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID driverID) {
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
         this.driverID = driverID;
-        this.rating = rating;
-        this.currentAddress = currentAddress;
     }
 
-    public Driver(UUID driverID, double rating, GeoPoint currentAddress) {
+    public Driver(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID driverID) {
+        super(name, surname, email, phoneNumber, password, activationCode, accountType);
         this.driverID = driverID;
-        this.rating = rating;
-        this.currentAddress = currentAddress;
     }
 
     public Driver() {
