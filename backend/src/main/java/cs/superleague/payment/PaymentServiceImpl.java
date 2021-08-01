@@ -478,7 +478,34 @@ import java.util.List;50"
     }
 
     @Override
-    public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) {
+    public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws InvalidRequestException, StatusCodeException {
+        if(request == null){
+            throw new InvalidRequestException("The request object is null.");
+        }
+        if(request.getTransactionID() == null){
+            throw new InvalidRequestException("The transactionID of the request object is null.");
+        }
+        Transaction transaction = transactionRepo.findById(request.getTransactionID()).orElse(null);
+        if(transaction == null){
+            throw new InvalidRequestException("There does not exist a transaction with the provided transactionID.");
+        }
+        Order order = transaction.getOrder();
+        if(order == null){
+            throw new InvalidRequestException("There is no order associated with this transaction.");
+        }
+        if(order.getOrderID() == null){
+            throw new InvalidRequestException("The order has no orderID.");
+        }
+        if(!orderRepo.findById(order.getOrderID()).isPresent()){
+            throw new InvalidRequestException("The order does not exist in the database");
+        }
+        // Need to implement actual verification of transaction here will look at PayFast
+        if(order.getStatus() != OrderStatus.VERIFYING){
+            throw new StatusCodeException("Invalid status code for order.");
+        }
+        order.setStatus(OrderStatus.PURCHASED);
+        orderRepo.save(order);
+        VerifyPaymentResponse response = new VerifyPaymentResponse(Calendar.getInstance(), transaction.getTransactionID());
         return null;
     }
 

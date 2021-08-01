@@ -1,8 +1,5 @@
 package cs.superleague.payment;
-import cs.superleague.payment.exceptions.InvalidRequestException;
-import cs.superleague.payment.exceptions.NotAuthorisedException;
-import cs.superleague.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.exceptions.*;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -25,7 +22,7 @@ public interface PaymentService {
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
 
-    VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request);
+    VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws InvalidRequestException, StatusCodeException;
 
     ReverseTransactionResponse  reverseTransaction(ReverseTransactionRequest request);
 
