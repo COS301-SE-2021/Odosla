@@ -79,7 +79,6 @@ public class CreateTransactionUnitTest {
         listOfOrders.add(o2);
         c=new Catalogue(expectedS1,expectedListOfItems);
         expectedStore=new Store(expectedS1,"Woolworthes",c,3,listOfOrders,null,4,true);
-        o.setStatus(OrderStatus.AWAITING_COLLECTION);
     }
 
     @AfterEach
@@ -142,12 +141,35 @@ public class CreateTransactionUnitTest {
     }
 
     @Test
-    @Description("Tests for when the order does exist, but the status of the order means it is not awaiting payment")
-    @DisplayName("Invalid status")
-    void UnitTest_OrderHasInvalidStatus() {
+    @Description("Tests for when the order does exist, but the status of the order is null")
+    @DisplayName("Null status")
+    void UnitTest_OrderHasNullStatus() {
+        o.setStatus(null);
         when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        CreateTransactionRequest request = new CreateTransactionRequest(UUID.randomUUID(), transactionAddress);
+        CreateTransactionRequest request = new CreateTransactionRequest(o1UUID, transactionAddress);
         Throwable thrown = Assertions.assertThrows(StatusCodeException.class, ()->paymentService.createTransaction(request));
         assertEquals("Invalid statusCode.", thrown.getMessage());
     }
+
+    @Test
+    @Description("Tests for when the order does exist, but the status of the order means it is not awaiting payment")
+    @DisplayName("Invalid status")
+    void UnitTest_OrderHasInvalidStatus() {
+        o.setStatus(OrderStatus.AWAITING_COLLECTION);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        CreateTransactionRequest request = new CreateTransactionRequest(o1UUID, transactionAddress);
+        Throwable thrown = Assertions.assertThrows(StatusCodeException.class, ()->paymentService.createTransaction(request));
+        assertEquals("Invalid statusCode.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the order does exist, and the transaction needs to be created")
+    @DisplayName("Valid Transaction creation")
+    void UnitTest_OrderIsValidAndTransactionCreated() {
+        o.setStatus(OrderStatus.AWAITING_PAYMENT);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+        CreateTransactionRequest request = new CreateTransactionRequest(o1UUID, transactionAddress);
+        assertDoesNotThrow(()->paymentService.createTransaction(request));
+    }
+
 }
