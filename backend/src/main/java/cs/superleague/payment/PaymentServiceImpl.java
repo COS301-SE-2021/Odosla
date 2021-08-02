@@ -497,7 +497,7 @@ import java.util.List;50"
             throw new InvalidRequestException("The order has no orderID.");
         }
         if(!orderRepo.findById(order.getOrderID()).isPresent()){
-            throw new InvalidRequestException("The order does not exist in the database");
+            throw new InvalidRequestException("The order does not exist in the database.");
         }
         // Need to implement actual verification of transaction here will look at PayFast
         if(order.getStatus() != OrderStatus.VERIFYING){
