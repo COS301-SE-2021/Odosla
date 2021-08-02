@@ -2,22 +2,15 @@ package cs.superleague.user.responses;
 
 import java.util.Date;
 
-public class LoginResponse {
-
-    private final String Token;
+public class RegisterShopperResponse {
     private final boolean success;
     private final Date timestamp;
     private final String message;
 
-    public LoginResponse(String token, boolean success, Date timestamp, String message) {
-        Token = token;
+    public RegisterShopperResponse(boolean success, Date timestamp, String message) {
         this.success = success;
         this.timestamp = timestamp;
         this.message = message;
-    }
-
-    public String getToken() {
-        return Token;
     }
 
     public boolean isSuccess() {

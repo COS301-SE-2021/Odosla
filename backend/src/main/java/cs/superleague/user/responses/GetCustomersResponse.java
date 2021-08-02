@@ -1,23 +1,25 @@
 package cs.superleague.user.responses;
 
 import java.util.Date;
+import java.util.List;
 
-public class LoginResponse {
+public class GetCustomersResponse {
 
-    private final String Token;
+    private final List customerList;
     private final boolean success;
     private final Date timestamp;
     private final String message;
 
-    public LoginResponse(String token, boolean success, Date timestamp, String message) {
-        Token = token;
+
+    public GetCustomersResponse(List customerList, boolean success, Date timestamp, String message) {
+        this.customerList = customerList;
         this.success = success;
         this.timestamp = timestamp;
         this.message = message;
     }
 
-    public String getToken() {
-        return Token;
+    public List getCustomerList() {
+        return customerList;
     }
 
     public boolean isSuccess() {

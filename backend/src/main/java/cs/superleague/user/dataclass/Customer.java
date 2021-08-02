@@ -7,12 +7,16 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
+import java.util.List;
 
 @Entity
 @Table
 public class Customer extends User {
+
+    @Id
+    private UUID customerID;
 
     @OneToOne(cascade={CascadeType.ALL})
     private GeoPoint address;
@@ -35,13 +39,30 @@ public class Customer extends User {
 
     }
 
-    public Customer(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart, Preference preference, Wallet wallet) {
-        super(name, surname, username, id, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+    public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID, GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart, Preference preference, Wallet wallet) {
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        this.customerID = customerID;
         this.address = address;
         this.groceryLists = groceryLists;
         this.shoppingCart = shoppingCart;
         this.preference = preference;
         this.wallet = wallet;
+    }
+
+    public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID) {
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        this.customerID = customerID;
+    }
+
+    public Customer(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID customerID) {
+        super(name, surname, email, phoneNumber, password, activationCode, accountType);
+        this.customerID = customerID;
+    }
+
+    public Customer(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID customerID, GeoPoint address) {
+        super(name, surname, email, phoneNumber, password, activationCode, accountType);
+        this.customerID = customerID;
+        this.address = address;
     }
 
     public GeoPoint getAddress() {
