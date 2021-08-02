@@ -76,7 +76,7 @@ public class MakeGroceryListIntegrationTest {
         groceryLists = groceryListRepo.saveAll(groceryLists);
 
         customer = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, listOfItems);
+                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, listOfItems, null, null);
 
         customer = customerRepo.save(customer);
     }

@@ -5,27 +5,20 @@ import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.InvalidRequestException;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.requests.GetShoppingCartRequest;
-import cs.superleague.user.responses.GetShoppingCartResponse;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class GetShoppingCartIntegrationTest {
@@ -77,9 +70,12 @@ public class GetShoppingCartIntegrationTest {
 
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
-        customer = new Customer(deliveryAddress, groceryLists, shoppingCart);
-        customerEMPTYCart = new Customer(deliveryAddress, groceryLists, shoppingCartEMPTY);
-        customerNULLCart = new Customer(deliveryAddress, groceryLists, shoppingCartNULL);
+        customer = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
+                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCart, null, null);
+        customerEMPTYCart = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
+                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCartEMPTY, null, null);
+        customerNULLCart = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
+                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCartNULL, null, null);
     }
 
     @AfterEach
