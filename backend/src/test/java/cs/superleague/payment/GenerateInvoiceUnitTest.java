@@ -75,7 +75,7 @@ public class GenerateInvoiceUnitTest {
         item = new Item("Heinz Tamatoe Sauce","123456","123456",storeID,36.99,1,"description","img/");
         listOfItems.add(item);
         order = new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, 0.0, OrderType.DELIVERY, awaitingPayment, listOfItems, 0.0, null, null, false);
-        transaction = new Transaction(Calendar.getInstance(), order, 0);
+        transaction = new Transaction(UUID.randomUUID(), Calendar.getInstance(), order, 0, "");
     }
 
     @Test

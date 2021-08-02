@@ -102,7 +102,7 @@ public class GenerateInvoiceIntegrationTest {
         // Assigning order
         order =new Order(orderID, userID, storeID, shopperID, Calendar.getInstance(), null, totalCost, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, 0.0, deliveryAddress, storeAddress, false);
 
-        transaction = new Transaction(transactionID, Calendar.getInstance(), order, 0);
+        transaction = new Transaction(transactionID, Calendar.getInstance(), order, 0, "");
 
         invoice = new Invoice(invoiceID, userID, Calendar.getInstance(), "Invoice Successfully Retrieved", 0.0, listOfItems);
         // adding orders to the orders list
