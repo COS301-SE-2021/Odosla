@@ -1,8 +1,10 @@
 package cs.superleague.user.dataclass;
 
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 import java.util.UUID;
 
+@MappedSuperclass
 public class User {
 
     /* Attributes */

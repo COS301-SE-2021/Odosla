@@ -8,14 +8,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("userServiceImpl")
+@PropertySource(value = {"classpath:application.properties"})
 public class UserServiceImpl implements UserService{
 
     private final ShopperRepo shopperRepo;
@@ -32,6 +36,30 @@ public class UserServiceImpl implements UserService{
         this.adminRepo=adminRepo;
         this.customerRepo = customerRepo;
         this.groceryListRepo = groceryListRepo;
+    }
+
+    @Override
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException {
+        GetShopperByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetShopperByUUIDRequest request - could not return shopper entity");
+            }
+
+            Shopper shopperEntity=null;
+            try {
+                shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){}
+            if(shopperEntity==null) {
+                throw new UserDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
+            }
+            response=new GetShopperByUUIDResponse(shopperEntity, Calendar.getInstance().getTime(),"Shopper entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetShopperByUUID request is null - could not return Shopper entity");
+        }
+        return response;
     }
 
     @Override //unfinished
@@ -544,7 +572,7 @@ public class UserServiceImpl implements UserService{
         switch (request.getUserType()){
             case DRIVER:
                 assert driverRepo!=null;
-                Driver driverToLogin=driverRepo.findDriver(request.getEmail());
+                Driver driverToLogin=driverRepo.findDriverByEmail(request.getEmail());
                 if (driverToLogin==null){
                     throw new DriverDoesNotExistException("Driver does not exist");
                 }
@@ -556,7 +584,7 @@ public class UserServiceImpl implements UserService{
 
             case SHOPPER:
                 assert shopperRepo!=null;
-                Shopper shopperToLogin=shopperRepo.findShopper(request.getEmail());
+                Shopper shopperToLogin=shopperRepo.findShopperByEmail(request.getEmail());
                 if(shopperToLogin==null){
                     throw new ShopperDoesNotExistException("Shopper does not exist");
                 }
@@ -568,7 +596,7 @@ public class UserServiceImpl implements UserService{
 
             case ADMIN:
                 assert adminRepo!=null;
-                Admin adminToLogin=adminRepo.findAdmin(request.getEmail());
+                Admin adminToLogin=adminRepo.findAdminByEmail(request.getEmail());
                 if(adminToLogin==null){
                     throw new AdminDoesNotExistException("Admin does not exist");
                 }
@@ -580,7 +608,7 @@ public class UserServiceImpl implements UserService{
 
             case CUSTOMER:
                 assert customerRepo!=null;
-                Customer customerToLogin=customerRepo.findCustomer(request.getEmail());
+                Customer customerToLogin=customerRepo.findCustomerByEmail(request.getEmail());
                 if(customerToLogin==null){
                     throw new CustomerDoesNotExistException("Customer does not exist");
                 }
@@ -652,7 +680,7 @@ public class UserServiceImpl implements UserService{
 
                 case SHOPPER:
                     assert shopperRepo!=null;
-                    Shopper shopperToVerify=shopperRepo.findShopper(request.getEmail());
+                    Shopper shopperToVerify=shopperRepo.findShopperByEmail(request.getEmail());
                     if(shopperToVerify==null){
                         throw new ShopperDoesNotExistException("Shopper Does Not Exist in database");
                     }
@@ -669,7 +697,7 @@ public class UserServiceImpl implements UserService{
 
                 case DRIVER:
                     assert driverRepo!=null;
-                    Driver driverToVerify=driverRepo.findDriver(request.getEmail());
+                    Driver driverToVerify=driverRepo.findDriverByEmail(request.getEmail());
                     if(driverToVerify==null){
                         throw new DriverDoesNotExistException("Driver does not exist in database");
                     }
@@ -686,7 +714,7 @@ public class UserServiceImpl implements UserService{
 
                 case CUSTOMER:
                     assert customerRepo!=null;
-                    Customer customerToVerify=customerRepo.findCustomer(request.getEmail());
+                    Customer customerToVerify=customerRepo.findCustomerByEmail(request.getEmail());
                     if(customerToVerify==null){
                         throw new CustomerDoesNotExistException("Customer does not exist in database");
                     }
@@ -703,7 +731,7 @@ public class UserServiceImpl implements UserService{
 
                 case ADMIN:
                     assert adminRepo!=null;
-                    Admin adminToVerify=adminRepo.findAdmin(request.getEmail());
+                    Admin adminToVerify=adminRepo.findAdminByEmail(request.getEmail());
                     if(adminToVerify==null){
                         throw new AdminDoesNotExistException("Admin does not exist in database");
                     }

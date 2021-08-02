@@ -13,10 +13,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -70,12 +67,12 @@ public class GetShoppingCartIntegrationTest {
 
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
-        customer = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCart, null, null);
-        customerEMPTYCart = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCartEMPTY, null, null);
-        customerNULLCart = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCartNULL, null, null);
+        customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+        customerEMPTYCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCartEMPTY, null, null);
+        customerNULLCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCartNULL, null, null);
     }
 
     @AfterEach

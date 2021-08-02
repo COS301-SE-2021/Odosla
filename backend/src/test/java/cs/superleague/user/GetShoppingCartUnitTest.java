@@ -72,12 +72,12 @@ public class GetShoppingCartUnitTest {
 
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
-        customer = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCart, null, null);
-        customerEMPTYCart = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCartEMPTY, null, null);
-        customerNULLCart = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, shoppingCartNULL, null, null);
+        customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+        customerEMPTYCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCartEMPTY, null, null);
+        customerNULLCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCartNULL, null, null);
     }
 
     @AfterEach

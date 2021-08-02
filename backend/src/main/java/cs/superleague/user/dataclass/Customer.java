@@ -80,4 +80,16 @@ public class Customer extends User {
     public List<Item> getShoppingCart() {
         return shoppingCart;
     }
+
+    public UUID getCustomerID() {
+        return customerID;
+    }
+
+    public Preference getPreference() {
+        return preference;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
 }

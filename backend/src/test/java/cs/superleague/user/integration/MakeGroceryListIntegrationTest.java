@@ -11,20 +11,20 @@ import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
+import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.MakeGroceryListRequest;
 import cs.superleague.user.responses.MakeGroceryListResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ComponentScan(basePackages = {"cs.superleague.user.repos"})
 public class MakeGroceryListIntegrationTest {
 
     @Autowired
@@ -75,8 +75,8 @@ public class MakeGroceryListIntegrationTest {
 
         groceryLists = groceryListRepo.saveAll(groceryLists);
 
-        customer = new Customer("D", "S", "DS77", userID, "ds@smallClub.com", "0721234567",
-                "", Calendar.getInstance(), "", "", "", true, UserType.CUSTOMER, deliveryAddress, groceryLists, listOfItems, null, null);
+        customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
 
         customer = customerRepo.save(customer);
     }

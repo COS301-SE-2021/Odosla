@@ -8,6 +8,8 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
+    GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException;
+
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException;
     public ScanItemResponse scanItem(ScanItemRequest request);
     public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
