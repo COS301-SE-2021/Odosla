@@ -5,18 +5,25 @@ import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.AlreadyExistsException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.requests.GetShoppingCartRequest;
+import cs.superleague.user.requests.RegisterCustomerRequest;
+import cs.superleague.user.responses.RegisterCustomerResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class RegisterCustomerIntegrationTest {
@@ -47,8 +54,15 @@ public class RegisterCustomerIntegrationTest {
     List<Item> shoppingCartNULL = new ArrayList<>();
     List<Item> shoppingCartEMPTY = new ArrayList<>();
 
+    RegisterCustomerRequest request;
+
+    Calendar today;
     @BeforeEach
     void setUp() {
+        today = Calendar.getInstance();
+        today.add(Calendar.DATE, 7);
+        String expirationDate = new SimpleDateFormat("yyyy-MM-dd").format(today.getTime());
+
         userID = UUID.randomUUID();
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
@@ -66,88 +80,177 @@ public class RegisterCustomerIntegrationTest {
 
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
-        groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
-        groceryLists.add(groceryList);
-        customer = new Customer(deliveryAddress, groceryLists, shoppingCart);
-        customerEMPTYCart = new Customer(deliveryAddress, groceryLists, shoppingCartEMPTY);
-        customerNULLCart = new Customer(deliveryAddress, groceryLists, shoppingCartNULL);
+        customer = new Customer("D", "S", "DS77", userID, "ds@smallClubUnited.com", "0721234567", "ewtryuj57iuhf",
+                today, UUID.randomUUID().toString(), UUID.randomUUID().toString(), expirationDate, true, UserType.CUSTOMER,
+                deliveryAddress, null, null);
+
+        customerRepo.save(customer);
     }
 
     @AfterEach
     void tearDown(){
+        customerRepo.deleteAll();
     }
-
 
     @Test
     @DisplayName("When request object is not specified")
     void IntegrationTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(null));
-        assertEquals("GetShoppingCart Request is null - could retrieve shopping cart", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(null));
+        assertEquals("RegisterCustomer Request is null - Could not register user as a customer", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void IntegrationTest_testingNullRequestUserIDParameter(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(request));
-        assertEquals("UserID is null - could retrieve shopping cart", thrown.getMessage());
-    }
-
-/*    @Test
-    @DisplayName("When customer with given UserID does not exist")
-    void IntegrationTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID());
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
-        assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
+    @DisplayName("When userType parameter is not Invalid - Shopper")
+    void IntegrationTest_testingInvalidUserTypeParameter_Shopper(){
+        request = new RegisterCustomerRequest("", "", "", "", "", "", today, "", "","",
+                true, UserType.SHOPPER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("User type is not Customer - Could not register user as a customer", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When a null shoppingCart is returned")
-    void UnitTest_ShoppingCartDoesNotExist_NULL(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerNULLCart));
+    @DisplayName("When userType parameter is not Invalid - Admin")
+    void IntegrationTest_testingInvalidUserTypeParameter_Admin(){
+        request = new RegisterCustomerRequest("", "", "", "", "", "", today, "", "","",
+                true, UserType.ADMIN, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("User type is not Customer - Could not register user as a customer", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When userType parameter is not Invalid - Driver")
+    void IntegrationTest_testingInvalidUserTypeParameter_Driver(){
+        request = new RegisterCustomerRequest("", "", "", "", "", "", today, "", "","",
+                true, UserType.DRIVER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("User type is not Customer - Could not register user as a customer", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When userType parameter is not Invalid - Null")
+    void IntegrationTest_testingInvalidUserTypeParameter_Null(){
+        request = new RegisterCustomerRequest("", "", "", "", "", "", today, "", "","",
+                true, null, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("User type is not Customer - Could not register user as a customer", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When name parameter is valid - Null")
+    void IntegrationTest_testingNameParameter_Null(){
+        request = new RegisterCustomerRequest(null, "", "", "", "", "", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Name cannot be null - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When surname parameter is valid - Null")
+    void IntegrationTest_testingSurnameParameter_Null(){
+        request = new RegisterCustomerRequest("D", null, "", "", "", "", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Surname cannot be null - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When username parameter is valid - Null")
+    void IntegrationTest_testingUsernameParameter_Null(){
+        request = new RegisterCustomerRequest("D", "S", null, "", "", "", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Username cannot be null - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When email parameter is valid - Null")
+    void IntegrationTest_testingEmailParameter_Null(){
+        request = new RegisterCustomerRequest("D", "S", "DS77", null, "", "", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Email cannot be null - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When phone number parameter is valid - Null")
+    void IntegrationTest_testingPhoneNumberParameter_Null(){
+        request = new RegisterCustomerRequest("D", "S", "DS77", "ds@smallClubUnited.com", null, "", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Phone Number cannot be null - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When password parameter is valid - Null")
+    void IntegrationTest_testingPasswordParameter_Null(){
+        request = new RegisterCustomerRequest("D", "S", "DS77", "ds@smallClubUnited.com", "0721234567",
+                null, today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Password cannot be null - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When username parameter exists")
+    void IntegrationTest_testingUsernameExists(){
+        request = new RegisterCustomerRequest("D", "S", "DS77", "ds@smallClubUnited.com", "0721234567",
+                "ewtryuj57iuhf", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+
+        Throwable thrown = Assertions.assertThrows(AlreadyExistsException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Username already exists - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When email parameter exists")
+    void IntegrationTest_testingEmailExists(){
+        request = new RegisterCustomerRequest("D", "S", "DS78", "ds@smallClubUnited.com", "0721234567",
+                "ewtryuj57iuhf", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+
+        Throwable thrown = Assertions.assertThrows(AlreadyExistsException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Email already exists - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When phone number parameter exists")
+    void IntegrationTest_testingPhoneNumberExists(){
+        request = new RegisterCustomerRequest("D", "S", "DS78", "ds@smallClub.com", "0721234567",
+                "ewtryuj57iuhf", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+
+        Throwable thrown = Assertions.assertThrows(AlreadyExistsException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Phone number already exists - Registration Failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the email format is Invalid")
+    void IntegrationTest_testingInvalidEmailFormat(){
+        request = new RegisterCustomerRequest("D", "S", "DS78", "dsSmallClub.com", "0721234568",
+                "ewtryuj57iuhf", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(request));
+        assertEquals("Invalid email - Registration failed", thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("When the registration is successful")
+    void IntegrationTest_SuccessfulRegistration(){
+        request = new RegisterCustomerRequest("D", "S", "DS78", "ds@smallClub.com", "0721234568",
+                "ewtryuj57iuhf", today, "", "","",
+                true, UserType.CUSTOMER, deliveryAddress);
+
+
         try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping Cart does not have any items", response.getMessage());
-            assertFalse(response.isSuccess());
-            assertNull(response.getShoppingCart());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
+            RegisterCustomerResponse response = userService.registerCustomer(request);
 
-    @Test
-    @DisplayName("When an empty shoppingCart is returned")
-    void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerEMPTYCart));
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping Cart does not have any items", response.getMessage());
-            assertFalse(response.isSuccess());
-            assertEquals(0, response.getShoppingCart().size());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    @DisplayName("When the groceryList Creation is successful")
-    void UnitTest_testingSuccessfulGroceryListCreation(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping cart successfully retrieved", response.getMessage());
+            assertEquals(request.getName(), response.getCustomer().getName());
+            assertEquals("Customer successfully registered", response.getMessage());
             assertTrue(response.isSuccess());
-            assertEquals(shoppingCart, response.getShoppingCart());
-        }catch(Exception e){
+        }catch (Exception e){
             e.printStackTrace();
             fail();
         }
     }
- */
 }
