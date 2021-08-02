@@ -1,5 +1,6 @@
 package cs.superleague.user;
 
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.Shopper;
@@ -8,21 +9,12 @@ import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.requests.CompletePackagingOrderRequest;
-import cs.superleague.user.requests.GetShopperByUUIDRequest;
-import cs.superleague.user.requests.MakeGroceryListRequest;
-import cs.superleague.user.requests.ScanItemRequest;
-import cs.superleague.user.responses.CompletePackagingOrderResponse;
-import cs.superleague.user.responses.GetShopperByUUIDResponse;
-import cs.superleague.user.responses.MakeGroceryListResponse;
-import cs.superleague.user.responses.ScanItemResponse;
+import cs.superleague.user.requests.*;
+import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
@@ -156,5 +148,42 @@ public class UserServiceImpl implements UserService{
         customerRepo.save(customer);
 
         return new MakeGroceryListResponse(groceryList, true, message);
+    }
+
+    @Override
+    public GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+        UUID userID;
+        Optional<Customer> customerOptional;
+        Customer customer;
+        List<Item> shoppingCart;
+        String message;
+        boolean success;
+
+        if(request == null){
+            throw new InvalidRequestException("GetShoppingCart Request is null - could retrieve shopping cart");
+        }
+
+        if(request.getUserID() == null){
+            throw new InvalidRequestException("UserID is null - could retrieve shopping cart");
+        }
+
+        userID = request.getUserID();
+        customerOptional = customerRepo.findById(userID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could not retrieve shopping cart");
+        }
+
+        customer = customerOptional.get();
+        shoppingCart = customer.getShoppingCart();
+
+        if(shoppingCart == null || shoppingCart.isEmpty()){
+            message = "Shopping Cart does not have any items";
+            success = false;
+        }else{
+            message = "Shopping cart successfully retrieved";
+            success = true;
+        }
+
+        return new GetShoppingCartResponse(shoppingCart, message, success);
     }
 }
