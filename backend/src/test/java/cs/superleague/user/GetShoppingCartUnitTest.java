@@ -7,9 +7,8 @@ import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.GroceryListRepo;
-import cs.superleague.user.requests.MakeGroceryListRequest;
-import cs.superleague.user.responses.MakeGroceryListResponse;
+import cs.superleague.user.requests.GetShoppingCartRequest;
+import cs.superleague.user.responses.GetShoppingCartResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,19 +26,18 @@ import static org.mockito.Mockito.when;
 
 /** Testing use cases with JUnit testing and Mockito */
 @ExtendWith(MockitoExtension.class)
-public class MakeGroceryListUnitTest {
+public class GetShoppingCartUnitTest {
 
     @Mock
     CustomerRepo customerRepo;
-
-    @Mock
-    GroceryListRepo groceryListRepo;
 
     @InjectMocks
     private UserServiceImpl userService;
 
     GroceryList groceryList;
     Customer customer;
+    Customer customerNULLCart;
+    Customer customerEMPTYCart;
     Item I1;
     Item I2;
     Item item;
@@ -52,6 +50,9 @@ public class MakeGroceryListUnitTest {
 
     List<Item> listOfItems = new ArrayList<>();
     List<GroceryList> groceryLists = new ArrayList<>();
+    List<Item> shoppingCart = new ArrayList<>();
+    List<Item> shoppingCartNULL = new ArrayList<>();
+    List<Item> shoppingCartEMPTY = new ArrayList<>();
     @BeforeEach
     void setUp() {
         userID = UUID.randomUUID();
@@ -65,11 +66,17 @@ public class MakeGroceryListUnitTest {
         listOfItems.add(I1);
         listOfItems.add(I2);
 
+        shoppingCartNULL = null;
+        shoppingCart.add(I1);
+        shoppingCart.add(I2);
+
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
-        customer = new Customer(deliveryAddress, groceryLists);
+        customer = new Customer(deliveryAddress, groceryLists, shoppingCart);
+        customerEMPTYCart = new Customer(deliveryAddress, groceryLists, shoppingCartEMPTY);
+        customerNULLCart = new Customer(deliveryAddress, groceryLists, shoppingCartNULL);
     }
 
     @AfterEach
@@ -80,70 +87,70 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(null));
-        assertEquals("MakeGroceryList Request is null - could not make grocery list", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(null));
+        assertEquals("GetShoppingCart Request is null - could retrieve shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
     void UnitTest_testingNullRequestUserIDParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfItems, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("UserID is null - could not make grocery list", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When items parameter is not specified")
-    void UnitTest_testingNullRequestItemsParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, item, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Item list empty - could not make the grocery list", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When items parameter is not specified")
-    void UnitTest_testingNullRequestItemsListParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, item, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Item list empty - could not make the grocery list", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When name parameter is not specified")
-    void UnitTest_testingNullRequestNameParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(request));
+        assertEquals("UserID is null - could retrieve shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("User with given userID does not exist - could not make the grocery list", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
+        assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When groceryList with given name exists")
-    void UnitTest_testingExistingGroceryList(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Grocery List Name exists - could not make the grocery list", thrown.getMessage());
+    @DisplayName("When a null shoppingCart is returned")
+    void UnitTest_ShoppingCartDoesNotExist_NULL(){
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerNULLCart));
+        try{
+            GetShoppingCartResponse response = userService.getShoppingCart(request);
+            assertEquals("Shopping Cart does not have any items", response.getMessage());
+            assertFalse(response.isSuccess());
+            assertNull(response.getShoppingCart());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("When an empty shoppingCart is returned")
+    void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerEMPTYCart));
+        try{
+            GetShoppingCartResponse response = userService.getShoppingCart(request);
+            assertEquals("Shopping Cart does not have any items", response.getMessage());
+            assertFalse(response.isSuccess());
+            assertEquals(0, response.getShoppingCart().size());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' bachelor party");
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
-            MakeGroceryListResponse response = userService.MakeGroceryList(request);
-            assertEquals("Grocery List successfully created", response.getMessage());
+            GetShoppingCartResponse response = userService.getShoppingCart(request);
+            assertEquals("Shopping cart successfully retrieved", response.getMessage());
             assertTrue(response.isSuccess());
+            assertEquals(shoppingCart, response.getShoppingCart());
         }catch(Exception e){
             e.printStackTrace();
             fail();
