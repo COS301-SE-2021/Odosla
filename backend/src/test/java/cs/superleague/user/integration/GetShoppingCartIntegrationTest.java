@@ -1,7 +1,8 @@
-package cs.superleague.user;
+package cs.superleague.user.integration;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.exceptions.InvalidRequestException;
@@ -15,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +27,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-/** Testing use cases with JUnit testing and Mockito */
-@ExtendWith(MockitoExtension.class)
-public class GetShoppingCartUnitTest {
+@SpringBootTest
+public class GetShoppingCartIntegrationTest {
 
-    @Mock
+    @Autowired
     CustomerRepo customerRepo;
 
-    @InjectMocks
+    @Autowired
     private UserServiceImpl userService;
 
     GroceryList groceryList;
@@ -53,6 +55,7 @@ public class GetShoppingCartUnitTest {
     List<Item> shoppingCart = new ArrayList<>();
     List<Item> shoppingCartNULL = new ArrayList<>();
     List<Item> shoppingCartEMPTY = new ArrayList<>();
+
     @BeforeEach
     void setUp() {
         userID = UUID.randomUUID();
@@ -86,24 +89,23 @@ public class GetShoppingCartUnitTest {
 
     @Test
     @DisplayName("When request object is not specified")
-    void UnitTest_testingNullRequestObject(){
+    void IntegrationTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(null));
         assertEquals("GetShoppingCart Request is null - could retrieve shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
-    void UnitTest_testingNullRequestUserIDParameter(){
+    void IntegrationTest_testingNullRequestUserIDParameter(){
         GetShoppingCartRequest request  = new GetShoppingCartRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(request));
         assertEquals("UserID is null - could retrieve shopping cart", thrown.getMessage());
     }
 
-    @Test
+/*    @Test
     @DisplayName("When customer with given UserID does not exist")
-    void UnitTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
-        when(customerRepo.findById(Mockito.any())).thenReturn(null);
+    void IntegrationTest_testingInvalidUser(){
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID());
         Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
         assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
     }
@@ -156,4 +158,5 @@ public class GetShoppingCartUnitTest {
             fail();
         }
     }
+ */
 }
