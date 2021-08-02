@@ -2,6 +2,8 @@ package cs.superleague.user.dataclass;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Item;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -16,18 +18,15 @@ public class Customer extends User {
     private GeoPoint address;
 
     @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<GroceryList> groceryLists;
 
     @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> shoppingCart;
 
     public Customer(){
 
-    }
-
-    public Customer(GeoPoint address, List<GroceryList> groceryLists) {
-        this.address = address;
-        this.groceryLists = groceryLists;
     }
 
     public Customer(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart) {
