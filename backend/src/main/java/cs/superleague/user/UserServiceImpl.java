@@ -539,6 +539,10 @@ public class UserServiceImpl implements UserService{
         LoginResponse response=null;
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
         UUID userID=null;
+        Shopper shopperUser=null;
+        Customer customerUser=null;
+        Admin adminUser=null;
+        Driver driverUser=null;
         switch (request.getUserType()){
             case DRIVER:
                 assert driverRepo!=null;
@@ -550,6 +554,7 @@ public class UserServiceImpl implements UserService{
                     throw new InvalidCredentialsException("Password is incorrect");
                 }
                 userID=driverToLogin.getDriverID();
+                driverUser=driverToLogin;
 
             case SHOPPER:
                 assert shopperRepo!=null;
@@ -561,6 +566,7 @@ public class UserServiceImpl implements UserService{
                     throw new InvalidCredentialsException("Password is incorrect");
                 }
                 userID=shopperToLogin.getShopperID();
+                shopperUser=shopperToLogin;
 
             case ADMIN:
                 assert adminRepo!=null;
@@ -572,6 +578,7 @@ public class UserServiceImpl implements UserService{
                     throw new InvalidCredentialsException("Password is incorrect");
                 }
                 userID=adminToLogin.getAdminID();
+                adminUser=adminToLogin;
 
             case CUSTOMER:
                 assert customerRepo!=null;
@@ -583,6 +590,7 @@ public class UserServiceImpl implements UserService{
                     throw new InvalidCredentialsException("Password is incorrect");
                 }
                 userID=customerToLogin.getCustomerID();
+                customerUser=customerToLogin;
         }
 
         Map<String, Object> head = new HashMap<>();
@@ -592,6 +600,26 @@ public class UserServiceImpl implements UserService{
         String JWTToken = Jwts.builder().setHeader(head).setClaims(claims).setSubject(request.getEmail()).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 60 * 1000)).signWith(SignatureAlgorithm.HS512, secret).compact();
         response=new LoginResponse(JWTToken,true,Calendar.getInstance().getTime(), "User successfully logged in");
+
+        switch (request.getUserType()){
+            case SHOPPER:
+                assert shopperRepo!=null;
+                shopperUser.setActive(true);
+                shopperRepo.save(shopperUser);
+            case DRIVER:
+                assert driverRepo!=null;
+                driverUser.setActive(true);
+                driverRepo.save(driverUser);
+            case CUSTOMER:
+                assert customerRepo!=null;
+                customerUser.setActive(true);
+                customerRepo.save(customerUser);
+            case ADMIN:
+                assert adminRepo!=null;
+                adminUser.setActive(true);
+                adminRepo.save(adminUser);
+
+        }
         return response;
     }
 
