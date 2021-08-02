@@ -3,7 +3,9 @@ package cs.superleague.user.dataclass;
 import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table
@@ -20,6 +22,12 @@ public class Customer extends User {
     }
 
     public Customer(GeoPoint address, List<GroceryList> groceryLists) {
+        this.address = address;
+        this.groceryLists = groceryLists;
+    }
+
+    public Customer(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, GeoPoint address, List<GroceryList> groceryLists) {
+        super(name, surname, username, id, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
         this.address = address;
         this.groceryLists = groceryLists;
     }
