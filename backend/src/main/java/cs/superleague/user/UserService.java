@@ -15,7 +15,7 @@ public interface UserService {
     public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
     public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
     public LoginResponse loginUser(LoginRequest request);
-
+    public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
 
 
 }
