@@ -221,7 +221,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(request!=null){
 
             if(request.getStoreID()==null){
-                throw new InvalidRequestException("Store ID paramter in request can't be null - can't get next queued");
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
             Store store;
 
@@ -232,37 +232,31 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
 
-            List<Order> orderqueue= store.getOrderQueue();
+            if(store == null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
 
-            if(orderqueue.size()==0){
-                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);
+            List<Order> orderQueue= store.getOrderQueue();
+
+            if(orderQueue.size()==0){
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
 
-            Date oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
-            Order correspondingOrder=orderqueue.get(0);
+            Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
+            Order correspondingOrder=orderQueue.get(0);
 
-            for (Order o: orderqueue){
-                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
-                    oldestProcssedDate=o.getProcessDate().getTime();
+            for (Order o: orderQueue){
+                if(oldestProcessedDate.after(o.getProcessDate().getTime())){
+                    oldestProcessedDate=o.getProcessDate().getTime();
                     correspondingOrder=o;
                 }
             }
 
-            orderqueue.remove(correspondingOrder);
-            store.setOrderQueue(orderqueue);
+            orderQueue.remove(correspondingOrder);
+            store.setOrderQueue(orderQueue);
 
-            oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
-            correspondingOrder=orderqueue.get(0);
-
-            for (Order o: orderqueue){
-                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
-                    oldestProcssedDate=o.getProcessDate().getTime();
-                    correspondingOrder=o;
-                }
-            }
-
-            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderqueue,correspondingOrder);
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderQueue,correspondingOrder);
 
         }
         else{
