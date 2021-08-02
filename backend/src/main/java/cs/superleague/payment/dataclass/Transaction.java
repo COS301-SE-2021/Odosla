@@ -7,7 +7,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "transactionTable")
 public class Transaction {
-
     @Id
     private UUID transactionID;
     private Calendar date;
@@ -15,24 +14,29 @@ public class Transaction {
     @OneToOne(cascade={CascadeType.ALL})
     private Order order;
 
-    private float amount;
+    private double amount;
+    private String transactionAddress;
+
     //private PayOption card;
 
 
     public Transaction() {
     }
 
-    public Transaction(Calendar date, Order order, float amount) {
-        this.date = date;
-        this.order = order;
-        this.amount = amount;
-    }
-
-    public Transaction(UUID transactionID, Calendar date, Order order, float amount) {
+    public Transaction(UUID transactionID, Calendar date, Order order, double amount, String transactionAddress) {
         this.transactionID = transactionID;
         this.date = date;
         this.order = order;
         this.amount = amount;
+        this.transactionAddress = transactionAddress;
+    }
+
+    public UUID getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(UUID transactionID) {
+        this.transactionID = transactionID;
     }
 
     public Calendar getDate() {
@@ -51,15 +55,19 @@ public class Transaction {
         this.order = order;
     }
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
-    public UUID getTransactionID() {
-        return transactionID;
+    public String getTransactionAddress() {
+        return transactionAddress;
+    }
+
+    public void setTransactionAddress(String transactionAddress) {
+        this.transactionAddress = transactionAddress;
     }
 }
