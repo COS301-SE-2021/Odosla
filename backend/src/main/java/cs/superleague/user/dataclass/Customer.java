@@ -43,6 +43,14 @@ public class Customer extends User {
 
     public Customer() {}
 
+    public UUID getCustomerID() {
+        return customerID;
+    }
+
+    public void setCustomerID(UUID customerID) {
+        this.customerID = customerID;
+    }
+
     public GeoPoint getAddress() {
         return address;
     }

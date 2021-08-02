@@ -1,6 +1,8 @@
 package cs.superleague.user;
 
+import cs.superleague.user.exceptions.DriverDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
 
@@ -14,7 +16,7 @@ public interface UserService {
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
     public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
     public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
-    public LoginResponse loginUser(LoginRequest request);
+    public LoginResponse loginUser(LoginRequest request) throws UserException;
     public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
 
 

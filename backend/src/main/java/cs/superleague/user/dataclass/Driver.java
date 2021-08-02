@@ -34,6 +34,14 @@ public class Driver extends User {
 
     }
 
+    public UUID getDriverID() {
+        return driverID;
+    }
+
+    public void setDriverID(UUID driverID) {
+        this.driverID = driverID;
+    }
+
     public double getRating() {
         return rating;
     }

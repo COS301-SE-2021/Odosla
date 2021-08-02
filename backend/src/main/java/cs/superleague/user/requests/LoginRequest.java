@@ -6,11 +6,21 @@ public class LoginRequest {
 
     private String email;
     private String password;
+    private UserType userType;
 
 
-    public LoginRequest(String email, String password) {
+    public LoginRequest(String email, String password,UserType userType) {
         this.email = email;
         this.password = password;
+        this.userType=userType;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public String getEmail() {

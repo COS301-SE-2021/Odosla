@@ -5,16 +5,17 @@ import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
-import java.util.Calendar;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -531,9 +532,67 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    @Value("${jwt.secret}")
+    private final String secret = "odosla";
     @Override
-    public LoginResponse loginUser(LoginRequest request) {
-        return null;
+    public LoginResponse loginUser(LoginRequest request) throws UserException {
+        LoginResponse response=null;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+        UUID userID=null;
+        switch (request.getUserType()){
+            case DRIVER:
+                assert driverRepo!=null;
+                Driver driverToLogin=driverRepo.findDriver(request.getEmail());
+                if (driverToLogin==null){
+                    throw new DriverDoesNotExistException("Driver does not exist");
+                }
+                else if(!passwordEncoder.matches(request.getPassword(),driverToLogin.getPassword())){
+                    throw new InvalidCredentialsException("Password is incorrect");
+                }
+                userID=driverToLogin.getDriverID();
+
+            case SHOPPER:
+                assert shopperRepo!=null;
+                Shopper shopperToLogin=shopperRepo.findShopper(request.getEmail());
+                if(shopperToLogin==null){
+                    throw new ShopperDoesNotExistException("Shopper does not exist");
+                }
+                else if(!passwordEncoder.matches(request.getPassword(),shopperToLogin.getPassword())){
+                    throw new InvalidCredentialsException("Password is incorrect");
+                }
+                userID=shopperToLogin.getShopperID();
+
+            case ADMIN:
+                assert adminRepo!=null;
+                Admin adminToLogin=adminRepo.findAdmin(request.getEmail());
+                if(adminToLogin==null){
+                    throw new AdminDoesNotExistException("Admin does not exist");
+                }
+                else if(!passwordEncoder.matches(request.getPassword(),adminToLogin.getPassword())){
+                    throw new InvalidCredentialsException("Password is incorrect");
+                }
+                userID=adminToLogin.getAdminID();
+
+            case CUSTOMER:
+                assert customerRepo!=null;
+                Customer customerToLogin=customerRepo.findCustomer(request.getEmail());
+                if(customerToLogin==null){
+                    throw new CustomerDoesNotExistException("Customer does not exist");
+                }
+                else if(!passwordEncoder.matches(request.getPassword(),customerToLogin.getPassword())){
+                    throw new InvalidCredentialsException("Password is incorrect");
+                }
+                userID=customerToLogin.getCustomerID();
+        }
+
+        Map<String, Object> head = new HashMap<>();
+        head.put("typ", "JWT");
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("UUID", userID.toString());
+        String JWTToken = Jwts.builder().setHeader(head).setClaims(claims).setSubject(request.getEmail()).setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 60 * 1000)).signWith(SignatureAlgorithm.HS512, secret).compact();
+        response=new LoginResponse(JWTToken,true,Calendar.getInstance().getTime(), "User successfully logged in");
+        return response;
     }
 
     @Override
