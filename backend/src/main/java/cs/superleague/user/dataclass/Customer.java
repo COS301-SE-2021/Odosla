@@ -1,6 +1,7 @@
 package cs.superleague.user.dataclass;
 
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.shopping.dataclass.Item;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -17,6 +18,9 @@ public class Customer extends User {
     @OneToMany
     private List<GroceryList> groceryLists;
 
+    @OneToMany
+    private List<Item> shoppingCart;
+
     public Customer(){
 
     }
@@ -26,10 +30,17 @@ public class Customer extends User {
         this.groceryLists = groceryLists;
     }
 
-    public Customer(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, GeoPoint address, List<GroceryList> groceryLists) {
+    public Customer(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart) {
         super(name, surname, username, id, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
         this.address = address;
         this.groceryLists = groceryLists;
+        this.shoppingCart = shoppingCart;
+    }
+
+    public Customer(GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart) {
+        this.address = address;
+        this.groceryLists = groceryLists;
+        this.shoppingCart = shoppingCart;
     }
 
     public GeoPoint getAddress() {
@@ -42,5 +53,9 @@ public class Customer extends User {
 
     public List<GroceryList> getGroceryLists() {
         return groceryLists;
+    }
+
+    public List<Item> getShoppingCart() {
+        return shoppingCart;
     }
 }
