@@ -1,11 +1,15 @@
 package cs.superleague.user;
 
+import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.AlreadyExistsException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.repos.ShopperRepo;
@@ -14,7 +18,10 @@ import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
@@ -185,5 +192,113 @@ public class UserServiceImpl implements UserService{
         }
 
         return new GetShoppingCartResponse(shoppingCart, message, success);
+    }
+
+    @Override
+    public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException, AlreadyExistsException {
+
+        List<GroceryList> groceryLists = new ArrayList<>();
+        List<Item> shoppingCart = new ArrayList<>();
+        List<Customer> customers;
+        GeoPoint address = null;
+        Customer customer;
+        String name, surname, username, email, phoneNum, password;
+
+        if(request == null){
+            throw new InvalidRequestException("RegisterCustomer Request is null - Could not register user as a customer");
+        }
+
+        if(request.getAccountType() != UserType.CUSTOMER){
+            throw new InvalidRequestException("User type is not Customer - Could not register user as a customer");
+        }
+
+        if(request.getAddress() != null){
+            address = request.getAddress();
+        }
+
+        name = request.getName();
+        surname = request.getSurname();
+        username = request.getUsername();
+        email = request.getEmail();
+        phoneNum = request.getPhoneNumber();
+        password = request.getPassword();
+
+        validRegisterDetails(name, surname, username, email, phoneNum, password);
+
+        customers = customerRepo.findAll();
+
+        for (Customer c: customers) {
+            if(c.getUsername().equals(username)){
+                throw new AlreadyExistsException("Username already exists - Registration Failed");
+            }
+
+            if(c.getEmail().equals(email)){
+                throw new AlreadyExistsException("Email already exists - Registration Failed");
+            }
+
+            if(c.getPhoneNumber().equals(phoneNum)){
+                throw new AlreadyExistsException("Phone number already exists - Registration Failed");
+            }
+        }
+
+        if(!emailRegex(email)){
+            throw new InvalidRequestException("Invalid email - Registration failed");
+        }
+
+        password = hashPassword(password);
+
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.DATE, 7);
+        String expirationDate = new SimpleDateFormat("yyyy-MM-dd").format(today.getTime());
+
+        customer = new Customer(name, surname, username, UUID.randomUUID(), email, phoneNum, password,
+                today, UUID.randomUUID().toString(), UUID.randomUUID().toString(), expirationDate,
+                request.isActive(), request.getAccountType(), address, groceryLists, shoppingCart);
+
+        customerRepo.save(customer);
+
+        return new RegisterCustomerResponse(customer, true, "Customer successfully registered");
+    }
+
+    /* helper */
+    private void validRegisterDetails(String name, String surname, String username, String email,
+             String phoneNum, String password) throws InvalidRequestException{
+
+        if(name == null){
+            throw new InvalidRequestException("Name cannot be null - Registration Failed");
+        }
+
+        if(surname == null){
+            throw new InvalidRequestException("Surname cannot be null - Registration Failed");
+        }
+
+        if(username == null){
+            throw new InvalidRequestException("Username cannot be null - Registration Failed");
+        }
+
+        if(email == null){
+            throw new InvalidRequestException("Email cannot be null - Registration Failed");
+        }
+
+        if(phoneNum == null){
+            throw new InvalidRequestException("Phone Number cannot be null - Registration Failed");
+        }
+
+        if(password == null){
+            throw new InvalidRequestException("Password cannot be null - Registration Failed");
+        }
+    }
+
+    private boolean emailRegex(String email){
+        String emailRegex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private String hashPassword(String password){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        return passwordEncoder.encode(password);
     }
 }
