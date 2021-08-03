@@ -1,5 +1,12 @@
 package cs.superleague.user;
 
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.AdminRepo;
@@ -26,51 +33,42 @@ public class UserServiceImpl implements UserService{
     private final DriverRepo driverRepo;
     private final AdminRepo adminRepo;
     private final CustomerRepo customerRepo;
+    private final OrderRepo orderRepo;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, OrderRepo orderRepo){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
         this.customerRepo=customerRepo;
+        this.orderRepo= orderRepo;
     }
 
-    @Override //unfinished
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException {
+    @Override
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist {
+        CompletePackagingOrderResponse response = null;
+        if(request != null){
 
-        // Checking for valid and appropriately populated request
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
+            }
 
-        boolean invalidReq = false;
-        String invalidMessage = "";
+            Order orderEntity=null;
+            try {
+                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
-        if (request == null){
-            invalidReq = true;
-            invalidMessage = "Invalid request: null value received";
-        } else if (request.getOrderID() == null){
-            invalidReq = true;
-            invalidMessage = "Invalid request: no orderID received";
+            //TODO check the order type and call the respective user (driver or customer)
+            response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
-
-        // // Get order by ID // //
-        //Order updatedOrder = <paymentService>.getOrder(request.getOrderID());
-
-        // if (updatedOrder.getStatus != OrderStatus.PACKING){
-        //  invalidReq = true;
-        //  invalidMessage = "Invalid request: incorrect order status;
-        //}
-
-        if (invalidReq) throw new InvalidRequestException(invalidMessage);
-
-
-        // // Update the order status and create time // //
-        //.setStatus(OrderStatus.AWAITING_COLLECTION);
-
-        // <paymentService>.updateOrder(updatedOrder);
-
-
-        //unfinished
-        CompletePackagingOrderResponse response = new CompletePackagingOrderResponse();
+        else{
+            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
+        }
         return response;
 
     }

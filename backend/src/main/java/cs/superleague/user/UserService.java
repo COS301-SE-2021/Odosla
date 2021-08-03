@@ -1,5 +1,6 @@
 package cs.superleague.user;
 
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.user.exceptions.DriverDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserException;
@@ -10,7 +11,7 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException;
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist;
     public ScanItemResponse scanItem(ScanItemRequest request);
     public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
