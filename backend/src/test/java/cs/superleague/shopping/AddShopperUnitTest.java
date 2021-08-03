@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Description;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,11 +58,11 @@ public class AddShopperUnitTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
     }
@@ -147,8 +148,8 @@ public class AddShopperUnitTest {
     void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
-        AddShopperRequest request=new AddShopperRequest(shopper1.getId(),storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
+        AddShopperRequest request=new AddShopperRequest(shopper1.getShopperID(),storeUUID1);
+        when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper1,null,null);
         when(userService.getShopperByUUIDRequest(Mockito.any())).thenReturn(shopperResponse);
         AddShopperResponse response=shoppingService.addShopper(request);

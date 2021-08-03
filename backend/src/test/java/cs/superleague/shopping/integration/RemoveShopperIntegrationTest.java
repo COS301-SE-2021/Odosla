@@ -60,11 +60,11 @@ public class RemoveShopperIntegrationTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
         shopperRepo.save(shopper1);
@@ -158,7 +158,7 @@ public class RemoveShopperIntegrationTest {
     void Shopper_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
-        RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getId(),storeUUID1);
+        RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getShopperID(),storeUUID1);
         storeRepo.save(store);
         GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper1,null,null);
         RemoveShopperResponse response=ServiceSelector.getShoppingService().removeShopper(request);
@@ -170,7 +170,7 @@ public class RemoveShopperIntegrationTest {
         List<Shopper> listOfShoppersResponse=storeResponse.getShoppers();
         shopperList.remove(shopper1);
         for(int i=0;i<shopperList.size();i++){
-            assertEquals(shopperList.get(i).getId(),listOfShoppersResponse.get(i).getId());
+            assertEquals(shopperList.get(i).getShopperID(),listOfShoppersResponse.get(i).getShopperID());
         }
     }
 }

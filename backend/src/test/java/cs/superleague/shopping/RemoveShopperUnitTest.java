@@ -22,6 +22,7 @@ import cs.superleague.user.dataclass.Shopper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,11 +58,11 @@ public class RemoveShopperUnitTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
     }
@@ -164,8 +165,8 @@ public class RemoveShopperUnitTest {
     void Shopper_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
-        RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getId(),storeUUID1);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
+        RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getShopperID(),storeUUID1);
+        when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper1,null,null);
         when(userService.getShopperByUUIDRequest(Mockito.any())).thenReturn(shopperResponse);
         RemoveShopperResponse response=shoppingService.removeShopper(request);
