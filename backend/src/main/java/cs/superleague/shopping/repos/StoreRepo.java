@@ -1,5 +1,6 @@
 package cs.superleague.shopping.repos;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import cs.superleague.shopping.dataclass.Store;

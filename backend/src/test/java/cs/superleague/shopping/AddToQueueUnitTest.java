@@ -42,7 +42,7 @@ public class AddToQueueUnitTest {
         i2=new Item("Ice Cream","p012345","b012345",uuid,14.99,3,"description","img/");
         listOfItems.add(i1);
         listOfItems.add(i2);
-        cat = new Catalogue(listOfItems);
+        cat = new Catalogue(uuid,listOfItems);
         store = new Store(uuid,"Checkers",cat,2,null,null,4,true);
         order = new Order(uuid, uuid, uuid, uuid, Calendar.getInstance(), Calendar.getInstance(), 30.0, OrderType.DELIVERY, OrderStatus.PURCHASED, listOfItems, 0.0, null, null, false);
     }
@@ -89,7 +89,7 @@ public class AddToQueueUnitTest {
         order.setUserID(null);
         AddToQueueRequest request=new AddToQueueRequest(order);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addToQueue(request));
-        assertEquals("Invalid request: missing cs.superleague.user ID", thrown.getMessage());
+        assertEquals("Invalid request: missing user ID", thrown.getMessage());
     }
 
     @Test

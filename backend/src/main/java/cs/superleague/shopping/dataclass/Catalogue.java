@@ -20,7 +20,8 @@ public class Catalogue {
 
     public Catalogue() { }
 
-    public Catalogue(List<Item> items) {
+    public Catalogue(UUID storeID,List<Item> items) {
+        this.storeID=storeID;
         this.items = items;
     }
 
@@ -31,4 +32,14 @@ public class Catalogue {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
+    }
+
 }

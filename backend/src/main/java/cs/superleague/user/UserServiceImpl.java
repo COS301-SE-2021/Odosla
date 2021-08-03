@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
@@ -25,6 +26,8 @@ import cs.superleague.user.requests.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import java.util.Calendar;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
@@ -727,6 +730,30 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
+
+    @Override
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        GetShopperByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetShopperByUUIDRequest request - could not return shopper entity");
+            }
+
+            Shopper shopperEntity=null;
+            try {
+                shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){}
+            if(shopperEntity==null) {
+                throw new ShopperDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
+            }
+            response=new GetShopperByUUIDResponse(shopperEntity, Calendar.getInstance().getTime(),"Shopper entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetShopperByUUID request is null - could not return Shopper entity");
+        }
+        return response;
+    }
 
 
 }

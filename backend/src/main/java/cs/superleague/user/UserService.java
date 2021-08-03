@@ -19,6 +19,7 @@ public interface UserService {
     public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
     public LoginResponse loginUser(LoginRequest request) throws UserException;
     public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws UserException;
 
 
 }
