@@ -8,8 +8,8 @@ import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.requests.GetShoppingCartRequest;
-import cs.superleague.user.responses.GetShoppingCartResponse;
+import cs.superleague.user.requests.UpdateCustomerDetailsRequest;
+import cs.superleague.user.responses.UpdateCustomerDetailsResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -34,11 +34,8 @@ public class UpdateCustomerDetailsUnitTest {
 
     GroceryList groceryList;
     Customer customer;
-    Customer customerNULLCart;
-    Customer customerEMPTYCart;
     Item I1;
     Item I2;
-    Item item;
 
     UUID userID;
     UUID groceryListID;
@@ -50,7 +47,10 @@ public class UpdateCustomerDetailsUnitTest {
     List<GroceryList> groceryLists = new ArrayList<>();
     List<Item> shoppingCart = new ArrayList<>();
     List<Item> shoppingCartNULL = new ArrayList<>();
-    List<Item> shoppingCartEMPTY = new ArrayList<>();
+
+    UpdateCustomerDetailsRequest request;
+    UpdateCustomerDetailsResponse response;
+
     @BeforeEach
     void setUp() {
         userID = UUID.randomUUID();
@@ -59,8 +59,6 @@ public class UpdateCustomerDetailsUnitTest {
 
         I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
-        item = null;
-
         listOfItems.add(I1);
         listOfItems.add(I2);
 
@@ -74,10 +72,6 @@ public class UpdateCustomerDetailsUnitTest {
         groceryLists.add(groceryList);
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
-        customerEMPTYCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCartEMPTY, null, null);
-        customerNULLCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCartNULL, null, null);
     }
 
     @AfterEach
@@ -88,70 +82,91 @@ public class UpdateCustomerDetailsUnitTest {
     @Test
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(null));
-        assertEquals("GetShoppingCart Request is null - could retrieve shopping cart", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateCustomerDetails(null));
+        assertEquals("UpdateCustomer Request is null - Could not update customer", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
     void UnitTest_testingNullRequestUserIDParameter(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(request));
-        assertEquals("UserID is null - could retrieve shopping cart", thrown.getMessage());
+        request = new UpdateCustomerDetailsRequest(null, "Dean", "Smith", "ds@smallFC.com",
+                "0712345678", customer.getPassword(), deliveryAddress);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateCustomerDetails(request));
+        assertEquals("CustomerId is null - could not update customer", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        request = new UpdateCustomerDetailsRequest(UUID.randomUUID(), "Dean", "Smith", "ds@smallFC.com",
+                "0712345678", customer.getPassword(), deliveryAddress);
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
-        assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.updateCustomerDetails(request));
+        assertEquals("User with given userID does not exist - could not update customer", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When a null shoppingCart is returned")
-    void UnitTest_ShoppingCartDoesNotExist_NULL(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerNULLCart));
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping Cart does not have any items", response.getMessage());
-            assertFalse(response.isSuccess());
-            assertNull(response.getShoppingCart());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    @DisplayName("When an empty shoppingCart is returned")
-    void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerEMPTYCart));
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping Cart does not have any items", response.getMessage());
-            assertFalse(response.isSuccess());
-            assertEquals(0, response.getShoppingCart().size());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    @DisplayName("When the groceryList Creation is successful")
-    void UnitTest_testingSuccessfulGroceryListCreation(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+    @DisplayName("When an Invalid email is given")
+    void UnitTest_testingInvalidEmail(){
+        request = new UpdateCustomerDetailsRequest(userID, "Dean", "Smith", "dsSmallFC.com",
+                "0712345678", customer.getPassword(), deliveryAddress);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping cart successfully retrieved", response.getMessage());
+        try {
+            response = userService.updateCustomerDetails(request);
+            assertEquals("Email is not valid", response.getMessage());
+            assertFalse(response.isSuccess());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("When an Invalid password is given")
+    void UnitTest_testingInvalidPassword(){
+        request = new UpdateCustomerDetailsRequest(userID, "Dean", "Smith", "ds@smallFC.com",
+                "0712345678", "nerd", deliveryAddress);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+
+        try {
+            response = userService.updateCustomerDetails(request);
+            assertEquals("Password is not valid", response.getMessage());
+            assertFalse(response.isSuccess());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("When null update values are given")
+    void UnitTest_testingNullUpdates(){
+        request = new UpdateCustomerDetailsRequest(userID, null, null, null,
+                null, null, null);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+
+        try {
+            response = userService.updateCustomerDetails(request);
+            assertEquals("Null values submitted - Nothing updated", response.getMessage());
+            assertFalse(response.isSuccess());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("When nonnull update values are given")
+    void UnitTest_testingSuccessfulUpdate(){
+        request = new UpdateCustomerDetailsRequest(userID, "Dean", "Smith", "ds@smallFC.com",
+                "0712345678", "loL7&lol", deliveryAddress);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+
+        try {
+            response = userService.updateCustomerDetails(request);
+            assertEquals("Customer successfully updated", response.getMessage());
             assertTrue(response.isSuccess());
-            assertEquals(shoppingCart, response.getShoppingCart());
         }catch(Exception e){
             e.printStackTrace();
             fail();
