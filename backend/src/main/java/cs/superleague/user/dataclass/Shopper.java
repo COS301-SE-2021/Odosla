@@ -54,4 +54,7 @@ public class Shopper extends User {
     public void setOrdersCompleted(int ordersCompleted) {
         this.ordersCompleted = ordersCompleted;
     }
+
+
+
 }

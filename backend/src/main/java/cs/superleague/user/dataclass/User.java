@@ -1,11 +1,17 @@
 package cs.superleague.user.dataclass;
 
-import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class User {
 
     /* Attributes */
+    @Id
+    private UUID id;
     private String name;
     private String surname;
     private String email;
@@ -32,16 +38,6 @@ public class User {
         this.resetExpiration = resetExpiration;
         this.isActive = isActive;
         this.accountType = accountType;
-    }
-
-    public User(String name, String surname, String email, String phoneNumber, String password, String activationCode,UserType accountType) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.activationCode=activationCode;
-        this.accountType=accountType;
     }
 
     public User(){
@@ -136,5 +132,27 @@ public class User {
 
     public void setAccountType(UserType accountType) {
         this.accountType = accountType;
+    }
+
+    /* Functions */
+
+    public boolean login(){
+        return true;
+    }
+
+    public boolean logout(){
+        return true;
+    }
+
+    public boolean registerUser(){
+        return true;
+    }
+
+    public boolean resetPassword(){
+        return true;
+    }
+
+    public boolean updateAccountDetails(){
+        return true;
     }
 }
