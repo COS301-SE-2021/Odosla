@@ -4,32 +4,39 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table
 public class Shopper extends User {
-    /* Attributes */
-    private UUID storeID;
-    private int ordersCompleted;
 
-//payOption..
+    /* Attributes */
+    @Id
+    private UUID shopperID;
+    private UUID storeID;
+    private int ordersCompleted=0;
+    //payOption..
 
     public Shopper() {
     }
 
-    public Shopper(String name, String surname, String username, UUID id, String email, String phoneNumber, String password, Calendar activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID storeID, int ordersCompleted) {
-        super(name, surname, username, id, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
-        this.storeID = storeID;
-        this.ordersCompleted = ordersCompleted;
+    public Shopper(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID shopperID) {
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        this.shopperID = shopperID;
     }
 
-    public int getOrdersCompleted() {
-        return ordersCompleted;
+    public Shopper(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID shopperID) {
+        super(name, surname, email, phoneNumber, password, activationCode, accountType);
+        this.shopperID = shopperID;
     }
 
-    public void setOrdersCompleted(int ordersCompleted) {
-        this.ordersCompleted = ordersCompleted;
+    public UUID getShopperID() {
+        return shopperID;
+    }
+
+    public void setShopperID(UUID shopperID) {
+        this.shopperID = shopperID;
     }
 
     public UUID getStoreID() {
@@ -40,5 +47,11 @@ public class Shopper extends User {
         this.storeID = storeID;
     }
 
+    public int getOrdersCompleted() {
+        return ordersCompleted;
+    }
 
+    public void setOrdersCompleted(int ordersCompleted) {
+        this.ordersCompleted = ordersCompleted;
+    }
 }

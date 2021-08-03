@@ -4,10 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="fixed main application.properties">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/controller/PaymentController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/odosla-api.yml" afterDir="false" />
+=======
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Registering requests and responses done">
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/CustomerRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/DriverRepo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetCustomersRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetCustomersResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33_[Default_Changelist]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2021_06_07_10_33__Default_Changelist_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Driver.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/AddAdminRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/FinalizePasswordResetRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/FinalizePasswordResetRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetUsersRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/LoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/LoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterAdminRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterAdminRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterCustomerRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterCustomerRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterDriverRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterDriverRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterShopperRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/ResetPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/ResetPasswordRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/SetAdminRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/AccountVerifyResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/AccountVerifyResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/FinalizePasswordResetResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/FinalizePasswordResetResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetUsersResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/LoginResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/LoginResponse.java" afterDir="false" />
+>>>>>>> origin/develop_user
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,7 +53,7 @@
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="Development" />
+    <option name="BRANCH" value="develop" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -42,13 +73,20 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+<<<<<<< HEAD
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
+=======
+>>>>>>> origin/develop_user
   </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
   <component name="ProjectViewState">
@@ -84,14 +122,21 @@
       <recent name="user.repos" />
     </key>
   </component>
+<<<<<<< HEAD
   <component name="RunManager" selected="Spring Boot.Application">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+=======
+  <component name="RunManager">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+>>>>>>> origin/develop_user
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -201,6 +246,7 @@
       <option name="project" value="LOCAL" />
       <updated>1623194178991</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00006" summary="fixed main application.properties">
       <created>1624207872284</created>
       <option name="number" value="00006" />
@@ -216,6 +262,16 @@
       <updated>1624208706112</updated>
     </task>
     <option name="localTasksCounter" value="8" />
+=======
+    <task id="LOCAL-00006" summary="Registering requests and responses done">
+      <created>1627580812778</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1627580812778</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
+>>>>>>> origin/develop_user
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -240,8 +296,13 @@
     <MESSAGE value="Created application file" />
     <MESSAGE value="Restructured project and created application file" />
     <MESSAGE value="fixed application file, added dependencies and properties" />
+<<<<<<< HEAD
     <MESSAGE value="fixed main application.properties" />
     <MESSAGE value="fixed small errors to make controller work" />
     <option name="LAST_COMMIT_MESSAGE" value="fixed small errors to make controller work" />
+=======
+    <MESSAGE value="Registering requests and responses done" />
+    <option name="LAST_COMMIT_MESSAGE" value="Registering requests and responses done" />
+>>>>>>> origin/develop_user
   </component>
 </project>

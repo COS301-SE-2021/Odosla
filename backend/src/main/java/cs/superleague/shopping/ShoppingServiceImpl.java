@@ -711,7 +711,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 Boolean notPresent=true;
                 for(Shopper shopper:listOfShoppers){
-                    if(shopper.getId().equals(request.getShopperID())){
+                    if(shopper.getShopperID().equals(request.getShopperID())){
                         response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "Shopper already is already in listOfShoppers");
                         notPresent=false;
                     }
@@ -810,7 +810,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                  Boolean inList=false;
                  for(Shopper shopper:listOfShoppers){
-                     if(shopper.getId().equals(request.getShopperID())){
+                     if(shopper.getShopperID().equals(request.getShopperID())){
                          listOfShoppers.remove(shopper);
                          inList=true;
                      }

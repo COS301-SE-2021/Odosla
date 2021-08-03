@@ -1,35 +1,24 @@
 package cs.superleague.user.requests;
 
-import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.user.dataclass.UserType;
 
 import java.util.Date;
 import java.util.UUID;
 
-public class RegisterCustomerRequest {
+public class RegisterAdminRequest {
 
     private String name;
     private String surname;
     private String email;
     private String phoneNumber;
     private String password;
-    private GeoPoint address;
 
-    public RegisterCustomerRequest(String name, String surname, String email, String phoneNumber, String password) {
+    public RegisterAdminRequest(String name, String surname, String email, String phoneNumber, String password) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
-    }
-
-    public RegisterCustomerRequest(String name, String surname, String username, String email, String phoneNumber, String password, Date activationDate, GeoPoint address) {
-        this.name = name;
-        this.surname = surname;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-        this.address = address;
     }
 
     public String getName() {
@@ -72,11 +61,4 @@ public class RegisterCustomerRequest {
         this.password = password;
     }
 
-    public GeoPoint getAddress() {
-        return address;
-    }
-
-    public void setAddress(GeoPoint address) {
-        this.address = address;
-    }
 }
