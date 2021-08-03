@@ -633,7 +633,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public MakeGroceryListResponse MakeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
+    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
         UUID userID;
         String name;
         String message;
@@ -716,6 +716,87 @@ public class UserServiceImpl implements UserService{
         }
 
         return new GetShoppingCartResponse(shoppingCart, message, success);
+    }
+
+    @Override
+    public UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, UserDoesNotExistException{
+
+        String message;
+        UUID customerID;
+        Customer customer;
+        boolean success;
+        boolean emptyUpdate = true;
+        Optional<Customer> customerOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("UpdateCustomer Request is null - Could not update customer");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not update customer");
+        }
+
+        customerID = request.getCustomerID();
+        customerOptional = customerRepo.findById(customerID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could not update customer");
+        }
+
+        // authentication ??
+
+        customer = customerOptional.get();
+
+        if(request.getName() != null && !Objects.equals(request.getName(), customer.getName())){
+            emptyUpdate = false;
+            customer.setName(request.getName());
+        }
+
+        if(request.getSurname() != null && !request.getSurname().equals(customer.getSurname())){
+            emptyUpdate = false;
+            customer.setSurname(request.getSurname());
+        }
+
+        if(request.getEmail() != null && !request.getEmail().equals(customer.getEmail())){
+            emptyUpdate = false;
+            if(!emailRegex(request.getEmail())){
+                message = "Email is not valid";
+                return new UpdateCustomerDetailsResponse(message, false, new Date());
+            }else{
+                customer.setEmail(request.getEmail());
+            }
+        }
+
+        if(request.getPassword() != null){
+            emptyUpdate = false;
+            if(passwordRegex(request.getPassword())){
+                customer.setPassword(request.getPassword());
+            }else{
+                message = "Password is not valid";
+                return new UpdateCustomerDetailsResponse(message, false, new Date());
+            }
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().equals(customer.getPhoneNumber())){
+            emptyUpdate = false;
+            customer.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        if(request.getAddress() != null && !request.getAddress().equals(customer.getAddress())){
+            emptyUpdate = false;
+            customer.setAddress(request.getAddress());
+        }
+
+        customerRepo.save(customer);
+
+        if(emptyUpdate){
+            success = false;
+            message = "Null values submitted - Nothing updated";
+        }else {
+            success = true;
+            message = "Customer successfully updated";
+        }
+
+        return new UpdateCustomerDetailsResponse(message, success, new Date());
     }
 
     /* helper */
