@@ -33,7 +33,7 @@ public class UpdateCustomerDetailsUnitTest {
     private UserServiceImpl userService;
 
     GroceryList groceryList;
-    Customer customer;
+    Customer customer, existingCustomer;
     Item I1;
     Item I2;
 
@@ -72,6 +72,8 @@ public class UpdateCustomerDetailsUnitTest {
         groceryLists.add(groceryList);
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+        existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
+                UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
     }
 
     @AfterEach
@@ -149,6 +151,23 @@ public class UpdateCustomerDetailsUnitTest {
         try {
             response = userService.updateCustomerDetails(request);
             assertEquals("Null values submitted - Nothing updated", response.getMessage());
+            assertFalse(response.isSuccess());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("When user tries to update to existingEmail")
+    void IntegrationTest_testingExistingEmailUpdateAttempt(){
+        request = new UpdateCustomerDetailsRequest(userID, "Dean", "Smith", "ds@smallSpursy.com",
+                "0712345678", "loL7&lol", deliveryAddress);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(existingCustomer);
+        try {
+            response = userService.updateCustomerDetails(request);
+            assertEquals("Email is already taken", response.getMessage());
             assertFalse(response.isSuccess());
         }catch(Exception e){
             e.printStackTrace();

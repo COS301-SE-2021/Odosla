@@ -762,6 +762,10 @@ public class UserServiceImpl implements UserService{
                 message = "Email is not valid";
                 return new UpdateCustomerDetailsResponse(message, false, new Date());
             }else{
+                if(customerRepo.findCustomerByEmail(request.getEmail()) != null){
+                    message = "Email is already taken";
+                    return new UpdateCustomerDetailsResponse(message, false, new Date());
+                }
                 customer.setEmail(request.getEmail());
             }
         }
