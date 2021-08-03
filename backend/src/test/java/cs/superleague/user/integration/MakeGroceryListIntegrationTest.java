@@ -11,7 +11,6 @@ import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
-import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.MakeGroceryListRequest;
 import cs.superleague.user.responses.MakeGroceryListResponse;
 import org.junit.jupiter.api.*;
@@ -92,7 +91,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When request object is not specified")
     void IntegrationTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(null));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(null));
         assertEquals("MakeGroceryList Request is null - could not make grocery list", thrown.getMessage());
     }
 
@@ -100,7 +99,7 @@ public class MakeGroceryListIntegrationTest {
     @DisplayName("When userID parameter is not specified")
     void IntegrationTest_testingNullRequestUserIDParameter(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfItems, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("UserID is null - could not make grocery list", thrown.getMessage());
     }
 
@@ -108,7 +107,7 @@ public class MakeGroceryListIntegrationTest {
     @DisplayName("When items parameter is not specified")
     void IntegrationTest_testingNullRequestItemsParameter(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, item, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Item list empty - could not make the grocery list", thrown.getMessage());
     }
 
@@ -116,7 +115,7 @@ public class MakeGroceryListIntegrationTest {
     @DisplayName("When items parameter is not specified")
     void IntegrationTest_testingNullRequestItemsListParameter(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, item, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Item list empty - could not make the grocery list", thrown.getMessage());
     }
 
@@ -124,7 +123,7 @@ public class MakeGroceryListIntegrationTest {
     @DisplayName("When name parameter is not specified")
     void IntegrationTest_testingNullRequestNameParameter(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
     }
 
@@ -132,7 +131,7 @@ public class MakeGroceryListIntegrationTest {
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(UUID.randomUUID(), listOfItems, "Seamus' party");
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.makeGroceryList(request));
         assertEquals("User with given userID does not exist - could not make the grocery list", thrown.getMessage());
     }
 
@@ -140,7 +139,7 @@ public class MakeGroceryListIntegrationTest {
     @DisplayName("When groceryList with given name exists")
     void IntegrationTest_testingExistingGroceryList(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name exists - could not make the grocery list", thrown.getMessage());
     }
 
@@ -150,7 +149,7 @@ public class MakeGroceryListIntegrationTest {
         MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' bachelor party");
 
         try{
-            MakeGroceryListResponse response = userService.MakeGroceryList(request);
+            MakeGroceryListResponse response = userService.makeGroceryList(request);
             assertEquals("Grocery List successfully created", response.getMessage());
             assertTrue(response.isSuccess());
         }catch(Exception e){
