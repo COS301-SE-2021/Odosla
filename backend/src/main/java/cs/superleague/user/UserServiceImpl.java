@@ -734,7 +734,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException {
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
         GetShopperByUUIDResponse response=null;
         if(request != null){
 
@@ -747,7 +747,7 @@ public class UserServiceImpl implements UserService{
                 shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
             }catch(Exception e){}
             if(shopperEntity==null) {
-                throw new UserDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
+                throw new ShopperDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
             }
             response=new GetShopperByUUIDResponse(shopperEntity, Calendar.getInstance().getTime(),"Shopper entity with corresponding user id was returned");
         }

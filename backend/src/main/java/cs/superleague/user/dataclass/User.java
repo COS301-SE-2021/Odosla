@@ -5,6 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class User {
@@ -38,6 +39,16 @@ public class User {
         this.resetExpiration = resetExpiration;
         this.isActive = isActive;
         this.accountType = accountType;
+    }
+
+    public User(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType userType) {
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.activationCode=activationCode;
+        this.accountType=userType;
     }
 
     public User(){
