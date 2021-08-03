@@ -184,52 +184,20 @@ public class UserServiceImpl implements UserService{
 
         if(request!=null){
 
-            boolean isException=false;
             String errorMessage="";
 
-            if(request.getEmail()==null){
-                isException=true;
-                errorMessage="Email in RegisterCustomerRequest is null";
-            }
-            else if(request.getName()==null){
-                isException=true;
-                errorMessage="Name in RegisterCustomerRequest is null";
-            }
-            else if(request.getPassword() == null){
-                isException=true;
-                errorMessage="Password in RegisterCustomerRequest is null";
-            }
-            else if(request.getSurname()==null){
-                isException=true;
-                errorMessage="Surname in RegisterCustomerRequest is null";
-            }
-            else if(request.getPhoneNumber()==null){
-                isException=true;
-                errorMessage="Phone number in RegisterCustomerRequest is null";
-            }
-
-
-            if(isException==true){
-                throw new InvalidRequestException(errorMessage);
-            }
-
-            String emailRegex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher emailMatcher = pattern.matcher(request.getEmail());
-
-            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
-            Pattern passwordPattern = Pattern.compile(passwordRegex);
-            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
+            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
+                request.getPhoneNumber(), request.getPassword());
 
             assert customerRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailMatcher.matches()){
+            if(!emailRegex(request.getEmail())){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordMatcher.matches()){
+            if(!passwordRegex(request.getPassword())){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -246,26 +214,9 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
-                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                String passwordHashed = hashPassword(request.getPassword());
 
-                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
-                String numbers = "0123456789";
-                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
-
-
-                StringBuilder sb = new StringBuilder();
-                Random random = new Random();
-                int length = 10;
-
-                for (int i = 0; i < length; i++) {
-                    int index = random.nextInt(alphaNumeric.length());
-                    char randomChar = alphaNumeric.charAt(index);
-                    sb.append(randomChar);
-                }
-
-                String activationCode = sb.toString();
+                String activationCode = setActivationCode();
 
                 UUID userID = UUID.randomUUID();
 
@@ -293,56 +244,23 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException {
-        RegisterDriverResponse response=null;
 
         if(request!=null){
 
-            boolean isException=false;
             String errorMessage="";
 
-            if(request.getEmail()==null){
-                isException=true;
-                errorMessage="Email in RegisterDriverRequest is null";
-            }
-            else if(request.getName()==null){
-                isException=true;
-                errorMessage="Name in RegisterDriverRequest is null";
-            }
-            else if(request.getPassword() == null){
-                isException=true;
-                errorMessage="Password in RegisterDriverRequest is null";
-            }
-            else if(request.getSurname()==null){
-                isException=true;
-                errorMessage="Surname in RegisterDriverRequest is null";
-            }
-            else if(request.getPhoneNumber()==null){
-                isException=true;
-                errorMessage="Phone number in RegisterDriverRequest is null";
-            }
-
-
-            if(isException==true){
-                throw new InvalidRequestException(errorMessage);
-            }
-
-            String emailRegex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher emailMatcher = pattern.matcher(request.getEmail());
-
-            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
-            Pattern passwordPattern = Pattern.compile(passwordRegex);
-            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
+            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
+                    request.getPhoneNumber(), request.getPassword());
 
             assert driverRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailMatcher.matches()){
+            if(!emailRegex(request.getEmail())){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordMatcher.matches()){
+            if(!passwordRegex(request.getPassword())){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -359,26 +277,9 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
-                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                String passwordHashed = hashPassword(request.getPassword());
 
-                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
-                String numbers = "0123456789";
-                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
-
-
-                StringBuilder sb = new StringBuilder();
-                Random random = new Random();
-                int length = 10;
-
-                for (int i = 0; i < length; i++) {
-                    int index = random.nextInt(alphaNumeric.length());
-                    char randomChar = alphaNumeric.charAt(index);
-                    sb.append(randomChar);
-                }
-
-                String activationCode = sb.toString();
+                String activationCode = setActivationCode();
 
                 UUID userID = UUID.randomUUID();
 
@@ -410,52 +311,21 @@ public class UserServiceImpl implements UserService{
 
         if(request!=null){
 
-            boolean isException=false;
             String errorMessage="";
 
-            if(request.getEmail()==null){
-                isException=true;
-                errorMessage="Email in RegisterShopperRequest is null";
-            }
-            else if(request.getName()==null){
-                isException=true;
-                errorMessage="Name in RegisterShopperRequest is null";
-            }
-            else if(request.getPassword() == null){
-                isException=true;
-                errorMessage="Password in RegisterShopperRequest is null";
-            }
-            else if(request.getSurname()==null){
-                isException=true;
-                errorMessage="Surname in RegisterShopperRequest is null";
-            }
-            else if(request.getPhoneNumber()==null){
-                isException=true;
-                errorMessage="Phone number in RegisterShopperRequest is null";
-            }
+            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
+                    request.getPhoneNumber(), request.getPassword());
 
-
-            if(isException==true){
-                throw new InvalidRequestException(errorMessage);
-            }
-
-            String emailRegex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher emailMatcher = pattern.matcher(request.getEmail());
-
-            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
-            Pattern passwordPattern = Pattern.compile(passwordRegex);
-            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
 
             assert shopperRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailMatcher.matches()){
+            if(!emailRegex(request.getEmail())){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordMatcher.matches()){
+            if(!passwordRegex(request.getPassword())){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -472,26 +342,9 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
-                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                String passwordHashed = hashPassword(request.getPassword());
 
-                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
-                String numbers = "0123456789";
-                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
-
-
-                StringBuilder sb = new StringBuilder();
-                Random random = new Random();
-                int length = 10;
-
-                for (int i = 0; i < length; i++) {
-                    int index = random.nextInt(alphaNumeric.length());
-                    char randomChar = alphaNumeric.charAt(index);
-                    sb.append(randomChar);
-                }
-
-                String activationCode = sb.toString();
+                String activationCode = setActivationCode();
 
                 UUID userID = UUID.randomUUID();
 
@@ -526,49 +379,18 @@ public class UserServiceImpl implements UserService{
             boolean isException=false;
             String errorMessage="";
 
-            if(request.getEmail()==null){
-                isException=true;
-                errorMessage="Email in RegisterAdminRequest is null";
-            }
-            else if(request.getName()==null){
-                isException=true;
-                errorMessage="Name in RegisterAdminRequest is null";
-            }
-            else if(request.getPassword() == null){
-                isException=true;
-                errorMessage="Password in RegisterAdminRequest is null";
-            }
-            else if(request.getSurname()==null){
-                isException=true;
-                errorMessage="Surname in RegisterAdminRequest is null";
-            }
-            else if(request.getPhoneNumber()==null){
-                isException=true;
-                errorMessage="Phone number in RegisterAdminRequest is null";
-            }
-
-
-            if(isException==true){
-                throw new InvalidRequestException(errorMessage);
-            }
-
-            String emailRegex = "^(.+)@(.+)$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher emailMatcher = pattern.matcher(request.getEmail());
-
-            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
-            Pattern passwordPattern = Pattern.compile(passwordRegex);
-            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
+            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
+                    request.getPhoneNumber(), request.getPassword());
 
             assert adminRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailMatcher.matches()){
+            if(!emailRegex(request.getEmail())){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordMatcher.matches()){
+            if(!passwordRegex(request.getPassword())){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -585,26 +407,9 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
-                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                String passwordHashed = hashPassword(request.getPassword());
 
-                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
-                String numbers = "0123456789";
-                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
-
-
-                StringBuilder sb = new StringBuilder();
-                Random random = new Random();
-                int length = 10;
-
-                for (int i = 0; i < length; i++) {
-                    int index = random.nextInt(alphaNumeric.length());
-                    char randomChar = alphaNumeric.charAt(index);
-                    sb.append(randomChar);
-                }
-
-                String activationCode = sb.toString();
+                String activationCode = setActivationCode();
 
                 UUID userID = UUID.randomUUID();
 
@@ -914,7 +719,7 @@ public class UserServiceImpl implements UserService{
     }
 
     /* helper */
-    private void validRegisterDetails(String name, String surname, String username, String email,
+    private void validRegisterDetails(String name, String surname, String email,
                                       String phoneNum, String password) throws InvalidRequestException{
 
         if(name == null){
@@ -923,10 +728,6 @@ public class UserServiceImpl implements UserService{
 
         if(surname == null){
             throw new InvalidRequestException("Surname cannot be null - Registration Failed");
-        }
-
-        if(username == null){
-            throw new InvalidRequestException("Username cannot be null - Registration Failed");
         }
 
         if(email == null){
@@ -950,8 +751,36 @@ public class UserServiceImpl implements UserService{
         return matcher.matches();
     }
 
+    private boolean passwordRegex(String password){
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(password);
+
+        return passwordMatcher.matches();
+    }
+
     private String hashPassword(String password){
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
         return passwordEncoder.encode(password);
     }
+
+    private String setActivationCode(){
+        String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int length = 10;
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(alphaNumeric.length());
+            char randomChar = alphaNumeric.charAt(index);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
+    }
+
 }

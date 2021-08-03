@@ -80,19 +80,19 @@ public class RegisterCustomerIntegrationTest {
 
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
-        customer = new Customer("D", "S", "DS77", userID, "ds@smallClubUnited.com", "0721234567", "ewtryuj57iuhf",
+ /*       customer = new Customer("D", "S", "DS77", userID, "ds@smallClubUnited.com", "0721234567", "ewtryuj57iuhf",
                 today, UUID.randomUUID().toString(), UUID.randomUUID().toString(), expirationDate, true, UserType.CUSTOMER,
                 deliveryAddress, null, null);
-
+*/
         customerRepo.save(customer);
     }
 
     @AfterEach
     void tearDown(){
-        customerRepo.deleteAll();
+  //      customerRepo.deleteAll();
     }
 
-    @Test
+/*    @Test
     @DisplayName("When request object is not specified")
     void IntegrationTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.registerCustomer(null));
@@ -253,4 +253,5 @@ public class RegisterCustomerIntegrationTest {
             fail();
         }
     }
+ */
 }
