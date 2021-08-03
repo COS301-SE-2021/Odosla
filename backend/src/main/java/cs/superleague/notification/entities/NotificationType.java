@@ -1,4 +1,4 @@
-package cs.superleague.notification;
+package cs.superleague.notification.entities;
 
 public enum NotificationType {
     Delivery,

@@ -1,4 +1,4 @@
-package cs.superleague.notification;
+package cs.superleague.notification.entities;
 
 import java.util.Calendar;
 import java.util.Map;
