@@ -14,6 +14,6 @@ public interface ShopperRepo extends JpaRepository<Shopper, UUID> {
 
   boolean findByEmail(String email);
 
-  Shopper findShopper(String email);
+  Shopper findShopperByEmail(String email);
 }
 

@@ -58,11 +58,11 @@ public class GetShoppersIntegrationTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
         shopperRepo.save(shopper1);
@@ -127,7 +127,7 @@ public class GetShoppersIntegrationTest {
         assertEquals("List of Shoppers successfully returned",response.getMessage());
         Store storeResponse=storeRepo.findById(store.getStoreID()).orElse(null);
         for (int i=0;i<shopperList.size();i++){
-            assertEquals(shopperList.get(i).getId(),storeResponse.getShoppers().get(i).getId());
+            assertEquals(shopperList.get(i).getShopperID(),storeResponse.getShoppers().get(i).getShopperID());
         }
     }
 

@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Description;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -119,7 +120,7 @@ public class AddShopperUnitTest {
     @Test
     @Description("Test for when store is return with list of shoppers being null")
     @DisplayName("List of Shoppers in Store entity is null")
-    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, UserException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(null);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);

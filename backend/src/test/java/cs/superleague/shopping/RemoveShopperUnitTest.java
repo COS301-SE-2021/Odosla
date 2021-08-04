@@ -23,6 +23,7 @@ import cs.superleague.user.dataclass.Shopper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

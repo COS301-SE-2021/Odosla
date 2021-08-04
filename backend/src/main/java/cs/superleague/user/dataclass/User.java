@@ -1,18 +1,13 @@
 package cs.superleague.user.dataclass;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+@MappedSuperclass
 public class User {
 
     /* Attributes */
-    @Id
-    private UUID id;
     private String name;
     private String surname;
     private String email;

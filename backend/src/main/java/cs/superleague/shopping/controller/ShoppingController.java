@@ -17,6 +17,7 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.AddShopperRequest;
 import cs.superleague.shopping.requests.GetItemsRequest;
+import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.requests.RemoveQueuedOrderRequest;
 import cs.superleague.shopping.responses.AddShopperResponse;
 import cs.superleague.shopping.responses.GetItemsResponse;
@@ -26,6 +27,7 @@ import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.UserException;
@@ -115,6 +117,8 @@ public class ShoppingController implements ShoppingApi{
         } catch (UserDoesNotExistException e) {
             e.printStackTrace();
         } catch (StoreDoesNotExistException e) {
+            e.printStackTrace();
+        }catch(Exception e){
             e.printStackTrace();
         }
         catch (UserException e) {
