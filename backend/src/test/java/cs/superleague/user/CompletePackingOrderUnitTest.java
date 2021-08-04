@@ -73,7 +73,7 @@ public class CompletePackingOrderUnitTest {
         c1.setTime(d1);
 
         o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
-
+        shopper = new Shopper();
         shopper.setShopperID(expectedShopper1);
         shopper.setName("JJ");
     }
