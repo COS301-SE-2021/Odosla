@@ -184,6 +184,9 @@ public class UpdateOrderIntegrationTest {
         orderRepo.delete(O6);
         orderRepo.delete(O7);
         orderRepo.delete(O8);
+
+        itemRepo.delete(I1);
+        itemRepo.delete(I2);
     }
 
     // Integration Tests

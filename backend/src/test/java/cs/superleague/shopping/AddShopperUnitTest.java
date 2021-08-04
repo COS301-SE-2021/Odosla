@@ -9,6 +9,7 @@ import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.junit.jupiter.api.*;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Description;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,11 +59,11 @@ public class AddShopperUnitTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
     }
@@ -118,7 +120,7 @@ public class AddShopperUnitTest {
     @Test
     @Description("Test for when store is return with list of shoppers being null")
     @DisplayName("List of Shoppers in Store entity is null")
-    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, UserException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(null);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
@@ -131,7 +133,7 @@ public class AddShopperUnitTest {
     @Test
     @Description("Test for when Shopper with shopperID does not exist in shopper database ")
     @DisplayName("When Shopper with ID doesn't exist")
-    void UnitTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void UnitTest_Shopper_doesnt_exist() throws InvalidRequestException, UserException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
@@ -144,10 +146,10 @@ public class AddShopperUnitTest {
     @Test
     @Description("Test for when list of shoppers already has Shopper in its list")
     @DisplayName("Shopper Id already in list of Shoppers")
-    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
-        AddShopperRequest request=new AddShopperRequest(shopper1.getId(),storeUUID1);
+        AddShopperRequest request=new AddShopperRequest(shopper1.getShopperID(),storeUUID1);
         when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
         GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper1,null,null);
         when(userService.getShopperByUUIDRequest(Mockito.any())).thenReturn(shopperResponse);
@@ -160,7 +162,7 @@ public class AddShopperUnitTest {
     @Test
     @Description("Test for when shopper is correctly added to the list")
     @DisplayName("Shopper was correctly added list of shoppers in store")
-    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
