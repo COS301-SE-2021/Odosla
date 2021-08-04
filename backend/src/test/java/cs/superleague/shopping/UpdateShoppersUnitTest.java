@@ -58,13 +58,13 @@ public class UpdateShoppersUnitTest {
         s.setStoreID(storeUUID1);
 
         shopper1=new Shopper();
-        shopper1.setId(shopperID1);
+        shopper1.setShopperID(shopperID1);
         shopper2=new Shopper();
-        shopper2.setId(shopperID2);
+        shopper2.setShopperID(shopperID2);
         shopper3=new Shopper();
-        shopper3.setId(shopperID3);
+        shopper3.setShopperID(shopperID3);
         shopper4=new Shopper();
-        shopper4.setId(shopperID4);
+        shopper4.setShopperID(shopperID4);
 
         shopperList.add(shopper1);
         shopperList.add(shopper2);

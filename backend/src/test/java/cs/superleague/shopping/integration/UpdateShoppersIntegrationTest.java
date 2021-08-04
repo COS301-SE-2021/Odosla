@@ -67,13 +67,13 @@ public class UpdateShoppersIntegrationTest {
     void setUp() {
 
         shopper1=new Shopper();
-        shopper1.setId(shopperID1);
+        shopper1.setShopperID(shopperID1);
         shopper2=new Shopper();
-        shopper2.setId(shopperID2);
+        shopper2.setShopperID(shopperID2);
         shopper3=new Shopper();
-        shopper3.setId(shopperID3);
+        shopper3.setShopperID(shopperID3);
         shopper4=new Shopper();
-        shopper4.setId(shopperID4);
+        shopper4.setShopperID(shopperID4);
 
         shopperRepo.save(shopper1);
         shopperRepo.save(shopper2);
@@ -156,8 +156,8 @@ public class UpdateShoppersIntegrationTest {
             store = storeRepo.findById(storeUUID1).orElse(null);
         }
         assertNotNull(store);
-        assertEquals(store.getShoppers().get(0).getId(), updateShoppersRequest.getNewShoppers().get(0).getId());
-        assertEquals(store.getShoppers().get(1).getId(), updateShoppersRequest.getNewShoppers().get(1).getId());
+        assertEquals(store.getShoppers().get(0).getShopperID(), updateShoppersRequest.getNewShoppers().get(0).getShopperID());
+        assertEquals(store.getShoppers().get(1).getShopperID(), updateShoppersRequest.getNewShoppers().get(1).getShopperID());
 
 
     }
