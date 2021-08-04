@@ -48,6 +48,34 @@ public class UserServiceImpl implements UserService{
         this.orderRepo= orderRepo;
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                OrderID - Id of order that should be found in database
+     *
+     * completePackagingOrder should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's orderID is null, else throw InvalidRequestException
+     *                3.Check if order exists in database, else throw OrderDoesNotExist
+     *                4.Set found order's status to AWAITING_COLLECTION
+     *                5.Return response object
+     * Request Object (CompletePackagingOrderRequest)
+     * {
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "getNext":true
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Order entity with corresponding ID is ready for collection"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws OrderDoesNotExist
+     */
     @Override
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist {
         CompletePackagingOrderResponse response = null;
@@ -62,6 +90,11 @@ public class UserServiceImpl implements UserService{
                 orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
             }
             catch (Exception e){
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            if(orderEntity==null)
+            {
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
             orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
