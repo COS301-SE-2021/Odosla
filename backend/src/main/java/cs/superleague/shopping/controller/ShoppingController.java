@@ -79,7 +79,7 @@ public class ShoppingController implements ShoppingApi{
 
 
     @Override
-    public ResponseEntity<ShoppingAddShopperResponse> addShopper(ShoppingAddShopperRequest body) throws UserException {
+    public ResponseEntity<ShoppingAddShopperResponse> addShopper(ShoppingAddShopperRequest body) {
 
         //mock mem:db
         Store store1 = new Store();
@@ -115,6 +115,9 @@ public class ShoppingController implements ShoppingApi{
         } catch (UserDoesNotExistException e) {
             e.printStackTrace();
         } catch (StoreDoesNotExistException e) {
+            e.printStackTrace();
+        }
+        catch (UserException e) {
             e.printStackTrace();
         }
 
