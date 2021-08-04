@@ -4,6 +4,7 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -758,6 +759,310 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("GetShopperByUUID request is null - could not return Shopper entity");
         }
         return response;
+    }
+
+    @Override
+    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
+        UUID userID;
+        String name;
+        String message;
+        Optional<Customer> customerOptional;
+        Customer customer;
+        GroceryList groceryList;
+
+        if(request == null){
+            throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
+        }
+
+        if(request.getUserID() == null){
+            throw new InvalidRequestException("UserID is null - could not make grocery list");
+        }
+
+        if(request.getItems() == null || request.getItems().isEmpty()){
+            throw new InvalidRequestException("Item list empty - could not make the grocery list");
+        }
+
+        if(request.getName() == null){
+            throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
+        }
+
+        userID = request.getUserID();
+        customerOptional = customerRepo.findById(userID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could not make the grocery list");
+        }
+
+        customer = customerOptional.get();
+        name = request.getName();
+        for (GroceryList list: customer.getGroceryLists()) { // if name exists throw exception
+            if(list.getName().equals(name)){
+                throw new InvalidRequestException("Grocery List Name exists - could not make the grocery list");
+            }
+        }
+
+        groceryList = new GroceryList(UUID.randomUUID(), name, request.getItems());
+        message = "Grocery List successfully created";
+
+        groceryList = groceryListRepo.save(groceryList);
+        customer.getGroceryLists().add(groceryList);
+        customerRepo.save(customer);
+
+        return new MakeGroceryListResponse(groceryList, true, message);
+    }
+
+    @Override
+    public GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+        UUID userID;
+        Optional<Customer> customerOptional;
+        Customer customer;
+        List<Item> shoppingCart;
+        String message;
+        boolean success;
+
+        if(request == null){
+            throw new InvalidRequestException("GetShoppingCart Request is null - could retrieve shopping cart");
+        }
+
+        if(request.getUserID() == null){
+            throw new InvalidRequestException("UserID is null - could retrieve shopping cart");
+        }
+
+        userID = request.getUserID();
+        customerOptional = customerRepo.findById(userID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could not retrieve shopping cart");
+        }
+
+        customer = customerOptional.get();
+        shoppingCart = customer.getShoppingCart();
+
+        if(shoppingCart == null || shoppingCart.isEmpty()){
+            message = "Shopping Cart does not have any items";
+            success = false;
+        }else{
+            message = "Shopping cart successfully retrieved";
+            success = true;
+        }
+
+        return new GetShoppingCartResponse(shoppingCart, message, success);
+    }
+
+    @Override
+    public UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, UserDoesNotExistException{
+
+        String message;
+        UUID customerID;
+        Customer customer;
+        boolean success;
+        boolean emptyUpdate = true;
+        Optional<Customer> customerOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("UpdateCustomer Request is null - Could not update customer");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not update customer");
+        }
+
+        customerID = request.getCustomerID();
+        customerOptional = customerRepo.findById(customerID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could not update customer");
+        }
+
+        // authentication ??
+
+        customer = customerOptional.get();
+
+        if(request.getName() != null && !Objects.equals(request.getName(), customer.getName())){
+            emptyUpdate = false;
+            customer.setName(request.getName());
+        }
+
+        if(request.getSurname() != null && !request.getSurname().equals(customer.getSurname())){
+            emptyUpdate = false;
+            customer.setSurname(request.getSurname());
+        }
+
+        if(request.getEmail() != null && !request.getEmail().equals(customer.getEmail())){
+            emptyUpdate = false;
+            if(!emailRegex(request.getEmail())){
+                message = "Email is not valid";
+                return new UpdateCustomerDetailsResponse(message, false, new Date());
+            }else{
+                if(customerRepo.findCustomerByEmail(request.getEmail()) != null){
+                    message = "Email is already taken";
+                    return new UpdateCustomerDetailsResponse(message, false, new Date());
+                }
+                customer.setEmail(request.getEmail());
+            }
+        }
+
+        if(request.getPassword() != null){
+            emptyUpdate = false;
+            if(passwordRegex(request.getPassword())){
+                customer.setPassword(request.getPassword());
+            }else{
+                message = "Password is not valid";
+                return new UpdateCustomerDetailsResponse(message, false, new Date());
+            }
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().equals(customer.getPhoneNumber())){
+            emptyUpdate = false;
+            customer.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        if(request.getAddress() != null && !request.getAddress().equals(customer.getAddress())){
+            emptyUpdate = false;
+            customer.setAddress(request.getAddress());
+        }
+
+        customerRepo.save(customer);
+
+        if(emptyUpdate){
+            success = false;
+            message = "Null values submitted - Nothing updated";
+        }else {
+            success = true;
+            message = "Customer successfully updated";
+        }
+
+        return new UpdateCustomerDetailsResponse(message, success, new Date());
+    }
+
+    @Override
+    public AddToCartResponse addToCart(AddToCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+
+        UUID customerID;
+        Customer customer;
+        String message = "Items successfully added to cart";
+        Optional<Customer> customerOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("addToCart Request is null - Could not add to cart");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not add to cart");
+        }
+
+        customerID = request.getCustomerID();
+        customerOptional = customerRepo.findById(customerID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could add to cart");
+        }
+
+        customer = customerOptional.get();
+
+        if(request.getItems() == null || request.getItems().isEmpty()){
+            message = "Item list empty - could not add to cart";
+            return new AddToCartResponse(message, false, new Date());
+        }
+
+        customer.getShoppingCart().clear();
+        customer.getShoppingCart().addAll(request.getItems());
+
+        customerRepo.save(customer);
+
+        return new AddToCartResponse(message, true, new Date());
+    }
+
+    @Override
+    public ClearShoppingCartResponse clearShoppingCart(ClearShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+
+        UUID customerID;
+        Customer customer;
+        String message = "Cart successfully cleared";
+        Optional<Customer> customerOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("clearShoppingCart Request is null - Could not clear to shopping cart");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not clear shopping cart");
+        }
+
+        customerID = request.getCustomerID();
+        customerOptional = customerRepo.findById(customerID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could clear cart");
+        }
+
+        customer = customerOptional.get();
+
+        customer.getShoppingCart().clear();
+
+        customer = customerRepo.save(customer);
+
+        return new ClearShoppingCartResponse(customer.getShoppingCart(), message, true, new Date());
+    }
+
+    /* helper */
+    private void validRegisterDetails(String name, String surname, String email,
+                                      String phoneNum, String password) throws InvalidRequestException{
+
+        if(name == null){
+            throw new InvalidRequestException("Name cannot be null - Registration Failed");
+        }
+
+        if(surname == null){
+            throw new InvalidRequestException("Surname cannot be null - Registration Failed");
+        }
+
+        if(email == null){
+            throw new InvalidRequestException("Email cannot be null - Registration Failed");
+        }
+
+        if(phoneNum == null){
+            throw new InvalidRequestException("Phone Number cannot be null - Registration Failed");
+        }
+
+        if(password == null){
+            throw new InvalidRequestException("Password cannot be null - Registration Failed");
+        }
+    }
+
+    private boolean emailRegex(String email){
+        String emailRegex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
+    private boolean passwordRegex(String password){
+        String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+        Pattern passwordPattern = Pattern.compile(passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(password);
+
+        return passwordMatcher.matches();
+    }
+
+    private String hashPassword(String password){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+        return passwordEncoder.encode(password);
+    }
+
+    private String setActivationCode(){
+        String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int length = 10;
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(alphaNumeric.length());
+            char randomChar = alphaNumeric.charAt(index);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
     }
 
 
