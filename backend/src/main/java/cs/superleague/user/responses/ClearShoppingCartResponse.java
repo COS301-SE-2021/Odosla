@@ -5,7 +5,7 @@ import cs.superleague.shopping.dataclass.Item;
 import java.util.Date;
 import java.util.List;
 
-public class RemoveFromCartResponse {
+public class ClearShoppingCartResponse {
 
     private final List<Item> items;
     private final String message;
@@ -28,7 +28,7 @@ public class RemoveFromCartResponse {
         return timestamp;
     }
 
-    public RemoveFromCartResponse(List<Item> items, String message, boolean success, Date timestamp) {
+    public ClearShoppingCartResponse(List<Item> items, String message, boolean success, Date timestamp) {
         this.items = items;
         this.message = message;
         this.success = success;
