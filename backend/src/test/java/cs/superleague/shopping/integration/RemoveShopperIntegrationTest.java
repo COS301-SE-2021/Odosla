@@ -13,6 +13,7 @@ import cs.superleague.shopping.responses.RemoveShopperResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.junit.jupiter.api.*;
@@ -140,7 +141,7 @@ public class RemoveShopperIntegrationTest {
     @Test
     @Description("Test for when list of shoppers doesn't contain shopper")
     @DisplayName("Shopper Id not in list of Shoppers")
-    void IntegrationTest_shopper_not_in_shopper_list() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void IntegrationTest_shopper_not_in_shopper_list() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         RemoveShopperRequest request=new RemoveShopperRequest(shopperID,storeUUID1);
@@ -155,7 +156,7 @@ public class RemoveShopperIntegrationTest {
     @Test
     @Description("Test for when shopper is correctly removed from the list")
     @DisplayName("Shopper was correctly removed from list of shoppers in store")
-    void Shopper_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Shopper_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getShopperID(),storeUUID1);

@@ -118,6 +118,8 @@ public class ShoppingController implements ShoppingApi{
             e.printStackTrace();
         } catch (StoreDoesNotExistException e) {
             e.printStackTrace();
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
         return new ResponseEntity<>(response, status);

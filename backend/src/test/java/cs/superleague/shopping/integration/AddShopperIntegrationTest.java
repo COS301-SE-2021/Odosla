@@ -13,6 +13,7 @@ import cs.superleague.shopping.responses.AddShopperResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.junit.jupiter.api.*;
@@ -139,7 +140,7 @@ public class AddShopperIntegrationTest {
     @Test
     @Description("Test for when list of shoppers already has Shopper in its list")
     @DisplayName("Shopper Id already in list of Shoppers")
-    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopper1.getShopperID(),storeUUID1);
@@ -153,7 +154,7 @@ public class AddShopperIntegrationTest {
     @Test
     @Description("Test for when shopper is correctly added to the list")
     @DisplayName("Shopper was correctly added list of shoppers in store")
-    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
