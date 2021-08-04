@@ -838,6 +838,37 @@ public class UserServiceImpl implements UserService{
         return new AddToCartResponse(message, true, new Date());
     }
 
+    @Override
+    public ClearShoppingCartResponse clearShoppingCart(ClearShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+
+        UUID customerID;
+        Customer customer;
+        String message = "Cart successfully cleared";
+        Optional<Customer> customerOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("clearShoppingCart Request is null - Could not clear to shopping cart");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not clear shopping cart");
+        }
+
+        customerID = request.getCustomerID();
+        customerOptional = customerRepo.findById(customerID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could clear cart");
+        }
+
+        customer = customerOptional.get();
+
+        customer.getShoppingCart().clear();
+
+        customer = customerRepo.save(customer);
+
+        return new ClearShoppingCartResponse(customer.getShoppingCart(), message, true, new Date());
+    }
+
     /* helper */
     private void validRegisterDetails(String name, String surname, String email,
                                       String phoneNum, String password) throws InvalidRequestException{
