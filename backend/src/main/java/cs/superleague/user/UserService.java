@@ -8,8 +8,6 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException;
-
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException;
     public ScanItemResponse scanItem(ScanItemRequest request);
     public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
@@ -18,6 +16,7 @@ public interface UserService {
     public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
     public LoginResponse loginUser(LoginRequest request) throws UserException;
     public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws UserException;
 
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException;

@@ -7,6 +7,7 @@ import cs.superleague.user.UserService;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.requests.GetShopperByUUIDRequest;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -663,7 +664,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      */
 
     @Override
-    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
         AddShopperResponse response=null;
 
         if(request!=null){
@@ -771,7 +772,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @throws UserDoesNotExistException
      */
     @Override
-    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
         RemoveShopperResponse response=null;
 
         if(request!=null){

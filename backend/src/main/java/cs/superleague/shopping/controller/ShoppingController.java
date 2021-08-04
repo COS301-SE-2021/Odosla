@@ -21,20 +21,28 @@ import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.requests.RemoveQueuedOrderRequest;
 import cs.superleague.shopping.responses.AddShopperResponse;
 import cs.superleague.shopping.responses.GetItemsResponse;
+import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.shopping.requests.GetShoppersRequest;
+import cs.superleague.shopping.responses.GetItemsResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -234,6 +242,7 @@ public class ShoppingController implements ShoppingApi{
         shopper1.setShopperID(UUID.randomUUID());
         shopper1.setName("Peter");
         shopper1.setSurname("Parker");
+        shopper1.setEmail("PeterParker2021!");
         shopper1.setPassword("DontTellMaryJane2021!");
         shopper1.setOrdersCompleted(5);
         shopper1.setAccountType(UserType.SHOPPER);
@@ -242,6 +251,7 @@ public class ShoppingController implements ShoppingApi{
         shopper2.setShopperID(UUID.randomUUID());
         shopper2.setName("Mary");
         shopper2.setSurname("Jane");
+        shopper2.setEmail("MaryJane2021!");
         shopper2.setPassword("IKnowWhoPeterIs2021!");
         shopper2.setOrdersCompleted(4);
         shopper2.setAccountType(UserType.SHOPPER);
@@ -338,6 +348,7 @@ public class ShoppingController implements ShoppingApi{
             currentShopper.setName(responseShoppers.get(i).getName());
             currentShopper.setId(responseShoppers.get(i).getShopperID().toString());
             currentShopper.setSurname(responseShoppers.get(i).getSurname());
+            currentShopper.setUsername(responseShoppers.get(i).getEmail());
             currentShopper.setPassword(responseShoppers.get(i).getPassword());
             currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
             currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());

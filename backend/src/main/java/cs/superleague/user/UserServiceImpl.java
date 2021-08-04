@@ -18,6 +18,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.Calendar;
+
 @Service("userServiceImpl")
 @PropertySource(value = {"classpath:application.properties"})
 public class UserServiceImpl implements UserService{
@@ -82,99 +84,6 @@ public class UserServiceImpl implements UserService{
     public ScanItemResponse scanItem(ScanItemRequest request) {
         return null;
     }
-
-    @Override
-    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, UserDoesNotExistException {
-        GetShopperByUUIDResponse response=null;
-        if(request != null){
-
-            if(request.getUserID()==null){
-                throw new InvalidRequestException("UserID is null in GetShopperByUUIDRequest request - could not return shopper entity");
-            }
-
-            Shopper shopperEntity=null;
-            try {
-                shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
-            }catch(Exception e){}
-            if(shopperEntity==null) {
-                throw new UserDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
-            }
-            response=new GetShopperByUUIDResponse(shopperEntity, Calendar.getInstance().getTime(),"Shopper entity with corresponding user id was returned");
-        }
-        else{
-            throw new InvalidRequestException("GetShopperByUUID request is null - could not return Shopper entity");
-        }
-        return response;
-    }
-
-    /*
-
-    @Override
-    public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException, AlreadyExistsException {
-
-        List<GroceryList> groceryLists = new ArrayList<>();
-        List<Item> shoppingCart = new ArrayList<>();
-        List<Customer> customers;
-        GeoPoint address = null;
-        Customer customer;
-        String name, surname, username, email, phoneNum, password;
-
-        if(request == null){
-            throw new InvalidRequestException("RegisterCustomer Request is null - Could not register user as a customer");
-        }
-
-        if(request.getAccountType() != UserType.CUSTOMER){
-            throw new InvalidRequestException("User type is not Customer - Could not register user as a customer");
-        }
-
-        if(request.getAddress() != null){
-            address = request.getAddress();
-        }
-
-        name = request.getName();
-        surname = request.getSurname();
-        username = request.getUsername();
-        email = request.getEmail();
-        phoneNum = request.getPhoneNumber();
-        password = request.getPassword();
-
-        validRegisterDetails(name, surname, username, email, phoneNum, password);
-
-        customers = customerRepo.findAll();
-
-        for (Customer c: customers) {
-            if(c.getUsername().equals(username)){
-                throw new AlreadyExistsException("Username already exists - Registration Failed");
-            }
-
-            if(c.getEmail().equals(email)){
-                throw new AlreadyExistsException("Email already exists - Registration Failed");
-            }
-
-            if(c.getPhoneNumber().equals(phoneNum)){
-                throw new AlreadyExistsException("Phone number already exists - Registration Failed");
-            }
-        }
-
-        if(!emailRegex(email)){
-            throw new InvalidRequestException("Invalid email - Registration failed");
-        }
-
-        password = hashPassword(password);
-
-        Calendar today = Calendar.getInstance();
-        today.add(Calendar.DATE, 7);
-        String expirationDate = new SimpleDateFormat("yyyy-MM-dd").format(today.getTime());
-
-        customer = new Customer(name, surname, username, UUID.randomUUID(), email, phoneNum, password,
-                today, UUID.randomUUID().toString(), UUID.randomUUID().toString(), expirationDate,
-                request.isActive(), request.getAccountType(), address, groceryLists, shoppingCart);
-
-        customerRepo.save(customer);
-
-        return new RegisterCustomerResponse(customer, true, "Customer successfully registered");
-    }
-     */
 
     @Override
     public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException {
@@ -438,6 +347,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
         LoginResponse response=null;
+
+        if(request==null){
+            throw new InvalidRequestException("LoginRequest is null");
+        }
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
         UUID userID=null;
         Shopper shopperUser=null;
@@ -626,6 +540,31 @@ public class UserServiceImpl implements UserService{
         }
         else{
             throw new InvalidRequestException("AccountVerifyRequest can't be null");
+        }
+        return response;
+    }
+
+
+    @Override
+    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        GetShopperByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetShopperByUUIDRequest request - could not return shopper entity");
+            }
+
+            Shopper shopperEntity=null;
+            try {
+                shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){}
+            if(shopperEntity==null) {
+                throw new ShopperDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
+            }
+            response=new GetShopperByUUIDResponse(shopperEntity, Calendar.getInstance().getTime(),"Shopper entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetShopperByUUID request is null - could not return Shopper entity");
         }
         return response;
     }
