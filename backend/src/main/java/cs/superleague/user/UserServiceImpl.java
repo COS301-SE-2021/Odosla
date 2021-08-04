@@ -1,10 +1,11 @@
 package cs.superleague.user;
 
-import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
+import cs.superleague.user.requests.*;
+import cs.superleague.user.responses.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import cs.superleague.user.responses.*;
-import cs.superleague.user.requests.*;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -801,6 +799,43 @@ public class UserServiceImpl implements UserService{
         }
 
         return new UpdateCustomerDetailsResponse(message, success, new Date());
+    }
+
+    @Override
+    public AddToCartResponse addToCart(AddToCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+
+        UUID customerID;
+        Customer customer;
+        String message = "Items successfully added to cart";
+        Optional<Customer> customerOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("addToCart Request is null - Could not add to cart");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not add to cart");
+        }
+
+        customerID = request.getCustomerID();
+        customerOptional = customerRepo.findById(customerID);
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new UserDoesNotExistException("User with given userID does not exist - could add to cart");
+        }
+
+        customer = customerOptional.get();
+
+        if(request.getItems() == null || request.getItems().isEmpty()){
+            message = "Item list empty - could not add to cart";
+            return new AddToCartResponse(message, false, new Date());
+        }
+
+        customer.getShoppingCart().clear();
+        customer.getShoppingCart().addAll(request.getItems());
+
+        customerRepo.save(customer);
+
+        return new AddToCartResponse(message, true, new Date());
     }
 
     /* helper */
