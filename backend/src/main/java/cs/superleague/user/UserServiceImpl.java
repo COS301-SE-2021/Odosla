@@ -1,18 +1,25 @@
 package cs.superleague.user;
 
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
-import cs.superleague.user.requests.*;
-import cs.superleague.user.responses.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import cs.superleague.user.exceptions.*;
+import cs.superleague.user.responses.*;
+import cs.superleague.user.requests.*;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -21,7 +28,6 @@ import java.util.regex.Pattern;
 import java.util.Calendar;
 
 @Service("userServiceImpl")
-@PropertySource(value = {"classpath:application.properties"})
 public class UserServiceImpl implements UserService{
 
     private final ShopperRepo shopperRepo;
@@ -29,53 +35,76 @@ public class UserServiceImpl implements UserService{
     private final AdminRepo adminRepo;
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
+    private final OrderRepo orderRepo;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
-        this.customerRepo = customerRepo;
-        this.groceryListRepo = groceryListRepo;
-        //this.userService = userService;
+        this.customerRepo=customerRepo;
+        this.groceryListRepo=groceryListRepo;
+        this.orderRepo= orderRepo;
     }
 
-    @Override //unfinished
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException {
+    /**
+     *
+     * @param request is used to bring in:
+     *                OrderID - Id of order that should be found in database
+     *
+     * completePackagingOrder should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's orderID is null, else throw InvalidRequestException
+     *                3.Check if order exists in database, else throw OrderDoesNotExist
+     *                4.Set found order's status to AWAITING_COLLECTION
+     *                5.Return response object
+     * Request Object (CompletePackagingOrderRequest)
+     * {
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "getNext":true
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Order entity with corresponding ID is ready for collection"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws OrderDoesNotExist
+     */
+    @Override
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist {
+        CompletePackagingOrderResponse response = null;
+        if(request != null){
 
-        // Checking for valid and appropriately populated request
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
+            }
 
-        boolean invalidReq = false;
-        String invalidMessage = "";
+            Order orderEntity=null;
+            try {
+                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
 
-        if (request == null){
-            invalidReq = true;
-            invalidMessage = "Invalid request: null value received";
-        } else if (request.getOrderID() == null){
-            invalidReq = true;
-            invalidMessage = "Invalid request: no orderID received";
+            if(orderEntity==null)
+            {
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
+
+            //TODO check the order type and call the respective user (driver or customer)
+            response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
-
-        // // Get order by ID // //
-        //Order updatedOrder = <paymentService>.getOrder(request.getOrderID());
-
-        // if (updatedOrder.getStatus != OrderStatus.PACKING){
-        //  invalidReq = true;
-        //  invalidMessage = "Invalid request: incorrect order status;
-        //}
-
-        if (invalidReq) throw new InvalidRequestException(invalidMessage);
-
-
-        // // Update the order status and create time // //
-        //.setStatus(OrderStatus.AWAITING_COLLECTION);
-
-        // <paymentService>.updateOrder(updatedOrder);
-
-
-        //unfinished
-        CompletePackagingOrderResponse response = new CompletePackagingOrderResponse();
+        else{
+            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
+        }
         return response;
 
     }
@@ -91,20 +120,52 @@ public class UserServiceImpl implements UserService{
 
         if(request!=null){
 
+            boolean isException=false;
             String errorMessage="";
 
-            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
-                request.getPhoneNumber(), request.getPassword());
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterCustomerRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterCustomerRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterCustomerRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterCustomerRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterCustomerRequest is null";
+            }
+
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
 
             assert customerRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailRegex(request.getEmail())){
+            if(!emailMatcher.matches()){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordRegex(request.getPassword())){
+            if(!passwordMatcher.matches()){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -121,9 +182,26 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                String passwordHashed = hashPassword(request.getPassword());
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
 
-                String activationCode = setActivationCode();
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
 
                 UUID userID = UUID.randomUUID();
 
@@ -151,23 +229,56 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException {
+        RegisterDriverResponse response=null;
 
         if(request!=null){
 
+            boolean isException=false;
             String errorMessage="";
 
-            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
-                    request.getPhoneNumber(), request.getPassword());
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterDriverRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterDriverRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterDriverRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterDriverRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterDriverRequest is null";
+            }
+
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
 
             assert driverRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailRegex(request.getEmail())){
+            if(!emailMatcher.matches()){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordRegex(request.getPassword())){
+            if(!passwordMatcher.matches()){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -184,9 +295,26 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                String passwordHashed = hashPassword(request.getPassword());
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
 
-                String activationCode = setActivationCode();
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
 
                 UUID userID = UUID.randomUUID();
 
@@ -218,21 +346,52 @@ public class UserServiceImpl implements UserService{
 
         if(request!=null){
 
+            boolean isException=false;
             String errorMessage="";
 
-            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
-                    request.getPhoneNumber(), request.getPassword());
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterShopperRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterShopperRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterShopperRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterShopperRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterShopperRequest is null";
+            }
 
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
 
             assert shopperRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailRegex(request.getEmail())){
+            if(!emailMatcher.matches()){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordRegex(request.getPassword())){
+            if(!passwordMatcher.matches()){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -249,9 +408,26 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                String passwordHashed = hashPassword(request.getPassword());
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
 
-                String activationCode = setActivationCode();
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
 
                 UUID userID = UUID.randomUUID();
 
@@ -286,18 +462,49 @@ public class UserServiceImpl implements UserService{
             boolean isException=false;
             String errorMessage="";
 
-            validRegisterDetails(request.getName(), request.getSurname(), request.getEmail(),
-                    request.getPhoneNumber(), request.getPassword());
+            if(request.getEmail()==null){
+                isException=true;
+                errorMessage="Email in RegisterAdminRequest is null";
+            }
+            else if(request.getName()==null){
+                isException=true;
+                errorMessage="Name in RegisterAdminRequest is null";
+            }
+            else if(request.getPassword() == null){
+                isException=true;
+                errorMessage="Password in RegisterAdminRequest is null";
+            }
+            else if(request.getSurname()==null){
+                isException=true;
+                errorMessage="Surname in RegisterAdminRequest is null";
+            }
+            else if(request.getPhoneNumber()==null){
+                isException=true;
+                errorMessage="Phone number in RegisterAdminRequest is null";
+            }
+
+
+            if(isException==true){
+                throw new InvalidRequestException(errorMessage);
+            }
+
+            String emailRegex = "^(.+)@(.+)$";
+            Pattern pattern = Pattern.compile(emailRegex);
+            Matcher emailMatcher = pattern.matcher(request.getEmail());
+
+            String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$";
+            Pattern passwordPattern = Pattern.compile(passwordRegex);
+            Matcher passwordMatcher = passwordPattern.matcher(request.getPassword());
 
             assert adminRepo!=null;
 
             errorMessage="";
             Boolean isError=false;
-            if(!emailRegex(request.getEmail())){
+            if(!emailMatcher.matches()){
                 isError=true;
                 errorMessage+="Email is not valid";
             }
-            if(!passwordRegex(request.getPassword())){
+            if(!passwordMatcher.matches()){
                 isError=true;
                 if (errorMessage!=""){
                     errorMessage+=" and ";
@@ -314,9 +521,26 @@ public class UserServiceImpl implements UserService{
             }
             else{
 
-                String passwordHashed = hashPassword(request.getPassword());
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
 
-                String activationCode = setActivationCode();
+                String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+                String numbers = "0123456789";
+                String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+                StringBuilder sb = new StringBuilder();
+                Random random = new Random();
+                int length = 10;
+
+                for (int i = 0; i < length; i++) {
+                    int index = random.nextInt(alphaNumeric.length());
+                    char randomChar = alphaNumeric.charAt(index);
+                    sb.append(randomChar);
+                }
+
+                String activationCode = sb.toString();
 
                 UUID userID = UUID.randomUUID();
 
@@ -872,5 +1096,6 @@ public class UserServiceImpl implements UserService{
 
         return sb.toString();
     }
+
 
 }
