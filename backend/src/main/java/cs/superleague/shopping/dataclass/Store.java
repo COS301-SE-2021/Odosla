@@ -56,6 +56,15 @@ public class Store {
         this.isOpen = isOpen;
     }
 
+    public Store(UUID storeID, int openingTime, int closingTime, String storeBrand, int maxShoppers, int maxOrders, Boolean isOpen) {
+        this.storeID = storeID;
+        this.openingTime= openingTime;
+        this.closingTime= closingTime;
+        this.storeBrand = storeBrand;
+        this.maxShoppers = maxShoppers;
+        this.maxOrders = maxOrders;
+        this.isOpen = isOpen;
+    }
     public UUID getStoreID() {
         return storeID;
     }
