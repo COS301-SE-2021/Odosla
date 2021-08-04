@@ -538,6 +538,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
         LoginResponse response=null;
+
+        if(request==null){
+            throw new InvalidRequestException("LoginRequest is null");
+        }
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
         UUID userID=null;
         Shopper shopperUser=null;

@@ -3,6 +3,7 @@ package cs.superleague.shopping;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.user.UserService;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.junit.jupiter.api.*;
@@ -57,11 +58,11 @@ public class RemoveShopperUnitTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
     }
@@ -118,7 +119,7 @@ public class RemoveShopperUnitTest {
     @Test
     @Description("Test for when store is return with list of shoppers being null")
     @DisplayName("List of Shoppers in Store entity is null")
-    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, UserException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(null);
         RemoveShopperRequest request=new RemoveShopperRequest(shopperID,storeID);
@@ -131,7 +132,7 @@ public class RemoveShopperUnitTest {
     @Test
     @Description("Test for when Shopper with shopperID does not exist in shopper database ")
     @DisplayName("When Shopper with ID doesn't exist")
-    void UnitTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void UnitTest_Shopper_doesnt_exist() throws InvalidRequestException, UserException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         RemoveShopperRequest request=new RemoveShopperRequest(shopperID,storeUUID1);
@@ -145,7 +146,7 @@ public class RemoveShopperUnitTest {
     @Test
     @Description("Test for when list of shoppers doesn't contain shopper")
     @DisplayName("Shopper Id not in list of Shoppers")
-    void UnitTest_shopper_not_in_shopper_list() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void UnitTest_shopper_not_in_shopper_list() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         RemoveShopperRequest request=new RemoveShopperRequest(shopperID,storeUUID1);
@@ -161,10 +162,10 @@ public class RemoveShopperUnitTest {
     @Test
     @Description("Test for when shopper is correctly removed from the list")
     @DisplayName("Shopper was correctly removed from list of shoppers in store")
-    void Shopper_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Shopper_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
-        RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getId(),storeUUID1);
+        RemoveShopperRequest request=new RemoveShopperRequest(shopper1.getShopperID(),storeUUID1);
         when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
         GetShopperByUUIDResponse shopperResponse=new GetShopperByUUIDResponse(shopper1,null,null);
         when(userService.getShopperByUUIDRequest(Mockito.any())).thenReturn(shopperResponse);
