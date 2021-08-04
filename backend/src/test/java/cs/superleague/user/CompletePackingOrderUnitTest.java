@@ -8,7 +8,7 @@ import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.GetNextQueuedRequest;
