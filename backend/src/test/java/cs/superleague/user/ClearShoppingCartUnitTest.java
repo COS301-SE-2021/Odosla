@@ -8,8 +8,8 @@ import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.requests.AddToCartRequest;
-import cs.superleague.user.responses.AddToCartResponse;
+import cs.superleague.user.requests.ClearShoppingCartRequest;
+import cs.superleague.user.responses.ClearShoppingCartResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 /** Testing use cases with JUnit testing and Mockito */
 @ExtendWith(MockitoExtension.class)
-public class AddToCartUnitTest {
+public class ClearShoppingCartUnitTest {
 
     @Mock
     CustomerRepo customerRepo;
@@ -48,8 +48,8 @@ public class AddToCartUnitTest {
     List<Item> shoppingCart = new ArrayList<>();
     List<Item> shoppingCartNULL = new ArrayList<>();
 
-    AddToCartRequest request;
-    AddToCartResponse response;
+    ClearShoppingCartRequest request;
+    ClearShoppingCartResponse response;
 
     @BeforeEach
     void setUp() {
@@ -82,53 +82,41 @@ public class AddToCartUnitTest {
     @Test
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.addToCart(null));
-        assertEquals("addToCart Request is null - Could not add to cart", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.clearShoppingCart(null));
+        assertEquals("clearShoppingCart Request is null - Could not clear to shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
     void UnitTest_testingNullRequestUserIDParameter(){
-        request = new AddToCartRequest(null, shoppingCart);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.addToCart(request));
-        assertEquals("CustomerId is null - could not add to cart", thrown.getMessage());
+        request = new ClearShoppingCartRequest(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.clearShoppingCart(request));
+        assertEquals("CustomerId is null - could not clear shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        request = new AddToCartRequest(UUID.randomUUID(), shoppingCart);
+        request = new ClearShoppingCartRequest(UUID.randomUUID());
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.addToCart(request));
-        assertEquals("User with given userID does not exist - could add to cart", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.clearShoppingCart(request));
+        assertEquals("User with given userID does not exist - could clear cart", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When item list is null/empty")
-    void UnitTest_testingNullEmptyItemList(){
-        request = new AddToCartRequest(userID, new ArrayList<>());
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-
-        try {
-            response = userService.addToCart(request);
-            assertEquals("Item list empty - could not add to cart", response.getMessage());
-            assertFalse(response.isSuccess());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    @DisplayName("When nonnull update values are given")
+    @DisplayName("When valid values are given")
     void UnitTest_testingSuccessfulUpdate(){
-        request = new AddToCartRequest(userID, shoppingCart);
+        request = new ClearShoppingCartRequest(userID);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
+        customer.getShoppingCart().clear();
+
+        when(customerRepo.save(customer)).thenReturn(customer);
         try {
-            response = userService.addToCart(request);
-            assertEquals("Items successfully added to cart", response.getMessage());
+            response = userService.clearShoppingCart(request);
+            assertEquals("Cart successfully cleared", response.getMessage());
             assertTrue(response.isSuccess());
+            assertEquals(0, response.getItems().size());
         }catch(Exception e){
             e.printStackTrace();
             fail();

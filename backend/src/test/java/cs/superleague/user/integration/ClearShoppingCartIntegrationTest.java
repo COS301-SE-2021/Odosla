@@ -11,8 +11,8 @@ import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
-import cs.superleague.user.requests.AddToCartRequest;
-import cs.superleague.user.responses.AddToCartResponse;
+import cs.superleague.user.requests.ClearShoppingCartRequest;
+import cs.superleague.user.responses.ClearShoppingCartResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +25,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class AddToCartIntegrationTest {
+public class ClearShoppingCartIntegrationTest {
 
     @Autowired
     CustomerRepo customerRepo;
@@ -55,8 +55,8 @@ public class AddToCartIntegrationTest {
     List<Item> shoppingCart = new ArrayList<>();
     List<Item> shoppingCartNULL = new ArrayList<>();
 
-    AddToCartRequest request;
-    AddToCartResponse response;
+    ClearShoppingCartRequest request;
+    ClearShoppingCartResponse response;
 
     @BeforeEach
     void setUp() {
@@ -92,54 +92,39 @@ public class AddToCartIntegrationTest {
         itemRepo.deleteAll();
     }
 
-
     @Test
     @DisplayName("When request object is not specified")
-    void IntegrationTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.addToCart(null));
-        assertEquals("addToCart Request is null - Could not add to cart", thrown.getMessage());
+    void UnitTest_testingNullRequestObject(){
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.clearShoppingCart(null));
+        assertEquals("clearShoppingCart Request is null - Could not clear to shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
-    void IntegrationTest_testingNullRequestUserIDParameter(){
-        request = new AddToCartRequest(null, shoppingCart);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.addToCart(request));
-        assertEquals("CustomerId is null - could not add to cart", thrown.getMessage());
+    void UnitTest_testingNullRequestUserIDParameter(){
+        request = new ClearShoppingCartRequest(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.clearShoppingCart(request));
+        assertEquals("CustomerId is null - could not clear shopping cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When customer with given UserID does not exist")
-    void IntegrationTest_testingInvalidUser(){
-        request = new AddToCartRequest(UUID.randomUUID(), shoppingCart);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.addToCart(request));
-        assertEquals("User with given userID does not exist - could add to cart", thrown.getMessage());
+    void UnitTest_testingInvalidUser(){
+        request = new ClearShoppingCartRequest(UUID.randomUUID());
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.clearShoppingCart(request));
+        assertEquals("User with given userID does not exist - could clear cart", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When item list is null/empty")
-    void IntegrationTest_testingNullEmptyItemList(){
-        request = new AddToCartRequest(userID, new ArrayList<>());
+    @DisplayName("When valid values are given")
+    void UnitTest_testingSuccessfulUpdate(){
+        request = new ClearShoppingCartRequest(userID);
 
         try {
-            response = userService.addToCart(request);
-            assertEquals("Item list empty - could not add to cart", response.getMessage());
-            assertFalse(response.isSuccess());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    @DisplayName("When nonnull update values are given")
-    void IntegrationTest_testingSuccessfulUpdate(){
-        request = new AddToCartRequest(userID, shoppingCart);
-
-        try {
-            response = userService.addToCart(request);
-            assertEquals("Items successfully added to cart", response.getMessage());
+            response = userService.clearShoppingCart(request);
+            assertEquals("Cart successfully cleared", response.getMessage());
             assertTrue(response.isSuccess());
+            assertEquals(0, response.getItems().size());
         }catch(Exception e){
             e.printStackTrace();
             fail();
