@@ -165,13 +165,28 @@ public class UserServiceImpl implements UserService{
                 throw new OrderDoesNotExist("Order does not exist in repository - could not get Order entity");
             }
 
-            //TODO implement check for item in order
-            response=new ScanItemResponse(true, Calendar.getInstance().getTime(),"Item successfully scanned");
+            List<Item> items = orderEntity.getItems();
+            boolean itemFound= false;
+
+            for (Item item : items) {
+                if (item.getBarcode().equals(request.getBarcode())) {
+                    itemFound = true;
+                    response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
+                }
+            }
+            if(itemFound)
+            {
+                return response;
+            }
+            else
+            {
+                throw new InvalidRequestException("Item barcode doesn't match any of the items in the order");
+            }
         }
         else{
-            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
+            throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
         }
-        return response;
+
     }
 
     @Override
