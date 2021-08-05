@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService{
 
             if(orderEntity==null)
             {
-                throw new OrderDoesNotExist("Order does not exist in repository - could not get Order entity");
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
 
             List<Item> items = orderEntity.getItems();
