@@ -1,5 +1,7 @@
 package cs.superleague.notification;
 
+import cs.superleague.notification.dataclass.Notification;
+import cs.superleague.notification.dataclass.NotificationType;
 import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.CreateNotificationRequest;
 import cs.superleague.notification.requests.RetrieveNotificationRequest;
@@ -13,9 +15,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-import java.io.IOException;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +38,49 @@ public class NotificationServiceImpl implements NotificationService {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        return null;
+        if (request.getPayLoad() == null || request.getCreatedDateTime() == null || request.getProperties() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        if (request.getPayLoad().equals("") || request.getCreatedDateTime().equals("") || request.getProperties().equals("")){
+            throw new InvalidRequestException("Empty parameters.");
+        }
+        NotificationType notificationType = null;
+        switch (request.getProperties().get("NotificationType").toLowerCase()){
+            case "delivery":
+                notificationType = NotificationType.DELIVERY;
+                break;
+            case "order":
+                notificationType = NotificationType.ORDER;
+                break;
+            case "store":
+                notificationType = NotificationType.STORE;
+                break;
+            case "verification":
+                notificationType = NotificationType.VERIFICATION;
+                break;
+            case "invoice":
+                notificationType = NotificationType.INVOICE;
+                break;
+            case "resetpassword":
+                notificationType = NotificationType.RESETPASSWORD;
+                break;
+        }
+        if (notificationType == null){
+            throw new InvalidRequestException("Invalid notification type.");
+        }
+        UUID notificationID = UUID.randomUUID();
+        while(notificationRepo.findById(notificationID).isPresent()){
+            notificationID = UUID.randomUUID();
+        }
+        Notification notification = new Notification(
+                notificationID,
+                UUID.fromString(request.getProperties().get("userID")),
+                request.getPayLoad(),
+                request.getCreatedDateTime(),
+                null,
+                notificationType);
+        notificationRepo.save(notification);
+        return new CreateNotificationResponse("Notification successfully created.");
     }
 
     @Override
@@ -63,9 +108,15 @@ public class NotificationServiceImpl implements NotificationService {
         if(request.getSubject() == null || request.getSubject().equals("") || request.getMessage() == null || request.getMessage().equals("")){
             throw new InvalidRequestException("Empty parameters.");
         }
+        Map<String, String> properties = new HashMap<>();
+        properties.put("NotificationType", request.getType());
+        properties.put("Subject", request.getSubject());
+        properties.put("userID", request.getUserID().toString());
+        properties.put("ContactDetails", request.getEmail());
+        CreateNotificationRequest request1 = new CreateNotificationRequest(request.getMessage(), Calendar.getInstance(), properties);
+        createNotification(request1);
         sendEmail(request.getEmail(), request.getSubject(), request.getMessage());
-
-        return null;
+        return new SendEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",request.getEmail(), request.getSubject(), request.getMessage()));
     }
 
     public void sendEmail(String email, String Subject, String Body) {
