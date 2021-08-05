@@ -1,4 +1,4 @@
 package cs.superleague.user.requests;
 
-public class SetAdminRequest {
+public class DeleteUserRequest {
 }

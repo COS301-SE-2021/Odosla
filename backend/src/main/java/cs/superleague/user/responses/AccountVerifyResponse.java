@@ -1,20 +1,30 @@
 package cs.superleague.user.responses;
 
-public class AccountVerifyResponse {
-    /* Attributes */
-    private String token;
+import java.util.Date;
 
-    /* Constructor */
-    public AccountVerifyResponse(String token) {
-        this.token = token;
+public class AccountVerifyResponse {
+
+    /* Attributes */
+    private final boolean success;
+    private final Date timestamp;
+    private final String message;
+
+    public AccountVerifyResponse(boolean success, Date timestamp, String message) {
+        this.success = success;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
     /* Getters and Setters */
-    public String getToken() {
-        return token;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
