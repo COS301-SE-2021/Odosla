@@ -109,9 +109,84 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                OrderID - Order that should be found in database
+     *                barcode- the barcode used to identify the item being scanned
+     *
+     * scanItem should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if request object's barcode is empty, else throw InvalidRequestException
+     *                4.Check if order exists in database, else throw OrderDoesNotExist
+     *                5.Use the barcode to find the corresponding item in the order.
+     *                6.Return response object
+     * Request Object (ScanItemRequest)
+     * {
+     *                "orderID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "barcode":"34gd-43232-43fsfs-421fsfs-grw"
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Item successfully scanned"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws OrderDoesNotExist
+     */
     @Override
-    public ScanItemResponse scanItem(ScanItemRequest request) {
-        return null;
+    public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist {
+        ScanItemResponse response = null;
+        if(request != null){
+
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("Order ID is null in ScanItemRequest request - could not retrieve order entity");
+            }
+            if(request.getBarcode()==null){
+                throw new InvalidRequestException("Barcode is null in ScanItemRequest request - could not scan item");
+            }
+
+            Order orderEntity=null;
+
+            try {
+                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            if(orderEntity==null)
+            {
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            List<Item> items = orderEntity.getItems();
+            boolean itemFound= false;
+
+            for (Item item : items) {
+                if (item.getBarcode().equals(request.getBarcode())) {
+                    itemFound = true;
+                    response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
+                }
+            }
+            if(itemFound)
+            {
+                return response;
+            }
+            else
+            {
+                throw new InvalidRequestException("Item barcode doesn't match any of the items in the order");
+            }
+        }
+        else{
+            throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
+        }
+
     }
 
     @Override
