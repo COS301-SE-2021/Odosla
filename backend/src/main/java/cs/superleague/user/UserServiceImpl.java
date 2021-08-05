@@ -99,6 +99,21 @@ public class UserServiceImpl implements UserService{
             }
             orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
+            Shopper shopperEntity=null;
+            try {
+                shopperEntity = shopperRepo.findById(orderEntity.getShopperID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+            }
+
+            if(shopperEntity==null)
+            {
+                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+            }
+
+            shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
+
             //TODO check the order type and call the respective user (driver or customer)
             response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
