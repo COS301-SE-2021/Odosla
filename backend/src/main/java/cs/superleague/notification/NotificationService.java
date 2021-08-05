@@ -6,12 +6,13 @@ import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.CreateNotificationResponse;
 import cs.superleague.notification.responses.RetrieveNotificationResponse;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
+import cs.superleague.payment.exceptions.InvalidRequestException;
 
 public interface NotificationService {
 
-    CreateNotificationResponse createNotification(CreateNotificationRequest request);
+    CreateNotificationResponse createNotification(CreateNotificationRequest request) throws InvalidRequestException;
 
     RetrieveNotificationResponse retrieveNotification(RetrieveNotificationRequest request);
 
-    SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request);
+    SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException;
 }
