@@ -66,7 +66,7 @@ public class GetShopperByUUIDUnitTest {
 
     @Test
     @Description("Test for when Shopper with userID does not exist in database - ShopperDoesNotExistException should be thrown")
-    @DisplayName("When Order with ID doesn't exist")
+    @DisplayName("When Shopper with ID doesn't exist")
     void UnitTest_Shopper_doesnt_exist(){
 
         GetShopperByUUIDRequest request=new GetShopperByUUIDRequest(UUID.randomUUID());
