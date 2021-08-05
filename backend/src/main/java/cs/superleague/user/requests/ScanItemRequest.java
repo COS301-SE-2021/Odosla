@@ -5,16 +5,16 @@ import cs.superleague.payment.dataclass.Order;
 import java.util.UUID;
 
 public class ScanItemRequest {
-    private Order order;
+    private UUID orderID;
     private String barcode;
 
-    public ScanItemRequest(String barcode, Order order) {
-        this.order = order;
+    public ScanItemRequest(String barcode, UUID orderID) {
+        this.orderID = orderID;
         this.barcode = barcode;
     }
 
-    public Order getOrder() {
-        return order;
+    public UUID getOrderID() {
+        return orderID;
     }
 
     public String getBarcode() {
