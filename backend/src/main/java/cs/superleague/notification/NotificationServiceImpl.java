@@ -10,6 +10,11 @@ import cs.superleague.notification.responses.CreateNotificationResponse;
 import cs.superleague.notification.responses.RetrieveNotificationResponse;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.repos.AdminRepo;
+import cs.superleague.user.repos.CustomerRepo;
+import cs.superleague.user.repos.DriverRepo;
+import cs.superleague.user.repos.ShopperRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,11 +31,19 @@ import java.util.regex.Pattern;
 public class NotificationServiceImpl implements NotificationService {
     private final JavaMailSender javaMailSender;
     private final NotificationRepo notificationRepo;
+    private final AdminRepo adminRepo;
+    private final DriverRepo driverRepo;
+    private final CustomerRepo customerRepo;
+    private final ShopperRepo shopperRepo;
 
     @Autowired
-    public NotificationServiceImpl(JavaMailSender javaMailSender, NotificationRepo notificationRepo) {
+    public NotificationServiceImpl(JavaMailSender javaMailSender, NotificationRepo notificationRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, ShopperRepo shopperRepo) {
         this.javaMailSender = javaMailSender;
         this.notificationRepo = notificationRepo;
+        this.adminRepo = adminRepo;
+        this.driverRepo = driverRepo;
+        this.customerRepo = customerRepo;
+        this.shopperRepo = shopperRepo;
     }
 
     @Override
@@ -95,13 +108,29 @@ public class NotificationServiceImpl implements NotificationService {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getEmail() == null){
+        if(request.getUserID() == null){
             throw new InvalidRequestException("Null recipient email.");
         }
-        if(request.getEmail().equals("")){
+        if(request.getUserID().equals("")){
             throw new InvalidRequestException("Empty recipient email.");
         }
-        Matcher matcher = pattern.matcher(request.getEmail());
+        String email = "";
+        if (adminRepo.findById(request.getUserID()).isPresent()){
+            Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
+            email = admin.getEmail();
+        } else if (customerRepo.findById(request.getUserID()).isPresent()){
+            Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
+            email = customer.getEmail();
+        }else if (driverRepo.findById(request.getUserID()).isPresent()){
+            Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
+            email = driver.getEmail();
+        }else if (shopperRepo.findById(request.getUserID()).isPresent()){
+            Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
+            email = shopper.getEmail();
+        }else{
+            throw new InvalidRequestException("Invalid userID, does not match any in the database.");
+        }
+        Matcher matcher = pattern.matcher(email);
         if(!matcher.matches()){
             throw new InvalidRequestException("Invalid recipient email address.");
         }
@@ -112,11 +141,11 @@ public class NotificationServiceImpl implements NotificationService {
         properties.put("NotificationType", request.getType());
         properties.put("Subject", request.getSubject());
         properties.put("userID", request.getUserID().toString());
-        properties.put("ContactDetails", request.getEmail());
+        properties.put("ContactDetails", email);
         CreateNotificationRequest request1 = new CreateNotificationRequest(request.getMessage(), Calendar.getInstance(), properties);
         createNotification(request1);
-        sendEmail(request.getEmail(), request.getSubject(), request.getMessage());
-        return new SendEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",request.getEmail(), request.getSubject(), request.getMessage()));
+        sendEmail(email, request.getSubject(), request.getMessage());
+        return new SendEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",email, request.getSubject(), request.getMessage()));
     }
 
     public void sendEmail(String email, String Subject, String Body) {

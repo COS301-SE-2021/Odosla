@@ -11,14 +11,12 @@ public class SendEmailNotificationRequest {
     private final UUID userID;
     private final String subject;
     private final String type;
-    private final String email;
 
     public SendEmailNotificationRequest(String message, Map<String, String> properties) {
         this.message = message;
         this.type = properties.get("Type");
         this.subject = properties.get("Subject");
         this.userID = UUID.fromString(properties.get("UUID"));
-        this.email = properties.get("Email");
     }
 
     public String getMessage() {
@@ -35,9 +33,5 @@ public class SendEmailNotificationRequest {
 
     public String getType() {
         return type;
-    }
-
-    public String getEmail() {
-        return email;
     }
 }
