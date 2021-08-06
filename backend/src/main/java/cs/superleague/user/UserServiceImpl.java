@@ -794,6 +794,26 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException {
+
+        if (request == null) {
+           throw new InvalidRequestException("GetCurrentUserRequest is null");
+        }
+
+        if(request.getJWTToken()==null){
+            throw new InvalidRequestException("JWTToken in GetCurrentUserRequest is null");
+        }
+
+        Optional<User> userOptionalJwtToken = userRepo.findUserByJWTToken(request.getJWTToken());
+
+        if (userOptionalJwtToken.isEmpty()) {
+            return new GetCurrentUserResponse(false, "There is no user with the specified JWT token.", null);
+        } else {
+            return new GetCurrentUserResponse(true, "The user with the specified JWT token was found.", userOptionalJwtToken.get());
+        }
+    }
+
+    @Override
     public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
         UUID userID;
         String name;

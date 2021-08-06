@@ -19,6 +19,7 @@ public class User {
     private String resetExpiration;
     private boolean isActive;
     private UserType accountType;
+    private String jwt_token;
 
     /* Constructor  */
 
@@ -140,25 +141,11 @@ public class User {
         this.accountType = accountType;
     }
 
-    /* Functions */
-
-    public boolean login(){
-        return true;
+    public String getJwt_token() {
+        return jwt_token;
     }
 
-    public boolean logout(){
-        return true;
-    }
-
-    public boolean registerUser(){
-        return true;
-    }
-
-    public boolean resetPassword(){
-        return true;
-    }
-
-    public boolean updateAccountDetails(){
-        return true;
+    public void setJwt_token(String jwt_token) {
+        this.jwt_token = jwt_token;
     }
 }
