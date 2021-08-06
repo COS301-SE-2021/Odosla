@@ -231,7 +231,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterCustomerRequest is null";
+                errorMessage="PhoneNumber in RegisterCustomerRequest is null";
             }
 
 
@@ -267,12 +267,15 @@ public class UserServiceImpl implements UserService{
                 return new RegisterCustomerResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(customerRepo.findByEmail(request.getEmail())){
+            Customer customer;
+            customer=customerRepo.findCustomerByEmail(request.getEmail());
+
+            if(customer!=null){
                 return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -294,15 +297,61 @@ public class UserServiceImpl implements UserService{
                 String activationCode = sb.toString();
 
                 UUID userID = UUID.randomUUID();
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+                Boolean isPresent=false;
 
-                while(customerRepo.findById(userID).isPresent()){
+                try{
+                    customer=customerRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(customer==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
                     userID=UUID.randomUUID();
+
+                    try{
+                        customer=customerRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(customer==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register Customer");
                 }
 
                 Customer newCustomer=new Customer(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.CUSTOMER,userID);
                 customerRepo.save(newCustomer);
 
-                if(customerRepo.findById(userID).isPresent()){
+                try{
+                    customer=customerRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(customer==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
                 }
@@ -344,7 +393,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterDriverRequest is null";
+                errorMessage="PhoneNumber in RegisterDriverRequest is null";
             }
 
 
@@ -380,12 +429,14 @@ public class UserServiceImpl implements UserService{
                 return new RegisterDriverResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(driverRepo.findByEmail(request.getEmail())){
+            Driver driver;
+            driver=driverRepo.findDriverByEmail(request.getEmail());
+            if(driver!=null){
                 return new RegisterDriverResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -408,14 +459,61 @@ public class UserServiceImpl implements UserService{
 
                 UUID userID = UUID.randomUUID();
 
-                while(driverRepo.findById(userID).isPresent()){
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+                Boolean isPresent=false;
+
+                try{
+                    driver=driverRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(driver==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
                     userID=UUID.randomUUID();
+
+                    try{
+                        driver=driverRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(driver==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterDriverResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register driver");
                 }
 
                 Driver newDriver=new Driver(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.DRIVER,userID);
                 driverRepo.save(newDriver);
 
-                if(driverRepo.findById(userID).isPresent()){
+                try{
+                    driver=driverRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(driver==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
@@ -457,7 +555,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterShopperRequest is null";
+                errorMessage="PhoneNumber in RegisterShopperRequest is null";
             }
 
 
@@ -493,12 +591,14 @@ public class UserServiceImpl implements UserService{
                 return new RegisterShopperResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(shopperRepo.findByEmail(request.getEmail())){
+            Shopper shopper;
+            shopper=shopperRepo.findShopperByEmail(request.getEmail());
+            if(shopper!=null){
                 return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -521,14 +621,63 @@ public class UserServiceImpl implements UserService{
 
                 UUID userID = UUID.randomUUID();
 
-                while(shopperRepo.findById(userID).isPresent()){
-                    userID=UUID.randomUUID();
+
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+                Boolean isPresent=false;
+
+                try{
+                    shopper=shopperRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(shopper==null){
+                        isPresent=false;
+                    }
                 }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
+                    userID=UUID.randomUUID();
+
+                    try{
+                        shopper=shopperRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(shopper==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register shopper");
+                }
+
 
                 Shopper newShopper=new Shopper(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.SHOPPER,userID);
                 shopperRepo.save(newShopper);
 
-                if(driverRepo.findById(userID).isPresent()){
+                try{
+                    shopper=shopperRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(shopper==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
@@ -539,7 +688,7 @@ public class UserServiceImpl implements UserService{
 
         }
         else{
-            throw new InvalidRequestException("Request object can't be null for RegisterDriverRequest");
+            throw new InvalidRequestException("Request object can't be null for RegisterShopperRequest");
         }
     }
 
@@ -570,7 +719,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterAdminRequest is null";
+                errorMessage="PhoneNumber in RegisterAdminRequest is null";
             }
 
 
@@ -606,12 +755,15 @@ public class UserServiceImpl implements UserService{
                 return new RegisterAdminResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(adminRepo.findByEmail(request.getEmail())){
+            Admin admin;
+            admin=adminRepo.findAdminByEmail(request.getEmail());
+
+            if(admin!=null){
                 return new RegisterAdminResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -634,14 +786,62 @@ public class UserServiceImpl implements UserService{
 
                 UUID userID = UUID.randomUUID();
 
-                while(adminRepo.findById(userID).isPresent()){
-                    userID=UUID.randomUUID();
+
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+                Boolean isPresent=false;
+
+                try{
+                    admin=adminRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(admin==null){
+                        isPresent=false;
+                    }
                 }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
+                    userID=UUID.randomUUID();
+
+                    try{
+                        admin=adminRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(admin==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterAdminResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register Admin");
+                }
+
 
                 Admin newAdmin=new Admin(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.ADMIN,userID);
                 adminRepo.save(newAdmin);
 
-                if(adminRepo.findById(userID).isPresent()){
+                try{
+                    admin=adminRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(admin==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
@@ -666,7 +866,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("LoginRequest is null");
         }
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
         UUID userID=null;
         Shopper shopperUser=null;
         Customer customerUser=null;
