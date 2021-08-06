@@ -27,9 +27,10 @@ public class RegisterDriverInetgrationTest {
     private UserServiceImpl userService;
 
     RegisterDriverRequest request;
-
+    Driver driver;
     @BeforeEach
     void setup(){
+
         request=new RegisterDriverRequest("Name","Surname","Email","PhoneNumber","Password");
     }
 
@@ -147,54 +148,22 @@ public class RegisterDriverInetgrationTest {
         assertEquals("Email has already been used",response.getMessage());
         assertNotNull(response.getTimestamp());
     }
-//
-//    @Test
-//    @Description("Tests for when RegisterDriver is submitted with a valid credentials but UUID for dirverID has been used should timeout after 5 seconds if constantly a UUID used")
-//    @DisplayName("DriverID has already been used")
-//    void IntegrationTest_DriverIDAlreadybeenUsed() throws InvalidRequestException {
-//        request.setEmail("validEmail@gmail.com");
-//        request.setPassword("validPassword@1");
-//        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(true);
-//        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(true);
-//        RegisterDriverResponse response=userService.registerDriver(request);
-//
-//        assertNotNull(response);
-//        assertEquals(false,response.isSuccess());
-//        assertEquals("Timeout occured and couldn't register driver",response.getMessage());
-//        assertNotNull(response.getTimestamp());
-//    }
-//
-//    @Test
-//    @Description("Tests for when RegisterDriver is submitted with a valid credentials")
-//    @DisplayName("Valid Registering")
-//    void IntegrationTest_ValidRegistration() throws InvalidRequestException {
-//        request.setEmail("validEmail@gmail.com");
-//        request.setPassword("validPassword@1");
-//        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(true);
-//        Mockito.when(driverRepo.findByID(Mockito.any())).thenReturn(false).thenReturn(true);
-//        RegisterDriverResponse response=userService.registerDriver(request);
-//
-//        assertNotNull(response);
-//        assertEquals(true,response.isSuccess());
-//        assertEquals("Driver succesfully added to database",response.getMessage());
-//        assertNotNull(response.getTimestamp());
-//    }
-//
-//    @Test
-//    @Description("Tests for when RegisterDriver is submitted with a valid credentials but Driver wasn't actually saved to database")
-//    @DisplayName("Valid Registering without actually being saved to database")
-//    void IntegrationTest_ValidRegistrationNotSavedToDatabase() throws InvalidRequestException {
-//        request.setEmail("validEmail@gmail.com");
-//        request.setPassword("validPassword@1");
-//        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(true);
-//        Mockito.when(driverRepo.findByID(Mockito.any())).thenReturn(false).thenReturn(false);
-//        RegisterDriverResponse response=userService.registerDriver(request);
-//
-//        assertNotNull(response);
-//        assertEquals(false,response.isSuccess());
-//        assertEquals("Could not save Driver to database",response.getMessage());
-//        assertNotNull(response.getTimestamp());
-//    }
-//
+
+
+
+    @Test
+    @Description("Tests for when RegisterDriver is submitted with a valid credentials")
+    @DisplayName("Valid Registering")
+    void IntegrationTest_ValidRegistration() throws InvalidRequestException {
+        request.setEmail("validEmail@gmail.com");
+        request.setPassword("validPassword@1");
+        RegisterDriverResponse response=userService.registerDriver(request);
+
+        assertNotNull(response);
+        assertEquals(true,response.isSuccess());
+        assertEquals("Driver succesfully added to database",response.getMessage());
+        assertNotNull(response.getTimestamp());
+
+    }
 
 }

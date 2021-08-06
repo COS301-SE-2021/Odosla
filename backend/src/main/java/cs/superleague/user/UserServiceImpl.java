@@ -290,7 +290,9 @@ public class UserServiceImpl implements UserService{
                 return new RegisterDriverResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(!driverRepo.findByEmail(request.getEmail())){
+            Driver driver;
+            driver=driverRepo.findDriverByEmail(request.getEmail());
+            if(driver!=null){
                 return new RegisterDriverResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
@@ -324,7 +326,7 @@ public class UserServiceImpl implements UserService{
 
                 Boolean isPresent=false;
 
-                Driver driver;
+
                 try{
                     driver=driverRepo.findById(userID).orElse(null);
                     isPresent=true;

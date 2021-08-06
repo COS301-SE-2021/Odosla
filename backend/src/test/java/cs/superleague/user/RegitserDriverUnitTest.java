@@ -133,7 +133,8 @@ public class RegitserDriverUnitTest {
     void UnitTest_EmailAlreadyExists() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(false);
+        Driver driver=new Driver();
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driver);
         RegisterDriverResponse response=userService.registerDriver(request);
 
         assertNotNull(response);
@@ -148,7 +149,7 @@ public class RegitserDriverUnitTest {
     void UnitTest_DriverIDAlreadybeenUsed() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(true);
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(null);
         Driver driver=new Driver();
         Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(java.util.Optional.of(driver));
         RegisterDriverResponse response=userService.registerDriver(request);
@@ -165,7 +166,7 @@ public class RegitserDriverUnitTest {
     void UnitTest_ValidRegistration() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(true);
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(null);
         Driver driver=new Driver();
         Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(null).thenReturn(java.util.Optional.of(driver));
         RegisterDriverResponse response=userService.registerDriver(request);
@@ -182,7 +183,7 @@ public class RegitserDriverUnitTest {
     void UnitTest_ValidRegistrationNotSavedToDatabase() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(driverRepo.findByEmail(Mockito.any())).thenReturn(true);
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(null);
         Driver driver=new Driver();
         Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(null).thenReturn(null);
         RegisterDriverResponse response=userService.registerDriver(request);
