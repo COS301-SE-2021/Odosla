@@ -1,6 +1,7 @@
-package cs.superleague.user;
+package cs.superleague.user.integration;
 
-import cs.superleague.shopping.ShoppingServiceImpl;
+import cs.superleague.integration.ServiceSelector;
+import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.AdminRepo;
@@ -10,33 +11,33 @@ import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.LoginRequest;
 import cs.superleague.user.responses.LoginResponse;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
-import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.Calendar;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(MockitoExtension.class)
-public class LoginUserUnitTest {
-    @Mock
-    ShopperRepo shopperRepo;
-    @Mock
-    DriverRepo driverRepo;
-    @Mock
+@SpringBootTest
+public class LoginUserIntegrationTest {
+
+    @Autowired
     CustomerRepo customerRepo;
-    @Mock
+
+    @Autowired
+    ShopperRepo shopperRepo;
+
+    @Autowired
+    DriverRepo driverRepo;
+
+    @Autowired
     AdminRepo adminRepo;
 
-    @InjectMocks
+    @Autowired
     private UserServiceImpl userService;
 
     LoginRequest loginRequest1;
@@ -72,7 +73,7 @@ public class LoginUserUnitTest {
     @Description("Tests for when login is submited with a null request object- exception should be thrown")
     @DisplayName("When request object is not specificed")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.loginUser(null));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getUserService().loginUser(null));
         assertEquals("LoginRequest is null", thrown.getMessage());
     }
 
@@ -80,8 +81,8 @@ public class LoginUserUnitTest {
     @Description("Tests for when login is submited with a null parameter for email in request object- exception should be thrown")
     @DisplayName("When request parameter object is not specificed")
     void UnitTest_testingEmailParameterNullRequestObject(){
-       loginRequest1.setEmail(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.loginUser(loginRequest1));
+        loginRequest1.setEmail(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("Email in LoginRequest is null", thrown.getMessage());
 
     }
@@ -91,7 +92,7 @@ public class LoginUserUnitTest {
     @DisplayName("When request parameter object is not specificed")
     void UnitTest_testingPasswordParameterNullRequestObject(){
         loginRequest1.setPassword(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.loginUser(loginRequest1));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("Password in LoginRequest is null", thrown.getMessage());
 
     }
@@ -100,7 +101,7 @@ public class LoginUserUnitTest {
     @DisplayName("When request parameter object is not specificed")
     void UnitTest_testingUserTypeParameterNullRequestObject(){
         loginRequest1.setUserType(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.loginUser(loginRequest1));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("UserType in LoginRequest is null", thrown.getMessage());
 
     }
@@ -121,7 +122,7 @@ public class LoginUserUnitTest {
     @DisplayName("DriverDoesNotExistException for login")
     void UnitTest_DriverDoesNotExist(){
         loginRequest1.setUserType(UserType.DRIVER);
-        Throwable thrown = Assertions.assertThrows(DriverDoesNotExistException.class, ()-> userService.loginUser(loginRequest1));
+        Throwable thrown = Assertions.assertThrows(DriverDoesNotExistException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("Driver does not exist", thrown.getMessage());
     }
 
@@ -129,7 +130,7 @@ public class LoginUserUnitTest {
     @Description("Test for shopper, if shopper does not exist")
     @DisplayName("ShopperDoesNotExistException for login")
     void UnitTest_ShopperDoesNotExist(){
-        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> userService.loginUser(loginRequest1));
+        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("Shopper does not exist", thrown.getMessage());
     }
 
@@ -138,7 +139,7 @@ public class LoginUserUnitTest {
     @DisplayName("CustomerDoesNotExistException for login")
     void UnitTest_CustomerDoesNotExist(){
         loginRequest1.setUserType(UserType.CUSTOMER);
-        Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.loginUser(loginRequest1));
+        Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("Customer does not exist", thrown.getMessage());
     }
 
@@ -147,7 +148,7 @@ public class LoginUserUnitTest {
     @DisplayName("AdminDoesNotExistException for login")
     void UnitTest_AdminDoesNotExist(){
         loginRequest1.setUserType(UserType.ADMIN);
-        Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> userService.loginUser(loginRequest1));
+        Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> ServiceSelector.getUserService().loginUser(loginRequest1));
         assertEquals("Admin does not exist", thrown.getMessage());
     }
 
@@ -159,9 +160,12 @@ public class LoginUserUnitTest {
         loginRequest1.setUserType(UserType.DRIVER);
         loginRequest1.setEmail("hi@gmail");
         driverToLogin.setPassword(passwordHashed);
-        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driverToLogin);
+        driverRepo.save(driverToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
+
+        Driver driver=driverRepo.findDriverByEmail(driverToLogin.getEmail());
+        assertEquals(false,driver.isActive());
     }
 
     @Test
@@ -171,9 +175,11 @@ public class LoginUserUnitTest {
         loginRequest1.setUserType(UserType.SHOPPER);
         loginRequest1.setEmail("hi@gmail");
         shopperToLogin.setPassword(passwordHashed);
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(shopperToLogin);
+        shopperRepo.save(shopperToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
+        Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
+        assertEquals(false,shopper.isActive());
     }
 
     @Test
@@ -183,9 +189,11 @@ public class LoginUserUnitTest {
         loginRequest1.setUserType(UserType.ADMIN);
         loginRequest1.setEmail("hi@gmail");
         adminToLogin.setPassword(passwordHashed);
-        Mockito.when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn(adminToLogin);
+        adminRepo.save(adminToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
+        Admin admin=adminRepo.findAdminByEmail(adminToLogin.getEmail());
+        assertEquals(false,admin.isActive());
     }
 
     @Test
@@ -195,9 +203,11 @@ public class LoginUserUnitTest {
         loginRequest1.setUserType(UserType.CUSTOMER);
         loginRequest1.setEmail("hi@gmail");
         customerToLogin.setPassword(passwordHashed);
-        Mockito.when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customerToLogin);
+        customerRepo.save(customerToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
+        Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
+        assertEquals(false,customer.isActive());
     }
 
     @Test
@@ -208,12 +218,15 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         customerToLogin.setPassword(passwordHashed);
-        Mockito.when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customerToLogin);
+        customerRepo.save(customerToLogin);
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
         assertEquals(true, response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
+
+        Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
+        assertEquals(true,customer.isActive());
     }
 
     @Test
@@ -224,14 +237,15 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         adminToLogin.setPassword(passwordHashed);
-        Mockito.when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn(adminToLogin);
+        adminRepo.save(adminToLogin);
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
         assertEquals(true, response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
-
+        Admin admin=adminRepo.findAdminByEmail(adminToLogin.getEmail());
+        assertEquals(true,admin.isActive());
     }
 
     @Test
@@ -242,14 +256,15 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         shopperToLogin.setPassword(passwordHashed);
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(shopperToLogin);
+        shopperRepo.save(shopperToLogin);
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
         assertEquals(true, response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
-
+        Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
+        assertEquals(true,shopper.isActive());
     }
 
     @Test
@@ -260,22 +275,17 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         driverToLogin.setPassword(passwordHashed);
-        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driverToLogin);
+        driverRepo.save(driverToLogin);
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
         assertEquals(true, response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
+        Driver driver=driverRepo.findDriverByEmail(driverToLogin.getEmail());
+        assertEquals(true,driver.isActive());
 
     }
-
-
-
-
-
-
-
 
 
 }

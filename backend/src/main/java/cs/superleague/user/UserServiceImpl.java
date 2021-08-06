@@ -857,13 +857,36 @@ public class UserServiceImpl implements UserService{
     }
 
     @Value("${jwt.secret}")
-    private final String secret = "odosla";
+    private final String secret = "theOdoslaSuperLeagueProjectKeyForEncrptionMustBeCertainNumberOFBitsIReallyDontKnowHowToMakeThisStringLonger";
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
         LoginResponse response=null;
 
         if(request==null){
             throw new InvalidRequestException("LoginRequest is null");
+        }
+
+
+        Boolean isException=false;
+        String errorMessage="";
+
+        if(request.getEmail()==null){
+            isException=true;
+            errorMessage="Email in LoginRequest is null";
+        }
+        else if(request.getPassword()==null){
+
+            isException=true;
+            errorMessage="Password in LoginRequest is null";
+        }
+        else if(request.getUserType()==null){
+
+            isException=true;
+            errorMessage="UserType in LoginRequest is null";
+        }
+
+        if(isException){
+            throw new InvalidRequestException(errorMessage);
         }
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
@@ -884,6 +907,7 @@ public class UserServiceImpl implements UserService{
                 }
                 userID=driverToLogin.getDriverID();
                 driverUser=driverToLogin;
+                break;
 
             case SHOPPER:
                 assert shopperRepo!=null;
@@ -896,6 +920,7 @@ public class UserServiceImpl implements UserService{
                 }
                 userID=shopperToLogin.getShopperID();
                 shopperUser=shopperToLogin;
+                break;
 
             case ADMIN:
                 assert adminRepo!=null;
@@ -908,6 +933,7 @@ public class UserServiceImpl implements UserService{
                 }
                 userID=adminToLogin.getAdminID();
                 adminUser=adminToLogin;
+                break;
 
             case CUSTOMER:
                 assert customerRepo!=null;
@@ -920,6 +946,7 @@ public class UserServiceImpl implements UserService{
                 }
                 userID=customerToLogin.getCustomerID();
                 customerUser=customerToLogin;
+                break;
         }
 
         Map<String, Object> head = new HashMap<>();
@@ -933,20 +960,28 @@ public class UserServiceImpl implements UserService{
         switch (request.getUserType()){
             case SHOPPER:
                 assert shopperRepo!=null;
+                if(shopperUser!=null) {
                 shopperUser.setActive(true);
                 shopperRepo.save(shopperUser);
+                }
             case DRIVER:
                 assert driverRepo!=null;
-                driverUser.setActive(true);
-                driverRepo.save(driverUser);
+                if(driverUser!=null) {
+                    driverUser.setActive(true);
+                    driverRepo.save(driverUser);
+                }
             case CUSTOMER:
                 assert customerRepo!=null;
-                customerUser.setActive(true);
-                customerRepo.save(customerUser);
+                if(customerUser!=null) {
+                    customerUser.setActive(true);
+                    customerRepo.save(customerUser);
+                }
             case ADMIN:
                 assert adminRepo!=null;
-                adminUser.setActive(true);
-                adminRepo.save(adminUser);
+                if(adminUser!=null) {
+                    adminUser.setActive(true);
+                    adminRepo.save(adminUser);
+                }
 
         }
         return response;
