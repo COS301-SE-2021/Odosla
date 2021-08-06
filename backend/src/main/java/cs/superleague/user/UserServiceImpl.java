@@ -323,9 +323,7 @@ public class UserServiceImpl implements UserService{
                 long start = System.currentTimeMillis();
                 long end = start + 5000;
                 Boolean timeout=false;
-
                 Boolean isPresent=false;
-
 
                 try{
                     driver=driverRepo.findById(userID).orElse(null);
@@ -418,7 +416,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterShopperRequest is null";
+                errorMessage="PhoneNumber in RegisterShopperRequest is null";
             }
 
 
@@ -454,12 +452,14 @@ public class UserServiceImpl implements UserService{
                 return new RegisterShopperResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(shopperRepo.findByEmail(request.getEmail())){
+            Shopper shopper;
+            shopper=shopperRepo.findShopperByEmail(request.getEmail());
+            if(shopper!=null){
                 return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -482,14 +482,63 @@ public class UserServiceImpl implements UserService{
 
                 UUID userID = UUID.randomUUID();
 
-                while(shopperRepo.findById(userID).isPresent()){
-                    userID=UUID.randomUUID();
+
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+                Boolean isPresent=false;
+
+                try{
+                    shopper=shopperRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(shopper==null){
+                        isPresent=false;
+                    }
                 }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
+                    userID=UUID.randomUUID();
+
+                    try{
+                        shopper=shopperRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(shopper==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register shopper");
+                }
+
 
                 Shopper newShopper=new Shopper(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.SHOPPER,userID);
                 shopperRepo.save(newShopper);
 
-                if(driverRepo.findById(userID).isPresent()){
+                try{
+                    shopper=shopperRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(shopper==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
@@ -500,7 +549,7 @@ public class UserServiceImpl implements UserService{
 
         }
         else{
-            throw new InvalidRequestException("Request object can't be null for RegisterDriverRequest");
+            throw new InvalidRequestException("Request object can't be null for RegisterShopperRequest");
         }
     }
 
