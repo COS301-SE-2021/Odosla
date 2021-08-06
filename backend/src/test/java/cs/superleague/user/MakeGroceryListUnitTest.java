@@ -49,12 +49,15 @@ public class MakeGroceryListUnitTest {
     GeoPoint deliveryAddress;
 
     List<Item> listOfItems = new ArrayList<>();
+    List<String> listOfBarcodes = new ArrayList<>();
     List<GroceryList> groceryLists = new ArrayList<>();
     @BeforeEach
     void setUp() {
         userID = UUID.randomUUID();
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
+
+        listOfBarcodes.add("123456");
 
         I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
@@ -79,68 +82,67 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(null));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(null));
         assertEquals("MakeGroceryList Request is null - could not make grocery list", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
     void UnitTest_testingNullRequestUserIDParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfItems, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfBarcodes, "Seamus' Party");
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("UserID is null - could not make grocery list", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When items parameter is not specified")
-    void UnitTest_testingNullRequestItemsParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, item, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Item list empty - could not make the grocery list", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When items parameter is not specified")
-    void UnitTest_testingNullRequestItemsListParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, item, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Item list empty - could not make the grocery list", thrown.getMessage());
+    @DisplayName("When barcodes parameter is not specified")
+    void UnitTest_testingNullRequestBarcodesParameter(){
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, null, "Seamus' Party");
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
+        assertEquals("Barcodes list empty - could not make the grocery list", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When name parameter is not specified")
     void UnitTest_testingNullRequestNameParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' party");
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.MakeGroceryList(request));
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.makeGroceryList(request));
         assertEquals("User with given userID does not exist - could not make the grocery list", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When groceryList with given name exists")
     void UnitTest_testingExistingGroceryList(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.MakeGroceryList(request));
-        assertEquals("Grocery List Name exists - could not make the grocery list", thrown.getMessage());
+
+        try{
+            MakeGroceryListResponse response = userService.makeGroceryList(request);
+            assertFalse(response.isSuccess());
+            assertEquals("Grocery List Name exists - could not make the grocery list", response.getMessage());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfItems, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' bachelor party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
-            MakeGroceryListResponse response = userService.MakeGroceryList(request);
+            MakeGroceryListResponse response = userService.makeGroceryList(request);
             assertEquals("Grocery List successfully created", response.getMessage());
             assertTrue(response.isSuccess());
         }catch(Exception e){

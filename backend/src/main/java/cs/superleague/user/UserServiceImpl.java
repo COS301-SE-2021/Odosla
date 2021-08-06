@@ -756,13 +756,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public MakeGroceryListResponse MakeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
+    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
         UUID userID;
         String name;
         String message;
-        Optional<Customer> customerOptional;
-        Customer customer;
+        Customer customer = null;
         GroceryList groceryList;
+        List<Item> items = new ArrayList<>();
 
         if(request == null){
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
@@ -772,8 +772,8 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UserID is null - could not make grocery list");
         }
 
-        if(request.getItems() == null || request.getItems().isEmpty()){
-            throw new InvalidRequestException("Item list empty - could not make the grocery list");
+        if(request.getBarcodes() == null || request.getBarcodes().isEmpty()){
+            throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
 
         if(request.getName() == null){
@@ -781,27 +781,41 @@ public class UserServiceImpl implements UserService{
         }
 
         userID = request.getUserID();
-        customerOptional = customerRepo.findById(userID);
-        if(customerOptional == null || !customerOptional.isPresent()){
+        try {
+            customer = customerRepo.findById(userID).orElse(null);
+        }catch(Exception e){}
+
+        if(customer == null){
             throw new UserDoesNotExistException("User with given userID does not exist - could not make the grocery list");
         }
 
-        customer = customerOptional.get();
         name = request.getName();
-        for (GroceryList list: customer.getGroceryLists()) { // if name exists throw exception
+        for (GroceryList list: customer.getGroceryLists()) { // if name exists return false
             if(list.getName().equals(name)){
-                throw new InvalidRequestException("Grocery List Name exists - could not make the grocery list");
+                message = "Grocery List Name exists - could not make the grocery list";
+                return new MakeGroceryListResponse(false, message, new Date());
             }
         }
 
-        groceryList = new GroceryList(UUID.randomUUID(), name, request.getItems());
+        for (String barcode: request.getBarcodes()) {
+            // getItemByBarcode(barcode);
+
+            if(true) { // found
+                // add item to items list
+            }else{
+                message = "Cannot find item with given barcode - could not make the grocery list";
+                return new MakeGroceryListResponse(false, message, new Date());
+            }
+        }
+
+        groceryList = new GroceryList(UUID.randomUUID(), name, items);
         message = "Grocery List successfully created";
 
         groceryList = groceryListRepo.save(groceryList);
         customer.getGroceryLists().add(groceryList);
         customerRepo.save(customer);
 
-        return new MakeGroceryListResponse(groceryList, true, message);
+        return new MakeGroceryListResponse(true, message, new Date());
     }
 
     @Override
