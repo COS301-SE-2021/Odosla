@@ -15,6 +15,6 @@ public interface ShopperRepo extends JpaRepository<Shopper, UUID> {
   List<Shopper> findAll();
 
   Shopper findShopperByEmail(String email);
-  Optional<Shopper> findById(UUID driverID);
+  Optional<Shopper> findById(UUID shopperID);
 }
 

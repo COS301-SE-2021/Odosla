@@ -629,7 +629,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterAdminRequest is null";
+                errorMessage="PhoneNumber in RegisterAdminRequest is null";
             }
 
 
@@ -665,12 +665,15 @@ public class UserServiceImpl implements UserService{
                 return new RegisterAdminResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(adminRepo.findByEmail(request.getEmail())){
+            Admin admin;
+            admin=adminRepo.findAdminByEmail(request.getEmail());
+
+            if(admin!=null){
                 return new RegisterAdminResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -693,14 +696,62 @@ public class UserServiceImpl implements UserService{
 
                 UUID userID = UUID.randomUUID();
 
-                while(adminRepo.findById(userID).isPresent()){
-                    userID=UUID.randomUUID();
+
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+                Boolean isPresent=false;
+
+                try{
+                    admin=adminRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(admin==null){
+                        isPresent=false;
+                    }
                 }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
+                    userID=UUID.randomUUID();
+
+                    try{
+                        admin=adminRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(admin==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterAdminResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register Admin");
+                }
+
 
                 Admin newAdmin=new Admin(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.ADMIN,userID);
                 adminRepo.save(newAdmin);
 
-                if(adminRepo.findById(userID).isPresent()){
+                try{
+                    admin=adminRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(admin==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
