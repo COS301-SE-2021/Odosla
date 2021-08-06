@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService{
             }
             else if(request.getPhoneNumber()==null){
                 isException=true;
-                errorMessage="Phone number in RegisterDriverRequest is null";
+                errorMessage="PhoneNumber in RegisterDriverRequest is null";
             }
 
 
@@ -290,12 +290,12 @@ public class UserServiceImpl implements UserService{
                 return new RegisterDriverResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            if(driverRepo.findByEmail(request.getEmail())){
+            if(!driverRepo.findByEmail(request.getEmail())){
                 return new RegisterDriverResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
             else{
 
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
 
                 String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -318,14 +318,63 @@ public class UserServiceImpl implements UserService{
 
                 UUID userID = UUID.randomUUID();
 
-                while(driverRepo.findById(userID).isPresent()){
+                long start = System.currentTimeMillis();
+                long end = start + 5000;
+                Boolean timeout=false;
+
+                Boolean isPresent=false;
+
+                Driver driver;
+                try{
+                    driver=driverRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(driver==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                while(isPresent){
                     userID=UUID.randomUUID();
+
+                    try{
+                        driver=driverRepo.findById(userID).orElse(null);
+                        isPresent=true;
+                        if(driver==null){
+                            isPresent=false;
+                        }
+                    }
+                    catch (NullPointerException e){
+                        isPresent=false;
+                    }
+
+                    if(System.currentTimeMillis() > end) {
+                        timeout=true;
+                        break;
+                    }
+                }
+
+                if(timeout==true){
+                    return new RegisterDriverResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register driver");
                 }
 
                 Driver newDriver=new Driver(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.DRIVER,userID);
                 driverRepo.save(newDriver);
 
-                if(driverRepo.findById(userID).isPresent()){
+                try{
+                    driver=driverRepo.findById(userID).orElse(null);
+                    isPresent=true;
+                    if(driver==null){
+                        isPresent=false;
+                    }
+                }
+                catch (NullPointerException e){
+                    isPresent=false;
+                }
+
+                if(isPresent){
                     /* send a notification with email */
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
