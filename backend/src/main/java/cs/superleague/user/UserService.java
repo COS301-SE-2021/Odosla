@@ -24,6 +24,6 @@ public interface UserService {
     GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     //RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException, AlreadyExistsException;
     UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
-    AddToCartResponse addToCart(AddToCartRequest request) throws InvalidRequestException, UserDoesNotExistException;
+    SetCartResponse setCart(SetCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     ClearShoppingCartResponse clearShoppingCart(ClearShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException;
 }

@@ -7,9 +7,7 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.requests.GetStoresRequest;
-import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
@@ -19,10 +17,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import cs.superleague.user.exceptions.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
@@ -663,7 +659,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    @Value("${jwt.secret}")
+    // @Value("${jwt.secret}")
     private final String secret = "odosla";
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
@@ -1212,13 +1208,46 @@ public class UserServiceImpl implements UserService{
         return new UpdateCustomerDetailsResponse(message, success, new Date());
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                customerID - Customer that should be found in database
+     *                barcodes- list of the barcode of iiems to add to cart
+     *                name - the name of the grocery list to be created
+     *
+     * makeGroceryList should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if customer exists in database, else throw CustomerDoesNotExistException
+     *                3.Return response object
+     * Request Object (makeGroceryListRequest)
+     * {
+     *                "userID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "barcodes":["34gd-43232-43fsfs-421fsfs-grw", "34gd-43232-43fsfs-421fsfs-grx"]
+     *                "name": "grocery list name"
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message": "Grocery List successfully created"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws CustomerDoesNotExistException
+     */
     @Override
-    public AddToCartResponse addToCart(AddToCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+    public SetCartResponse setCart(SetCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
 
         UUID customerID;
         Customer customer;
         String message = "Items successfully added to cart";
         Optional<Customer> customerOptional;
+        GetStoresResponse response = null;
+        List<Item> items = new ArrayList<>();
+        List<Item> cart = new ArrayList<>();
+
 
         if(request == null){
             throw new InvalidRequestException("addToCart Request is null - Could not add to cart");
@@ -1231,22 +1260,55 @@ public class UserServiceImpl implements UserService{
         customerID = request.getCustomerID();
         customerOptional = customerRepo.findById(customerID);
         if(customerOptional == null || !customerOptional.isPresent()){
-            throw new UserDoesNotExistException("User with given userID does not exist - could add to cart");
+            throw new CustomerDoesNotExistException("User with given userID does not exist - could add to cart");
         }
 
         customer = customerOptional.get();
 
-        if(request.getItems() == null || request.getItems().isEmpty()){
+        if(request.getBarcodes() == null || request.getBarcodes().isEmpty()){
             message = "Item list empty - could not add to cart";
-            return new AddToCartResponse(message, false, new Date());
+            return new SetCartResponse(message, false, new Date());
         }
 
-        customer.getShoppingCart().clear();
-        customer.getShoppingCart().addAll(request.getItems());
+        try {
+            response = shoppingService.getStores(new GetStoresRequest());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
+        if(response == null || !response.getResponse()){
+            message = "Cannot find items - could not add to cart";
+            return new SetCartResponse(message, false, new Date());
+        }
+
+        for (Store store: response.getStores()) {
+            items.addAll(store.getStock().getItems());
+        }
+
+        for (String barcode: request.getBarcodes()) {
+            for (Item item: items) {
+                if(item.getBarcode().equals(barcode)){
+                    cart.add(item);
+                }
+            }
+        }
+
+        if(cart.isEmpty()){
+            message = "Cannot find item with given barcode - could not add to cart";
+            return new SetCartResponse(message, false, new Date());
+        }
+
+//        customer.getShoppingCart().addAll(cart);
+        customer.setShoppingCart(cart);
+
+//        Customer c = new Customer("name", "surname", "name@email.com", "1111111111",
+//                "tetetE$4", new Date(), "fsdfghg", "safdf",
+//                "adg", true, UserType.CUSTOMER, UUID.randomUUID(), null, customer.getGroceryLists(), null, null, null);
         customerRepo.save(customer);
+//        customerRepo.save(new Customer("", "", "",))
+//        customerRepo.save(c);
 
-        return new AddToCartResponse(message, true, new Date());
+        return new SetCartResponse(message, true, new Date());
     }
 
     @Override
