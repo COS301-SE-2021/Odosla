@@ -1066,15 +1066,48 @@ public class UserServiceImpl implements UserService{
         return new GetShoppingCartResponse(shoppingCart, message, success);
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                customerID - Customer that should be found in database
+     *                name - the name of the customer that they want changed to
+     *                surname - the surname of the customer that they want changed to
+     *                email - the email of the customer that they want changed to
+     *                password - the password of the customer that they want changed to
+     *
+     * UpdateCustomerDetailsRequest should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if customer exists in database, else throw CustomerDoesNotExistException
+     *                4.Return response object
+     * Request Object (makeGroceryListRequest)
+     * {
+     *                "userID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "name": "Harold"
+     *                "surname": "Mbalula"
+     *                "email": "mbalula@gmail.com"
+     *                "password": "$%^&*INJHBGVFYRdr&3"
+     *                "phoneNumber": "0712345678"
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message": "Customer successfully updated"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws CustomerDoesNotExistException
+     */
     @Override
-    public UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, UserDoesNotExistException{
+    public UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
 
         String message;
         UUID customerID;
-        Customer customer;
+        Customer customer = null;
         boolean success;
         boolean emptyUpdate = true;
-        Optional<Customer> customerOptional;
 
         if(request == null){
             throw new InvalidRequestException("UpdateCustomer Request is null - Could not update customer");
@@ -1085,14 +1118,15 @@ public class UserServiceImpl implements UserService{
         }
 
         customerID = request.getCustomerID();
-        customerOptional = customerRepo.findById(customerID);
-        if(customerOptional == null || !customerOptional.isPresent()){
-            throw new UserDoesNotExistException("User with given userID does not exist - could not update customer");
+        try {
+            customer = customerRepo.findById(customerID).orElse(null);
+        }catch(Exception e){}
+
+        if(customer == null){
+            throw new CustomerDoesNotExistException("User with given userID does not exist - could not update customer");
         }
 
         // authentication ??
-
-        customer = customerOptional.get();
 
         if(request.getName() != null && !Objects.equals(request.getName(), customer.getName())){
             emptyUpdate = false;
@@ -1283,6 +1317,5 @@ public class UserServiceImpl implements UserService{
 
         return sb.toString();
     }
-
 
 }
