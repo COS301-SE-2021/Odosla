@@ -17,6 +17,7 @@ import cs.superleague.shopping.responses.GetNextQueuedResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.User;
+import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.CompletePackagingOrderRequest;
 import cs.superleague.user.responses.CompletePackagingOrderResponse;
 import org.junit.jupiter.api.*;
@@ -37,6 +38,9 @@ public class CompletePackingOrderUnitTest {
 
     @Mock
     private OrderRepo orderRepo;
+
+    @Mock
+    private ShopperRepo shopperRepo;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -93,7 +97,7 @@ public class CompletePackingOrderUnitTest {
     @Test
     @Description("Tests for when orderID in request object is null- exception should be thrown")
     @DisplayName("When request object parameter -orderID - is not specified")
-    void UnitTest_testingNull_storeID_Parameter_RequestObject(){
+    void UnitTest_testingNull_orderID_Parameter_RequestObject(){
         CompletePackagingOrderRequest request=new CompletePackagingOrderRequest(null, true);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.completePackagingOrder(request));
         assertEquals("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity", thrown.getMessage());
@@ -117,6 +121,7 @@ public class CompletePackingOrderUnitTest {
 
         CompletePackagingOrderRequest request= new CompletePackagingOrderRequest(expectedShopper1, true);
         when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(o));
+        when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         CompletePackagingOrderResponse response= userService.completePackagingOrder(request);
         assertNotNull(response);
         assertEquals(true,response.isSuccess());

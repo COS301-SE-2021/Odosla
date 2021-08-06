@@ -106,6 +106,21 @@ public class UserServiceImpl implements UserService{
             }
             orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
+            Shopper shopperEntity=null;
+            try {
+                shopperEntity = shopperRepo.findById(orderEntity.getShopperID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+            }
+
+            if(shopperEntity==null)
+            {
+                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+            }
+
+            shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
+
             //TODO check the order type and call the respective user (driver or customer)
             response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
@@ -850,7 +865,31 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
-
+    /**
+     *
+     * @param request is used to bring in:
+     *                userID - user ID to fetch the corresponding shopper from the database
+     *  GetShoppersByUUID should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if shopper exists in database, else throw ShopperDoesNotExist
+     *                5.Return response object
+     * Request object (GetShopperByUUIDRequest)
+     * {
+     *               "userID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     *
+     * Response object (GetShopperByUUIDResponse)
+     * {
+     *                "shopperEntity": shopperEntity
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Shopper entity with corresponding user id was returned"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws ShopperDoesNotExistException
+     */
     @Override
     public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
         GetShopperByUUIDResponse response=null;
@@ -863,7 +902,9 @@ public class UserServiceImpl implements UserService{
             Shopper shopperEntity=null;
             try {
                 shopperEntity = shopperRepo.findById(request.getUserID()).orElse(null);
-            }catch(Exception e){}
+            }catch(Exception e){
+                throw new ShopperDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
+            }
             if(shopperEntity==null) {
                 throw new ShopperDoesNotExistException("User with ID does not exist in repository - could not get Shopper entity");
             }

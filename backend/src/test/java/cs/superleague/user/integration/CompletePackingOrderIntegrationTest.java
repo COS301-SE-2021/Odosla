@@ -47,7 +47,9 @@ public class CompletePackingOrderIntegrationTest {
 
     Shopper shopper;
     Order o;
+    Order o2;
     UUID o1UUID=UUID.randomUUID();
+    UUID o2UUID=UUID.randomUUID();
     UUID storeUUID1= UUID.randomUUID();
     UUID expectedU1=UUID.randomUUID();
     UUID expectedS1=UUID.randomUUID();
@@ -83,7 +85,10 @@ public class CompletePackingOrderIntegrationTest {
         c1.setTime(d1);
 
         o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        o2=new Order(o2UUID, expectedU1, expectedS1, UUID.randomUUID(), Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+
         orderRepo.save(o);
+        orderRepo.save(o2);
 
         shopper = new Shopper();
         shopper.setShopperID(expectedShopper1);
@@ -123,6 +128,15 @@ public class CompletePackingOrderIntegrationTest {
         request = new CompletePackagingOrderRequest(UUID.randomUUID(), true);
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completePackagingOrder(request));
         assertEquals("Order with ID does not exist in repository - could not get Order entity", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when completePackingOrder shopperID doesnt exist - exception should be thrown")
+    @DisplayName("When shopperID does not exist")
+    void IntegrationTest_testingInvalidShopper(){
+        request = new CompletePackagingOrderRequest(o2UUID, true);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.completePackagingOrder(request));
+        assertEquals("Shopper with ID does not exist in repository - could not get Shopper entity", thrown.getMessage());
     }
 
     @Test
