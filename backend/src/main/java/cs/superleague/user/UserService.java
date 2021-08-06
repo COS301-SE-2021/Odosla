@@ -10,7 +10,7 @@ public interface UserService {
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist;
-    public ScanItemResponse scanItem(ScanItemRequest request);
+    public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
     public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
     public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
