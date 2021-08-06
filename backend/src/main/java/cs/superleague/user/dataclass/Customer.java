@@ -85,6 +85,26 @@ public class Customer extends User {
         return customerID;
     }
 
+    public void setCustomerID(UUID customerID) {
+        this.customerID = customerID;
+    }
+
+    public void setGroceryLists(List<GroceryList> groceryLists) {
+        this.groceryLists = groceryLists;
+    }
+
+    public void setPreference(Preference preference) {
+        this.preference = preference;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public void setShoppingCart(List<Item> shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
     public Preference getPreference() {
         return preference;
     }

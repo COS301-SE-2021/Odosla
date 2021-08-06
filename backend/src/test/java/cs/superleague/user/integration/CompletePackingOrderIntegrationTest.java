@@ -1,6 +1,5 @@
 package cs.superleague.user.integration;
 
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -10,15 +9,9 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.shopping.repos.ItemRepo;
-import cs.superleague.shopping.requests.GetStoresRequest;
-import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.requests.AddToCartRequest;
 import cs.superleague.user.requests.CompletePackagingOrderRequest;
 import cs.superleague.user.responses.CompletePackagingOrderResponse;
 import org.junit.jupiter.api.*;
@@ -47,7 +40,9 @@ public class CompletePackingOrderIntegrationTest {
 
     Shopper shopper;
     Order o;
+    Order o2;
     UUID o1UUID=UUID.randomUUID();
+    UUID o2UUID=UUID.randomUUID();
     UUID storeUUID1= UUID.randomUUID();
     UUID expectedU1=UUID.randomUUID();
     UUID expectedS1=UUID.randomUUID();
@@ -83,7 +78,10 @@ public class CompletePackingOrderIntegrationTest {
         c1.setTime(d1);
 
         o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        o2=new Order(o2UUID, expectedU1, expectedS1, UUID.randomUUID(), Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+
         orderRepo.save(o);
+        orderRepo.save(o2);
 
         shopper = new Shopper();
         shopper.setShopperID(expectedShopper1);
@@ -123,6 +121,15 @@ public class CompletePackingOrderIntegrationTest {
         request = new CompletePackagingOrderRequest(UUID.randomUUID(), true);
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completePackagingOrder(request));
         assertEquals("Order with ID does not exist in repository - could not get Order entity", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when completePackingOrder shopperID doesnt exist - exception should be thrown")
+    @DisplayName("When shopperID does not exist")
+    void IntegrationTest_testingInvalidShopper(){
+        request = new CompletePackagingOrderRequest(o2UUID, true);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.completePackagingOrder(request));
+        assertEquals("Shopper with ID does not exist in repository - could not get Shopper entity", thrown.getMessage());
     }
 
     @Test

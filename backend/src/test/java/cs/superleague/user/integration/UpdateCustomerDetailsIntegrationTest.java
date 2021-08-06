@@ -7,6 +7,7 @@ import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
@@ -118,7 +119,7 @@ public class UpdateCustomerDetailsIntegrationTest {
     void IntegrationTest_testingInvalidUser(){
         request = new UpdateCustomerDetailsRequest(UUID.randomUUID(), "Dean", "Smith", "ds@smallFC.com",
                 "0712345678", customer.getPassword(), deliveryAddress);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.updateCustomerDetails(request));
+        Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.updateCustomerDetails(request));
         assertEquals("User with given userID does not exist - could not update customer", thrown.getMessage());
     }
 

@@ -5,6 +5,7 @@ import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
@@ -105,7 +106,7 @@ public class GetShoppingCartUnitTest {
     void UnitTest_testingInvalidUser(){
         GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
+        Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.getShoppingCart(request));
         assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
     }
 

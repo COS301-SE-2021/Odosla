@@ -7,8 +7,8 @@ import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.requests.GetShoppingCartRequest;
@@ -130,7 +130,7 @@ public class GetShoppingCartIntegrationTest {
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
         GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID());
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
+        Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.getShoppingCart(request));
         assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
     }
 
