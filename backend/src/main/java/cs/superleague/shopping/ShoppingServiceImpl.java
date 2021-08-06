@@ -7,6 +7,7 @@ import cs.superleague.user.UserService;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.requests.GetShopperByUUIDRequest;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,6 +171,15 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         // // Add order to respective store order queue in db // //
         // ...
+        GetStoreByUUIDRequest getStoreByUUIDRequest = new GetStoreByUUIDRequest(updatedOrder.getStoreID());
+        GetStoreByUUIDResponse getStoreByUUIDResponse = null;
+        try {
+            getStoreByUUIDResponse = getStoreByUUID(getStoreByUUIDRequest);
+        }catch(Exception e){
+            throw new InvalidRequestException(e.getMessage());
+        }
+
+        getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
 
         response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
 
@@ -212,7 +222,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(request!=null){
 
             if(request.getStoreID()==null){
-                throw new InvalidRequestException("Store ID paramter in request can't be null - can't get next queued");
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
             Store store;
 
@@ -223,37 +233,31 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
 
-            List<Order> orderqueue= store.getOrderQueue();
+            if(store == null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
 
-            if(orderqueue.size()==0){
-                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderqueue,null);
+            List<Order> orderQueue= store.getOrderQueue();
+
+            if(orderQueue.size()==0){
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
 
-            Date oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
-            Order correspondingOrder=orderqueue.get(0);
+            Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
+            Order correspondingOrder=orderQueue.get(0);
 
-            for (Order o: orderqueue){
-                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
-                    oldestProcssedDate=o.getProcessDate().getTime();
+            for (Order o: orderQueue){
+                if(oldestProcessedDate.after(o.getProcessDate().getTime())){
+                    oldestProcessedDate=o.getProcessDate().getTime();
                     correspondingOrder=o;
                 }
             }
 
-            orderqueue.remove(correspondingOrder);
-            store.setOrderQueue(orderqueue);
+            orderQueue.remove(correspondingOrder);
+            store.setOrderQueue(orderQueue);
 
-            oldestProcssedDate=orderqueue.get(0).getProcessDate().getTime();
-            correspondingOrder=orderqueue.get(0);
-
-            for (Order o: orderqueue){
-                if(oldestProcssedDate.after(o.getProcessDate().getTime())){
-                    oldestProcssedDate=o.getProcessDate().getTime();
-                    correspondingOrder=o;
-                }
-            }
-
-            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderqueue,correspondingOrder);
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderQueue,correspondingOrder);
 
         }
         else{
@@ -663,7 +667,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      */
 
     @Override
-    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
         AddShopperResponse response=null;
 
         if(request!=null){
@@ -771,7 +775,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @throws UserDoesNotExistException
      */
     @Override
-    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
         RemoveShopperResponse response=null;
 
         if(request!=null){
@@ -899,6 +903,292 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
 
         return response;
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *                private String storeBrand;
+                      private int maxShoppers;
+                      private int maxOrders;
+                      private Boolean isOpen;
+                      private int openingTime;
+                      private int closingTime;
+     *
+     * updateStore should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's store object is not null, else throw an InvalidRequestException
+     *               3. Check if the request's storeID is not null, else throw an StoreDoesNotExistException
+     *               4. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               5. Update the found store object's fields with the request object store's data.
+     *               6. Initialize the response object's constructor to the storeID and response message
+     *               7. Return the response object.
+     *
+     * Request Object (UpdateStoreRequest):
+     * {
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                "store":{
+     *                          "storeBrand":"PnP"
+     *                          ...
+     *                }
+     * }
+     *
+     * Response Object (UpdateStoreResponse):
+     * {
+     *                "response":true
+     *                "message":"Store updated successfully"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+    @Override
+    public UpdateStoreResponse updateStore(UpdateStoreRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+
+        UpdateStoreResponse response = null;
+        if (request != null) {
+            if (request.getStore() == null) {
+                throw new InvalidRequestException("The Store object in UpdateStoreRequest parameter is null - Could not update store");
+            }
+            Store storeEntity = null;
+            try {
+                storeEntity = storeRepo.findById(request.getStore().getStoreID()).orElse(null);
+            } catch (Exception e) {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
+            }
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Store entity");
+            }
+
+            if(request.getStore().getOpen()!=null){
+                storeEntity.setOpen(request.getStore().getOpen());
+            }
+            if(request.getStore().getOpeningTime()!=-1){
+                storeEntity.setOpeningTime(request.getStore().getOpeningTime());
+            }
+            if(request.getStore().getClosingTime()!=-1){
+                storeEntity.setClosingTime(request.getStore().getClosingTime());
+            }
+            if(request.getStore().getStoreBrand()!=null){
+                storeEntity.setStoreBrand(request.getStore().getStoreBrand());
+            }
+            if(request.getStore().getMaxShoppers()!=-1){
+                storeEntity.setMaxShoppers(request.getStore().getMaxShoppers());
+            }
+            if(request.getStore().getMaxOrders()!=-1){
+                storeEntity.setMaxOrders(request.getStore().getMaxOrders());
+            }
+            storeRepo.save(storeEntity);
+
+            response = new UpdateStoreResponse(true, "Store updated successfully", storeEntity.getStoreID());
+        }
+        else {
+            throw new InvalidRequestException("The request object for UpdateStoreRequest is null - Could not update store");
+        }
+        return response;
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                private storeID
+     *                private List<Shopper> newShoppers;
+     *
+     * updateShoppers should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the request's store object is not null, else throw an InvalidRequestException
+     *               3. Check if the request's newShoppers object is not null, else throw an InvalidRequestException
+     *               4. Check if the request's storeID is not null, else throw an StoreDoesNotExistException
+     *               5. Use the request's storeID to find the corresponding Store object in the repo. If
+     *               it doesn't exist then throw a StoreDoesNotExistException.
+     *               6. Update the found store object's list of shoppers with the request object store's shopper list.
+     *               7. Initialize the response object's constructor to the storeID and response message
+     *               8. Return the response object.
+     *
+     * Request Object (UpdateShoppersRequest):
+     * {
+     *
+     *                "store":{
+     *                          "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                          ...
+     *                }
+     *                "newShoppers":{
+     *                          "shopper":{
+     *                                  "id":"1fa96449-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                                  ...
+     *                          }
+     *                          "shopper":{
+     *                                  "id":"2fa96449-98e5-43a0-b4d0-9dbc8e29f74a"
+     *                                  ...
+     *                          }
+     *                }
+     * }
+     *
+     * Response Object (UpdateShoppersResponse):
+     * {
+     *                "response":true
+     *                "message":"Shoppers updated successfully"
+     *                "storeID":"7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+    @Override
+    public UpdateShoppersResponse updateShoppers(UpdateShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+
+        UpdateShoppersResponse response = null;
+        if (request != null) {
+            if (request.getStore() == null) {
+                throw new InvalidRequestException("The Store object in UpdateShoppersRequest parameter is null - Could not update shoppers");
+            }
+            if (request.getNewShoppers() == null) {
+                throw new InvalidRequestException("The newShoppers object in UpdateShoppersRequest parameter is null - Could not update shoppers");
+            }
+            Store storeEntity = null;
+            try {
+                storeEntity = storeRepo.findById(request.getStore().getStoreID()).orElse(null);
+            } catch (Exception e) {
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Shoppers entity");
+            }
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not update Shoppers entity");
+            }
+
+            storeEntity.setShoppers(request.getNewShoppers());
+            storeRepo.save(storeEntity);
+
+            response = new UpdateShoppersResponse(true, "Shoppers updated successfully", storeEntity.getStoreID());
+        }
+        else {
+            throw new InvalidRequestException("The request object for UpdateShoppersRequest is null - Could not update shoppers");
+        }
+        return response;
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *
+     *  getStores should:
+     *                1. Check if there are any stores in the store database
+     *                2. If there are stores, store them in a list
+     *                3. If there aren't any stores in the database, return response with success being false
+     *                4. If list of shoppers is not null return response with list of shoppers and success status being true
+     *
+     * Request object (GetStoresRequest)
+     * {
+     *
+     *
+     * }
+     *
+     * Response object (GetStoresResponse)
+     * {
+     *                "stores": storeEntity.findAll()
+     *                "success": "true"
+     *                "message":"List of Stores successfully returned"
+     * }
+     * @return
+     */
+    @Override
+    public GetStoresResponse getStores(GetStoresRequest request) throws InvalidRequestException{
+        GetStoresResponse response=null;
+
+        if(request!=null){
+
+            List<Store> storeEntity=null;
+
+            try {
+                storeEntity = storeRepo.findAll();
+
+            }catch (Exception e){}
+
+            if(storeRepo.count()!=0) {
+
+                response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
+            }
+            else{
+                response = new GetStoresResponse(false,"List of Stores is null", null);
+            }
+        }
+        else{
+            throw new InvalidRequestException("Request object for getStores can't be null");
+        }
+        return response;
+
+    }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private storeID
+     *
+     * getQueue should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate order attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the store exists, else throw a StoreDoesNotExistException
+     *               4. Find and store the order list from that store in the response object
+     *               5. Return the response object.
+     *
+     * Request Object (GetQueueRequest):
+     * {
+     *                "storeID": {"d09832893"}
+     * }
+     *
+     * Response Object (GetQueueResponse):
+     * {
+     *                "success":true
+     *                "message":"Order was correctly added to queue"
+     *                "queueOfOrders": store.getOrderQueue
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * @throws StoreDoesNotExistException
+     * */
+
+    @Override
+    public GetQueueResponse getQueue(GetQueueRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        GetQueueResponse response=null;
+
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get queue of orders");
+            }
+            Store store=null;
+
+            try {
+                store = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch(Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - can't get queue of orders");
+            }
+
+            if(store==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - can't get queue of orders");
+            }
+            List<Order> orderQueue= store.getOrderQueue();
+
+            if(orderQueue.size()!=0){
+                response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
+            }
+            else
+            {
+                response=new GetQueueResponse(false,"The order queue of shop is empty",null);
+
+            }
+            return response;
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
+        }
     }
 }
 

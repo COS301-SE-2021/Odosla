@@ -11,8 +11,8 @@ import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
-import cs.superleague.user.requests.GetShoppingCartRequest;
-import cs.superleague.user.responses.GetShoppingCartResponse;
+import cs.superleague.user.requests.AddToCartRequest;
+import cs.superleague.user.responses.AddToCartResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +25,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class GetShoppingCartIntegrationTest {
+public class AddToCartIntegrationTest {
 
     @Autowired
     CustomerRepo customerRepo;
@@ -40,15 +40,11 @@ public class GetShoppingCartIntegrationTest {
     private UserServiceImpl userService;
 
     GroceryList groceryList;
-    GroceryList groceryListEmptyCart;
     Customer customer;
-    Customer customerEMPTYCart;
     Item I1;
     Item I2;
-    Item item;
 
     UUID userID;
-    UUID userID_EMPTY;
     UUID groceryListID;
     UUID expectedS1;
 
@@ -56,51 +52,37 @@ public class GetShoppingCartIntegrationTest {
 
     List<Item> listOfItems = new ArrayList<>();
     List<GroceryList> groceryLists = new ArrayList<>();
-    List<GroceryList> groceryListsEmptyCart = new ArrayList<>();
     List<Item> shoppingCart = new ArrayList<>();
-    List<Item> shoppingCartEMPTY = new ArrayList<>();
+    List<Item> shoppingCartNULL = new ArrayList<>();
+
+    AddToCartRequest request;
+    AddToCartResponse response;
 
     @BeforeEach
     void setUp() {
         userID = UUID.randomUUID();
-        userID_EMPTY = UUID.randomUUID();
-
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
         I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
-        item = null;
-
         listOfItems.add(I1);
         listOfItems.add(I2);
 
+        shoppingCartNULL = null;
         shoppingCart.add(I1);
         shoppingCart.add(I2);
-
-        itemRepo.saveAll(shoppingCart);
 
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
-        groceryListEmptyCart = new GroceryList(UUID.randomUUID(), "Seamus' party", listOfItems);
-
         groceryLists.add(groceryList);
-        groceryListsEmptyCart.add(groceryListEmptyCart);
-
-        groceryListRepo.saveAll(groceryLists);
-        groceryListRepo.saveAll(groceryListsEmptyCart);
-
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
-
-        customerEMPTYCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID_EMPTY, deliveryAddress, groceryListsEmptyCart, shoppingCartEMPTY, null, null);
-
-
+        itemRepo.saveAll(shoppingCart);
+        groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
-        customerRepo.save(customerEMPTYCart);
     }
 
     @AfterEach
@@ -114,35 +96,35 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When request object is not specified")
     void IntegrationTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(null));
-        assertEquals("GetShoppingCart Request is null - could retrieve shopping cart", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.addToCart(null));
+        assertEquals("addToCart Request is null - Could not add to cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When userID parameter is not specified")
     void IntegrationTest_testingNullRequestUserIDParameter(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getShoppingCart(request));
-        assertEquals("UserID is null - could retrieve shopping cart", thrown.getMessage());
+        request = new AddToCartRequest(null, shoppingCart);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.addToCart(request));
+        assertEquals("CustomerId is null - could not add to cart", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID());
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.getShoppingCart(request));
-        assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
+        request = new AddToCartRequest(UUID.randomUUID(), shoppingCart);
+        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.addToCart(request));
+        assertEquals("User with given userID does not exist - could add to cart", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When an empty shoppingCart is returned")
-    void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID_EMPTY);
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping Cart does not have any items", response.getMessage());
+    @DisplayName("When item list is null/empty")
+    void IntegrationTest_testingNullEmptyItemList(){
+        request = new AddToCartRequest(userID, new ArrayList<>());
+
+        try {
+            response = userService.addToCart(request);
+            assertEquals("Item list empty - could not add to cart", response.getMessage());
             assertFalse(response.isSuccess());
-            assertEquals(0, response.getShoppingCart().size());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -150,15 +132,14 @@ public class GetShoppingCartIntegrationTest {
     }
 
     @Test
-    @DisplayName("When the groceryList Creation is successful")
-    void UnitTest_testingSuccessfulGroceryListCreation(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+    @DisplayName("When nonnull update values are given")
+    void IntegrationTest_testingSuccessfulUpdate(){
+        request = new AddToCartRequest(userID, shoppingCart);
 
-        try{
-            GetShoppingCartResponse response = userService.getShoppingCart(request);
-            assertEquals("Shopping cart successfully retrieved", response.getMessage());
+        try {
+            response = userService.addToCart(request);
+            assertEquals("Items successfully added to cart", response.getMessage());
             assertTrue(response.isSuccess());
-            assertEquals(shoppingCart.containsAll(response.getShoppingCart()), response.getShoppingCart().containsAll(shoppingCart));
         }catch(Exception e){
             e.printStackTrace();
             fail();
