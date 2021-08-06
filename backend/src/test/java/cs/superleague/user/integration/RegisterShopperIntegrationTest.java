@@ -1,6 +1,7 @@
 package cs.superleague.user.integration;
 
 import cs.superleague.user.UserServiceImpl;
+import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.ShopperRepo;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.UUID;
 
@@ -163,6 +165,18 @@ public class RegisterShopperIntegrationTest {
         assertEquals("Shopper succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
 
+        Shopper shopperSaved=shopperRepo.findShopperByEmail(request.getEmail());
+
+        assertNotNull(shopperSaved);
+        assertEquals(request.getName(),shopperSaved.getName());
+        assertEquals(request.getSurname(),shopperSaved.getSurname());
+        assertEquals(request.getPhoneNumber(),shopperSaved.getPhoneNumber());
+        assertEquals(request.getEmail(),shopperSaved.getEmail());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        assertEquals(true,passwordEncoder.matches(request.getPassword(),shopperSaved.getPassword()));
+
     }
+
+
 
 }

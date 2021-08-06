@@ -2,6 +2,7 @@ package cs.superleague.user.integration;
 
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.requests.RegisterAdminRequest;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.UUID;
 
@@ -162,6 +164,17 @@ public class RegisterAdminIntegrationTest {
         assertEquals(true,response.isSuccess());
         assertEquals("Admin succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
+
+        Admin adminSaved=adminRepo.findAdminByEmail(request.getEmail());
+
+        assertNotNull(adminSaved);
+        assertEquals(request.getName(),adminSaved.getName());
+        assertEquals(request.getSurname(),adminSaved.getSurname());
+        assertEquals(request.getPhoneNumber(),adminSaved.getPhoneNumber());
+        assertEquals(request.getEmail(),adminSaved.getEmail());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        assertEquals(true,passwordEncoder.matches(request.getPassword(),adminSaved.getPassword()));
+
 
     }
 }

@@ -776,7 +776,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("LoginRequest is null");
         }
 
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
         UUID userID=null;
         Shopper shopperUser=null;
         Customer customerUser=null;

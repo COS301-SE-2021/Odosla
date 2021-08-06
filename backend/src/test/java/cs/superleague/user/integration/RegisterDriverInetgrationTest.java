@@ -7,10 +7,10 @@ import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.RegisterDriverRequest;
 import cs.superleague.user.responses.RegisterDriverResponse;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.UUID;
 
@@ -163,6 +163,16 @@ public class RegisterDriverInetgrationTest {
         assertEquals(true,response.isSuccess());
         assertEquals("Driver succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
+
+        Driver driverSaved=driverRepo.findDriverByEmail(request.getEmail());
+
+        assertNotNull(driverSaved);
+        assertEquals(request.getName(),driverSaved.getName());
+        assertEquals(request.getSurname(),driverSaved.getSurname());
+        assertEquals(request.getPhoneNumber(),driverSaved.getPhoneNumber());
+        assertEquals(request.getEmail(),driverSaved.getEmail());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        assertEquals(true,passwordEncoder.matches(request.getPassword(),driverSaved.getPassword()));
 
     }
 

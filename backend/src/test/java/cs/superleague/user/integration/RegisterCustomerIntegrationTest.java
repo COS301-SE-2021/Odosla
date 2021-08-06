@@ -19,6 +19,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -175,6 +176,16 @@ public class RegisterCustomerIntegrationTest {
         assertEquals(true,response.isSuccess());
         assertEquals("Customer succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
+
+        Customer customerSaved=customerRepo.findCustomerByEmail(request.getEmail());
+
+        assertNotNull(customerSaved);
+        assertEquals(request.getName(),customerSaved.getName());
+        assertEquals(request.getSurname(),customerSaved.getSurname());
+        assertEquals(request.getPhoneNumber(),customerSaved.getPhoneNumber());
+        assertEquals(request.getEmail(),customerSaved.getEmail());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        assertEquals(true,passwordEncoder.matches(request.getPassword(),customerSaved.getPassword()));
 
     }
 }
