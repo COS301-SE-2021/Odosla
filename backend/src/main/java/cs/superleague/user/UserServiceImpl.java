@@ -4,10 +4,13 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.requests.GetStoresRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -15,6 +18,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,16 +41,18 @@ public class UserServiceImpl implements UserService{
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
     private final OrderRepo orderRepo;
+    private final ShoppingService shoppingService;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
         this.customerRepo=customerRepo;
         this.groceryListRepo=groceryListRepo;
         this.orderRepo= orderRepo;
+        this.shoppingService = shoppingService;
     }
 
     /**
@@ -869,14 +875,47 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                userID - Order that should be found in database
+     *                barcodes- list of the barcode used to identify the items to place in the groceryList
+     *                name - the name of the grocery list to be created
+     *
+     * makeGroceryList should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if request object's barcode list is empty, else throw InvalidRequestException
+     *                4.Check if request object's name is null, else throw InvalidRequestException
+     *                5.Check if customer exists in database, else throw CustomerDoesNotExistException
+     *                5.Use the barcodes to find the corresponding items in the database.
+     *                6.Return response object
+     * Request Object (makeGroceryListRequest)
+     * {
+     *                "userID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *                "barcode":["34gd-43232-43fsfs-421fsfs-grw", "34gd-43232-43fsfs-421fsfs-grx"]
+     *                "name": "grocery list name"
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message": "Grocery List successfully created"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws CustomerDoesNotExistException
+     */
     @Override
-    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException{
+    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
         UUID userID;
-        String name;
-        String message;
+        String name, message;
         Customer customer = null;
         GroceryList groceryList;
-        List<Item> items = new ArrayList<>();
+        GetStoresResponse response = null;
+        List<Item> items = new ArrayList<>(), groceryListItems = new ArrayList<>();
 
         if(request == null){
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
@@ -900,7 +939,7 @@ public class UserServiceImpl implements UserService{
         }catch(Exception e){}
 
         if(customer == null){
-            throw new UserDoesNotExistException("User with given userID does not exist - could not make the grocery list");
+            throw new CustomerDoesNotExistException("User with given userID does not exist - could not make the grocery list");
         }
 
         name = request.getName();
@@ -911,21 +950,38 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        for (String barcode: request.getBarcodes()) {
-            // getItemByBarcode(barcode);
+        try {
+            response = shoppingService.getStores(new GetStoresRequest());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-            if(true) { // found
-                // add item to items list
-            }else{
-                message = "Cannot find item with given barcode - could not make the grocery list";
-                return new MakeGroceryListResponse(false, message, new Date());
+        if(response == null || !response.getResponse()){
+            message = "Cannot find items - could not make the grocery list";
+            return new MakeGroceryListResponse(false, message, new Date());
+        }
+
+        for (Store store: response.getStores()) {
+            items.addAll(store.getStock().getItems());
+        }
+
+        for (String barcode: request.getBarcodes()) {
+            for (Item item: items) {
+                if(item.getBarcode().equals(barcode)){
+                    groceryListItems.add(item);
+                }
             }
         }
 
-        groceryList = new GroceryList(UUID.randomUUID(), name, items);
+        if(groceryListItems.isEmpty()){
+            message = "Cannot find item with given barcode - could not make the grocery list";
+            return new MakeGroceryListResponse(false, message, new Date());
+        }
+
+        groceryList = new GroceryList(UUID.randomUUID(), name, groceryListItems);
         message = "Grocery List successfully created";
 
-        groceryList = groceryListRepo.save(groceryList);
+        groceryListRepo.save(groceryList);
         customer.getGroceryLists().add(groceryList);
         customerRepo.save(customer);
 
