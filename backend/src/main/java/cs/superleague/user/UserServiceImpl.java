@@ -1029,8 +1029,35 @@ public class UserServiceImpl implements UserService{
         return new MakeGroceryListResponse(true, message, new Date());
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                userID - Order that should be found in database
+     *                barcodes- list of the barcode used to identify the items to place in the groceryList
+     *                name - the name of the grocery list to be created
+     *
+     * makeGroceryList should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if customer exists in database, else throw CustomerDoesNotExistException
+     *                4.Return response object
+     * Request Object (makeGroceryListRequest)
+     * {
+     *                "userID":"d30e7a98-c918-11eb-b8bc-0242ac130003"
+     *
+     * }
+     * Response Object
+     * {
+     *                "success":"true"
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message": "Shopping cart successfully retrieved"
+     *
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws CustomerDoesNotExistException
+     */
     @Override
-    public GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException{
+    public GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
         UUID userID;
         Optional<Customer> customerOptional;
         Customer customer;
@@ -1049,7 +1076,7 @@ public class UserServiceImpl implements UserService{
         userID = request.getUserID();
         customerOptional = customerRepo.findById(userID);
         if(customerOptional == null || !customerOptional.isPresent()){
-            throw new UserDoesNotExistException("User with given userID does not exist - could not retrieve shopping cart");
+            throw new CustomerDoesNotExistException("User with given userID does not exist - could not retrieve shopping cart");
         }
 
         customer = customerOptional.get();
