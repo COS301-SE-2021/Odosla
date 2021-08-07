@@ -93,16 +93,16 @@ public class Customer extends User {
         this.groceryLists = groceryLists;
     }
 
+    public void setShoppingCart(List<Item> shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
     public void setPreference(Preference preference) {
         this.preference = preference;
     }
 
     public void setWallet(Wallet wallet) {
         this.wallet = wallet;
-    }
-
-    public void setShoppingCart(List<Item> shoppingCart) {
-        this.shoppingCart = shoppingCart;
     }
 
     public Preference getPreference() {
@@ -112,4 +112,5 @@ public class Customer extends User {
     public Wallet getWallet() {
         return wallet;
     }
+
 }

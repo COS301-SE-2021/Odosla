@@ -1,5 +1,6 @@
 package cs.superleague.user.dataclass;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 import java.util.UUID;
@@ -10,6 +11,7 @@ public class User {
     /* Attributes */
     private String name;
     private String surname;
+    @Column(unique = true)
     private String email;
     private String phoneNumber;
     private String password;

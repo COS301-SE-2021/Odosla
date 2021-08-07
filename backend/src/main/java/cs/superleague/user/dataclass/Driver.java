@@ -12,6 +12,8 @@ import java.util.UUID;
 public class Driver extends User {
 
     /* Attributes */
+
+    @Column(unique = true)
     @Id
     private UUID driverID;
     private double rating;
