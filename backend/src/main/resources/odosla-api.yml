@@ -102,6 +102,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
 
+  /shopping/getStores:
+    post:
+      summary: Endpoint for Get Stores use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetStoresRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetStoresResponse"
+
 
 
   /payment/updateOrder:
@@ -256,6 +278,51 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ShopperObject"
+
+    StoreObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        storeBrand:
+          type: string
+        isOpen:
+          type: boolean
+        maxShoppers:
+          type: integer
+        maxOrders:
+          type: integer
+        openingTime:
+          type: integer
+        closingTime:
+          type: integer
+        orderQueue:
+          type: array
+        currentOrders:
+          type: array
+        shoppers:
+          type: array
+
+    shopping_GetStoresRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    shopping_GetStoresResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
 
     OrderObject:
       description: "Generic schema for an Order"
