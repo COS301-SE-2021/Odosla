@@ -303,6 +303,8 @@ components:
           type: array
         shoppers:
           type: array
+        stock:
+          type: object
 
     shopping_GetStoresRequest:
       description: This object is expected as input
