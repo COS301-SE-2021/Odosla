@@ -15,7 +15,6 @@ import cs.superleague.user.repos.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -1340,6 +1339,52 @@ public class UserServiceImpl implements UserService{
         customer = customerRepo.save(customer);
 
         return new ClearShoppingCartResponse(customer.getShoppingCart(), message, true, new Date());
+    }
+
+    @Override
+    public RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
+
+        String message;
+        Customer customer = null;
+        List<Item> cart;
+
+        if(request == null){
+            throw new InvalidRequestException("RemoveFromCart Request is null - Could not remove from cart");
+        }
+
+        if(request.getCustomerID() == null){
+            throw new InvalidRequestException("CustomerId is null - could not remove from cart");
+        }
+
+        if(request.getBarcode() == null){
+            throw new InvalidRequestException("Barcode is null - could not remove from cart");
+        }
+
+        try {
+            customer = customerRepo.findById(request.getCustomerID()).orElse(null);
+        }catch(Exception e){}
+
+        if(customer == null){
+            throw new CustomerDoesNotExistException("User with given userID does not exist - could not remove from cart");
+        }
+
+        cart = customer.getShoppingCart();
+
+        if(cart == null || cart.isEmpty()){
+            message = "There are no items in the cart - Could not remove from cart";
+            return new RemoveFromCartResponse(cart, message, false, new Date());
+        }
+
+        for (Item item: cart) {
+            if(item.getBarcode().equals(request.getBarcode())){
+                cart.remove(item);
+                message = "Item successfully removed from cart";
+                return new RemoveFromCartResponse(cart, message, true, new Date());
+            }
+        }
+
+        message = "Item with given barcode does not exist - Could not remove from cart";
+        return new RemoveFromCartResponse(cart, message, false, new Date());
     }
 
     /* helper */
