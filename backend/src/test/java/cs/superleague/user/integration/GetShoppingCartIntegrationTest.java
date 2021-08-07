@@ -95,7 +95,7 @@ public class GetShoppingCartIntegrationTest {
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
 
-        customerEMPTYCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+        customerEMPTYCart = new Customer("D", "S", "ds@smallClubFC.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID_EMPTY, deliveryAddress, groceryListsEmptyCart, shoppingCartEMPTY, null, null);
 
 
