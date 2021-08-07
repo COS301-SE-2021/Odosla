@@ -1157,19 +1157,19 @@ public class UserServiceImpl implements UserService{
             switch(userType){
                 case "CUSTOMER":
                     assert customerRepo!=null;
-                    user=customerRepo.findCustomerByEmail(email);
+                    user=(Customer)customerRepo.findCustomerByEmail(email);
                     break;
                 case "SHOPPER":
                     assert shopperRepo!=null;
-                    user=shopperRepo.findShopperByEmail(email);
+                    user=(Shopper) shopperRepo.findShopperByEmail(email);
                     break;
                 case "ADMIN":
                     assert adminRepo!=null;
-                    user=adminRepo.findAdminByEmail(email);
+                    user=(Admin) adminRepo.findAdminByEmail(email);
                     break;
                 case "DRIVER":
                     assert driverRepo!=null;
-                    user=driverRepo.findDriverByEmail(email);
+                    user=(Driver) driverRepo.findDriverByEmail(email);
             }
             if(user!=null){
                 response=new GetCurrentUserResponse(user,true,Calendar.getInstance().getTime(),"User successfully returned");

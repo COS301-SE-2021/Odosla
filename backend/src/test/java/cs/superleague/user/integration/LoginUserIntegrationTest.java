@@ -165,7 +165,7 @@ public class LoginUserIntegrationTest {
         assertEquals("Password is incorrect", thrown.getMessage());
 
         Driver driver=driverRepo.findDriverByEmail(driverToLogin.getEmail());
-        assertEquals(false,driver.isActive());
+
     }
 
     @Test
@@ -179,7 +179,7 @@ public class LoginUserIntegrationTest {
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
         Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
-        assertEquals(false,shopper.isActive());
+
     }
 
     @Test
@@ -193,7 +193,6 @@ public class LoginUserIntegrationTest {
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
         Admin admin=adminRepo.findAdminByEmail(adminToLogin.getEmail());
-        assertEquals(false,admin.isActive());
     }
 
     @Test
@@ -207,7 +206,6 @@ public class LoginUserIntegrationTest {
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
         Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
-        assertEquals(false,customer.isActive());
     }
 
     @Test
@@ -226,7 +224,6 @@ public class LoginUserIntegrationTest {
         assertEquals("User successfully logged in",response.getMessage());
 
         Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
-        assertEquals(true,customer.isActive());
     }
 
     @Test
@@ -245,7 +242,6 @@ public class LoginUserIntegrationTest {
         assertEquals("User successfully logged in",response.getMessage());
 
         Admin admin=adminRepo.findAdminByEmail(adminToLogin.getEmail());
-        assertEquals(true,admin.isActive());
     }
 
     @Test
@@ -264,7 +260,6 @@ public class LoginUserIntegrationTest {
         assertEquals("User successfully logged in",response.getMessage());
 
         Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
-        assertEquals(true,shopper.isActive());
     }
 
     @Test
@@ -283,7 +278,6 @@ public class LoginUserIntegrationTest {
         assertEquals("User successfully logged in",response.getMessage());
 
         Driver driver=driverRepo.findDriverByEmail(driverToLogin.getEmail());
-        assertEquals(true,driver.isActive());
 
     }
 
