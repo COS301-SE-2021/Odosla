@@ -142,25 +142,4 @@ public class User {
         this.accountType = accountType;
     }
 
-    /* Functions */
-
-    public boolean login(){
-        return true;
-    }
-
-    public boolean logout(){
-        return true;
-    }
-
-    public boolean registerUser(){
-        return true;
-    }
-
-    public boolean resetPassword(){
-        return true;
-    }
-
-    public boolean updateAccountDetails(){
-        return true;
-    }
 }
