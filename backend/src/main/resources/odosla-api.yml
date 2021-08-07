@@ -324,6 +324,7 @@ components:
           items:
             $ref: "#/components/schemas/StoreObject"
 
+
     OrderObject:
       description: "Generic schema for an Order"
       type: object
