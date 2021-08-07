@@ -85,12 +85,12 @@ public class RemoveFromCartIntegrationTest {
                 "123Pol*&", new Date(), UUID.randomUUID().toString(),UUID.randomUUID().toString(),
                 new Date().toString(), true, UserType.CUSTOMER, userID, address, groceryListsNullCart, null, null, null);
 
-        customerEmptyCart = new Customer("Harry", "Kane", "kane@spur.com", "0721234569",
+        customerEmptyCart = new Customer("Harry", "Kane", "kane@spurs.com", "0721234569",
                 "123Pol*&", new Date(), UUID.randomUUID().toString(),UUID.randomUUID().toString(),
                 new Date().toString(), true, UserType.CUSTOMER, customerIDEmptyCart, address, groceryListsEmptyCart,
                 emptyCart, null, null);
 
-        customer = new Customer("Harry", "Kane", "kane@spur.com", "0721234569",
+        customer = new Customer("Harry", "Kane", "kane@spursy.com", "0721234569",
                 "123Pol*&", new Date(), UUID.randomUUID().toString(),UUID.randomUUID().toString(),
                 new Date().toString(), true, UserType.CUSTOMER, customerID, address, groceryLists,
                 cart, null, null);
@@ -100,8 +100,8 @@ public class RemoveFromCartIntegrationTest {
         groceryListRepo.save(groceryListNullCart);
         groceryListRepo.save(groceryListEmptyCart);
         customerRepo.save(customer);
-        customerRepo.save(customerEmptyCart);
         customerRepo.save(customerNullShoppingCart);
+        customerRepo.save(customerEmptyCart);
     }
 
     @AfterEach
