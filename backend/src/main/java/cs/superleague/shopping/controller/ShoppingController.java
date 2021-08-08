@@ -228,7 +228,6 @@ public class ShoppingController implements ShoppingApi{
 
     }
 
-    @Override
     public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
         //add mock data to repo
         List<Shopper> mockShopperList = new ArrayList<>();
@@ -303,7 +302,7 @@ public class ShoppingController implements ShoppingApi{
         return new ResponseEntity<>(response, httpStatus);
     }
 
-    @Override
+
     public ResponseEntity<ShoppingGetStoresResponse> getStores(ShoppingGetStoresRequest body) {
         //add mock data to repo
         UUID storeUUID1 = UUID.randomUUID();
@@ -314,20 +313,24 @@ public class ShoppingController implements ShoppingApi{
         item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","img/");
         item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","img/");
         ItemList.add(item1); ItemList.add(item2);
+        itemRepo.save(item1); itemRepo.save(item2);
 
         List<Item> ItemList2 = new ArrayList<>();
         Item item3, item4;
         item3=new Item("Milk","p423523144","69767699-9ABF-HJDS-1234-56789ABCDEFF",storeUUID2,36.99,1,"description","img/");
         item4=new Item("Beans","p623235254","65363563-9JBC-DEF0-1234-56789ABCDEFA", storeUUID2,14.99,3,"description","img/");
         ItemList2.add(item3); ItemList.add(item4);
+        itemRepo.save(item3); itemRepo.save(item4);
 
         Catalogue c = new Catalogue();
         c.setStoreID(storeUUID1);
         c.setItems(ItemList);
+        catalogueRepo.save(c);
 
         Catalogue c2 = new Catalogue();
         c2.setStoreID(storeUUID2);
         c2.setItems(ItemList2);
+        catalogueRepo.save(c2);
 
 
         List<Store> mockStoreList = new ArrayList<>();
