@@ -76,7 +76,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("UserID",userID1.toString());
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         assertEquals(request.getMessage(), "message");
@@ -101,7 +101,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID","");
+        properties.put("UserID","");
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -115,7 +115,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("UserID",userID1.toString());
         properties.put("UserType", "");
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -129,7 +129,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",invalidID.toString());
+        properties.put("UserID",invalidID.toString());
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -143,7 +143,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",null);
+        properties.put("UserID",null);
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -157,7 +157,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","");
-        properties.put("userID",userID1.toString());
+        properties.put("UserID",userID1.toString());
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -171,7 +171,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("UserID",userID1.toString());
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -185,7 +185,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","hello");
         properties.put("Subject","odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("UserID",userID1.toString());
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -199,7 +199,7 @@ class SendEmailNotificationIntegrationTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("UserID",userID1.toString());
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         SendEmailNotificationResponse response = notificationService.sendEmailNotification(request);

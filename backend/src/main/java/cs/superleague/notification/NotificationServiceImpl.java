@@ -57,6 +57,9 @@ public class NotificationServiceImpl implements NotificationService {
             throw new InvalidRequestException("Empty parameters.");
         }
         NotificationType notificationType = null;
+        if(request.getProperties().get("NotificationType") == null){
+            throw new InvalidRequestException("Null notification type.");
+        }
         switch (request.getProperties().get("NotificationType").toLowerCase()){
             case "delivery":
                 notificationType = NotificationType.DELIVERY;
@@ -79,6 +82,9 @@ public class NotificationServiceImpl implements NotificationService {
         }
         if (notificationType == null){
             throw new InvalidRequestException("Invalid notification type.");
+        }
+        if (request.getProperties().get("UserID") == null || request.getProperties().get("UserID").equals("")){
+            throw new InvalidRequestException("Null UserID.");
         }
         UserType userType = null;
         if (request.getProperties().get("UserType") != null){
@@ -105,13 +111,31 @@ public class NotificationServiceImpl implements NotificationService {
         if (userType == null){
             throw new InvalidRequestException("Invalid UserType.");
         }
+        if (userType == UserType.ADMIN){
+            if (!adminRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
+        } else if (userType == UserType.CUSTOMER){
+            if (!customerRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
+        } else if (userType == UserType.DRIVER){
+            if (!driverRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
+        } else if (userType == UserType.SHOPPER){
+            if (!shopperRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
+        }
+
         UUID notificationID = UUID.randomUUID();
         while(notificationRepo.findById(notificationID).isPresent()){
             notificationID = UUID.randomUUID();
         }
         Notification notification = new Notification(
                 notificationID,
-                UUID.fromString(request.getProperties().get("userID")),
+                UUID.fromString(request.getProperties().get("UserID")),
                 request.getPayLoad(),
                 request.getCreatedDateTime(),
                 null,
@@ -177,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService {
         Map<String, String> properties = new HashMap<>();
         properties.put("NotificationType", request.getType());
         properties.put("Subject", request.getSubject());
-        properties.put("userID", request.getUserID().toString());
+        properties.put("UserID", request.getUserID().toString());
         properties.put("UserType", request.getUserType().toString());
         properties.put("ContactDetails", email);
         CreateNotificationRequest request1 = new CreateNotificationRequest(request.getMessage(), Calendar.getInstance(), properties);
