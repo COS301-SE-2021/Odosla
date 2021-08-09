@@ -279,17 +279,6 @@ components:
           items:
             $ref: "#/components/schemas/ShopperObject"
 
-    CatalogueObject:
-      description: "Generic schema for a catalogue"
-      type: object
-      properties:
-        storeID:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-
     StoreObject:
       description: "Generic schema for a store"
       type: object
@@ -308,20 +297,6 @@ components:
           type: integer
         closingTime:
           type: integer
-        orderQueue:
-          type: array
-          items:
-            $ref: "#/components/schemas/OrderObject"
-        currentOrders:
-          type: array
-          items:
-            $ref: "#/components/schemas/OrderObject"
-        shoppers:
-          type: array
-          items:
-            $ref: "#/components/schemas/ShopperObject"
-        stock:
-          type: object
 
     shopping_GetStoresRequest:
       description: This object is expected as input
