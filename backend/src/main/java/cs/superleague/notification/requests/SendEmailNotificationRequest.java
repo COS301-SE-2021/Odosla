@@ -16,7 +16,11 @@ public class SendEmailNotificationRequest {
         this.message = message;
         this.type = properties.get("Type");
         this.subject = properties.get("Subject");
-        this.userID = UUID.fromString(properties.get("UUID"));
+        if (properties.get("userID") != null && !properties.get("userID").equals("")) {
+            this.userID = UUID.fromString(properties.get("userID"));
+        }else{
+            this.userID = null;
+        }
     }
 
     public String getMessage() {
