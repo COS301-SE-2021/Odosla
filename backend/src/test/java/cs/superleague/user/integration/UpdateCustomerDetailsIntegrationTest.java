@@ -5,6 +5,7 @@ import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.InvalidRequestException;
@@ -16,11 +17,9 @@ import cs.superleague.user.responses.UpdateCustomerDetailsResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -132,6 +131,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Email is not valid", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -148,6 +148,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Password is not valid", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -164,6 +165,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Null values submitted - Nothing updated", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -180,6 +182,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Email is already taken", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -196,6 +199,18 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Customer successfully updated", response.getMessage());
             assertTrue(response.isSuccess());
+            assertNotNull(response.getTimestamp());
+
+            /* Ensure customer with same ID's details have been changed */
+            Optional<Customer> checkCustomer=customerRepo.findById(userID);
+            assertNotNull(checkCustomer);
+            assertEquals(userID, checkCustomer.get().getCustomerID());
+            assertEquals(request.getEmail(),checkCustomer.get().getEmail());
+            assertEquals(request.getName(),checkCustomer.get().getName());
+            assertEquals(request.getSurname(),checkCustomer.get().getSurname());
+            assertEquals(request.getPhoneNumber(),checkCustomer.get().getPhoneNumber());
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            passwordEncoder.matches(request.getPassword(),checkCustomer.get().getPassword());
         }catch(Exception e){
             e.printStackTrace();
             fail();

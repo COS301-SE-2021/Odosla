@@ -12,6 +12,8 @@ import java.util.UUID;
 public class Driver extends User {
 
     /* Attributes */
+
+    @Column(unique = true)
     @Id
     private UUID driverID;
     private double rating;
@@ -21,7 +23,7 @@ public class Driver extends User {
 
 
     public Driver(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID driverID) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
         this.driverID = driverID;
     }
 

@@ -40,7 +40,7 @@ public class Customer extends User {
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID, GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart, Preference preference, Wallet wallet) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
         this.customerID = customerID;
         this.address = address;
         this.groceryLists = groceryLists;
@@ -50,7 +50,7 @@ public class Customer extends User {
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
         this.customerID = customerID;
     }
 
@@ -85,6 +85,26 @@ public class Customer extends User {
         return customerID;
     }
 
+    public void setCustomerID(UUID customerID) {
+        this.customerID = customerID;
+    }
+
+    public void setGroceryLists(List<GroceryList> groceryLists) {
+        this.groceryLists = groceryLists;
+    }
+
+    public void setShoppingCart(List<Item> shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
+
+    public void setPreference(Preference preference) {
+        this.preference = preference;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
     public Preference getPreference() {
         return preference;
     }
@@ -92,4 +112,5 @@ public class Customer extends User {
     public Wallet getWallet() {
         return wallet;
     }
+
 }
