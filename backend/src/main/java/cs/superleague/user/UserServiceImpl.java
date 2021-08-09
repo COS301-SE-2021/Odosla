@@ -1,23 +1,18 @@
 package cs.superleague.user;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import cs.superleague.user.exceptions.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
@@ -26,6 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import java.util.Calendar;
+
+import static cs.superleague.user.dataclass.UserType.CUSTOMER;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
@@ -36,7 +33,7 @@ public class UserServiceImpl implements UserService{
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
     private final OrderRepo orderRepo;
-    //private final UserService userService;
+    private JwtUtil jwtTokenUtil=new JwtUtil();
 
     @Autowired
     public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo){//, UserService userService) {
@@ -337,7 +334,7 @@ public class UserServiceImpl implements UserService{
                     return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Timeout occured and couldn't register Customer");
                 }
 
-                Customer newCustomer=new Customer(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, UserType.CUSTOMER,userID);
+                Customer newCustomer=new Customer(request.getName(),request.getSurname(),request.getEmail(),request.getPhoneNumber(),passwordHashed,activationCode, CUSTOMER,userID);
                 customerRepo.save(newCustomer);
 
                 try{
@@ -949,43 +946,42 @@ public class UserServiceImpl implements UserService{
                 break;
         }
 
-        Map<String, Object> head = new HashMap<>();
-        head.put("typ", "JWT");
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("UUID", userID.toString());
-        String JWTToken = Jwts.builder().setHeader(head).setClaims(claims).setSubject(request.getEmail()).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 60 * 1000)).signWith(SignatureAlgorithm.HS512, secret).compact();
-        response=new LoginResponse(JWTToken,true,Calendar.getInstance().getTime(), "User successfully logged in");
+
+        String jwtToken="";
+
 
         switch (request.getUserType()){
             case SHOPPER:
                 assert shopperRepo!=null;
                 if(shopperUser!=null) {
-                shopperUser.setActive(true);
-                shopperRepo.save(shopperUser);
+                    jwtToken=jwtTokenUtil.generateJWTTokenShopper(shopperUser);
                 }
             case DRIVER:
                 assert driverRepo!=null;
                 if(driverUser!=null) {
-                    driverUser.setActive(true);
-                    driverRepo.save(driverUser);
+                    jwtToken=jwtTokenUtil.generateJWTTokenDriver(driverUser);
                 }
             case CUSTOMER:
                 assert customerRepo!=null;
                 if(customerUser!=null) {
-                    customerUser.setActive(true);
-                    customerRepo.save(customerUser);
+                    jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customerUser);
                 }
             case ADMIN:
                 assert adminRepo!=null;
                 if(adminUser!=null) {
-                    adminUser.setActive(true);
-                    adminRepo.save(adminUser);
+                    jwtToken=jwtTokenUtil.generateJWTTokenAdmin(adminUser);
                 }
+
+                if(jwtToken==""){
+                    return new LoginResponse(null, false, Calendar.getInstance().getTime(), "Couldn't generate JWTToken for user");
+                }
+
+                response=new LoginResponse(jwtToken,true,Calendar.getInstance().getTime(), "User successfully logged in");
 
         }
         return response;
     }
+
 
     @Override
     public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception {
@@ -1386,6 +1382,48 @@ public class UserServiceImpl implements UserService{
         }
 
         return new UpdateDriverDetailsResponse(message, success, new Date());
+      
+    public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException {
+        GetCurrentUserResponse response=null;
+        if(request!=null) {
+
+            if(request.getJWTToken()==null){
+                throw new InvalidRequestException("JWTToken in GetCurrentUserRequest is null");
+            }
+
+            final String jwtToken = request.getJWTToken();
+
+            String userType=jwtTokenUtil.extractUserType(jwtToken);
+            String email=jwtTokenUtil.extractEmail(jwtToken);
+            User user=null;
+            switch(userType){
+                case "CUSTOMER":
+                    assert customerRepo!=null;
+                    user=(Customer)customerRepo.findCustomerByEmail(email);
+                    break;
+                case "SHOPPER":
+                    assert shopperRepo!=null;
+                    user=(Shopper) shopperRepo.findShopperByEmail(email);
+                    break;
+                case "ADMIN":
+                    assert adminRepo!=null;
+                    user=(Admin) adminRepo.findAdminByEmail(email);
+                    break;
+                case "DRIVER":
+                    assert driverRepo!=null;
+                    user=(Driver) driverRepo.findDriverByEmail(email);
+            }
+            if(user!=null){
+                response=new GetCurrentUserResponse(user,true,Calendar.getInstance().getTime(),"User successfully returned");
+            }else{
+                response=new GetCurrentUserResponse(null,false,Calendar.getInstance().getTime(),"User could not be returned");
+            }
+        }
+        else{
+            throw new InvalidRequestException("GetCurrentUserRequest object is null");
+        }
+
+        return response;
     }
 
     @Override
