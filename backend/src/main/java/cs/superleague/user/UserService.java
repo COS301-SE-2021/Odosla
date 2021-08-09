@@ -18,7 +18,7 @@ public interface UserService {
     public LoginResponse loginUser(LoginRequest request) throws UserException;
     public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
     public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws UserException;
-
+    public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException;
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException;
     GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException;
