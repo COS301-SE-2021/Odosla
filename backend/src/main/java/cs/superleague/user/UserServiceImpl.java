@@ -1312,17 +1312,17 @@ public class UserServiceImpl implements UserService{
         boolean emptyUpdate = true;
         Optional<Driver> driverOptional;
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("UpdateDriver Request is null - Could not update driver");
         }
 
-        if(request.getDriverID() == null){
+        if (request.getDriverID() == null) {
             throw new InvalidRequestException("DriverId is null - could not update driver");
         }
 
         driverID = request.getDriverID();
         driverOptional = driverRepo.findById(driverID);
-        if(driverOptional == null || !driverOptional.isPresent()){
+        if (driverOptional == null || !driverOptional.isPresent()) {
             throw new DriverDoesNotExistException("User with given userID does not exist - could not update driver");
         }
 
@@ -1330,23 +1330,23 @@ public class UserServiceImpl implements UserService{
 
         driver = driverOptional.get();
 
-        if(request.getName() != null && !Objects.equals(request.getName(), driver.getName())){
+        if (request.getName() != null && !Objects.equals(request.getName(), driver.getName())) {
             emptyUpdate = false;
             driver.setName(request.getName());
         }
 
-        if(request.getSurname() != null && !request.getSurname().equals(driver.getSurname())){
+        if (request.getSurname() != null && !request.getSurname().equals(driver.getSurname())) {
             emptyUpdate = false;
             driver.setSurname(request.getSurname());
         }
 
-        if(request.getEmail() != null && !request.getEmail().equals(driver.getEmail())){
+        if (request.getEmail() != null && !request.getEmail().equals(driver.getEmail())) {
             emptyUpdate = false;
-            if(!emailRegex(request.getEmail())){
+            if (!emailRegex(request.getEmail())) {
                 message = "Email is not valid";
                 return new UpdateDriverDetailsResponse(message, false, new Date());
-            }else{
-                if(driverRepo.findDriverByEmail(request.getEmail()) != null){
+            } else {
+                if (driverRepo.findDriverByEmail(request.getEmail()) != null) {
                     message = "Email is already taken";
                     return new UpdateDriverDetailsResponse(message, false, new Date());
                 }
@@ -1354,34 +1354,35 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        if(request.getPassword() != null){
+        if (request.getPassword() != null) {
             emptyUpdate = false;
-            if(passwordRegex(request.getPassword())){
+            if (passwordRegex(request.getPassword())) {
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 driver.setPassword(passwordHashed);
-            }else{
+            } else {
                 message = "Password is not valid";
                 return new UpdateDriverDetailsResponse(message, false, new Date());
             }
         }
 
-        if(request.getPhoneNumber() != null && !request.getPhoneNumber().equals(driver.getPhoneNumber())){
+        if (request.getPhoneNumber() != null && !request.getPhoneNumber().equals(driver.getPhoneNumber())) {
             emptyUpdate = false;
             driver.setPhoneNumber(request.getPhoneNumber());
         }
 
         driverRepo.save(driver);
 
-        if(emptyUpdate){
+        if (emptyUpdate) {
             success = false;
             message = "Null values submitted - Nothing updated";
-        }else {
+        } else {
             success = true;
             message = "Driver successfully updated";
         }
 
         return new UpdateDriverDetailsResponse(message, success, new Date());
+    }
       
     public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException {
         GetCurrentUserResponse response=null;
