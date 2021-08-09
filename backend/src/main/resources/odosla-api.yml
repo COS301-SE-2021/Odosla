@@ -310,17 +310,15 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
-          description: generated token used to identify the caller of the endpoint
 
     shopping_GetStoresResponse:
       description: This object is expected as input
       type: object
       properties:
-        errorMessage:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        response:
+          type: boolean
+        message:
+            type: string
         stores:
           type: array
           items:
