@@ -82,11 +82,13 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",adminID.toString());
+        properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         assertEquals(request.getMessage(), "message");
         assertEquals(request.getSubject(), "Odosla");
         assertEquals(request.getType(), "delivery");
         assertEquals(request.getUserID(), adminID);
+        assertEquals(request.getUserType(), UserType.ADMIN);
     }
 
     @Test
@@ -105,6 +107,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",null);
+        properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
         assertEquals("Null userID.", thrown.getMessage());
@@ -118,6 +121,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID","");
+        properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
         assertEquals("Null userID.", thrown.getMessage());
@@ -131,9 +135,10 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",adminID.toString());
+        properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
-        assertEquals("Invalid userID, does not match any in the database.", thrown.getMessage());
+        assertEquals("User not found in database.", thrown.getMessage());
     }
 
     @Test
@@ -144,6 +149,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",adminID.toString());
+        properties.put("UserType", UserType.ADMIN.toString());
         when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminIncorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -158,6 +164,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",customerID.toString());
+        properties.put("UserType", UserType.CUSTOMER.toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerIncorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -172,6 +179,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",driverID.toString());
+        properties.put("UserType", UserType.DRIVER.toString());
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driverIncorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -186,6 +194,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
         properties.put("userID",shopperID.toString());
+        properties.put("UserType", UserType.SHOPPER.toString());
         when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopperIncorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -200,6 +209,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","");
         properties.put("userID",adminID.toString());
+        properties.put("UserType", UserType.ADMIN.toString());
         when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -214,6 +224,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","delivery");
         properties.put("Subject","odosla");
         properties.put("userID",adminID.toString());
+        properties.put("UserType", UserType.ADMIN.toString());
         when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -228,6 +239,7 @@ public class SendEmailNotificationUnitTest {
         properties.put("Type","hello");
         properties.put("Subject","odosla");
         properties.put("userID",adminID.toString());
+        properties.put("UserType", UserType.ADMIN.toString());
         when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
