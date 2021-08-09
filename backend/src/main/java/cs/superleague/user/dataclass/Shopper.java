@@ -22,7 +22,7 @@ public class Shopper extends User {
     }
 
     public Shopper(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID shopperID) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, isActive, accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
         this.shopperID = shopperID;
     }
 

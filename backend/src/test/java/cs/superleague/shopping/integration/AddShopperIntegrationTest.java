@@ -128,7 +128,7 @@ public class AddShopperIntegrationTest {
     @Test
     @Description("Test for when Shopper with shopperID does not exist in shopper database ")
     @DisplayName("When Shopper with ID doesn't exist")
-    void IntegrationTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void IntegrationTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
