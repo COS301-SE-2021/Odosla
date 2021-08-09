@@ -2,7 +2,6 @@ package cs.superleague.notification;
 
 import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
-import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
@@ -21,7 +20,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,10 +49,12 @@ public class SendEmailNotificationUnitTest {
     UUID customerID;
     UUID driverID;
     UUID shopperID;
+    UUID adminID2;
     Admin adminIncorrectEmail;
     Customer customerIncorrectEmail;
     Driver driverIncorrectEmail;
     Shopper shopperIncorrectEmail;
+    Admin adminCorrectEmail;
 
     @BeforeEach
     void setUp() {
@@ -66,6 +66,8 @@ public class SendEmailNotificationUnitTest {
         customerIncorrectEmail = new Customer("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.CUSTOMER, customerID);
         driverIncorrectEmail = new Driver("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.DRIVER, driverID);
         shopperIncorrectEmail = new Shopper("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.SHOPPER, shopperID);
+        adminCorrectEmail = new Admin("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID2);
+
     }
 
     @AfterEach
@@ -188,5 +190,47 @@ public class SendEmailNotificationUnitTest {
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
         assertEquals("Invalid recipient email address.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests when the subject is empty, should throw an exception.")
+    @DisplayName("Empty subject")
+    void requestObjectEmptySubject_UnitTest(){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","delivery");
+        properties.put("Subject","");
+        properties.put("userID",adminID.toString());
+        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Empty parameters.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests when the message is empty, should throw an exception.")
+    @DisplayName("Empty message")
+    void requestObjectEmptyMessage_UnitTest(){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","delivery");
+        properties.put("Subject","odosla");
+        properties.put("userID",adminID.toString());
+        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("", properties);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Empty parameters.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests when the type is invalid, should throw an exception from the createNotification function.")
+    @DisplayName("Invalid type")
+    void requestObjectInvalidType_UnitTest(){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","hello");
+        properties.put("Subject","odosla");
+        properties.put("userID",adminID.toString());
+        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Invalid notification type.", thrown.getMessage());
     }
 }
