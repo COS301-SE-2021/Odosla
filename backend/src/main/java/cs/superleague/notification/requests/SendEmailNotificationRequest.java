@@ -1,7 +1,9 @@
 package cs.superleague.notification.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import cs.superleague.user.dataclass.UserType;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -11,16 +13,38 @@ public class SendEmailNotificationRequest {
     private final UUID userID;
     private final String subject;
     private final String type;
+    private final UserType userType;
 
     public SendEmailNotificationRequest(String message, Map<String, String> properties) {
         this.message = message;
         this.type = properties.get("Type");
         this.subject = properties.get("Subject");
+        switch (properties.get("UserType").toLowerCase()){
+            case "admin":
+                this.userType = UserType.ADMIN;
+                break;
+            case "customer":
+                this.userType = UserType.CUSTOMER;
+                break;
+            case "driver":
+                this.userType = UserType.DRIVER;
+                break;
+            case "shopper":
+                this.userType = UserType.SHOPPER;
+                break;
+            default:
+                this.userType = null;
+                break;
+        }
         if (properties.get("userID") != null && !properties.get("userID").equals("")) {
             this.userID = UUID.fromString(properties.get("userID"));
         }else{
             this.userID = null;
         }
+    }
+
+    public UserType getUserType() {
+        return userType;
     }
 
     public String getMessage() {

@@ -111,20 +111,33 @@ public class NotificationServiceImpl implements NotificationService {
             throw new InvalidRequestException("Null userID.");
         }
         String email = "";
-        if (adminRepo.findById(request.getUserID()).isPresent()){
+        if (request.getUserType() == null){
+            throw new InvalidRequestException("Invalid UserType.");
+        }
+        if (request.getUserType() == UserType.ADMIN){
             Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
+            if (admin == null){
+                throw new InvalidRequestException("User not found in database.");
+            }
             email = admin.getEmail();
-        } else if (customerRepo.findById(request.getUserID()).isPresent()){
+        } else if (request.getUserType() == UserType.CUSTOMER){
             Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
+            if (customer == null){
+                throw new InvalidRequestException("User not found in database.");
+            }
             email = customer.getEmail();
-        }else if (driverRepo.findById(request.getUserID()).isPresent()){
+        }else if (request.getUserType() == UserType.DRIVER){
             Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
+            if (driver == null){
+                throw new InvalidRequestException("User not found in database.");
+            }
             email = driver.getEmail();
-        }else if (shopperRepo.findById(request.getUserID()).isPresent()){
+        }else if (request.getUserType() == UserType.SHOPPER) {
             Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
+            if (shopper == null) {
+                throw new InvalidRequestException("User not found in database.");
+            }
             email = shopper.getEmail();
-        }else{
-            throw new InvalidRequestException("Invalid userID, does not match any in the database.");
         }
         if (email == null){
             throw new InvalidRequestException("Null recipient email address.");
