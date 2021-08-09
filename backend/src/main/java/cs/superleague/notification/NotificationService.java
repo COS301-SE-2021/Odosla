@@ -6,7 +6,7 @@ import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.CreateNotificationResponse;
 import cs.superleague.notification.responses.RetrieveNotificationResponse;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
-import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.notification.exceptions.InvalidRequestException;
 
 public interface NotificationService {
 

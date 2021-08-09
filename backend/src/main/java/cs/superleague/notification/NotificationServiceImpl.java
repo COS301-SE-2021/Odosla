@@ -9,7 +9,7 @@ import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.CreateNotificationResponse;
 import cs.superleague.notification.responses.RetrieveNotificationResponse;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
-import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.notification.exceptions.InvalidRequestException;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
@@ -29,16 +29,15 @@ import java.util.regex.Pattern;
 
 @Service("NotificationServiceImpl")
 public class NotificationServiceImpl implements NotificationService {
-    private final JavaMailSender javaMailSender;
+    @Autowired
+    private JavaMailSender javaMailSender;
     private final NotificationRepo notificationRepo;
     private final AdminRepo adminRepo;
     private final DriverRepo driverRepo;
     private final CustomerRepo customerRepo;
     private final ShopperRepo shopperRepo;
 
-    @Autowired
-    public NotificationServiceImpl(JavaMailSender javaMailSender, NotificationRepo notificationRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, ShopperRepo shopperRepo) {
-        this.javaMailSender = javaMailSender;
+    public NotificationServiceImpl(NotificationRepo notificationRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, ShopperRepo shopperRepo) {
         this.notificationRepo = notificationRepo;
         this.adminRepo = adminRepo;
         this.driverRepo = driverRepo;
@@ -108,11 +107,8 @@ public class NotificationServiceImpl implements NotificationService {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getUserID() == null){
-            throw new InvalidRequestException("Null recipient email.");
-        }
-        if(request.getUserID().equals("")){
-            throw new InvalidRequestException("Empty recipient email.");
+        if(request.getUserID() == null || request.getUserID().equals("")){
+            throw new InvalidRequestException("Null userID.");
         }
         String email = "";
         if (adminRepo.findById(request.getUserID()).isPresent()){
@@ -129,6 +125,9 @@ public class NotificationServiceImpl implements NotificationService {
             email = shopper.getEmail();
         }else{
             throw new InvalidRequestException("Invalid userID, does not match any in the database.");
+        }
+        if (email == null){
+            throw new InvalidRequestException("Null recipient email address.");
         }
         Matcher matcher = pattern.matcher(email);
         if(!matcher.matches()){
