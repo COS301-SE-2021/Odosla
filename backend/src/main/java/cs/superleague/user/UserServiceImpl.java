@@ -1141,6 +1141,248 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException {
+
+        String message;
+        UUID shopperID;
+        Shopper shopper;
+        boolean success;
+        boolean emptyUpdate = true;
+        Optional<Shopper> shopperOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("UpdateShopper Request is null - Could not update shopper");
+        }
+
+        if(request.getShopperID() == null){
+            throw new InvalidRequestException("ShopperId is null - could not update shopper");
+        }
+
+        shopperID = request.getShopperID();
+        shopperOptional = shopperRepo.findById(shopperID);
+        if(shopperOptional == null || !shopperOptional.isPresent()){
+            throw new ShopperDoesNotExistException("User with given userID does not exist - could not update shopper");
+        }
+
+        // authentication ??
+
+        shopper = shopperOptional.get();
+
+        if(request.getName() != null && !Objects.equals(request.getName(), shopper.getName())){
+            emptyUpdate = false;
+            shopper.setName(request.getName());
+        }
+
+        if(request.getSurname() != null && !request.getSurname().equals(shopper.getSurname())){
+            emptyUpdate = false;
+            shopper.setSurname(request.getSurname());
+        }
+
+        if(request.getEmail() != null && !request.getEmail().equals(shopper.getEmail())){
+            emptyUpdate = false;
+            if(!emailRegex(request.getEmail())){
+                message = "Email is not valid";
+                return new UpdateShopperDetailsResponse(message, false, new Date());
+            }else{
+                if(shopperRepo.findShopperByEmail(request.getEmail()) != null){
+                    message = "Email is already taken";
+                    return new UpdateShopperDetailsResponse(message, false, new Date());
+                }
+                shopper.setEmail(request.getEmail());
+            }
+        }
+
+        if(request.getPassword() != null){
+            emptyUpdate = false;
+            if(passwordRegex(request.getPassword())){
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                shopper.setPassword(passwordHashed);
+            }else{
+                message = "Password is not valid";
+                return new UpdateShopperDetailsResponse(message, false, new Date());
+            }
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().equals(shopper.getPhoneNumber())){
+            emptyUpdate = false;
+            shopper.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        shopperRepo.save(shopper);
+
+        if(emptyUpdate){
+            success = false;
+            message = "Null values submitted - Nothing updated";
+        }else {
+            success = true;
+            message = "Shopper successfully updated";
+        }
+
+        return new UpdateShopperDetailsResponse(message, success, new Date());
+    }
+
+    @Override
+    public UpdateAdminDetailsResponse updateAdminDetails(UpdateAdminDetailsRequest request) throws UserException{
+        String message;
+        UUID adminID;
+        Admin admin;
+        boolean success;
+        boolean emptyUpdate = true;
+        Optional<Admin> adminOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("UpdateAdmin Request is null - Could not update admin");
+        }
+
+        if(request.getAdminID() == null){
+            throw new InvalidRequestException("AdminId is null - could not update admin");
+        }
+
+        adminID = request.getAdminID();
+        adminOptional = adminRepo.findById(adminID);
+        if(adminOptional == null || !adminOptional.isPresent()){
+            throw new AdminDoesNotExistException("User with given userID does not exist - could not update admin");
+        }
+
+        // authentication ??
+
+        admin = adminOptional.get();
+
+        if(request.getName() != null && !Objects.equals(request.getName(), admin.getName())){
+            emptyUpdate = false;
+            admin.setName(request.getName());
+        }
+
+        if(request.getSurname() != null && !request.getSurname().equals(admin.getSurname())){
+            emptyUpdate = false;
+            admin.setSurname(request.getSurname());
+        }
+
+        if(request.getEmail() != null && !request.getEmail().equals(admin.getEmail())){
+            emptyUpdate = false;
+            if(!emailRegex(request.getEmail())){
+                message = "Email is not valid";
+                return new UpdateAdminDetailsResponse(message, false, new Date());
+            }else{
+                if(adminRepo.findAdminByEmail(request.getEmail()) != null){
+                    message = "Email is already taken";
+                    return new UpdateAdminDetailsResponse(message, false, new Date());
+                }
+                admin.setEmail(request.getEmail());
+            }
+        }
+
+        if(request.getPassword() != null){
+            emptyUpdate = false;
+            if(passwordRegex(request.getPassword())){
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                admin.setPassword(passwordHashed);
+            }else{
+                message = "Password is not valid";
+                return new UpdateAdminDetailsResponse(message, false, new Date());
+            }
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().equals(admin.getPhoneNumber())){
+            emptyUpdate = false;
+            admin.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        adminRepo.save(admin);
+
+        if(emptyUpdate){
+            success = false;
+            message = "Null values submitted - Nothing updated";
+        }else {
+            success = true;
+            message = "Admin successfully updated";
+        }
+
+        return new UpdateAdminDetailsResponse(message, success, new Date());
+    }
+
+    @Override
+    public UpdateDriverDetailsResponse updateDriverDetails(UpdateDriverDetailsRequest request) throws UserException {
+        String message;
+        UUID driverID;
+        Driver driver;
+        boolean success;
+        boolean emptyUpdate = true;
+        Optional<Driver> driverOptional;
+
+        if(request == null){
+            throw new InvalidRequestException("UpdateDriver Request is null - Could not update driver");
+        }
+
+        if(request.getDriverID() == null){
+            throw new InvalidRequestException("DriverId is null - could not update driver");
+        }
+
+        driverID = request.getDriverID();
+        driverOptional = driverRepo.findById(driverID);
+        if(driverOptional == null || !driverOptional.isPresent()){
+            throw new DriverDoesNotExistException("User with given userID does not exist - could not update driver");
+        }
+
+        // authentication ??
+
+        driver = driverOptional.get();
+
+        if(request.getName() != null && !Objects.equals(request.getName(), driver.getName())){
+            emptyUpdate = false;
+            driver.setName(request.getName());
+        }
+
+        if(request.getSurname() != null && !request.getSurname().equals(driver.getSurname())){
+            emptyUpdate = false;
+            driver.setSurname(request.getSurname());
+        }
+
+        if(request.getEmail() != null && !request.getEmail().equals(driver.getEmail())){
+            emptyUpdate = false;
+            if(!emailRegex(request.getEmail())){
+                message = "Email is not valid";
+                return new UpdateDriverDetailsResponse(message, false, new Date());
+            }else{
+                if(driverRepo.findDriverByEmail(request.getEmail()) != null){
+                    message = "Email is already taken";
+                    return new UpdateDriverDetailsResponse(message, false, new Date());
+                }
+                driver.setEmail(request.getEmail());
+            }
+        }
+
+        if(request.getPassword() != null){
+            emptyUpdate = false;
+            if(passwordRegex(request.getPassword())){
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                driver.setPassword(passwordHashed);
+            }else{
+                message = "Password is not valid";
+                return new UpdateDriverDetailsResponse(message, false, new Date());
+            }
+        }
+
+        if(request.getPhoneNumber() != null && !request.getPhoneNumber().equals(driver.getPhoneNumber())){
+            emptyUpdate = false;
+            driver.setPhoneNumber(request.getPhoneNumber());
+        }
+
+        driverRepo.save(driver);
+
+        if(emptyUpdate){
+            success = false;
+            message = "Null values submitted - Nothing updated";
+        }else {
+            success = true;
+            message = "Driver successfully updated";
+        }
+
+        return new UpdateDriverDetailsResponse(message, success, new Date());
+      
     public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException {
         GetCurrentUserResponse response=null;
         if(request!=null) {
@@ -1325,7 +1567,9 @@ public class UserServiceImpl implements UserService{
         if(request.getPassword() != null){
             emptyUpdate = false;
             if(passwordRegex(request.getPassword())){
-                customer.setPassword(request.getPassword());
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                String passwordHashed = passwordEncoder.encode(request.getPassword());
+                customer.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
                 return new UpdateCustomerDetailsResponse(message, false, new Date());

@@ -9,16 +9,19 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist;
-    public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
-    public RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
-    public RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
-    public RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
-    public RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
-    public LoginResponse loginUser(LoginRequest request) throws UserException;
-    public AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
-    public GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws UserException;
-    public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException;
+    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist;
+    ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
+    RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
+    RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
+    RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
+    RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
+    LoginResponse loginUser(LoginRequest request) throws UserException;
+    AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
+    GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws UserException;
+    UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException;
+    UpdateAdminDetailsResponse updateAdminDetails(UpdateAdminDetailsRequest request) throws UserException;
+    UpdateDriverDetailsResponse updateDriverDetails(UpdateDriverDetailsRequest request) throws UserException;
+
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, UserDoesNotExistException;
     GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException;
