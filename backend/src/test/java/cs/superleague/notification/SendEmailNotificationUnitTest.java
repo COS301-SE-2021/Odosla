@@ -128,6 +128,20 @@ public class SendEmailNotificationUnitTest {
     }
 
     @Test
+    @Description("Tests when the request object has an invalid UserType")
+    @DisplayName("Invalid UserType in request object")
+    void requestObjectHasInvalidUserType_UnitTest(){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","delivery");
+        properties.put("Subject","Odosla");
+        properties.put("userID",adminID.toString());
+        properties.put("UserType", "");
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Invalid UserType.", thrown.getMessage());
+    }
+
+    @Test
     @Description("Tests when the request object has userID not found on the database")
     @DisplayName("Invalid userID in request object")
     void requestObjectInvalidUserID_UnitTest(){
