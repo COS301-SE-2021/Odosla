@@ -45,6 +45,7 @@ public class GetShoppingCartIntegrationTest {
     Customer customerEMPTYCart;
     Item I1;
     Item I2;
+    Item I3;
     Item item;
 
     UUID userID;
@@ -68,8 +69,9 @@ public class GetShoppingCartIntegrationTest {
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
-        I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
+        I1=new Item("Heinz Tamatoe Sauce","T123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
+        I3=new Item("Bar one","TTTT012345","012345",expectedS1,14.99,3,"description","img/");
         item = null;
 
         listOfItems.add(I1);
@@ -78,7 +80,9 @@ public class GetShoppingCartIntegrationTest {
         shoppingCart.add(I1);
         shoppingCart.add(I2);
 
-        itemRepo.saveAll(shoppingCart);
+        itemRepo.save(I1);
+        itemRepo.save(I2);
+        itemRepo.save(I3);
 
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
@@ -95,7 +99,7 @@ public class GetShoppingCartIntegrationTest {
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
 
-        customerEMPTYCart = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+        customerEMPTYCart = new Customer("D", "S", "d2s@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID_EMPTY, deliveryAddress, groceryListsEmptyCart, shoppingCartEMPTY, null, null);
 
 
@@ -107,7 +111,7 @@ public class GetShoppingCartIntegrationTest {
     void tearDown(){
         customerRepo.deleteAll();
         groceryListRepo.deleteAll();
-        itemRepo.deleteAll();
+
     }
 
 
