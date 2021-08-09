@@ -133,7 +133,7 @@ class SendEmailNotificationIntegrationTest {
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
-        assertEquals("Invalid userID, does not match any in the database.", thrown.getMessage());
+        assertEquals("User not found in database.", thrown.getMessage());
     }
 
     @Test
