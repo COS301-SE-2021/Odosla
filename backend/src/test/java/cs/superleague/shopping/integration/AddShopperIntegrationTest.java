@@ -12,6 +12,7 @@ import cs.superleague.shopping.requests.AddShopperRequest;
 import cs.superleague.shopping.responses.AddShopperResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
@@ -132,7 +133,7 @@ public class AddShopperIntegrationTest {
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
         storeRepo.save(store);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
+        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
         assertEquals("User with ID does not exist in repository - could not get Shopper entity",thrown.getMessage());
     }
 
