@@ -19,22 +19,26 @@ public class SendEmailNotificationRequest {
         this.message = message;
         this.type = properties.get("Type");
         this.subject = properties.get("Subject");
-        switch (properties.get("UserType").toLowerCase()){
-            case "admin":
-                this.userType = UserType.ADMIN;
-                break;
-            case "customer":
-                this.userType = UserType.CUSTOMER;
-                break;
-            case "driver":
-                this.userType = UserType.DRIVER;
-                break;
-            case "shopper":
-                this.userType = UserType.SHOPPER;
-                break;
-            default:
-                this.userType = null;
-                break;
+        if (properties.get("UserType") != null){
+            switch (properties.get("UserType").toLowerCase()){
+                case "admin":
+                    this.userType = UserType.ADMIN;
+                    break;
+                case "customer":
+                    this.userType = UserType.CUSTOMER;
+                    break;
+                case "driver":
+                    this.userType = UserType.DRIVER;
+                    break;
+                case "shopper":
+                    this.userType = UserType.SHOPPER;
+                    break;
+                default:
+                    this.userType = null;
+                    break;
+            }
+        }else{
+            this.userType = null;
         }
         if (properties.get("userID") != null && !properties.get("userID").equals("")) {
             this.userID = UUID.fromString(properties.get("userID"));
