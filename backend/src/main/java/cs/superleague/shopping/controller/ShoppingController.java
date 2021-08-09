@@ -322,24 +322,10 @@ public class ShoppingController implements ShoppingApi{
         ItemList2.add(item3); ItemList.add(item4);
         itemRepo.save(item3); itemRepo.save(item4);
 
-        Catalogue c = new Catalogue();
-        c.setStoreID(storeUUID1);
-        c.setItems(ItemList);
-        catalogueRepo.save(c);
-
-        Catalogue c2 = new Catalogue();
-        c2.setStoreID(storeUUID2);
-        c2.setItems(ItemList2);
-        catalogueRepo.save(c2);
-
-
         List<Store> mockStoreList = new ArrayList<>();
         Store store1, store2;
         store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
         store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, false);
-
-        store1.setStock(c);
-        store2.setStock(c2);
 
         storeRepo.save(store1); storeRepo.save(store2);
         mockStoreList.add(store1); mockStoreList.add(store2);
@@ -364,6 +350,8 @@ public class ShoppingController implements ShoppingApi{
                 GetStoresResponse getStoresResponse = ServiceSelector.getShoppingService().getStores(new GetStoresRequest());
                 try {
                     response.setStores(populateStores(getStoresResponse.getStores()));
+                    response.setResponse(true);
+                    response.setMessage(getStoresResponse.getMessage());
 
                 } catch (Exception e){
                     e.printStackTrace();
