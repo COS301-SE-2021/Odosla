@@ -12,6 +12,7 @@ import cs.superleague.shopping.requests.RemoveShopperRequest;
 import cs.superleague.shopping.responses.RemoveShopperResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
@@ -133,7 +134,7 @@ public class RemoveShopperIntegrationTest {
         store.setShoppers(shopperList);
         RemoveShopperRequest request=new RemoveShopperRequest(shopperID,storeUUID1);
         storeRepo.save(store);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().removeShopper(request));
+        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().removeShopper(request));
         assertEquals("User with ID does not exist in repository - could not get Shopper entity", thrown.getMessage());
     }
 
