@@ -80,6 +80,31 @@ public class NotificationServiceImpl implements NotificationService {
         if (notificationType == null){
             throw new InvalidRequestException("Invalid notification type.");
         }
+        UserType userType = null;
+        if (request.getProperties().get("UserType") != null){
+            switch (request.getProperties().get("UserType").toLowerCase()){
+                case "admin":
+                    userType = UserType.ADMIN;
+                    break;
+                case "customer":
+                    userType = UserType.CUSTOMER;
+                    break;
+                case "driver":
+                    userType = UserType.DRIVER;
+                    break;
+                case "shopper":
+                    userType = UserType.SHOPPER;
+                    break;
+                default:
+                    userType = null;
+                    break;
+            }
+        }else{
+            userType = null;
+        }
+        if (userType == null){
+            throw new InvalidRequestException("Invalid UserType.");
+        }
         UUID notificationID = UUID.randomUUID();
         while(notificationRepo.findById(notificationID).isPresent()){
             notificationID = UUID.randomUUID();
@@ -153,6 +178,7 @@ public class NotificationServiceImpl implements NotificationService {
         properties.put("NotificationType", request.getType());
         properties.put("Subject", request.getSubject());
         properties.put("userID", request.getUserID().toString());
+        properties.put("UserType", request.getUserType().toString());
         properties.put("ContactDetails", email);
         CreateNotificationRequest request1 = new CreateNotificationRequest(request.getMessage(), Calendar.getInstance(), properties);
         createNotification(request1);
