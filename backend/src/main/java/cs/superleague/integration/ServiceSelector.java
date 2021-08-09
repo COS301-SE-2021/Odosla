@@ -2,6 +2,7 @@ package cs.superleague.integration;
 
 import cs.superleague.payment.PaymentService;
 import cs.superleague.shopping.ShoppingService;
+import cs.superleague.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -18,9 +19,12 @@ public class ServiceSelector {
     @Value("${shoppingService}")
     private String shoppingService = "";
 
+    @Value("${env.USER_SERVICE}")
+    private String userService = "";
+
     private PaymentService payment;
     private ShoppingService shopping;
-
+    private UserService user;
     @Autowired
     public ServiceSelector() {
         singleton = this;
@@ -31,6 +35,7 @@ public class ServiceSelector {
         singleton = this;
         singleton.payment = (PaymentService) context.getBean(paymentService);
         singleton.shopping=(ShoppingService) context.getBean(shoppingService);
+        singleton.user=(UserService) context.getBean(userService);
 
     }
 
@@ -40,6 +45,10 @@ public class ServiceSelector {
 
     public static ShoppingService getShoppingService(){
         return singleton.shopping;
+    }
+
+    public static UserService getUserService(){
+        return singleton.user;
     }
 
 }

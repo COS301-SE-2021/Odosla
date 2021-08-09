@@ -6,20 +6,14 @@ import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.user.exceptions.InvalidRequestException;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.shopping.requests.GetNextQueuedRequest;
-import cs.superleague.shopping.requests.GetShoppersRequest;
-import cs.superleague.shopping.responses.GetNextQueuedResponse;
-import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.User;
-import cs.superleague.user.repos.ShopperRepo;
+import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.requests.CompletePackagingOrderRequest;
+import cs.superleague.user.requests.ScanItemRequest;
 import cs.superleague.user.responses.CompletePackagingOrderResponse;
+import cs.superleague.user.responses.ScanItemResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,20 +21,20 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
+
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class CompletePackingOrderUnitTest {
+public class ScanItemUnitTest {
 
     @Mock
     private OrderRepo orderRepo;
 
     @Mock
-    private ShopperRepo shopperRepo;
+    private ItemRepo itemRepo;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -61,7 +55,7 @@ public class CompletePackingOrderUnitTest {
     OrderStatus expectedStatus;
     OrderType expectedType;
     GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-    GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworths, Hillcrest Boulevard");
+    GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworth's, Hillcrest Boulevard");
 
     @BeforeEach
     void setUp()
@@ -87,20 +81,29 @@ public class CompletePackingOrderUnitTest {
     }
 
     @Test
-    @Description("Tests for when completePackingOrderRequest is submitted with a null request object- exception should be thrown")
+    @Description("Tests for when ScanItem is submitted with a null request object- exception should be thrown")
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.completePackagingOrder(null));
-        assertEquals("CompletePackagingOrderRequest is null - could not fetch order entity", thrown.getMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.scanItem(null));
+        assertEquals("ScanItemRequest is null - could not fetch order entity", thrown.getMessage());
     }
 
     @Test
     @Description("Tests for when orderID in request object is null- exception should be thrown")
     @DisplayName("When request object parameter -orderID - is not specified")
     void UnitTest_testingNull_orderID_Parameter_RequestObject(){
-        CompletePackagingOrderRequest request=new CompletePackagingOrderRequest(null, true);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.completePackagingOrder(request));
-        assertEquals("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity", thrown.getMessage());
+        ScanItemRequest request=new ScanItemRequest("rjiw2141", null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.scanItem(request));
+        assertEquals("Order ID is null in ScanItemRequest request - could not retrieve order entity", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when barcode in request object is null- exception should be thrown")
+    @DisplayName("When request object parameter -barcode - is not specified")
+    void UnitTest_testingNull_barcode_Parameter_RequestObject(){
+        ScanItemRequest request=new ScanItemRequest(null, o1UUID);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.scanItem(request));
+        assertEquals("Barcode is null in ScanItemRequest request - could not scan item", thrown.getMessage());
     }
 
     @Test
@@ -108,25 +111,22 @@ public class CompletePackingOrderUnitTest {
     @DisplayName("When Order with ID doesn't exist")
     void UnitTest_Order_doesnt_exist(){
 
-        CompletePackagingOrderRequest request=new CompletePackagingOrderRequest(UUID.randomUUID(), true);
+        ScanItemRequest request=new ScanItemRequest("123456", UUID.randomUUID());
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completePackagingOrder(request));
+        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.scanItem(request));
         assertEquals("Order with ID does not exist in repository - could not get Order entity", thrown.getMessage());
     }
 
     @Test
-    @Description("Test for when order does exist")
-    @DisplayName("When Order with ID does exist")
-    void UnitTest_Order_does_exist() throws OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException {
+    @Description("Test for when item does exist")
+    @DisplayName("When Item with barcode does exist")
+    void UnitTest_Item_does_exist() throws OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException {
 
-        CompletePackagingOrderRequest request= new CompletePackagingOrderRequest(expectedShopper1, true);
+        ScanItemRequest request= new ScanItemRequest("123456", o1UUID);
         when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(o));
-        when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
-        CompletePackagingOrderResponse response= userService.completePackagingOrder(request);
+        ScanItemResponse response= userService.scanItem(request);
         assertNotNull(response);
-        assertEquals(true,response.isSuccess());
-        assertEquals("Order entity with corresponding ID is ready for collection",response.getMessage());
+        assertTrue(response.isSuccess());
+        assertEquals("Item successfully scanned",response.getMessage());
     }
-
-
 }
