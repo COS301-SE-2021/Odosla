@@ -3,7 +3,6 @@ package cs.superleague.user.dataclass;
 import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -17,6 +16,7 @@ public class Driver extends User {
     @Id
     private UUID driverID;
     private double rating;
+    private Boolean onShift=false;
 
     @OneToOne(cascade={CascadeType.ALL})
     private GeoPoint currentAddress;
@@ -32,9 +32,7 @@ public class Driver extends User {
         this.driverID = driverID;
     }
 
-    public Driver() {
-
-    }
+    public Driver() {}
 
     public UUID getDriverID() {
         return driverID;
@@ -58,5 +56,13 @@ public class Driver extends User {
 
     public void setCurrentAddress(GeoPoint currentAddress) {
         this.currentAddress = currentAddress;
+    }
+
+    public Boolean getOnShift() {
+        return onShift;
+    }
+
+    public void setOnShift(Boolean onShift) {
+        this.onShift = onShift;
     }
 }
