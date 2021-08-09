@@ -3,8 +3,7 @@ package cs.superleague.notification;
 import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
-import cs.superleague.user.dataclass.Admin;
-import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
@@ -48,22 +47,29 @@ public class SendEmailNotificationUnitTest {
     @Mock
     private ShopperRepo shopperRepo;
 
-    UUID userID1;
-    UUID userID2;
+    UUID adminID;
+    UUID customerID;
+    UUID driverID;
+    UUID shopperID;
     Admin adminIncorrectEmail;
-    Admin adminCorrectEmail;
+    Customer customerIncorrectEmail;
+    Driver driverIncorrectEmail;
+    Shopper shopperIncorrectEmail;
 
     @BeforeEach
     void setUp() {
-        userID1 = UUID.randomUUID();
-        userID2 = UUID.randomUUID();
-        adminIncorrectEmail = new Admin("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, userID1);
-        adminCorrectEmail = new Admin("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, userID2);
+        adminID = UUID.randomUUID();
+        customerID = UUID.randomUUID();
+        driverID = UUID.randomUUID();
+        shopperID = UUID.randomUUID();
+        adminIncorrectEmail = new Admin("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID);
+        customerIncorrectEmail = new Customer("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.CUSTOMER, customerID);
+        driverIncorrectEmail = new Driver("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.DRIVER, driverID);
+        shopperIncorrectEmail = new Shopper("John", "Doe", "u19060468tuks.co.za", "0743149813", "Hello123", "123", UserType.SHOPPER, shopperID);
     }
 
     @AfterEach
     void tearDown() {
-
     }
 
     @Test
@@ -73,12 +79,12 @@ public class SendEmailNotificationUnitTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("userID",adminID.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         assertEquals(request.getMessage(), "message");
         assertEquals(request.getSubject(), "Odosla");
         assertEquals(request.getType(), "delivery");
-        assertEquals(request.getUserID(), userID1);
+        assertEquals(request.getUserID(), adminID);
     }
 
     @Test
@@ -122,20 +128,20 @@ public class SendEmailNotificationUnitTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("userID",adminID.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
         assertEquals("Invalid userID, does not match any in the database.", thrown.getMessage());
     }
 
     @Test
-    @Description("Tests when the request object has userID with an invalid email")
-    @DisplayName("Invalid email in user")
-    void requestObjectInvalidEmail_UnitTest(){
+    @Description("Tests when the request object has userID with an invalid email in admin repo")
+    @DisplayName("Invalid email in admin user")
+    void requestObjectInvalidEmailAdminRepo_UnitTest(){
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID1.toString());
+        properties.put("userID",adminID.toString());
         when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminIncorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
@@ -143,16 +149,44 @@ public class SendEmailNotificationUnitTest {
     }
 
     @Test
-    @Description("Tests when the request object has userID with an invalid email")
-    @DisplayName("valid email in user")
-    void validEmailSent_UnitTest() throws InvalidRequestException {
+    @Description("Tests when the request object has userID with an invalid email in customer repo")
+    @DisplayName("Invalid email in customer user")
+    void requestObjectInvalidEmailCustomerRepo_UnitTest(){
         Map<String, String> properties = new HashMap<>();
         properties.put("Type","delivery");
         properties.put("Subject","Odosla");
-        properties.put("userID",userID2.toString());
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(adminCorrectEmail));
+        properties.put("userID",customerID.toString());
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerIncorrectEmail));
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
-        SendEmailNotificationResponse response = notificationService.sendEmailNotification(request);
-        assertEquals(true, response.getSuccessMessage());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Invalid recipient email address.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests when the request object has userID with an invalid email in driver repo")
+    @DisplayName("Invalid email in driver user")
+    void requestObjectInvalidEmailDriverRepo_UnitTest(){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","delivery");
+        properties.put("Subject","Odosla");
+        properties.put("userID",driverID.toString());
+        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driverIncorrectEmail));
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Invalid recipient email address.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests when the request object has userID with an invalid email in shopper repo")
+    @DisplayName("Invalid email in shopper user")
+    void requestObjectInvalidEmailShopperRepo_UnitTest(){
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","delivery");
+        properties.put("Subject","Odosla");
+        properties.put("userID",shopperID.toString());
+        when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopperIncorrectEmail));
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Invalid recipient email address.", thrown.getMessage());
     }
 }
