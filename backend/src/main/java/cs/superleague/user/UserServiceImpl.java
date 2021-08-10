@@ -1937,7 +1937,32 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
+        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+
+        if(currentOrder==null || !currentOrder.isPresent()){
+            throw new OrderDoesNotExist("Order does not exist in database");
         }
+
+        Order order=currentOrder.get();
+        order.setStatus(OrderStatus.DELIVERED);
+
+        /* Send notification to User saying order has been delivered and ask to rate driver*/
+
+        orderRepo.save(order);
+
+        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+        currentOrder= orderRepo.findById(request.getOrderID());
+        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERED){
+            response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
+        }
+        else{
+            response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
+        }
+
+        return response;
+
+
+    }
 
     /* helper */
     private void validRegisterDetails(String name, String surname, String email,
