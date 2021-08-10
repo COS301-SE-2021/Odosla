@@ -1918,7 +1918,8 @@ public class UserServiceImpl implements UserService{
 
     /* helper */
     private void validRegisterDetails(String name, String surname, String email,
-                                      String phoneNum, String password) throws InvalidRequestException{
+                                      String phoneNum, String password) throws InvalidRequestException {
+    }
     @Override
     public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
 
