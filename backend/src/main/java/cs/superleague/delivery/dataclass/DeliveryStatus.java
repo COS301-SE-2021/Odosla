@@ -1,4 +1,4 @@
-package cs.superleague.delivery;
+package cs.superleague.delivery.dataclass;
 
 public enum DeliveryStatus {
     CollectingFromStore,
