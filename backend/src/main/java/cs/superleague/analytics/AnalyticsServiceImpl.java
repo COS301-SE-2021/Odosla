@@ -60,6 +60,9 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getCustomerID());
 
+        isAdmin(request.getCustomerID());
+
+
 
         return null;
     }
@@ -79,14 +82,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
     }
 
-//    public void isAuthorized(UUID userID) throws NotAuthorizedException {
-//        GetUserByUUIDRequest request=new GetUserByUUIDRequest(userID);
-//        boolean isAdmin=false;
-//        try {
-//            GetUserByUUIDResponse response= .getUserByUUID(request);
-//            isAdmin=response.getAdmin();
-//        } catch (UserDoesNotExist userDoesNotExist) {
-//            throw new NotAuthorizedException("Error: User is not authorized to perform this action");
-//        }
-//    }
+    public void isAdmin(UUID userID) throws NotAuthorizedException {
+        // GetAdmin by UUID
+
+        // if not admin then throw
+    }
+
+
 }
