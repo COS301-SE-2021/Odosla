@@ -6,19 +6,19 @@ import cs.superleague.delivery.responses.*;
 
 public interface DeliveryService {
 
-    AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request);
+    AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request) throws InvalidRequestException;
 
     CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException;
 
-    GetDeliveriesResponse getDeliveries(GetDeliveriesRequest request);
+    GetDeliveriesResponse getDeliveries(GetDeliveriesRequest request) throws InvalidRequestException;
 
-    GetDeliveryCostResponse getDeliveryCost(GetDeliveryCostRequest request);
+    GetDeliveryCostResponse getDeliveryCost(GetDeliveryCostRequest request) throws InvalidRequestException;
 
-    GetDeliveryDetailResponse getDeliveryDetail(GetDeliveryDetailRequest request);
+    GetDeliveryDetailResponse getDeliveryDetail(GetDeliveryDetailRequest request) throws InvalidRequestException;
 
-    GetDeliveryStatusResponse getDeliveryStatus(GetDeliveryStatusRequest request);
+    GetDeliveryStatusResponse getDeliveryStatus(GetDeliveryStatusRequest request) throws InvalidRequestException;
 
-    TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request);
+    TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException;
 
-    UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request);
+    UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException;
 }
