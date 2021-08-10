@@ -21,11 +21,14 @@ public class Delivery {
 
     private UUID customerId;
     private UUID storeId;
+    private UUID driverId;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
     private double cost;
+
+    private boolean completed = false;
 
     @OneToMany(mappedBy = "delivery")
     private List<DeliveryDetail> deliveryDetail;
@@ -42,6 +45,22 @@ public class Delivery {
 
     public Delivery() {
 
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public UUID getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(UUID driverId) {
+        this.driverId = driverId;
     }
 
     public UUID getDeliveryID() {

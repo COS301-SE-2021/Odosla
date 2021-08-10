@@ -11,6 +11,7 @@ import cs.superleague.delivery.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
@@ -160,7 +161,22 @@ public class DeliveryServiceImpl implements DeliveryService {
         if(request == null){
             throw new InvalidRequestException("Null request.");
         }
-        return null;
+        if (request.getDeliveryID() == null){
+            throw new InvalidRequestException("No delivery Id provided.");
+        }
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
+        if (delivery.getDriverId() == null){
+            TrackDeliveryResponse response = new TrackDeliveryResponse(delivery.getPickUpLocation(), "No driver has been assigned to this delivery.");
+            return response;
+        }
+        Driver driver = driverRepo.findById(delivery.getDriverId()).orElse(null);
+        if (driver == null){
+            delivery.setDriverId(null);
+            deliveryRepo.save(delivery);
+            throw new InvalidRequestException("No driver has been assigned to this delivery.");
+        }
+        TrackDeliveryResponse response = new TrackDeliveryResponse(driver.getCurrentAddress(), "Drivers current location.");
+        return response;
     }
 
     @Override
