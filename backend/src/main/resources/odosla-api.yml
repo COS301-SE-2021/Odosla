@@ -170,6 +170,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_SetCartResponse"
+
+  /user/loginUser:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: loginUser
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_LoginRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_LoginResponse"
 components:
 
   schemas:
@@ -406,6 +428,37 @@ components:
         order:
           type: object
 
+    DriverObject:
+      description: "Generic schema for a Driver"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        driverID:
+          type: string
+        rating:
+          type: number
+        onShift:
+          type: boolean
+
     user_SetCartRequest:
       description: This object is expected as input
       type: object
@@ -427,3 +480,26 @@ components:
         date:
           type: string
 
+    user_LoginRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        userType:
+          type: string
+
+    user_LoginResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        Token:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
