@@ -1870,6 +1870,100 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+
+    public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
+
+        CollectOrderResponse response;
+
+        Boolean isException=false;
+        String errorMessage="";
+
+        if(request==null){
+            isException=true;
+            errorMessage="CollectOrderRequest object is null";
+
+        }else if(request.getOrderID()==null){
+            isException=true;
+            errorMessage="OrderID in CollectOrderRequest object is null";
+        }
+
+        if(isException){
+            throw new InvalidRequestException(errorMessage);
+        }
+
+        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+
+        if(currentOrder==null || !currentOrder.isPresent()){
+            throw new OrderDoesNotExist("Order does not exist in database");
+        }
+
+        Order order=currentOrder.get();
+        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
+
+        /* Send notification to User saying order has been collected */
+
+        orderRepo.save(order);
+
+        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+        currentOrder= orderRepo.findById(request.getOrderID());
+        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERY_COLLECTED){
+            response=new CollectOrderResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been collected in database");
+        }
+        else{
+            response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
+        }
+
+        return response;
+    }
+
+    @Override
+    public CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException {
+
+        CompleteDeliveryResponse response;
+
+        Boolean isException=false;
+        String errorMessage="";
+
+        if(request==null){
+            isException=true;
+            errorMessage="CompleteDeliveryRequest object is null";
+
+        }else if(request.getOrderID()==null){
+            isException=true;
+            errorMessage="OrderID in CompleteDeliveryRequest object is null";
+        }
+
+        if(isException){
+            throw new InvalidRequestException(errorMessage);
+        }
+
+        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+
+        if(currentOrder==null || !currentOrder.isPresent()){
+            throw new OrderDoesNotExist("Order does not exist in database");
+        }
+
+        Order order=currentOrder.get();
+        order.setStatus(OrderStatus.DELIVERED);
+
+        /* Send notification to User saying order has been delivered and ask to rate driver*/
+
+        orderRepo.save(order);
+
+        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+        currentOrder= orderRepo.findById(request.getOrderID());
+        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERED){
+            response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
+        }
+        else{
+            response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
+        }
+
+        return response;
+
+
+    }
+
     public RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
 
         String message;
@@ -1915,29 +2009,60 @@ public class UserServiceImpl implements UserService{
         return new RemoveFromCartResponse(cart, message, false, new Date());
     }
 
-    /* helper */
-    private void validRegisterDetails(String name, String surname, String email,
-                                      String phoneNum, String password) throws InvalidRequestException{
+    @Override
+    public UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException {
+        UpdateDriverShiftResponse response;
 
-        if(name == null){
-            throw new InvalidRequestException("Name cannot be null - Registration Failed");
+        Boolean isException=false;
+        String errorMessage="";
+
+        if(request==null){
+            isException=true;
+            errorMessage="UpdateDriverShiftRequest object is null";
+        }else if(request.getDriverID()==null){
+            isException=true;
+            errorMessage="DriverID in UpdateDriverShiftRequest is null";
+        } else if(request.getOnShift()==null){
+            isException=true;
+            errorMessage="onShift in UpdateDriverShiftRequest is null";
         }
 
-        if(surname == null){
-            throw new InvalidRequestException("Surname cannot be null - Registration Failed");
+        if(isException){
+            throw new InvalidRequestException(errorMessage);
         }
 
-        if(email == null){
-            throw new InvalidRequestException("Email cannot be null - Registration Failed");
+        Optional<Driver> driver=driverRepo.findById(request.getDriverID());
+
+        if(driver==null || !driver.isPresent()){
+            throw new DriverDoesNotExistException("Driver with driverID does not exist in database");
         }
 
-        if(phoneNum == null){
-            throw new InvalidRequestException("Phone Number cannot be null - Registration Failed");
+        if(driver.get().getOnShift()==request.getOnShift()){
+            String message="";
+            if(request.getOnShift()==true){
+                message="Driver is already on shift";
+            }
+            else if(request.getOnShift()==false){
+                message="Driver is already not on shift";
+            }
+            response=new UpdateDriverShiftResponse(false,Calendar.getInstance().getTime(),message);
         }
+        else{
+            driver.get().setOnShift(request.getOnShift());
+            driverRepo.save(driver.get());
 
-        if(password == null){
-            throw new InvalidRequestException("Password cannot be null - Registration Failed");
+            /*Check updates have happened */
+            driver=driverRepo.findById(request.getDriverID());
+
+            if(driver==null || !driver.isPresent()|| driver.get().getOnShift()!=request.getOnShift()){
+                response=new UpdateDriverShiftResponse(false,Calendar.getInstance().getTime(),"Couldn't update driver's shift");
+            }
+            else{
+                response=new UpdateDriverShiftResponse(true,Calendar.getInstance().getTime(),"Driver's shift correctly updated");
+            }
         }
+        return response;
+
     }
 
     private boolean emailRegex(String email){
@@ -1955,7 +2080,6 @@ public class UserServiceImpl implements UserService{
 
         return passwordMatcher.matches();
     }
-
     private String hashPassword(String password){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(20);
         return passwordEncoder.encode(password);
