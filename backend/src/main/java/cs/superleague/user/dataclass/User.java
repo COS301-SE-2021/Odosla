@@ -19,12 +19,11 @@ public class User {
     private String activationCode;
     private String resetCode;
     private String resetExpiration;
-    private boolean isActive;
     private UserType accountType;
 
     /* Constructor  */
 
-    public User(String name, String surname,String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType) {
+    public User(String name, String surname,String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, UserType accountType) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -34,7 +33,6 @@ public class User {
         this.activationCode = activationCode;
         this.resetCode = resetCode;
         this.resetExpiration = resetExpiration;
-        this.isActive = isActive;
         this.accountType = accountType;
     }
 
@@ -126,14 +124,6 @@ public class User {
         this.resetExpiration = resetExpiration;
     }
 
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
     public UserType getAccountType() {
         return accountType;
     }
@@ -142,25 +132,4 @@ public class User {
         this.accountType = accountType;
     }
 
-    /* Functions */
-
-    public boolean login(){
-        return true;
-    }
-
-    public boolean logout(){
-        return true;
-    }
-
-    public boolean registerUser(){
-        return true;
-    }
-
-    public boolean resetPassword(){
-        return true;
-    }
-
-    public boolean updateAccountDetails(){
-        return true;
-    }
 }
