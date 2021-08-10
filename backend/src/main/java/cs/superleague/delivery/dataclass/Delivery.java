@@ -43,4 +43,68 @@ public class Delivery {
     public Delivery() {
 
     }
+
+    public UUID getDeliveryID() {
+        return deliveryID;
+    }
+
+    public void setDeliveryID(UUID deliveryID) {
+        this.deliveryID = deliveryID;
+    }
+
+    public GeoPoint getPickUpLocation() {
+        return pickUpLocation;
+    }
+
+    public void setPickUpLocation(GeoPoint pickUpLocation) {
+        this.pickUpLocation = pickUpLocation;
+    }
+
+    public GeoPoint getDropOffLocation() {
+        return dropOffLocation;
+    }
+
+    public void setDropOffLocation(GeoPoint dropOffLocation) {
+        this.dropOffLocation = dropOffLocation;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
+    }
+
+    public UUID getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(UUID storeId) {
+        this.storeId = storeId;
+    }
+
+    public DeliveryStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+    public List<DeliveryDetail> getDeliveryDetail() {
+        return deliveryDetail;
+    }
+
+    public void setDeliveryDetail(List<DeliveryDetail> deliveryDetail) {
+        this.deliveryDetail = deliveryDetail;
+    }
 }
