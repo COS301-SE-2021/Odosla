@@ -9,6 +9,7 @@ tags:
   - name: "Shopping"
   - name: "Payment"
   - name: "Notification"
+  - name: "User"
 
 
 paths:
@@ -94,7 +95,7 @@ paths:
         content:
           application/json:
             schema:
-               $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
+              $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
       responses:
         "200":
           description: Returns upon success
@@ -102,6 +103,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
+
+  /shopping/getStores:
+    post:
+      summary: Endpoint for Get Stores use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetStoresRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetStoresResponse"
 
 
 
@@ -148,6 +171,27 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
+  /user/setCart:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: setCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_SetCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_SetCartResponse"
 components:
 
   schemas:
@@ -194,7 +238,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/itemObject"
+            $ref: "#/components/schemas/ItemObject"
 
 
     shopping_AddShopperRequest:
@@ -279,6 +323,43 @@ components:
           items:
             $ref: "#/components/schemas/ShopperObject"
 
+    StoreObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        storeBrand:
+          type: string
+        isOpen:
+          type: boolean
+        maxShoppers:
+          type: integer
+        maxOrders:
+          type: integer
+        openingTime:
+          type: integer
+        closingTime:
+          type: integer
+
+    shopping_GetStoresRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_GetStoresResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
+
+
     OrderObject:
       description: "Generic schema for an Order"
       type: object
@@ -301,6 +382,8 @@ components:
           type: string
         items:
           type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
         deliveryAddress:
@@ -323,7 +406,7 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/itemObject"
+            $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
         orderType:
@@ -367,4 +450,26 @@ components:
           description: Will contain a descriptive error message if response code is not 200, else will be empty
         success:
           type: boolean
+
+
+    user_SetCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+
+    user_SetCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
 
