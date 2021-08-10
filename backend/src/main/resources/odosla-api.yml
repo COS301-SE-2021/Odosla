@@ -8,6 +8,7 @@ info:
 tags:
   - name: "Shopping"
   - name: "Payment"
+  - name: "User"
 
 
 paths:
@@ -148,6 +149,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
+  /user/setCart:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: setCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_SetCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_SetCartResponse"
 components:
 
   schemas:
@@ -383,3 +405,25 @@ components:
           type: string
         order:
           type: object
+
+    user_SetCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+
+    user_SetCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
