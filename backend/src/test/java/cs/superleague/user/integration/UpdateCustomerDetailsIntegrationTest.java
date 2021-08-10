@@ -79,10 +79,11 @@ public class UpdateCustomerDetailsIntegrationTest {
         groceryLists.add(groceryList);
 
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
 
+        itemRepo.saveAll(listOfItems);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
         customerRepo.save(existingCustomer);
