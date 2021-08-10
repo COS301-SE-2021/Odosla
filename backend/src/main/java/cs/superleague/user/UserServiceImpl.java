@@ -1782,7 +1782,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("CustomerId is null - could not add to cart");
         }
 
-        customerID = request.getCustomerID();
+        customerID = UUID.fromString(request.getCustomerID());
         customerOptional = customerRepo.findById(customerID);
         if(customerOptional == null || !customerOptional.isPresent()){
             throw new CustomerDoesNotExistException("User with given userID does not exist - could add to cart");
@@ -1804,7 +1804,7 @@ public class UserServiceImpl implements UserService{
         if(response == null || !response.getResponse()){
             message = "Cannot find items - could not add to cart";
             return new SetCartResponse(message, false, new Date());
-        }System.out.println("ta");
+        }
 
         for (Store store: response.getStores()) {
             items.addAll(store.getStock().getItems());
