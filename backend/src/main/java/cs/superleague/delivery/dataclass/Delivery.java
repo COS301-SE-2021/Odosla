@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name="deliverys")
+@Table(name="deliveryTable")
 public class Delivery {
 
     @Id

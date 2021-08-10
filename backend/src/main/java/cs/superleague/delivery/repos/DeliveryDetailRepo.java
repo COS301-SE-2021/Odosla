@@ -1,11 +1,9 @@
 package cs.superleague.delivery.repos;
 
-import cs.superleague.delivery.dataclass.Delivery;
+import cs.superleague.delivery.dataclass.DeliveryDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface DeliveryRepo extends JpaRepository<Delivery, UUID> {
+public interface DeliveryDetailRepo extends JpaRepository<DeliveryDetail, Integer> {
 }
