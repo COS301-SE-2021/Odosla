@@ -83,7 +83,6 @@ public class UpdateCustomerDetailsIntegrationTest {
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
 
-        itemRepo.saveAll(shoppingCart);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
         customerRepo.save(existingCustomer);
@@ -93,7 +92,6 @@ public class UpdateCustomerDetailsIntegrationTest {
     void tearDown(){
         customerRepo.deleteAll();
         groceryListRepo.deleteAll();
-        itemRepo.deleteAll();
     }
 
 
