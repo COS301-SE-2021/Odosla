@@ -2,27 +2,28 @@ package cs.superleague.user.responses;
 
 import java.util.Date;
 
-public class MakeGroceryListResponse {
+public class UpdateDriverDetailsResponse {
 
-    private final boolean success;
+
     private final String message;
+    private final boolean success;
     private final Date timestamp;
-
-    public boolean isSuccess() {
-        return success;
-    }
 
     public String getMessage() {
         return message;
+    }
+
+    public boolean isSuccess() {
+        return success;
     }
 
     public Date getTimestamp() {
         return timestamp;
     }
 
-    public MakeGroceryListResponse(boolean success, String message, Date timestamp) {
-        this.success = success;
+    public UpdateDriverDetailsResponse(String message, boolean success, Date timestamp) {
         this.message = message;
+        this.success = success;
         this.timestamp = timestamp;
     }
 }

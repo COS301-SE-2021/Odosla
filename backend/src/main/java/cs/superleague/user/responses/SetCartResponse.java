@@ -2,7 +2,7 @@ package cs.superleague.user.responses;
 
 import java.util.Date;
 
-public class AddToCartResponse {
+public class SetCartResponse {
 
     private final String message;
     private final boolean success;
@@ -20,7 +20,7 @@ public class AddToCartResponse {
         return timestamp;
     }
 
-    public AddToCartResponse(String message, boolean success, Date timestamp) {
+    public SetCartResponse(String message, boolean success, Date timestamp) {
         this.message = message;
         this.success = success;
         this.timestamp = timestamp;
