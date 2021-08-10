@@ -72,13 +72,19 @@ public class GetShoppingCartIntegrationTest {
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         item = null;
 
+        itemRepo.save(I1);
+        itemRepo.save(I2);
+
         listOfItems.add(I1);
         listOfItems.add(I2);
 
         shoppingCart.add(I1);
         shoppingCart.add(I2);
 
+        itemRepo.save(I1);
+        itemRepo.save(I2);
         itemRepo.saveAll(shoppingCart);
+        itemRepo.saveAll(listOfItems);
 
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
 
@@ -107,7 +113,7 @@ public class GetShoppingCartIntegrationTest {
     void tearDown(){
         customerRepo.deleteAll();
         groceryListRepo.deleteAll();
-        itemRepo.deleteAll();
+        //itemRepo.deleteAll();
     }
 
 
