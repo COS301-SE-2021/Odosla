@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Service("NotificationServiceImpl")
+@Service("notificationServiceImpl")
 public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private JavaMailSender javaMailSender;

@@ -853,134 +853,135 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    @Value("${jwt.secret}")
-    private final String secret = "theOdoslaSuperLeagueProjectKeyForEncrptionMustBeCertainNumberOFBitsIReallyDontKnowHowToMakeThisStringLonger";
-    @Override
-    public LoginResponse loginUser(LoginRequest request) throws UserException {
-        LoginResponse response=null;
-
-        if(request==null){
-            throw new InvalidRequestException("LoginRequest is null");
-        }
-
-
-        Boolean isException=false;
-        String errorMessage="";
-
-        if(request.getEmail()==null){
-            isException=true;
-            errorMessage="Email in LoginRequest is null";
-        }
-        else if(request.getPassword()==null){
-
-            isException=true;
-            errorMessage="Password in LoginRequest is null";
-        }
-        else if(request.getUserType()==null){
-
-            isException=true;
-            errorMessage="UserType in LoginRequest is null";
-        }
-
-        if(isException){
-            throw new InvalidRequestException(errorMessage);
-        }
-
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
-        UUID userID=null;
-        Shopper shopperUser=null;
-        Customer customerUser=null;
-        Admin adminUser=null;
-        Driver driverUser=null;
-        switch (request.getUserType()){
-            case DRIVER:
-                assert driverRepo!=null;
-                Driver driverToLogin=driverRepo.findDriverByEmail(request.getEmail());
-                if (driverToLogin==null){
-                    throw new DriverDoesNotExistException("Driver does not exist");
-                }
-                else if(!passwordEncoder.matches(request.getPassword(),driverToLogin.getPassword())){
-                    throw new InvalidCredentialsException("Password is incorrect");
-                }
-                userID=driverToLogin.getDriverID();
-                driverUser=driverToLogin;
-                break;
-
-            case SHOPPER:
-                assert shopperRepo!=null;
-                Shopper shopperToLogin=shopperRepo.findShopperByEmail(request.getEmail());
-                if(shopperToLogin==null){
-                    throw new ShopperDoesNotExistException("Shopper does not exist");
-                }
-                else if(!passwordEncoder.matches(request.getPassword(),shopperToLogin.getPassword())){
-                    throw new InvalidCredentialsException("Password is incorrect");
-                }
-                userID=shopperToLogin.getShopperID();
-                shopperUser=shopperToLogin;
-                break;
-
-            case ADMIN:
-                assert adminRepo!=null;
-                Admin adminToLogin=adminRepo.findAdminByEmail(request.getEmail());
-                if(adminToLogin==null){
-                    throw new AdminDoesNotExistException("Admin does not exist");
-                }
-                else if(!passwordEncoder.matches(request.getPassword(),adminToLogin.getPassword())){
-                    throw new InvalidCredentialsException("Password is incorrect");
-                }
-                userID=adminToLogin.getAdminID();
-                adminUser=adminToLogin;
-                break;
-
-            case CUSTOMER:
-                assert customerRepo!=null;
-                Customer customerToLogin=customerRepo.findCustomerByEmail(request.getEmail());
-                if(customerToLogin==null){
-                    throw new CustomerDoesNotExistException("Customer does not exist");
-                }
-                else if(!passwordEncoder.matches(request.getPassword(),customerToLogin.getPassword())){
-                    throw new InvalidCredentialsException("Password is incorrect");
-                }
-                userID=customerToLogin.getCustomerID();
-                customerUser=customerToLogin;
-                break;
-        }
-
-
-        String jwtToken="";
-
-
-        switch (request.getUserType()){
-            case SHOPPER:
-                assert shopperRepo!=null;
-                if(shopperUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenShopper(shopperUser);
-                }
-            case DRIVER:
-                assert driverRepo!=null;
-                if(driverUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenDriver(driverUser);
-                }
-            case CUSTOMER:
-                assert customerRepo!=null;
-                if(customerUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customerUser);
-                }
-            case ADMIN:
-                assert adminRepo!=null;
-                if(adminUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenAdmin(adminUser);
-                }
-
-                if(jwtToken==""){
-                    return new LoginResponse(null, false, Calendar.getInstance().getTime(), "Couldn't generate JWTToken for user");
-                }
-
-                response=new LoginResponse(jwtToken,true,Calendar.getInstance().getTime(), "User successfully logged in");
-
-        }
-        return response;
-    }
+//    @Value("${jwt.secret}")
+//    private final String secret = "theOdoslaSuperLeagueProjectKeyForEncrptionMustBeCertainNumberOFBitsIReallyDontKnowHowToMakeThisStringLonger";
+//    @Override
+//    public LoginResponse loginUser(LoginRequest request) throws UserException {
+//        LoginResponse response=null;
+//
+//        if(request==null){
+//            throw new InvalidRequestException("LoginRequest is null");
+//        }
+//
+//
+//        Boolean isException=false;
+//        String errorMessage="";
+//
+//        if(request.getEmail()==null){
+//            isException=true;
+//            errorMessage="Email in LoginRequest is null";
+//        }
+//        else if(request.getPassword()==null){
+//
+//            isException=true;
+//            errorMessage="Password in LoginRequest is null";
+//        }
+//        else if(request.getUserType()==null){
+//
+//            isException=true;
+//            errorMessage="UserType in LoginRequest is null";
+//        }
+//
+//        if(isException){
+//            throw new InvalidRequestException(errorMessage);
+//        }
+//
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+//        UUID userID=null;
+//        Shopper shopperUser=null;
+//        Customer customerUser=null;
+//        Admin adminUser=null;
+//        Driver driverUser=null;
+//        switch (request.getUserType()){
+//            case DRIVER:
+//                assert driverRepo!=null;
+//                Driver driverToLogin=driverRepo.findDriverByEmail(request.getEmail());
+//                if (driverToLogin==null){
+//                    throw new DriverDoesNotExistException("Driver does not exist");
+//                }
+//                else if(!passwordEncoder.matches(request.getPassword(),driverToLogin.getPassword())){
+//                    throw new InvalidCredentialsException("Password is incorrect");
+//                }
+//                userID=driverToLogin.getDriverID();
+//                driverUser=driverToLogin;
+//                break;
+//
+//            case SHOPPER:
+//                assert shopperRepo!=null;
+//                Shopper shopperToLogin=shopperRepo.findShopperByEmail(request.getEmail());
+//                if(shopperToLogin==null){
+//                    throw new ShopperDoesNotExistException("Shopper does not exist");
+//                }
+//                else if(!passwordEncoder.matches(request.getPassword(),shopperToLogin.getPassword())){
+//                    throw new InvalidCredentialsException("Password is incorrect");
+//                }
+//                userID=shopperToLogin.getShopperID();
+//                shopperUser=shopperToLogin;
+//                break;
+//
+//            case ADMIN:
+//                assert adminRepo!=null;
+//                Admin adminToLogin=adminRepo.findAdminByEmail(request.getEmail());
+//                if(adminToLogin==null){
+//                    throw new AdminDoesNotExistException("Admin does not exist");
+//                }
+//                else if(!passwordEncoder.matches(request.getPassword(),adminToLogin.getPassword())){
+//                    throw new InvalidCredentialsException("Password is incorrect");
+//                }
+//                userID=adminToLogin.getAdminID();
+//                adminUser=adminToLogin;
+//                break;
+//
+//            case CUSTOMER:
+//                assert customerRepo!=null;
+//                Customer customerToLogin=customerRepo.findCustomerByEmail(request.getEmail());
+//                if(customerToLogin==null){
+//                    throw new CustomerDoesNotExistException("Customer does not exist");
+//                }
+//                else if(!passwordEncoder.matches(request.getPassword(),customerToLogin.getPassword())){
+//                    throw new InvalidCredentialsException("Password is incorrect");
+//                }
+//                userID=customerToLogin.getCustomerID();
+//                customerUser=customerToLogin;
+//                break;
+//        }
+//
+//
+//        String jwtToken="";
+//
+//
+//        switch (request.getUserType()){
+//            case SHOPPER:
+//                assert shopperRepo!=null;
+//                if(shopperUser!=null) {
+//                    jwtToken=jwtTokenUtil.generateJWTTokenShopper(shopperUser);
+//                }
+//            case DRIVER:
+//                assert driverRepo!=null;
+//                if(driverUser!=null) {
+//                    jwtToken=jwtTokenUtil.generateJWTTokenDriver(driverUser);
+//                }
+//            case CUSTOMER:
+//                assert customerRepo!=null;
+//                if(customerUser!=null) {
+//                    jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customerUser);
+//                }
+//            case ADMIN:
+//                assert adminRepo!=null;
+//                if(adminUser!=null) {
+//                    jwtToken=jwtTokenUtil.generateJWTTokenAdmin(adminUser);
+//                }
+//
+//                if(jwtToken==""){
+//                    return new LoginResponse(null, false, Calendar.getInstance().getTime(), "Couldn't generate JWTToken for user");
+//                }
+//
+//                response=new LoginResponse(jwtToken,true,Calendar.getInstance().getTime(), "User successfully logged in");
+//
+//        }
+//        return response;
+        //return null;
+    //}
 
 
     @Override

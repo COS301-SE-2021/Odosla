@@ -127,7 +127,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
-  /notification/SendEmailNotification:
+  /notification/sendEmailNotification:
     post:
       summary: Endpoint for sending an email notification
       tags:

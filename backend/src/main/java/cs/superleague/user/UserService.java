@@ -15,7 +15,7 @@ public interface UserService {
     RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
     RegisterShopperResponse registerShopper(RegisterShopperRequest request) throws InvalidRequestException;
     RegisterAdminResponse registerAdmin(RegisterAdminRequest request) throws InvalidRequestException;
-    LoginResponse loginUser(LoginRequest request) throws UserException;
+    //LoginResponse loginUser(LoginRequest request) throws UserException;
     AccountVerifyResponse verifyAccount(AccountVerifyRequest request) throws Exception;
     GetShopperByUUIDResponse getShopperByUUIDRequest(GetShopperByUUIDRequest request) throws UserException;
     UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException;
