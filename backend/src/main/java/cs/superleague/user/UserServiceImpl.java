@@ -864,7 +864,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    @Value("${jwt.secret}")
     private final String secret = "theOdoslaSuperLeagueProjectKeyForEncrptionMustBeCertainNumberOFBitsIReallyDontKnowHowToMakeThisStringLonger";
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
