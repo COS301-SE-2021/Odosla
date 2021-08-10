@@ -1,9 +1,10 @@
 package cs.superleague.delivery.dataclass;
 
 public enum DeliveryStatus {
-    CollectingFromStore,
-    Collected,
-    DeliveringToCustomer,
     WaitingForShoppers,
+    CollectingFromStore,
+    CollectedByDriver,
+    DeliveringToCustomer,
+    CollectedByCustomer,
     Delivered
 }
