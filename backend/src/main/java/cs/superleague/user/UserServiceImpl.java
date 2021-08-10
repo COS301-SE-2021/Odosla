@@ -1774,7 +1774,6 @@ public class UserServiceImpl implements UserService{
         List<Item> items = new ArrayList<>();
         List<Item> cart = new ArrayList<>();
 
-
         if(request == null){
             throw new InvalidRequestException("addToCart Request is null - Could not add to cart");
         }
@@ -1805,7 +1804,7 @@ public class UserServiceImpl implements UserService{
         if(response == null || !response.getResponse()){
             message = "Cannot find items - could not add to cart";
             return new SetCartResponse(message, false, new Date());
-        }
+        }System.out.println("ta");
 
         for (Store store: response.getStores()) {
             items.addAll(store.getStock().getItems());

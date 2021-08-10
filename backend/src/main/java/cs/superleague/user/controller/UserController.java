@@ -95,7 +95,9 @@ public class UserController implements UserApi {
         itemRepo.save(item1);
         itemRepo.save(item2);
         groceryListRepo.save(groceryList);
-        customerRepo.save(setCartCustomer);
+
+        if(!customerRepo.findById(customerID).isPresent())
+            customerRepo.save(setCartCustomer);
 
         UserSetCartResponse userSetCartResponse = new UserSetCartResponse();
         HttpStatus status = HttpStatus.OK;
@@ -103,7 +105,6 @@ public class UserController implements UserApi {
         try{
             SetCartRequest request = new SetCartRequest(customerID, barcodes);
             SetCartResponse response = ServiceSelector.getUserService().setCart(request);
-
             try{
                 userSetCartResponse.setDate(response.getTimestamp().toString());
                 userSetCartResponse.setMessage(userSetCartResponse.getMessage());
