@@ -1,6 +1,8 @@
 package cs.superleague.user;
 
+import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.notification.Notification;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -2061,6 +2063,125 @@ public class UserServiceImpl implements UserService{
         }
         return response;
 
+    }
+
+    @Override
+    public ResetPasswordResponse resetPassword(ResetPasswordRequest request) throws UserException{
+        User user;
+        String email;
+        String userType;
+        String resetCode;
+        String passwordResetMessage;
+
+        if(request == null){
+            throw new InvalidRequestException("ResetPassword Request is null - Could not reset password");
+        }
+
+        if(request.getEmail() == null){
+            throw new InvalidRequestException("Email in request object is null - Could not reset password");
+        }
+
+        if(request.getUserType() == null){
+            throw new InvalidRequestException("Account Type in request object is null - Could not reset password");
+        }
+
+        email = request.getEmail();
+        userType = request.getUserType();
+
+        if(!emailRegex(email)){
+            return new ResetPasswordResponse(null, "Invalid email - Could not reset", false);
+        }
+
+        String upperAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lowerAlphabet = "abcdefghijklmnopqrstuvwxyz";
+        String numbers = "0123456789";
+        String alphaNumeric = upperAlphabet + lowerAlphabet + numbers;
+
+
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        int length = 10;
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(alphaNumeric.length());
+            char randomChar = alphaNumeric.charAt(index);
+            sb.append(randomChar);
+        }
+
+        resetCode = sb.toString();
+
+        if(userType == "CUSTOMER"){
+            Customer customer = customerRepo.findCustomerByEmail(email);
+
+            if(customer == null){
+                return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
+            }
+
+            user = customer;
+            user.setActivationCode(resetCode);
+            user.setActivationDate(new Date());
+
+            customerRepo.save((Customer)user);
+
+            passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
+
+//            Notification emailNotification = ServiceSelector.
+            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+
+        }else if(userType == "SHOPPER"){
+            Shopper shopper = shopperRepo.findShopperByEmail(email);
+
+            if(shopper == null){
+                return new ResetPasswordResponse(null, "Could not find shopper with email - Could not reset", false);
+            }
+
+            user = shopper;
+            user.setActivationCode(resetCode);
+            user.setActivationDate(new Date());
+
+            shopperRepo.save((Shopper)user);
+
+            passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
+
+//            Notification emailNotification = ServiceSelector.
+            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+        }else if(userType == "DRIVER"){
+            Driver driver = driverRepo.findDriverByEmail(email);
+
+            if(driver == null){
+                return new ResetPasswordResponse(null, "Could not find driver with email - Could not reset", false);
+            }
+
+            user = driver;
+            user.setActivationCode(resetCode);
+            user.setActivationDate(new Date());
+
+            driverRepo.save((Driver) user);
+
+            passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
+
+//            Notification emailNotification = ServiceSelector.
+            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+        }else if(userType == "ADMIN"){
+            Admin admin = adminRepo.findAdminByEmail(email);
+
+            if(admin == null){
+                return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
+            }
+
+            user = admin;
+            user.setActivationCode(resetCode);
+            user.setActivationDate(new Date());
+
+            adminRepo.save((Admin)user);
+
+            passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
+
+//            Notification emailNotification = ServiceSelector.
+            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+        }
+
+        return new ResetPasswordResponse(resetCode, "Account type given does not exist - Could not reset password", false);
     }
 
     private boolean emailRegex(String email){
