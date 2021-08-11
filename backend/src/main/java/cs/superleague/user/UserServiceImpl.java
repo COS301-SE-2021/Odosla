@@ -28,6 +28,7 @@ import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2123,8 +2124,8 @@ public class UserServiceImpl implements UserService{
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
 
             user = customer;
-            user.setActivationCode(resetCode);
-            user.setActivationDate(expiration);
+            user.setResetCode(resetCode);
+            user.setResetExpiration(expiration.toString());
 
             customerRepo.save((Customer)user);
 
@@ -2144,8 +2145,8 @@ public class UserServiceImpl implements UserService{
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
 
             user = shopper;
-            user.setActivationCode(resetCode);
-            user.setActivationDate(expiration);
+            user.setResetCode(resetCode);
+            user.setResetExpiration(expiration.toString());
 
             shopperRepo.save((Shopper)user);
 
@@ -2164,8 +2165,8 @@ public class UserServiceImpl implements UserService{
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
 
             user = driver;
-            user.setActivationCode(resetCode);
-            user.setActivationDate(expiration);
+            user.setResetCode(resetCode);
+            user.setResetExpiration(expiration.toString());
 
             driverRepo.save((Driver) user);
 
@@ -2184,8 +2185,8 @@ public class UserServiceImpl implements UserService{
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
 
             user = admin;
-            user.setActivationCode(resetCode);
-            user.setActivationDate(expiration);
+            user.setResetCode(resetCode);
+            user.setResetExpiration(expiration.toString());
 
             adminRepo.save((Admin)user);
 
@@ -2205,6 +2206,7 @@ public class UserServiceImpl implements UserService{
         String email;
         String userType;
         String password;
+        SimpleDateFormat format = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
         if(request == null){
             throw new InvalidRequestException("ResetPassword Request is null - Could not final password reset");
@@ -2242,26 +2244,27 @@ public class UserServiceImpl implements UserService{
             Customer customer = customerRepo.findCustomerByEmail(email);
 
             if(customer == null){
-                return new FinalisePasswordResetResponse("Could not find customer with email - Could not final password reset", false, new Date());
+                return new FinalisePasswordResetResponse("Could not find customer with email - Could not finalise password reset", false, new Date());
             }
 
             user = customer;
 
             try {
-                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                Date expiryDate = format.parse(user.getResetExpiration());
                 if (!new Date().before(expiryDate)){
-                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not finalise password reset", false, new Date());
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
 
-            if(request.getResetCode().equals(user.getResetCode())){
-                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+            if(!request.getResetCode().equals(user.getResetCode())){
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not finalise password reset", false, new Date());
             }
 
-            password = hashPassword(password);
-            user.setPassword(password);
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String passwordHashed = passwordEncoder.encode(password);
+            user.setPassword(passwordHashed);
 
             customerRepo.save((Customer) user);
 
@@ -2277,7 +2280,7 @@ public class UserServiceImpl implements UserService{
             user = shopper;
 
             try {
-                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                Date expiryDate = format.parse(user.getResetExpiration());
                 if (!new Date().before(expiryDate)){
                     return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
                 }
@@ -2300,22 +2303,22 @@ public class UserServiceImpl implements UserService{
             Admin admin = adminRepo.findAdminByEmail(email);
 
             if(admin == null){
-                return new FinalisePasswordResetResponse("Could not find admin with email - Could not final password reset", false, new Date());
+                return new FinalisePasswordResetResponse("Could not find admin with email - Could not finalise password reset", false, new Date());
             }
 
             user = admin;
 
             try {
-                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                Date expiryDate = format.parse(user.getResetExpiration());
                 if (!new Date().before(expiryDate)){
-                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not finalise password reset", false, new Date());
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
 
             if(request.getResetCode().equals(user.getResetCode())){
-                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not finalise password reset", false, new Date());
             }
 
             password = hashPassword(password);
@@ -2329,22 +2332,22 @@ public class UserServiceImpl implements UserService{
             Driver driver = driverRepo.findDriverByEmail(email);
 
             if(driver == null){
-                return new FinalisePasswordResetResponse("Could not find driver with email - Could not final password reset", false, new Date());
+                return new FinalisePasswordResetResponse("Could not find driver with email - Could not finalise password reset", false, new Date());
             }
 
             user = driver;
 
             try {
-                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                Date expiryDate = format.parse(user.getResetExpiration());
                 if (!new Date().before(expiryDate)){
-                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not finalise password reset", false, new Date());
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
 
             if(request.getResetCode().equals(user.getResetCode())){
-                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not finalise password reset", false, new Date());
             }
 
             password = hashPassword(password);
