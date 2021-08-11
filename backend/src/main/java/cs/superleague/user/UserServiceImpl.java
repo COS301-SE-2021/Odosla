@@ -1,8 +1,6 @@
 package cs.superleague.user;
 
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.Notification;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -15,25 +13,17 @@ import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.http.client.utils.DateUtils;
+import cs.superleague.user.requests.*;
+import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import cs.superleague.user.exceptions.*;
-import cs.superleague.user.responses.*;
-import cs.superleague.user.requests.*;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.util.Calendar;
 
 import static cs.superleague.user.dataclass.UserType.CUSTOMER;
 
@@ -2398,5 +2388,6 @@ public class UserServiceImpl implements UserService{
 
         return sb.toString();
     }
+
 
 }
