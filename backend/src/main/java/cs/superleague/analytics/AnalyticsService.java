@@ -1,11 +1,10 @@
 package cs.superleague.analytics;
 
-import cs.superleague.analytics.exceptions.AnalyticsException;
-import cs.superleague.analytics.requests.CreateCustomerReportRequest;
-import cs.superleague.analytics.responses.CreateCustomerReportResponse;
+import cs.superleague.analytics.requests.CreateUserReportRequest;
+import cs.superleague.analytics.responses.CreateUserReportResponse;
 
 public interface AnalyticsService {
 
-    CreateCustomerReportResponse createCustomerReport(CreateCustomerReportRequest request) throws AnalyticsException;
+    CreateUserReportResponse createUserReport(CreateUserReportRequest request) throws Exception;
 
 }

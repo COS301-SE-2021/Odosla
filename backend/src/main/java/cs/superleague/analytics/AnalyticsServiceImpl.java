@@ -1,21 +1,34 @@
 package cs.superleague.analytics;
 
+import cs.superleague.analytics.AnalyticsHelpers.UserAnalyticsHelper;
+import cs.superleague.analytics.CreateAnalyticsDataHelpers.CreateUserAnalyticsData;
 import cs.superleague.analytics.dataclass.ReportType;
 import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.analytics.exceptions.NotAuthorizedException;
-import cs.superleague.analytics.requests.CreateCustomerReportRequest;
-import cs.superleague.analytics.responses.CreateCustomerReportResponse;
-import cs.superleague.integration.ServiceSelector;
-import cs.superleague.user.requests.GetUserByUUIDRequest;
-import cs.superleague.user.responses.GetUserByUUIDResponse;
+import cs.superleague.analytics.requests.CreateUserReportRequest;
+import cs.superleague.analytics.responses.CreateUserReportResponse;
+import cs.superleague.user.UserService;
+import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.repos.AdminRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class AnalyticsServiceImpl implements AnalyticsService {
+
+    private final AdminRepo adminRepo;
+    private final UserService userService;
+
+    @Autowired
+    public AnalyticsServiceImpl(AdminRepo adminRepo, UserService userService) {
+        this.adminRepo = adminRepo;
+        this.userService = userService;
+    }
 
     /**
      * WHAT TO DO:
@@ -46,25 +59,41 @@ public class AnalyticsServiceImpl implements AnalyticsService {
      *                "PDFReport":"com.itextpdf.text.Document@68999068"
      *                }
      * @return
-     * @throws // NotAuthorizedException
-     * @throws // ReportException
-     * @throws // InvalidRequestException
+     * @throws AnalyticsException
      */
 
     @Override
-    public CreateCustomerReportResponse createCustomerReport(CreateCustomerReportRequest request) throws AnalyticsException {
+    public CreateUserReportResponse createUserReport(CreateUserReportRequest request) throws Exception {
+
+        CreateUserReportResponse response;
+        CreateUserAnalyticsData createUserAnalyticsData;
 
         if (request == null) {
-            throw new InvalidRequestException("CreateCustomerReportRequest is null- Cannot create report");
+            throw new InvalidRequestException("CreateUserReportRequest is null- Cannot create report");
         }
 
-        validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getCustomerID());
+        validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getAdminID());
 
-        isAdmin(request.getCustomerID());
+        isAdmin(request.getAdminID());
 
+        try {
+            createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
+                    request.getEndDate(), request.getAdminID(), userService);
+        }catch (Exception e){
+            throw new AnalyticsException("Problem with creating user statistics report");
+        }
 
+        UserAnalyticsHelper userAnalyticsHelper = new UserAnalyticsHelper(createUserAnalyticsData.getUserStatisticsData());
 
-        return null;
+        if(request.getReportType() == ReportType.PDF){
+            response =  new CreateUserReportResponse(userAnalyticsHelper.createPDF(), null);
+        }else if(request.getReportType() == ReportType.CSV){
+            response = new CreateUserReportResponse(null, userAnalyticsHelper.createCSVReport());
+        }else{
+            throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
+        }
+
+        return response;
     }
 
     private void validAnalyticsRequest(ReportType reportType, Calendar startDate, Calendar endDate, UUID userID) throws InvalidRequestException {
@@ -82,10 +111,16 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
     }
 
-    public void isAdmin(UUID userID) throws NotAuthorizedException {
-        // GetAdmin by UUID
+    private void isAdmin(UUID userID) throws NotAuthorizedException {
 
-        // if not admin then throw
+        Optional<Admin> adminOptional;
+
+        adminOptional = adminRepo.findById(userID);
+
+        if(adminOptional == null || !adminOptional.isPresent()){
+            throw new NotAuthorizedException("ID given does not belong to admin - Could not generate report");
+        }
+
     }
 
 

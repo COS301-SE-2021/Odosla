@@ -1,5 +1,7 @@
 package cs.superleague.integration;
 
+import cs.superleague.analytics.AnalyticsService;
+import cs.superleague.analytics.AnalyticsServiceImpl;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.user.UserService;
@@ -22,9 +24,14 @@ public class ServiceSelector {
     @Value("${userService}")
     private String userService = "";
 
+    @Value("${env.ANALYTICS_SERVICE}")
+    private String analyticsService = "";
+
     private PaymentService payment;
     private ShoppingService shopping;
     private UserService user;
+    private AnalyticsService analytics;
+
     @Autowired
     public ServiceSelector() {
         singleton = this;
@@ -36,7 +43,7 @@ public class ServiceSelector {
         singleton.payment = (PaymentService) context.getBean(paymentService);
         singleton.shopping=(ShoppingService) context.getBean(shoppingService);
         singleton.user=(UserService) context.getBean(userService);
-
+        singleton.analytics = (AnalyticsService) context.getBean(analyticsService);
     }
 
     public static PaymentService getPaymentService() {

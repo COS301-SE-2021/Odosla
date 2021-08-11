@@ -5,22 +5,22 @@ import cs.superleague.analytics.dataclass.ReportType;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class CreateCustomerReportRequest {
+public class CreateUserReportRequest {
 
-    private final UUID customerID;
+    private final UUID adminID;
     private final Calendar startDate;
     private final Calendar endDate;
     private final ReportType reportType;
 
-    public CreateCustomerReportRequest(UUID customerID, Calendar startDate, Calendar endDate, ReportType reportType) {
-        this.customerID = customerID;
+    public CreateUserReportRequest(UUID adminID, Calendar startDate, Calendar endDate, ReportType reportType) {
+        this.adminID = adminID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportType = reportType;
     }
 
-    public UUID getCustomerID() {
-        return customerID;
+    public UUID getAdminID() {
+        return adminID;
     }
 
     public Calendar getStartDate() {

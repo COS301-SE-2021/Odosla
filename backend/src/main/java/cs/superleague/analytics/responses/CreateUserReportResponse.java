@@ -1,13 +1,13 @@
 package cs.superleague.analytics.responses;
 
-import javax.swing.text.Document;
+import com.itextpdf.text.Document;
 
-public class CreateCustomerReportResponse{
+public class CreateUserReportResponse {
 
     private final Document PDFReport;
     private final StringBuilder CSVReport;
 
-    public CreateCustomerReportResponse(Document PDFReport, StringBuilder CSVReport) {
+    public CreateUserReportResponse(Document PDFReport, StringBuilder CSVReport) {
         this.PDFReport = PDFReport;
         this.CSVReport = CSVReport;
     }
