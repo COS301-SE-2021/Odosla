@@ -730,8 +730,11 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
                 if(notPresent){
                     Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
-                    updateShopper.setStoreID(request.getStoreID());
-                    shopperRepo.save(updateShopper);
+                    if(updateShopper!=null)
+                    {
+                        updateShopper.setStoreID(request.getStoreID());
+                        shopperRepo.save(updateShopper);
+                    }
 
                     listOfShoppers.add(shopperResponse.getShopper());
                     storeEntity.setShoppers(listOfShoppers);
@@ -742,8 +745,11 @@ public class ShoppingServiceImpl implements ShoppingService {
             else
             {
                 Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
-                updateShopper.setStoreID(request.getStoreID());
-                shopperRepo.save(updateShopper);
+                if(updateShopper!=null)
+                {
+                    updateShopper.setStoreID(request.getStoreID());
+                    shopperRepo.save(updateShopper);
+                }
 
                 List<Shopper> newList= new ArrayList<>();
                 newList.add(shopperResponse.getShopper());
