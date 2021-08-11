@@ -214,7 +214,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_GetShoppingCartResponse"
-
   /user/makeGroceryList:
     post:
       summary: Endpoint for making a grocery list
@@ -237,9 +236,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_MakeGroceryListResponse"
 
+  /user/removeFromCart:
+    post:
+      summary: Endpoint for removing from cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: removeFromCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RemoveFromCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RemoveFromCartResponse"
+
 components:
 
   schemas:
+
 
 
     ItemObject:
@@ -549,6 +571,29 @@ components:
           type: string
 
     user_MakeGroceryListResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+
+
+    user_RemoveFromCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcode:
+          type: string
+
+    user_RemoveFromCartResponse:
       description: This object is returned as output
       type: object
       properties:

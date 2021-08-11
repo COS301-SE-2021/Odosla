@@ -1981,7 +1981,7 @@ public class UserServiceImpl implements UserService{
         }
 
         try {
-            customer = customerRepo.findById(request.getCustomerID()).orElse(null);
+            customer = customerRepo.findById(UUID.fromString(request.getCustomerID())).orElse(null);
         }catch(Exception e){}
 
         if(customer == null){

@@ -1,13 +1,12 @@
 package cs.superleague.user.requests;
 
-import java.util.UUID;
 
 public class RemoveFromCartRequest {
 
-    private final UUID customerID;
+    private final String customerID;
     private final String barcode;
 
-    public UUID getCustomerID() {
+    public String getCustomerID() {
         return customerID;
     }
 
@@ -15,7 +14,7 @@ public class RemoveFromCartRequest {
         return barcode;
     }
 
-    public RemoveFromCartRequest(UUID customerID, String barcode) {
+    public RemoveFromCartRequest(String customerID, String barcode) {
         this.customerID = customerID;
         this.barcode = barcode;
     }
