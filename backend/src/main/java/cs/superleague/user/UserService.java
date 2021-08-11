@@ -33,4 +33,7 @@ public interface UserService {
     CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
+
+    /* Analytics user data*/
+    GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
 }
