@@ -8,6 +8,8 @@ public interface DeliveryService {
 
     AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request) throws InvalidRequestException;
 
+    AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException;
+
     CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException;
 
     GetDeliveriesResponse getDeliveries(GetDeliveriesRequest request) throws InvalidRequestException;

@@ -58,6 +58,27 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
+    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getDeliveryID() == null || request.getDriverID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        if(driverRepo.findById(request.getDriverID()).isPresent()){
+            throw new InvalidRequestException("Driver does not exist in the database.");
+        }
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in database"));
+        if (delivery.getDriverId() != null){
+            throw new InvalidRequestException("This delivery has already been taken by another driver.");
+        }
+        delivery.setDriverId(request.getDriverID());
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.");
+        return response;
+    }
+
+    @Override
     public CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
