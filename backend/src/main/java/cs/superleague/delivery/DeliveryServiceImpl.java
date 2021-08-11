@@ -65,10 +65,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request.getDeliveryID() == null || request.getDriverID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
-        if(driverRepo.findById(request.getDriverID()).isPresent()){
+        if(!driverRepo.findById(request.getDriverID()).isPresent()){
             throw new InvalidRequestException("Driver does not exist in the database.");
         }
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in database"));
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in database."));
         if (delivery.getDriverId() != null){
             throw new InvalidRequestException("This delivery has already been taken by another driver.");
         }
