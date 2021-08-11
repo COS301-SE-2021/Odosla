@@ -8,6 +8,7 @@ import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
+import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.GetShopperByUUIDRequest;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
     private final OrderRepo orderRepo;
+    private final ShopperRepo shopperRepo;
     private final UserService userService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, UserService userService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShopperRepo shopperRepo, UserService userService) {
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
+        this.shopperRepo= shopperRepo;
         this.userService = userService;
     }
     /**
@@ -724,6 +727,10 @@ public class ShoppingServiceImpl implements ShoppingService {
                     }
                 }
                 if(notPresent){
+                    Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                    updateShopper.setStoreID(request.getStoreID());
+                    shopperRepo.save(updateShopper);
+
                     listOfShoppers.add(shopperResponse.getShopper());
                     storeEntity.setShoppers(listOfShoppers);
                     storeRepo.save(storeEntity);
@@ -732,6 +739,10 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             else
             {
+                Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                updateShopper.setStoreID(request.getStoreID());
+                shopperRepo.save(updateShopper);
+
                 List<Shopper> newList= new ArrayList<>();
                 newList.add(shopperResponse.getShopper());
                 storeEntity.setShoppers(newList);
