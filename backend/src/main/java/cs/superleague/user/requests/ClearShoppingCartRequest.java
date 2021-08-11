@@ -4,13 +4,13 @@ import java.util.UUID;
 
 public class ClearShoppingCartRequest {
 
-    private final UUID customerID;
+    private final String customerID;
 
-    public UUID getCustomerID() {
+    public String getCustomerID() {
         return customerID;
     }
 
-    public ClearShoppingCartRequest(UUID customerID) {
+    public ClearShoppingCartRequest(String customerID) {
         this.customerID = customerID;
     }
 }
