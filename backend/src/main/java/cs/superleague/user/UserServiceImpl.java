@@ -1497,7 +1497,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        userID = request.getUserID();
+        userID = UUID.fromString(request.getUserID());
         try {
             customer = customerRepo.findById(userID).orElse(null);
         }catch(Exception e){}

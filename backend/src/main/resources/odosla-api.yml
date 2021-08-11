@@ -215,6 +215,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_GetShoppingCartResponse"
 
+  /user/makeGroceryList:
+    post:
+      summary: Endpoint for making a grocery list
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: makeGroceryList
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_MakeGroceryListRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_MakeGroceryListResponse"
+
 components:
 
   schemas:
@@ -512,3 +534,27 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ItemObject"
+
+
+    user_MakeGroceryListRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+        name:
+          type: string
+
+    user_MakeGroceryListResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string

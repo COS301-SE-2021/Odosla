@@ -5,18 +5,18 @@ import java.util.UUID;
 
 public class MakeGroceryListRequest {
 
-    private final UUID userID;
+    private final String userID;
     private final List<String> barcodes;
     private final String name;
 
 
-    public MakeGroceryListRequest(UUID userID, List<String> barcodes, String name) { //if multiple items are parsed in
+    public MakeGroceryListRequest(String userID, List<String> barcodes, String name) { //if multiple items are parsed in
         this.userID = userID;
         this.barcodes = barcodes;
         this.name = name;
     }
 
-    public UUID getUserID() {
+    public String getUserID() {
         return userID;
     }
 
