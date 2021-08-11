@@ -135,7 +135,7 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID());
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID().toString());
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.getShoppingCart(request));
         assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
     }
@@ -143,7 +143,7 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When an empty shoppingCart is returned")
     void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID_EMPTY);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID_EMPTY.toString());
         try{
             GetShoppingCartResponse response = userService.getShoppingCart(request);
             assertEquals("Shopping Cart does not have any items", response.getMessage());
@@ -158,7 +158,7 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID.toString());
 
         try{
             GetShoppingCartResponse response = userService.getShoppingCart(request);

@@ -1593,7 +1593,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UserID is null - could retrieve shopping cart");
         }
 
-        userID = request.getUserID();
+        userID = UUID.fromString(request.getUserID());
         customerOptional = customerRepo.findById(userID);
         if(customerOptional == null || !customerOptional.isPresent()){
             throw new CustomerDoesNotExistException("User with given userID does not exist - could not retrieve shopping cart");
