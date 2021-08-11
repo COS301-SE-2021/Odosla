@@ -27,6 +27,7 @@ import cs.superleague.user.exceptions.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
+import java.text.DateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -2195,6 +2196,167 @@ public class UserServiceImpl implements UserService{
         }
 
         return new ResetPasswordResponse(resetCode, "Account type given does not exist - Could not reset password", false);
+    }
+
+    @Override
+    public FinalisePasswordResetResponse finalisePasswordReset(FinalisePasswordResetRequest request) throws UserException{
+
+        User user;
+        String email;
+        String userType;
+        String password;
+
+        if(request == null){
+            throw new InvalidRequestException("ResetPassword Request is null - Could not final password reset");
+        }
+
+        if(request.getEmail() == null){
+            throw new InvalidRequestException("Email in request object is null - Could not finalise password reset");
+        }
+
+        if(request.getUserType() == null){
+            throw new InvalidRequestException("Account Type in request object is null - Could not finalise password reset");
+        }
+
+        if(request.getResetCode() == null){
+            throw new InvalidRequestException("Reset code in request object is null - Could not finalise password reset");
+        }
+
+        if(request.getPassword() == null){
+            throw new InvalidRequestException("Password in request object is null - Could not finalise password reset");
+        }
+
+        email = request.getEmail();
+        userType = request.getUserType();
+        password = request.getPassword();
+
+        if(!emailRegex(email)){
+            return new FinalisePasswordResetResponse("Invalid email - Could not finalise password reset", false, new Date());
+        }
+
+        if(!passwordRegex(password)){
+            return new FinalisePasswordResetResponse("invalid password - Could not finalise password reset", false, new Date());
+        }
+
+        if(userType.equals("CUSTOMER")){
+            Customer customer = customerRepo.findCustomerByEmail(email);
+
+            if(customer == null){
+                return new FinalisePasswordResetResponse("Could not find customer with email - Could not final password reset", false, new Date());
+            }
+
+            user = customer;
+
+            try {
+                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                if (!new Date().before(expiryDate)){
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(request.getResetCode().equals(user.getResetCode())){
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+            }
+
+            password = hashPassword(password);
+            user.setPassword(password);
+
+            customerRepo.save((Customer) user);
+
+//            Notification emailNotification = ServiceSelector.
+            return new FinalisePasswordResetResponse("Password reset successful", true, new Date());
+        }else if(userType.equals("SHOPPER")){
+            Shopper shopper = shopperRepo.findShopperByEmail(email);
+
+            if(shopper == null){
+                return new FinalisePasswordResetResponse("Could not find shopper with email - Could not final password reset", false, new Date());
+            }
+
+            user = shopper;
+
+            try {
+                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                if (!new Date().before(expiryDate)){
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(request.getResetCode().equals(user.getResetCode())){
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+            }
+
+            password = hashPassword(password);
+            user.setPassword(password);
+
+            shopperRepo.save((Shopper) user);
+
+//            Notification emailNotification = ServiceSelector.
+            return new FinalisePasswordResetResponse("Password reset successful", true, new Date());
+        }else if(userType.equals("ADMIN")){
+            Admin admin = adminRepo.findAdminByEmail(email);
+
+            if(admin == null){
+                return new FinalisePasswordResetResponse("Could not find admin with email - Could not final password reset", false, new Date());
+            }
+
+            user = admin;
+
+            try {
+                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                if (!new Date().before(expiryDate)){
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(request.getResetCode().equals(user.getResetCode())){
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+            }
+
+            password = hashPassword(password);
+            user.setPassword(password);
+
+            adminRepo.save((Admin) user);
+
+//            Notification emailNotification = ServiceSelector.
+            return new FinalisePasswordResetResponse("Password reset successful", true, new Date());
+        }else if(userType.equals("DRIVER")){
+            Driver driver = driverRepo.findDriverByEmail(email);
+
+            if(driver == null){
+                return new FinalisePasswordResetResponse("Could not find driver with email - Could not final password reset", false, new Date());
+            }
+
+            user = driver;
+
+            try {
+                Date expiryDate = DateFormat.getDateInstance().parse(user.getResetExpiration());
+                if (!new Date().before(expiryDate)){
+                    return new FinalisePasswordResetResponse("Reset code expired - Could not final password reset", false, new Date());
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            if(request.getResetCode().equals(user.getResetCode())){
+                return new FinalisePasswordResetResponse("Invalid Reset code given - Could not final password reset", false, new Date());
+            }
+
+            password = hashPassword(password);
+            user.setPassword(password);
+
+            driverRepo.save((Driver) user);
+
+//            Notification emailNotification = ServiceSelector.
+            return new FinalisePasswordResetResponse("Password reset successful", true, new Date());
+        }
+
+        return new FinalisePasswordResetResponse("Invalid account type - could not finalise password reset", false, new Date());
     }
 
     private boolean emailRegex(String email){
