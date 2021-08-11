@@ -149,7 +149,7 @@ public class AddShopperIntegrationTest {
         AddShopperResponse response=ServiceSelector.getShoppingService().addShopper(request);
         assertNotNull(response);
         assertEquals(false,response.isSuccess());
-        assertEquals("Shopper already is already in listOfShoppers",response.getMessage());
+        assertEquals("Shopper already is in listOfShoppers",response.getMessage());
     }
 
     @Test

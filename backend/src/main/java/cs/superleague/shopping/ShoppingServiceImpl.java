@@ -21,6 +21,7 @@ import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.StoreRepo;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -701,23 +702,25 @@ public class ShoppingServiceImpl implements ShoppingService {
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
             /* Get Shopper by UUID- get Shopper Object */
             /* Shopper shopper */
-            if(listOfShoppers!=null){
+            //if(listOfShoppers!=null){
                 /* Get Shopper by UUID- get Shopper Object */
                 /* Shopper shopper */
-                GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-                GetShopperByUUIDResponse shopperResponse;
-                try {
-                    shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
-                }catch(Exception e){
-                    throw e;
-                }
+            GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
+            GetShopperByUUIDResponse shopperResponse;
+            try {
+                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
+            }catch(Exception e){
+                throw e;
+            }
 
+            Boolean notPresent = true;
 
-                Boolean notPresent=true;
-                for(Shopper shopper:listOfShoppers){
-                    if(shopper.getShopperID().equals(request.getShopperID())){
-                        response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "Shopper already is already in listOfShoppers");
-                        notPresent=false;
+            if(listOfShoppers!=null) {
+
+                for (Shopper shopper : listOfShoppers) {
+                    if (shopper.getShopperID().equals(request.getShopperID())) {
+                        response = new AddShopperResponse(false, Calendar.getInstance().getTime(), "Shopper already is in listOfShoppers");
+                        notPresent = false;
                     }
                 }
                 if(notPresent){
@@ -727,9 +730,20 @@ public class ShoppingServiceImpl implements ShoppingService {
                     response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
                 }
             }
-            else{
-                response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+            else
+            {
+                List<Shopper> newList= new ArrayList<>();
+                newList.add(shopperResponse.getShopper());
+                storeEntity.setShoppers(newList);
+                storeRepo.save(storeEntity);
+                response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
+
             }
+
+//            }
+//            else{
+//                response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+//            }
 
         }
         else{

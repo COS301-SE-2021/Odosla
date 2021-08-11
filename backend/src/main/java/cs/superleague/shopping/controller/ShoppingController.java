@@ -80,11 +80,18 @@ public class ShoppingController implements ShoppingApi{
         //mock mem:db
         Store store1 = new Store();
         store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-        store1.setShoppers(new ArrayList<>());
+        store1.setStoreBrand("PnP");
+        store1.setOpeningTime(7);
+        store1.setClosingTime(20);
+        store1.setOpen(false);
+        store1.setMaxOrders(5);
         storeRepo.save(store1);
 
         Shopper sh1 = new Shopper();
         sh1.setShopperID(userID);
+        sh1.setName("John");
+        sh1.setEmail("John123@gmail.com");
+        sh1.setSurname("Cena");
         shopperRepo.save(sh1);
 
         //creating response object  and default return status
@@ -93,7 +100,7 @@ public class ShoppingController implements ShoppingApi{
 
         try{
 
-            AddShopperRequest req = new AddShopperRequest(userID, storeID);
+            AddShopperRequest req = new AddShopperRequest(UUID.fromString(body.getShopperID()), UUID.fromString(body.getStoreID()));
             AddShopperResponse addShopperResponse = ServiceSelector.getShoppingService().addShopper(req);
 
             try {
