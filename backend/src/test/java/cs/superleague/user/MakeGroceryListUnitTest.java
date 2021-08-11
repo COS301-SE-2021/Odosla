@@ -116,7 +116,7 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When barcodes parameter is not specified")
     void UnitTest_testingNullRequestBarcodesParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, null, "Seamus' Party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), null, "Seamus' Party");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Barcodes list empty - could not make the grocery list", thrown.getMessage());
     }
@@ -124,7 +124,7 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When name parameter is not specified")
     void UnitTest_testingNullRequestNameParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, null);
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
     }
@@ -132,7 +132,7 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, "Seamus' party");
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.makeGroceryList(request));
         assertEquals("User with given userID does not exist - could not make the grocery list", thrown.getMessage());
@@ -141,7 +141,7 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When groceryList with given name exists")
     void UnitTest_testingExistingGroceryList(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, "Seamus' party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
@@ -157,7 +157,7 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When the barcodes do not exist")
     void UnitTest_testing_Barcodes_DoneExist(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, "Seamus' bachelor party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
@@ -174,7 +174,7 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, "Seamus' bachelor party");
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{

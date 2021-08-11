@@ -132,7 +132,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When barcodes parameter is not specified")
     void IntegrationTest_testingNullRequestBarcodesParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, null, "Seamus' Party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), null, "Seamus' Party");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Barcodes list empty - could not make the grocery list", thrown.getMessage());
     }
@@ -140,7 +140,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When name parameter is not specified")
     void IntegrationTest_testingNullRequestNameParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, null);
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
     }
@@ -148,7 +148,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(UUID.randomUUID(), listOfBarcodes, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(UUID.randomUUID().toString(), listOfBarcodes, "Seamus' party");
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.makeGroceryList(request));
         assertEquals("User with given userID does not exist - could not make the grocery list", thrown.getMessage());
     }
@@ -156,7 +156,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When groceryList with given name exists")
     void IntegrationTest_testingExistingGroceryList(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, "Seamus' party");
 
         try{
             MakeGroceryListResponse response = userService.makeGroceryList(request);
@@ -173,7 +173,7 @@ public class MakeGroceryListIntegrationTest {
     void IntegrationTest_testing_Barcodes_DoneExist(){
         List<String> doesNotExist = new ArrayList<>();
         doesNotExist.add("456123");
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, doesNotExist, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), doesNotExist, "Seamus' bachelor party");
 
         try{
             MakeGroceryListResponse response = userService.makeGroceryList(request);
@@ -188,7 +188,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void IntegrationTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID, listOfBarcodes, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(userID.toString(), listOfBarcodes, "Seamus' bachelor party");
 
         try{
             MakeGroceryListResponse response = userService.makeGroceryList(request);
