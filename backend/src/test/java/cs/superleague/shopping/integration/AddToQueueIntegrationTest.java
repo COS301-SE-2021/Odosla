@@ -107,6 +107,7 @@ public class AddToQueueIntegrationTest {
     @AfterEach
     void tearDown(){
         storeRepo.delete(store);
+        itemRepo.deleteAll();
     }
 
     // Integration Tests

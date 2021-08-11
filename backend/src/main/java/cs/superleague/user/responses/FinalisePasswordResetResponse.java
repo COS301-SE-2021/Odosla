@@ -1,19 +1,17 @@
 package cs.superleague.user.responses;
 
-public class ResetPasswordResponse {
+import java.util.Date;
 
-    private final String resetCode;
+public class FinalisePasswordResetResponse {
+
     private final String message;
     private final boolean success;
+    private final Date timestamp;
 
-    public ResetPasswordResponse(String resetCode, String message, boolean success) {
-        this.resetCode = resetCode;
+    public FinalisePasswordResetResponse(String message, boolean success, Date timestamp) {
         this.message = message;
         this.success = success;
-    }
-
-    public String getResetCode() {
-        return resetCode;
+        this.timestamp = timestamp;
     }
 
     public String getMessage() {
@@ -22,5 +20,9 @@ public class ResetPasswordResponse {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 }

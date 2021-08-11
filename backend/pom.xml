@@ -103,6 +103,11 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
@@ -155,7 +160,6 @@
             <artifactId>spring-dotenv</artifactId>
             <version>2.3.0</version>
         </dependency>
-
         <dependency>
             <groupId>cs.superleague</groupId>
             <artifactId>backend</artifactId>
@@ -166,6 +170,12 @@
             <artifactId>spring-security-config</artifactId>
             <version>5.4.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail</artifactId>
+            <version>1.5.0</version>
+        </dependency>
+
     </dependencies>
 
     <distributionManagement>
@@ -177,6 +187,5 @@
             <layout>default</layout>
         </repository>
     </distributionManagement>
-
 
 </project>

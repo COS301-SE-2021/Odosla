@@ -102,6 +102,7 @@ public class UpdateCatalogueIntegrationTest {
     void tearDown() {
         storeRepo.deleteAll();
         catalogueRepo.deleteAll();
+        itemRepo.deleteAll();
     }
 
     @Test

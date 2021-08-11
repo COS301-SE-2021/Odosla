@@ -83,7 +83,7 @@ public class UpdateStoreIntegrationTest {
         listOfItems2.add(item2);
         listOfItems2.add(item3);
         listOfItems2.add(item4);
-        store=new Store(storeUUID1,"Woolworths",catalogue1,2,null,null,4,false);
+        store=new Store(storeUUID1,"Woolworth's",catalogue1,2,null,null,4,false);
         store.setOpeningTime(9);
         store.setClosingTime(23);
         store2=new Store(storeUUID1, 7, 21, "PnP", 2,6,true);
@@ -94,6 +94,7 @@ public class UpdateStoreIntegrationTest {
     void tearDown() {
         storeRepo.deleteAll();
         catalogueRepo.deleteAll();
+        itemRepo.deleteAll();
     }
 
     @Test

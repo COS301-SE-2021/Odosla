@@ -9,6 +9,7 @@ tags:
   - name: "Shopping"
   - name: "Payment"
   - name: "User"
+  - name: "Notification"
 
 
 paths:
@@ -149,6 +150,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
+  /notification/sendEmailNotification:
+    post:
+      summary: Endpoint for sending an email notification
+      tags:
+        - "notification"
+      description: Refer to summary
+      operationId: sendEmailNotification
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/notification_SendEmailNotificationRequest"
+      responses:
+        "200":
+          description: Returns updated order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
   /user/setCart:
     post:
       summary: Endpoint for setting a shopping cart
@@ -170,6 +192,73 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_SetCartResponse"
+
+  /user/clearShoppingCart:
+    post:
+      summary: Endpoint for clearing a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: clearShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ClearShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ClearShoppingCartResponse"
+
+  /user/getShoppingCart:
+    post:
+      summary: Endpoint for getting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetShoppingCartResponse"
+
+  /user/makeGroceryList:
+    post:
+      summary: Endpoint for making a grocery list
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: makeGroceryList
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_MakeGroceryListRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_MakeGroceryListResponse"
+
 components:
 
   schemas:
@@ -406,6 +495,30 @@ components:
         order:
           type: object
 
+    notification_SendEmailNotificationRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        message:
+          type: string
+          description: This is the message that will be sent as a notification
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Hash map that needs to contain the Type (e.g delivery), Subject, UserType (e.g admin) and the UserID
+
+    notification_SendEmailNotificationResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        responseMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+
+
     user_SetCartRequest:
       description: This object is expected as input
       type: object
@@ -427,3 +540,67 @@ components:
         date:
           type: string
 
+    user_ClearShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_ClearShoppingCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+
+    user_GetShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_GetShoppingCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+
+
+    user_MakeGroceryListRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+        name:
+          type: string
+
+    user_MakeGroceryListResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string

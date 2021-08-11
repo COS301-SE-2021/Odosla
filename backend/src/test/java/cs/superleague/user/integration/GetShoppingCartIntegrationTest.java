@@ -9,6 +9,7 @@ import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.requests.GetShoppingCartRequest;
@@ -47,6 +48,7 @@ public class GetShoppingCartIntegrationTest {
     Customer customerEMPTYCart;
     Item I1;
     Item I2;
+    Item I3;
     Item item;
 
     UUID userID;
@@ -70,12 +72,10 @@ public class GetShoppingCartIntegrationTest {
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
-        I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
+        I1=new Item("Heinz Tamatoe Sauce","T123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
+        I3=new Item("Bar one","TTTT012345","012345",expectedS1,14.99,3,"description","img/");
         item = null;
-
-        itemRepo.save(I1);
-        itemRepo.save(I2);
 
         listOfItems.add(I1);
         listOfItems.add(I2);
@@ -85,6 +85,7 @@ public class GetShoppingCartIntegrationTest {
 
         itemRepo.save(I1);
         itemRepo.save(I2);
+        itemRepo.save(I3);
         itemRepo.saveAll(shoppingCart);
         itemRepo.saveAll(listOfItems);
 
@@ -103,7 +104,7 @@ public class GetShoppingCartIntegrationTest {
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
 
-        customerEMPTYCart = new Customer("D", "S", "ds@smallClubFC.com", "0721234567", "", new Date(), "", "", "", true,
+        customerEMPTYCart = new Customer("D", "S", "d2s@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID_EMPTY, deliveryAddress, groceryListsEmptyCart, shoppingCartEMPTY, null, null);
 
 
@@ -137,7 +138,7 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID());
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(UUID.randomUUID().toString());
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.getShoppingCart(request));
         assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
     }
@@ -145,7 +146,7 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When an empty shoppingCart is returned")
     void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID_EMPTY);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID_EMPTY.toString());
         try{
             GetShoppingCartResponse response = userService.getShoppingCart(request);
             assertEquals("Shopping Cart does not have any items", response.getMessage());
@@ -160,7 +161,7 @@ public class GetShoppingCartIntegrationTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID.toString());
 
         try{
             GetShoppingCartResponse response = userService.getShoppingCart(request);
