@@ -109,7 +109,7 @@ public class ClearShoppingCartIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        request = new ClearShoppingCartRequest(UUID.randomUUID());
+        request = new ClearShoppingCartRequest(UUID.randomUUID().toString());
         Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.clearShoppingCart(request));
         assertEquals("User with given userID does not exist - could clear cart", thrown.getMessage());
     }
@@ -117,7 +117,7 @@ public class ClearShoppingCartIntegrationTest {
     @Test
     @DisplayName("When valid values are given")
     void UnitTest_testingSuccessfulUpdate(){
-        request = new ClearShoppingCartRequest(userID);
+        request = new ClearShoppingCartRequest(userID.toString());
 
         try {
             response = userService.clearShoppingCart(request);
