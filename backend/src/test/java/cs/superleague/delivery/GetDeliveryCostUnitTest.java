@@ -1,18 +1,12 @@
 package cs.superleague.delivery;
 
 import cs.superleague.delivery.exceptions.InvalidRequestException;
-import cs.superleague.delivery.repos.DeliveryDetailRepo;
-import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.GetDeliveryCostRequest;
+import cs.superleague.delivery.responses.GetDeliveryCostResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.DriverRepo;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 
@@ -68,11 +62,75 @@ public class GetDeliveryCostUnitTest {
     }
 
     @Test
-    @Description("Tests for when invalid geoPoints, should throw an error.")
-    @DisplayName("Invalid geoPoints")
-    void invalidGeoPointsBeingPassedIn_UnitTest(){
-
+    @Description("Tests for when invalid latitude drop off geoPoint, should throw an error.")
+    @DisplayName("Invalid latitude drop off geoPoints")
+    void invalidLatitudeDropOffGeoPointsBeingPassedIn_UnitTest(){
+        dropOffLocation = new GeoPoint(91.0, 0.0, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryCost(request1));
+        assertEquals("Invalid Co-ordinates.", thrown1.getMessage());
     }
 
+    @Test
+    @Description("Tests for when invalid longitude drop off geoPoint, should throw an error.")
+    @DisplayName("Invalid longitude drop off geoPoints")
+    void invalidLongitudeDropOffGeoPointsBeingPassedIn_UnitTest(){
+        dropOffLocation = new GeoPoint(89.0, -181.0, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryCost(request1));
+        assertEquals("Invalid Co-ordinates.", thrown1.getMessage());
+    }
 
+    @Test
+    @Description("Tests for when invalid latitude pick up geoPoint, should throw an error.")
+    @DisplayName("Invalid latitude pick up geoPoints")
+    void invalidLatitudePickUpGeoPointsBeingPassedIn_UnitTest(){
+        pickUpLocation = new GeoPoint(-91.0, 0.0, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryCost(request1));
+        assertEquals("Invalid Co-ordinates.", thrown1.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when invalid longitude pick up geoPoint, should throw an error.")
+    @DisplayName("Invalid longitude pick up geoPoints")
+    void invalidLongitudePickUpGeoPointsBeingPassedIn_UnitTest(){
+        dropOffLocation = new GeoPoint(89.0, 181.0, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryCost(request1));
+        assertEquals("Invalid Co-ordinates.", thrown1.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when valid geoPoints, distance below 20km.")
+    @DisplayName("Valid geoPoints, distance below 20")
+    void ValidGeoPointsBeingPassedInBelowTwentyKm_UnitTest() throws InvalidRequestException {
+        dropOffLocation = new GeoPoint(0.1, 0.1, "");
+        pickUpLocation = new GeoPoint(0.2, 0.2, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        GetDeliveryCostResponse response = deliveryService.getDeliveryCost(request1);
+        assertEquals(response.getCost(), 20.0);
+    }
+
+    @Test
+    @Description("Tests for when valid geoPoints, distance above 20km but below 40km.")
+    @DisplayName("Valid geoPoints, distance above 20, below 40")
+    void ValidGeoPointsBeingPassedInBelowFortyKmAboveTwenty_UnitTest() throws InvalidRequestException {
+        dropOffLocation = new GeoPoint(0.1, 0.1, "");
+        pickUpLocation = new GeoPoint(0.3, 0.3, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        GetDeliveryCostResponse response = deliveryService.getDeliveryCost(request1);
+        assertEquals(response.getCost(), 35.0);
+    }
+
+    @Test
+    @Description("Tests for when valid geoPoints, distance above 40km.")
+    @DisplayName("Valid geoPoints, distance above 40")
+    void ValidGeoPointsBeingPassedInAboveFortyKm_UnitTest() throws InvalidRequestException {
+        dropOffLocation = new GeoPoint(0.1, 0.1, "");
+        pickUpLocation = new GeoPoint(0.4, 0.4, "");
+        GetDeliveryCostRequest request1 = new GetDeliveryCostRequest(dropOffLocation, pickUpLocation);
+        GetDeliveryCostResponse response = deliveryService.getDeliveryCost(request1);
+        assertEquals(response.getCost(), 50.0);
+    }
 }

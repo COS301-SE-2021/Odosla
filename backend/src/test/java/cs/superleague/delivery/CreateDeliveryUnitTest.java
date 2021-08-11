@@ -77,6 +77,7 @@ public class CreateDeliveryUnitTest {
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, status, cost);
         customer = new Customer("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.CUSTOMER,customerID);
         store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true);
+        store.setStoreLocation(pickUpLocation);
     }
 
     @AfterEach
@@ -141,6 +142,18 @@ public class CreateDeliveryUnitTest {
         CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, dropOffLocation);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.createDelivery(request1));
         assertEquals("Invalid storeID.", thrown1.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the store does not contain a valid location.")
+    @DisplayName("Invalid store location")
+    void invalidStoreLocationInRequestObject_UnitTest(){
+        store.setStoreLocation(null);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
+        CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, invalidDropOffLocation);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.createDelivery(request1));
+        assertEquals("Store has no location set.", thrown1.getMessage());
     }
 
     @Test

@@ -71,9 +71,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (store == null){
             throw new InvalidRequestException("Invalid storeID.");
         }
-        //Get from store
-        GeoPoint locationOfStore = new GeoPoint(0.0,0.0, "");
-
+        GeoPoint locationOfStore = store.getStoreLocation();
+        if (locationOfStore == null){
+            throw new InvalidRequestException("Store has no location set.");
+        }
         //Adding delivery to database
         UUID deliveryID = UUID.randomUUID();
         while(deliveryRepo.findById(deliveryID).isPresent()){
@@ -112,14 +113,14 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Invalid Co-ordinates.");
         }
         double distance = getDistanceBetweenTwoPoints(request.getDropOffLocation(), request.getPickUpLocation());
-        double cost = 0.0;
+        double cost;
         if (distance < 20){
             //price of less than 20km drive
             cost = 20.0;
         }else if (distance < 40){
             cost = 35.0;
         }else{
-            cost = 50;
+            cost = 50.0;
         }
         GetDeliveryCostResponse response = new GetDeliveryCostResponse(cost);
         return response;
