@@ -220,6 +220,26 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
+    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getDeliveryID() == null || request.getDriverID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
+        if (delivery.getDriverId() != request.getDriverID()){
+            throw new InvalidRequestException("Driver was not assigned to delivery.");
+        }
+        delivery.setDriverId(null);
+        deliveryRepo.save(delivery);
+        UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(DeliveryStatus.WaitingForShoppers, delivery.getDeliveryID(), "Driver has dropped delivery.");
+        updateDeliveryStatus(request1);
+        RemoveDriverFromDeliveryResponse response = new RemoveDriverFromDeliveryResponse(true, "Driver successfully removed from delivery.");
+        return response;
+    }
+
+    @Override
     public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
