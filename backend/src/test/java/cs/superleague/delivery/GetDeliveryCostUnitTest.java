@@ -67,4 +67,12 @@ public class GetDeliveryCostUnitTest {
         assertEquals("Null parameters.", thrown2.getMessage());
     }
 
+    @Test
+    @Description("Tests for when invalid geoPoints, should throw an error.")
+    @DisplayName("Invalid geoPoints")
+    void invalidGeoPointsBeingPassedIn_UnitTest(){
+
+    }
+
+
 }

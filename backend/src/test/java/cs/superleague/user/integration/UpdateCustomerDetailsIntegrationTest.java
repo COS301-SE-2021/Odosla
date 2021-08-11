@@ -82,7 +82,8 @@ public class UpdateCustomerDetailsIntegrationTest {
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
-
+        itemRepo.save(I1);
+        itemRepo.save(I2);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
         customerRepo.save(existingCustomer);

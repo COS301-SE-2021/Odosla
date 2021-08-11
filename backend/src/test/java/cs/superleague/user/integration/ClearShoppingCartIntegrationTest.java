@@ -79,7 +79,8 @@ public class ClearShoppingCartIntegrationTest {
         groceryLists.add(groceryList);
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
+        itemRepo.save(I1);
+        itemRepo.save(I2);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
     }
