@@ -1,20 +1,11 @@
 package cs.superleague.user.integration;
 
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
-import cs.superleague.user.dataclass.GroceryList;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.exceptions.AlreadyExistsException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.requests.GetShoppingCartRequest;
 import cs.superleague.user.requests.RegisterCustomerRequest;
-import cs.superleague.user.requests.RegisterShopperRequest;
 import cs.superleague.user.responses.RegisterCustomerResponse;
-import cs.superleague.user.responses.RegisterShopperResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,14 +13,10 @@ import org.springframework.context.annotation.Description;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -179,7 +166,7 @@ public class RegisterCustomerIntegrationTest {
         assertEquals("Customer succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
 
-        Customer customerSaved=customerRepo.findCustomerByEmail(request.getEmail());
+        Customer customerSaved=customerRepo.findByEmail(request.getEmail()).orElse(null);
 
         assertNotNull(customerSaved);
         assertEquals(request.getName(),customerSaved.getName());

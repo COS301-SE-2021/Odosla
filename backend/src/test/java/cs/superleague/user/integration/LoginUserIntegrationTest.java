@@ -206,7 +206,7 @@ public class LoginUserIntegrationTest {
         customerRepo.save(customerToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
-        Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
+        Customer customer=customerRepo.findByEmail(customerToLogin.getEmail()).orElse(null);
     }
 
     @Test
@@ -224,7 +224,7 @@ public class LoginUserIntegrationTest {
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
-        Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
+        Customer customer=customerRepo.findByEmail(customerToLogin.getEmail()).orElse(null);
     }
 
     @Test

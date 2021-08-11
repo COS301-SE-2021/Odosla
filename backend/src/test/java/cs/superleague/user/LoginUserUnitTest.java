@@ -17,10 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class LoginUserUnitTest {
@@ -192,7 +194,8 @@ public class LoginUserUnitTest {
         loginRequest1.setUserType(UserType.CUSTOMER);
         loginRequest1.setEmail("hi@gmail");
         customerToLogin.setPassword(passwordHashed);
-        Mockito.when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customerToLogin);
+        //Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(customerToLogin);
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customerToLogin));
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
     }
@@ -205,7 +208,8 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         customerToLogin.setPassword(passwordHashed);
-        Mockito.when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customerToLogin);
+        //Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(customerToLogin);
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customerToLogin));
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
         assertEquals(true, response.isSuccess());

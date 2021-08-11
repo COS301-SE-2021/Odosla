@@ -16,10 +16,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class GetCurrentUserUnitTest {
@@ -121,7 +123,7 @@ public class GetCurrentUserUnitTest {
     @DisplayName("Testing when could not retrieve User correctly-Customer")
     void UnitTest_CustomerNotRetrieved() throws InvalidRequestException {
         validRequest=new GetCurrentUserRequest(jwtTokenCustomer);
-        Mockito.when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(null);
+        Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(null);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
         assertNotNull(response);
@@ -220,7 +222,8 @@ public class GetCurrentUserUnitTest {
     @DisplayName("Testing when User is retrieved correctly-Customer")
     void UnitTest_CustomerRetrieved() throws InvalidRequestException {
         validRequest=new GetCurrentUserRequest(jwtTokenCustomer);
-        Mockito.when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customer);
+        //Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(customer);
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
         assertNotNull(response);

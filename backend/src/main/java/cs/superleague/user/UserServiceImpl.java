@@ -271,8 +271,11 @@ public class UserServiceImpl implements UserService{
                 return new RegisterCustomerResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            Customer customer;
-            customer=customerRepo.findCustomerByEmail(request.getEmail());
+            Customer customer=null;
+            try {
+                customer=customerRepo.findByEmail(request.getEmail()).orElse(null);
+            }catch (Exception e){}
+
 
             if(customer!=null){
                 return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
@@ -943,7 +946,7 @@ public class UserServiceImpl implements UserService{
 
             case CUSTOMER:
                 assert customerRepo!=null;
-                Customer customerToLogin=customerRepo.findCustomerByEmail(request.getEmail());
+                Customer customerToLogin=customerRepo.findByEmail(request.getEmail()).orElse(null);
                 if(customerToLogin==null){
                     throw new CustomerDoesNotExistException("Customer does not exist");
                 }
@@ -1056,7 +1059,7 @@ public class UserServiceImpl implements UserService{
 
                 case CUSTOMER:
                     assert customerRepo!=null;
-                    Customer customerToVerify=customerRepo.findCustomerByEmail(request.getEmail());
+                    Customer customerToVerify=customerRepo.findByEmail(request.getEmail()).orElse(null);
                     if(customerToVerify==null){
                         throw new CustomerDoesNotExistException("Customer does not exist in database");
                     }
@@ -1409,7 +1412,7 @@ public class UserServiceImpl implements UserService{
                 case "CUSTOMER":
                     //assert customerRepo!=null;
                     try {
-                        user=(Customer)customerRepo.findCustomerByEmail(email);
+                        user=(Customer)customerRepo.findByEmail(email).orElse(null);
                     }catch (Exception e){}
                     break;
                 case "SHOPPER":
@@ -1434,7 +1437,6 @@ public class UserServiceImpl implements UserService{
 
             }
             if(user!=null){
-                System.out.println(user.getAccountType());
                 response=new GetCurrentUserResponse(user,true,Calendar.getInstance().getTime(),"User successfully returned");
             }else{
                 response=new GetCurrentUserResponse(null,false,Calendar.getInstance().getTime(),"User could not be returned");
@@ -1703,7 +1705,7 @@ public class UserServiceImpl implements UserService{
                 message = "Email is not valid";
                 return new UpdateCustomerDetailsResponse(message, false, new Date());
             }else{
-                if(customerRepo.findCustomerByEmail(request.getEmail()) != null){
+                if(customerRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
                     return new UpdateCustomerDetailsResponse(message, false, new Date());
                 }
