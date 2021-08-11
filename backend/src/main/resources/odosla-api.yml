@@ -8,6 +8,7 @@ info:
 tags:
   - name: "Shopping"
   - name: "Payment"
+  - name: "User"
 
 
 paths:
@@ -147,6 +148,94 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
+
+  /user/setCart:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: setCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_SetCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_SetCartResponse"
+
+  /user/clearShoppingCart:
+    post:
+      summary: Endpoint for clearing a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: clearShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ClearShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ClearShoppingCartResponse"
+
+  /user/getShoppingCart:
+    post:
+      summary: Endpoint for getting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetShoppingCartResponse"
+
+  /user/makeGroceryList:
+    post:
+      summary: Endpoint for making a grocery list
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: makeGroceryList
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_MakeGroceryListRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_MakeGroceryListResponse"
 
 components:
 
@@ -383,3 +472,89 @@ components:
           type: string
         order:
           type: object
+
+    user_SetCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+
+    user_SetCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_ClearShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_ClearShoppingCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+
+    user_GetShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_GetShoppingCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+
+
+    user_MakeGroceryListRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+        name:
+          type: string
+
+    user_MakeGroceryListResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string

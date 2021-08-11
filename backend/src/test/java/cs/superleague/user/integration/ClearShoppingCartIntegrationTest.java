@@ -78,9 +78,9 @@ public class ClearShoppingCartIntegrationTest {
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
 
-        itemRepo.saveAll(shoppingCart);
+        itemRepo.saveAll(listOfItems);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
     }
@@ -89,7 +89,6 @@ public class ClearShoppingCartIntegrationTest {
     void tearDown(){
         customerRepo.deleteAll();
         groceryListRepo.deleteAll();
-        itemRepo.deleteAll();
     }
 
     @Test
@@ -110,7 +109,7 @@ public class ClearShoppingCartIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        request = new ClearShoppingCartRequest(UUID.randomUUID());
+        request = new ClearShoppingCartRequest(UUID.randomUUID().toString());
         Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.clearShoppingCart(request));
         assertEquals("User with given userID does not exist - could clear cart", thrown.getMessage());
     }
@@ -118,7 +117,7 @@ public class ClearShoppingCartIntegrationTest {
     @Test
     @DisplayName("When valid values are given")
     void UnitTest_testingSuccessfulUpdate(){
-        request = new ClearShoppingCartRequest(userID);
+        request = new ClearShoppingCartRequest(userID.toString());
 
         try {
             response = userService.clearShoppingCart(request);
