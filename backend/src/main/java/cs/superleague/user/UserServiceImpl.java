@@ -2120,8 +2120,11 @@ public class UserServiceImpl implements UserService{
 
         resetCode = sb.toString();
 
+        Customer customer = null;
         if(userType == "CUSTOMER"){
-            Customer customer = customerRepo.findCustomerByEmail(email);
+            try {
+                customer = customerRepo.findByEmail(email).orElse(null);
+            }catch (Exception e){}
 
             if(customer == null){
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
@@ -2142,7 +2145,11 @@ public class UserServiceImpl implements UserService{
             return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
 
         }else if(userType == "SHOPPER"){
-            Shopper shopper = shopperRepo.findShopperByEmail(email);
+            Shopper shopper = null;
+            try {
+                shopper= shopperRepo.findByEmail(email).orElse(null);
+            }
+            catch (Exception e){}
 
             if(shopper == null){
                 return new ResetPasswordResponse(null, "Could not find shopper with email - Could not reset", false);
@@ -2248,7 +2255,11 @@ public class UserServiceImpl implements UserService{
         }
 
         if(userType.equals("CUSTOMER")){
-            Customer customer = customerRepo.findCustomerByEmail(email);
+
+            Customer customer = null;
+            try {
+                customer = customerRepo.findByEmail(email).orElse(null);
+            }catch (Exception e){}
 
             if(customer == null){
                 return new FinalisePasswordResetResponse("Could not find customer with email - Could not finalise password reset", false, new Date());
@@ -2278,7 +2289,12 @@ public class UserServiceImpl implements UserService{
 //            Notification emailNotification = ServiceSelector.
             return new FinalisePasswordResetResponse("Password reset successful", true, new Date());
         }else if(userType.equals("SHOPPER")){
-            Shopper shopper = shopperRepo.findShopperByEmail(email);
+
+            Shopper shopper = null;
+
+            try {
+                shopper = shopperRepo.findByEmail(email).orElse(null);
+            }catch (Exception e){}
 
             if(shopper == null){
                 return new FinalisePasswordResetResponse("Could not find shopper with email - Could not final password reset", false, new Date());
