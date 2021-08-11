@@ -18,6 +18,8 @@ public interface DeliveryService {
 
     GetDeliveryStatusResponse getDeliveryStatus(GetDeliveryStatusRequest request) throws InvalidRequestException;
 
+    GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException;
+
     TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException;
 
     UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException;

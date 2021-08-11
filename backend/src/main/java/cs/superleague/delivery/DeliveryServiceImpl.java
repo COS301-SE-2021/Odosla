@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -200,6 +201,45 @@ public class DeliveryServiceImpl implements DeliveryService {
         deliveryRepo.save(delivery);
         UpdateDeliveryStatusResponse response = new UpdateDeliveryStatusResponse("Successful status update.");
         return response;
+    }
+
+    @Override
+    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
+        if (request==null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if(request.getDriverID() == null || request.getCurrentLocation() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        double range = 10.0;
+        if (request.getRangeOfDelivery() == 0){
+            range = request.getRangeOfDelivery();
+        }
+        Driver driver = driverRepo.findById(request.getDriverID()).orElseThrow(()->new InvalidRequestException("Driver not found in database."));
+        driver.setCurrentAddress(request.getCurrentLocation());
+        driverRepo.save(driver);
+        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
+        if (deliveries == null){
+            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
+            return response;
+        }
+        Collections.shuffle(deliveries);
+        if (deliveries.size()>0){
+            for (Delivery d : deliveries){
+                double driverDistanceFromStore = getDistanceBetweenTwoPoints(d.getPickUpLocation(), request.getCurrentLocation());
+                if (driverDistanceFromStore > range){
+                    continue;
+                }else{
+                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d.getDeliveryID());
+                    return response;
+                }
+            }
+            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
+            return response;
+        }else{
+            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
+            return response;
+        }
     }
 
     //Helper
