@@ -8,6 +8,10 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.CreateDeliveryRequest;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Customer;
@@ -38,18 +42,15 @@ public class CreateDeliveryUnitTest {
     @Mock
     DeliveryRepo deliveryRepo;
     @Mock
-    DeliveryDetailRepo deliveryDetailRepo;
-    @Mock
-    AdminRepo adminRepo;
-    @Mock
-    DriverRepo driverRepo;
-    @Mock
     CustomerRepo customerRepo;
     @Mock
     StoreRepo storeRepo;
+    @Mock
+    OrderRepo orderRepo;
 
     UUID deliveryID;
     UUID orderID;
+    UUID shopperID;
     Calendar time;
     Delivery delivery;
     GeoPoint invalidDropOffLocation;
@@ -61,6 +62,7 @@ public class CreateDeliveryUnitTest {
     double cost;
     Customer customer;
     Store store;
+    Order order;
 
     @BeforeEach
     void setUp(){
@@ -78,6 +80,7 @@ public class CreateDeliveryUnitTest {
         customer = new Customer("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.CUSTOMER,customerID);
         store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true);
         store.setStoreLocation(pickUpLocation);
+        order = new Order(orderID, customerID, storeID, shopperID, Calendar.getInstance(), null, 50.0, OrderType.DELIVERY, OrderStatus.PURCHASED, null, 0.0, dropOffLocation, pickUpLocation, false);
     }
 
     @AfterEach
@@ -137,6 +140,7 @@ public class CreateDeliveryUnitTest {
     @Description("Tests for when the store ID is invalid.")
     @DisplayName("Invalid store ID")
     void storeIDInRequestObjectNotValid_UnitTest(){
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
         CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, dropOffLocation);
@@ -148,6 +152,7 @@ public class CreateDeliveryUnitTest {
     @Description("Tests for when the store does not contain a valid location.")
     @DisplayName("Invalid store location")
     void invalidStoreLocationInRequestObject_UnitTest(){
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         store.setStoreLocation(null);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
@@ -160,6 +165,7 @@ public class CreateDeliveryUnitTest {
     @Description("Tests for when the geoPoints are invalid.")
     @DisplayName("Invalid geoPoints")
     void invalidGeoPointsInRequestObject_UnitTest(){
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, invalidDropOffLocation);
@@ -171,6 +177,7 @@ public class CreateDeliveryUnitTest {
     @Description("Tests for when all the data is valid.")
     @DisplayName("Successful run")
     void deliveryCreatedSuccessfully_UnitTest() throws InvalidRequestException {
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
         when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, dropOffLocation);

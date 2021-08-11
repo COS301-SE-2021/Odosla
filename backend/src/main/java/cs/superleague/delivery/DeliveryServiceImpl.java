@@ -9,6 +9,7 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Driver;
@@ -31,15 +32,17 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final DriverRepo driverRepo;
     private final CustomerRepo customerRepo;
     private final StoreRepo storeRepo;
+    private final OrderRepo orderRepo;
 
     @Autowired
-    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo) {
+    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.adminRepo = adminRepo;
         this.driverRepo = driverRepo;
         this.customerRepo = customerRepo;
         this.storeRepo = storeRepo;
+        this.orderRepo = orderRepo;
     }
 
     @Override
@@ -88,6 +91,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         if(!customerRepo.findById(request.getCustomerID()).isPresent()){
             throw new InvalidRequestException("Invalid customerID.");
+        }
+        if (!orderRepo.findById(request.getOrderID()).isPresent()){
+            throw new InvalidRequestException("Invalid orderID.");
         }
         Store store = storeRepo.findById(request.getStoreID()).orElse(null);
         if (store == null){
