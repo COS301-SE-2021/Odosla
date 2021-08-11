@@ -243,7 +243,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderQueue.size()==0){
+            if(orderQueue==null){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
@@ -353,11 +353,13 @@ public class ShoppingServiceImpl implements ShoppingService {
             if(calendar.get(Calendar.HOUR_OF_DAY) >= storeEntity.getOpeningTime() && calendar.get(Calendar.HOUR_OF_DAY) < storeEntity.getClosingTime())
             {
                 storeEntity.setOpen(true);
+                storeRepo.save(storeEntity);
                 response=new GetStoreOpenResponse(request.getStoreID(),storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
             }
             else
             {
                 storeEntity.setOpen(false);
+                storeRepo.save(storeEntity);
                 response=new GetStoreOpenResponse(request.getStoreID(),storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is closed for business");
             }
             response.setOpeningTime(storeEntity.getOpeningTime());
@@ -1200,7 +1202,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderQueue.size()!=0){
+            if(orderQueue!=null){
                 response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
             }
             else

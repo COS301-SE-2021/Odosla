@@ -140,8 +140,9 @@ public class GetNextQueuedIntegrationTest {
     @DisplayName("Order queue is empty")
     void IntegrationTest_Store_no_orders_in_orderQueue() throws InvalidRequestException, StoreDoesNotExistException {
         GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
-        s.setOrderQueue(null);
-        storeRepo.save(s);
+        Store updateStore = storeRepo.findById(storeUUID1).orElse(null);
+        updateStore.setOrderQueue(null);
+        storeRepo.save(updateStore);
         GetNextQueuedResponse response=ServiceSelector.getShoppingService().getNextQueued(request);
         assertNotNull(response);
         assertEquals("The order queue of shop is empty", response.getMessage());
