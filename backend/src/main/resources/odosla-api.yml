@@ -214,6 +214,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_GetShoppingCartResponse"
+
   /user/makeGroceryList:
     post:
       summary: Endpoint for making a grocery list
@@ -257,6 +258,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_RemoveFromCartResponse"
+
+
+  /user/registerCustomer:
+    post:
+      summary: Endpoint for registering a customer
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerCustomer
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterCustomerRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterCustomerResponse"
 
 components:
 
@@ -594,6 +618,36 @@ components:
           type: string
 
     user_RemoveFromCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+
+
+    user_RegisterCustomerRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surnname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        address:
+          type: string
+
+    user_RegisterCustomerResponse:
       description: This object is returned as output
       type: object
       properties:

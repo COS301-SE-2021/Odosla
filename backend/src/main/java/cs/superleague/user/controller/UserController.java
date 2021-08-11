@@ -372,6 +372,66 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(userRemoveFromCartResponse, status);
     }
 
+    @Override
+    public ResponseEntity<UserRegisterCustomerResponse> registerCustomer(UserRegisterCustomerRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
+
+        UserRegisterCustomerResponse userRegisterCustomerResponse = new UserRegisterCustomerResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            RegisterCustomerRequest request = new RegisterCustomerRequest(body.getName(), body.getSurnname(),
+                    body.getEmail(), body.getPhoneNumber(), body.getPassword());
+
+            RegisterCustomerResponse response = ServiceSelector.getUserService().registerCustomer(request);
+            try{
+                userRegisterCustomerResponse.setDate(response.getTimestamp().toString());
+                userRegisterCustomerResponse.setMessage(response.getMessage());
+                userRegisterCustomerResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userRegisterCustomerResponse, status);
+    }
+
     //Populate ItemObject list from items returned by use case
     private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
 
