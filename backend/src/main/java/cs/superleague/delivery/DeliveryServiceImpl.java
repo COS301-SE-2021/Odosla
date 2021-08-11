@@ -151,12 +151,12 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public GetDeliveryStatusResponse getDeliveryStatus(GetDeliveryStatusRequest request) throws InvalidRequestException {
         if(request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
         if(request.getDeliveryID() == null){
             throw new InvalidRequestException("No delivery Id specified.");
         }
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new com.twilio.exception.InvalidRequestException("Delivery not found in database."));
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
         GetDeliveryStatusResponse response = new GetDeliveryStatusResponse(delivery.getStatus(), "Delivery Found.");
         return response;
     }
