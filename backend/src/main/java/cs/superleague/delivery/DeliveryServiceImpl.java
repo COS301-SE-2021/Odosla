@@ -163,6 +163,42 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
+    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
+        if (request==null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if(request.getDriverID() == null || request.getCurrentLocation() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        double range = request.getRangeOfDelivery();
+        Driver driver = driverRepo.findById(request.getDriverID()).orElseThrow(()->new InvalidRequestException("Driver not found in database."));
+        driver.setCurrentAddress(request.getCurrentLocation());
+        driverRepo.save(driver);
+        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
+        if (deliveries == null){
+            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
+            return response;
+        }
+        Collections.shuffle(deliveries);
+        if (deliveries.size()>0){
+            for (Delivery d : deliveries){
+                double driverDistanceFromStore = getDistanceBetweenTwoPoints(d.getPickUpLocation(), request.getCurrentLocation());
+                if (driverDistanceFromStore > range){
+                    continue;
+                }else{
+                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d.getDeliveryID());
+                    return response;
+                }
+            }
+            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the range specified.", null);
+            return response;
+        }else{
+            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
+            return response;
+        }
+    }
+
+    @Override
     public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
@@ -203,46 +239,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         return response;
     }
 
-    @Override
-    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
-        if (request==null){
-            throw new InvalidRequestException("Null request object.");
-        }
-        if(request.getDriverID() == null || request.getCurrentLocation() == null){
-            throw new InvalidRequestException("Null parameters.");
-        }
-        double range = 10.0;
-        if (request.getRangeOfDelivery() == 0){
-            range = request.getRangeOfDelivery();
-        }
-        Driver driver = driverRepo.findById(request.getDriverID()).orElseThrow(()->new InvalidRequestException("Driver not found in database."));
-        driver.setCurrentAddress(request.getCurrentLocation());
-        driverRepo.save(driver);
-        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
-        if (deliveries == null){
-            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
-            return response;
-        }
-        Collections.shuffle(deliveries);
-        if (deliveries.size()>0){
-            for (Delivery d : deliveries){
-                double driverDistanceFromStore = getDistanceBetweenTwoPoints(d.getPickUpLocation(), request.getCurrentLocation());
-                if (driverDistanceFromStore > range){
-                    continue;
-                }else{
-                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d.getDeliveryID());
-                    return response;
-                }
-            }
-            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
-            return response;
-        }else{
-            GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
-            return response;
-        }
-    }
-
-    //Helper
+    //Helpers
     public boolean checkLongAndLatIfValid(GeoPoint point1, GeoPoint point2){
         if(point1.getLongitude() < -180 || point1.getLongitude() > 180 ||
            point2.getLongitude() < -180 || point2.getLongitude() > 180 ||

@@ -128,4 +128,12 @@ public class Delivery {
     public void setDeliveryDetail(List<DeliveryDetail> deliveryDetail) {
         this.deliveryDetail = deliveryDetail;
     }
+
+    public UUID getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(UUID orderID) {
+        this.orderID = orderID;
+    }
 }

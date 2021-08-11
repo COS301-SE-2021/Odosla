@@ -7,12 +7,18 @@ import java.util.UUID;
 public class GetNextOrderForDriverRequest {
     private UUID driverID;
     private GeoPoint currentLocation;
-    private double rangeOfDelivery=0;
+    private double rangeOfDelivery;
 
     public GetNextOrderForDriverRequest(UUID driverID, GeoPoint currentLocation, double rangeOfDeliverys) {
         this.driverID = driverID;
         this.currentLocation = currentLocation;
         this.rangeOfDelivery = rangeOfDeliverys;
+    }
+
+    public GetNextOrderForDriverRequest(UUID driverID, GeoPoint currentLocation) {
+        this.driverID = driverID;
+        this.currentLocation = currentLocation;
+        this.rangeOfDelivery = 10;
     }
 
     public double getRangeOfDelivery() {
