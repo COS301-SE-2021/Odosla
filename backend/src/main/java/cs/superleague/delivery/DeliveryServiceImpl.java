@@ -129,10 +129,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public GetDeliveryDetailResponse getDeliveryDetail(GetDeliveryDetailRequest request) throws InvalidRequestException {
         if(request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null){
-            throw new InvalidRequestException("No delivery Id specified.");
+        if (request.getDeliveryID() == null || request.getAdminID() == null){
+            throw new InvalidRequestException("Null parameters.");
         }
         if (!adminRepo.findById(request.getAdminID()).isPresent()){
             throw new InvalidRequestException("User is not an admin.");
