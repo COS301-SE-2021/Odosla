@@ -10,10 +10,8 @@ import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.requests.LoginRequest;
-import cs.superleague.user.requests.RegisterDriverRequest;
-import cs.superleague.user.responses.LoginResponse;
-import cs.superleague.user.responses.RegisterDriverResponse;
+import cs.superleague.user.requests.*;
+import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -96,10 +94,98 @@ public class UserController implements UserApi {
 
     }
 
-//    @Override
-//    public ResponseEntity<UserRegisterDriverResponse> registerDriver(UserRegisterDriverRequest body){
-//
-//    }
+    @Override
+    public ResponseEntity<UserRegisterDriverResponse> registerDriver(UserRegisterDriverRequest body) {
+        UserRegisterDriverResponse response=new UserRegisterDriverResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterDriverRequest request=new RegisterDriverRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterDriverResponse driverResponse=ServiceSelector.getUserService().registerDriver(request);
+
+            try{
+                response.setMessage(driverResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(driverResponse.getTimestamp()));
+                response.setSuccess(driverResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterCustomerResponse> registerCustomer(UserRegisterCustomerRequest body) {
+        UserRegisterCustomerResponse response=new UserRegisterCustomerResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterCustomerRequest request=new RegisterCustomerRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterCustomerResponse customerResponse=ServiceSelector.getUserService().registerCustomer(request);
+
+            try{
+                response.setMessage(customerResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(customerResponse.getTimestamp()));
+                response.setSuccess(customerResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterAdminResponse> registerAdmin(UserRegisterAdminRequest body) {
+        UserRegisterAdminResponse response=new UserRegisterAdminResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterAdminRequest request=new RegisterAdminRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterAdminResponse adminResponse=ServiceSelector.getUserService().registerAdmin(request);
+
+            try{
+                response.setMessage(adminResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(adminResponse.getTimestamp()));
+                response.setSuccess(adminResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterShopperResponse> registerShopper(UserRegisterShopperRequest body) {
+        UserRegisterShopperResponse response=new UserRegisterShopperResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterShopperRequest request=new RegisterShopperRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterShopperResponse shopperResponse=ServiceSelector.getUserService().registerShopper(request);
+
+            try{
+                response.setMessage(shopperResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(shopperResponse.getTimestamp()));
+                response.setSuccess(shopperResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
 
     @Override
     public ResponseEntity<UserSetCartResponse> setCart(UserSetCartRequest body) {
