@@ -1835,8 +1835,6 @@ public class UserServiceImpl implements UserService{
 //                "tetetE$4", new Date(), "fsdfghg", "safdf",
 //                "adg", true, UserType.CUSTOMER, UUID.randomUUID(), null, customer.getGroceryLists(), null, null, null);
         customerRepo.save(customer);
-//        customerRepo.save(new Customer("", "", "",))
-//        customerRepo.save(c);
 
         return new SetCartResponse(message, true, new Date());
     }

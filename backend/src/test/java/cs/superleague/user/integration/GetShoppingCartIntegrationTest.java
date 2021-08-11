@@ -9,6 +9,7 @@ import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.requests.GetShoppingCartRequest;
@@ -45,6 +46,7 @@ public class GetShoppingCartIntegrationTest {
     Customer customerEMPTYCart;
     Item I1;
     Item I2;
+    Item I3;
     Item item;
 
     UUID userID;
@@ -68,12 +70,10 @@ public class GetShoppingCartIntegrationTest {
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
-        I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
+        I1=new Item("Heinz Tamatoe Sauce","T123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
+        I3=new Item("Bar one","TTTT012345","012345",expectedS1,14.99,3,"description","img/");
         item = null;
-
-        itemRepo.save(I1);
-        itemRepo.save(I2);
 
         listOfItems.add(I1);
         listOfItems.add(I2);
@@ -83,6 +83,7 @@ public class GetShoppingCartIntegrationTest {
 
         itemRepo.save(I1);
         itemRepo.save(I2);
+        itemRepo.save(I3);
         itemRepo.saveAll(shoppingCart);
         itemRepo.saveAll(listOfItems);
 
@@ -101,7 +102,7 @@ public class GetShoppingCartIntegrationTest {
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
 
-        customerEMPTYCart = new Customer("D", "S", "ds@smallClubFC.com", "0721234567", "", new Date(), "", "", "", true,
+        customerEMPTYCart = new Customer("D", "S", "d2s@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID_EMPTY, deliveryAddress, groceryListsEmptyCart, shoppingCartEMPTY, null, null);
 
 
