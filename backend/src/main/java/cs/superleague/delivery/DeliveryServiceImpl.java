@@ -164,10 +164,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException {
         if(request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
         if (request.getDeliveryID() == null){
-            throw new InvalidRequestException("No delivery Id provided.");
+            throw new InvalidRequestException("No delivery Id specified.");
         }
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
         if (delivery.getDriverId() == null){
@@ -175,10 +175,11 @@ public class DeliveryServiceImpl implements DeliveryService {
             return response;
         }
         Driver driver = driverRepo.findById(delivery.getDriverId()).orElse(null);
-        if (driver == null){
+        if (driver == null ||driver.getOnShift() == false){
             delivery.setDriverId(null);
             deliveryRepo.save(delivery);
-            throw new InvalidRequestException("No driver has been assigned to this delivery.");
+            TrackDeliveryResponse response = new TrackDeliveryResponse(delivery.getPickUpLocation(), "No driver has been assigned to this delivery.");
+            return response;
         }
         TrackDeliveryResponse response = new TrackDeliveryResponse(driver.getCurrentAddress(), "Drivers current location.");
         return response;
