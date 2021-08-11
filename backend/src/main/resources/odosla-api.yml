@@ -170,6 +170,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_SetCartResponse"
+
+  /user/clearShoppingCart:
+    post:
+      summary: Endpoint for clearing a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: clearShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ClearShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ClearShoppingCartResponse"
 components:
 
   schemas:
@@ -417,6 +439,25 @@ components:
           type: array
 
     user_SetCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_ClearShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_ClearShoppingCartResponse:
       description: This object is returned as output
       type: object
       properties:

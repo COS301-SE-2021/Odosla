@@ -1852,7 +1852,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("CustomerId is null - could not clear shopping cart");
         }
 
-        customerID = request.getCustomerID();
+        customerID = UUID.fromString(request.getCustomerID());
         customerOptional = customerRepo.findById(customerID);
         if(customerOptional == null || !customerOptional.isPresent()){
             throw new UserDoesNotExistException("User with given userID does not exist - could clear cart");
