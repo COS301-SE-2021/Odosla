@@ -1774,7 +1774,6 @@ public class UserServiceImpl implements UserService{
         List<Item> items = new ArrayList<>();
         List<Item> cart = new ArrayList<>();
 
-
         if(request == null){
             throw new InvalidRequestException("addToCart Request is null - Could not add to cart");
         }
@@ -1783,7 +1782,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("CustomerId is null - could not add to cart");
         }
 
-        customerID = request.getCustomerID();
+        customerID = UUID.fromString(request.getCustomerID());
         customerOptional = customerRepo.findById(customerID);
         if(customerOptional == null || !customerOptional.isPresent()){
             throw new CustomerDoesNotExistException("User with given userID does not exist - could add to cart");

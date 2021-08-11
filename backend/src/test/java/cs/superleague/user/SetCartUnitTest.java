@@ -114,7 +114,7 @@ public class SetCartUnitTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        request = new SetCartRequest(UUID.randomUUID(), listOfBarcodes);
+        request = new SetCartRequest(UUID.randomUUID().toString(), listOfBarcodes);
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.setCart(request));
         assertEquals("User with given userID does not exist - could add to cart", thrown.getMessage());
@@ -123,7 +123,7 @@ public class SetCartUnitTest {
     @Test
     @DisplayName("When barcodes list is null/empty")
     void UnitTest_testingNullEmptyItemList(){
-        request = new SetCartRequest(userID, new ArrayList<>());
+        request = new SetCartRequest(userID.toString(), new ArrayList<>());
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try {
@@ -139,7 +139,7 @@ public class SetCartUnitTest {
     @Test
     @DisplayName("When the barcodes do not exist")
     void UnitTest_testing_Barcodes_DoneExist(){
-        request = new SetCartRequest(userID, listOfBarcodes);
+        request = new SetCartRequest(userID.toString(), listOfBarcodes);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
@@ -156,7 +156,7 @@ public class SetCartUnitTest {
     @Test
     @DisplayName("When nonnull update values are given")
     void UnitTest_testingSuccessfulUpdate(){
-        request = new SetCartRequest(userID, listOfBarcodes);
+        request = new SetCartRequest(userID.toString(), listOfBarcodes);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try {
