@@ -2106,11 +2106,11 @@ public class UserServiceImpl implements UserService{
         resetCode = sb.toString();
 
         Map<String, String> properties = new HashMap<>();
-        properties.put("Type","password reset");
+        properties.put("Type","RESETPASSWORD");
         properties.put("Subject","Odosla");
         properties.put("UserType", userType);
 
-        if(userType == "CUSTOMER"){
+        if(userType.equals("CUSTOMER")){
             Customer customer = customerRepo.findCustomerByEmail(email);
 
             if(customer == null){
@@ -2141,7 +2141,7 @@ public class UserServiceImpl implements UserService{
             }
 
         }
-        else if(userType == "SHOPPER"){
+        else if(userType.equals("SHOPPER")){
             Shopper shopper = shopperRepo.findShopperByEmail(email);
 
             if(shopper == null){
@@ -2169,7 +2169,7 @@ public class UserServiceImpl implements UserService{
                 e.printStackTrace();
             }
         }
-        else if(userType == "DRIVER"){
+        else if(userType.equals("DRIVER")){
             Driver driver = driverRepo.findDriverByEmail(email);
 
             if(driver == null){
@@ -2196,7 +2196,7 @@ public class UserServiceImpl implements UserService{
             }catch (Exception e){
                 e.printStackTrace();
             }
-        }else if(userType == "ADMIN"){
+        }else if(userType.equals("ADMIN")){
             Admin admin = adminRepo.findAdminByEmail(email);
 
             if(admin == null){
