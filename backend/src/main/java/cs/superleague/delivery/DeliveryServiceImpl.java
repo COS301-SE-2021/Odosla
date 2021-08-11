@@ -188,7 +188,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException {
         if(request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
         if(request.getDeliveryID() == null || request.getStatus() == null || request.getDetail() == null){
             throw new InvalidRequestException("Null parameters.");
