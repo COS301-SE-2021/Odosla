@@ -192,6 +192,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_LoginResponse"
+
+  /user/registerDriver:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: loginUser
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterDriverRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterDriverResponse"
 components:
 
   schemas:
@@ -497,6 +519,32 @@ components:
       properties:
         Token:
           type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterDriverRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterDriverResponse:
+      description: This object is returned as output
+      type: object
+      properties:
         message:
           type: string
         success:
