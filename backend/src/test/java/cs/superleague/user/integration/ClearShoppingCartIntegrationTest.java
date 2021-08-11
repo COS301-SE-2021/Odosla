@@ -89,8 +89,9 @@ public class ClearShoppingCartIntegrationTest {
 
     @AfterEach
     void tearDown(){
-        customerRepo.deleteAll();
+        itemRepo.deleteAll();
         groceryListRepo.deleteAll();
+        customerRepo.deleteAll();
     }
 
     @Test

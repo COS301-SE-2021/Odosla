@@ -11,7 +11,6 @@ import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.LoginRequest;
 import cs.superleague.user.responses.LoginResponse;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
@@ -180,7 +179,7 @@ public class LoginUserIntegrationTest {
         shopperRepo.save(shopperToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
-        Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
+        Shopper shopper=shopperRepo.findByEmail(shopperToLogin.getEmail()).orElse(null);
 
     }
 
@@ -261,7 +260,7 @@ public class LoginUserIntegrationTest {
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
-        Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
+        Shopper shopper=shopperRepo.findByEmail(shopperToLogin.getEmail()).orElse(null);
     }
 
     @Test

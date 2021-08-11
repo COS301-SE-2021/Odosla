@@ -133,7 +133,7 @@ public class Shopper extends User {
     private boolean isActive;
 
     @Column(name="account_type")
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
     private UserType accountType;
 
     //payOption..
@@ -143,12 +143,30 @@ public class Shopper extends User {
 
     public Shopper(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID shopperID) {
         super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
+        this.name=name;
+        this.surname=surname;
         this.shopperID = shopperID;
+        this.email= email;
+        this.phoneNumber= phoneNumber;
+        this.password= password;
+        this.activationDate= activationDate;
+        this.activationCode=activationCode;
+        this.resetCode=resetCode;
+        this.resetExpiration=resetExpiration;
+        this.accountType=accountType;
+        this.isActive=isActive;
     }
 
     public Shopper(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID shopperID) {
         super(name, surname, email, phoneNumber, password, activationCode, accountType);
+        this.name=name;
+        this.surname=surname;
         this.shopperID = shopperID;
+        this.email= email;
+        this.phoneNumber= phoneNumber;
+        this.password= password;
+        this.activationCode=activationCode;
+        this.accountType=accountType;
     }
 
     public UUID getShopperID() {
@@ -175,6 +193,12 @@ public class Shopper extends User {
         this.ordersCompleted = ordersCompleted;
     }
 
+    public UserType getAccountType() {
+        return accountType;
+    }
 
+    public void setAccountType(UserType accountType) {
+        this.accountType = accountType;
+    }
 
 }

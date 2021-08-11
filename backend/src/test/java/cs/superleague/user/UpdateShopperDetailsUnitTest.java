@@ -137,7 +137,7 @@ public class UpdateShopperDetailsUnitTest {
     void UnitTest_testingExistingEmailUpdateAttempt(){
         shopper.setEmail("validEmail@gmail.com");
         when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
-        when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(shopper);
+        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
         try {
             response = userService.updateShopperDetails(request);
             assertEquals("Email is already taken", response.getMessage());

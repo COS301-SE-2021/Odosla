@@ -1,6 +1,5 @@
 package cs.superleague.user;
 
-import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.AdminRepo;
@@ -169,7 +168,7 @@ public class LoginUserUnitTest {
         loginRequest1.setUserType(UserType.SHOPPER);
         loginRequest1.setEmail("hi@gmail");
         shopperToLogin.setPassword(passwordHashed);
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(shopperToLogin);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopperToLogin));
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
     }
@@ -240,7 +239,7 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         shopperToLogin.setPassword(passwordHashed);
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(shopperToLogin);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopperToLogin));
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
         assertEquals(true, response.isSuccess());

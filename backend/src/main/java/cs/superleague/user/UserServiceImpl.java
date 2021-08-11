@@ -13,14 +13,10 @@ import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import cs.superleague.user.exceptions.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
@@ -599,8 +595,11 @@ public class UserServiceImpl implements UserService{
                 return new RegisterShopperResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            Shopper shopper;
-            shopper=shopperRepo.findShopperByEmail(request.getEmail());
+            Shopper shopper=null;
+            try {
+                shopper=shopperRepo.findByEmail(request.getEmail()).orElse(null);
+            }catch (Exception e){}
+
             if(shopper!=null){
                 return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
@@ -918,7 +917,7 @@ public class UserServiceImpl implements UserService{
 
             case SHOPPER:
                 assert shopperRepo!=null;
-                Shopper shopperToLogin=shopperRepo.findShopperByEmail(request.getEmail());
+                Shopper shopperToLogin=shopperRepo.findByEmail(request.getEmail()).orElse(null);
                 if(shopperToLogin==null){
                     throw new ShopperDoesNotExistException("Shopper does not exist");
                 }
@@ -1023,7 +1022,7 @@ public class UserServiceImpl implements UserService{
 
                 case SHOPPER:
                     assert shopperRepo!=null;
-                    Shopper shopperToVerify=shopperRepo.findShopperByEmail(request.getEmail());
+                    Shopper shopperToVerify=shopperRepo.findByEmail(request.getEmail()).orElse(null);
                     if(shopperToVerify==null){
                         throw new ShopperDoesNotExistException("Shopper Does Not Exist in database");
                     }
@@ -1193,7 +1192,7 @@ public class UserServiceImpl implements UserService{
                 message = "Email is not valid";
                 return new UpdateShopperDetailsResponse(message, false, new Date());
             }else{
-                if(shopperRepo.findShopperByEmail(request.getEmail()) != null){
+                if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
                     return new UpdateShopperDetailsResponse(message, false, new Date());
                 }
@@ -1408,22 +1407,34 @@ public class UserServiceImpl implements UserService{
             User user=null;
             switch(userType){
                 case "CUSTOMER":
-                    assert customerRepo!=null;
-                    user=(Customer)customerRepo.findCustomerByEmail(email);
+                    //assert customerRepo!=null;
+                    try {
+                        user=(Customer)customerRepo.findCustomerByEmail(email);
+                    }catch (Exception e){}
                     break;
                 case "SHOPPER":
-                    assert shopperRepo!=null;
-                    user=(Shopper) shopperRepo.findShopperByEmail(email);
+                    //assert shopperRepo!=null;
+                    try {
+                        user=(Shopper) shopperRepo.findByEmail(email).orElse(null);
+                    }catch (Exception e){}
+
                     break;
                 case "ADMIN":
-                    assert adminRepo!=null;
-                    user=(Admin) adminRepo.findAdminByEmail(email);
+                    //assert adminRepo!=null;
+                    try {
+                        user=(Admin) adminRepo.findAdminByEmail(email);
+                    }catch (Exception e){}
+
                     break;
                 case "DRIVER":
-                    assert driverRepo!=null;
-                    user=(Driver) driverRepo.findDriverByEmail(email);
+                    //assert driverRepo!=null;
+                    try {
+                        user=(Driver) driverRepo.findDriverByEmail(email);
+                    }catch (Exception e){}
+
             }
             if(user!=null){
+                System.out.println(user.getAccountType());
                 response=new GetCurrentUserResponse(user,true,Calendar.getInstance().getTime(),"User successfully returned");
             }else{
                 response=new GetCurrentUserResponse(null,false,Calendar.getInstance().getTime(),"User could not be returned");
@@ -1523,6 +1534,7 @@ public class UserServiceImpl implements UserService{
         }
 
         for (Store store: response.getStores()) {
+            if(store.getStock()!=null)
             items.addAll(store.getStock().getItems());
         }
 
@@ -1808,6 +1820,7 @@ public class UserServiceImpl implements UserService{
         }
 
         for (Store store: response.getStores()) {
+            if(store.getStock().getItems()!=null)
             items.addAll(store.getStock().getItems());
         }
 

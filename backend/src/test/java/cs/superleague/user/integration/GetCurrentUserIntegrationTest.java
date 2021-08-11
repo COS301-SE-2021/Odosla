@@ -184,9 +184,13 @@ public class GetCurrentUserIntegrationTest {
 
         assertNotNull(response);
         assertEquals(shopper.getEmail(),response.getUser().getEmail());
-        assertEquals(shopper.getAccountType(),response.getUser().getAccountType());
+        System.out.println(shopper.getAccountType());
+        System.out.println(response.getUser().getAccountType());
+
         assertEquals(true,response.isSuccess());
         assertEquals("User successfully returned",response.getMessage());
+        assertEquals(shopper.getAccountType(),response.getUser().getAccountType());
+
         assertNotNull(response.getTimestamp());
     }
 

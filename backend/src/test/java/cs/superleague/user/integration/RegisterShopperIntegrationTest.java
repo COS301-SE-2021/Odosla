@@ -1,7 +1,6 @@
 package cs.superleague.user.integration;
 
 import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.ShopperRepo;
@@ -167,7 +166,7 @@ public class RegisterShopperIntegrationTest {
         assertEquals("Shopper succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
 
-        Shopper shopperSaved=shopperRepo.findShopperByEmail(request.getEmail());
+        Shopper shopperSaved=shopperRepo.findByEmail(request.getEmail()).orElse(null);
 
         assertNotNull(shopperSaved);
         assertEquals(request.getName(),shopperSaved.getName());

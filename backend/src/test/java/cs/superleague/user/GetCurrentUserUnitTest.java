@@ -135,7 +135,7 @@ public class GetCurrentUserUnitTest {
     @DisplayName("Testing when could not retrieve User correctly-Shopper")
     void UnitTest_ShopperNotRetrieved() throws InvalidRequestException {
         validRequest=new GetCurrentUserRequest(jwtTokenShopper);
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(null);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
         assertNotNull(response);
@@ -177,7 +177,8 @@ public class GetCurrentUserUnitTest {
     @DisplayName("Testing when User is retrieved correctly-Shopper")
     void UnitTest_ShopperRetrieved() throws InvalidRequestException {
         validRequest=new GetCurrentUserRequest(jwtTokenShopper);
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(shopper);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        //Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.of(shopper));
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
         assertNotNull(response);
