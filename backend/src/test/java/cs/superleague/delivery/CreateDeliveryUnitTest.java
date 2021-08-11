@@ -149,6 +149,17 @@ public class CreateDeliveryUnitTest {
     }
 
     @Test
+    @Description("Tests for when the orderID is invalid.")
+    @DisplayName("Invalid orderID")
+    void invalidOrderIDPassedInRequestObject_UnitTest(){
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, dropOffLocation);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.createDelivery(request1));
+        assertEquals("Invalid orderID.", thrown1.getMessage());
+    }
+
+    @Test
     @Description("Tests for when the store does not contain a valid location.")
     @DisplayName("Invalid store location")
     void invalidStoreLocationInRequestObject_UnitTest(){
