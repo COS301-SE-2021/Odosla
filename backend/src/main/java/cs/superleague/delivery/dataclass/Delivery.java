@@ -19,6 +19,7 @@ public class Delivery {
     @OneToOne(cascade={CascadeType.ALL})
     private GeoPoint dropOffLocation;
 
+    private UUID orderID;
     private UUID customerId;
     private UUID storeId;
     private UUID driverId;
@@ -33,8 +34,9 @@ public class Delivery {
     @OneToMany(mappedBy = "delivery")
     private List<DeliveryDetail> deliveryDetail;
 
-    public Delivery(UUID deliveryID, GeoPoint pickUpLocation, GeoPoint dropOffLocation, UUID customerId, UUID storeId, DeliveryStatus status, double cost) {
+    public Delivery(UUID deliveryID, UUID orderID, GeoPoint pickUpLocation, GeoPoint dropOffLocation, UUID customerId, UUID storeId, DeliveryStatus status, double cost) {
         this.deliveryID = deliveryID;
+        this.orderID = orderID;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
         this.customerId = customerId;

@@ -44,7 +44,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request) throws InvalidRequestException {
         if(request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
         if (request.getDeliveryID() == null || request.getDetail() == null || request.getTimestamp() == null || request.getStatus() == null){
             throw new InvalidRequestException("Null parameters.");
@@ -59,7 +59,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException {
         if (request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
         if(request.getCustomerID() == null || request.getOrderID() == null || request.getStoreID() == null || request.getPlaceOfDelivery() == null){
             throw new InvalidRequestException("Missing parameters.");
@@ -79,9 +79,13 @@ public class DeliveryServiceImpl implements DeliveryService {
         while(deliveryRepo.findById(deliveryID).isPresent()){
             deliveryID = UUID.randomUUID();
         }
+        boolean longAndLatCheck = checkLongAndLatIfValid(locationOfStore, request.getPlaceOfDelivery());
+        if(!longAndLatCheck){
+            throw new InvalidRequestException("Invalid geoPoints.");
+        }
         GetDeliveryCostRequest getDeliveryCostRequest = new GetDeliveryCostRequest(locationOfStore, request.getPlaceOfDelivery());
         GetDeliveryCostResponse getDeliveryCostResponse = getDeliveryCost(getDeliveryCostRequest);
-        Delivery delivery = new Delivery(deliveryID, locationOfStore, request.getPlaceOfDelivery(), request.getCustomerID(), request.getStoreID(), DeliveryStatus.WaitingForShoppers, getDeliveryCostResponse.getCost());
+        Delivery delivery = new Delivery(deliveryID, request.getOrderID(), locationOfStore, request.getPlaceOfDelivery(), request.getCustomerID(), request.getStoreID(), DeliveryStatus.WaitingForShoppers, getDeliveryCostResponse.getCost());
         deliveryRepo.save(delivery);
         CreateDeliveryResponse response = new CreateDeliveryResponse(true, "Delivery request placed.", deliveryID);
         return response;
@@ -98,9 +102,9 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public GetDeliveryCostResponse getDeliveryCost(GetDeliveryCostRequest request) throws InvalidRequestException {
         if(request == null){
-            throw new InvalidRequestException("Null request.");
+            throw new InvalidRequestException("Null request object.");
         }
-        if(request.getDropOffLocation() == null || request.getDropOffLocation() == null){
+        if(request.getDropOffLocation() == null || request.getPickUpLocation() == null){
             throw new InvalidRequestException("Null parameters.");
         }
         boolean validGeoPoints = checkLongAndLatIfValid(request.getDropOffLocation(), request.getPickUpLocation());
@@ -132,7 +136,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (!adminRepo.findById(request.getAdminID()).isPresent()){
             throw new InvalidRequestException("User is not an admin.");
         }
-        List<DeliveryDetail> details = deliveryDetailRepo.findAllByDeliveryId(request.getDeliveryID());
+        List<DeliveryDetail> details = deliveryDetailRepo.findAllByDeliveryID(request.getDeliveryID());
         if (details == null){
             throw new InvalidRequestException("No details found for this delivery.");
         }

@@ -9,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface DeliveryDetailRepo extends JpaRepository<DeliveryDetail, Integer> {
-    List<DeliveryDetail> findAllByDeliveryId(UUID deliveryID);
+    //List<DeliveryDetail> findAllByDeliveryId(UUID deliveryID);
+    List<DeliveryDetail> findAllByDeliveryID(UUID deliveryID);
 }
