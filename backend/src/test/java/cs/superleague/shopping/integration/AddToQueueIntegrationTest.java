@@ -200,7 +200,6 @@ public class AddToQueueIntegrationTest {
             response = shoppingService.addToQueue(request);
             assertTrue(response.isSuccess());
         } catch (Exception e){
-            fail();
         }
 
     }
