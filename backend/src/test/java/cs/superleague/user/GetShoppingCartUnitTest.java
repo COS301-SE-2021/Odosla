@@ -104,7 +104,7 @@ public class GetShoppingCartUnitTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID.toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.getShoppingCart(request));
         assertEquals("User with given userID does not exist - could not retrieve shopping cart", thrown.getMessage());
@@ -113,7 +113,7 @@ public class GetShoppingCartUnitTest {
     @Test
     @DisplayName("When a null shoppingCart is returned")
     void UnitTest_ShoppingCartDoesNotExist_NULL(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID.toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerNULLCart));
         try{
             GetShoppingCartResponse response = userService.getShoppingCart(request);
@@ -129,7 +129,7 @@ public class GetShoppingCartUnitTest {
     @Test
     @DisplayName("When an empty shoppingCart is returned")
     void UnitTest_ShoppingCartDoesNotExist_EMPTY(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID.toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerEMPTYCart));
         try{
             GetShoppingCartResponse response = userService.getShoppingCart(request);
@@ -145,7 +145,7 @@ public class GetShoppingCartUnitTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID);
+        GetShoppingCartRequest request  = new GetShoppingCartRequest(userID.toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
