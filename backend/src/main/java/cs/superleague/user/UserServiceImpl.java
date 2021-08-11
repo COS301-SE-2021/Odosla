@@ -17,6 +17,7 @@ import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -2117,9 +2118,12 @@ public class UserServiceImpl implements UserService{
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
 
+            Date today = new Date();
+            Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
+
             user = customer;
             user.setActivationCode(resetCode);
-            user.setActivationDate(new Date());
+            user.setActivationDate(expiration);
 
             customerRepo.save((Customer)user);
 
@@ -2135,9 +2139,12 @@ public class UserServiceImpl implements UserService{
                 return new ResetPasswordResponse(null, "Could not find shopper with email - Could not reset", false);
             }
 
+            Date today = new Date();
+            Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
+
             user = shopper;
             user.setActivationCode(resetCode);
-            user.setActivationDate(new Date());
+            user.setActivationDate(expiration);
 
             shopperRepo.save((Shopper)user);
 
@@ -2152,9 +2159,12 @@ public class UserServiceImpl implements UserService{
                 return new ResetPasswordResponse(null, "Could not find driver with email - Could not reset", false);
             }
 
+            Date today = new Date();
+            Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
+
             user = driver;
             user.setActivationCode(resetCode);
-            user.setActivationDate(new Date());
+            user.setActivationDate(expiration);
 
             driverRepo.save((Driver) user);
 
@@ -2169,9 +2179,12 @@ public class UserServiceImpl implements UserService{
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
 
+            Date today = new Date();
+            Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
+
             user = admin;
             user.setActivationCode(resetCode);
-            user.setActivationDate(new Date());
+            user.setActivationDate(expiration);
 
             adminRepo.save((Admin)user);
 
