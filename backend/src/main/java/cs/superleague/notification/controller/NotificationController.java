@@ -2,10 +2,14 @@ package cs.superleague.notification.controller;
 
 import cs.superleague.api.NotificationApi;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.models.NotificationSendDirectEmailNotificationRequest;
+import cs.superleague.models.NotificationSendDirectEmailNotificationResponse;
 import cs.superleague.models.NotificationSendEmailNotificationRequest;
 import cs.superleague.models.NotificationSendEmailNotificationResponse;
 import cs.superleague.notification.repos.NotificationRepo;
+import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
+import cs.superleague.notification.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.user.dataclass.Admin;
 import cs.superleague.user.dataclass.UserType;
@@ -69,6 +73,29 @@ public class NotificationController implements NotificationApi {
             e.printStackTrace();
         }
         adminRepo.deleteAll();
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotification(NotificationSendDirectEmailNotificationRequest body){
+        NotificationSendDirectEmailNotificationResponse response = new NotificationSendDirectEmailNotificationResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            SendDirectEmailNotificationRequest request = new SendDirectEmailNotificationRequest(body.getMessage(), body.getProperties());
+            SendDirectEmailNotificationResponse sendDirectEmailNotificationResponse = ServiceSelector.getNotificationService().sendDirectEmailNotification(request);
+            try{
+                response.setSuccess(sendDirectEmailNotificationResponse.isSuccess());
+                response.setResponseMessage(sendDirectEmailNotificationResponse.getResponseMessage());
+            }catch (Exception e){
+                response.setSuccess(false);
+                response.setResponseMessage(e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (Exception e){
+            response.setSuccess(false);
+            response.setResponseMessage(e.getMessage());
+            e.printStackTrace();
+        }
         return new ResponseEntity<>(response, httpStatus);
     }
 }
