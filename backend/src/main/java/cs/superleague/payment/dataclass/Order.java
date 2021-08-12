@@ -19,6 +19,7 @@ public class Order {
     private UUID userID;
     private UUID storeID;
     private UUID shopperID;
+    private UUID driverID;
     private Calendar createDate;
     private Calendar processDate;
     private Double totalCost;

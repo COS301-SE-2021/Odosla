@@ -88,8 +88,8 @@ public class GetNextQueuedUnitTest {
     }
 
     @Test
-    @Description("Tests for when getNextQueued is submited with a null request object- exception should be thrown")
-    @DisplayName("When request object is not specificed")
+    @Description("Tests for when getNextQueued is submitted with a null request object- exception should be thrown")
+    @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.getNextQueued(null));
         assertEquals("Request object for GetNextQueuedRequest can't be null - can't get next queued", thrown.getMessage());
@@ -101,7 +101,7 @@ public class GetNextQueuedUnitTest {
     void UnitTest_testingNull_storeID_Parameter_RequestObject(){
         GetNextQueuedRequest request=new GetNextQueuedRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.getNextQueued(request));
-        assertEquals("Store ID paramter in request can't be null - can't get next queued", thrown.getMessage());
+        assertEquals("Store ID parameter in request can't be null - can't get next queued", thrown.getMessage());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class GetNextQueuedUnitTest {
     void UnitTest_Store_no_orders_in_orderQueue() throws InvalidRequestException, StoreDoesNotExistException {
         GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
         List<Order> listOfOrders2=new ArrayList<>();
-        s.setOrderQueue(listOfOrders2);
+        s.setOrderQueue(null);
         when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(s));
         GetNextQueuedResponse response=shoppingService.getNextQueued(request);
         assertNotNull(response);
@@ -144,7 +144,7 @@ public class GetNextQueuedUnitTest {
         assertEquals(listOfOrders.size(),response.getQueueOfOrders().size());
         assertEquals("Queue was successfully updated for store",response.getMessage());
         assertEquals(listOfOrders,response.getQueueOfOrders());
-        assertEquals(o,response.getNewCurrentOrder());
+        assertEquals(o2,response.getNewCurrentOrder());
 
     }
 
@@ -158,19 +158,6 @@ public class GetNextQueuedUnitTest {
 
         assertNotNull(request);
         assertEquals(storeUUID1, request.getStoreID());
-    }
-
-    @Test
-    @Description("Test for when Store with storeID does not have any current orders in order queue")
-    @DisplayName("Order queue is empty")
-    void UnitTest_Queue_nullTest() throws InvalidRequestException, StoreDoesNotExistException {
-        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
-        List<Order> listOfOrders2=new ArrayList<>();
-        s.setOrderQueue(listOfOrders2);
-        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(s));
-
-        GetNextQueuedResponse response=shoppingService.getNextQueued(request);
-        assertNotNull(response.getQueueOfOrders());
     }
 
 }

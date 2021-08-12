@@ -18,6 +18,8 @@ public class Item {
     private int quantity;
     private String description;
     private String imageUrl;
+    private String brand;
+    private String size;
 
     public Item(){ }
 
@@ -94,5 +96,21 @@ public class Item {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }
