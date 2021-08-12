@@ -281,6 +281,138 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_ResetPasswordResponse"
 
+  /user/loginUser:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: loginUser
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_LoginRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_LoginResponse"
+
+  /user/registerDriver:
+    post:
+      summary: Endpoint for setting a registering driver
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerDriver
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterDriverRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterDriverResponse"
+  /user/registerShopper:
+    post:
+      summary: Endpoint for setting a registering shopper
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerShopper
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterShopperRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterShopperResponse"
+
+  /user/registerCustomer:
+    post:
+      summary: Endpoint for setting a registering customer
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerCustomer
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterCustomerRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterCustomerResponse"
+
+  /user/registerAdmin:
+    post:
+      summary: Endpoint for setting a registering admin
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerAdmin
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterAdminRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterAdminResponse"
+
+  /user/verifyAccount:
+    post:
+      summary: Endpoint for verifying a user account
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: verifyAccount
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_AccountVerifyRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_AccountVerifyResponse"
+
+
 components:
 
   schemas:
@@ -645,4 +777,249 @@ components:
         success:
           type: boolean
         resetCode:
+          type: string
+
+    DriverObject:
+      description: "Generic schema for a Driver"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        driverID:
+          type: string
+        rating:
+          type: number
+        onShift:
+          type: boolean
+
+    CustomerObject:
+      description: "Generic schema for a Customer"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        customerID:
+          type: string
+        rating:
+          type: number
+        isActive:
+          type: boolean
+
+    AdminObject:
+      description: "Generic schema for a Admin"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        adminID:
+          type: string
+        rating:
+          type: number
+        isActive:
+          type: boolean
+
+    user_LoginRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        userType:
+          type: string
+
+    user_LoginResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        Token:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterDriverRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterDriverResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterShopperRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterShopperResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterAdminRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterAdminResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterCustomerRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterCustomerResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_AccountVerifyRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        activationCode:
+          type: string
+        userType:
+          type: string
+
+    user_AccountVerifyResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+        userType:
           type: string

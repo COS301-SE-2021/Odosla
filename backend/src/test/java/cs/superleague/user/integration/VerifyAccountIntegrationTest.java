@@ -56,9 +56,9 @@ public class VerifyAccountIntegrationTest {
 
     @AfterEach
     void tearDown(){
-        customerRepo.deleteAll();
-        shopperRepo.deleteAll();
-        driverRepo.deleteAll();
+        //customerRepo.deleteAll();
+        //shopperRepo.deleteAll();
+        //driverRepo.deleteAll();
     }
 
     @Test
