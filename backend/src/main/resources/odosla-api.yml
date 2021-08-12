@@ -710,9 +710,11 @@ components:
           type: string
         orderType:
           type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
         deliveryAddress:
-          type: string
-        storeAddress:
           type: string
 
     payment_SubmitOrderResponse:
