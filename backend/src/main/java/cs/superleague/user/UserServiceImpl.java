@@ -1,6 +1,10 @@
 package cs.superleague.user;
 
+import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.notification.dataclass.Notification;
+import cs.superleague.notification.requests.SendEmailNotificationRequest;
+import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -2120,15 +2124,25 @@ public class UserServiceImpl implements UserService{
 
         resetCode = sb.toString();
 
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","RESETPASSWORD");
+        properties.put("Subject","Odosla");
+        properties.put("UserType", userType);
+
         Customer customer = null;
-        if(userType == "CUSTOMER"){
+
+        if(userType.equals("CUSTOMER")){
+
             try {
                 customer = customerRepo.findByEmail(email).orElse(null);
             }catch (Exception e){}
 
+
             if(customer == null){
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
+
+            properties.put("UserID", customer.getCustomerID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2141,10 +2155,16 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
-        }else if(userType == "SHOPPER"){
+        }
+        else if(userType.equals("SHOPPER")){
             Shopper shopper = null;
             try {
                 shopper= shopperRepo.findByEmail(email).orElse(null);
@@ -2154,6 +2174,8 @@ public class UserServiceImpl implements UserService{
             if(shopper == null){
                 return new ResetPasswordResponse(null, "Could not find shopper with email - Could not reset", false);
             }
+
+            properties.put("UserID", shopper.getShopperID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2166,14 +2188,22 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-        }else if(userType == "DRIVER"){
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else if(userType.equals("DRIVER")){
             Driver driver = driverRepo.findDriverByEmail(email);
 
             if(driver == null){
                 return new ResetPasswordResponse(null, "Could not find driver with email - Could not reset", false);
             }
+
+            properties.put("UserID", driver.getDriverID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2186,14 +2216,21 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-        }else if(userType == "ADMIN"){
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else if(userType.equals("ADMIN")){
             Admin admin = adminRepo.findAdminByEmail(email);
 
             if(admin == null){
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
+
+            properties.put("UserID", admin.getAdminID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2206,8 +2243,13 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return new ResetPasswordResponse(resetCode, "Account type given does not exist - Could not reset password", false);

@@ -182,7 +182,7 @@ public class SubmitOrderIntegrationTest {
     @Description("Tests for if the store does is closed")
     @DisplayName("When store with store ID is closed")
     void IntegrationTest_StoreDoesisClosed() throws InvalidRequestException {
-        storeRepo.deleteAll();
+//        storeRepo.deleteAll();
         store.setOpen(false);
         storeRepo.save(store);
         submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
