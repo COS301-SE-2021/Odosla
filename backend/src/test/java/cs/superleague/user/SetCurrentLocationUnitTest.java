@@ -97,7 +97,7 @@ public class SetCurrentLocationUnitTest {
     @Test
     @DisplayName("When userID parameter is not specified")
     void UnitTest_testingNullRequestUserIDParameter(){
-        request = new SetCurrentLocationRequest(null, 0, 0, null);
+        request = new SetCurrentLocationRequest(null, 0.0, 0.0, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.setCurrentLocation(request));
         assertEquals("DriverID attribute is null - could not set current location", thrown.getMessage());
     }
@@ -105,7 +105,7 @@ public class SetCurrentLocationUnitTest {
     @Test
     @DisplayName("When longitude parameter is not specified")
     void UnitTest_testingNullRequestLongitudeParameter(){
-        request = new SetCurrentLocationRequest(UUID.randomUUID().toString(), 0, 0, null);
+        request = new SetCurrentLocationRequest(UUID.randomUUID().toString(), 0.0, 0.0, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.setCurrentLocation(request));
         assertEquals("Longitude attribute is null - could not set current location", thrown.getMessage());
     }
@@ -113,7 +113,7 @@ public class SetCurrentLocationUnitTest {
     @Test
     @DisplayName("When latitude parameter is not specified")
     void UnitTest_testingNullRequestLatitudeParameter(){
-        request = new SetCurrentLocationRequest(UUID.randomUUID().toString(), 1.00, 0, null);
+        request = new SetCurrentLocationRequest(UUID.randomUUID().toString(), 1.00, 0.0, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.setCurrentLocation(request));
         assertEquals("Latitude attribute is null - could not set current location", thrown.getMessage());
     }

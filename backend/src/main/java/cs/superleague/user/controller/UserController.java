@@ -600,6 +600,44 @@ public class UserController implements UserApi {
 
     }
 
+    @Override
+    public ResponseEntity<UserSetCurrentLocationResponse> setCurrentLocation(UserSetCurrentLocationRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!driverRepo.findById(customerID).isPresent()){
+
+            Driver driver = new Driver();
+            driver.setDriverID(customerID);
+
+            driverRepo.save(driver);
+
+        }
+
+        UserSetCurrentLocationResponse setCurrentLocationResponse = new UserSetCurrentLocationResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            SetCurrentLocationRequest request = new SetCurrentLocationRequest(body.getDriverID(), body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getAddress());
+
+            SetCurrentLocationResponse response = ServiceSelector.getUserService().setCurrentLocation(request);
+            try{
+                setCurrentLocationResponse.setDate(response.getTimestamp().toString());
+                setCurrentLocationResponse.setMessage(response.getMessage());
+                setCurrentLocationResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(setCurrentLocationResponse, status);
+    }
 
 
 }
