@@ -617,7 +617,7 @@ import java.util.List;50"
         Document pdf = new Document();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
+//            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
             pdf.open();
             com.itextpdf.text.Font header = FontFactory.getFont(FontFactory.COURIER, 24, Font.BOLD);
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
@@ -630,7 +630,7 @@ import java.util.List;50"
             }
 
             //pdf.add(new Paragraph("BuyerID: " + BuyerID, body));
-            pdf.add(new Paragraph("Date: " + INVOICED_DATE, body));
+            pdf.add(new Paragraph("Date: " + INVOICED_DATE.getTime(), body));
             pdf.add(new Paragraph("Details: " + DETAILS, body));
             pdf.add(new Paragraph("Price: " + TOTAL_PRICE, body));
             //pdf.add(new Paragraph("ShippingID: " + SHIPMENT.getShipmentId(), body));
@@ -638,7 +638,7 @@ import java.util.List;50"
             pdf.close();
         } catch (DocumentException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             System.out.println("PDF Error");
         }
         return output.toByteArray();

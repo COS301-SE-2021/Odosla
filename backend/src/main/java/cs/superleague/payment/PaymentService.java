@@ -24,6 +24,8 @@ public interface PaymentService {
 
     GetStatusResponse getStatus(GetStatusRequest request) throws PaymentException;
 
+    GetItemsResponse getItems(GetItemsRequest request) throws PaymentException;
+
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);
