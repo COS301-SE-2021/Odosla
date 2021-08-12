@@ -16,6 +16,7 @@ import cs.superleague.user.responses.ClearShoppingCartResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class ClearShoppingCartIntegrationTest {
 
     @Autowired
@@ -78,16 +80,18 @@ public class ClearShoppingCartIntegrationTest {
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
 
+        itemRepo.saveAll(listOfItems);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
     }
 
     @AfterEach
     void tearDown(){
-        customerRepo.deleteAll();
+        itemRepo.deleteAll();
         groceryListRepo.deleteAll();
+        customerRepo.deleteAll();
     }
 
     @Test
@@ -108,7 +112,7 @@ public class ClearShoppingCartIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        request = new ClearShoppingCartRequest(UUID.randomUUID());
+        request = new ClearShoppingCartRequest(UUID.randomUUID().toString());
         Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.clearShoppingCart(request));
         assertEquals("User with given userID does not exist - could clear cart", thrown.getMessage());
     }
@@ -116,7 +120,7 @@ public class ClearShoppingCartIntegrationTest {
     @Test
     @DisplayName("When valid values are given")
     void UnitTest_testingSuccessfulUpdate(){
-        request = new ClearShoppingCartRequest(userID);
+        request = new ClearShoppingCartRequest(userID.toString());
 
         try {
             response = userService.clearShoppingCart(request);

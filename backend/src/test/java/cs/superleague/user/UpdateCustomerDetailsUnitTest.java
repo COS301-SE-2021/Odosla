@@ -7,7 +7,6 @@ import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.requests.UpdateCustomerDetailsRequest;
 import cs.superleague.user.responses.UpdateCustomerDetailsResponse;
@@ -165,7 +164,8 @@ public class UpdateCustomerDetailsUnitTest {
         request = new UpdateCustomerDetailsRequest(userID, "Dean", "Smith", "ds@smallSpursy.com",
                 "0712345678", "loL7&lol", deliveryAddress);
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(existingCustomer);
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(existingCustomer));
+        //when(customerRepo.findByEmail(Mockito.any())).thenReturn(existingCustomer);
         try {
             response = userService.updateCustomerDetails(request);
             assertEquals("Email is already taken", response.getMessage());

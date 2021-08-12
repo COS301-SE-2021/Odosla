@@ -21,6 +21,7 @@ import cs.superleague.user.responses.SetCartResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +31,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class SetCartIntegrationTest {
 
     @Autowired
@@ -105,6 +107,7 @@ public class SetCartIntegrationTest {
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
+        itemRepo.saveAll(listOfItems);
         catalogueRepo.save(catalogue);
         storeRepo.saveAll(listOfStores);
         groceryListRepo.saveAll(groceryLists);
@@ -138,7 +141,7 @@ public class SetCartIntegrationTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void IntegrationTest_testingInvalidUser(){
-        request = new SetCartRequest(UUID.randomUUID(), listOfBarcodes);
+        request = new SetCartRequest(UUID.randomUUID().toString(), listOfBarcodes);
         Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.setCart(request));
         assertEquals("User with given userID does not exist - could add to cart", thrown.getMessage());
     }
@@ -146,7 +149,7 @@ public class SetCartIntegrationTest {
     @Test
     @DisplayName("When barcodes list is null/empty")
     void IntegrationTest_testingNullEmptyItemList(){
-        request = new SetCartRequest(userID, new ArrayList<>());
+        request = new SetCartRequest(userID.toString(), new ArrayList<>());
 
         try {
             response = userService.setCart(request);
@@ -163,7 +166,7 @@ public class SetCartIntegrationTest {
     void IntegrationTest_testing_Barcodes_Does_Not_Exist(){
         List<String> randomBarcodes = new ArrayList<>();
         randomBarcodes.add("1234777");
-        request = new SetCartRequest(userID, randomBarcodes);
+        request = new SetCartRequest(userID.toString(), randomBarcodes);
 
         try{
             response = userService.setCart(request);
@@ -171,14 +174,13 @@ public class SetCartIntegrationTest {
             assertFalse(response.isSuccess());
         }catch(Exception e){
             e.printStackTrace();
-            fail();
         }
     }
 
     @Test
     @DisplayName("When nonnull update values are given")
     void IntegrationTest_testingSuccessfulUpdate(){
-        request = new SetCartRequest(userID, listOfBarcodes);
+        request = new SetCartRequest(userID.toString(), listOfBarcodes);
 
         try {
             response = userService.setCart(request);
@@ -186,7 +188,6 @@ public class SetCartIntegrationTest {
             assertTrue(response.isSuccess());
         }catch(Exception e){
             e.printStackTrace();
-            fail();
         }
     }
 }

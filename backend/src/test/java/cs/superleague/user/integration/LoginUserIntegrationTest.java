@@ -11,11 +11,11 @@ import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.LoginRequest;
 import cs.superleague.user.responses.LoginResponse;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Transactional
 public class LoginUserIntegrationTest {
 
     @Autowired
@@ -178,7 +179,7 @@ public class LoginUserIntegrationTest {
         shopperRepo.save(shopperToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
-        Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
+        Shopper shopper=shopperRepo.findByEmail(shopperToLogin.getEmail()).orElse(null);
 
     }
 
@@ -205,7 +206,7 @@ public class LoginUserIntegrationTest {
         customerRepo.save(customerToLogin);
         Throwable thrown = Assertions.assertThrows(InvalidCredentialsException.class, ()-> userService.loginUser(loginRequest1));
         assertEquals("Password is incorrect", thrown.getMessage());
-        Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
+        Customer customer=customerRepo.findByEmail(customerToLogin.getEmail()).orElse(null);
     }
 
     @Test
@@ -223,7 +224,7 @@ public class LoginUserIntegrationTest {
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
-        Customer customer=customerRepo.findCustomerByEmail(customerToLogin.getEmail());
+        Customer customer=customerRepo.findByEmail(customerToLogin.getEmail()).orElse(null);
     }
 
     @Test
@@ -259,7 +260,7 @@ public class LoginUserIntegrationTest {
         assertNotNull(response.getTimestamp());
         assertEquals("User successfully logged in",response.getMessage());
 
-        Shopper shopper=shopperRepo.findShopperByEmail(shopperToLogin.getEmail());
+        Shopper shopper=shopperRepo.findByEmail(shopperToLogin.getEmail()).orElse(null);
     }
 
     @Test

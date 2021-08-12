@@ -26,16 +26,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Transactional
 public class GetStoreOpenIntegrationTest {
     @Autowired
     ShoppingServiceImpl shoppingService;
@@ -153,7 +152,16 @@ public class GetStoreOpenIntegrationTest {
         assertNotNull(getStore);
         assertEquals(listOfItems.size(), getStore.getStock().getItems().size());
         assertEquals(store.getStoreID(), getStore.getStoreID());
-        assertEquals(store.getOpen(), getStore.getOpen());
+        Calendar calendar= Calendar.getInstance();
+        if(calendar.get(Calendar.HOUR_OF_DAY) >= getStore.getOpeningTime() && calendar.get(Calendar.HOUR_OF_DAY) < getStore.getClosingTime())
+        {
+            assertEquals(true, getStore.getOpen());
+        }
+        else
+        {
+            assertEquals(false, getStore.getOpen());
+        }
+
         assertEquals(store.getOpeningTime(), getStore.getOpeningTime());
         assertEquals(store.getClosingTime(), getStore.getClosingTime());
         assertEquals(store.getMaxOrders(), getStore.getMaxOrders());

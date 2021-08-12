@@ -134,7 +134,7 @@ public class RegisterShopperUnitTest {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
         Shopper Shopper=new Shopper();
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(Shopper);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.of(Shopper));
         RegisterShopperResponse response=userService.registerShopper(request);
 
         assertNotNull(response);
@@ -149,7 +149,7 @@ public class RegisterShopperUnitTest {
     void UnitTest_ShopperIDAlreadybeenUsed() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(null);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
         Shopper Shopper=new Shopper();
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.of(Shopper));
         RegisterShopperResponse response=userService.registerShopper(request);
@@ -166,7 +166,7 @@ public class RegisterShopperUnitTest {
     void UnitTest_ValidRegistration() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(null);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
         Shopper Shopper=new Shopper();
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(null).thenReturn(java.util.Optional.of(Shopper));
         RegisterShopperResponse response=userService.registerShopper(request);
@@ -183,7 +183,7 @@ public class RegisterShopperUnitTest {
     void UnitTest_ValidRegistrationNotSavedToDatabase() throws InvalidRequestException {
         request.setEmail("validEmail@gmail.com");
         request.setPassword("validPassword@1");
-        Mockito.when(shopperRepo.findShopperByEmail(Mockito.any())).thenReturn(null);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
         Shopper Shopper=new Shopper();
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(null).thenReturn(null);
         RegisterShopperResponse response=userService.registerShopper(request);

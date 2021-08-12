@@ -19,12 +19,14 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class UpdateCustomerDetailsIntegrationTest {
 
     @Autowired
@@ -64,7 +66,7 @@ public class UpdateCustomerDetailsIntegrationTest {
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
-        I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
+        I1=new Item("Heinz Tamatoe Sauce","TTT123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         listOfItems.add(I1);
         listOfItems.add(I2);
@@ -79,10 +81,11 @@ public class UpdateCustomerDetailsIntegrationTest {
         groceryLists.add(groceryList);
 
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
 
+        itemRepo.saveAll(listOfItems);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
         customerRepo.save(existingCustomer);
@@ -90,8 +93,10 @@ public class UpdateCustomerDetailsIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        //itemRepo.deleteAll();
+        //groceryListRepo.deleteAll();
         customerRepo.deleteAll();
-        groceryListRepo.deleteAll();
+
     }
 
 

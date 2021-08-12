@@ -1,7 +1,6 @@
 package cs.superleague.user.integration;
 
 import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.ShopperRepo;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Transactional
 public class RegisterShopperIntegrationTest {
 
     @Autowired
@@ -165,7 +166,7 @@ public class RegisterShopperIntegrationTest {
         assertEquals("Shopper succesfully added to database",response.getMessage());
         assertNotNull(response.getTimestamp());
 
-        Shopper shopperSaved=shopperRepo.findShopperByEmail(request.getEmail());
+        Shopper shopperSaved=shopperRepo.findByEmail(request.getEmail()).orElse(null);
 
         assertNotNull(shopperSaved);
         assertEquals(request.getName(),shopperSaved.getName());

@@ -1,5 +1,6 @@
 package cs.superleague.integration;
 
+import cs.superleague.notification.NotificationService;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.user.UserService;
@@ -13,15 +14,19 @@ public class ServiceSelector {
 
     private static ServiceSelector singleton;
 
+    @Value("${notificationService}")
+    private String notificationService = "";
+
     @Value("${paymentService}")
     private String paymentService = "";
 
     @Value("${shoppingService}")
     private String shoppingService = "";
 
-    @Value("${env.USER_SERVICE}")
+    @Value("${userService}")
     private String userService = "";
 
+    private NotificationService notification;
     private PaymentService payment;
     private ShoppingService shopping;
     private UserService user;
@@ -33,6 +38,7 @@ public class ServiceSelector {
     @Autowired
     public void setServiceSelector(ApplicationContext context) {
         singleton = this;
+        singleton.notification = (NotificationService) context.getBean(notificationService);
         singleton.payment = (PaymentService) context.getBean(paymentService);
         singleton.shopping=(ShoppingService) context.getBean(shoppingService);
         singleton.user=(UserService) context.getBean(userService);
@@ -51,4 +57,7 @@ public class ServiceSelector {
         return singleton.user;
     }
 
+    public static NotificationService getNotificationService(){
+        return singleton.notification;
+    }
 }
