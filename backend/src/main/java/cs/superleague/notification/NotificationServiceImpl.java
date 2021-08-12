@@ -5,9 +5,11 @@ import cs.superleague.notification.dataclass.NotificationType;
 import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.CreateNotificationRequest;
 import cs.superleague.notification.requests.RetrieveNotificationRequest;
+import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.CreateNotificationResponse;
 import cs.superleague.notification.responses.RetrieveNotificationResponse;
+import cs.superleague.notification.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.notification.exceptions.InvalidRequestException;
 import cs.superleague.user.dataclass.*;
@@ -147,6 +149,25 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public RetrieveNotificationResponse retrieveNotification(RetrieveNotificationRequest request) {
         return null;
+    }
+
+    @Override
+    public SendDirectEmailNotificationResponse sendDirectEmailNotification(SendDirectEmailNotificationRequest request) throws InvalidRequestException {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if(request.getSubject() == null || request.getSubject().equals("") || request.getMessage() == null || request.getMessage().equals("") || request.getEmail() == null || request.getEmail().equals("")){
+            throw new InvalidRequestException("Empty parameters.");
+        }
+        Matcher matcher = pattern.matcher(request.getEmail());
+        if (!matcher.matches()){
+            throw new InvalidRequestException("Invalid recipient email address.");
+        }
+        sendEmail(request.getEmail(), request.getSubject(), request.getMessage());
+        SendDirectEmailNotificationResponse response = new SendDirectEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",request.getEmail(), request.getSubject(), request.getMessage()));
+        return response;
     }
 
     @Override
