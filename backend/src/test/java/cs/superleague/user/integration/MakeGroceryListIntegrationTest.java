@@ -22,6 +22,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ComponentScan(basePackages = {"cs.superleague.user.repos"})
+@Transactional
 public class MakeGroceryListIntegrationTest {
 
     @Autowired

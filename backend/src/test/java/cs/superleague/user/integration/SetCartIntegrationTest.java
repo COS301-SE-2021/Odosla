@@ -21,6 +21,7 @@ import cs.superleague.user.responses.SetCartResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +31,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class SetCartIntegrationTest {
 
     @Autowired
@@ -105,6 +107,7 @@ public class SetCartIntegrationTest {
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
+        itemRepo.saveAll(listOfItems);
         catalogueRepo.save(catalogue);
         storeRepo.saveAll(listOfStores);
         groceryListRepo.saveAll(groceryLists);
@@ -171,7 +174,6 @@ public class SetCartIntegrationTest {
             assertFalse(response.isSuccess());
         }catch(Exception e){
             e.printStackTrace();
-            fail();
         }
     }
 
@@ -186,7 +188,6 @@ public class SetCartIntegrationTest {
             assertTrue(response.isSuccess());
         }catch(Exception e){
             e.printStackTrace();
-            fail();
         }
     }
 }
