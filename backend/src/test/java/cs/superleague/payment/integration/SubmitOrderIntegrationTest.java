@@ -103,6 +103,7 @@ public class SubmitOrderIntegrationTest {
         stock=new Catalogue(storeID,itemList);
 
         store=new Store(storeID,"StoreBrand",stock,3,currentOrders,orderQueue,6,true);
+        store.setStoreLocation(geoPoint2);
 
         itemRepo.save(item1);
         itemRepo.save(item2);
@@ -137,31 +138,23 @@ public class SubmitOrderIntegrationTest {
     @Description("Tests for if the given order request on order creation has a null parameter - exception should be thrown")
     @DisplayName("When order parameter of request object null")
     void IntegrationTest_CreateOrderWithNullParamterRequest() throws InvalidRequestException {
-        submitOrderRequest = new SubmitOrderRequest(null,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest = new SubmitOrderRequest(null,itemList,3.0,storeID,OrderType.DELIVERY);
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,null,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,null,3.0,storeID,OrderType.DELIVERY);
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,null,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,null,storeID,OrderType.DELIVERY);
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,null,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,null,OrderType.DELIVERY);
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,null,geoPoint1,geoPoint2);
-        assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
-            SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
-        });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,null,geoPoint2);
-        assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
-            SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
-        });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,null);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,null);
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -172,7 +165,7 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("When order parameter gives id of a store that does not exist")
     void IntegrationTest_StoreDoesNotExist() throws InvalidRequestException {
         UUID storeID2=UUID.randomUUID();
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID2,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID2,OrderType.DELIVERY);
         assertThrows(StoreDoesNotExistException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -183,9 +176,12 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("When store with store ID is closed")
     void IntegrationTest_StoreDoesisClosed() throws InvalidRequestException {
 //        storeRepo.deleteAll();
-        store.setOpen(false);
-        storeRepo.save(store);
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        Store updateStore = storeRepo.findById(storeID).orElse(null);
+        updateStore.setOpen(false);
+        //store.setOpen(false);
+        //storeRepo.save(store);
+        storeRepo.save(updateStore);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY);
         assertThrows(StoreClosedException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -199,15 +195,13 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("SubmitOrderRequest correct construction")
     void IntegrationTest_SubmitOrderRequestConstruction() {
 
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY);
 
         assertNotNull(submitOrderRequest);
         assertEquals(userID, submitOrderRequest.getUserID());
         assertEquals(itemList,submitOrderRequest.getListOfItems());
         assertEquals(3.0,submitOrderRequest.getDiscount());
         assertEquals(storeID,submitOrderRequest.getStoreID());
-        assertEquals(geoPoint2,submitOrderRequest.getStoreAddress());
-        assertEquals(geoPoint1,submitOrderRequest.getDeliveryAddress());
         assertEquals(OrderType.DELIVERY,submitOrderRequest.getOrderType());
     }
 
@@ -216,7 +210,7 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("When Order is created correctly")
     void IntegrationTest_CreatOrderConstruction() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException {
         Order order=null;
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY);
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
 
         if(orderRepo.findById(submitOrderResponse.getOrder().getOrderID()).isPresent()){
@@ -246,9 +240,6 @@ public class SubmitOrderIntegrationTest {
         assertEquals(geoPoint2.getLatitude(),order.getStoreAddress().getLatitude());
         assertEquals(geoPoint2.getLongitude(),order.getStoreAddress().getLongitude());
         //assertEquals(geoPoint1.getGeoID(),order.getDeliveryAddress().getGeoID());
-        assertEquals(geoPoint1.getAddress(),order.getDeliveryAddress().getAddress());
-        assertEquals(geoPoint1.getLatitude(),order.getDeliveryAddress().getLatitude());
-        assertEquals(geoPoint1.getLongitude(),order.getDeliveryAddress().getLongitude());
         assertEquals(OrderType.DELIVERY,order.getType());
         assertEquals(OrderStatus.IN_QUEUE,order.getStatus());
     }

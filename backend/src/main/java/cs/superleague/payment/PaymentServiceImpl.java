@@ -22,6 +22,7 @@ import cs.superleague.shopping.responses.AddToQueueResponse;
 import cs.superleague.shopping.responses.GetQueueResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.requests.GetUserByUUIDRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -105,6 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
         boolean invalidReq = false;
         String invalidMessage = "";
 
+        GetStoreByUUIDResponse shop=null;
         if (request!=null) {
 
             /* checking for invalid requests */
@@ -132,15 +134,19 @@ public class PaymentServiceImpl implements PaymentService {
                 invalidReq = true;
                 invalidMessage = ("Order type cannot be null in request object - order unsuccessfully created.");
             }
+            else
+            {
+                GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(request.getStoreID());
+                shop=shoppingService.getStoreByUUID(getShopRequest);
 
-            else if(request.getDeliveryAddress()==null){
-                invalidReq = true;
-                invalidMessage = ("Delivery Address GeoPoint cannot be null in request object - order unsuccessfully created.");
-            }
+                if(shop!=null)
+                {
+                    if (shop.getStore().getStoreLocation()==null){
+                        invalidReq = true;
+                        invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                    }
+                }
 
-            else if (request.getStoreAddress()==null){
-                invalidReq = true;
-                invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
             }
 
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
@@ -174,7 +180,7 @@ public class PaymentServiceImpl implements PaymentService {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             double totalC=bd.doubleValue();
 
-            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), request.getDeliveryAddress(), request.getStoreAddress(), requiresPharmacy);
+            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), shop.getStore().getStoreLocation(), requiresPharmacy);
 
             Order alreadyExists=null;
             while (true) {
@@ -191,9 +197,7 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
             if (o != null) {
-                GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(storeID);
-                GetStoreByUUIDResponse shop=shoppingService.getStoreByUUID(getShopRequest);
-                if (shop != null) {
+
                     if(shop.getStore().getOpen()==true) {
                         if(orderRepo!=null)
                         orderRepo.save(o);
@@ -204,10 +208,9 @@ public class PaymentServiceImpl implements PaymentService {
                         System.out.println("Order has been created");
                         response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
                     }
-                    else{
+                    else {
                         throw new StoreClosedException("Store is currently closed - could not create order");
                     }
-                }
             }
 
         }else{

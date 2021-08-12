@@ -10,11 +10,15 @@ import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.GetStatusRequest;
+import cs.superleague.payment.requests.SubmitOrderRequest;
 import cs.superleague.payment.requests.UpdateOrderRequest;
 import cs.superleague.payment.responses.GetStatusResponse;
+import cs.superleague.payment.responses.SubmitOrderResponse;
 import cs.superleague.payment.responses.UpdateOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.repos.ItemRepo;
+import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.user.dataclass.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +43,9 @@ public class PaymentController implements PaymentApi {
 
     @Autowired
     ItemRepo itemRepo;
+
+    @Autowired
+    StoreRepo storeRepo;
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
     UUID shopperID = UUID.randomUUID();
@@ -184,6 +191,33 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
+
+
+        PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        OrderType orderType = null;
+        if(body.getOrderType().equals("DELIVERY")){
+            orderType= OrderType.DELIVERY;
+        } else if(body.getOrderType().equals("COLLECTION")){
+            orderType= OrderType.COLLECTION;
+        }
+
+        try{
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(UUID.fromString(body.getUserId()), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType);
+            SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
+            try {
+//                response.setMessage(getStatusResponse.getMessage());
+//                response.setStatus(getStatusResponse.getStatus());
+//                response.setSuccess(getStatusResponse.isSuccess());
+//                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         return null;
     }
 
