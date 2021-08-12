@@ -1053,7 +1053,7 @@ components:
         storeID:
           type: string
 
-    shoppping_GetNextQueuedResponse:
+    shopping_GetNextQueuedResponse:
       description: This object is returned as output
       type: object
       properties:

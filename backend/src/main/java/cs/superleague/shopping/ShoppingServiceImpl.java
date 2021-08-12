@@ -243,8 +243,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Order> orderQueue= store.getOrderQueue();
 
-            System.out.println("m: " + orderQueue.size());
-
             if(orderQueue==null || orderQueue.isEmpty()){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
