@@ -428,7 +428,7 @@ public class ShoppingController implements ShoppingApi{
 
                     response.setDate(getNextQueuedResponse.getTimeStamp().toString());
                     response.setMessage(getNextQueuedResponse.getMessage());
-//                    response.setSuccess(getNextQueuedResponse.get);
+                    response.setSuccess(getNextQueuedResponse.isResponse());
                     response.setNewCurrentOrder(getNextQueuedResponse.getNewCurrentOrder());
                     response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
 
