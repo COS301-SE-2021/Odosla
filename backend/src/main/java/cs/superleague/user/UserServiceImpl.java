@@ -2389,6 +2389,11 @@ public class UserServiceImpl implements UserService{
         return new FinalisePasswordResetResponse("Invalid account type - could not finalise password reset", false, new Date());
     }
 
+    @Override
+    public ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException {
+        return null;
+    }
+
     private boolean emailRegex(String email){
         String emailRegex = "^(.+)@(.+)$";
         Pattern pattern = Pattern.compile(emailRegex);
