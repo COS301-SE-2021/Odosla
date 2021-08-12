@@ -161,38 +161,10 @@ public class PaymentController implements PaymentApi {
     @Override
     public ResponseEntity<PaymentGetStatusResponse> getStatus(PaymentGetStatusRequest body) {
 
-
-        //add mock data to repo
-        List<Item> mockItemList = new ArrayList<>();
-        Item item1, item2;
-        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
-        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-        itemRepo.save(item1); itemRepo.save(item2);
-        mockItemList.add(item1); mockItemList.add(item2);
-
-        double totalCost = 14.99 + 36.99;
-        Order order = new Order();
-        order.setOrderID(orderId_AWAITNG_PAYMENT);
-        order.setUserID(userID);
-        order.setStoreID(storeID);
-        order.setShopperID(shopperID);
-        order.setCreateDate(Calendar.getInstance());
-        order.setTotalCost(totalCost);
-        order.setType(OrderType.DELIVERY);
-        order.setStatus(OrderStatus.AWAITING_PAYMENT);
-        order.setItems(mockItemList);
-        order.setStoreAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-        order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-        totalCost = 0;
-
-        orders.add(order);
-        orderRepo.save(order);
-
         PaymentGetStatusResponse response = new PaymentGetStatusResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
         try{
-            System.out.println(orderId_AWAITNG_PAYMENT);
             GetStatusRequest getStatusRequest = new GetStatusRequest(UUID.fromString(body.getOrderID()));
             GetStatusResponse getStatusResponse = ServiceSelector.getPaymentService().getStatus(getStatusRequest);
             try {
@@ -206,9 +178,6 @@ public class PaymentController implements PaymentApi {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        orderRepo.deleteAll();
-//        itemRepo.deleteAll();
 
         return new ResponseEntity<>(response, httpStatus);
     }
