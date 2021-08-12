@@ -259,6 +259,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_MakeGroceryListResponse"
 
+  /user/resetPassword:
+    post:
+      summary: Endpoint for reseting password
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: resetPassword
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ResetPasswordRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ResetPasswordResponse"
+
 components:
 
   schemas:
@@ -603,4 +625,24 @@ components:
         success:
           type: boolean
         date:
+          type: string
+
+    user_ResetPasswordRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        userType:
+          type: string
+
+    user_ResetPasswordResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        resetCode:
           type: string

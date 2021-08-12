@@ -17,14 +17,8 @@ import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.GroceryListRepo;
-import cs.superleague.user.requests.ClearShoppingCartRequest;
-import cs.superleague.user.requests.GetShoppingCartRequest;
-import cs.superleague.user.requests.MakeGroceryListRequest;
-import cs.superleague.user.requests.SetCartRequest;
-import cs.superleague.user.responses.ClearShoppingCartResponse;
-import cs.superleague.user.responses.GetShoppingCartResponse;
-import cs.superleague.user.responses.MakeGroceryListResponse;
-import cs.superleague.user.responses.SetCartResponse;
+import cs.superleague.user.requests.*;
+import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -342,5 +336,64 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(makeGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserResetPasswordResponse> resetPassword(UserResetPasswordRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "u14254922@tuks.co.za", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
+
+        UserResetPasswordResponse userMakeGroceryListResponse = new UserResetPasswordResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ResetPasswordRequest request = new ResetPasswordRequest(body.getEmail(), body.getUserType());
+
+            ResetPasswordResponse response = ServiceSelector.getUserService().resetPassword(request);
+            try{
+                userMakeGroceryListResponse.setResetCode(response.getResetCode());
+                userMakeGroceryListResponse.setMessage(response.getMessage());
+                userMakeGroceryListResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userMakeGroceryListResponse, status);
     }
 }
