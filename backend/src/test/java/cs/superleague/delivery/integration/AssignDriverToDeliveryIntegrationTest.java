@@ -6,6 +6,7 @@ import cs.superleague.delivery.dataclass.DeliveryStatus;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.AssignDriverToDeliveryRequest;
+import cs.superleague.delivery.responses.AssignDriverToDeliveryResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.UserType;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Description;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,7 +59,7 @@ public class AssignDriverToDeliveryIntegrationTest {
         driver = new Driver("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.DRIVER, driverID);
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, DeliveryStatus.WaitingForShoppers, 0.0);
         driverRepo.save(driver);
-
+        deliveryRepo.save(delivery);
     }
 
     @AfterEach
@@ -72,5 +74,39 @@ public class AssignDriverToDeliveryIntegrationTest {
         AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.randomUUID(), deliveryID);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
         assertEquals("Driver does not exist in the database.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the deliveryID does not exist in the database.")
+    @DisplayName("Invalid deliveryID")
+    void invalidDeliveryIDPassedInRequestObject_IntegrationTest(){
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, UUID.randomUUID());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
+        assertEquals("Delivery does not exist in the database.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the delivery has already been taken by a different driver.")
+    @DisplayName("Delivery already taken")
+    void deliveryAlreadyTakenByADifferentDriver_IntegrationTest(){
+        delivery.setDriverId(UUID.randomUUID());
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
+        assertEquals("This delivery has already been taken by another driver.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the driver is successfully assigned to the delivery.")
+    @DisplayName("Successful assigning")
+    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException{
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
+        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
+        assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
+        assertEquals(response.isAssigned(), true);
+        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+        assertEquals(delivery1.get().getDriverId(), driverID);
+
+
     }
 }

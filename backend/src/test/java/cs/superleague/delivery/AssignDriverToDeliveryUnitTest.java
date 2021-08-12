@@ -152,7 +152,7 @@ public class AssignDriverToDeliveryUnitTest {
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(driverID, deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
-        assertEquals("Delivery does not exist in database.", thrown1.getMessage());
+        assertEquals("Delivery does not exist in the database.", thrown1.getMessage());
     }
 
     @Test
