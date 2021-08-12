@@ -412,6 +412,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_AccountVerifyResponse"
 
+  /user/setCurrentLocation:
+    post:
+      summary: Endpoint for setting Current Location Driver
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: setCurrentLocation
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_SetCurrentLocationRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_SetCurrentLocationResponse"
+
 
 components:
 
@@ -1022,4 +1044,28 @@ components:
         date:
           type: string
         userType:
+          type: string
+
+    user_SetCurrentLocationRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        driverID:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
+    user_SetCurrentLocationResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
           type: string

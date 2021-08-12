@@ -5,11 +5,11 @@ import java.util.List;
 public class SetCurrentLocationRequest {
 
     private final String driverID;
-    private final double longitude;
-    private final double latitude;
+    private final Double longitude;
+    private final Double latitude;
     private final String address;
 
-    public SetCurrentLocationRequest(String driverID, double longitude, double latitude, String address) {
+    public SetCurrentLocationRequest(String driverID, Double longitude, Double latitude, String address) {
         this.driverID = driverID;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -28,7 +28,7 @@ public class SetCurrentLocationRequest {
         return longitude;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 }
