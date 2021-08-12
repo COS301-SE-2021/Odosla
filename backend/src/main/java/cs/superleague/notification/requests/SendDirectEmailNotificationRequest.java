@@ -8,15 +8,20 @@ public class SendDirectEmailNotificationRequest {
     private final String email;
     public SendDirectEmailNotificationRequest(String message, Map<String, String> properties) {
         this.message = message;
-        if(properties.get("Subject") == null){
+        if (properties == null){
             this.subject = null;
-        }else{
-            this.subject = properties.get("Subject");
-        }
-        if (properties.get("Email") == null){
             this.email = null;
         }else{
-            this.email = properties.get("Email");
+            if(properties.get("Subject") == null){
+                this.subject = null;
+            }else{
+                this.subject = properties.get("Subject");
+            }
+            if (properties.get("Email") == null){
+                this.email = null;
+            }else{
+                this.email = properties.get("Email");
+            }
         }
     }
 
