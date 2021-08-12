@@ -10,6 +10,7 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.GetOrderRequest;
 import cs.superleague.payment.requests.GetStatusRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.payment.responses.GetStatusResponse;
 import cs.superleague.shopping.dataclass.Item;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -20,8 +21,7 @@ import org.springframework.context.annotation.Description;
 
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 public class GetStatusUnitTest {
@@ -106,12 +106,39 @@ public class GetStatusUnitTest {
     @Description("Tests for when order requested is found - should return the object")
     @DisplayName("when the order is found the DB")
     void UnitTest_testingOrderExists() throws InvalidRequestException, OrderDoesNotExist{
+        GetStatusRequest request = new GetStatusRequest(o1UUID);
         when(orderRepo.findAll()).thenReturn(listOfOrders);
         when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
-        GetOrderRequest request = new GetOrderRequest(o1UUID);
-        GetOrderResponse response = paymentService.getOrder(request);
-        assertEquals("Order retrieval successful.",response.getMessage());
-        assertTrue(response.isSuccess());
-        assertEquals(o1UUID, response.getOrder().getOrderID());
+
+        try {
+            GetStatusResponse response = paymentService.getStatus(request);
+
+            assertTrue(response.isSuccess());
+            assertEquals("Status retrieval successful.", response.getMessage());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @Description("Tests for when order requested is found - should return the object")
+    @DisplayName("when the order is found the DB")
+    void UnitTest_testingOrderExistsInvalidUserType() throws InvalidRequestException, OrderDoesNotExist{
+
+        o.setStatus(null);
+
+        GetStatusRequest request = new GetStatusRequest(o1UUID);
+        when(orderRepo.findAll()).thenReturn(listOfOrders);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
+
+        try {
+            GetStatusResponse response = paymentService.getStatus(request);
+            assertFalse(response.isSuccess());
+            assertEquals("Order does not have a valid Status", response.getMessage());
+        }catch(Exception e){
+            e.printStackTrace();
+            fail();
+        }
     }
 }

@@ -438,7 +438,7 @@ import java.util.List;50"
             throw new OrderDoesNotExist("Order doesn't exist in database - could not get status.");
         }
 
-        if(order.getStatus() == null){
+        if(!(order.getStatus() instanceof OrderStatus)){
             message = "Order does not have a valid Status";
             return new GetStatusResponse(null, false, new Date(), message);
         }
