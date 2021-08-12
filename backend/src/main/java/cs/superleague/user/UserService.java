@@ -24,6 +24,8 @@ public interface UserService {
     ResetPasswordResponse resetPassword(ResetPasswordRequest request) throws UserException;
     FinalisePasswordResetResponse finalisePasswordReset(FinalisePasswordResetRequest request) throws UserException;
     ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException;
+    SetCurrentLocationResponse setCurrentLocation(SetCurrentLocationRequest request) throws UserException;
+
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;

@@ -5,6 +5,7 @@ import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notification.dataclass.Notification;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
+import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -2434,6 +2435,58 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException {
         return null;
+    }
+
+    @Override
+    public SetCurrentLocationResponse setCurrentLocation(SetCurrentLocationRequest request) throws UserException{
+
+        UUID driverID;
+        Driver driver;
+        Optional<Driver> driverOptional;
+        String address;
+        GeoPoint geoPoint;
+        double latitude, longitude;
+
+        if(request == null){
+            throw new InvalidRequestException("SetCurrentLocationRequest is null - could not set current location");
+        }
+
+        if(request.getAddress() == null){
+            throw new InvalidRequestException("Address attribute is null - could not set current location");
+        }
+
+        if(request.getLatitude() == 0){
+            throw new InvalidRequestException("Latitude attribute is null - could not set current location");
+        }
+
+        if(request.getLongitude() == 0){
+            throw new InvalidRequestException("Longitude attribute is null - could not set current location");
+        }
+
+        if(request.getDriverID() == null){
+            throw new InvalidRequestException("DriverID attribute is null - could not set current location");
+        }
+
+        driverID = UUID.fromString(request.getDriverID());
+        driverOptional = driverRepo.findById(driverID);
+
+        if(driverOptional == null || !driverOptional.isPresent()){
+            throw new DriverDoesNotExistException("Driver with driverID does not exist in database");
+        }
+
+        if(request.getAddress().equals("")){
+            return new SetCurrentLocationResponse("address cannot be empty", false, new Date());
+        }
+
+        driver = driverOptional.get();
+
+        geoPoint = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
+
+        driver.setCurrentAddress(geoPoint);
+
+        driverRepo.save(driver);
+
+        return new SetCurrentLocationResponse("driver location successfully updated", true, new Date());
     }
 
     private boolean emailRegex(String email){
