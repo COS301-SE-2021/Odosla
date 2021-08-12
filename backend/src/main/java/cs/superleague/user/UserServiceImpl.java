@@ -1,6 +1,10 @@
 package cs.superleague.user;
 
+import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.notification.dataclass.Notification;
+import cs.superleague.notification.requests.SendEmailNotificationRequest;
+import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -270,8 +274,11 @@ public class UserServiceImpl implements UserService{
                 return new RegisterCustomerResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            Customer customer;
-            customer=customerRepo.findCustomerByEmail(request.getEmail());
+            Customer customer=null;
+            try {
+                customer=customerRepo.findByEmail(request.getEmail()).orElse(null);
+            }catch (Exception e){}
+
 
             if(customer!=null){
                 return new RegisterCustomerResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
@@ -594,8 +601,11 @@ public class UserServiceImpl implements UserService{
                 return new RegisterShopperResponse(false, Calendar.getInstance().getTime(), errorMessage);
             }
 
-            Shopper shopper;
-            shopper=shopperRepo.findShopperByEmail(request.getEmail());
+            Shopper shopper=null;
+            try {
+                shopper=shopperRepo.findByEmail(request.getEmail()).orElse(null);
+            }catch (Exception e){}
+
             if(shopper!=null){
                 return new RegisterShopperResponse(false,Calendar.getInstance().getTime(), "Email has already been used");
             }
@@ -906,6 +916,8 @@ public class UserServiceImpl implements UserService{
                 }
                 else if(!passwordEncoder.matches(request.getPassword(),driverToLogin.getPassword())){
                     throw new InvalidCredentialsException("Password is incorrect");
+                } else if(driverToLogin.getActivationDate()==null || driverToLogin.getActivationDate().after(Calendar.getInstance().getTime())){
+                    return new LoginResponse(null,false,Calendar.getInstance().getTime(),"Please verify account before logging in");
                 }
                 userID=driverToLogin.getDriverID();
                 driverUser=driverToLogin;
@@ -913,12 +925,14 @@ public class UserServiceImpl implements UserService{
 
             case SHOPPER:
                 assert shopperRepo!=null;
-                Shopper shopperToLogin=shopperRepo.findShopperByEmail(request.getEmail());
+                Shopper shopperToLogin=shopperRepo.findByEmail(request.getEmail()).orElse(null);
                 if(shopperToLogin==null){
                     throw new ShopperDoesNotExistException("Shopper does not exist");
                 }
                 else if(!passwordEncoder.matches(request.getPassword(),shopperToLogin.getPassword())){
                     throw new InvalidCredentialsException("Password is incorrect");
+                } else if(shopperToLogin.getActivationDate()==null || shopperToLogin.getActivationDate().after(Calendar.getInstance().getTime())){
+                    return new LoginResponse(null,false,Calendar.getInstance().getTime(),"Please verify account before logging in");
                 }
                 userID=shopperToLogin.getShopperID();
                 shopperUser=shopperToLogin;
@@ -939,12 +953,14 @@ public class UserServiceImpl implements UserService{
 
             case CUSTOMER:
                 assert customerRepo!=null;
-                Customer customerToLogin=customerRepo.findCustomerByEmail(request.getEmail());
+                Customer customerToLogin=customerRepo.findByEmail(request.getEmail()).orElse(null);
                 if(customerToLogin==null){
                     throw new CustomerDoesNotExistException("Customer does not exist");
                 }
                 else if(!passwordEncoder.matches(request.getPassword(),customerToLogin.getPassword())){
                     throw new InvalidCredentialsException("Password is incorrect");
+                } else if(customerToLogin.getActivationDate()==null || customerToLogin.getActivationDate().after(Calendar.getInstance().getTime())){
+                    return new LoginResponse(null,false,Calendar.getInstance().getTime(),"Please verify account before logging in");
                 }
                 userID=customerToLogin.getCustomerID();
                 customerUser=customerToLogin;
@@ -998,15 +1014,15 @@ public class UserServiceImpl implements UserService{
 
             if(request.getEmail()==null){
                 isException=true;
-                errorMessage="Email can't be null in AccountVerfiyRequest";
+                errorMessage="Email can't be null in AccountVerifyRequest";
             }
             else if(request.getActivationCode()==null){
                 isException=true;
-                errorMessage="ActivationCode can't be null in AccountVerfiyRequest";
+                errorMessage="ActivationCode can't be null in AccountVerifyRequest";
             }
             else if (request.getUserType()==null){
                 isException=true;
-                errorMessage="UserType can't be null in AccountVerfiyRequest";
+                errorMessage="UserType can't be null in AccountVerifyRequest";
             }
 
             if(isException){
@@ -1018,7 +1034,13 @@ public class UserServiceImpl implements UserService{
 
                 case SHOPPER:
                     assert shopperRepo!=null;
-                    Shopper shopperToVerify=shopperRepo.findShopperByEmail(request.getEmail());
+                    Shopper shopperToVerify;
+                    try {
+                        shopperToVerify = shopperRepo.findByEmail(request.getEmail()).orElse(null);
+                    }catch(Exception e){
+                        shopperToVerify=null;
+                    }
+
                     if(shopperToVerify==null){
                         throw new ShopperDoesNotExistException("Shopper Does Not Exist in database");
                     }
@@ -1027,15 +1049,20 @@ public class UserServiceImpl implements UserService{
                         if(shopperToVerify.getActivationCode().equals(request.getActivationCode())){
                             shopperToVerify.setActivationDate(Calendar.getInstance().getTime());
                             shopperRepo.save(shopperToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account" );
+                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account", UserType.SHOPPER);
                         }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect");
+                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect", UserType.SHOPPER);
                     }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Shopper with email '"+request.getEmail()+"' has already activated their Shopper account");
+                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Shopper with email '"+request.getEmail()+"' has already activated their Shopper account", UserType.SHOPPER);
 
                 case DRIVER:
                     assert driverRepo!=null;
-                    Driver driverToVerify=driverRepo.findDriverByEmail(request.getEmail());
+                    Driver driverToVerify;
+                    try {
+                        driverToVerify = driverRepo.findDriverByEmail(request.getEmail());
+                    }catch (Exception e) {
+                        driverToVerify=null;
+                    }
                     if(driverToVerify==null){
                         throw new DriverDoesNotExistException("Driver does not exist in database");
                     }
@@ -1044,15 +1071,20 @@ public class UserServiceImpl implements UserService{
                         if(driverToVerify.getActivationCode().equals(request.getActivationCode())){
                             driverToVerify.setActivationDate(Calendar.getInstance().getTime());
                             driverRepo.save(driverToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account");
+                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account", UserType.DRIVER);
                         }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect" );
+                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect", UserType.DRIVER);
                     }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Driver with email '"+request.getEmail()+"'  has already activated their Driver account");
+                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Driver with email '"+request.getEmail()+"' has already activated their Driver account", UserType.DRIVER);
 
                 case CUSTOMER:
                     assert customerRepo!=null;
-                    Customer customerToVerify=customerRepo.findCustomerByEmail(request.getEmail());
+                    Customer customerToVerify;
+                     try {
+                         customerToVerify = customerRepo.findByEmail(request.getEmail()).orElse(null);
+                     }catch (Exception e) {
+                         customerToVerify=null;
+                     }
                     if(customerToVerify==null){
                         throw new CustomerDoesNotExistException("Customer does not exist in database");
                     }
@@ -1061,30 +1093,12 @@ public class UserServiceImpl implements UserService{
                         if(customerToVerify.getActivationCode().equals(request.getActivationCode())){
                             customerToVerify.setActivationDate(Calendar.getInstance().getTime());
                             customerRepo.save(customerToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account");
+                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account", UserType.CUSTOMER);
                         }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect" );
+                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect", UserType.CUSTOMER);
                     }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Customer with email '"+request.getEmail()+"'  has already activated their Customer account");
+                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Customer with email '"+request.getEmail()+"' has already activated their Customer account", UserType.CUSTOMER);
 
-                case ADMIN:
-                    assert adminRepo!=null;
-                    Admin adminToVerify=adminRepo.findAdminByEmail(request.getEmail());
-                    if(adminToVerify==null){
-                        throw new AdminDoesNotExistException("Admin does not exist in database");
-                    }
-
-                    if(adminToVerify.getActivationDate()==null){
-
-                        if(adminToVerify.getActivationCode().equals(request.getActivationCode())){
-                            adminToVerify.setActivationDate(Calendar.getInstance().getTime());
-                            adminRepo.save(adminToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(), "Admin with email '"+request.getEmail()+"' has successfully activated their Admin account");
-                        }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(),"Activation code was incorrect" );
-
-                    }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Admin with email '"+request.getEmail()+"'  has already activated their Admin account");
             }
         }
         else{
@@ -1188,7 +1202,7 @@ public class UserServiceImpl implements UserService{
                 message = "Email is not valid";
                 return new UpdateShopperDetailsResponse(message, false, new Date());
             }else{
-                if(shopperRepo.findShopperByEmail(request.getEmail()) != null){
+                if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
                     return new UpdateShopperDetailsResponse(message, false, new Date());
                 }
@@ -1403,20 +1417,31 @@ public class UserServiceImpl implements UserService{
             User user=null;
             switch(userType){
                 case "CUSTOMER":
-                    assert customerRepo!=null;
-                    user=(Customer)customerRepo.findCustomerByEmail(email);
+                    //assert customerRepo!=null;
+                    try {
+                        user=(Customer)customerRepo.findByEmail(email).orElse(null);
+                    }catch (Exception e){}
                     break;
                 case "SHOPPER":
-                    assert shopperRepo!=null;
-                    user=(Shopper) shopperRepo.findShopperByEmail(email);
+                    //assert shopperRepo!=null;
+                    try {
+                        user=(Shopper) shopperRepo.findByEmail(email).orElse(null);
+                    }catch (Exception e){}
+
                     break;
                 case "ADMIN":
-                    assert adminRepo!=null;
-                    user=(Admin) adminRepo.findAdminByEmail(email);
+                    //assert adminRepo!=null;
+                    try {
+                        user=(Admin) adminRepo.findAdminByEmail(email);
+                    }catch (Exception e){}
+
                     break;
                 case "DRIVER":
-                    assert driverRepo!=null;
-                    user=(Driver) driverRepo.findDriverByEmail(email);
+                    //assert driverRepo!=null;
+                    try {
+                        user=(Driver) driverRepo.findDriverByEmail(email);
+                    }catch (Exception e){}
+
             }
             if(user!=null){
                 response=new GetCurrentUserResponse(user,true,Calendar.getInstance().getTime(),"User successfully returned");
@@ -1518,6 +1543,7 @@ public class UserServiceImpl implements UserService{
         }
 
         for (Store store: response.getStores()) {
+            if(store.getStock()!=null)
             items.addAll(store.getStock().getItems());
         }
 
@@ -1686,7 +1712,7 @@ public class UserServiceImpl implements UserService{
                 message = "Email is not valid";
                 return new UpdateCustomerDetailsResponse(message, false, new Date());
             }else{
-                if(customerRepo.findCustomerByEmail(request.getEmail()) != null){
+                if(customerRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
                     return new UpdateCustomerDetailsResponse(message, false, new Date());
                 }
@@ -1802,6 +1828,7 @@ public class UserServiceImpl implements UserService{
         }
 
         for (Store store: response.getStores()) {
+            if(store.getStock().getItems()!=null)
             items.addAll(store.getStock().getItems());
         }
 
@@ -2101,12 +2128,25 @@ public class UserServiceImpl implements UserService{
 
         resetCode = sb.toString();
 
-        if(userType == "CUSTOMER"){
-            Customer customer = customerRepo.findCustomerByEmail(email);
+        Map<String, String> properties = new HashMap<>();
+        properties.put("Type","RESETPASSWORD");
+        properties.put("Subject","Odosla");
+        properties.put("UserType", userType);
+
+        Customer customer = null;
+
+        if(userType.equals("CUSTOMER")){
+
+            try {
+                customer = customerRepo.findByEmail(email).orElse(null);
+            }catch (Exception e){}
+
 
             if(customer == null){
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
+
+            properties.put("UserID", customer.getCustomerID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2119,15 +2159,27 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
-        }else if(userType == "SHOPPER"){
-            Shopper shopper = shopperRepo.findShopperByEmail(email);
+        }
+        else if(userType.equals("SHOPPER")){
+            Shopper shopper = null;
+            try {
+                shopper= shopperRepo.findByEmail(email).orElse(null);
+            }
+            catch (Exception e){}
 
             if(shopper == null){
                 return new ResetPasswordResponse(null, "Could not find shopper with email - Could not reset", false);
             }
+
+            properties.put("UserID", shopper.getShopperID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2140,14 +2192,22 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-        }else if(userType == "DRIVER"){
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        else if(userType.equals("DRIVER")){
             Driver driver = driverRepo.findDriverByEmail(email);
 
             if(driver == null){
                 return new ResetPasswordResponse(null, "Could not find driver with email - Could not reset", false);
             }
+
+            properties.put("UserID", driver.getDriverID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2160,14 +2220,21 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-        }else if(userType == "ADMIN"){
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else if(userType.equals("ADMIN")){
             Admin admin = adminRepo.findAdminByEmail(email);
 
             if(admin == null){
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
+
+            properties.put("UserID", admin.getAdminID().toString());
 
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
@@ -2180,8 +2247,13 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-//            Notification emailNotification = ServiceSelector.
-            return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            try {
+                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
+                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
+                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         return new ResetPasswordResponse(resetCode, "Account type given does not exist - Could not reset password", false);
@@ -2229,7 +2301,11 @@ public class UserServiceImpl implements UserService{
         }
 
         if(userType.equals("CUSTOMER")){
-            Customer customer = customerRepo.findCustomerByEmail(email);
+
+            Customer customer = null;
+            try {
+                customer = customerRepo.findByEmail(email).orElse(null);
+            }catch (Exception e){}
 
             if(customer == null){
                 return new FinalisePasswordResetResponse("Could not find customer with email - Could not finalise password reset", false, new Date());
@@ -2259,7 +2335,12 @@ public class UserServiceImpl implements UserService{
 //            Notification emailNotification = ServiceSelector.
             return new FinalisePasswordResetResponse("Password reset successful", true, new Date());
         }else if(userType.equals("SHOPPER")){
-            Shopper shopper = shopperRepo.findShopperByEmail(email);
+
+            Shopper shopper = null;
+
+            try {
+                shopper = shopperRepo.findByEmail(email).orElse(null);
+            }catch (Exception e){}
 
             if(shopper == null){
                 return new FinalisePasswordResetResponse("Could not find shopper with email - Could not final password reset", false, new Date());
@@ -2348,6 +2429,11 @@ public class UserServiceImpl implements UserService{
         }
 
         return new FinalisePasswordResetResponse("Invalid account type - could not finalise password reset", false, new Date());
+    }
+
+    @Override
+    public ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException {
+        return null;
     }
 
     private boolean emailRegex(String email){

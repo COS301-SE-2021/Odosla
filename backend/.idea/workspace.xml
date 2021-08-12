@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="fixed the errors regarding security in spring and postman. Added a SpringSecurityConfig file to disable the csrf.">
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="removed h2 database dependency">
+      <change afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/SpringJdbcPostgreSqlApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__cs_superleague_api_0_0_1_SNAPSHOT.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__cs_superleague_backend_0_0_1_SNAPSHOT.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_0_9_1.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_swagger_swagger_annotations_1_5_21.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__io_swagger_swagger_models_1_6_0.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__javax_annotation_javax_annotation_api_1_3_2.xml" beforeDir="false" />
@@ -19,15 +21,14 @@
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_config_5_4_5.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_core_5_4_5.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_security_spring_security_web_5_4_5.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/odosla-api.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/cs/superleague/user/LoginUserUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/user/LoginUserUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/.env" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/.env" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +106,7 @@
       <recent name="cs.superleague.shopping" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application">
+  <component name="RunManager" selected="Application.SpringJdbcPostgreSqlApplication">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -132,17 +133,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CompletePackingOrderIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="SpringJdbcPostgreSqlApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.SpringJdbcPostgreSqlApplication" />
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="cs.superleague.user.integration.*" />
+          <option name="PATTERN" value="cs.superleague.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.user.integration" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.user.integration.CompletePackingOrderIntegrationTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -216,18 +215,18 @@
     <list>
       <item itemvalue="Application.Application" />
       <item itemvalue="JUnit.allTests" />
-      <item itemvalue="JUnit.CompletePackingOrderIntegrationTest" />
       <item itemvalue="JUnit.CompletePackingOrderIntegrationTest.IntegrationTest_testingInvalidShopper" />
       <item itemvalue="JUnit.GetShopperByUUIDUnitTest" />
       <item itemvalue="JUnit.GetShopperByUUIDIntegrationTest" />
+      <item itemvalue="Application.SpringJdbcPostgreSqlApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.SpringJdbcPostgreSqlApplication" />
         <item itemvalue="Application.Application" />
         <item itemvalue="JUnit.GetShopperByUUIDIntegrationTest" />
         <item itemvalue="JUnit.GetShopperByUUIDUnitTest" />
         <item itemvalue="JUnit.CompletePackingOrderIntegrationTest.IntegrationTest_testingInvalidShopper" />
-        <item itemvalue="JUnit.CompletePackingOrderIntegrationTest" />
       </list>
     </recent_temporary>
   </component>
@@ -493,7 +492,21 @@
       <option name="project" value="LOCAL" />
       <updated>1628525347355</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="added necessary maven dependencies for postgre db">
+      <created>1628629687628</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1628629687628</updated>
+    </task>
+    <task id="LOCAL-00038" summary="removed h2 database dependency">
+      <created>1628630172709</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1628630172709</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -512,8 +525,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="GetStoreByUUIDUnitTest" />
-    <MESSAGE value="implemented unit testing" />
     <MESSAGE value="added userException catch method" />
     <MESSAGE value="added functions to UserServiceImpl" />
     <MESSAGE value="general changes" />
@@ -537,7 +548,9 @@
     <MESSAGE value="changed the getStoresResponse to show the correct properties returned" />
     <MESSAGE value="added a security configuration to bypass spring security for API calls" />
     <MESSAGE value="fixed the errors regarding security in spring and postman. Added a SpringSecurityConfig file to disable the csrf." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed the errors regarding security in spring and postman. Added a SpringSecurityConfig file to disable the csrf." />
+    <MESSAGE value="added necessary maven dependencies for postgre db" />
+    <MESSAGE value="removed h2 database dependency" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed h2 database dependency" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
