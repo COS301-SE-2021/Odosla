@@ -17,9 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -208,6 +210,7 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         customerToLogin.setPassword(passwordHashed);
+        customerToLogin.setActivationDate(Calendar.getInstance().getTime());
         //Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(customerToLogin);
         when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customerToLogin));
         LoginResponse response=userService.loginUser(loginRequest1);
@@ -243,6 +246,7 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         shopperToLogin.setPassword(passwordHashed);
+        shopperToLogin.setActivationDate(Calendar.getInstance().getTime());
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopperToLogin));
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
@@ -261,6 +265,7 @@ public class LoginUserUnitTest {
         loginRequest1.setEmail("hi@gmail");
         loginRequest1.setPassword("pass");
         driverToLogin.setPassword(passwordHashed);
+        driverToLogin.setActivationDate(Calendar.getInstance().getTime());
         Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driverToLogin);
         LoginResponse response=userService.loginUser(loginRequest1);
         assertNotNull(response.getToken());
@@ -271,6 +276,62 @@ public class LoginUserUnitTest {
 
     }
 
+
+    @Test
+    @Description("Test for shopper, if shopper exists but Not Verified")
+    @DisplayName("Shopper Not verified")
+    void UnitTest_ShopperNotVerified() throws UserException {
+        loginRequest1.setUserType(UserType.SHOPPER);
+        loginRequest1.setEmail("hi@gmail");
+        loginRequest1.setPassword("pass");
+        shopperToLogin.setPassword(passwordHashed);
+        shopperToLogin.setActivationDate(null);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopperToLogin));
+        LoginResponse response=userService.loginUser(loginRequest1);
+        assertNull(response.getToken());
+        assertEquals(false, response.isSuccess());
+        assertNotNull(response.getTimestamp());
+        assertEquals("Please verify account before logging in",response.getMessage());
+
+
+    }
+
+    @Test
+    @Description("Test for driver, if driver credentials are right but not verified")
+    @DisplayName("Driver not verified")
+    void UnitTest_DriverNotVerified() throws UserException {
+        loginRequest1.setUserType(UserType.DRIVER);
+        loginRequest1.setEmail("hi@gmail");
+        loginRequest1.setPassword("pass");
+        driverToLogin.setPassword(passwordHashed);
+        driverToLogin.setActivationDate(null);
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driverToLogin);
+        LoginResponse response=userService.loginUser(loginRequest1);
+        assertNull(response.getToken());
+        assertEquals(false, response.isSuccess());
+        assertNotNull(response.getTimestamp());
+        assertEquals("Please verify account before logging in",response.getMessage());
+
+
+    }
+
+    @Test
+    @Description("Test for customer, if customer exists but not verified")
+    @DisplayName("Customer not verified")
+    void UnitTest_CustomerNotVerified() throws UserException {
+        loginRequest1.setUserType(UserType.CUSTOMER);
+        loginRequest1.setEmail("hi@gmail");
+        loginRequest1.setPassword("pass");
+        customerToLogin.setPassword(passwordHashed);
+        customerToLogin.setActivationDate(null);
+        //Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(customerToLogin);
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customerToLogin));
+        LoginResponse response=userService.loginUser(loginRequest1);
+        assertNull(response.getToken());
+        assertEquals(false, response.isSuccess());
+        assertNotNull(response.getTimestamp());
+        assertEquals("Please verify account before logging in",response.getMessage());
+    }
 
 
 

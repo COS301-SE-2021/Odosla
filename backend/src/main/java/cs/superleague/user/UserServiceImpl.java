@@ -912,6 +912,8 @@ public class UserServiceImpl implements UserService{
                 }
                 else if(!passwordEncoder.matches(request.getPassword(),driverToLogin.getPassword())){
                     throw new InvalidCredentialsException("Password is incorrect");
+                } else if(driverToLogin.getActivationDate()==null || driverToLogin.getActivationDate().after(Calendar.getInstance().getTime())){
+                    return new LoginResponse(null,false,Calendar.getInstance().getTime(),"Please verify account before logging in");
                 }
                 userID=driverToLogin.getDriverID();
                 driverUser=driverToLogin;
@@ -925,6 +927,8 @@ public class UserServiceImpl implements UserService{
                 }
                 else if(!passwordEncoder.matches(request.getPassword(),shopperToLogin.getPassword())){
                     throw new InvalidCredentialsException("Password is incorrect");
+                } else if(shopperToLogin.getActivationDate()==null || shopperToLogin.getActivationDate().after(Calendar.getInstance().getTime())){
+                    return new LoginResponse(null,false,Calendar.getInstance().getTime(),"Please verify account before logging in");
                 }
                 userID=shopperToLogin.getShopperID();
                 shopperUser=shopperToLogin;
@@ -951,6 +955,8 @@ public class UserServiceImpl implements UserService{
                 }
                 else if(!passwordEncoder.matches(request.getPassword(),customerToLogin.getPassword())){
                     throw new InvalidCredentialsException("Password is incorrect");
+                } else if(customerToLogin.getActivationDate()==null || customerToLogin.getActivationDate().after(Calendar.getInstance().getTime())){
+                    return new LoginResponse(null,false,Calendar.getInstance().getTime(),"Please verify account before logging in");
                 }
                 userID=customerToLogin.getCustomerID();
                 customerUser=customerToLogin;
