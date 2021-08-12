@@ -2443,28 +2443,26 @@ public class UserServiceImpl implements UserService{
         UUID driverID;
         Driver driver;
         Optional<Driver> driverOptional;
-        String address;
         GeoPoint geoPoint;
-        double latitude, longitude;
 
         if(request == null){
             throw new InvalidRequestException("SetCurrentLocationRequest is null - could not set current location");
         }
 
-        if(request.getAddress() == null){
-            throw new InvalidRequestException("Address attribute is null - could not set current location");
-        }
-
-        if(request.getLatitude() == 0){
-            throw new InvalidRequestException("Latitude attribute is null - could not set current location");
+        if(request.getDriverID() == null){
+            throw new InvalidRequestException("DriverID attribute is null - could not set current location");
         }
 
         if(request.getLongitude() == 0){
             throw new InvalidRequestException("Longitude attribute is null - could not set current location");
         }
 
-        if(request.getDriverID() == null){
-            throw new InvalidRequestException("DriverID attribute is null - could not set current location");
+        if(request.getLatitude() == 0){
+            throw new InvalidRequestException("Latitude attribute is null - could not set current location");
+        }
+
+        if(request.getAddress() == null){
+            throw new InvalidRequestException("Address attribute is null - could not set current location");
         }
 
         driverID = UUID.fromString(request.getDriverID());
