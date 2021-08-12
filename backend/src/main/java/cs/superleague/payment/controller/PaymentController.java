@@ -217,7 +217,7 @@ public class PaymentController implements PaymentApi {
         }
 
         try{
-            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(UUID.fromString(body.getUserId()), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType);
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(UUID.fromString(body.getUserId()), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());

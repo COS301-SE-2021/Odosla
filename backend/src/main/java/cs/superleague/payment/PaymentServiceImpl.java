@@ -134,6 +134,24 @@ public class PaymentServiceImpl implements PaymentService {
                 invalidReq = true;
                 invalidMessage = ("Order type cannot be null in request object - order unsuccessfully created.");
             }
+            else if(request.getLongitude()==null)
+            {
+                invalidReq = true;
+                invalidMessage = ("Longitude cannot be null in request object - order unsuccessfully created.");
+
+            }
+            else if(request.getLatitude()==null)
+            {
+                invalidReq = true;
+                invalidMessage = ("Latitude cannot be null in request object - order unsuccessfully created.");
+
+            }
+            else if(request.getAddress()==null)
+            {
+                invalidReq = true;
+                invalidMessage = ("Address cannot be null in request object - order unsuccessfully created.");
+
+            }
             else
             {
                 GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(request.getStoreID());
@@ -180,8 +198,10 @@ public class PaymentServiceImpl implements PaymentService {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             double totalC=bd.doubleValue();
 
+            GeoPoint customerLocation= new GeoPoint(request.getLatitude(),request.getLongitude(), request.getAddress());
+
             assert shop != null;
-            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), shop.getStore().getStoreLocation(), requiresPharmacy);
+            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
 
             Order alreadyExists=null;
             while (true) {
