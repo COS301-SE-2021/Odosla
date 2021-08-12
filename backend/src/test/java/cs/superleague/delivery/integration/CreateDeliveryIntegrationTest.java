@@ -50,7 +50,6 @@ public class CreateDeliveryIntegrationTest {
     UUID deliveryID;
     UUID orderID;
     Calendar time;
-    Delivery delivery;
     GeoPoint invalidDropOffLocation;
     GeoPoint pickUpLocation;
     GeoPoint dropOffLocation;
