@@ -186,10 +186,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         //getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
         Store store= getStoreByUUIDResponse.getStore();
-        List<Order> currentOrders = store.getCurrentOrders();
-        currentOrders.add(updatedOrder);
+        List<Order> orderQueue=null;
+        if(store.getOrderQueue()!=null)
+        {
+            orderQueue = store.getCurrentOrders();
+            orderQueue.add(updatedOrder);
+        }
+        else
+        {
+            orderQueue = new ArrayList<>();
+            orderQueue.add(updatedOrder);
+        }
 
-        store.setCurrentOrders(currentOrders);
+
+        store.setOrderQueue(orderQueue);
         if(storeRepo!=null)
         storeRepo.save(store);
 

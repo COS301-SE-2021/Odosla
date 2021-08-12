@@ -180,6 +180,7 @@ public class PaymentServiceImpl implements PaymentService {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             double totalC=bd.doubleValue();
 
+            assert shop != null;
             Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), shop.getStore().getStoreLocation(), requiresPharmacy);
 
             Order alreadyExists=null;

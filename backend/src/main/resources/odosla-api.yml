@@ -719,8 +719,8 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        order:
-          type: object
+        orderStatus:
+          type: string
         message:
           type: string
           description: Will contain a descriptive error message if response code is not 200, else will be empty
