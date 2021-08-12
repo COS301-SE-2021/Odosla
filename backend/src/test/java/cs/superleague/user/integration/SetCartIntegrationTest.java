@@ -116,10 +116,6 @@ public class SetCartIntegrationTest {
 
     @AfterEach
     void tearDown(){
-        customerRepo.deleteAll();
-        groceryListRepo.deleteAll();
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
     }
 
 
