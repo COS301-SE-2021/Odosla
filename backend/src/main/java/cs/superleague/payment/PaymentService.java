@@ -21,6 +21,9 @@ public interface PaymentService {
     GetOrderResponse getOrder(GetOrderRequest req) throws PaymentException;
 
     SetStatusResponse setStatus(SetStatusRequest request) throws PaymentException;
+
+    GetStatusResponse getStatus(GetStatusRequest request) throws PaymentException;
+
     // TRANSACTION
 
     CreateTransactionResponse createTransaction(CreateTransactionRequest request);

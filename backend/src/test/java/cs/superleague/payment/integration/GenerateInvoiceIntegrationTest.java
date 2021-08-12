@@ -16,6 +16,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @DirtiesContext
+@Transactional
 public class GenerateInvoiceIntegrationTest {
 
     @Autowired

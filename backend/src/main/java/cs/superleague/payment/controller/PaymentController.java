@@ -2,16 +2,16 @@ package cs.superleague.payment.controller;
 
 import cs.superleague.api.PaymentApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.ItemObject;
-import cs.superleague.models.PaymentUpdateOrderRequest;
-import cs.superleague.models.PaymentUpdateOrderResponse;
+import cs.superleague.models.*;
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.requests.GetStatusRequest;
 import cs.superleague.payment.requests.UpdateOrderRequest;
+import cs.superleague.payment.responses.GetStatusResponse;
 import cs.superleague.payment.responses.UpdateOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.repos.ItemRepo;
@@ -154,6 +154,30 @@ public class PaymentController implements PaymentApi {
 
         orderRepo.deleteAll();
         itemRepo.deleteAll();
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetStatusResponse> getStatus(PaymentGetStatusRequest body) {
+
+        PaymentGetStatusResponse response = new PaymentGetStatusResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try{
+            GetStatusRequest getStatusRequest = new GetStatusRequest(UUID.fromString(body.getOrderID()));
+            GetStatusResponse getStatusResponse = ServiceSelector.getPaymentService().getStatus(getStatusRequest);
+            try {
+                response.setMessage(getStatusResponse.getMessage());
+                response.setStatus(getStatusResponse.getStatus());
+                response.setSuccess(getStatusResponse.isSuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return new ResponseEntity<>(response, httpStatus);
     }
