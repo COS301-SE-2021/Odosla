@@ -19,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -141,7 +142,7 @@ public class FinalisePasswordResetUnitTest {
     void UnitTest_testingEmailParameterNotFound(){
 
         request = new FinalisePasswordResetRequest("null@nully.com", "CUSTOMER", "null", "nulL^666");
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(null);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
 
 
         try{
@@ -164,7 +165,7 @@ public class FinalisePasswordResetUnitTest {
 
         customer.setResetExpiration(expiration.toString());
         request = new FinalisePasswordResetRequest("levy@smallFC.com", "CUSTOMER", "null", "nulL^666");
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customer);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
 
         try{
@@ -181,7 +182,7 @@ public class FinalisePasswordResetUnitTest {
     @DisplayName("When the reset codes don't match")
     void UnitTest_testingWhenResetCodesDontMatch(){
         request = new FinalisePasswordResetRequest("levy@smallFC.com", "CUSTOMER", "null", "nulL^666");
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customer);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             response = userService.finalisePasswordReset(request);
@@ -197,7 +198,7 @@ public class FinalisePasswordResetUnitTest {
     @DisplayName("When the reset codes match")
     void UnitTest_testingWhenResetCodesMatch(){
         request = new FinalisePasswordResetRequest("levy@smallFC.com", "CUSTOMER", "GcnDne4rFH", "nulL^666");
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customer);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             response = userService.finalisePasswordReset(request);
