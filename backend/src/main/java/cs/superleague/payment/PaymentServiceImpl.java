@@ -14,6 +14,14 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.requests.AddToQueueRequest;
+import cs.superleague.shopping.requests.GetQueueRequest;
+import cs.superleague.shopping.requests.GetShoppersRequest;
+import cs.superleague.shopping.responses.AddToQueueResponse;
+import cs.superleague.shopping.responses.GetQueueResponse;
+import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.dataclass.Shopper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -157,7 +165,6 @@ public class PaymentServiceImpl implements PaymentService {
             //meant to use assign order request in shop - Mock Data
             UUID shopperID = null;
 
-
             //Mock Data - still have to find out how this is going to work
             Boolean requiresPharmacy = false;
 
@@ -188,7 +195,12 @@ public class PaymentServiceImpl implements PaymentService {
                 GetStoreByUUIDResponse shop=shoppingService.getStoreByUUID(getShopRequest);
                 if (shop != null) {
                     if(shop.getStore().getOpen()==true) {
+                        if(orderRepo!=null)
                         orderRepo.save(o);
+
+                        AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
+                        shoppingService.addToQueue(addToQueueRequest);
+
                         System.out.println("Order has been created");
                         response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
                     }

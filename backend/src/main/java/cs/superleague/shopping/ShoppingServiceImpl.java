@@ -183,7 +183,13 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException(e.getMessage());
         }
 
-        getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
+        //getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
+        Store store= getStoreByUUIDResponse.getStore();
+        List<Order> currentOrders = store.getCurrentOrders();
+        currentOrders.add(updatedOrder);
+
+        store.setCurrentOrders(currentOrders);
+        storeRepo.save(store);
 
         response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
 
