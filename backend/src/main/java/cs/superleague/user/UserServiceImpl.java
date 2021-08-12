@@ -2155,8 +2155,6 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-
-
             try {
                 SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
                 SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);

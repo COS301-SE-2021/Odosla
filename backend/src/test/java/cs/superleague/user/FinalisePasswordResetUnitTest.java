@@ -7,10 +7,7 @@ import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.FinalisePasswordResetRequest;
-import cs.superleague.user.requests.FinalizePasswordResetRequest;
-import cs.superleague.user.requests.ResetPasswordRequest;
 import cs.superleague.user.responses.FinalisePasswordResetResponse;
-import cs.superleague.user.responses.ResetPasswordResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,12 +17,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -142,7 +139,7 @@ public class FinalisePasswordResetUnitTest {
     void UnitTest_testingEmailParameterNotFound(){
 
         request = new FinalisePasswordResetRequest("null@nully.com", "CUSTOMER", "null", "nulL^666");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
+//        when(customerRepo.findById(Mockito.any())).thenReturn(null);
 
 
         try{
@@ -165,7 +162,7 @@ public class FinalisePasswordResetUnitTest {
 
         customer.setResetExpiration(expiration.toString());
         request = new FinalisePasswordResetRequest("levy@smallFC.com", "CUSTOMER", "null", "nulL^666");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
 
         try{
@@ -182,7 +179,7 @@ public class FinalisePasswordResetUnitTest {
     @DisplayName("When the reset codes don't match")
     void UnitTest_testingWhenResetCodesDontMatch(){
         request = new FinalisePasswordResetRequest("levy@smallFC.com", "CUSTOMER", "null", "nulL^666");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             response = userService.finalisePasswordReset(request);
@@ -198,7 +195,7 @@ public class FinalisePasswordResetUnitTest {
     @DisplayName("When the reset codes match")
     void UnitTest_testingWhenResetCodesMatch(){
         request = new FinalisePasswordResetRequest("levy@smallFC.com", "CUSTOMER", "GcnDne4rFH", "nulL^666");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             response = userService.finalisePasswordReset(request);

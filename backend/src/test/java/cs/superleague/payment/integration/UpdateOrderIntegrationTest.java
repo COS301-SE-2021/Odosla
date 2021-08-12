@@ -230,7 +230,9 @@ public class UpdateOrderIntegrationTest {
         UpdateOrderResponse response = paymentService.updateOrder(updateOrderRequestValidOrderId);
         assertEquals(expectedMessage_AWAITING_PAYMENT,response.getMessage());
         assertTrue(response.isSuccess());
-        assertEquals(expectedDeliveryAddress, response.getOrder().getDeliveryAddress());
+        assertEquals(expectedDeliveryAddress.getAddress(), response.getOrder().getDeliveryAddress().getAddress());
+        assertEquals(expectedDeliveryAddress.getLatitude(), response.getOrder().getDeliveryAddress().getLatitude());
+        assertEquals(expectedDeliveryAddress.getLongitude(), response.getOrder().getDeliveryAddress().getLongitude());
         assertEquals(OrderType.COLLECTION, response.getOrder().getType());
     }
 
@@ -240,7 +242,9 @@ public class UpdateOrderIntegrationTest {
         UpdateOrderResponse response = paymentService.updateOrder(updateOrderRequest_PURCHASED);
         assertEquals(expectedMessage_AWAITING_PAYMENT,response.getMessage()); // same message as awaiting payment
         assertTrue(response.isSuccess());
-        assertEquals(expectedDeliveryAddress, response.getOrder().getDeliveryAddress());
+        assertEquals(expectedDeliveryAddress.getAddress(), response.getOrder().getDeliveryAddress().getAddress());
+        assertEquals(expectedDeliveryAddress.getLatitude(), response.getOrder().getDeliveryAddress().getLatitude());
+        assertEquals(expectedDeliveryAddress.getLongitude(), response.getOrder().getDeliveryAddress().getLongitude());
         assertEquals(OrderType.COLLECTION, response.getOrder().getType());
     }
 
@@ -250,7 +254,9 @@ public class UpdateOrderIntegrationTest {
         UpdateOrderResponse response = paymentService.updateOrder(updateOrderRequest_IN_QUEUE);
         assertEquals(expectedMessage_AWAITING_PAYMENT,response.getMessage()); // same message as awaiting payment
         assertTrue(response.isSuccess());
-        assertEquals(expectedDeliveryAddress, response.getOrder().getDeliveryAddress());
+        assertEquals(expectedDeliveryAddress.getAddress(), response.getOrder().getDeliveryAddress().getAddress());
+        assertEquals(expectedDeliveryAddress.getLatitude(), response.getOrder().getDeliveryAddress().getLatitude());
+        assertEquals(expectedDeliveryAddress.getLongitude(), response.getOrder().getDeliveryAddress().getLongitude());
         assertEquals(OrderType.COLLECTION, response.getOrder().getType());
     }
 
