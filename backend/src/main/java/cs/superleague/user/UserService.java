@@ -25,6 +25,7 @@ public interface UserService {
     FinalisePasswordResetResponse finalisePasswordReset(FinalisePasswordResetRequest request) throws UserException;
     ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException;
     SetCurrentLocationResponse setCurrentLocation(SetCurrentLocationRequest request) throws UserException;
+    GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException;
 
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException;

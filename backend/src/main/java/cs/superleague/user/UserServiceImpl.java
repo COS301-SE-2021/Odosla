@@ -1403,6 +1403,7 @@ public class UserServiceImpl implements UserService{
         return new UpdateDriverDetailsResponse(message, success, new Date());
     }
 
+    @Override
     public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException {
         GetCurrentUserResponse response=null;
         if(request!=null) {
