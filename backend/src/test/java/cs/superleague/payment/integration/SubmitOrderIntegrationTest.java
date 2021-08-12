@@ -250,7 +250,7 @@ public class SubmitOrderIntegrationTest {
         assertEquals(geoPoint1.getLatitude(),order.getDeliveryAddress().getLatitude());
         assertEquals(geoPoint1.getLongitude(),order.getDeliveryAddress().getLongitude());
         assertEquals(OrderType.DELIVERY,order.getType());
-        assertEquals(OrderStatus.AWAITING_PAYMENT,order.getStatus());
+        assertEquals(OrderStatus.IN_QUEUE,order.getStatus());
     }
 
 

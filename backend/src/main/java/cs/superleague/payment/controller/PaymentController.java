@@ -182,6 +182,11 @@ public class PaymentController implements PaymentApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
+        return null;
+    }
+
     // helper
     List<Item> assignItems(List<ItemObject> itemObjectList){
 

@@ -169,7 +169,8 @@ public class ShoppingServiceImpl implements ShoppingService {
         // // Update the order status and create time // //
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
         updatedOrder.setProcessDate(Calendar.getInstance());
-
+        if(orderRepo!=null)
+        orderRepo.save(updatedOrder);
         // <paymentService>.updateOrder(updatedOrder);
 
 
@@ -189,6 +190,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         currentOrders.add(updatedOrder);
 
         store.setCurrentOrders(currentOrders);
+        if(storeRepo!=null)
         storeRepo.save(store);
 
         response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
