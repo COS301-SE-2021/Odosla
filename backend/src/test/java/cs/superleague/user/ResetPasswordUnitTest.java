@@ -104,7 +104,7 @@ public class ResetPasswordUnitTest {
     @DisplayName("When Email Not found")
     void UnitTest_testingEmailParameterNotFound(){
         request = new ResetPasswordRequest("levy@smallFC.com", "CUSTOMER");
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(null);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
 
 
         try{
@@ -138,7 +138,7 @@ public class ResetPasswordUnitTest {
     @DisplayName("When Email found")
     void UnitTest_testingEmailParameterFound(){
         request = new ResetPasswordRequest("levy@smallFC.com", "CUSTOMER");
-        when(customerRepo.findCustomerByEmail(Mockito.any())).thenReturn(customer);
+        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             response = userService.resetPassword(request);
