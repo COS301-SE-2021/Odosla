@@ -2,7 +2,8 @@ package cs.superleague.user;
 
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.dataclass.Notification;
+import cs.superleague.notification.NotificationService;
+import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
@@ -364,6 +365,16 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    try {
+                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+                        e.printStackTrace();
+                        System.out.println("Email failed to send");
+                    }
                     return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
                 }
                 else{
@@ -526,6 +537,16 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    try {
+                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+                        e.printStackTrace();
+                        System.out.println("Email failed to send");
+                    }
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
                 else{
@@ -693,6 +714,16 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    try {
+                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+                        e.printStackTrace();
+                        System.out.println("Email failed to send");
+                    }
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
                 else{
@@ -857,6 +888,16 @@ public class UserServiceImpl implements UserService{
                 }
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    try {
+//                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+//                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+//                        e.printStackTrace();
+//                        System.out.println("Email failed to send");
+//                    }
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
                 else{
