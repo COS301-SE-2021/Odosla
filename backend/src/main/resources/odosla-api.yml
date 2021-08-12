@@ -412,6 +412,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_AccountVerifyResponse"
 
+  /shopping/getNextQueued:
+    post:
+      summary: Endpoint for getting next queue
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getNextQueued
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetNextQueuedRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetNextQueuedResponse"
+
 
 components:
 
@@ -579,7 +601,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/StoreObject"
-
 
     OrderObject:
       description: "Generic schema for an Order"
@@ -1023,3 +1044,28 @@ components:
           type: string
         userType:
           type: string
+
+
+    shopping_GetNextQueuedRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shoppping_GetNextQueuedResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+        queueOfOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        newCurrentOrder:
+          type: object
