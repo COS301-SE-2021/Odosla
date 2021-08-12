@@ -8,6 +8,7 @@ import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
+import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.GetShopperByUUIDRequest;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.StoreRepo;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -30,12 +32,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
     private final OrderRepo orderRepo;
+    private final ShopperRepo shopperRepo;
     private final UserService userService;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, UserService userService) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShopperRepo shopperRepo, UserService userService) {
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
+        this.shopperRepo= shopperRepo;
         this.userService = userService;
     }
     /**
@@ -239,7 +243,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderQueue.size()==0){
+            if(orderQueue==null){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
@@ -349,11 +353,13 @@ public class ShoppingServiceImpl implements ShoppingService {
             if(calendar.get(Calendar.HOUR_OF_DAY) >= storeEntity.getOpeningTime() && calendar.get(Calendar.HOUR_OF_DAY) < storeEntity.getClosingTime())
             {
                 storeEntity.setOpen(true);
+                storeRepo.save(storeEntity);
                 response=new GetStoreOpenResponse(request.getStoreID(),storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is now open for business");
             }
             else
             {
                 storeEntity.setOpen(false);
+                storeRepo.save(storeEntity);
                 response=new GetStoreOpenResponse(request.getStoreID(),storeEntity.getOpen(),Calendar.getInstance().getTime(), "Store is closed for business");
             }
             response.setOpeningTime(storeEntity.getOpeningTime());
@@ -701,35 +707,62 @@ public class ShoppingServiceImpl implements ShoppingService {
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
             /* Get Shopper by UUID- get Shopper Object */
             /* Shopper shopper */
-            if(listOfShoppers!=null){
+            //if(listOfShoppers!=null){
                 /* Get Shopper by UUID- get Shopper Object */
                 /* Shopper shopper */
-                GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-                GetShopperByUUIDResponse shopperResponse;
-                try {
-                    shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
-                }catch(Exception e){
-                    throw e;
-                }
+            GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
+            GetShopperByUUIDResponse shopperResponse;
+            try {
+                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
+            }catch(Exception e){
+                throw e;
+            }
 
+            Boolean notPresent = true;
 
-                Boolean notPresent=true;
-                for(Shopper shopper:listOfShoppers){
-                    if(shopper.getShopperID().equals(request.getShopperID())){
-                        response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "Shopper already is already in listOfShoppers");
-                        notPresent=false;
+            if(listOfShoppers!=null) {
+
+                for (Shopper shopper : listOfShoppers) {
+                    if (shopper.getShopperID().equals(request.getShopperID())) {
+                        response = new AddShopperResponse(false, Calendar.getInstance().getTime(), "Shopper already is in listOfShoppers");
+                        notPresent = false;
                     }
                 }
                 if(notPresent){
+                    Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                    if(updateShopper!=null)
+                    {
+                        updateShopper.setStoreID(request.getStoreID());
+                        shopperRepo.save(updateShopper);
+                    }
+
                     listOfShoppers.add(shopperResponse.getShopper());
                     storeEntity.setShoppers(listOfShoppers);
                     storeRepo.save(storeEntity);
                     response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
                 }
             }
-            else{
-                response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+            else
+            {
+                Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                if(updateShopper!=null)
+                {
+                    updateShopper.setStoreID(request.getStoreID());
+                    shopperRepo.save(updateShopper);
+                }
+
+                List<Shopper> newList= new ArrayList<>();
+                newList.add(shopperResponse.getShopper());
+                storeEntity.setShoppers(newList);
+                storeRepo.save(storeEntity);
+                response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
+
             }
+
+//            }
+//            else{
+//                response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+//            }
 
         }
         else{
@@ -1175,7 +1208,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderQueue.size()!=0){
+            if(orderQueue!=null){
                 response=new GetQueueResponse(true,"The order queue was successfully returned", orderQueue);
             }
             else

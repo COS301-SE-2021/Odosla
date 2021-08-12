@@ -78,14 +78,21 @@ public class ShoppingController implements ShoppingApi{
     public ResponseEntity<ShoppingAddShopperResponse> addShopper(ShoppingAddShopperRequest body) {
 
         //mock mem:db
-        Store store1 = new Store();
-        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-        store1.setShoppers(new ArrayList<>());
-        storeRepo.save(store1);
-
-        Shopper sh1 = new Shopper();
-        sh1.setShopperID(userID);
-        shopperRepo.save(sh1);
+//        Store store1 = new Store();
+//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+//        store1.setStoreBrand("PnP");
+//        store1.setOpeningTime(7);
+//        store1.setClosingTime(20);
+//        store1.setOpen(false);
+//        store1.setMaxOrders(5);
+//        storeRepo.save(store1);
+//
+//        Shopper sh1 = new Shopper();
+//        sh1.setShopperID(userID);
+//        sh1.setName("John");
+//        sh1.setEmail("John123@gmail.com");
+//        sh1.setSurname("Cena");
+//        shopperRepo.save(sh1);
 
         //creating response object  and default return status
         ShoppingAddShopperResponse response = new ShoppingAddShopperResponse();
@@ -93,7 +100,7 @@ public class ShoppingController implements ShoppingApi{
 
         try{
 
-            AddShopperRequest req = new AddShopperRequest(userID, storeID);
+            AddShopperRequest req = new AddShopperRequest(UUID.fromString(body.getShopperID()), UUID.fromString(body.getStoreID()));
             AddShopperResponse addShopperResponse = ServiceSelector.getShoppingService().addShopper(req);
 
             try {
@@ -233,36 +240,36 @@ public class ShoppingController implements ShoppingApi{
 
     public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
         //add mock data to repo
-        List<Shopper> mockShopperList = new ArrayList<>();
-        Shopper shopper1, shopper2;
-        shopper1=new Shopper();
-        shopper2=new Shopper();
-
-        shopper1.setShopperID(UUID.randomUUID());
-        shopper1.setName("Peter");
-        shopper1.setSurname("Parker");
-        shopper1.setEmail("PeterParker2021!");
-        shopper1.setPassword("DontTellMaryJane2021!");
-        shopper1.setOrdersCompleted(5);
-        shopper1.setAccountType(UserType.SHOPPER);
-        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-
-        shopper2.setShopperID(UUID.randomUUID());
-        shopper2.setName("Mary");
-        shopper2.setSurname("Jane");
-        shopper2.setEmail("MaryJane2021!");
-        shopper2.setPassword("IKnowWhoPeterIs2021!");
-        shopper2.setOrdersCompleted(4);
-        shopper2.setAccountType(UserType.SHOPPER);
-        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-
-        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
-        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
-
-        Store store1 = new Store();
-        store1.setShoppers(mockShopperList);
-        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-        storeRepo.save(store1);
+//        List<Shopper> mockShopperList = new ArrayList<>();
+//        Shopper shopper1, shopper2;
+//        shopper1=new Shopper();
+//        shopper2=new Shopper();
+//
+//        shopper1.setShopperID(UUID.randomUUID());
+//        shopper1.setName("Peter");
+//        shopper1.setSurname("Parker");
+//        shopper1.setEmail("PeterParker2021!");
+//        shopper1.setPassword("DontTellMaryJane2021!");
+//        shopper1.setOrdersCompleted(5);
+//        shopper1.setAccountType(UserType.SHOPPER);
+//        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+//
+//        shopper2.setShopperID(UUID.randomUUID());
+//        shopper2.setName("Mary");
+//        shopper2.setSurname("Jane");
+//        shopper2.setEmail("MaryJane2021!");
+//        shopper2.setPassword("IKnowWhoPeterIs2021!");
+//        shopper2.setOrdersCompleted(4);
+//        shopper2.setAccountType(UserType.SHOPPER);
+//        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+//
+//        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
+//        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
+//
+//        Store store1 = new Store();
+//        store1.setShoppers(mockShopperList);
+//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+//        storeRepo.save(store1);
 
         //creating response object and default return status:
         ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
@@ -281,7 +288,9 @@ public class ShoppingController implements ShoppingApi{
         } else {
 
             try {
-                GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(new GetShoppersRequest(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0")));
+                GetShoppersRequest req = new GetShoppersRequest(UUID.fromString(body.getStoreID()));
+                GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(req);
+
                 try {
                     response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
 
@@ -296,11 +305,6 @@ public class ShoppingController implements ShoppingApi{
             }
 
         }
-
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
-        shopperRepo.deleteAll();
 
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -404,7 +408,7 @@ public class ShoppingController implements ShoppingApi{
         return responseBody;
     }
 
-    //Populate ItemObject list from items returned by use case
+    //Populate ShopperObject list from items returned by use case
     private List<ShopperObject> populateShoppers(List<Shopper> responseShoppers) throws NullPointerException{
 
         List<ShopperObject> responseBody = new ArrayList<>();

@@ -1,6 +1,8 @@
 package cs.superleague.user.dataclass;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 import java.util.UUID;
@@ -19,6 +21,9 @@ public class User {
     private String activationCode;
     private String resetCode;
     private String resetExpiration;
+
+    @Column(name="account_type")
+    @Enumerated(EnumType.STRING)
     private UserType accountType;
 
     /* Constructor  */
