@@ -434,6 +434,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_SetCurrentLocationResponse"
 
+  /user/getCurrentUser:
+    post:
+      summary: Endpoint for to get Current user
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getCurrentUser
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetCurrentUserRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetCurrentUserResponse"
+
 
 components:
 
@@ -1069,3 +1091,28 @@ components:
           type: boolean
         date:
           type: string
+
+
+    user_GetCurrentUserRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWTToken:
+          type: string
+
+    user_GetCurrentUserResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+        user:
+          oneOf:
+            - $ref: '#/components/schemas/DriverObject'
+            - $ref: '#/components/schemas/CustomerObject'
+            - $ref: '#/components/schemas/ShopperObject'
+            - $ref: '#/components/schemas/AdminObject'

@@ -602,20 +602,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserSetCurrentLocationResponse> setCurrentLocation(UserSetCurrentLocationRequest body){
-
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!driverRepo.findById(customerID).isPresent()){
-
-            Driver driver = new Driver();
-            driver.setDriverID(customerID);
-
-            driverRepo.save(driver);
-
-        }
-
         UserSetCurrentLocationResponse setCurrentLocationResponse = new UserSetCurrentLocationResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -637,6 +623,46 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(setCurrentLocationResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!driverRepo.findById(customerID).isPresent()){
+
+            Customer customer = new Customer();
+            customer.setCustomerID(customerID);
+
+            customerRepo.save(customer);
+
+        }
+
+        UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCurrentUserRequest request = new GetCurrentUserRequest(body.getJwTToken());
+
+            GetCurrentUserResponse response = ServiceSelector.getUserService().getCurrentUser(request);
+            try{
+                userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
+                userGetCurrentUserResponse.setMessage(response.getMessage());
+                userGetCurrentUserResponse.setSuccess(response.isSuccess());
+                userGetCurrentUserResponse.setUser((OneOfuserGetCurrentUserResponseUser) response.getUser());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetCurrentUserResponse, status);
     }
 
 
