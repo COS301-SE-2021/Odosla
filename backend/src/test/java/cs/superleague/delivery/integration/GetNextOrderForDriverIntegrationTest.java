@@ -5,7 +5,6 @@ import cs.superleague.delivery.dataclass.Delivery;
 import cs.superleague.delivery.dataclass.DeliveryStatus;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.repos.DeliveryRepo;
-import cs.superleague.delivery.requests.GetDeliveryDetailRequest;
 import cs.superleague.delivery.requests.GetNextOrderForDriverRequest;
 import cs.superleague.delivery.responses.GetNextOrderForDriverResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
