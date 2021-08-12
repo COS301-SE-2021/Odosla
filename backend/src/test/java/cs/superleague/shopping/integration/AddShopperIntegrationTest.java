@@ -12,7 +12,9 @@ import cs.superleague.shopping.requests.AddShopperRequest;
 import cs.superleague.shopping.responses.AddShopperResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.junit.jupiter.api.*;
@@ -20,6 +22,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Transactional
 public class AddShopperIntegrationTest {
 
     @Autowired
@@ -61,11 +65,11 @@ public class AddShopperIntegrationTest {
     void setUp() {
         store=new Store();
         shopper=new Shopper();
-        shopper.setId(shopperID);
+        shopper.setShopperID(shopperID);
         shopper1=new Shopper();
-        shopper1.setId(shopperID2);
+        shopper1.setShopperID(shopperID2);
         shopper2=new Shopper();
-        shopper2.setId(shopperID3);
+        shopper2.setShopperID(shopperID3);
         shopperList.add(shopper1);
         shopperList.add(shopper2);
         shopperRepo.save(shopper1);
@@ -126,12 +130,12 @@ public class AddShopperIntegrationTest {
     @Test
     @Description("Test for when Shopper with shopperID does not exist in shopper database ")
     @DisplayName("When Shopper with ID doesn't exist")
-    void IntegrationTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException, StoreDoesNotExistException {
+    void IntegrationTest_Shopper_doesnt_exist() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, StoreDoesNotExistException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
         storeRepo.save(store);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
+        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
         assertEquals("User with ID does not exist in repository - could not get Shopper entity",thrown.getMessage());
     }
 
@@ -139,21 +143,21 @@ public class AddShopperIntegrationTest {
     @Test
     @Description("Test for when list of shoppers already has Shopper in its list")
     @DisplayName("Shopper Id already in list of Shoppers")
-    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Store_already_contains_shopper() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
-        AddShopperRequest request=new AddShopperRequest(shopper1.getId(),storeUUID1);
+        AddShopperRequest request=new AddShopperRequest(shopper1.getShopperID(),storeUUID1);
         storeRepo.save(store);
         AddShopperResponse response=ServiceSelector.getShoppingService().addShopper(request);
         assertNotNull(response);
         assertEquals(false,response.isSuccess());
-        assertEquals("Shopper already is already in listOfShoppers",response.getMessage());
+        assertEquals("Shopper already is in listOfShoppers",response.getMessage());
     }
 
     @Test
     @Description("Test for when shopper is correctly added to the list")
     @DisplayName("Shopper was correctly added list of shoppers in store")
-    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    void Shopper_correctly_added() throws InvalidRequestException, StoreDoesNotExistException, UserException {
         store.setStoreID(storeUUID1);
         store.setShoppers(shopperList);
         AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
@@ -169,7 +173,7 @@ public class AddShopperIntegrationTest {
         shopperList.add(shopper);
         List<Shopper> shopperList1=store.getShoppers();
         for(int i=0;i<shopperList.size();i++){
-            assertEquals(shopperList.get(i).getId(),shopperList1.get(i).getId());
+            assertEquals(shopperList.get(i).getShopperID(),shopperList1.get(i).getShopperID());
         }
     }
 }

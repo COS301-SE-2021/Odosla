@@ -7,6 +7,9 @@ info:
 
 tags:
   - name: "Shopping"
+  - name: "Payment"
+  - name: "User"
+  - name: "Notification"
 
 
 paths:
@@ -32,6 +35,383 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsResponse"
+
+
+  /shopping/addShopper:
+    post:
+      summary: Endpoint for adding shopper to shopper list
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: addShopper
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_AddShopperRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_AddShopperResponse"
+
+
+  /shopping/getShoppers:
+    post:
+      summary: Endpoint for Get Shoppers use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getShoppers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetShoppersRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetShoppersResponse"
+
+  /shopping/removeQueuedOrder:
+    post:
+      summary: Endpoint for removing a queued order.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: removeQueuedOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
+
+  /shopping/getStores:
+    post:
+      summary: Endpoint for Get Stores use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetStoresRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetStoresResponse"
+
+
+
+  /payment/updateOrder:
+    post:
+      summary: Endpoint for the Update Order use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: updateOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_UpdateOrderRequest"
+      responses:
+        "200":
+          description: Returns updated order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_UpdateOrderResponse"
+
+  /notification/sendEmailNotification:
+    post:
+      summary: Endpoint for sending an email notification
+      tags:
+        - "notification"
+      description: Refer to summary
+      operationId: sendEmailNotification
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/notification_SendEmailNotificationRequest"
+      responses:
+        "200":
+          description: Returns updated order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
+  /user/setCart:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: setCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_SetCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_SetCartResponse"
+
+  /user/clearShoppingCart:
+    post:
+      summary: Endpoint for clearing a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: clearShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ClearShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ClearShoppingCartResponse"
+
+  /user/getShoppingCart:
+    post:
+      summary: Endpoint for getting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getShoppingCart
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetShoppingCartRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetShoppingCartResponse"
+
+  /user/makeGroceryList:
+    post:
+      summary: Endpoint for making a grocery list
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: makeGroceryList
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_MakeGroceryListRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_MakeGroceryListResponse"
+
+  /user/resetPassword:
+    post:
+      summary: Endpoint for reseting password
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: resetPassword
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ResetPasswordRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ResetPasswordResponse"
+
+  /user/loginUser:
+    post:
+      summary: Endpoint for setting a shopping cart
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: loginUser
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_LoginRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_LoginResponse"
+
+  /user/registerDriver:
+    post:
+      summary: Endpoint for setting a registering driver
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerDriver
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterDriverRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterDriverResponse"
+  /user/registerShopper:
+    post:
+      summary: Endpoint for setting a registering shopper
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerShopper
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterShopperRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterShopperResponse"
+
+  /user/registerCustomer:
+    post:
+      summary: Endpoint for setting a registering customer
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerCustomer
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterCustomerRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterCustomerResponse"
+
+  /user/registerAdmin:
+    post:
+      summary: Endpoint for setting a registering admin
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: registerAdmin
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_RegisterAdminRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_RegisterAdminResponse"
+
+  /user/verifyAccount:
+    post:
+      summary: Endpoint for verifying a user account
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: verifyAccount
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_AccountVerifyRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_AccountVerifyResponse"
+
 
 components:
 
@@ -70,7 +450,7 @@ components:
           type: string
 
     shopping_GetItemsResponse:
-      description: This object is expected as input
+      description: This object is returned as output
       type: object
       properties:
         errorMessage:
@@ -79,4 +459,567 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/itemObject"
+            $ref: "#/components/schemas/ItemObject"
+
+
+    shopping_AddShopperRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        shopperID:
+          type: string
+        storeID:
+          type: string
+
+    shopping_AddShopperResponse:
+      description: This object is output
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: generated token used to identify the caller of the endpoint
+        date:
+          type: string
+        message:
+          type: string
+
+    shopping_RemoveQueuedOrderRequest:
+      description: this object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+        storeID:
+          type: string
+
+    shopping_RemoveQueuedOrderResponse:
+      description: this object is output
+      type: object
+      properties:
+        isRemoved:
+          type: boolean
+        message:
+          type: string
+        orderID:
+          type: string
+
+    ShopperObject:
+      description: "Generic schema for a shopper"
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        storeID:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        ordersCompleted:
+          type: integer
+
+    shopping_GetShoppersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        storeID:
+          type: string
+
+    shopping_GetShoppersResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        errorMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+
+    StoreObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        storeBrand:
+          type: string
+        isOpen:
+          type: boolean
+        maxShoppers:
+          type: integer
+        maxOrders:
+          type: integer
+        openingTime:
+          type: integer
+        closingTime:
+          type: integer
+
+    shopping_GetStoresRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_GetStoresResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
+
+
+    OrderObject:
+      description: "Generic schema for an Order"
+      type: object
+      properties:
+        orderId:
+          type: string
+        userId:
+          type: string
+        storeId:
+          type: string
+        shopperId:
+          type: string
+        createDate:
+          type: string
+        processDate:
+          type: string
+        totalPrice:
+          type: number
+        status:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        discount:
+          type: number
+        deliveryAddress:
+          type: string
+        storeAddress:
+          type: string
+        requiresPharmacy:
+          type: boolean
+
+    payment_UpdateOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderId:
+          type: string
+          description: the id of the order to be generated
+        userId:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        discount:
+          type: number
+        orderType:
+          type: string
+        deliveryAddress:
+          type: string
+
+    payment_UpdateOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        order:
+          type: object
+
+    notification_SendEmailNotificationRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        message:
+          type: string
+          description: This is the message that will be sent as a notification
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Hash map that needs to contain the Type (e.g delivery), Subject, UserType (e.g admin) and the UserID
+
+    notification_SendEmailNotificationResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        responseMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+
+
+    user_SetCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+
+    user_SetCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_ClearShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_ClearShoppingCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+
+    user_GetShoppingCartRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+
+    user_GetShoppingCartResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+
+
+    user_MakeGroceryListRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        customerID:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        barcodes:
+          type: array
+        name:
+          type: string
+
+    user_MakeGroceryListResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_ResetPasswordRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        userType:
+          type: string
+
+    user_ResetPasswordResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        resetCode:
+          type: string
+
+    DriverObject:
+      description: "Generic schema for a Driver"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        driverID:
+          type: string
+        rating:
+          type: number
+        onShift:
+          type: boolean
+
+    CustomerObject:
+      description: "Generic schema for a Customer"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        customerID:
+          type: string
+        rating:
+          type: number
+        isActive:
+          type: boolean
+
+    AdminObject:
+      description: "Generic schema for a Admin"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        adminID:
+          type: string
+        rating:
+          type: number
+        isActive:
+          type: boolean
+
+    user_LoginRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        userType:
+          type: string
+
+    user_LoginResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        Token:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterDriverRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterDriverResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterShopperRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterShopperResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterAdminRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterAdminResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_RegisterCustomerRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+
+    user_RegisterCustomerResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_AccountVerifyRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        activationCode:
+          type: string
+        userType:
+          type: string
+
+    user_AccountVerifyResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+        userType:
+          type: string
