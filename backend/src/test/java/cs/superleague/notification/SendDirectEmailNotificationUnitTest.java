@@ -98,6 +98,5 @@ public class SendDirectEmailNotificationUnitTest {
         SendDirectEmailNotificationRequest request = new SendDirectEmailNotificationRequest("message", properties);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendDirectEmailNotification(request));
         assertEquals("Invalid recipient email address.", thrown.getMessage());
-
     }
 }
