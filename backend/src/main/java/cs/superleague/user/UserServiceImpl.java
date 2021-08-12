@@ -1004,15 +1004,15 @@ public class UserServiceImpl implements UserService{
 
             if(request.getEmail()==null){
                 isException=true;
-                errorMessage="Email can't be null in AccountVerfiyRequest";
+                errorMessage="Email can't be null in AccountVerifyRequest";
             }
             else if(request.getActivationCode()==null){
                 isException=true;
-                errorMessage="ActivationCode can't be null in AccountVerfiyRequest";
+                errorMessage="ActivationCode can't be null in AccountVerifyRequest";
             }
             else if (request.getUserType()==null){
                 isException=true;
-                errorMessage="UserType can't be null in AccountVerfiyRequest";
+                errorMessage="UserType can't be null in AccountVerifyRequest";
             }
 
             if(isException){
@@ -1024,7 +1024,13 @@ public class UserServiceImpl implements UserService{
 
                 case SHOPPER:
                     assert shopperRepo!=null;
-                    Shopper shopperToVerify=shopperRepo.findByEmail(request.getEmail()).orElse(null);
+                    Shopper shopperToVerify;
+                    try {
+                        shopperToVerify = shopperRepo.findByEmail(request.getEmail()).orElse(null);
+                    }catch(Exception e){
+                        shopperToVerify=null;
+                    }
+
                     if(shopperToVerify==null){
                         throw new ShopperDoesNotExistException("Shopper Does Not Exist in database");
                     }
@@ -1033,15 +1039,20 @@ public class UserServiceImpl implements UserService{
                         if(shopperToVerify.getActivationCode().equals(request.getActivationCode())){
                             shopperToVerify.setActivationDate(Calendar.getInstance().getTime());
                             shopperRepo.save(shopperToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account" );
+                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account", UserType.SHOPPER);
                         }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect");
+                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect", UserType.SHOPPER);
                     }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Shopper with email '"+request.getEmail()+"' has already activated their Shopper account");
+                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Shopper with email '"+request.getEmail()+"' has already activated their Shopper account", UserType.SHOPPER);
 
                 case DRIVER:
                     assert driverRepo!=null;
-                    Driver driverToVerify=driverRepo.findDriverByEmail(request.getEmail());
+                    Driver driverToVerify;
+                    try {
+                        driverToVerify = driverRepo.findDriverByEmail(request.getEmail());
+                    }catch (Exception e) {
+                        driverToVerify=null;
+                    }
                     if(driverToVerify==null){
                         throw new DriverDoesNotExistException("Driver does not exist in database");
                     }
@@ -1050,15 +1061,20 @@ public class UserServiceImpl implements UserService{
                         if(driverToVerify.getActivationCode().equals(request.getActivationCode())){
                             driverToVerify.setActivationDate(Calendar.getInstance().getTime());
                             driverRepo.save(driverToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account");
+                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account", UserType.DRIVER);
                         }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect" );
+                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect", UserType.DRIVER);
                     }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Driver with email '"+request.getEmail()+"'  has already activated their Driver account");
+                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Driver with email '"+request.getEmail()+"' has already activated their Driver account", UserType.DRIVER);
 
                 case CUSTOMER:
                     assert customerRepo!=null;
-                    Customer customerToVerify=customerRepo.findByEmail(request.getEmail()).orElse(null);
+                    Customer customerToVerify;
+                     try {
+                         customerToVerify = customerRepo.findByEmail(request.getEmail()).orElse(null);
+                     }catch (Exception e) {
+                         customerToVerify=null;
+                     }
                     if(customerToVerify==null){
                         throw new CustomerDoesNotExistException("Customer does not exist in database");
                     }
@@ -1067,30 +1083,12 @@ public class UserServiceImpl implements UserService{
                         if(customerToVerify.getActivationCode().equals(request.getActivationCode())){
                             customerToVerify.setActivationDate(Calendar.getInstance().getTime());
                             customerRepo.save(customerToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account");
+                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account", UserType.CUSTOMER);
                         }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect" );
+                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Activation code was incorrect", UserType.CUSTOMER);
                     }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Customer with email '"+request.getEmail()+"'  has already activated their Customer account");
+                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Customer with email '"+request.getEmail()+"' has already activated their Customer account", UserType.CUSTOMER);
 
-                case ADMIN:
-                    assert adminRepo!=null;
-                    Admin adminToVerify=adminRepo.findAdminByEmail(request.getEmail());
-                    if(adminToVerify==null){
-                        throw new AdminDoesNotExistException("Admin does not exist in database");
-                    }
-
-                    if(adminToVerify.getActivationDate()==null){
-
-                        if(adminToVerify.getActivationCode().equals(request.getActivationCode())){
-                            adminToVerify.setActivationDate(Calendar.getInstance().getTime());
-                            adminRepo.save(adminToVerify);
-                            return new AccountVerifyResponse(true,Calendar.getInstance().getTime(), "Admin with email '"+request.getEmail()+"' has successfully activated their Admin account");
-                        }
-                        else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(),"Activation code was incorrect" );
-
-                    }
-                    else return new AccountVerifyResponse(false,Calendar.getInstance().getTime(), "Admin with email '"+request.getEmail()+"'  has already activated their Admin account");
             }
         }
         else{
