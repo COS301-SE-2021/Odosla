@@ -7,6 +7,7 @@ info:
 
 tags:
   - name: "Shopping"
+  - name: "Payment"
 
 
 paths:
@@ -32,6 +33,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsResponse"
+
+  /payment/getStatus:
+    post:
+      summary: Endpoint for Get Status use case
+      tags:
+        - "Paymenr"
+      description: Refer to summary
+      operationId: geStatus
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetStatusRequest"
+      responses:
+        "200":
+          description: Returns status upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetStatusResponse"
 
 components:
 
@@ -80,3 +103,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/itemObject"
+
+    payment_GetStatusRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetStatusResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        status:
+          type: string
+        success:
+          type: boolean
+        message:
+           type: string
+        timestamp:
+          type: string
