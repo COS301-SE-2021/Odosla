@@ -64,7 +64,8 @@ public class AssignDriverToDeliveryIntegrationTest {
 
     @AfterEach
     void tearDown(){
-
+        deliveryRepo.deleteAll();
+        driverRepo.deleteAll();
     }
 
     @Test
@@ -106,7 +107,5 @@ public class AssignDriverToDeliveryIntegrationTest {
         assertEquals(response.isAssigned(), true);
         Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
         assertEquals(delivery1.get().getDriverId(), driverID);
-
-
     }
 }
