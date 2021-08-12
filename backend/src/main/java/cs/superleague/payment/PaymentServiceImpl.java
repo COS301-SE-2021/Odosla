@@ -420,6 +420,33 @@ import java.util.List;50"
         return new GetOrderResponse(order, true, Calendar.getInstance().getTime(), message);
     }
 
+    @Override
+    public GetStatusResponse getStatus(GetStatusRequest request) throws PaymentException{
+        String message;
+        Order order;
+
+        if(request == null){
+            throw new InvalidRequestException("Invalid getStatusRequest received - could not get status.");
+        }
+
+        if(request.getOrderID() == null){
+            throw new InvalidRequestException("OrderID cannot be null in request object - could not get status.");
+        }
+
+        order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if(order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - could not get status.");
+        }
+
+        if(order.getStatus() == null){
+            message = "Order does not have a valid Status";
+            return new GetStatusResponse(null, false, new Date(), message);
+        }
+
+        message = "Status retrieval successful.";
+        return new GetStatusResponse(order.getStatus().name(), true, new Date(), message);
+    }
+
     /** WHAT TO DO: setStatus
      *
      * @param request is used to bring in:
