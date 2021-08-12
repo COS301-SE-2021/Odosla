@@ -97,7 +97,7 @@ public class ClearShoppingCartUnitTest {
     @Test
     @DisplayName("When customer with given UserID does not exist")
     void UnitTest_testingInvalidUser(){
-        request = new ClearShoppingCartRequest(UUID.randomUUID());
+        request = new ClearShoppingCartRequest(UUID.randomUUID().toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.clearShoppingCart(request));
         assertEquals("User with given userID does not exist - could clear cart", thrown.getMessage());
@@ -106,7 +106,7 @@ public class ClearShoppingCartUnitTest {
     @Test
     @DisplayName("When valid values are given")
     void UnitTest_testingSuccessfulUpdate(){
-        request = new ClearShoppingCartRequest(userID);
+        request = new ClearShoppingCartRequest(userID.toString());
         when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         customer.getShoppingCart().clear();

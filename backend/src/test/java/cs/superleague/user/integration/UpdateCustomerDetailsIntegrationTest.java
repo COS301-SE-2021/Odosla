@@ -5,8 +5,10 @@ import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.GroceryList;
 import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
@@ -16,15 +18,15 @@ import cs.superleague.user.responses.UpdateCustomerDetailsResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class UpdateCustomerDetailsIntegrationTest {
 
     @Autowired
@@ -64,7 +66,7 @@ public class UpdateCustomerDetailsIntegrationTest {
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
-        I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
+        I1=new Item("Heinz Tamatoe Sauce","TTT123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         listOfItems.add(I1);
         listOfItems.add(I2);
@@ -79,11 +81,11 @@ public class UpdateCustomerDetailsIntegrationTest {
         groceryLists.add(groceryList);
 
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
 
-        itemRepo.saveAll(shoppingCart);
+        itemRepo.saveAll(listOfItems);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
         customerRepo.save(existingCustomer);
@@ -91,9 +93,10 @@ public class UpdateCustomerDetailsIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        //itemRepo.deleteAll();
+        //groceryListRepo.deleteAll();
         customerRepo.deleteAll();
-        groceryListRepo.deleteAll();
-        itemRepo.deleteAll();
+
     }
 
 
@@ -118,7 +121,7 @@ public class UpdateCustomerDetailsIntegrationTest {
     void IntegrationTest_testingInvalidUser(){
         request = new UpdateCustomerDetailsRequest(UUID.randomUUID(), "Dean", "Smith", "ds@smallFC.com",
                 "0712345678", customer.getPassword(), deliveryAddress);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> userService.updateCustomerDetails(request));
+        Throwable thrown = Assertions.assertThrows(CustomerDoesNotExistException.class, ()-> userService.updateCustomerDetails(request));
         assertEquals("User with given userID does not exist - could not update customer", thrown.getMessage());
     }
 
@@ -132,6 +135,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Email is not valid", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -148,6 +152,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Password is not valid", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -164,6 +169,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Null values submitted - Nothing updated", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -180,6 +186,7 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Email is already taken", response.getMessage());
             assertFalse(response.isSuccess());
+            assertNotNull(response.getTimestamp());
         }catch(Exception e){
             e.printStackTrace();
             fail();
@@ -196,6 +203,18 @@ public class UpdateCustomerDetailsIntegrationTest {
             response = userService.updateCustomerDetails(request);
             assertEquals("Customer successfully updated", response.getMessage());
             assertTrue(response.isSuccess());
+            assertNotNull(response.getTimestamp());
+
+            /* Ensure customer with same ID's details have been changed */
+            Optional<Customer> checkCustomer=customerRepo.findById(userID);
+            assertNotNull(checkCustomer);
+            assertEquals(userID, checkCustomer.get().getCustomerID());
+            assertEquals(request.getEmail(),checkCustomer.get().getEmail());
+            assertEquals(request.getName(),checkCustomer.get().getName());
+            assertEquals(request.getSurname(),checkCustomer.get().getSurname());
+            assertEquals(request.getPhoneNumber(),checkCustomer.get().getPhoneNumber());
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            passwordEncoder.matches(request.getPassword(),checkCustomer.get().getPassword());
         }catch(Exception e){
             e.printStackTrace();
             fail();

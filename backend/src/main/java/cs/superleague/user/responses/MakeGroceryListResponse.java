@@ -1,24 +1,12 @@
 package cs.superleague.user.responses;
 
-import cs.superleague.user.dataclass.GroceryList;
-
-import java.util.List;
+import java.util.Date;
 
 public class MakeGroceryListResponse {
 
-    private final GroceryList groceryList;
     private final boolean success;
     private final String message;
-
-    public MakeGroceryListResponse(GroceryList groceryList, boolean success, String message) {
-        this.groceryList = groceryList;
-        this.success = success;
-        this.message = message;
-    }
-
-    public GroceryList getGroceryList() {
-        return groceryList;
-    }
+    private final Date timestamp;
 
     public boolean isSuccess() {
         return success;
@@ -26,5 +14,15 @@ public class MakeGroceryListResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public MakeGroceryListResponse(boolean success, String message, Date timestamp) {
+        this.success = success;
+        this.message = message;
+        this.timestamp = timestamp;
     }
 }

@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class SubmitOrderIntegrationTest {
     @Autowired
     PaymentServiceImpl paymentService;
@@ -180,7 +182,7 @@ public class SubmitOrderIntegrationTest {
     @Description("Tests for if the store does is closed")
     @DisplayName("When store with store ID is closed")
     void IntegrationTest_StoreDoesisClosed() throws InvalidRequestException {
-        storeRepo.deleteAll();
+//        storeRepo.deleteAll();
         store.setOpen(false);
         storeRepo.save(store);
         submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);

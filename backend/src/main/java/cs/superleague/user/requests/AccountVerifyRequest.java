@@ -7,12 +7,13 @@ public class AccountVerifyRequest {
     /* Attributes */
     private String email;
     private String activationCode;
-    UserType userType;
+    private UserType userType;
 
     /* Constructor */
     public AccountVerifyRequest(String email, String activationCode, UserType userType) {
         this.email = email;
         this.activationCode = activationCode;
+        this.userType = userType;
     }
 
     /* Getters and Setters */
