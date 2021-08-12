@@ -52,8 +52,8 @@ public class NotificationController implements NotificationApi {
     @Override
     public ResponseEntity<NotificationSendEmailNotificationResponse> sendEmailNotification(NotificationSendEmailNotificationRequest body) {
         //Mock data
-        Admin admin= new Admin("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID);
-        adminRepo.save(admin);
+//        Admin admin= new Admin("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID);
+//        adminRepo.save(admin);
         //End of Mock data
         NotificationSendEmailNotificationResponse response = new NotificationSendEmailNotificationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -72,7 +72,7 @@ public class NotificationController implements NotificationApi {
             response.setResponseMessage(e.getMessage());
             e.printStackTrace();
         }
-        adminRepo.deleteAll();
+        //adminRepo.deleteAll();
         return new ResponseEntity<>(response, httpStatus);
     }
 
