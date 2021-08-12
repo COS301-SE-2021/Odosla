@@ -150,6 +150,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
+
   /notification/sendEmailNotification:
     post:
       summary: Endpoint for sending an email notification
@@ -166,7 +167,7 @@ paths:
               $ref: "#/components/schemas/notification_SendEmailNotificationRequest"
       responses:
         "200":
-          description: Returns updated order upon success
+          description: Returns whether the email was sent
           content:
             application/json:
               schema:
@@ -457,6 +458,30 @@ paths:
                 $ref: "#/components/schemas/user_GetCurrentUserResponse"
 
 
+
+
+  /notification/sendDirectEmailNotification:
+    post:
+      summary: Endpoint for sending a direct email notification
+      tags:
+        - "notification"
+      description: Refer to summary
+      operationId: sendDirectEmailNotification
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/notification_SendDirectEmailNotificationRequest"
+      responses:
+        "200":
+          description: Returns whether the email was sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notification_SendDirectEmailNotificationResponse"
+
 components:
 
   schemas:
@@ -716,6 +741,28 @@ components:
         success:
           type: boolean
 
+    notification_SendDirectEmailNotificationRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        message:
+          type: string
+          description: This is the message that will be sent as a notification
+        properties:
+          type: object
+          additionalProperties:
+            type: string
+          description: Hash map that needs to contain the Subject and the email
+
+    notification_SendDirectEmailNotificationResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        responseMessage:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
 
     user_SetCartRequest:
       description: This object is expected as input

@@ -100,6 +100,15 @@ public class SendEmailNotificationUnitTest {
     }
 
     @Test
+    @Description("Tests when the property is null, exception should be thrown.")
+    @DisplayName("Null properties")
+    void requestObjectHasNullProperties_UnitTest(){
+        SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendEmailNotification(request));
+        assertEquals("Null userID.", thrown.getMessage());
+    }
+
+    @Test
     @Description("Tests when the request object has null userID")
     @DisplayName("Null userID in request object")
     void requestObjectHasNullUserID_UnitTest(){
