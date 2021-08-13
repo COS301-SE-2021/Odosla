@@ -51,6 +51,9 @@ public class ShoppingController implements ShoppingApi{
     StoreRepo storeRepo;
 
     @Autowired
+    OrderRepo orderRepo;
+
+    @Autowired
     CatalogueRepo catalogueRepo;
 
     @Autowired
@@ -59,8 +62,6 @@ public class ShoppingController implements ShoppingApi{
     @Autowired
     ShopperRepo shopperRepo;
 
-    @Autowired
-    OrderRepo orderRepo;
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 
@@ -370,10 +371,76 @@ public class ShoppingController implements ShoppingApi{
 
         }
 
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
-        shopperRepo.deleteAll();
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    public ResponseEntity<ShoppingGetNextQueuedResponse> getNextQueued(ShoppingGetNextQueuedRequest body) {
+        //add mock data to repo
+        UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
+        UUID orderID = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a278");
+
+        List<Item> ItemList = new ArrayList<>();
+        Item item1, item2;
+        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","img/");
+        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","img/");
+        ItemList.add(item1); ItemList.add(item2);
+        itemRepo.save(item1); itemRepo.save(item2);
+
+        List<Order> orders = new ArrayList<>();
+        Order order = new Order();
+        order.setItems(ItemList);
+        order.setOrderID(orderID);
+        order.setStoreID(storeUUID1);
+        order.setProcessDate(Calendar.getInstance());
+        orders.add(order);
+
+        orderRepo.saveAll(orders);
+
+        Store store = new Store(storeUUID1, "Boxer", null, 6,null,  orders,5, true);
+
+        System.out.println(store.getOrderQueue().size());
+
+        //creating response object and default return status:
+        ShoppingGetNextQueuedResponse response = new ShoppingGetNextQueuedResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        storeRepo.save(store);
+        if (mockMode){
+            List<StoreObject> mockStores = new ArrayList<>();
+            StoreObject a = new StoreObject();
+            a.setStoreBrand("mockA");
+            StoreObject b = new StoreObject();
+            b.setStoreBrand("mockB");
+            mockStores.add(a);
+            mockStores.add(b);
+
+            System.out.println(storeUUID1);
+//            storeRepo.save(store1);
+            storeRepo.save(store);
+
+//            response.setStores(mockStores);
+        } else {
+
+            try {
+                GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
+                GetNextQueuedResponse getNextQueuedResponse = ServiceSelector.getShoppingService().getNextQueued(getNextQueuedRequest);
+                try {
+
+                    response.setDate(getNextQueuedResponse.getTimeStamp().toString());
+                    response.setMessage(getNextQueuedResponse.getMessage());
+                    response.setSuccess(getNextQueuedResponse.isResponse());
+                    response.setNewCurrentOrder(getNextQueuedResponse.getNewCurrentOrder());
+                    response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
+
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
 
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -450,6 +517,33 @@ public class ShoppingController implements ShoppingApi{
 
             responseBody.add(currentStore);
 
+        }
+
+        return responseBody;
+    }
+
+    private List<OrderObject> populateOrders(List<Order> responseOrders) throws NullPointerException{
+
+        List<OrderObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseOrders.size(); i++){
+
+            OrderObject currentOrder = new OrderObject();
+
+            currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
+            currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
+            currentOrder.setCreateDate(responseOrders.get(i).toString());
+            currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
+            currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
+            currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
+            currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
+            currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
+            currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
+            currentOrder.setStatus(responseOrders.get(i).getStatus().name());
+            currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
+            currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
+
+            responseBody.add(currentOrder);
         }
 
         return responseBody;

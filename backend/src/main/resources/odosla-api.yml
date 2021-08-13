@@ -150,6 +150,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
+  /payment/submitOrder:
+    post:
+      summary: Endpoint for the Submit Order use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: submitOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_SubmitOrderRequest"
+      responses:
+        "200":
+          description: Returns submitted order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_SubmitOrderResponse"
+
 
   /notification/sendEmailNotification:
     post:
@@ -172,6 +194,30 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
+
+
+  /notification/sendDirectEmailNotification:
+    post:
+      summary: Endpoint for sending a direct email notification
+      tags:
+        - "notification"
+      description: Refer to summary
+      operationId: sendDirectEmailNotification
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/notification_SendDirectEmailNotificationRequest"
+      responses:
+        "200":
+          description: Returns whether the email was sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notification_SendDirectEmailNotificationResponse"
+
   /user/setCart:
     post:
       summary: Endpoint for setting a shopping cart
@@ -479,31 +525,71 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_UpdateShopperShiftResponse"
 
-
-
-
-  /notification/sendDirectEmailNotification:
+  /shopping/getNextQueued:
     post:
-      summary: Endpoint for sending a direct email notification
+      summary: Endpoint for getting next queue
       tags:
-        - "notification"
+        - "User"
       description: Refer to summary
-      operationId: sendDirectEmailNotification
+      operationId: getNextQueued
       requestBody:
         description: The input body required by this request
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/notification_SendDirectEmailNotificationRequest"
+              $ref: "#/components/schemas/shopping_GetNextQueuedRequest"
       responses:
         "200":
-          description: Returns whether the email was sent
+          description: Returns upon success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/notification_SendDirectEmailNotificationResponse"
+                $ref: "#/components/schemas/shopping_GetNextQueuedResponse"
 
+  /payment/getStatus:
+    post:
+      summary: Endpoint for Get Status use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: getStatus
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetStatusRequest"
+      responses:
+        "200":
+          description: Returns status upon success
+          content:
+            application/json:
+              schema:
+              $ref: "#/components/schemas/payment_GetStatusResponse"
+
+  /payment/getItems:
+    post:
+      summary: Endpoint for Get Items use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: getItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetItemsRequest"
+      responses:
+        "200":
+          description: Returns status upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetItemsResponse"
 
   /user/scanItem:
     post:
@@ -572,6 +658,12 @@ components:
         description:
           type: string
         imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
           type: string
 
     shopping_GetItemsRequest:
@@ -715,7 +807,6 @@ components:
           items:
             $ref: "#/components/schemas/StoreObject"
 
-
     OrderObject:
       description: "Generic schema for an Order"
       type: object
@@ -783,6 +874,44 @@ components:
           type: string
         order:
           type: object
+
+    payment_SubmitOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userId:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        listOfItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        discount:
+          type: number
+        storeId:
+          type: string
+        orderType:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        deliveryAddress:
+          type: string
+
+    payment_SubmitOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        orderStatus:
+          type: string
+        message:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+        timestamp:
+          type: string
 
     notification_SendEmailNotificationRequest:
       description: This object is expected as input
@@ -1225,7 +1354,6 @@ components:
         date:
           type: string
 
-
     user_GetCurrentUserRequest:
       description: This object is expected as input
       type: object
@@ -1288,4 +1416,70 @@ components:
         success:
           type: boolean
         date:
+          type: string
+
+    shopping_GetNextQueuedRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetNextQueuedResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+        queueOfOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        newCurrentOrder:
+          type: object
+
+    payment_GetStatusRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetStatusResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        status:
+          type: string
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    payment_GetItemsRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetItemsResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
           type: string

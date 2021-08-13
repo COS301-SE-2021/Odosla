@@ -169,7 +169,8 @@ public class ShoppingServiceImpl implements ShoppingService {
         // // Update the order status and create time // //
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
         updatedOrder.setProcessDate(Calendar.getInstance());
-
+        if(orderRepo!=null)
+        orderRepo.save(updatedOrder);
         // <paymentService>.updateOrder(updatedOrder);
 
 
@@ -183,7 +184,24 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException(e.getMessage());
         }
 
-        getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
+        //getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
+        Store store= getStoreByUUIDResponse.getStore();
+        List<Order> orderQueue=null;
+        if(store.getOrderQueue()!=null)
+        {
+            orderQueue = store.getCurrentOrders();
+            orderQueue.add(updatedOrder);
+        }
+        else
+        {
+            orderQueue = new ArrayList<>();
+            orderQueue.add(updatedOrder);
+        }
+
+
+        store.setOrderQueue(orderQueue);
+        if(storeRepo!=null)
+        storeRepo.save(store);
 
         response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
 
@@ -243,7 +261,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Order> orderQueue= store.getOrderQueue();
 
-            if(orderQueue==null){
+            if(orderQueue==null || orderQueue.isEmpty()){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
