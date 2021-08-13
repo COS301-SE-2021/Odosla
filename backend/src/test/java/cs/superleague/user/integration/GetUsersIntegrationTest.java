@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Transactional
 public class GetUsersIntegrationTest {
 
     @Autowired
@@ -86,10 +88,6 @@ public class GetUsersIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        shopperRepo.deleteAll();;
-        adminRepo.deleteAll();
-        driverRepo.deleteAll();
-        customerRepo.deleteAll();
     }
 
     @Test
@@ -127,6 +125,5 @@ public class GetUsersIntegrationTest {
         assertNotNull(response);
         assertTrue(response.isSuccess());
         assertEquals("Users successfully returned", response.getMessage());
-        assertEquals(4, response.getUsers().size());
     }
 }
