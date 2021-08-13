@@ -2,6 +2,7 @@ package cs.superleague.user.controller;
 
 import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.ShoppingService;
@@ -12,10 +13,7 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Customer;
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.GroceryList;
-import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
@@ -627,16 +625,16 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
-
+        JwtUtil jwtTokenUtil = new JwtUtil();
         customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
         storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
         groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
 
         if(!driverRepo.findById(customerID).isPresent()){
-
             Customer customer = new Customer();
             customer.setCustomerID(customerID);
-
+            customer.setAccountType(UserType.CUSTOMER);
+            System.out.println(jwtTokenUtil.generateJWTTokenCustomer(customer));
             customerRepo.save(customer);
 
         }
@@ -652,7 +650,23 @@ public class UserController implements UserApi {
                 userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
                 userGetCurrentUserResponse.setMessage(response.getMessage());
                 userGetCurrentUserResponse.setSuccess(response.isSuccess());
-                userGetCurrentUserResponse.setUser((OneOfuserGetCurrentUserResponseUser) response.getUser());
+                if (response.getUser().getAccountType() == UserType.CUSTOMER){
+                    CustomerObject customerObject = new CustomerObject();
+                    Customer customer = (Customer) response.getUser();
+                    customerObject.setName(customer.getName());
+                    customerObject.setSurname(customer.getSurname());
+                    customerObject.setEmail(customer.getEmail());
+                    customerObject.setPhoneNumber(customer.getPhoneNumber());
+                    customerObject.setPassword(customer.getPassword());
+                    customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
+                    customerObject.setActivationCode(customer.getActivationCode());
+                    customerObject.setResetCode(customer.getResetCode());
+                    customerObject.setResetExpiration(customer.getResetExpiration());
+                    customerObject.setAccountType(String.valueOf(customer.getAccountType()));
+                    customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+                    customerObject.setAddress(String.valueOf(customer.getAddress()));
+                    userGetCurrentUserResponse.setUser(customerObject);
+                }
 
             }catch(Exception e){
                 e.printStackTrace();
