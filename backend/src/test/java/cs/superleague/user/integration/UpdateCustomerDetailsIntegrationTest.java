@@ -19,12 +19,14 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class UpdateCustomerDetailsIntegrationTest {
 
     @Autowired
@@ -79,11 +81,11 @@ public class UpdateCustomerDetailsIntegrationTest {
         groceryLists.add(groceryList);
 
         customer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, shoppingCart, null, null);
+                UserType.CUSTOMER, userID, deliveryAddress, groceryLists, listOfItems, null, null);
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
-        itemRepo.save(I1);
-        itemRepo.save(I2);
+
+        itemRepo.saveAll(listOfItems);
         groceryListRepo.saveAll(groceryLists);
         customerRepo.save(customer);
         customerRepo.save(existingCustomer);
@@ -91,8 +93,10 @@ public class UpdateCustomerDetailsIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        //itemRepo.deleteAll();
+        //groceryListRepo.deleteAll();
         customerRepo.deleteAll();
-        groceryListRepo.deleteAll();
+
     }
 
 

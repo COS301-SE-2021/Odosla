@@ -35,6 +35,16 @@ public class Customer extends User {
     @OneToOne (cascade={CascadeType.ALL})
     private Wallet wallet;
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    private String email;
+
     public Customer(){
 
     }
@@ -47,22 +57,27 @@ public class Customer extends User {
         this.shoppingCart = shoppingCart;
         this.preference = preference;
         this.wallet = wallet;
+        this.email=email;
+
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID) {
         super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
         this.customerID = customerID;
+        this.email=email;
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID customerID) {
         super(name, surname, email, phoneNumber, password, activationCode, accountType);
         this.customerID = customerID;
+        this.email=email;
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID customerID, GeoPoint address) {
         super(name, surname, email, phoneNumber, password, activationCode, accountType);
         this.customerID = customerID;
         this.address = address;
+        this.email=email;
     }
 
     public GeoPoint getAddress() {

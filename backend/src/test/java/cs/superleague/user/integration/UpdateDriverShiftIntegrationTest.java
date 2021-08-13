@@ -7,13 +7,10 @@ import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.UpdateDriverShiftRequest;
 import cs.superleague.user.responses.UpdateDriverShiftResponse;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.*;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -23,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Transactional
 public class UpdateDriverShiftIntegrationTest {
 
 

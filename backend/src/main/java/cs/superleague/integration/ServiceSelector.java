@@ -23,7 +23,7 @@ public class ServiceSelector {
     @Value("${shoppingService}")
     private String shoppingService = "";
 
-    @Value("${env.USER_SERVICE}")
+    @Value("${userService}")
     private String userService = "";
 
     private NotificationService notification;

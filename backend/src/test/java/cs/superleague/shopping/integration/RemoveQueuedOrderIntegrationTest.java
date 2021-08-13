@@ -30,6 +30,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Transactional
 public class RemoveQueuedOrderIntegrationTest {
 
     @Autowired
@@ -105,6 +107,7 @@ public class RemoveQueuedOrderIntegrationTest {
         stock=new Catalogue(storeID,itemList);
 
         store=new Store(storeID,"StoreBrand",stock,3,currentOrders,orderQueue,6,true);
+        store.setStoreLocation(geoPoint2);
 
         itemRepo.save(item1);
         itemRepo.save(item2);
@@ -113,7 +116,7 @@ public class RemoveQueuedOrderIntegrationTest {
         itemRepo.save(item5);
         catalogueRepo.save(stock);
         storeRepo.save(store);
-        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID1 = submitOrderResponse.getOrder().getOrderID();
         order1 = submitOrderResponse.getOrder();
@@ -121,7 +124,7 @@ public class RemoveQueuedOrderIntegrationTest {
         orderRepo.save(order1);
         store.getOrderQueue().add(order1);
         storeRepo.save(store);
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY,geoPoint1,geoPoint2);
+        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID2 = submitOrderResponse.getOrder().getOrderID();
         order2 = submitOrderResponse.getOrder();

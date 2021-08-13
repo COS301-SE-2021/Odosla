@@ -1,10 +1,20 @@
 package cs.superleague.payment.dataclass;
 
+import javax.persistence.*;
 import java.util.Calendar;
+import java.util.UUID;
 
+@Entity
+@Table(name = "transactionTable")
 public class Transaction {
+
+    @Id
+    private UUID transactionID;
     private Calendar date;
+
+    @OneToOne(cascade={CascadeType.ALL})
     private Order order;
+
     private float amount;
     //private PayOption card;
 
@@ -13,6 +23,13 @@ public class Transaction {
     }
 
     public Transaction(Calendar date, Order order, float amount) {
+        this.date = date;
+        this.order = order;
+        this.amount = amount;
+    }
+
+    public Transaction(UUID transactionID, Calendar date, Order order, float amount) {
+        this.transactionID = transactionID;
         this.date = date;
         this.order = order;
         this.amount = amount;
@@ -40,5 +57,9 @@ public class Transaction {
 
     public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    public UUID getTransactionID() {
+        return transactionID;
     }
 }
