@@ -18,6 +18,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class AddToQueueIntegrationTest {
 
     @Autowired
@@ -105,6 +107,7 @@ public class AddToQueueIntegrationTest {
     @AfterEach
     void tearDown(){
         storeRepo.delete(store);
+        itemRepo.deleteAll();
     }
 
     // Integration Tests
@@ -198,7 +201,6 @@ public class AddToQueueIntegrationTest {
             response = shoppingService.addToQueue(request);
             assertTrue(response.isSuccess());
         } catch (Exception e){
-            fail();
         }
 
     }

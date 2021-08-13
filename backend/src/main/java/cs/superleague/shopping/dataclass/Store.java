@@ -1,5 +1,6 @@
 package cs.superleague.shopping.dataclass;
 
+import cs.superleague.payment.dataclass.GeoPoint;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table
+@Table (name = "store")
 @DynamicUpdate
 public class Store {
 
@@ -24,6 +25,9 @@ public class Store {
     private Boolean isOpen;
     private int openingTime;
     private int closingTime;
+
+    @OneToOne(cascade={CascadeType.ALL})
+    private GeoPoint storeLocation;
 
     @OneToOne(cascade={CascadeType.ALL})
     private Catalogue stock;
@@ -152,5 +156,14 @@ public class Store {
     public int getClosingTime() {
         return closingTime;
     }
+
+    public GeoPoint getStoreLocation(){
+        return storeLocation;
+    }
+
+    public void setStoreLocation(GeoPoint storeLocation) {
+        this.storeLocation = storeLocation;
+    }
+
 }
 

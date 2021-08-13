@@ -1,7 +1,11 @@
 package cs.superleague.user.repos;
 
 import cs.superleague.user.dataclass.Driver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import cs.superleague.user.dataclass.Shopper;
 
@@ -14,7 +18,8 @@ public interface ShopperRepo extends JpaRepository<Shopper, UUID> {
 
   List<Shopper> findAll();
 
-  Shopper findShopperByEmail(String email);
+  Optional<Shopper> findByEmail(String email);
+
   Optional<Shopper> findById(UUID shopperID);
 }
 

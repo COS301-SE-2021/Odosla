@@ -4,6 +4,8 @@ import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -12,24 +14,22 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Customer;
-import cs.superleague.user.dataclass.GroceryList;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.GroceryListRepo;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.ShopperDoesNotExistException;
+import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -49,6 +49,18 @@ public class UserController implements UserApi {
 
     @Autowired
     CatalogueRepo catalogueRepo;
+
+    @Autowired
+    DriverRepo driverRepo;
+
+    @Autowired
+    AdminRepo adminRepo;
+
+    @Autowired
+    ShopperRepo shopperRepo;
+
+    @Autowired
+    OrderRepo orderRepo;
 
     @Autowired
     private UserServiceImpl userService;
@@ -254,6 +266,31 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(userGetShoppingCartResponse, status);
     }
 
+    //Populate ItemObject list from items returned by use case
+    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
+
+        List<ItemObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseItems.size(); i++){
+
+            ItemObject currentItem = new ItemObject();
+
+            currentItem.setName(responseItems.get(i).getName());
+            currentItem.setDescription(responseItems.get(i).getDescription());
+            currentItem.setBarcode(responseItems.get(i).getBarcode());
+            currentItem.setProductId(responseItems.get(i).getProductID());
+            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
+            currentItem.setQuantity(responseItems.get(i).getQuantity());
+            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+
+            responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
     @Override
     public ResponseEntity<UserMakeGroceryListResponse> makeGroceryList(UserMakeGroceryListRequest body){
 
@@ -314,7 +351,7 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserRemoveFromCartResponse> removeFromCart(UserRemoveFromCartRequest body){
+    public ResponseEntity<UserResetPasswordResponse> resetPassword(UserResetPasswordRequest body){
 
         customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
         storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
@@ -339,7 +376,7 @@ public class UserController implements UserApi {
             store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
             listOfStores.add(store);
 
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+            setCartCustomer = new Customer("D", "S", "u14254922@tuks.co.za", "0721234567", "", new Date(), "", "", "", true,
                     UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
 
             itemRepo.save(item1);
@@ -349,17 +386,17 @@ public class UserController implements UserApi {
             customerRepo.save(setCartCustomer);
         }
 
-        UserRemoveFromCartResponse userRemoveFromCartResponse = new UserRemoveFromCartResponse();
+        UserResetPasswordResponse userMakeGroceryListResponse = new UserResetPasswordResponse();
         HttpStatus status = HttpStatus.OK;
 
         try{
-            RemoveFromCartRequest request = new RemoveFromCartRequest(body.getCustomerID(), body.getBarcode());
+            ResetPasswordRequest request = new ResetPasswordRequest(body.getEmail(), body.getUserType());
 
-            RemoveFromCartResponse response = ServiceSelector.getUserService().removeFromCart(request);
+            ResetPasswordResponse response = ServiceSelector.getUserService().resetPassword(request);
             try{
-                userRemoveFromCartResponse.setDate(response.getTimestamp().toString());
-                userRemoveFromCartResponse.setMessage(response.getMessage());
-                userRemoveFromCartResponse.setSuccess(response.isSuccess());
+                userMakeGroceryListResponse.setResetCode(response.getResetCode());
+                userMakeGroceryListResponse.setMessage(response.getMessage());
+                userMakeGroceryListResponse.setSuccess(response.isSuccess());
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -369,57 +406,214 @@ public class UserController implements UserApi {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>(userRemoveFromCartResponse, status);
+        return new ResponseEntity<>(userMakeGroceryListResponse, status);
     }
 
     @Override
-    public ResponseEntity<UserRegisterCustomerResponse> registerCustomer(UserRegisterCustomerRequest body){
+    public ResponseEntity<UserLoginResponse> loginUser(UserLoginRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+        Driver driver=new Driver();
+        UUID driverId= UUID.randomUUID();
+        String driverEmail="driverEmail@gmail.com";
+        String password="Kelcat@01";
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        String passwordHashed=passwordEncoder.encode(password);
 
-        if(!customerRepo.findById(customerID).isPresent()){
+        driver.setDriverID(driverId);
+        driver.setEmail(driverEmail);
+        driver.setPassword(passwordHashed);
+        UserType userType = null;
+        driverRepo.save(driver);
+        UserLoginResponse response=new UserLoginResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            if (body.getUserType().equals("DRIVER")) {
+                userType = UserType.DRIVER;
+            } else if (body.getUserType().equals("CUSTOMER")) {
+                userType = UserType.CUSTOMER;
+            } else if (body.getUserType().equals("SHOPPER")) {
+                userType = UserType.SHOPPER;
+            } else if (body.getUserType().equals("ADMIN")) {
+                userType = UserType.ADMIN;
+            }
 
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+            String emailRequest=body.getEmail();
+            String passwordRequest=body.getPassword();
 
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
 
-            listOfItems.add(item1);
+            LoginRequest request = new LoginRequest(body.getEmail(), body.getPassword(), userType);
 
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
+            LoginResponse loginResponse= ServiceSelector.getUserService().loginUser(request);
 
-            shoppingCart.add(item2);
+            try {
+                response.setMessage(loginResponse.getMessage());
+                response.setToken(loginResponse.getToken());
+                response.setSuccess(loginResponse.isSuccess());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(loginResponse.getTimestamp()));
 
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
 
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
+        }catch(Exception e){
+            e.printStackTrace();
         }
+        driverRepo.deleteAll();
+        shopperRepo.deleteAll();
+        customerRepo.deleteAll();
+        adminRepo.deleteAll();
+        return new ResponseEntity<>(response, httpStatus);
 
-        UserRegisterCustomerResponse userRegisterCustomerResponse = new UserRegisterCustomerResponse();
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterDriverResponse> registerDriver(UserRegisterDriverRequest body) {
+        UserRegisterDriverResponse response=new UserRegisterDriverResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterDriverRequest request=new RegisterDriverRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterDriverResponse driverResponse=ServiceSelector.getUserService().registerDriver(request);
+
+            try{
+                response.setMessage(driverResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(driverResponse.getTimestamp()));
+                response.setSuccess(driverResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterCustomerResponse> registerCustomer(UserRegisterCustomerRequest body) {
+        UserRegisterCustomerResponse response=new UserRegisterCustomerResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterCustomerRequest request=new RegisterCustomerRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterCustomerResponse customerResponse=ServiceSelector.getUserService().registerCustomer(request);
+
+            try{
+                response.setMessage(customerResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(customerResponse.getTimestamp()));
+                response.setSuccess(customerResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterAdminResponse> registerAdmin(UserRegisterAdminRequest body) {
+        UserRegisterAdminResponse response=new UserRegisterAdminResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterAdminRequest request=new RegisterAdminRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterAdminResponse adminResponse=ServiceSelector.getUserService().registerAdmin(request);
+
+            try{
+                response.setMessage(adminResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(adminResponse.getTimestamp()));
+                response.setSuccess(adminResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterShopperResponse> registerShopper(UserRegisterShopperRequest body) {
+        UserRegisterShopperResponse response=new UserRegisterShopperResponse();
+        HttpStatus httpStatus=HttpStatus.OK;
+        try{
+
+            RegisterShopperRequest request=new RegisterShopperRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            RegisterShopperResponse shopperResponse=ServiceSelector.getUserService().registerShopper(request);
+
+            try{
+                response.setMessage(shopperResponse.getMessage());
+                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(shopperResponse.getTimestamp()));
+                response.setSuccess(shopperResponse.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response,httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<UserAccountVerifyResponse> verifyAccount(UserAccountVerifyRequest body) {
+        Driver driver=new Driver();
+        driver.setDriverID(UUID.randomUUID());
+        driver.setEmail("driverVerifyEmail@gmail.com");
+        driver.setActivationCode("verifyCode");
+        driverRepo.save(driver);
+        UserAccountVerifyResponse response=new UserAccountVerifyResponse();
         HttpStatus status = HttpStatus.OK;
 
         try{
-            RegisterCustomerRequest request = new RegisterCustomerRequest(body.getName(), body.getSurnname(),
-                    body.getEmail(), body.getPhoneNumber(), body.getPassword());
+            UserType userType = null;
+            if(body.getUserType().equals("SHOPPER")){
+                userType=UserType.SHOPPER;
+            } else if(body.getUserType().equals("DRIVER")){
+                userType=UserType.DRIVER;
+            } else if(body.getUserType().equals("CUSTOMER")){
+                userType=UserType.CUSTOMER;
+            } else if(body.getUserType().equals("ADMIN")){
+                userType=UserType.ADMIN;
+            }
+            AccountVerifyRequest request = new AccountVerifyRequest(body.getEmail(),body.getActivationCode(),userType);
 
-            RegisterCustomerResponse response = ServiceSelector.getUserService().registerCustomer(request);
+            AccountVerifyResponse userResponse = ServiceSelector.getUserService().verifyAccount(request);
             try{
-                userRegisterCustomerResponse.setDate(response.getTimestamp().toString());
-                userRegisterCustomerResponse.setMessage(response.getMessage());
-                userRegisterCustomerResponse.setSuccess(response.isSuccess());
+                response.setDate(userResponse.getTimestamp().toString());
+                response.setMessage(userResponse.getMessage());
+                response.setSuccess(userResponse.isSuccess());
+                response.setUserType(body.getUserType());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        driverRepo.deleteAll();
+
+        return new ResponseEntity<>(response, status);
+
+    }
+
+    @Override
+    public ResponseEntity<UserSetCurrentLocationResponse> setCurrentLocation(UserSetCurrentLocationRequest body){
+        UserSetCurrentLocationResponse setCurrentLocationResponse = new UserSetCurrentLocationResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            SetCurrentLocationRequest request = new SetCurrentLocationRequest(body.getDriverID(), body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getAddress());
+
+            SetCurrentLocationResponse response = ServiceSelector.getUserService().setCurrentLocation(request);
+            try{
+                setCurrentLocationResponse.setDate(response.getTimestamp().toString());
+                setCurrentLocationResponse.setMessage(response.getMessage());
+                setCurrentLocationResponse.setSuccess(response.isSuccess());
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -429,31 +623,118 @@ public class UserController implements UserApi {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>(userRegisterCustomerResponse, status);
+        return new ResponseEntity<>(setCurrentLocationResponse, status);
     }
 
-    //Populate ItemObject list from items returned by use case
-    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
+    @Override
+    public ResponseEntity<UserUpdateShopperShiftResponse> updateShopperShift(UserUpdateShopperShiftRequest body) {
+        UUID shopperID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        Shopper shopper = new Shopper();
+        shopper.setShopperID(shopperID);
+        shopper.setOnShift(false);
+        shopperRepo.save(shopper);
 
-        List<ItemObject> responseBody = new ArrayList<>();
+        UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(UUID.fromString(body.getShopperID()), body.isOnShift());
+            UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
+            try {
+                response.setMessage(response1.getMessage());
+                response.setSuccess(Boolean.valueOf(response1.isSuccess()));
+                response.setTimestamp(String.valueOf(response1.getTimestamp().getTime()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setMessage(e.getMessage());
+                response.setSuccess(false);
+                response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
+        }
+        shopperRepo.delete(shopper);
+        return new ResponseEntity<>(response, status);
+    }
 
-        for(int i = 0; i < responseItems.size(); i++){
+    @Override
+    public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
 
-            ItemObject currentItem = new ItemObject();
+        UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
+        HttpStatus status = HttpStatus.OK;
 
-            currentItem.setName(responseItems.get(i).getName());
-            currentItem.setDescription(responseItems.get(i).getDescription());
-            currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
-            currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
-            currentItem.setQuantity(responseItems.get(i).getQuantity());
-            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+        try{
+            GetCurrentUserRequest request = new GetCurrentUserRequest(body.getJwTToken());
 
-            responseBody.add(currentItem);
+            GetCurrentUserResponse response = ServiceSelector.getUserService().getCurrentUser(request);
+            try{
+                userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
+                userGetCurrentUserResponse.setMessage(response.getMessage());
+                userGetCurrentUserResponse.setSuccess(response.isSuccess());
+                userGetCurrentUserResponse.setUser((OneOfuserGetCurrentUserResponseUser) response.getUser());
 
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
         }
 
-        return responseBody;
+        return new ResponseEntity<>(userGetCurrentUserResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserScanItemResponse> scanItem(UserScanItemRequest body){
+
+        UserScanItemResponse userScanItemResponse = new UserScanItemResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ScanItemRequest request = new ScanItemRequest(body.getBarcode(), UUID.fromString(body.getOrderID()));
+
+            ScanItemResponse response = ServiceSelector.getUserService().scanItem(request);
+            try{
+                userScanItemResponse.setDate(response.getTimestamp().toString());
+                userScanItemResponse.setMessage(response.getMessage());
+                userScanItemResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userScanItemResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserCompletePackagingOrderResponse> completePackagingOrder(UserCompletePackagingOrderRequest body){
+
+        UserCompletePackagingOrderResponse userCompletePackagingOrderResponse = new UserCompletePackagingOrderResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            CompletePackagingOrderRequest request = new CompletePackagingOrderRequest(UUID.fromString(body.getOrderID()), body.isGetNext());
+
+            CompletePackagingOrderResponse response = ServiceSelector.getUserService().completePackagingOrder(request);
+            try{
+                userCompletePackagingOrderResponse.setDate(response.getTimestamp().toString());
+                userCompletePackagingOrderResponse.setMessage(response.getMessage());
+                userCompletePackagingOrderResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userCompletePackagingOrderResponse, status);
     }
 }

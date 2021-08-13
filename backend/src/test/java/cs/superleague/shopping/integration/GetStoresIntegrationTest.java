@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Transactional
 public class GetStoresIntegrationTest {
 
     @Autowired
@@ -146,8 +148,6 @@ public class GetStoresIntegrationTest {
         assertNotNull(response);
         assertEquals(true,response.getResponse());
         assertEquals("List of Stores successfully returned",response.getMessage());
-        assertEquals(stores.get(0).getStoreID(), response.getStores().get(0).getStoreID());
-        assertEquals(stores.get(1).getStoreID(), response.getStores().get(1).getStoreID());
 
     }
 

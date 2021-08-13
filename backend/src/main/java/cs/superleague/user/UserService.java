@@ -21,6 +21,11 @@ public interface UserService {
     UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException;
     UpdateAdminDetailsResponse updateAdminDetails(UpdateAdminDetailsRequest request) throws UserException;
     UpdateDriverDetailsResponse updateDriverDetails(UpdateDriverDetailsRequest request) throws UserException;
+    ResetPasswordResponse resetPassword(ResetPasswordRequest request) throws UserException;
+    FinalisePasswordResetResponse finalisePasswordReset(FinalisePasswordResetRequest request) throws UserException;
+    ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException;
+    SetCurrentLocationResponse setCurrentLocation(SetCurrentLocationRequest request) throws UserException;
+    GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException;
 
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
@@ -33,6 +38,7 @@ public interface UserService {
     CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
+    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException;
 
     /* Analytics user data*/
     GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
