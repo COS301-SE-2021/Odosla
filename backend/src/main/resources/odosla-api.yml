@@ -482,6 +482,12 @@ components:
           type: string
         imageUrl:
           type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
 
     shopping_GetItemsRequest:
       description: This object is expected as input

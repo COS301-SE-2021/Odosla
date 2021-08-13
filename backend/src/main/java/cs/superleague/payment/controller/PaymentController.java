@@ -256,7 +256,10 @@ public class PaymentController implements PaymentApi {
 
             item.setPrice(price);
             item.setImageUrl(i.getImageUrl());
-
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
             items.add(itemRepo.save(item));
 
         }
