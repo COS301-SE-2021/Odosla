@@ -98,7 +98,7 @@ public class RemoveFromCartUnitTest {
     @Test
     @DisplayName("When barcode attribute is null")
     void UnitTest_testingNull_Barcode_Attribute(){
-        request = new RemoveFromCartRequest(UUID.randomUUID(), null);
+        request = new RemoveFromCartRequest(UUID.randomUUID().toString(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> userService.removeFromCart(request));
         assertEquals("Barcode is null - could not remove from cart", thrown.getMessage());
     }
@@ -106,7 +106,7 @@ public class RemoveFromCartUnitTest {
     @Test
     @DisplayName("When customer with the provided ID does not exist")
     void UnitTest_testing_InvalidUser(){
-        request = new RemoveFromCartRequest(UUID.randomUUID(), "");
+        request = new RemoveFromCartRequest(UUID.randomUUID().toString(), "");
 
         when(customerRepo.findById(Mockito.any())).thenReturn(null);
         Throwable throwable = Assertions.assertThrows((CustomerDoesNotExistException.class), () -> userService.removeFromCart(request));
@@ -116,7 +116,7 @@ public class RemoveFromCartUnitTest {
     @Test
     @DisplayName("When does not have a shopping cart")
     void UnitTest_testing_NoShoppingCart(){
-        request = new RemoveFromCartRequest(userID, "");
+        request = new RemoveFromCartRequest(userID.toString(), "");
 
         try {
             when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerNullShoppingCart));
@@ -132,7 +132,7 @@ public class RemoveFromCartUnitTest {
     @Test
     @DisplayName("When shopping cart is Empty")
     void UnitTest_testing_ShoppingCartEmpty(){
-        request = new RemoveFromCartRequest(userID, "");
+        request = new RemoveFromCartRequest(userID.toString(), "");
 
         try {
             when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customerEmptyCart));
@@ -148,7 +148,7 @@ public class RemoveFromCartUnitTest {
     @Test
     @DisplayName("When a non-matching barcode is given")
     void UnitTest_testing_NonMatchingBarcode(){
-        request = new RemoveFromCartRequest(userID, "");
+        request = new RemoveFromCartRequest(userID.toString(), "");
 
         try {
             when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
@@ -165,7 +165,7 @@ public class RemoveFromCartUnitTest {
     @Test
     @DisplayName("When a matching barcode is given")
     void UnitTest_testing_MatchingBarcode(){
-        request = new RemoveFromCartRequest(userID, "123456");
+        request = new RemoveFromCartRequest(userID.toString(), "123456");
 
         try {
             when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));

@@ -39,4 +39,7 @@ public interface UserService {
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException;
+
+    /* Analytics user data*/
+    GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
 }
