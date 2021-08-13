@@ -454,67 +454,17 @@ public class ShoppingController implements ShoppingApi{
     }
 
     public ResponseEntity<ShoppingPopulateTablesResponse> populateTables(ShoppingPopulateTablesRequest body) {
+        //Items
+
         UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
         UUID storeUUID2 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f");
 
-        Store store = new Store(storeID, 7, 19, "Boxer", 2, 5, true);
-        Store store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
-        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, true);
-        GeoPoint storeLocation = new GeoPoint(-25.72073513199565, 28.245849609375004, "Maple street");
-        GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
-        GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
-        store.setStoreLocation(storeLocation);
-        store1.setStoreLocation(store1Location);
-        store2.setStoreLocation(store2Location);
-        storeRepo.save(store);
-        storeRepo.save(store1);
-        storeRepo.save(store2);
-
-       // HttpStatus httpStatus = HttpStatus.OK;
-
-        //Shoppers
-        Shopper shopper1, shopper2;
-        shopper1=new Shopper();
-        shopper2=new Shopper();
-
-        UUID shopper1ID= UUID.randomUUID();
-        UUID shopper2ID= UUID.randomUUID();
-
-        shopper1.setShopperID(shopper1ID);
-        shopper1.setName("Peter");
-        shopper1.setSurname("Parker");
-        shopper1.setEmail("PeterParker2021!@gmail.com");
-        shopper1.setPassword("DontTellMaryJane2021!");
-        shopper1.setOrdersCompleted(5);
-        shopper1.setAccountType(UserType.SHOPPER);
-        shopper1.setStoreID(storeUUID1);
-
-        shopper2.setShopperID(shopper2ID);
-        shopper2.setName("Mary");
-        shopper2.setSurname("Jane");
-        shopper2.setEmail("MaryJane2021!@gmail.com");
-        shopper2.setPassword("IKnowWhoPeterIs2021!");
-        shopper2.setOrdersCompleted(4);
-        shopper2.setAccountType(UserType.SHOPPER);
-        shopper2.setStoreID(storeUUID2);
-
-        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
-        List<Shopper> mockShopperList = new ArrayList<>();
-        mockShopperList.add(shopper1);
-        store1.setShoppers(mockShopperList);
-        storeRepo.save(store1);
-        mockShopperList = new ArrayList<>();
-        mockShopperList.add(shopper2);
-        store2.setShoppers(mockShopperList);
-        storeRepo.save(store2);
-
-        //Items
         Item item1, item2,item3, item4, item5;
-        item1=new Item("Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID2,36.99,1,"description","item/", "Heinz", "250g", "Sauce");
-        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID2,14.99,3,"description","item/", "Nestle", "90g", "Chocolate");
+        item1=new Item("Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","item/", "Heinz", "250g", "Sauce");
+        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","item/", "Nestle", "90g", "Chocolate");
         item3=new Item("Milk","p423523144","69767699-9ABF-HJDS-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","item/", "Pick n Pay", "2l", "Dairy");
-        item4=new Item("Baked Beans","p623235254","65363563-9JBC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","item/", "Koo", "410g", "Canned");
-        item5=new Item("Bread", "p903932918", "6001710010253", storeUUID1, 16.99, 9, "description", "item/", "Sasko", "700g", "Bakery" );
+        item4=new Item("Baked Beans","p623235254","65363563-9JBC-DEF0-1234-56789ABCDEFA", storeUUID2,14.99,3,"description","item/", "Koo", "410g", "Canned");
+        item5=new Item("Bread", "p903932918", "6001710010253", storeUUID2, 16.99, 9, "description", "item/", "Sasko", "700g", "Bakery" );
 
         itemRepo.save(item1);
         itemRepo.save(item2);
@@ -526,8 +476,9 @@ public class ShoppingController implements ShoppingApi{
         List<Item> store1Cat = new ArrayList<>();
         store1Cat.add(item1);
         store1Cat.add(item2);
+        store1Cat.add(item3);
+
         List<Item> store2Cat = new ArrayList<>();
-        store2Cat.add(item3);
         store2Cat.add(item4);
         store2Cat.add(item5);
 
@@ -537,21 +488,69 @@ public class ShoppingController implements ShoppingApi{
         Catalogue c2 = new Catalogue(storeUUID2, store2Cat);
         catalogueRepo.save(c2);
 
+        Store store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
+        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, true);
+        GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
+        GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
+
+        store1.setStoreLocation(store1Location);
         store1.setStock(c1);
+
+        store2.setStoreLocation(store2Location);
         store2.setStock(c2);
+
 
         storeRepo.save(store1);
         storeRepo.save(store2);
 
-        //Grocery Lists
-        GroceryList groceryList = new GroceryList(UUID.randomUUID(), "Shopping List", store2Cat);
-        List<GroceryList> groceryLists = new ArrayList<>();
-        groceryLists.add(groceryList);
-        groceryListRepo.save(groceryList);
-        //Customers
-        GeoPoint customerLocation = new GeoPoint(-25.700937877819005, 28.223876953125004, "customer address");
-        Customer customer = new Customer("Dan", "Smith", "ds@smallClub.com", "0721234567", "Hello$$123",null, "activate", "reset", null, true,UserType.CUSTOMER, UUID.randomUUID(), customerLocation, groceryLists, null, null, null);
-        customerRepo.save(customer);
+       // HttpStatus httpStatus = HttpStatus.OK;
+
+        //Shoppers
+//        Shopper shopper1, shopper2;
+//        shopper1=new Shopper();
+//        shopper2=new Shopper();
+//
+//        UUID shopper1ID= UUID.randomUUID();
+//        UUID shopper2ID= UUID.randomUUID();
+//
+//        shopper1.setShopperID(shopper1ID);
+//        shopper1.setName("Peter");
+//        shopper1.setSurname("Parker");
+//        shopper1.setEmail("PeterParker2021!@gmail.com");
+//        shopper1.setPassword("DontTellMaryJane2021!");
+//        shopper1.setOrdersCompleted(5);
+//        shopper1.setAccountType(UserType.SHOPPER);
+//        shopper1.setStoreID(storeUUID1);
+//
+//        shopper2.setShopperID(shopper2ID);
+//        shopper2.setName("Mary");
+//        shopper2.setSurname("Jane");
+//        shopper2.setEmail("MaryJane2021!@gmail.com");
+//        shopper2.setPassword("IKnowWhoPeterIs2021!");
+//        shopper2.setOrdersCompleted(4);
+//        shopper2.setAccountType(UserType.SHOPPER);
+//        shopper2.setStoreID(storeUUID2);
+//
+//        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
+//        List<Shopper> mockShopperList = new ArrayList<>();
+//        mockShopperList.add(shopper1);
+//        store1.setShoppers(mockShopperList);
+//        storeRepo.save(store1);
+//        mockShopperList = new ArrayList<>();
+//        mockShopperList.add(shopper2);
+//        store2.setShoppers(mockShopperList);
+//        storeRepo.save(store2);
+//
+//
+//        //Grocery Lists
+//        GroceryList groceryList = new GroceryList(UUID.randomUUID(), "Shopping List", store2Cat);
+//        List<GroceryList> groceryLists = new ArrayList<>();
+//        groceryLists.add(groceryList);
+//        groceryListRepo.save(groceryList);
+//        //Customers
+//        GeoPoint customerLocation = new GeoPoint(-25.700937877819005, 28.223876953125004, "customer address");
+//        Customer customer = new Customer("Dan", "Smith", "ds@smallClub.com", "0721234567", "Hello$$123",null, "activate", "reset", null, true,UserType.CUSTOMER, UUID.randomUUID(), customerLocation, groceryLists, null, null, null);
+//        customerRepo.save(customer);
 
         return null;
     }
