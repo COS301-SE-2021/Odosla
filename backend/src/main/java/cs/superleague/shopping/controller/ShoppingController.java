@@ -455,14 +455,14 @@ public class ShoppingController implements ShoppingApi{
 
     public ResponseEntity<ShoppingPopulateTablesResponse> populateTables(ShoppingPopulateTablesRequest body) {
         UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
-        UUID storeUUID2 = UUID.randomUUID();
+        UUID storeUUID2 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f");
 
         Store store = new Store(storeID, 7, 19, "Boxer", 2, 5, true);
         Store store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
-        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, false);
-        GeoPoint storeLocation = new GeoPoint(-25.72073513199565, 28.245849609375004, "address");
-        GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "address");
-        GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "address");
+        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, true);
+        GeoPoint storeLocation = new GeoPoint(-25.72073513199565, 28.245849609375004, "Maple street");
+        GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
+        GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
         store.setStoreLocation(storeLocation);
         store1.setStoreLocation(store1Location);
         store2.setStoreLocation(store2Location);
@@ -477,7 +477,10 @@ public class ShoppingController implements ShoppingApi{
         shopper1=new Shopper();
         shopper2=new Shopper();
 
-        shopper1.setShopperID(UUID.randomUUID());
+        UUID shopper1ID= UUID.randomUUID();
+        UUID shopper2ID= UUID.randomUUID();
+
+        shopper1.setShopperID(shopper1ID);
         shopper1.setName("Peter");
         shopper1.setSurname("Parker");
         shopper1.setEmail("PeterParker2021!@gmail.com");
@@ -486,7 +489,7 @@ public class ShoppingController implements ShoppingApi{
         shopper1.setAccountType(UserType.SHOPPER);
         shopper1.setStoreID(storeUUID1);
 
-        shopper2.setShopperID(UUID.randomUUID());
+        shopper2.setShopperID(shopper2ID);
         shopper2.setName("Mary");
         shopper2.setSurname("Jane");
         shopper2.setEmail("MaryJane2021!@gmail.com");
@@ -533,6 +536,12 @@ public class ShoppingController implements ShoppingApi{
 
         Catalogue c2 = new Catalogue(storeUUID2, store2Cat);
         catalogueRepo.save(c2);
+
+        store1.setStock(c1);
+        store2.setStock(c2);
+
+        storeRepo.save(store1);
+        storeRepo.save(store2);
 
         //Grocery Lists
         GroceryList groceryList = new GroceryList(UUID.randomUUID(), "Shopping List", store2Cat);
