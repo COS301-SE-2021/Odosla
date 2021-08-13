@@ -4,6 +4,8 @@ import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -60,6 +62,9 @@ public class UserController implements UserApi {
 
     @Autowired
     ShopperRepo shopperRepo;
+
+    @Autowired
+    OrderRepo orderRepo;
 
     @Autowired
     private UserServiceImpl userService;
@@ -628,19 +633,6 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!driverRepo.findById(customerID).isPresent()){
-
-            Customer customer = new Customer();
-            customer.setCustomerID(customerID);
-
-            customerRepo.save(customer);
-
-        }
-
         UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -665,5 +657,29 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(userGetCurrentUserResponse, status);
     }
 
+    @Override
+    public ResponseEntity<UserScanItemResponse> scanItem(UserScanItemRequest body){
 
+        UserScanItemResponse userScanItemResponse = new UserScanItemResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ScanItemRequest request = new ScanItemRequest(body.getBarcode(), UUID.fromString(body.getOrderID()));
+
+            ScanItemResponse response = ServiceSelector.getUserService().scanItem(request);
+            try{
+                userScanItemResponse.setDate(response.getTimestamp().toString());
+                userScanItemResponse.setMessage(response.getMessage());
+                userScanItemResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userScanItemResponse, status);
+    }
 }
