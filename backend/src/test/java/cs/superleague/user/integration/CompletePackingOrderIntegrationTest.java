@@ -1,6 +1,5 @@
 package cs.superleague.user.integration;
 
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -10,27 +9,23 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.shopping.repos.ItemRepo;
-import cs.superleague.shopping.requests.GetStoresRequest;
-import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.requests.AddToCartRequest;
 import cs.superleague.user.requests.CompletePackagingOrderRequest;
 import cs.superleague.user.responses.CompletePackagingOrderResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class CompletePackingOrderIntegrationTest {
 
     @Autowired

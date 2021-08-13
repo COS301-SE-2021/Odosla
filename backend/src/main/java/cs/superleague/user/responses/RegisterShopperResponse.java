@@ -3,6 +3,7 @@ package cs.superleague.user.responses;
 import java.util.Date;
 
 public class RegisterShopperResponse {
+
     private final boolean success;
     private final Date timestamp;
     private final String message;

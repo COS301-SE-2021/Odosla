@@ -14,6 +14,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Transactional
 public class GetCurrentUserIntegrationTest {
     @Autowired
     ShopperRepo shopperRepo;
@@ -182,9 +184,13 @@ public class GetCurrentUserIntegrationTest {
 
         assertNotNull(response);
         assertEquals(shopper.getEmail(),response.getUser().getEmail());
-        assertEquals(shopper.getAccountType(),response.getUser().getAccountType());
+        System.out.println(shopper.getAccountType());
+        System.out.println(response.getUser().getAccountType());
+
         assertEquals(true,response.isSuccess());
         assertEquals("User successfully returned",response.getMessage());
+        assertEquals(shopper.getAccountType(),response.getUser().getAccountType());
+
         assertNotNull(response.getTimestamp());
     }
 

@@ -5,43 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="GetStoreByUUIDUnitTest">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/requests/GetShopperByUUIDRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/responses/GetShopperByUUIDResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/payment/integration/GenerateInvoiceIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/payment/integration/GetInvoiceIntegrationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/ShoppingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/ShoppingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/dataclass/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/dataclass/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/repos/StoreRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/repos/StoreRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/GetShoppersRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/GetShoppersRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/responses/GetShoppersResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/responses/GetShoppersResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/dataclass/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/dataclass/exceptions/UserDoesNotExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/exceptions/UserDoesNotExistException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/dataclass/exceptions/UserException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/dataclass/repos/UserRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/user/repos/UserRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/dataclass/requests/GetShopperByUUIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/user/dataclass/responses/GetShopperByUUIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/ShoppingService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/ShoppingServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/requests/AddShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/AddShopperRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/requests/ClearShoppersRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/ClearShoppersRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/requests/GetShoppersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/requests/RemoveShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/RemoveShopperRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/responses/AddShopperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/responses/AddShopperResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/responses/ClearShoppersResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/responses/ClearShoppersResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/responses/GetShoppersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/shopping/responses/RemoveShopperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/responses/RemoveShopperResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/user/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/user/UserServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/user/dataclass/Shopper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/AddToQueueUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/AddToQueueUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/AddShopperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/AddShopperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/ClearShopperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/ClearShopperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/GetItemsUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/GetItemsUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/GetShoppersTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/GetShoppersTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/GetStoreOpenUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/GetStoreOpenUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/shopping/RemoveShopperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/shopping/RemoveShopperTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +30,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="Development" />
+        <entry key="$PROJECT_DIR$/.." value="develop_payments" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -74,13 +43,23 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="recentNewPullRequestHead">
+      <RepoCoordinatesHolder>
+        <option name="owner" value="COS301-SE-2021" />
+        <option name="repository" value="Odosla" />
+      </RepoCoordinatesHolder>
+    </option>
+  </component>
   <component name="ProjectId" id="1tOXSe31tlP96NlMQQMch4w9Axv" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RequestMappingsPanelOrder0" value="0" />
@@ -101,6 +80,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.31274638" />
     <property name="project.structure.side.proportion" value="0.16556293" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="ReaderModeSettings">
     <option name="enabled" value="false" />
@@ -109,8 +89,13 @@
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="cs.superleague.shopping" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="cs.superleague.payment.integration" />
+      <recent name="cs.superleague.payment" />
+      <recent name="cs.superleague.payment.repos" />
+    </key>
   </component>
-  <component name="RunManager" selected="JUnit.GetShoppersTest">
+  <component name="RunManager" selected="JUnit.allTests">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -124,78 +109,80 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AddShopperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GenerateInvoiceIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="cs.superleague.shopping.*" />
+          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.shopping" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.shopping.AddShopperTest" />
+      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GenerateInvoiceIntegrationTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ClearShopperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="cs.superleague.shopping.*" />
+          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.shopping" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.shopping.ClearShopperTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="GetShoppersTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cs.superleague.shopping.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.shopping" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.shopping.GetShoppersTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RemoveShopperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cs.superleague.shopping.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.shopping" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.shopping.RemoveShopperTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RemoveShopperTest.UnitTest_Store_doesnt_exist" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cs.superleague.shopping.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.shopping" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.shopping.RemoveShopperTest" />
-      <option name="METHOD_NAME" value="UnitTest_Store_doesnt_exist" />
+      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GenerateInvoiceIntegrationTest" />
+      <option name="METHOD_NAME" value="IntegrationTest_testingNullRequestObject" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GenerateInvoiceIntegrationTest" />
+      <option name="METHOD_NAME" value="UnitTest_Valid_TransactionID" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetInvoiceIntegrationTest.IntegrationTest_Unauthorised_User" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GetInvoiceIntegrationTest" />
+      <option name="METHOD_NAME" value="IntegrationTest_Unauthorised_User" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetOrderIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GetOrderIntegrationTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -222,19 +209,19 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.allTests" />
-      <item itemvalue="JUnit.ClearShopperTest" />
-      <item itemvalue="JUnit.GetShoppersTest" />
-      <item itemvalue="JUnit.RemoveShopperTest.UnitTest_Store_doesnt_exist" />
-      <item itemvalue="JUnit.AddShopperTest" />
-      <item itemvalue="JUnit.RemoveShopperTest" />
+      <item itemvalue="JUnit.GetOrderIntegrationTest" />
+      <item itemvalue="JUnit.GetInvoiceIntegrationTest.IntegrationTest_Unauthorised_User" />
+      <item itemvalue="JUnit.GenerateInvoiceIntegrationTest" />
+      <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" />
+      <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.GetShoppersTest" />
-        <item itemvalue="JUnit.RemoveShopperTest" />
-        <item itemvalue="JUnit.ClearShopperTest" />
-        <item itemvalue="JUnit.AddShopperTest" />
-        <item itemvalue="JUnit.RemoveShopperTest.UnitTest_Store_doesnt_exist" />
+        <item itemvalue="JUnit.GenerateInvoiceIntegrationTest" />
+        <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" />
+        <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" />
+        <item itemvalue="JUnit.GetOrderIntegrationTest" />
+        <item itemvalue="JUnit.GetInvoiceIntegrationTest.IntegrationTest_Unauthorised_User" />
       </list>
     </recent_temporary>
   </component>
@@ -247,6 +234,13 @@
       <option name="presentableId" value="Default" />
       <updated>1622641111382</updated>
       <workItem from="1622641113728" duration="5440000" />
+      <workItem from="1626636211272" duration="904000" />
+      <workItem from="1626637258762" duration="1876000" />
+      <workItem from="1626639392264" duration="5074000" />
+      <workItem from="1626713215853" duration="9996000" />
+      <workItem from="1626870915380" duration="10679000" />
+      <workItem from="1627417690631" duration="37812000" />
+      <workItem from="1627647527615" duration="4720000" />
     </task>
     <task id="LOCAL-00001" summary="Changed file name to payment">
       <created>1622641408400</created>
@@ -330,22 +324,27 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Changed file name to payment" />
     <MESSAGE value="Added config files" />
     <MESSAGE value="merging" />
     <MESSAGE value="merging completed" />
     <MESSAGE value="GetStoreByUUIDUnitTest" />
+    <MESSAGE value="unit tests and implementation for the getInvoice and generateInvoice methods done." />
+    <MESSAGE value="get invoice tests" />
+    <MESSAGE value="generate invoice tests" />
+    <MESSAGE value="generate invoice implementation" />
     <option name="LAST_COMMIT_MESSAGE" value="GetStoreByUUIDUnitTest" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
-    </SUITE>
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>cs.superleague.payment.integration.*</FILTER>
       <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
       <FILTER>cs.superleague.payment.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/backend$allTests.ic" NAME="allTests Coverage Results" MODIFIED="1623967032024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
+    </SUITE>
   </component>
 </project>

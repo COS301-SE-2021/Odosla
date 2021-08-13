@@ -2,11 +2,16 @@ package cs.superleague.user.responses;
 
 import java.util.Date;
 
-public class AddToCartResponse {
-
+public class ResendActivationCodeResponse {
     private final String message;
     private final boolean success;
     private final Date timestamp;
+
+    public ResendActivationCodeResponse(String message, boolean success, Date timestamp) {
+        this.message = message;
+        this.success = success;
+        this.timestamp = timestamp;
+    }
 
     public String getMessage() {
         return message;
@@ -18,11 +23,5 @@ public class AddToCartResponse {
 
     public Date getTimestamp() {
         return timestamp;
-    }
-
-    public AddToCartResponse(String message, boolean success, Date timestamp) {
-        this.message = message;
-        this.success = success;
-        this.timestamp = timestamp;
     }
 }
