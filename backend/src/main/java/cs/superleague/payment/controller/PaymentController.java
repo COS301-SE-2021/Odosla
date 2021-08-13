@@ -21,7 +21,6 @@ import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.dataclass.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
