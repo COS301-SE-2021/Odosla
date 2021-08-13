@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @SpringBootTest
-@RunWith(SpringRunner.class)
 @Transactional
 class SendEmailNotificationIntegrationTest {
 
@@ -206,7 +205,8 @@ class SendEmailNotificationIntegrationTest {
         properties.put("UserType", UserType.ADMIN.toString());
         SendEmailNotificationRequest request = new SendEmailNotificationRequest("message", properties);
         SendEmailNotificationResponse response = notificationService.sendEmailNotification(request);
-        Assertions.assertEquals(true, response.getSuccessMessage());
+        assertEquals(true, response.getSuccessMessage());
+        assertEquals("Email sent to u19060468@tuks.co.za - Subject: Odosla - Content: message", response.getResponseMessage());
     }
 
 }
