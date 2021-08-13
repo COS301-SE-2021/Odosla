@@ -18,6 +18,9 @@ public class Item {
     private int quantity;
     private String description;
     private String imageUrl;
+    private String brand;
+    private String size;
+    private String itemType;
 
     public Item(){ }
 
@@ -30,6 +33,20 @@ public class Item {
         this.quantity = quantity;
         this.description = description;
         this.imageUrl = imageUrl;
+    }
+
+    public Item(String name, String productID, String barcode, UUID storeID, double price, int quantity, String description, String imageUrl, String brand, String size, String itemType) {
+        this.name = name;
+        this.productID = productID;
+        this.barcode = barcode;
+        this.storeID = storeID;
+        this.price = price;
+        this.quantity = quantity;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.brand=brand;
+        this.itemType=itemType;
+        this.size=size;
     }
 
     public String getName() {
@@ -94,5 +111,29 @@ public class Item {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
 }

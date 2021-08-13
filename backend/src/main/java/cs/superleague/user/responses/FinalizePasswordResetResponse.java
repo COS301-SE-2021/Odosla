@@ -1,20 +1,28 @@
 package cs.superleague.user.responses;
 
-public class FinalizePasswordResetResponse {
-    /* Attributes */
-    private String message;
+import java.util.Date;
 
-    /* Constructor */
-    public FinalizePasswordResetResponse(String message) {
+public class FinalizePasswordResetResponse {
+
+    private final boolean success;
+    private final Date timestamp;
+    private final String message;
+
+    public FinalizePasswordResetResponse(boolean success, Date timestamp, String message) {
+        this.success = success;
+        this.timestamp = timestamp;
         this.message = message;
     }
 
-    /* Getters and Setters */
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

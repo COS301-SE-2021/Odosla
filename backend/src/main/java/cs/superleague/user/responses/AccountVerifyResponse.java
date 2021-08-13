@@ -1,20 +1,38 @@
 package cs.superleague.user.responses;
 
-public class AccountVerifyResponse {
-    /* Attributes */
-    private String token;
+import cs.superleague.user.dataclass.UserType;
 
-    /* Constructor */
-    public AccountVerifyResponse(String token) {
-        this.token = token;
+import java.util.Date;
+
+public class AccountVerifyResponse {
+
+    /* Attributes */
+    private final boolean success;
+    private final Date timestamp;
+    private final String message;
+    private final UserType userType;
+
+    public AccountVerifyResponse(boolean success, Date timestamp, String message, UserType userType) {
+        this.success = success;
+        this.timestamp = timestamp;
+        this.message = message;
+        this.userType = userType;
     }
 
     /* Getters and Setters */
-    public String getToken() {
-        return token;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public UserType getUserType() {
+        return userType;
     }
 }

@@ -1,16 +1,20 @@
 package cs.superleague.shopping.dataclass;
 
+import cs.superleague.payment.dataclass.GeoPoint;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.user.dataclass.Shopper;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table
+@Table (name = "store")
+@DynamicUpdate
 public class Store {
 
     @Id
@@ -19,6 +23,11 @@ public class Store {
     private int maxShoppers = 2;
     private int maxOrders;
     private Boolean isOpen;
+    private int openingTime;
+    private int closingTime;
+
+    @OneToOne(cascade={CascadeType.ALL})
+    private GeoPoint storeLocation;
 
     @OneToOne(cascade={CascadeType.ALL})
     private Catalogue stock;
@@ -26,7 +35,7 @@ public class Store {
     @ManyToMany
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Shopper> shoppers;
+    private List<Shopper> shoppers=null;
 
     @ManyToMany
     @JoinTable
@@ -51,6 +60,15 @@ public class Store {
         this.isOpen = isOpen;
     }
 
+    public Store(UUID storeID, int openingTime, int closingTime, String storeBrand, int maxShoppers, int maxOrders, Boolean isOpen) {
+        this.storeID = storeID;
+        this.openingTime= openingTime;
+        this.closingTime= closingTime;
+        this.storeBrand = storeBrand;
+        this.maxShoppers = maxShoppers;
+        this.maxOrders = maxOrders;
+        this.isOpen = isOpen;
+    }
     public UUID getStoreID() {
         return storeID;
     }
@@ -122,5 +140,30 @@ public class Store {
     public void setOpen(Boolean open) {
         isOpen = open;
     }
+
+    public void setOpeningTime(int openingTime) {
+        this.openingTime = openingTime;
+    }
+
+    public int getOpeningTime() {
+        return openingTime;
+    }
+
+    public void setClosingTime(int closingTime) {
+        this.closingTime = closingTime;
+    }
+
+    public int getClosingTime() {
+        return closingTime;
+    }
+
+    public GeoPoint getStoreLocation(){
+        return storeLocation;
+    }
+
+    public void setStoreLocation(GeoPoint storeLocation) {
+        this.storeLocation = storeLocation;
+    }
+
 }
 

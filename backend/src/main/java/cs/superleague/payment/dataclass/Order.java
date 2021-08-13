@@ -19,6 +19,7 @@ public class Order {
     private UUID userID;
     private UUID storeID;
     private UUID shopperID;
+    private UUID driverID;
     private Calendar createDate;
     private Calendar processDate;
     private Double totalCost;
@@ -59,6 +60,22 @@ public class Order {
         this.items = items;
         this.discount = discount;
         this.deliveryAddress = deliveryAddress;
+        this.storeAddress = storeAddress;
+        this.requiresPharmacy = requiresPharmacy;
+    }
+
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.storeID = storeID;
+        this.shopperID = shopperID;
+        this.createDate = createDate;
+        this.processDate = processDate;
+        this.totalCost = totalCost;
+        this.type = type;
+        this.status = status;
+        this.items = items;
+        this.discount = discount;
         this.storeAddress = storeAddress;
         this.requiresPharmacy = requiresPharmacy;
     }

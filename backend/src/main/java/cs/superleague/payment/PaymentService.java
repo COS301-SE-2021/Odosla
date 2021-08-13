@@ -1,5 +1,6 @@
 package cs.superleague.payment;
 import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.requests.*;
@@ -13,8 +14,17 @@ public interface PaymentService {
 
     SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 
-    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist;
+    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException;
 
+    UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException;
+
+    GetOrderResponse getOrder(GetOrderRequest req) throws PaymentException;
+
+    SetStatusResponse setStatus(SetStatusRequest request) throws PaymentException;
+
+    GetStatusResponse getStatus(GetStatusRequest request) throws PaymentException;
+
+    GetItemsResponse getItems(GetItemsRequest request) throws PaymentException;
 
     // TRANSACTION
 
@@ -27,8 +37,8 @@ public interface PaymentService {
 
     // INVOICE
 
-    GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request);
+    GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) throws InvalidRequestException;
 
-    GetInvoiceResponse getInvoice(GetInvoiceRequest request);
+    GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException;
 
 }

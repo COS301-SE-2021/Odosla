@@ -84,8 +84,9 @@ public class SubmitOrderUnitTest {
         o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
         listOfOrders.add(o2);
-        c=new Catalogue(expectedListOfItems);
+        c=new Catalogue(expectedS1,expectedListOfItems);
         expectedStore=new Store(expectedS1,"Woolworthes",c,3,listOfOrders,null,4,true);
+        expectedStore.setStoreLocation(storeAddress);
     }
 
     @AfterEach
@@ -107,7 +108,7 @@ public class SubmitOrderUnitTest {
     @DisplayName("When request object parameter -userID - is not specificed")
     void UnitTest_testingNull_UserID_Parameter_RequestObject(){
         List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(null,list,0.0, UUID.randomUUID(), OrderType.DELIVERY,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(null,list,0.0, UUID.randomUUID(), OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
         assertEquals("UserID cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
@@ -116,7 +117,7 @@ public class SubmitOrderUnitTest {
     @Description("Tests for whether an order is submited with a null parameter for listOfItems in request object- exception should be thrown")
     @DisplayName("When request object parameter -listOfItems - is not specificed")
     void UnitTest_testingNull_listOfItems_Parameter_RequestObject(){
-        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),null,0.0, UUID.randomUUID(), OrderType.DELIVERY,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),null,0.0, UUID.randomUUID(), OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
         assertEquals("List of items cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
@@ -126,7 +127,7 @@ public class SubmitOrderUnitTest {
     @DisplayName("When request object parameter - discount - is not specificed")
     void UnitTest_testingNull_discount_Parameter_RequestObject(){
         List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,null, UUID.randomUUID(), OrderType.DELIVERY,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,null, UUID.randomUUID(), OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
         assertEquals("Discount cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
@@ -136,7 +137,7 @@ public class SubmitOrderUnitTest {
     @DisplayName("When request object parameter - storeID - is not specificed")
     void UnitTest_testingNull_storeID_Parameter_RequestObject(){
         List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, null, OrderType.DELIVERY,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, null, OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
         assertEquals("Store ID cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
@@ -146,30 +147,20 @@ public class SubmitOrderUnitTest {
     @DisplayName("When request object parameter - orderType - is not specificed")
     void UnitTest_testingNull_orderType_Parameter_RequestObject(){
         List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, UUID.randomUUID(), null,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, UUID.randomUUID(), null, 3.3, 3.5, "Homer Street");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
         assertEquals("Order type cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
 
-    @Test
-    @Description("Tests for whether an order is submited with a null parameter for cs.superleague.delivery address in request object- exception should be thrown")
-    @DisplayName("When request object parameter - cs.superleague.delivery address - is not specificed")
-    void UnitTest_testingNull_deliveryAddress_Parameter_RequestObject(){
-        List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, UUID.randomUUID(), expectedType,null,storeAddress);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
-        assertEquals("Delivery Address GeoPoint cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
-    }
-
-    @Test
-    @Description("Tests for whether an order is submited with a null parameter for storeAddress in request object- exception should be thrown")
-    @DisplayName("When request object parameter - storeAddress - is not specificed")
-    void UnitTest_testingNull_storeAddress_Parameter_RequestObject(){
-        List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, UUID.randomUUID(), expectedType,deliveryAddress,null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
-        assertEquals("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
-    }
+//    @Test
+//    @Description("Tests for whether an order is submited with a null parameter for storeAddress in request object- exception should be thrown")
+//    @DisplayName("When request object parameter - storeAddress - is not specificed")
+//    void UnitTest_testingNull_storeAddress_Parameter_RequestObject(){
+//        List<Item> list=new ArrayList<>();
+//        SubmitOrderRequest request=new SubmitOrderRequest(UUID.randomUUID(),list,0.0, UUID.randomUUID(), expectedType);
+//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
+//        assertEquals("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
+//    }
 
     /** Checking request object is created correctly */
     @Test
@@ -177,7 +168,7 @@ public class SubmitOrderUnitTest {
     @DisplayName("SubmitOrderRequest correctly constructed")
     void UnitTest_SubmitOrderRequestConstruction() {
 
-        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
 
         assertNotNull(request);
         assertEquals(expectedU1,request.getUserID());
@@ -185,16 +176,14 @@ public class SubmitOrderUnitTest {
         assertEquals(expectedDiscount,request.getDiscount());
         assertEquals(expectedS1,request.getStoreID());
         assertEquals(expectedType,request.getOrderType());
-        assertEquals(deliveryAddress,request.getDeliveryAddress());
-        assertEquals(storeAddress,request.getStoreAddress());
     }
 
     @Test
     @Description("This test is to check if the invalid request exception for finding store by UUID - throw Invalid exception from shoppingService")
     @DisplayName("Exception for Store doesn't exist")
     void UnitTest_IvalidRequest_ShoppingService() throws cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException {
-        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
-        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
+        //when(orderRepo.findById(Mockito.any())).thenReturn(null);
         when(shoppingService.getStoreByUUID(Mockito.any())).thenThrow(new cs.superleague.shopping.exceptions.InvalidRequestException("Invalid submit order request received - order unsuccessfully created."));
         Throwable thrown = Assertions.assertThrows(cs.superleague.shopping.exceptions.InvalidRequestException.class, ()-> paymentService.submitOrder(request));
         assertEquals("Invalid submit order request received - order unsuccessfully created.",thrown.getMessage());
@@ -204,8 +193,8 @@ public class SubmitOrderUnitTest {
     @Description("This test is to check if the store with ID does not exist - throw Store Does Not exist exception")
     @DisplayName("Exception for Store doesn't exist")
     void UnitTest_StoreDoesNotExist() throws cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, PaymentException, StoreClosedException {
-        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
-        when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
+        //when(orderRepo.findById(Mockito.any())).thenReturn(null);
         GetStoreByUUIDRequest storeRequest=new GetStoreByUUIDRequest(expectedS1);
         when(shoppingService.getStoreByUUID(Mockito.any())).thenThrow(new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity"));
         Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> paymentService.submitOrder(request));
@@ -217,7 +206,7 @@ public class SubmitOrderUnitTest {
     @Description("This test is to check if the store with ID is returned but closed - throw Store Closed exception")
     @DisplayName("Exception for Store is closed")
     void UnitTest_StoreIsClosed() throws cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, PaymentException, StoreClosedException {
-        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
         GetStoreByUUIDRequest storeRequest=new GetStoreByUUIDRequest(expectedS1);
         expectedStore.setOpen(false);
@@ -237,7 +226,7 @@ public class SubmitOrderUnitTest {
     @Description("This test is to check order is created correctly- should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
     void UnitTest_StartOrderConstruction() throws PaymentException, StoreClosedException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException {
-        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType,deliveryAddress,storeAddress);
+        SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
         GetStoreByUUIDResponse storeResponse=new GetStoreByUUIDResponse(expectedStore,Calendar.getInstance().getTime(), "Store successfully returned");
         when(shoppingService.getStoreByUUID(Mockito.any())).thenReturn(storeResponse);
@@ -249,8 +238,6 @@ public class SubmitOrderUnitTest {
         assertEquals(request.getDiscount(),o.getDiscount());
         assertEquals(request.getStoreID(),o.getStoreID());
         assertEquals(request.getOrderType(),o.getType());
-        assertEquals(request.getDeliveryAddress(),o.getDeliveryAddress());
-        assertEquals(request.getStoreAddress(),o.getStoreAddress());
 
         assertEquals("Order successfully created.", response.getMessage());
         Order order=response.getOrder();
@@ -258,9 +245,8 @@ public class SubmitOrderUnitTest {
                      assertEquals(o.getTotalCost(), order.getTotalCost());
                      assertEquals(o.getDiscount(), order.getDiscount());
                      assertEquals(o.getItems(), order.getItems());
-                     assertEquals(o.getStatus(), order.getStatus());
-                     assertEquals(o.getDeliveryAddress(), order.getDeliveryAddress());
-                     assertEquals(o.getStoreAddress(), order.getStoreAddress());
+                     assertEquals(OrderStatus.PURCHASED, order.getStatus());
+                     //assertEquals(o.getDeliveryAddress(), order.getDeliveryAddress());
                      assertEquals(null, order.getShopperID());
                      assertEquals(o.getType(), order.getType());
         }

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -18,6 +19,7 @@ import cs.superleague.shopping.responses.AddToQueueResponse;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AddToQueueUnitTest {
@@ -35,6 +37,7 @@ public class AddToQueueUnitTest {
     Item i2;
     List<Item> listOfItems=new ArrayList<>();
     Order order;
+    List<Order> listOfOrders = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
@@ -42,8 +45,8 @@ public class AddToQueueUnitTest {
         i2=new Item("Ice Cream","p012345","b012345",uuid,14.99,3,"description","img/");
         listOfItems.add(i1);
         listOfItems.add(i2);
-        cat = new Catalogue(listOfItems);
-        store = new Store(uuid,"Checkers",cat,2,null,null,4,true);
+        cat = new Catalogue(uuid,listOfItems);
+        store = new Store(uuid,"Checkers",cat,2,listOfOrders,null,4,true);
         order = new Order(uuid, uuid, uuid, uuid, Calendar.getInstance(), Calendar.getInstance(), 30.0, OrderType.DELIVERY, OrderStatus.PURCHASED, listOfItems, 0.0, null, null, false);
     }
     @AfterEach
@@ -89,7 +92,7 @@ public class AddToQueueUnitTest {
         order.setUserID(null);
         AddToQueueRequest request=new AddToQueueRequest(order);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addToQueue(request));
-        assertEquals("Invalid request: missing cs.superleague.user ID", thrown.getMessage());
+        assertEquals("Invalid request: missing user ID", thrown.getMessage());
     }
 
     @Test
@@ -141,9 +144,11 @@ public class AddToQueueUnitTest {
         AddToQueueRequest request=new AddToQueueRequest(order);
         AddToQueueResponse response;
         try {
+            when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
             response = shoppingService.addToQueue(request);
             assertTrue(response.isSuccess());
         } catch (Exception e){
+            System.out.println(e.getMessage());
             fail();
         }
 
