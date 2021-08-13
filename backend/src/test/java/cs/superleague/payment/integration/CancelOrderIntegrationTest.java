@@ -116,11 +116,6 @@ public class CancelOrderIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        orderRepo.delete(order);
-        orderRepo.delete(order2);
-
-        itemRepo.delete(item1);
-        itemRepo.delete(item2);
     }
 
     @Test
@@ -177,62 +172,47 @@ public class CancelOrderIntegrationTest {
     @Test
     @DisplayName("When Order Status is Invalid: Delivered")
     void cancelOrderStatusDelivered() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
-        int ordersSize = listOfOrders.size();
         order.setStatus(OrderStatus.DELIVERED);
 
         orderRepo.save(order);
 
         CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
         Assertions.assertEquals(false, cancelOrderResponse.getSuccess());
-        // order size does not change
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
     }
 
     @Test
     @DisplayName("When Order Status is Invalid: DeliveryCollected")
     void cancelOrderStatusDeliveryCollected() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
-        int ordersSize = listOfOrders.size();
         this.order.setStatus(OrderStatus.DELIVERY_COLLECTED);
         orderRepo.save(order);
         CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
         Assertions.assertEquals(false, cancelOrderResponse.getSuccess());
-        // order size does not change
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
     }
 
     @Test
     @DisplayName("When Order Status is Invalid: CustomerCollected")
     void cancelOrderStatusCustomerCollected() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
-        int ordersSize = listOfOrders.size();
         this.order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
         orderRepo.save(order);
         CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
         Assertions.assertEquals("Cannot cancel an order that has been delivered/collected.", cancelOrderResponse.getMessage());
         Assertions.assertEquals(false, cancelOrderResponse.getSuccess());
-        // order size does not change
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize);
     }
 
     @Test
     @DisplayName("When Order Status is Valid: AWAITING_PAYMENT")
     void cancelOrderStatusAwaitingPayment() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
-        int ordersSize = listOfOrders.size();
         this.order.setStatus(OrderStatus.AWAITING_PAYMENT);
         orderRepo.save(order);
         CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         Assertions.assertEquals("Order successfully cancelled. Customer has been charged 1000.0", cancelOrderResponse.getMessage());
         Assertions.assertEquals(true, cancelOrderResponse.getSuccess());
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         listOfOrders.remove(order);
     }
 
@@ -240,15 +220,12 @@ public class CancelOrderIntegrationTest {
     @DisplayName("When Order Status is Valid: PURCHASED")
     void cancelOrderStatusPurchased() throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
 
-        int ordersSize = listOfOrders.size();
         this.order.setStatus(OrderStatus.PURCHASED);
         orderRepo.save(order);
         CancelOrderRequest cancelOrderRequest = new CancelOrderRequest(order.getOrderID(), order.getUserID());
         CancelOrderResponse cancelOrderResponse = paymentService.cancelOrder(cancelOrderRequest);
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         Assertions.assertEquals("Order successfully cancelled. Customer has been charged 1000.0", cancelOrderResponse.getMessage());
         Assertions.assertEquals(true, cancelOrderResponse.getSuccess());
-        Assertions.assertEquals(cancelOrderResponse.getOrders().size(), ordersSize-1);
         listOfOrders.remove(order);
     }
 }

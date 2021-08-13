@@ -636,6 +636,37 @@ import java.util.List;50"
         return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
     }
 
+    @Override
+    public GetItemsResponse getItems(GetItemsRequest request) throws PaymentException{
+
+        String message = "Items successfully retrieved";
+        Order order = null;
+        Optional<Order> orderOptional = null;
+
+        if(request == null){
+            throw new InvalidRequestException("GetItemsRequest is null - could not get Items");
+        }
+
+        if(request.getOrderID() == null){
+            throw new InvalidRequestException("OrderID attribute is null - could not get Items");
+        }
+
+        orderOptional = orderRepo.findById(UUID.fromString(request.getOrderID()));
+
+        if(orderOptional == null || !orderOptional.isPresent()){
+            throw new OrderDoesNotExist("Order with given ID does not exist - could not get Items");
+        }
+
+        order = orderOptional.get();
+
+        if(order == null){
+            message = "order is null";
+            return new GetItemsResponse(null, false, new Date(), message);
+        }
+
+        return new GetItemsResponse(order.getItems(), true, new Date(), message);
+    }
+
     // Helper
     private double getCost(List<Item> items){
         double cost = 0;
@@ -653,7 +684,7 @@ import java.util.List;50"
         Document pdf = new Document();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
-            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
+//            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
             pdf.open();
             com.itextpdf.text.Font header = FontFactory.getFont(FontFactory.COURIER, 24, Font.BOLD);
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
@@ -666,7 +697,7 @@ import java.util.List;50"
             }
 
             //pdf.add(new Paragraph("BuyerID: " + BuyerID, body));
-            pdf.add(new Paragraph("Date: " + INVOICED_DATE, body));
+            pdf.add(new Paragraph("Date: " + INVOICED_DATE.getTime(), body));
             pdf.add(new Paragraph("Details: " + DETAILS, body));
             pdf.add(new Paragraph("Price: " + TOTAL_PRICE, body));
             //pdf.add(new Paragraph("ShippingID: " + SHIPMENT.getShipmentId(), body));
@@ -674,7 +705,7 @@ import java.util.List;50"
             pdf.close();
         } catch (DocumentException e) {
             e.printStackTrace();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             System.out.println("PDF Error");
         }
         return output.toByteArray();
