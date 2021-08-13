@@ -502,6 +502,27 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_ScanItemResponse"
 
+  /user/completePackagingOrder:
+    post:
+      summary: Endpoint for complete packaging order use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: completePackagingOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_CompletePackagingOrderRequest"
+      responses:
+        "200":
+          description: Returns whether the email was sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_CompletePackagingOrderResponse"
 components:
 
   schemas:
@@ -1194,6 +1215,26 @@ components:
           type: string
 
     user_ScanItemResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+
+    user_CompletePackagingOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+        getNext:
+          type: boolean
+
+    user_CompletePackagingOrderResponse:
       description: This object is returned as output
       type: object
       properties:
