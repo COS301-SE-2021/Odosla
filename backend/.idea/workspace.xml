@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="GetStoreByUUIDUnitTest">
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/GetItemsRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/requests/GetStoreOpenRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/responses/UpdateCatalogueResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_checkerframework_checker_qual_3_5_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_postgresql_postgresql_42_2_19.xml" beforeDir="false" />
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="merged master">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/odosla-api.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -308,7 +302,14 @@
       <option name="project" value="LOCAL" />
       <updated>1622666501908</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="merged master">
+      <created>1628863356176</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1628863356176</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,7 +338,8 @@
     <MESSAGE value="get invoice tests" />
     <MESSAGE value="generate invoice tests" />
     <MESSAGE value="generate invoice implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="GetStoreByUUIDUnitTest" />
+    <MESSAGE value="merged master" />
+    <option name="LAST_COMMIT_MESSAGE" value="merged master" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

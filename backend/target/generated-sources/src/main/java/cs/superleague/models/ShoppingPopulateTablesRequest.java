@@ -1,10 +1,7 @@
 package cs.superleague.models;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -15,29 +12,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object is expected as input")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T16:31:49.521809+02:00[Africa/Harare]")
-public class UserGetShoppingCartRequest   {
-  @JsonProperty("customerID")
-  private String customerID = null;
-
-  public UserGetShoppingCartRequest customerID(String customerID) {
-    this.customerID = customerID;
-    return this;
-  }
-
-  /**
-   * generated token used to identify the caller of the endpoint
-   * @return customerID
-  **/
-  @ApiModelProperty(value = "generated token used to identify the caller of the endpoint")
-  
-    public String getCustomerID() {
-    return customerID;
-  }
-
-  public void setCustomerID(String customerID) {
-    this.customerID = customerID;
-  }
-
+public class ShoppingPopulateTablesRequest   {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -47,21 +22,19 @@ public class UserGetShoppingCartRequest   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserGetShoppingCartRequest userGetShoppingCartRequest = (UserGetShoppingCartRequest) o;
-    return Objects.equals(this.customerID, userGetShoppingCartRequest.customerID);
+    return true;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerID);
+    return Objects.hash();
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UserGetShoppingCartRequest {\n");
+    sb.append("class ShoppingPopulateTablesRequest {\n");
     
-    sb.append("    customerID: ").append(toIndentedString(customerID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -453,7 +453,7 @@ public class ShoppingController implements ShoppingApi{
         return new ResponseEntity<>(response, httpStatus);
     }
 
-    public ResponseEntity<ShoppingPopulateTables> populateTables(PopulateTablesRequest body) {
+    public ResponseEntity<ShoppingPopulateTablesResponse> populateTables(ShoppingPopulateTablesRequest body) {
         UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
         UUID storeUUID2 = UUID.randomUUID();
 

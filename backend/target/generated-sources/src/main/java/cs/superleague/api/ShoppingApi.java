@@ -15,6 +15,8 @@ import cs.superleague.models.ShoppingGetShoppersRequest;
 import cs.superleague.models.ShoppingGetShoppersResponse;
 import cs.superleague.models.ShoppingGetStoresRequest;
 import cs.superleague.models.ShoppingGetStoresResponse;
+import cs.superleague.models.ShoppingPopulateTablesRequest;
+import cs.superleague.models.ShoppingPopulateTablesResponse;
 import cs.superleague.models.ShoppingRemoveQueuedOrderRequest;
 import cs.superleague.models.ShoppingRemoveQueuedOrderResponse;
 import io.swagger.annotations.*;
@@ -34,7 +36,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T15:49:46.017974400+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T16:31:49.521809+02:00[Africa/Harare]")
 @Api(value = "shopping", description = "the shopping API")
 public interface ShoppingApi {
 
@@ -90,6 +92,17 @@ public interface ShoppingApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<ShoppingGetStoresResponse> getStores(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody ShoppingGetStoresRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint populating tables", nickname = "populateTables", notes = "Refer to summary", response = ShoppingPopulateTablesResponse.class, tags={ "Shopping", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns success", response = ShoppingPopulateTablesResponse.class) })
+    @RequestMapping(value = "/shopping/populateTables",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<ShoppingPopulateTablesResponse> populateTables(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody ShoppingPopulateTablesRequest body
 );
 
 
