@@ -457,6 +457,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_GetCurrentUserResponse"
 
+  /user/updateShopperShift:
+    post:
+      summary: Endpoint for updating shopper shift
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: updateShopperShift
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_UpdateShopperShiftRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_UpdateShopperShiftResponse"
+
+
+
+
   /notification/sendDirectEmailNotification:
     post:
       summary: Endpoint for sending a direct email notification
@@ -909,6 +934,26 @@ components:
         success:
           type: boolean
         resetCode:
+          type: string
+
+    user_UpdateShopperShiftRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        shopperID:
+          type: string
+        onShift:
+          type: boolean
+
+    user_UpdateShopperShiftResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
           type: string
 
     DriverObject:

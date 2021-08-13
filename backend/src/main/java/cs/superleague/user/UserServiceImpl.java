@@ -2071,6 +2071,51 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        UpdateShopperShiftResponse response;
+        if (request == null){
+            throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
+        }
+        if (request.getShopperID() == null){
+            throw new InvalidRequestException("ShopperID in UpdateShopperShiftRequest is null");
+        }
+        if (request.getOnShift() == null){
+            throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
+        }
+        Optional<Shopper> shopper=shopperRepo.findById(request.getShopperID());
+
+        if(shopper==null || !shopper.isPresent()){
+            throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
+        }
+
+        if(shopper.get().getOnShift()==request.getOnShift()){
+            String message="";
+            if(request.getOnShift()==true){
+                message="Shopper is already on shift";
+            }
+            else if(request.getOnShift()==false){
+                message="Shopper is already not on shift";
+            }
+            response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
+        }
+        else{
+            shopper.get().setOnShift(request.getOnShift());
+            shopperRepo.save(shopper.get());
+
+            /*Check updates have happened */
+            shopper=shopperRepo.findById(request.getShopperID());
+
+            if(shopper==null || !shopper.isPresent()|| shopper.get().getOnShift()!=request.getOnShift()){
+                response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),"Couldn't update shopper's shift");
+            }
+            else{
+                response=new UpdateShopperShiftResponse(true,Calendar.getInstance(),"Shopper's shift correctly updated");
+            }
+        }
+        return response;
+    }
+
+    @Override
     public UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException {
         UpdateDriverShiftResponse response;
 

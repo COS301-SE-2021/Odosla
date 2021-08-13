@@ -14,10 +14,9 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Customer;
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.GroceryList;
-import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
@@ -30,10 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -628,6 +624,39 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(setCurrentLocationResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateShopperShiftResponse> updateShopperShift(UserUpdateShopperShiftRequest body) {
+        UUID shopperID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        Shopper shopper = new Shopper();
+        shopper.setShopperID(shopperID);
+        shopper.setOnShift(false);
+        shopperRepo.save(shopper);
+
+        UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(UUID.fromString(body.getShopperID()), body.isOnShift());
+            UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
+            try {
+                response.setMessage(response1.getMessage());
+                response.setSuccess(Boolean.valueOf(response1.isSuccess()));
+                response.setTimestamp(String.valueOf(response1.getTimestamp().getTime()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setMessage(e.getMessage());
+                response.setSuccess(false);
+                response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
+        }
+        shopperRepo.delete(shopper);
+        return new ResponseEntity<>(response, status);
     }
 
     @Override
