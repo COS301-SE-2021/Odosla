@@ -417,7 +417,7 @@ paths:
     post:
       summary: Endpoint for Get Status use case
       tags:
-        - "Paymenr"
+        - "Payment"
       description: Refer to summary
       operationId: getStatus
       requestBody:
@@ -434,6 +434,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetStatusResponse"
+
+  /payment/getItems:
+    post:
+      summary: Endpoint for Get Items use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: getItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetItemsRequest"
+      responses:
+        "200":
+          description: Returns status upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetItemsResponse"
 
 components:
 
@@ -1045,6 +1067,7 @@ components:
           type: string
         userType:
           type: string
+
     payment_GetStatusRequest:
       description: This object is expected as input
       type: object
@@ -1062,5 +1085,27 @@ components:
           type: boolean
         message:
            type: string
+        timestamp:
+          type: string
+
+    payment_GetItemsRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetItemsResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        success:
+          type: boolean
+        message:
+          type: string
         timestamp:
           type: string

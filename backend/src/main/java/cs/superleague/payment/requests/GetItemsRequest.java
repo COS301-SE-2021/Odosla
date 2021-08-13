@@ -4,17 +4,17 @@ import java.util.UUID;
 
 public class GetItemsRequest {
     /* Attributes */
-    private UUID orderID;
+    private String orderID;
 
-    public GetItemsRequest(UUID orderID) {
+    public GetItemsRequest(String orderID) {
         this.orderID = orderID;
     }
 
-    public UUID getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public void setOrderID(UUID orderID) {
+    public void setOrderID(String orderID) {
         this.orderID = orderID;
     }
 }

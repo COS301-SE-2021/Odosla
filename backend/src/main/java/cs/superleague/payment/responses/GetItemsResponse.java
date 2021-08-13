@@ -25,7 +25,7 @@ public class GetItemsResponse {
         this.message = message;
     }
 
-    public List<Item> getOrder() {
+    public List<Item> getItems() {
         return itemList;
     }
 

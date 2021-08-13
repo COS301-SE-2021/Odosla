@@ -600,6 +600,37 @@ import java.util.List;50"
         return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
     }
 
+    @Override
+    public GetItemsResponse getItems(GetItemsRequest request) throws PaymentException{
+
+        String message = "Items successfully retrieved";
+        Order order = null;
+        Optional<Order> orderOptional = null;
+
+        if(request == null){
+            throw new InvalidRequestException("GetItemsRequest is null - could not get Items");
+        }
+
+        if(request.getOrderID() == null){
+            throw new InvalidRequestException("OrderID attribute is null - could not get Items");
+        }
+
+        orderOptional = orderRepo.findById(UUID.fromString(request.getOrderID()));
+
+        if(orderOptional == null || !orderOptional.isPresent()){
+            throw new OrderDoesNotExist("Order with given ID does not exist - could not get Items");
+        }
+
+        order = orderOptional.get();
+
+        if(order == null){
+            message = "order is null";
+            return new GetItemsResponse(null, false, new Date(), message);
+        }
+
+        return new GetItemsResponse(order.getItems(), true, new Date(), message);
+    }
+
     // Helper
     private double getCost(List<Item> items){
         double cost = 0;
