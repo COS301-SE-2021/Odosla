@@ -567,7 +567,7 @@ paths:
           content:
             application/json:
               schema:
-              $ref: "#/components/schemas/payment_GetStatusResponse"
+                $ref: "#/components/schemas/payment_GetStatusResponse"
 
   /payment/getItems:
     post:
