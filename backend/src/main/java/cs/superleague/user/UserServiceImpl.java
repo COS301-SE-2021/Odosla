@@ -2,9 +2,11 @@ package cs.superleague.user;
 
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.dataclass.Notification;
+import cs.superleague.notification.NotificationService;
+import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
+import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -363,6 +365,16 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    try {
+                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+                        e.printStackTrace();
+                        System.out.println("Email failed to send");
+                    }
                     return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
                 }
                 else{
@@ -525,6 +537,16 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    try {
+                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+                        e.printStackTrace();
+                        System.out.println("Email failed to send");
+                    }
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
                 else{
@@ -692,6 +714,16 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    try {
+                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+                        e.printStackTrace();
+                        System.out.println("Email failed to send");
+                    }
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
                 else{
@@ -856,6 +888,16 @@ public class UserServiceImpl implements UserService{
                 }
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    try {
+//                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
+//                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
+//                        e.printStackTrace();
+//                        System.out.println("Email failed to send");
+//                    }
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
                 else{
@@ -1402,6 +1444,7 @@ public class UserServiceImpl implements UserService{
         return new UpdateDriverDetailsResponse(message, success, new Date());
     }
 
+    @Override
     public GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException {
         GetCurrentUserResponse response=null;
         if(request!=null) {
@@ -2028,6 +2071,51 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        UpdateShopperShiftResponse response;
+        if (request == null){
+            throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
+        }
+        if (request.getShopperID() == null){
+            throw new InvalidRequestException("ShopperID in UpdateShopperShiftRequest is null");
+        }
+        if (request.getOnShift() == null){
+            throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
+        }
+        Optional<Shopper> shopper=shopperRepo.findById(request.getShopperID());
+
+        if(shopper==null || !shopper.isPresent()){
+            throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
+        }
+
+        if(shopper.get().getOnShift()==request.getOnShift()){
+            String message="";
+            if(request.getOnShift()==true){
+                message="Shopper is already on shift";
+            }
+            else if(request.getOnShift()==false){
+                message="Shopper is already not on shift";
+            }
+            response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
+        }
+        else{
+            shopper.get().setOnShift(request.getOnShift());
+            shopperRepo.save(shopper.get());
+
+            /*Check updates have happened */
+            shopper=shopperRepo.findById(request.getShopperID());
+
+            if(shopper==null || !shopper.isPresent()|| shopper.get().getOnShift()!=request.getOnShift()){
+                response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),"Couldn't update shopper's shift");
+            }
+            else{
+                response=new UpdateShopperShiftResponse(true,Calendar.getInstance(),"Shopper's shift correctly updated");
+            }
+        }
+        return response;
+    }
+
+    @Override
     public UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException {
         UpdateDriverShiftResponse response;
 
@@ -2434,6 +2522,56 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException {
         return null;
+    }
+
+    @Override
+    public SetCurrentLocationResponse setCurrentLocation(SetCurrentLocationRequest request) throws UserException{
+
+        UUID driverID;
+        Driver driver;
+        Optional<Driver> driverOptional;
+        GeoPoint geoPoint;
+
+        if(request == null){
+            throw new InvalidRequestException("SetCurrentLocationRequest is null - could not set current location");
+        }
+
+        if(request.getDriverID() == null){
+            throw new InvalidRequestException("DriverID attribute is null - could not set current location");
+        }
+
+        if(request.getLongitude() == 0){
+            throw new InvalidRequestException("Longitude attribute is null - could not set current location");
+        }
+
+        if(request.getLatitude() == 0){
+            throw new InvalidRequestException("Latitude attribute is null - could not set current location");
+        }
+
+        if(request.getAddress() == null){
+            throw new InvalidRequestException("Address attribute is null - could not set current location");
+        }
+
+        driverID = UUID.fromString(request.getDriverID());
+        driverOptional = driverRepo.findById(driverID);
+
+        if(driverOptional == null || !driverOptional.isPresent()){
+            throw new DriverDoesNotExistException("Driver with driverID does not exist in database");
+        }
+
+        if(request.getAddress().equals("")){
+            return new SetCurrentLocationResponse("address cannot be empty", false, new Date());
+        }
+
+        driver = driverOptional.get();
+
+        geoPoint = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
+
+        driver.setCurrentAddress(geoPoint);
+
+        driverRepo.save(driver);
+
+        return new SetCurrentLocationResponse("driver location successfully updated", true, new Date());
     }
 
     private boolean emailRegex(String email){

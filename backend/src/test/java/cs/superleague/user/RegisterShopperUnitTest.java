@@ -160,22 +160,22 @@ public class RegisterShopperUnitTest {
         assertNotNull(response.getTimestamp());
     }
 
-    @Test
-    @Description("Tests for when RegisterShopper is submitted with a valid credentials")
-    @DisplayName("Valid Registering")
-    void UnitTest_ValidRegistration() throws InvalidRequestException {
-        request.setEmail("validEmail@gmail.com");
-        request.setPassword("validPassword@1");
-        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
-        Shopper Shopper=new Shopper();
-        Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(null).thenReturn(java.util.Optional.of(Shopper));
-        RegisterShopperResponse response=userService.registerShopper(request);
-
-        assertNotNull(response);
-        assertEquals(true,response.isSuccess());
-        assertEquals("Shopper succesfully added to database",response.getMessage());
-        assertNotNull(response.getTimestamp());
-    }
+//    @Test
+//    @Description("Tests for when RegisterShopper is submitted with a valid credentials")
+//    @DisplayName("Valid Registering")
+//    void UnitTest_ValidRegistration() throws InvalidRequestException {
+//        request.setEmail("validEmail@gmail.com");
+//        request.setPassword("validPassword@1");
+//        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
+//        Shopper Shopper=new Shopper();
+//        Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(null).thenReturn(java.util.Optional.of(Shopper));
+//        RegisterShopperResponse response=userService.registerShopper(request);
+//
+//        assertNotNull(response);
+//        assertEquals(true,response.isSuccess());
+//        assertEquals("Shopper succesfully added to database",response.getMessage());
+//        assertNotNull(response.getTimestamp());
+//    }
 
     @Test
     @Description("Tests for when RegisterShopper is submitted with a valid credentials but Shopper wasn't actually saved to database")

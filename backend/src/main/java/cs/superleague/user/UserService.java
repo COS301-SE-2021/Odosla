@@ -24,6 +24,9 @@ public interface UserService {
     ResetPasswordResponse resetPassword(ResetPasswordRequest request) throws UserException;
     FinalisePasswordResetResponse finalisePasswordReset(FinalisePasswordResetRequest request) throws UserException;
     ResendActivationCodeResponse resendActivationCode(ResendActivationCodeRequest request) throws UserException;
+    SetCurrentLocationResponse setCurrentLocation(SetCurrentLocationRequest request) throws UserException;
+    GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException;
+
     /* Customer  */
     MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
@@ -35,4 +38,5 @@ public interface UserService {
     CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
+    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException;
 }
