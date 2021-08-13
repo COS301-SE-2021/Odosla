@@ -72,7 +72,6 @@ public class PaymentController implements PaymentApi {
         Item item1, item2;
         item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
         item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-        itemRepo.save(item1); itemRepo.save(item2);
         mockItemList.add(item1); mockItemList.add(item2);
 
         double totalCost = 14.99 + 36.99;
@@ -91,42 +90,33 @@ public class PaymentController implements PaymentApi {
         totalCost = 0;
 
         orders.add(order);
-        orderRepo.save(order);
 
         order.setOrderID(orderId_PURCHASED);
         order.setStatus(OrderStatus.PURCHASED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderId_IN_QUEUE);
         order.setStatus(OrderStatus.IN_QUEUE);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_PACKING);
         order.setStatus(OrderStatus.PACKING);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_COLLECTION);
         order.setStatus(OrderStatus.AWAITING_COLLECTION);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_DELIVERY_COLLECTED);
         order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_CUSTOMER_COLLECTED);
         order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_DELIVERED);
         order.setStatus(OrderStatus.DELIVERED);
-        orders.add(order);
-        orderRepo.save(order);
 
 
         PaymentUpdateOrderResponse response = new PaymentUpdateOrderResponse();
@@ -161,9 +151,6 @@ public class PaymentController implements PaymentApi {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        orderRepo.deleteAll();
-        itemRepo.deleteAll();
 
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -206,7 +193,6 @@ public class PaymentController implements PaymentApi {
         store1.setOpen(true);
         store1.setMaxOrders(5);
         store1.setStoreLocation(storeAddress);
-        storeRepo.save(store1);
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -245,7 +231,6 @@ public class PaymentController implements PaymentApi {
         Item item1, item2;
         item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
         item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-        itemRepo.save(item1); itemRepo.save(item2);
         mockItemList.add(item1); mockItemList.add(item2);
 
         double totalCost = 14.99 + 36.99;
@@ -264,42 +249,33 @@ public class PaymentController implements PaymentApi {
         totalCost = 0;
 
         orders.add(order);
-        orderRepo.save(order);
 
         order.setOrderID(orderId_PURCHASED);
         order.setStatus(OrderStatus.PURCHASED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderId_IN_QUEUE);
         order.setStatus(OrderStatus.IN_QUEUE);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_PACKING);
         order.setStatus(OrderStatus.PACKING);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_COLLECTION);
         order.setStatus(OrderStatus.AWAITING_COLLECTION);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_DELIVERY_COLLECTED);
         order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_CUSTOMER_COLLECTED);
         order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_DELIVERED);
         order.setStatus(OrderStatus.DELIVERED);
-        orders.add(order);
-        orderRepo.save(order);
 
 
         PaymentGetItemsResponse response = new PaymentGetItemsResponse();
@@ -350,7 +326,7 @@ public class PaymentController implements PaymentApi {
             item.setSize(i.getSize());
             item.setItemType(i.getItemType());
             item.setDescription(i.getDescription());
-            items.add(itemRepo.save(item));
+            items.add(item);
 
         }
         return items;

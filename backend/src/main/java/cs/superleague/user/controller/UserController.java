@@ -20,6 +20,7 @@ import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,68 +69,15 @@ public class UserController implements UserApi {
     @Autowired
     private ShoppingService shoppingService;
 
-    Customer setCartCustomer;
-    GroceryList groceryList;
-    Item item1;
-    Item item2;
-    Store store;
-    Catalogue catalogue;
-
-    UUID storeID;
-    UUID customerID;
-    UUID groceryListID;
-
-    GeoPoint deliveryAddress;
-
-    List<Item> listOfItems = new ArrayList<>();
-    List<GroceryList> groceryLists = new ArrayList<>();
-    List<Item> shoppingCart = new ArrayList<>();
-    List<String> barcodes = new ArrayList<>();
-    List<Store> listOfStores = new ArrayList<>();
 
     @Override
     public ResponseEntity<UserSetCartResponse> setCart(UserSetCartRequest body){
-
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserSetCartResponse userSetCartResponse = new UserSetCartResponse();
         HttpStatus status = HttpStatus.OK;
 
         try{
             SetCartRequest request = new SetCartRequest(body.getCustomerID(), body.getBarcodes());
-
-            System.out.println(barcodes.get(0));
 
             SetCartResponse response = ServiceSelector.getUserService().setCart(request);
             try{
@@ -150,39 +98,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserClearShoppingCartResponse> clearShoppingCart(UserClearShoppingCartRequest body){
-
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserClearShoppingCartResponse userClearShoppingCartResponse = new UserClearShoppingCartResponse();
         HttpStatus status = HttpStatus.OK;
@@ -209,39 +124,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetShoppingCartResponse> getShoppingCart(UserGetShoppingCartRequest body){
-
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserGetShoppingCartResponse userGetShoppingCartResponse = new UserGetShoppingCartResponse();
         HttpStatus status = HttpStatus.OK;
@@ -294,38 +176,6 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserMakeGroceryListResponse> makeGroceryList(UserMakeGroceryListRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserMakeGroceryListResponse makeGroceryListResponse = new UserMakeGroceryListResponse();
         HttpStatus status = HttpStatus.OK;
@@ -353,38 +203,6 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserResetPasswordResponse> resetPassword(UserResetPasswordRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "u14254922@tuks.co.za", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserResetPasswordResponse userMakeGroceryListResponse = new UserResetPasswordResponse();
         HttpStatus status = HttpStatus.OK;
@@ -412,21 +230,10 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserLoginResponse> loginUser(UserLoginRequest body){
 
-        Driver driver=new Driver();
-        UUID driverId= UUID.randomUUID();
-        String driverEmail="driverEmail@gmail.com";
-        String password="Kelcat@01";
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
-        String passwordHashed=passwordEncoder.encode(password);
-
-        driver.setDriverID(driverId);
-        driver.setEmail(driverEmail);
-        driver.setPassword(passwordHashed);
-        UserType userType = null;
-        driverRepo.save(driver);
         UserLoginResponse response=new UserLoginResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
+            UserType userType = null;
             if (body.getUserType().equals("DRIVER")) {
                 userType = UserType.DRIVER;
             } else if (body.getUserType().equals("CUSTOMER")) {
@@ -458,10 +265,6 @@ public class UserController implements UserApi {
         }catch(Exception e){
             e.printStackTrace();
         }
-        driverRepo.deleteAll();
-        shopperRepo.deleteAll();
-        customerRepo.deleteAll();
-        adminRepo.deleteAll();
         return new ResponseEntity<>(response, httpStatus);
 
     }
@@ -560,11 +363,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserAccountVerifyResponse> verifyAccount(UserAccountVerifyRequest body) {
-        Driver driver=new Driver();
-        driver.setDriverID(UUID.randomUUID());
-        driver.setEmail("driverVerifyEmail@gmail.com");
-        driver.setActivationCode("verifyCode");
-        driverRepo.save(driver);
         UserAccountVerifyResponse response=new UserAccountVerifyResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -595,7 +393,6 @@ public class UserController implements UserApi {
         }catch(Exception e){
             e.printStackTrace();
         }
-        driverRepo.deleteAll();
 
         return new ResponseEntity<>(response, status);
 
@@ -628,11 +425,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserUpdateShopperShiftResponse> updateShopperShift(UserUpdateShopperShiftRequest body) {
-        UUID shopperID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        Shopper shopper = new Shopper();
-        shopper.setShopperID(shopperID);
-        shopper.setOnShift(false);
-        shopperRepo.save(shopper);
 
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
@@ -655,7 +447,6 @@ public class UserController implements UserApi {
             response.setSuccess(false);
             response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
         }
-        shopperRepo.delete(shopper);
         return new ResponseEntity<>(response, status);
     }
 

@@ -4,13 +4,78 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="GetStoreByUUIDUnitTest">
-      <change afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/payment/integration/GenerateInvoiceIntegrationTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/payment/integration/GetInvoiceIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="made change to populate function">
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/ShoppingApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/ShoppingApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/AdminObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/AdminObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DriverObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DriverObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ItemObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ItemObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/OrderObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/OrderObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/StoreObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/StoreObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserLoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserLoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserLoginResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserLoginResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +160,7 @@
       <recent name="cs.superleague.payment.repos" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.allTests">
+  <component name="RunManager" selected="Application.Application">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -105,6 +170,19 @@
       <option name="TEST_OBJECT" value="CLASS" />
       <properties />
       <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.Application" />
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -156,22 +234,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GetInvoiceIntegrationTest.IntegrationTest_Unauthorised_User" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GetInvoiceIntegrationTest" />
-      <option name="METHOD_NAME" value="IntegrationTest_Unauthorised_User" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="GetOrderIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
@@ -208,20 +270,20 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.Application" />
       <item itemvalue="JUnit.allTests" />
       <item itemvalue="JUnit.GetOrderIntegrationTest" />
-      <item itemvalue="JUnit.GetInvoiceIntegrationTest.IntegrationTest_Unauthorised_User" />
       <item itemvalue="JUnit.GenerateInvoiceIntegrationTest" />
       <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" />
       <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Application" />
         <item itemvalue="JUnit.GenerateInvoiceIntegrationTest" />
         <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" />
         <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" />
         <item itemvalue="JUnit.GetOrderIntegrationTest" />
-        <item itemvalue="JUnit.GetInvoiceIntegrationTest.IntegrationTest_Unauthorised_User" />
       </list>
     </recent_temporary>
   </component>
@@ -305,7 +367,42 @@
       <option name="project" value="LOCAL" />
       <updated>1622666501908</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="merged master">
+      <created>1628863356176</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1628863356176</updated>
+    </task>
+    <task id="LOCAL-00011" summary="merged master">
+      <created>1628864956890</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1628864956890</updated>
+    </task>
+    <task id="LOCAL-00012" summary="added populating function">
+      <created>1628865169736</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1628865169736</updated>
+    </task>
+    <task id="LOCAL-00013" summary="added populating function">
+      <created>1628868249499</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1628868249499</updated>
+    </task>
+    <task id="LOCAL-00014" summary="made change to populate function">
+      <created>1628871516959</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1628871516959</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -334,7 +431,10 @@
     <MESSAGE value="get invoice tests" />
     <MESSAGE value="generate invoice tests" />
     <MESSAGE value="generate invoice implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="GetStoreByUUIDUnitTest" />
+    <MESSAGE value="merged master" />
+    <MESSAGE value="added populating function" />
+    <MESSAGE value="made change to populate function" />
+    <option name="LAST_COMMIT_MESSAGE" value="made change to populate function" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -342,9 +442,9 @@
       <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
       <FILTER>cs.superleague.payment.*</FILTER>
     </SUITE>
-    <SUITE FILE_PATH="coverage/backend$allTests.ic" NAME="allTests Coverage Results" MODIFIED="1623967032024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
     </SUITE>
+    <SUITE FILE_PATH="coverage/backend$allTests.ic" NAME="allTests Coverage Results" MODIFIED="1623967032024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
