@@ -25,6 +25,7 @@ public class Store {
     private Boolean isOpen;
     private int openingTime;
     private int closingTime;
+    private String imgUrl;
 
     @OneToOne(cascade={CascadeType.ALL})
     private GeoPoint storeLocation;
@@ -58,6 +59,18 @@ public class Store {
         this.orderQueue = orderQueue;
         this.maxOrders = maxOrders;
         this.isOpen = isOpen;
+    }
+
+    public Store(UUID storeID, String storeBrand, Catalogue stock, int maxShoppers, List<Order> currentOrders, List<Order> orderQueue, int maxOrders, Boolean isOpen, String imgUrl) {
+        this.storeID = storeID;
+        this.storeBrand = storeBrand;
+        this.stock = stock;
+        this.maxShoppers = maxShoppers;
+        this.currentOrders = currentOrders;
+        this.orderQueue = orderQueue;
+        this.maxOrders = maxOrders;
+        this.isOpen = isOpen;
+        this.imgUrl=imgUrl;
     }
 
     public Store(UUID storeID, int openingTime, int closingTime, String storeBrand, int maxShoppers, int maxOrders, Boolean isOpen) {
@@ -165,5 +178,12 @@ public class Store {
         this.storeLocation = storeLocation;
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 }
 
