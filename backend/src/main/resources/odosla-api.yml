@@ -150,6 +150,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_UpdateOrderResponse"
 
+  /payment/submitOrder:
+    post:
+      summary: Endpoint for the Submit Order use case
+      tags:
+        - "Payment"
+      description: Refer to summary
+      operationId: submitOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_SubmitOrderRequest"
+      responses:
+        "200":
+          description: Returns submitted order upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_SubmitOrderResponse"
+
   /notification/sendEmailNotification:
     post:
       summary: Endpoint for sending an email notification
@@ -460,6 +482,12 @@ components:
           type: string
         imageUrl:
           type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
 
     shopping_GetItemsRequest:
       description: This object is expected as input
@@ -670,6 +698,44 @@ components:
           type: string
         order:
           type: object
+
+    payment_SubmitOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userId:
+          type: string
+          description: generated token used to identify the caller of the endpoint
+        listOfItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        discount:
+          type: number
+        storeId:
+          type: string
+        orderType:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        deliveryAddress:
+          type: string
+
+    payment_SubmitOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        orderStatus:
+          type: string
+        message:
+          type: string
+          description: Will contain a descriptive error message if response code is not 200, else will be empty
+        success:
+          type: boolean
+        timestamp:
+          type: string
 
     notification_SendEmailNotificationRequest:
       description: This object is expected as input

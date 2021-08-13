@@ -14,6 +14,15 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.requests.AddToQueueRequest;
+import cs.superleague.shopping.requests.GetQueueRequest;
+import cs.superleague.shopping.requests.GetShoppersRequest;
+import cs.superleague.shopping.responses.AddToQueueResponse;
+import cs.superleague.shopping.responses.GetQueueResponse;
+import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.requests.GetUserByUUIDRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -97,6 +106,7 @@ public class PaymentServiceImpl implements PaymentService {
         boolean invalidReq = false;
         String invalidMessage = "";
 
+        GetStoreByUUIDResponse shop=null;
         if (request!=null) {
 
             /* checking for invalid requests */
@@ -124,15 +134,37 @@ public class PaymentServiceImpl implements PaymentService {
                 invalidReq = true;
                 invalidMessage = ("Order type cannot be null in request object - order unsuccessfully created.");
             }
-
-            else if(request.getDeliveryAddress()==null){
+            else if(request.getLongitude()==null)
+            {
                 invalidReq = true;
-                invalidMessage = ("Delivery Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                invalidMessage = ("Longitude cannot be null in request object - order unsuccessfully created.");
+
             }
-
-            else if (request.getStoreAddress()==null){
+            else if(request.getLatitude()==null)
+            {
                 invalidReq = true;
-                invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                invalidMessage = ("Latitude cannot be null in request object - order unsuccessfully created.");
+
+            }
+            else if(request.getAddress()==null)
+            {
+                invalidReq = true;
+                invalidMessage = ("Address cannot be null in request object - order unsuccessfully created.");
+
+            }
+            else
+            {
+                GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(request.getStoreID());
+                shop=shoppingService.getStoreByUUID(getShopRequest);
+
+                if(shop!=null)
+                {
+                    if (shop.getStore().getStoreLocation()==null){
+                        invalidReq = true;
+                        invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                    }
+                }
+
             }
 
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
@@ -157,7 +189,6 @@ public class PaymentServiceImpl implements PaymentService {
             //meant to use assign order request in shop - Mock Data
             UUID shopperID = null;
 
-
             //Mock Data - still have to find out how this is going to work
             Boolean requiresPharmacy = false;
 
@@ -167,7 +198,10 @@ public class PaymentServiceImpl implements PaymentService {
             bd = bd.setScale(2, RoundingMode.HALF_UP);
             double totalC=bd.doubleValue();
 
-            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), request.getDeliveryAddress(), request.getStoreAddress(), requiresPharmacy);
+            GeoPoint customerLocation= new GeoPoint(request.getLatitude(),request.getLongitude(), request.getAddress());
+
+            assert shop != null;
+            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
 
             Order alreadyExists=null;
             while (true) {
@@ -184,18 +218,20 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
             if (o != null) {
-                GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(storeID);
-                GetStoreByUUIDResponse shop=shoppingService.getStoreByUUID(getShopRequest);
-                if (shop != null) {
+
                     if(shop.getStore().getOpen()==true) {
+                        if(orderRepo!=null)
                         orderRepo.save(o);
+
+                        AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
+                        shoppingService.addToQueue(addToQueueRequest);
+
                         System.out.println("Order has been created");
                         response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
                     }
-                    else{
+                    else {
                         throw new StoreClosedException("Store is currently closed - could not create order");
                     }
-                }
             }
 
         }else{
