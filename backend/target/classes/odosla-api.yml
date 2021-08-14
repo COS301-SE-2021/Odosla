@@ -966,7 +966,7 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        orderStatus:
+        orderId:
           type: string
         message:
           type: string

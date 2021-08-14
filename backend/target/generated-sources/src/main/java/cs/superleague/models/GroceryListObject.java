@@ -17,7 +17,6 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a GroceryList")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:26:44.499818600+02:00[Africa/Harare]")
 public class GroceryListObject   {
   @JsonProperty("groceryListID")
   private String groceryListID = null;

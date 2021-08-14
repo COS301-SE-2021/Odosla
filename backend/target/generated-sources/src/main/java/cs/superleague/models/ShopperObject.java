@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a shopper")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 public class ShopperObject  implements OneOfuserGetCurrentUserResponseUser {
   @JsonProperty("name")
   private String name = null;
