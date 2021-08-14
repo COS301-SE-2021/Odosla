@@ -1,8 +1,7 @@
 package cs.superleague.integration;
 
-import cs.superleague.notification.NotificationService;
 import cs.superleague.analytics.AnalyticsService;
-import cs.superleague.analytics.AnalyticsServiceImpl;
+import cs.superleague.notification.NotificationService;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.user.UserService;
@@ -66,5 +65,9 @@ public class ServiceSelector {
 
     public static NotificationService getNotificationService(){
         return singleton.notification;
+    }
+
+    public static AnalyticsService getAnalyticsService(){
+        return singleton.analytics;
     }
 }
