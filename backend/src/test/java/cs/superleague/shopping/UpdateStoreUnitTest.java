@@ -61,7 +61,7 @@ public class UpdateStoreUnitTest {
         listOfItems2.add(i3);
         listOfItems2.add(i4);
         s=new Store(storeUUID1,"Woolworths",c,2,null,null,4,true);
-        s2=new Store(storeUUID1, 7, 21, "PnP", 2,6,true);
+        s2=new Store(storeUUID1, 7, 21, "PnP", 2,6,true, "img");
     }
 
     @AfterEach

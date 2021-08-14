@@ -184,15 +184,15 @@ public class PaymentController implements PaymentApi {
 
         //add mock data to repo
 
-        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "PnP, Hillcrest Boulevard");
-        Store store1 = new Store();
-        store1.setStoreID(storeID);
-        store1.setStoreBrand("PnP");
-        store1.setOpeningTime(7);
-        store1.setClosingTime(20);
-        store1.setOpen(true);
-        store1.setMaxOrders(5);
-        store1.setStoreLocation(storeAddress);
+//        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "PnP, Hillcrest Boulevard");
+//        Store store1 = new Store();
+//        store1.setStoreID(storeID);
+//        store1.setStoreBrand("PnP");
+//        store1.setOpeningTime(7);
+//        store1.setClosingTime(20);
+//        store1.setOpen(true);
+//        store1.setMaxOrders(5);
+//        store1.setStoreLocation(storeAddress);
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;

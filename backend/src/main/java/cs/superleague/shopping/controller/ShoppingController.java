@@ -594,8 +594,8 @@ public class ShoppingController implements ShoppingApi{
         Catalogue c2 = new Catalogue(storeUUID2, store2Cat);
         catalogueRepo.save(c2);
 
-        Store store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
-        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, true);
+        Store store1=new Store(storeUUID1, 7, 16, "PnP", 2, 5, true, "shop/pnp.png");
+        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, true, "shop/woolworths.png");
         GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
         GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
 
@@ -681,6 +681,9 @@ public class ShoppingController implements ShoppingApi{
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+            currentItem.setBrand(responseItems.get(i).getBrand());
+            currentItem.setItemType(responseItems.get(i).getItemType());
+            currentItem.setSize(responseItems.get(i).getSize());
 
             responseBody.add(currentItem);
 
@@ -735,6 +738,7 @@ public class ShoppingController implements ShoppingApi{
             currentStore.setMaxOrders(responseStores.get(i).getMaxOrders());
             currentStore.setMaxShoppers(responseStores.get(i).getMaxShoppers());
             currentStore.setIsOpen(responseStores.get(i).getOpen());
+            currentStore.setImageUrl(responseStores.get(i).getImgUrl());
 
             responseBody.add(currentStore);
 
