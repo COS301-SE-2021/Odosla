@@ -5,6 +5,7 @@ import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
@@ -37,10 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -453,6 +451,114 @@ public class ShoppingController implements ShoppingApi{
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingGetQueueResponse> getQueue(ShoppingGetQueueRequest body) {
+        GetQueueRequest getQueueRequest;
+
+        /* StoreID */
+        UUID storeUUID1= UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
+        UUID storeUUID2= UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF9");
+
+        Store s;
+        Store s2;
+
+        Catalogue c;
+        Catalogue c2;
+
+        Order o;
+        Order o2;
+        UUID o1UUID=UUID.randomUUID();
+        UUID o2UUID=UUID.randomUUID();
+
+        UUID expectedU1=UUID.randomUUID();
+        UUID expectedS1=UUID.randomUUID();
+        UUID expectedShopper1=UUID.randomUUID();
+        Double expectedDiscount;
+        Double totalC;
+
+        Item i1;
+        Item i2;
+        Item i3;
+        Item i4;
+        List<Item> listOfItems=new ArrayList<>();
+        List<Item> listOfItems2=new ArrayList<>();
+
+        List<Order> listOfOrders=new ArrayList<>();
+        String expectedMessage;
+        OrderStatus expectedStatus;
+        OrderType expectedType;
+        GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworths, Hillcrest Boulevard");
+        List<Item> expectedListOfItems=new ArrayList<>();
+
+        i1=new Item("Heinz Tomato Sauce","123456","123456",storeUUID1,36.99,1,"description","img/");
+        i2=new Item("Bar one","012345","012345",storeUUID1,14.99,3,"description","img/");
+        i3=new Item("Milk","901234","901234",storeUUID2,30.00,1,"description","img/");
+        i4=new Item("Bread","890123","890123",storeUUID2,36.99,1,"description","img/");
+        itemRepo.save(i1);
+        itemRepo.save(i2);
+        itemRepo.save(i3);
+        itemRepo.save(i4);
+
+        listOfItems.add(i1);
+        listOfItems.add(i2);
+        listOfItems2.add(i3);
+        listOfItems2.add(i4);
+
+        c=new Catalogue(storeUUID1,listOfItems);
+        c2= new Catalogue(storeUUID2, listOfItems2);
+        catalogueRepo.save(c);
+        catalogueRepo.save(c2);
+
+        Date d1=new Date(2021,06,1,14,30);
+        Date d2=new Date(2021,06,1,14,23);
+        totalC=133.99;
+        expectedDiscount=0.0;
+
+        Calendar c1=Calendar.getInstance();
+        Calendar cal2=Calendar.getInstance();
+
+        c1.setTime(d1);
+        cal2.setTime(d2);
+
+        o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), cal2, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        orderRepo.save(o);
+        orderRepo.save(o2);
+        listOfOrders.add(o);
+        listOfOrders.add(o2);
+
+        s=new Store(storeUUID1,"Woolworths",c,2,null,listOfOrders,4,true);
+        s2= new Store(storeUUID2,"PnP",c2,2,null,null,4,true);
+
+        storeRepo.save(s);
+        storeRepo.save(s2);
+
+
+        ShoppingGetQueueResponse response = new ShoppingGetQueueResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetQueueRequest request = new GetQueueRequest(UUID.fromString(body.getStoreID()));
+            GetQueueResponse getQueueResponse = ServiceSelector.getShoppingService().getQueue(request);
+            try {
+                response.setResponse(getQueueResponse.getResponse());
+                response.setMessage(getQueueResponse.getMessage());
+                response.setQueueOfOrders(populateOrders(getQueueResponse.getQueueOfOrders()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setResponse(false);
+                response.setMessage(e.getMessage());
+                response.setQueueOfOrders(null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setResponse(false);
+            response.setMessage(e.getMessage());
+            response.setQueueOfOrders(null);
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     public ResponseEntity<ShoppingPopulateTablesResponse> populateTables(ShoppingPopulateTablesRequest body) {
         //Items
 
@@ -640,18 +746,20 @@ public class ShoppingController implements ShoppingApi{
     private List<OrderObject> populateOrders(List<Order> responseOrders) throws NullPointerException{
 
         List<OrderObject> responseBody = new ArrayList<>();
-
+        if (responseOrders == null){
+            return null;
+        }
         for(int i = 0; i < responseOrders.size(); i++){
 
             OrderObject currentOrder = new OrderObject();
 
             currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
             currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
-            currentOrder.setCreateDate(responseOrders.get(i).toString());
+            currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
             currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
             currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
             currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
-            currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
+            currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
             currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
             currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
             currentOrder.setStatus(responseOrders.get(i).getStatus().name());

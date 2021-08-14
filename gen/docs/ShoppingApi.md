@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**addShopper**](ShoppingApi.md#addShopper) | **POST** /shopping/addShopper | Endpoint for adding shopper to shopper list
 [**getItems**](ShoppingApi.md#getItems) | **POST** /shopping/getItems | Endpoint for Get Items use case
+[**getQueue**](ShoppingApi.md#getQueue) | **POST** /shopping/getQueue | Endpoint for getting the order queue of a shop
 [**getShoppers**](ShoppingApi.md#getShoppers) | **POST** /shopping/getShoppers | Endpoint for Get Shoppers use case
 [**getStores**](ShoppingApi.md#getStores) | **POST** /shopping/getStores | Endpoint for Get Stores use case
 [**populateTables**](ShoppingApi.md#populateTables) | **POST** /shopping/populateTables | Endpoint populating tables
@@ -135,6 +136,68 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns items upon success |  -  |
+
+<a name="getQueue"></a>
+# **getQueue**
+> ShoppingGetQueueResponse getQueue(shoppingGetQueueRequest)
+
+Endpoint for getting the order queue of a shop
+
+Refer to summary
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.ShoppingApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+
+    ShoppingApi apiInstance = new ShoppingApi(defaultClient);
+    ShoppingGetQueueRequest shoppingGetQueueRequest = new ShoppingGetQueueRequest(); // ShoppingGetQueueRequest | The input body required by this request
+    try {
+      ShoppingGetQueueResponse result = apiInstance.getQueue(shoppingGetQueueRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ShoppingApi#getQueue");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **shoppingGetQueueRequest** | [**ShoppingGetQueueRequest**](ShoppingGetQueueRequest.md)| The input body required by this request |
+
+### Return type
+
+[**ShoppingGetQueueResponse**](ShoppingGetQueueResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns upon success |  -  |
 
 <a name="getShoppers"></a>
 # **getShoppers**
