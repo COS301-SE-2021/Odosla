@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: cs.superleague.user.UpdateDriverDetailsUnitTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.547 s - in cs.superleague.user.UpdateDriverDetailsUnitTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.017 s - in cs.superleague.user.UpdateDriverDetailsUnitTest

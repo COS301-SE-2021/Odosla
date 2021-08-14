@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: cs.superleague.user.UpdateAdminDetailsUnitTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.563 s - in cs.superleague.user.UpdateAdminDetailsUnitTest
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.625 s - in cs.superleague.user.UpdateAdminDetailsUnitTest

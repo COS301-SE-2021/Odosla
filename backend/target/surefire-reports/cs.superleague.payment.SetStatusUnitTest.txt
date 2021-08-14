@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: cs.superleague.payment.SetStatusUnitTest
 -------------------------------------------------------------------------------
-Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.006 s - in cs.superleague.payment.SetStatusUnitTest
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.03 s - in cs.superleague.payment.SetStatusUnitTest
