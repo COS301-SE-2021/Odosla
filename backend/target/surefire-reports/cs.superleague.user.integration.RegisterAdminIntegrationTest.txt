@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cs.superleague.user.integration.RegisterAdminIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.221 s - in cs.superleague.user.integration.RegisterAdminIntegrationTest
