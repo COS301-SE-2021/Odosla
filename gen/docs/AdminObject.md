@@ -18,8 +18,6 @@ Name | Type | Description | Notes
 **resetExpiration** | **String** |  |  [optional]
 **accountType** | **String** |  |  [optional]
 **adminID** | **String** |  |  [optional]
-**rating** | **BigDecimal** |  |  [optional]
-**isActive** | **Boolean** |  |  [optional]
 
 
 

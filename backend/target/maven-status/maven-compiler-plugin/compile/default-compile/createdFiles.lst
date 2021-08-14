@@ -217,6 +217,7 @@ cs\superleague\shopping\repos\ItemRepo.class
 cs\superleague\user\responses\UpdateShopperDetailsResponse.class
 cs\superleague\payment\requests\CancelOrderRequest.class
 cs\superleague\user\exceptions\AlreadyExistsException.class
+cs\superleague\models\UserObject.class
 cs\superleague\payment\dataclass\Invoice.class
 cs\superleague\payment\repos\OrderRepo.class
 cs\superleague\shopping\exceptions\StoreDoesNotExistException.class
@@ -254,6 +255,7 @@ cs\superleague\payment\responses\SetStatusResponse.class
 cs\superleague\payment\PaymentService.class
 cs\superleague\shopping\responses\GetStoreOpenResponse.class
 cs\superleague\models\CustomerObject.class
+cs\superleague\models\GroceryListObject.class
 cs\superleague\models\ShoppingAddShopperResponse.class
 cs\superleague\payment\dataclass\OrderType.class
 cs\superleague\user\dataclass\Wallet.class
