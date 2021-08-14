@@ -166,26 +166,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         Order updatedOrder = request.getOrder();
 
-        // // Update the order status and create time // //
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
         updatedOrder.setProcessDate(Calendar.getInstance());
         if(orderRepo!=null)
         orderRepo.save(updatedOrder);
-        // <paymentService>.updateOrder(updatedOrder);
 
-
-        // // Add order to respective store order queue in db // //
-        // ...
-        GetStoreByUUIDRequest getStoreByUUIDRequest = new GetStoreByUUIDRequest(updatedOrder.getStoreID());
-        GetStoreByUUIDResponse getStoreByUUIDResponse = null;
-        try {
-            getStoreByUUIDResponse = getStoreByUUID(getStoreByUUIDRequest);
-        }catch(Exception e){
-            throw new InvalidRequestException(e.getMessage());
-        }
-
-        //getStoreByUUIDResponse.getStore().getCurrentOrders().add(updatedOrder);
-        //Store store= getStoreByUUIDResponse.getStore();
         Store store=null;
         try {
             store= storeRepo.findById(request.getOrder().getStoreID()).orElse(null);
@@ -193,21 +178,8 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException(e.getMessage());
         }
 
-//        List<Order> orderQueue=null;
-//        if(store.getOrderQueue()!=null)
-//        {
-//            orderQueue = store.getCurrentOrders();
-//            orderQueue.add(updatedOrder);
-//        }
-//        else
-//        {
-//            orderQueue = new ArrayList<>();
-//            orderQueue.add(updatedOrder);
-//        }
-
         store.getOrderQueue().add(updatedOrder);
 
-        //store.setOrderQueue(orderQueue);
         if(storeRepo!=null)
         storeRepo.save(store);
 
