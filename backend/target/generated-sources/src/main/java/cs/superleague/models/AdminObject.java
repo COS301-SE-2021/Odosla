@@ -15,7 +15,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a Admin")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T13:48:59.955289300+02:00[Africa/Harare]")
 public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
   @JsonProperty("name")
   private String name = null;

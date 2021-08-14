@@ -14,6 +14,28 @@ tags:
 
 paths:
 
+  /shopping/populateTables:
+    post:
+      summary: Endpoint populating tables
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: populateTables
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PopulateTablesRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PopulateTablesResponse"
+
   /shopping/getItems:
     post:
       summary: Endpoint for Get Items use case
@@ -1483,3 +1505,11 @@ components:
           type: string
         timestamp:
           type: string
+
+    shopping_PopulateTablesRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_PopulateTablesResponse:
+      description: This object is expected as output
+      type: object

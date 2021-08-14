@@ -575,6 +575,9 @@ public class ShoppingController implements ShoppingApi{
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+            currentItem.setBrand(responseItems.get(i).getBrand());
+            currentItem.setItemType(responseItems.get(i).getItemType());
+            currentItem.setSize(responseItems.get(i).getSize());
 
             responseBody.add(currentItem);
 

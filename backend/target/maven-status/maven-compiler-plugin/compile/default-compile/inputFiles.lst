@@ -1,8 +1,8 @@
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetStoreOpenResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\SetStatusResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetShoppersResponse.java
-C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetCustomersResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\ResetPasswordRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingPopulateTablesResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\dataclass\NotificationType.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentUpdateOrderRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendDirectEmailNotificationResponse.java
@@ -23,6 +23,7 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\jav
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\DriverObject.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RegisterCustomerRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\DriverRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetUsersRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateShopperDetailsRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetItemsRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\ClearShoppingCartResponse.java
@@ -132,6 +133,7 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notifica
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Wallet.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetShoppersResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\CreateTransactionResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingPopulateTablesRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetStoreByUUIDResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\UserException.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Address.java
@@ -266,6 +268,7 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\req
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetCatalogueResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetStoreOpenRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\ShoppingService.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetUsersResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\UpdateStoreRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\OneOfuserGetCurrentUserResponseUser.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\ReverseTransactionResponse.java
