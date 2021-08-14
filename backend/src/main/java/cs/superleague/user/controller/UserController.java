@@ -651,21 +651,20 @@ public class UserController implements UserApi {
                 userGetCurrentUserResponse.setMessage(response.getMessage());
                 userGetCurrentUserResponse.setSuccess(response.isSuccess());
                 if (response.getUser().getAccountType() == UserType.CUSTOMER){
-                    CustomerObject customerObject = new CustomerObject();
                     Customer customer = (Customer) response.getUser();
-                    customerObject.setName(customer.getName());
-                    customerObject.setSurname(customer.getSurname());
-                    customerObject.setEmail(customer.getEmail());
-                    customerObject.setPhoneNumber(customer.getPhoneNumber());
-                    customerObject.setPassword(customer.getPassword());
-                    customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
-                    customerObject.setActivationCode(customer.getActivationCode());
-                    customerObject.setResetCode(customer.getResetCode());
-                    customerObject.setResetExpiration(customer.getResetExpiration());
-                    customerObject.setAccountType(String.valueOf(customer.getAccountType()));
-                    customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
-                    customerObject.setAddress(String.valueOf(customer.getAddress()));
+                    CustomerObject customerObject = populateCustomer(customer);
                     userGetCurrentUserResponse.setUser(customerObject);
+                }else if (response.getUser().getAccountType() == UserType.ADMIN){
+                    Admin admin = (Admin) response.getUser();
+                    AdminObject adminObject = populateAdmin(admin);
+                    userGetCurrentUserResponse.setUser(adminObject);
+                }else if (response.getUser().getAccountType() == UserType.DRIVER){
+                    Driver driver = (Driver) response.getUser();
+                    DriverObject driverObject = populateDriver(driver);
+                    userGetCurrentUserResponse.setUser(driverObject);
+                } else if (response.getUser().getAccountType() == UserType.SHOPPER){
+                    Shopper shopper = (Shopper) response.getUser();
+                    ShopperObject shopperObject = populateShopper(shopper);
                 }
 
             }catch(Exception e){
@@ -679,5 +678,75 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(userGetCurrentUserResponse, status);
     }
 
-
+    //Helper for getCurrentUser
+    public AdminObject populateAdmin(Admin admin){
+        AdminObject adminObject = new AdminObject();
+        adminObject.setName(admin.getName());
+        adminObject.setSurname(admin.getSurname());
+        adminObject.setEmail(admin.getEmail());
+        adminObject.setPhoneNumber(admin.getPhoneNumber());
+        adminObject.setPassword(admin.getPassword());
+        adminObject.setActivationDate(String.valueOf(admin.getActivationDate()));
+        adminObject.setActivationCode(admin.getActivationCode());
+        adminObject.setResetCode(admin.getResetCode());
+        adminObject.setResetExpiration(admin.getResetExpiration());
+        adminObject.setAccountType(String.valueOf(admin.getAccountType()));
+        adminObject.setAdminID(String.valueOf(admin.getAdminID()));
+        return adminObject;
+    }
+    public DriverObject populateDriver(Driver driver){
+        DriverObject driverObject = new DriverObject();
+        driverObject.setName(driver.getName());
+        driverObject.setSurname(driver.getSurname());
+        driverObject.setEmail(driver.getEmail());
+        driverObject.setPhoneNumber(driver.getPhoneNumber());
+        driverObject.setPassword(driver.getPassword());
+        driverObject.setActivationDate(String.valueOf(driver.getActivationDate()));
+        driverObject.setActivationCode(driver.getActivationCode());
+        driverObject.setResetCode(driver.getResetCode());
+        driverObject.setResetExpiration(driver.getResetExpiration());
+        driverObject.setAccountType(String.valueOf(driver.getAccountType()));
+        driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
+        driverObject.setOnShift(driver.getOnShift());
+        return driverObject;
+    }
+    public CustomerObject populateCustomer(Customer customer){
+        CustomerObject customerObject = new CustomerObject();
+        customerObject.setName(customer.getName());
+        customerObject.setSurname(customer.getSurname());
+        customerObject.setEmail(customer.getEmail());
+        customerObject.setPhoneNumber(customer.getPhoneNumber());
+        customerObject.setPassword(customer.getPassword());
+        customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
+        customerObject.setActivationCode(customer.getActivationCode());
+        customerObject.setResetCode(customer.getResetCode());
+        customerObject.setResetExpiration(customer.getResetExpiration());
+        customerObject.setAccountType(String.valueOf(customer.getAccountType()));
+        customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        customerObject.setAddress(String.valueOf(customer.getAddress()));
+        List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
+        customerObject.setGroceryLists(groceryListObjectList);
+        List<ItemObject> itemObjects = populateItems(customer.getShoppingCart());
+        customerObject.setShoppingCart(itemObjects);
+        customerObject.setPreference(customer.getPreference());
+        customerObject.setWallet(customer.getWallet());
+        return customerObject;
+    }
+    public ShopperObject populateShopper(Shopper shopper){
+        ShopperObject shopperObject = new ShopperObject();
+        return shopperObject;
+    }
+    public List<GroceryListObject> populateGroceryList(List<GroceryList> groceryList){
+        List<GroceryListObject> groceryListObjectList = new ArrayList<>();
+        for (int i = 0; i < groceryList.size(); i++){
+            GroceryListObject groceryListObject = new GroceryListObject();
+            groceryListObject.setGroceryListID(String.valueOf(groceryList.get(i).getGroceryListID()));
+            List<ItemObject> itemObjects = populateItems(groceryList.get(i).getItems());
+            groceryListObject.setItems(itemObjects);
+            groceryListObject.setName(groceryList.get(i).getName());
+            groceryListObjectList.add(groceryListObject);
+        }
+        return groceryListObjectList;
+    }
 }
