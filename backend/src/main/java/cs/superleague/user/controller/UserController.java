@@ -2,6 +2,7 @@ package cs.superleague.user.controller;
 
 import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
@@ -14,6 +15,7 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
+import cs.superleague.user.dataclass.*;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.ShopperDoesNotExistException;
@@ -69,15 +71,68 @@ public class UserController implements UserApi {
     @Autowired
     private ShoppingService shoppingService;
 
+    Customer setCartCustomer;
+    GroceryList groceryList;
+    Item item1;
+    Item item2;
+    Store store;
+    Catalogue catalogue;
+
+    UUID storeID;
+    UUID customerID;
+    UUID groceryListID;
+
+    GeoPoint deliveryAddress;
+
+    List<Item> listOfItems = new ArrayList<>();
+    List<GroceryList> groceryLists = new ArrayList<>();
+    List<Item> shoppingCart = new ArrayList<>();
+    List<String> barcodes = new ArrayList<>();
+    List<Store> listOfStores = new ArrayList<>();
 
     @Override
     public ResponseEntity<UserSetCartResponse> setCart(UserSetCartRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
 
         UserSetCartResponse userSetCartResponse = new UserSetCartResponse();
         HttpStatus status = HttpStatus.OK;
 
         try{
             SetCartRequest request = new SetCartRequest(body.getCustomerID(), body.getBarcodes());
+
+            System.out.println(barcodes.get(0));
 
             SetCartResponse response = ServiceSelector.getUserService().setCart(request);
             try{
@@ -98,6 +153,39 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserClearShoppingCartResponse> clearShoppingCart(UserClearShoppingCartRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
 
         UserClearShoppingCartResponse userClearShoppingCartResponse = new UserClearShoppingCartResponse();
         HttpStatus status = HttpStatus.OK;
@@ -124,6 +212,39 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetShoppingCartResponse> getShoppingCart(UserGetShoppingCartRequest body){
+
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
 
         UserGetShoppingCartResponse userGetShoppingCartResponse = new UserGetShoppingCartResponse();
         HttpStatus status = HttpStatus.OK;
@@ -152,6 +273,9 @@ public class UserController implements UserApi {
     private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
 
         List<ItemObject> responseBody = new ArrayList<>();
+        if (responseItems == null){
+            return null;
+        }
 
         for(int i = 0; i < responseItems.size(); i++){
 
@@ -176,6 +300,38 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserMakeGroceryListResponse> makeGroceryList(UserMakeGroceryListRequest body){
 
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
 
         UserMakeGroceryListResponse makeGroceryListResponse = new UserMakeGroceryListResponse();
         HttpStatus status = HttpStatus.OK;
@@ -203,6 +359,38 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserResetPasswordResponse> resetPassword(UserResetPasswordRequest body){
 
+        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+
+        if(!customerRepo.findById(customerID).isPresent()){
+
+            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
+
+            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
+            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
+
+            listOfItems.add(item1);
+
+            barcodes.add("123456");
+            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
+            groceryLists.add(groceryList);
+
+            shoppingCart.add(item2);
+
+            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
+            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
+            listOfStores.add(store);
+
+            setCartCustomer = new Customer("D", "S", "u14254922@tuks.co.za", "0721234567", "", new Date(), "", "", "", true,
+                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
+
+            itemRepo.save(item1);
+            itemRepo.saveAll(shoppingCart);
+            groceryListRepo.save(groceryList);
+            storeRepo.saveAll(listOfStores);
+            customerRepo.save(setCartCustomer);
+        }
 
         UserResetPasswordResponse userMakeGroceryListResponse = new UserResetPasswordResponse();
         HttpStatus status = HttpStatus.OK;
@@ -230,10 +418,21 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserLoginResponse> loginUser(UserLoginRequest body){
 
+        Driver driver=new Driver();
+        UUID driverId= UUID.randomUUID();
+        String driverEmail="driverEmail@gmail.com";
+        String password="Kelcat@01";
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+        String passwordHashed=passwordEncoder.encode(password);
+
+        driver.setDriverID(driverId);
+        driver.setEmail(driverEmail);
+        driver.setPassword(passwordHashed);
+        UserType userType = null;
+        driverRepo.save(driver);
         UserLoginResponse response=new UserLoginResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
-            UserType userType = null;
             if (body.getUserType().equals("DRIVER")) {
                 userType = UserType.DRIVER;
             } else if (body.getUserType().equals("CUSTOMER")) {
@@ -265,6 +464,10 @@ public class UserController implements UserApi {
         }catch(Exception e){
             e.printStackTrace();
         }
+        driverRepo.deleteAll();
+        shopperRepo.deleteAll();
+        customerRepo.deleteAll();
+        adminRepo.deleteAll();
         return new ResponseEntity<>(response, httpStatus);
 
     }
@@ -363,6 +566,11 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserAccountVerifyResponse> verifyAccount(UserAccountVerifyRequest body) {
+        Driver driver=new Driver();
+        driver.setDriverID(UUID.randomUUID());
+        driver.setEmail("driverVerifyEmail@gmail.com");
+        driver.setActivationCode("verifyCode");
+        driverRepo.save(driver);
         UserAccountVerifyResponse response=new UserAccountVerifyResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -393,6 +601,7 @@ public class UserController implements UserApi {
         }catch(Exception e){
             e.printStackTrace();
         }
+        driverRepo.deleteAll();
 
         return new ResponseEntity<>(response, status);
 
@@ -452,6 +661,18 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
+//        JwtUtil jwtTokenUtil = new JwtUtil();
+//        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+//        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+//        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+//
+//        if(!driverRepo.findById(customerID).isPresent()){
+//            Customer customer = new Customer();
+//            customer.setCustomerID(customerID);
+//            customer.setAccountType(UserType.CUSTOMER);
+//            customerRepo.save(customer);
+//
+//        }
 
         UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
         HttpStatus status = HttpStatus.OK;
@@ -464,19 +685,131 @@ public class UserController implements UserApi {
                 userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
                 userGetCurrentUserResponse.setMessage(response.getMessage());
                 userGetCurrentUserResponse.setSuccess(response.isSuccess());
-                userGetCurrentUserResponse.setUser((OneOfuserGetCurrentUserResponseUser) response.getUser());
+                if (response.getUser().getAccountType() == UserType.CUSTOMER){
+                    Customer customer = (Customer) response.getUser();
+                    CustomerObject customerObject = populateCustomer(customer);
+                    userGetCurrentUserResponse.setUser(customerObject);
+                }else if (response.getUser().getAccountType() == UserType.ADMIN){
+                    Admin admin = (Admin) response.getUser();
+                    AdminObject adminObject = populateAdmin(admin);
+                    userGetCurrentUserResponse.setUser(adminObject);
+                }else if (response.getUser().getAccountType() == UserType.DRIVER){
+                    Driver driver = (Driver) response.getUser();
+                    DriverObject driverObject = populateDriver(driver);
+                    userGetCurrentUserResponse.setUser(driverObject);
+                } else if (response.getUser().getAccountType() == UserType.SHOPPER){
+                    Shopper shopper = (Shopper) response.getUser();
+                    ShopperObject shopperObject = populateShopper(shopper);
+                    userGetCurrentUserResponse.setUser(shopperObject);
+                }else{
+                    userGetCurrentUserResponse.setMessage("User type is invalid.");
+                    userGetCurrentUserResponse.setSuccess(false);
+                }
 
             }catch(Exception e){
                 e.printStackTrace();
+                userGetCurrentUserResponse.setSuccess(false);
+                userGetCurrentUserResponse.setMessage(e.getMessage());
             }
 
         }catch(Exception e){
             e.printStackTrace();
+            userGetCurrentUserResponse.setSuccess(false);
+            userGetCurrentUserResponse.setMessage(e.getMessage());
         }
 
         return new ResponseEntity<>(userGetCurrentUserResponse, status);
     }
 
+    //Helper for getCurrentUser
+    public AdminObject populateAdmin(Admin admin){
+        AdminObject adminObject = new AdminObject();
+        adminObject.setName(admin.getName());
+        adminObject.setSurname(admin.getSurname());
+        adminObject.setEmail(admin.getEmail());
+        adminObject.setPhoneNumber(admin.getPhoneNumber());
+        adminObject.setPassword(admin.getPassword());
+        adminObject.setActivationDate(String.valueOf(admin.getActivationDate()));
+        adminObject.setActivationCode(admin.getActivationCode());
+        adminObject.setResetCode(admin.getResetCode());
+        adminObject.setResetExpiration(admin.getResetExpiration());
+        adminObject.setAccountType(String.valueOf(admin.getAccountType()));
+        adminObject.setAdminID(String.valueOf(admin.getAdminID()));
+        return adminObject;
+    }
+    public DriverObject populateDriver(Driver driver){
+        DriverObject driverObject = new DriverObject();
+        driverObject.setName(driver.getName());
+        driverObject.setSurname(driver.getSurname());
+        driverObject.setEmail(driver.getEmail());
+        driverObject.setPhoneNumber(driver.getPhoneNumber());
+        driverObject.setPassword(driver.getPassword());
+        driverObject.setActivationDate(String.valueOf(driver.getActivationDate()));
+        driverObject.setActivationCode(driver.getActivationCode());
+        driverObject.setResetCode(driver.getResetCode());
+        driverObject.setResetExpiration(driver.getResetExpiration());
+        driverObject.setAccountType(String.valueOf(driver.getAccountType()));
+        driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
+        driverObject.setOnShift(driver.getOnShift());
+        return driverObject;
+    }
+    public CustomerObject populateCustomer(Customer customer){
+        CustomerObject customerObject = new CustomerObject();
+        customerObject.setName(customer.getName());
+        customerObject.setSurname(customer.getSurname());
+        customerObject.setEmail(customer.getEmail());
+        customerObject.setPhoneNumber(customer.getPhoneNumber());
+        customerObject.setPassword(customer.getPassword());
+        customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
+        customerObject.setActivationCode(customer.getActivationCode());
+        customerObject.setResetCode(customer.getResetCode());
+        customerObject.setResetExpiration(customer.getResetExpiration());
+        customerObject.setAccountType(String.valueOf(customer.getAccountType()));
+        customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        customerObject.setAddress(String.valueOf(customer.getAddress()));
+        List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
+        customerObject.setGroceryLists(groceryListObjectList);
+        List<ItemObject> itemObjects = populateItems(customer.getShoppingCart());
+        customerObject.setShoppingCart(itemObjects);
+        customerObject.setPreference(customer.getPreference());
+        customerObject.setWallet(customer.getWallet());
+        return customerObject;
+    }
+    public ShopperObject populateShopper(Shopper shopper){
+        ShopperObject shopperObject = new ShopperObject();
+        shopperObject.setName(shopper.getName());
+        shopperObject.setSurname(shopper.getSurname());
+        shopperObject.setEmail(shopper.getEmail());
+        shopperObject.setPhoneNumber(shopper.getPhoneNumber());
+        shopperObject.setPassword(shopper.getPassword());
+        shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
+        shopperObject.setActivationCode(shopper.getActivationCode());
+        shopperObject.setResetCode(shopper.getResetCode());
+        shopperObject.setResetExpiration(shopper.getResetExpiration());
+        shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
+        shopperObject.setShopperID(shopper.getShopperID().toString());
+        shopperObject.setStoreID(shopper.getStoreID().toString());
+        shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
+        shopperObject.setOnShift(shopper.getOnShift());
+        shopperObject.setIsActive(shopper.isActive());
+        return shopperObject;
+    }
+    public List<GroceryListObject> populateGroceryList(List<GroceryList> groceryList){
+        List<GroceryListObject> groceryListObjectList = new ArrayList<>();
+        if (groceryList == null){
+            return null;
+        }
+        for (int i = 0; i < groceryList.size(); i++){
+            GroceryListObject groceryListObject = new GroceryListObject();
+            groceryListObject.setGroceryListID(String.valueOf(groceryList.get(i).getGroceryListID()));
+            List<ItemObject> itemObjects = populateItems(groceryList.get(i).getItems());
+            groceryListObject.setItems(itemObjects);
+            groceryListObject.setName(groceryList.get(i).getName());
+            groceryListObjectList.add(groceryListObject);
+        }
+        return groceryListObjectList;
+    }
     @Override
     public ResponseEntity<UserScanItemResponse> scanItem(UserScanItemRequest body){
 
