@@ -1,0 +1,28 @@
+-------------------------------------------------------------------------------
+Test set: cs.superleague.payment.integration.GetItemsIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 0, Errors: 4, Skipped: 0, Time elapsed: 0.085 s <<< FAILURE! - in cs.superleague.payment.integration.GetItemsIntegrationTest
+UnitTest_testingNull_OrderID_Parameter_RequestObject  Time elapsed: 0.026 s  <<< ERROR!
+org.springframework.orm.jpa.JpaObjectRetrievalFailureException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456; nested exception is javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+Caused by: javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+
+UnitTest_testingNullRequestObject  Time elapsed: 0.014 s  <<< ERROR!
+org.springframework.orm.jpa.JpaObjectRetrievalFailureException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456; nested exception is javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+Caused by: javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+
+UnitTest_OrderID_Parameter_RequestObject_Not_In_DB  Time elapsed: 0.013 s  <<< ERROR!
+org.springframework.orm.jpa.JpaObjectRetrievalFailureException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456; nested exception is javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+Caused by: javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+
+UnitTest_testingOrderExists  Time elapsed: 0.017 s  <<< ERROR!
+org.springframework.orm.jpa.JpaObjectRetrievalFailureException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456; nested exception is javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+Caused by: javax.persistence.EntityNotFoundException: Unable to find cs.superleague.shopping.dataclass.Item with id 123456
+	at cs.superleague.payment.integration.GetItemsIntegrationTest.setUp(GetItemsIntegrationTest.java:77)
+

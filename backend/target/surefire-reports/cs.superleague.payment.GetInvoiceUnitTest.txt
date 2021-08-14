@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cs.superleague.payment.GetInvoiceUnitTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s - in cs.superleague.payment.GetInvoiceUnitTest
