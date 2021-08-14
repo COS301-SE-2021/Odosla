@@ -22,6 +22,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ComponentScan(basePackages = {"cs.superleague.user.repos"})
+@Transactional
 public class MakeGroceryListIntegrationTest {
 
     @Autowired
@@ -79,7 +81,7 @@ public class MakeGroceryListIntegrationTest {
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
 
-        I1=new Item("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
+        I1=new Item("Heinz Tamatoe Sauce","TT123456","123456",expectedS1,36.99,1,"description","img/");
         I2=new Item("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
         item = null;
 

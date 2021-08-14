@@ -22,6 +22,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
+@Transactional
 public class AddShopperIntegrationTest {
 
     @Autowired
@@ -149,7 +151,7 @@ public class AddShopperIntegrationTest {
         AddShopperResponse response=ServiceSelector.getShoppingService().addShopper(request);
         assertNotNull(response);
         assertEquals(false,response.isSuccess());
-        assertEquals("Shopper already is already in listOfShoppers",response.getMessage());
+        assertEquals("Shopper already is in listOfShoppers",response.getMessage());
     }
 
     @Test

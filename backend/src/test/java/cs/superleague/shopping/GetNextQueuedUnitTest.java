@@ -120,7 +120,7 @@ public class GetNextQueuedUnitTest {
     void UnitTest_Store_no_orders_in_orderQueue() throws InvalidRequestException, StoreDoesNotExistException {
         GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
         List<Order> listOfOrders2=new ArrayList<>();
-        s.setOrderQueue(listOfOrders2);
+        s.setOrderQueue(null);
         when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(s));
         GetNextQueuedResponse response=shoppingService.getNextQueued(request);
         assertNotNull(response);
