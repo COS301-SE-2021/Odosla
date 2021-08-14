@@ -14,104 +14,52 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a shopper")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 public class ShopperObject  implements OneOfuserGetCurrentUserResponseUser {
-  @JsonProperty("id")
-  private String id = null;
-
-  @JsonProperty("username")
-  private String username = null;
-
-  @JsonProperty("password")
-  private String password = null;
-
-  @JsonProperty("storeID")
-  private String storeID = null;
-
   @JsonProperty("name")
   private String name = null;
 
   @JsonProperty("surname")
   private String surname = null;
 
+  @JsonProperty("email")
+  private String email = null;
+
+  @JsonProperty("phoneNumber")
+  private String phoneNumber = null;
+
+  @JsonProperty("password")
+  private String password = null;
+
+  @JsonProperty("activationDate")
+  private String activationDate = null;
+
+  @JsonProperty("activationCode")
+  private String activationCode = null;
+
+  @JsonProperty("resetCode")
+  private String resetCode = null;
+
+  @JsonProperty("resetExpiration")
+  private String resetExpiration = null;
+
+  @JsonProperty("accountType")
+  private String accountType = null;
+
+  @JsonProperty("shopperID")
+  private String shopperID = null;
+
+  @JsonProperty("storeID")
+  private String storeID = null;
+
   @JsonProperty("ordersCompleted")
   private Integer ordersCompleted = null;
 
-  public ShopperObject id(String id) {
-    this.id = id;
-    return this;
-  }
+  @JsonProperty("onShift")
+  private Boolean onShift = null;
 
-  /**
-   * Get id
-   * @return id
-  **/
-  @ApiModelProperty(value = "")
-  
-    public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public ShopperObject username(String username) {
-    this.username = username;
-    return this;
-  }
-
-  /**
-   * Get username
-   * @return username
-  **/
-  @ApiModelProperty(value = "")
-  
-    public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public ShopperObject password(String password) {
-    this.password = password;
-    return this;
-  }
-
-  /**
-   * Get password
-   * @return password
-  **/
-  @ApiModelProperty(value = "")
-  
-    public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public ShopperObject storeID(String storeID) {
-    this.storeID = storeID;
-    return this;
-  }
-
-  /**
-   * Get storeID
-   * @return storeID
-  **/
-  @ApiModelProperty(value = "")
-  
-    public String getStoreID() {
-    return storeID;
-  }
-
-  public void setStoreID(String storeID) {
-    this.storeID = storeID;
-  }
+  @JsonProperty("isActive")
+  private Boolean isActive = null;
 
   public ShopperObject name(String name) {
     this.name = name;
@@ -151,6 +99,196 @@ public class ShopperObject  implements OneOfuserGetCurrentUserResponseUser {
     this.surname = surname;
   }
 
+  public ShopperObject email(String email) {
+    this.email = email;
+    return this;
+  }
+
+  /**
+   * Get email
+   * @return email
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public ShopperObject phoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+    return this;
+  }
+
+  /**
+   * Get phoneNumber
+   * @return phoneNumber
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+  public ShopperObject password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * Get password
+   * @return password
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public ShopperObject activationDate(String activationDate) {
+    this.activationDate = activationDate;
+    return this;
+  }
+
+  /**
+   * Get activationDate
+   * @return activationDate
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getActivationDate() {
+    return activationDate;
+  }
+
+  public void setActivationDate(String activationDate) {
+    this.activationDate = activationDate;
+  }
+
+  public ShopperObject activationCode(String activationCode) {
+    this.activationCode = activationCode;
+    return this;
+  }
+
+  /**
+   * Get activationCode
+   * @return activationCode
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getActivationCode() {
+    return activationCode;
+  }
+
+  public void setActivationCode(String activationCode) {
+    this.activationCode = activationCode;
+  }
+
+  public ShopperObject resetCode(String resetCode) {
+    this.resetCode = resetCode;
+    return this;
+  }
+
+  /**
+   * Get resetCode
+   * @return resetCode
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getResetCode() {
+    return resetCode;
+  }
+
+  public void setResetCode(String resetCode) {
+    this.resetCode = resetCode;
+  }
+
+  public ShopperObject resetExpiration(String resetExpiration) {
+    this.resetExpiration = resetExpiration;
+    return this;
+  }
+
+  /**
+   * Get resetExpiration
+   * @return resetExpiration
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getResetExpiration() {
+    return resetExpiration;
+  }
+
+  public void setResetExpiration(String resetExpiration) {
+    this.resetExpiration = resetExpiration;
+  }
+
+  public ShopperObject accountType(String accountType) {
+    this.accountType = accountType;
+    return this;
+  }
+
+  /**
+   * Get accountType
+   * @return accountType
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getAccountType() {
+    return accountType;
+  }
+
+  public void setAccountType(String accountType) {
+    this.accountType = accountType;
+  }
+
+  public ShopperObject shopperID(String shopperID) {
+    this.shopperID = shopperID;
+    return this;
+  }
+
+  /**
+   * Get shopperID
+   * @return shopperID
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getShopperID() {
+    return shopperID;
+  }
+
+  public void setShopperID(String shopperID) {
+    this.shopperID = shopperID;
+  }
+
+  public ShopperObject storeID(String storeID) {
+    this.storeID = storeID;
+    return this;
+  }
+
+  /**
+   * Get storeID
+   * @return storeID
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getStoreID() {
+    return storeID;
+  }
+
+  public void setStoreID(String storeID) {
+    this.storeID = storeID;
+  }
+
   public ShopperObject ordersCompleted(Integer ordersCompleted) {
     this.ordersCompleted = ordersCompleted;
     return this;
@@ -170,6 +308,44 @@ public class ShopperObject  implements OneOfuserGetCurrentUserResponseUser {
     this.ordersCompleted = ordersCompleted;
   }
 
+  public ShopperObject onShift(Boolean onShift) {
+    this.onShift = onShift;
+    return this;
+  }
+
+  /**
+   * Get onShift
+   * @return onShift
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Boolean isOnShift() {
+    return onShift;
+  }
+
+  public void setOnShift(Boolean onShift) {
+    this.onShift = onShift;
+  }
+
+  public ShopperObject isActive(Boolean isActive) {
+    this.isActive = isActive;
+    return this;
+  }
+
+  /**
+   * Get isActive
+   * @return isActive
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Boolean isIsActive() {
+    return isActive;
+  }
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -180,18 +356,26 @@ public class ShopperObject  implements OneOfuserGetCurrentUserResponseUser {
       return false;
     }
     ShopperObject shopperObject = (ShopperObject) o;
-    return Objects.equals(this.id, shopperObject.id) &&
-        Objects.equals(this.username, shopperObject.username) &&
-        Objects.equals(this.password, shopperObject.password) &&
-        Objects.equals(this.storeID, shopperObject.storeID) &&
-        Objects.equals(this.name, shopperObject.name) &&
+    return Objects.equals(this.name, shopperObject.name) &&
         Objects.equals(this.surname, shopperObject.surname) &&
-        Objects.equals(this.ordersCompleted, shopperObject.ordersCompleted);
+        Objects.equals(this.email, shopperObject.email) &&
+        Objects.equals(this.phoneNumber, shopperObject.phoneNumber) &&
+        Objects.equals(this.password, shopperObject.password) &&
+        Objects.equals(this.activationDate, shopperObject.activationDate) &&
+        Objects.equals(this.activationCode, shopperObject.activationCode) &&
+        Objects.equals(this.resetCode, shopperObject.resetCode) &&
+        Objects.equals(this.resetExpiration, shopperObject.resetExpiration) &&
+        Objects.equals(this.accountType, shopperObject.accountType) &&
+        Objects.equals(this.shopperID, shopperObject.shopperID) &&
+        Objects.equals(this.storeID, shopperObject.storeID) &&
+        Objects.equals(this.ordersCompleted, shopperObject.ordersCompleted) &&
+        Objects.equals(this.onShift, shopperObject.onShift) &&
+        Objects.equals(this.isActive, shopperObject.isActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, password, storeID, name, surname, ordersCompleted);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, shopperID, storeID, ordersCompleted, onShift, isActive);
   }
 
   @Override
@@ -199,13 +383,21 @@ public class ShopperObject  implements OneOfuserGetCurrentUserResponseUser {
     StringBuilder sb = new StringBuilder();
     sb.append("class ShopperObject {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    username: ").append(toIndentedString(username)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    phoneNumber: ").append(toIndentedString(phoneNumber)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    activationDate: ").append(toIndentedString(activationDate)).append("\n");
+    sb.append("    activationCode: ").append(toIndentedString(activationCode)).append("\n");
+    sb.append("    resetCode: ").append(toIndentedString(resetCode)).append("\n");
+    sb.append("    resetExpiration: ").append(toIndentedString(resetExpiration)).append("\n");
+    sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
+    sb.append("    shopperID: ").append(toIndentedString(shopperID)).append("\n");
+    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("    ordersCompleted: ").append(toIndentedString(ordersCompleted)).append("\n");
+    sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
+    sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");
     return sb.toString();
   }

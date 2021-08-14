@@ -27,6 +27,7 @@ cs\superleague\models\UserRegisterShopperResponse.class
 cs\superleague\user\requests\LoginRequest.class
 cs\superleague\user\responses\MakeGroceryListResponse.class
 cs\superleague\user\dataclass\User.class
+cs\superleague\models\ShoppingGetQueueResponse.class
 cs\superleague\payment\requests\GetOrderRequest.class
 cs\superleague\shopping\requests\GetStoreOpenRequest.class
 cs\superleague\shopping\responses\AddToQueueResponse.class
@@ -36,7 +37,6 @@ cs\superleague\user\exceptions\AdminDoesNotExistException.class
 cs\superleague\models\PaymentSubmitOrderRequest.class
 cs\superleague\shopping\responses\GetCatalogueResponse.class
 cs\superleague\models\PaymentGetItemsResponse.class
-cs\superleague\user\responses\GetCustomersResponse.class
 cs\superleague\user\exceptions\NotAuthorisedException.class
 cs\superleague\payment\responses\GetOrderResponse.class
 cs\superleague\user\exceptions\InvalidRequestException.class
@@ -113,6 +113,7 @@ cs\superleague\shopping\responses\RemoveQueuedOrderResponse.class
 cs\superleague\user\responses\CompletePackagingOrderResponse.class
 cs\superleague\payment\responses\SubmitOrderResponse.class
 cs\superleague\user\responses\GetCurrentUserResponse.class
+cs\superleague\user\responses\GetUsersResponse.class
 cs\superleague\integration\security\JwtUtil.class
 cs\superleague\shopping\responses\UpdateStoreResponse.class
 cs\superleague\user\responses\UpdateShopperShiftResponse.class
@@ -121,6 +122,7 @@ cs\superleague\user\dataclass\Customer.class
 cs\superleague\shopping\requests\GetShoppersRequest.class
 cs\superleague\models\PaymentUpdateOrderResponse.class
 cs\superleague\models\UserClearShoppingCartResponse.class
+cs\superleague\models\ShoppingPopulateTablesRequest.class
 cs\superleague\user\repos\DriverRepo.class
 cs\superleague\models\DriverObject.class
 cs\superleague\models\ShoppingGetItemsRequest.class
@@ -180,6 +182,7 @@ cs\superleague\user\requests\CollectOrderRequest.class
 cs\superleague\user\responses\SetCartResponse.class
 cs\superleague\api\ShoppingApi.class
 cs\superleague\payment\dataclass\Transaction.class
+cs\superleague\models\ShoppingGetQueueRequest.class
 cs\superleague\models\UserMakeGroceryListRequest.class
 cs\superleague\user\dataclass\Shopper.class
 cs\superleague\integration\TestController.class
@@ -227,6 +230,7 @@ cs\superleague\user\responses\CompleteDeliveryResponse.class
 cs\superleague\shopping\dataclass\Item.class
 cs\superleague\user\requests\UpdateCustomerDetailsRequest.class
 cs\superleague\user\responses\GetShopperByUUIDResponse.class
+cs\superleague\user\requests\GetUsersRequest.class
 cs\superleague\notification\responses\SendEmailNotificationResponse.class
 cs\superleague\user\dataclass\Preference.class
 cs\superleague\user\dataclass\Driver.class
@@ -244,6 +248,7 @@ cs\superleague\api\PaymentApi.class
 cs\superleague\shopping\requests\AddShopperRequest.class
 cs\superleague\models\AdminObject.class
 cs\superleague\shopping\requests\RemoveShopperRequest.class
+cs\superleague\models\ShoppingPopulateTablesResponse.class
 cs\superleague\models\ItemObject.class
 cs\superleague\payment\responses\SetStatusResponse.class
 cs\superleague\payment\PaymentService.class
