@@ -5,6 +5,7 @@ import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.requests.GetUsersRequest;
 import cs.superleague.user.responses.GetUsersResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
@@ -16,11 +17,12 @@ public class CreateUserAnalyticsData {
     private int totalCustomers;
     private int totalAdmins;
     private int totalShoppers;
-    private double totalDrivers;
+    private int totalDrivers;
     private int driversOnShift;
     private int totalOrderCompleted;
     private double ratingSum;
     private Driver [] topDrivers;
+    private UserService userService;
 
     private GetUsersResponse response;
     private UserType userType;
@@ -31,25 +33,27 @@ public class CreateUserAnalyticsData {
 
     public CreateUserAnalyticsData(Calendar startDate, Calendar endDate, UUID adminID, UserService userService){
 
-        users = new ArrayList<>();
-        drivers = new ArrayList<>();
+        this.users = new ArrayList<>();
+        this.drivers = new ArrayList<>();
 
-        totalUsers = 0;
-        totalCustomers = 0;
-        totalAdmins = 0;
-        totalShoppers = 0;
-        totalDrivers = 0;
-        driversOnShift = 0;
-        totalOrderCompleted = 0;
-        ratingSum = 0;
-        topDrivers = new Driver[10];
+        this.totalUsers = 0;
+        this.totalCustomers = 0;
+        this.totalAdmins = 0;
+        this.totalShoppers = 0;
+        this.totalDrivers = 0;
+        this.driversOnShift = 0;
+        this.totalOrderCompleted = 0;
+        this.ratingSum = 0;
+        this.topDrivers = new Driver[10];
 
         this.adminID = adminID;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.userService = userService;
 
+        GetUsersRequest request = new GetUsersRequest(adminID.toString());
         try{
-            response = userService.getUsers(new GetUsersRequest(adminID.toString()));
+            response = this.userService.getUsers(request);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -69,8 +73,8 @@ public class CreateUserAnalyticsData {
             data.put("totalNum_DriversOnShift", driversOnShift);
             data.put("averageRating_Drivers", ratingSum);
             data.put("top10Drivers", topDrivers);
-//        data.put("startDate", this.startDate);
-//        data.put("endDate", this.endDate);
+            data.put("startDate", this.startDate.getTime());
+            data.put("endDate", this.endDate.getTime());
         }
 
         return data;
@@ -110,9 +114,15 @@ public class CreateUserAnalyticsData {
                 }
                 totalDrivers += 1;
             }
+
+            totalUsers += 1;
+
         }
 
-        ratingSum = ratingSum / totalDrivers;
+        if(totalDrivers > 0) {
+            ratingSum = ratingSum / totalDrivers;
+        }
+
         getTopDrivers(drivers);
 
         return true;
@@ -120,21 +130,20 @@ public class CreateUserAnalyticsData {
 
     private void getTopDrivers(List<Driver> drivers){
 
-        for (Driver driver: drivers) {
-            if(driver.getRating() > topDrivers[0].getRating()){
-                Driver temp;
-                topDrivers[0] = driver;
+        int size;
 
-                for (int i = 0; i < 10; i++) {
-                    for (int j = i+1; j < 10; j++) {
-                        if(topDrivers[i].getRating() > topDrivers[j].getRating()) {
-                            temp = topDrivers[i];
-                            topDrivers[i] = topDrivers[j];
-                            topDrivers[j] = temp;
-                        }
-                    }
-                }
-            }
+        if(drivers.size() > 10){
+            size = 10;
+        }else{
+            size = drivers.size();
+        }
+
+        topDrivers = new Driver[size];
+
+        drivers.sort(Comparator.comparing(Driver::getRating).reversed());
+
+        for(int i = 0; i < size; i++) {
+            topDrivers[i] = drivers.get(i);
         }
     }
 }

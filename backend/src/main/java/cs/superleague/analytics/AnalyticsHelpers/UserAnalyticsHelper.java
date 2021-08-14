@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class UserAnalyticsHelper {
 
-    private HashMap<String, Object> data;
+    private final HashMap<String, Object> data;
 
     public UserAnalyticsHelper(HashMap<String, Object> data){
         this. data = data;
@@ -26,7 +26,7 @@ public class UserAnalyticsHelper {
         Document document = new Document();
         try{
 
-            String file_name = "C:\\createReports\\UserStatisticsReport.pdf";
+            String file_name = "C:\\createReports\\UserReport.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
@@ -60,17 +60,20 @@ public class UserAnalyticsHelper {
             PdfPCell cl = new PdfPCell(new Phrase("Top Drivers", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table.addCell(cl);
 
-            cl = new PdfPCell(new Phrase("User Name", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            cl = new PdfPCell(new Phrase("Email", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table.addCell(cl);
 
-            cl = new PdfPCell(new Phrase("Num of Sales", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            cl = new PdfPCell(new Phrase("Rating", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table.addCell(cl);
             Driver[] topDrivers;
             topDrivers =  (Driver[]) data.get("top10Drivers");
-            if (topDrivers != null) {
-                for (int i = 0; i < 10; i++) {
-                    table.addCell(String.valueOf(i + 1));
-                    table.addCell(String.valueOf(topDrivers[0].getEmail()));
+
+            for (int i = 0; i < topDrivers.length; i++) {
+                table.addCell(String.valueOf(i + 1));
+
+                if(topDrivers[0] != null) {
+                    table.addCell(String.valueOf(topDrivers[i].getEmail()));
+                    table.addCell(String.valueOf(topDrivers[i].getRating()));
                 }
             }
 
@@ -80,7 +83,7 @@ public class UserAnalyticsHelper {
             table1.setWidths(new int[]{2, 5});
             table1.setWidthPercentage(100);
             table1.addCell(new Paragraph("Reporting Period", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
-            table1.addCell(String.valueOf(data.get("startDate"))+"   -   "+String.valueOf(data.get("endDate")));
+            table1.addCell(data.get("startDate")+"   -   "+ data.get("endDate"));
             table1.addCell(new Paragraph("Total Number Of Users", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
             table1.addCell(String.valueOf(data.get("totalNum_Users")));
             table1.addCell(new Paragraph("Total Number Of Admins", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
@@ -114,7 +117,7 @@ public class UserAnalyticsHelper {
 
     public StringBuilder createCSVReport() {
         try {
-            String file_name = "C:\\createReports\\UserStatisticsReport.csv";
+            String file_name = "C:\\createReports\\UserReport.csv";
             PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
@@ -125,12 +128,15 @@ public class UserAnalyticsHelper {
             sb.append("Total Number Of Admins");
             sb.append(",");
             sb.append(data.get("totalNum_Admins"));
+            sb.append("\n");
             sb.append("Total Number Of Customers");
             sb.append(",");
             sb.append(data.get("totalNum_Customers"));
+            sb.append("\n");
             sb.append("Total Number Of Shoppers");
             sb.append(",");
             sb.append(data.get("totalNum_Shoppers"));
+            sb.append("\n");
             sb.append("Total Number Of Drivers");
             sb.append(",");
             sb.append(data.get("totalNum_Drivers"));

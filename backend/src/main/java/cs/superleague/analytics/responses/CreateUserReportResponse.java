@@ -2,21 +2,29 @@ package cs.superleague.analytics.responses;
 
 import com.itextpdf.text.Document;
 
+import java.util.Date;
+
 public class CreateUserReportResponse {
 
-    private final Document PDFReport;
-    private final StringBuilder CSVReport;
+    private final boolean success;
+    private final String message;
+    private final Date timestamp;
 
-    public CreateUserReportResponse(Document PDFReport, StringBuilder CSVReport) {
-        this.PDFReport = PDFReport;
-        this.CSVReport = CSVReport;
+    public CreateUserReportResponse(boolean success, String message, Date timestamp) {
+        this.success = success;
+        this.message = message;
+        this.timestamp = timestamp;
     }
 
-    public Document getPDFReport() {
-        return PDFReport;
+    public boolean isSuccess() {
+        return success;
     }
 
-    public StringBuilder getCSVReport() {
-        return CSVReport;
+    public String getMessage() {
+        return message;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
     }
 }
