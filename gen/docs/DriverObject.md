@@ -2,6 +2,7 @@
 
 # DriverObject
 
+Generic schema for a Driver
 ## Properties
 
 Name | Type | Description | Notes

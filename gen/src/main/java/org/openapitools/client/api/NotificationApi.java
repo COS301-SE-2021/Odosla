@@ -27,6 +27,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import org.openapitools.client.model.NotificationSendDirectEmailNotificationRequest;
+import org.openapitools.client.model.NotificationSendDirectEmailNotificationResponse;
 import org.openapitools.client.model.NotificationSendEmailNotificationRequest;
 import org.openapitools.client.model.NotificationSendEmailNotificationResponse;
 
@@ -56,6 +58,117 @@ public class NotificationApi {
     }
 
     /**
+     * Build call for sendDirectEmailNotification
+     * @param notificationSendDirectEmailNotificationRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call sendDirectEmailNotificationCall(NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = notificationSendDirectEmailNotificationRequest;
+
+        // create path and map variables
+        String localVarPath = "/notification/sendDirectEmailNotification";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call sendDirectEmailNotificationValidateBeforeCall(NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'notificationSendDirectEmailNotificationRequest' is set
+        if (notificationSendDirectEmailNotificationRequest == null) {
+            throw new ApiException("Missing the required parameter 'notificationSendDirectEmailNotificationRequest' when calling sendDirectEmailNotification(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = sendDirectEmailNotificationCall(notificationSendDirectEmailNotificationRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for sending a direct email notification
+     * Refer to summary
+     * @param notificationSendDirectEmailNotificationRequest The input body required by this request (required)
+     * @return NotificationSendDirectEmailNotificationResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public NotificationSendDirectEmailNotificationResponse sendDirectEmailNotification(NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest) throws ApiException {
+        ApiResponse<NotificationSendDirectEmailNotificationResponse> localVarResp = sendDirectEmailNotificationWithHttpInfo(notificationSendDirectEmailNotificationRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for sending a direct email notification
+     * Refer to summary
+     * @param notificationSendDirectEmailNotificationRequest The input body required by this request (required)
+     * @return ApiResponse&lt;NotificationSendDirectEmailNotificationResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotificationWithHttpInfo(NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest) throws ApiException {
+        okhttp3.Call localVarCall = sendDirectEmailNotificationValidateBeforeCall(notificationSendDirectEmailNotificationRequest, null);
+        Type localVarReturnType = new TypeToken<NotificationSendDirectEmailNotificationResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for sending a direct email notification (asynchronously)
+     * Refer to summary
+     * @param notificationSendDirectEmailNotificationRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call sendDirectEmailNotificationAsync(NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest, final ApiCallback<NotificationSendDirectEmailNotificationResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = sendDirectEmailNotificationValidateBeforeCall(notificationSendDirectEmailNotificationRequest, _callback);
+        Type localVarReturnType = new TypeToken<NotificationSendDirectEmailNotificationResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
      * Build call for sendEmailNotification
      * @param notificationSendEmailNotificationRequest The input body required by this request (required)
      * @param _callback Callback for upload/download progress
@@ -64,7 +177,7 @@ public class NotificationApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Returns updated order upon success </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call sendEmailNotificationCall(NotificationSendEmailNotificationRequest notificationSendEmailNotificationRequest, final ApiCallback _callback) throws ApiException {
@@ -120,7 +233,7 @@ public class NotificationApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Returns updated order upon success </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
      </table>
      */
     public NotificationSendEmailNotificationResponse sendEmailNotification(NotificationSendEmailNotificationRequest notificationSendEmailNotificationRequest) throws ApiException {
@@ -137,7 +250,7 @@ public class NotificationApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Returns updated order upon success </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
      </table>
      */
     public ApiResponse<NotificationSendEmailNotificationResponse> sendEmailNotificationWithHttpInfo(NotificationSendEmailNotificationRequest notificationSendEmailNotificationRequest) throws ApiException {
@@ -156,7 +269,7 @@ public class NotificationApi {
      * @http.response.details
      <table summary="Response Details" border="1">
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Returns updated order upon success </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
      </table>
      */
     public okhttp3.Call sendEmailNotificationAsync(NotificationSendEmailNotificationRequest notificationSendEmailNotificationRequest, final ApiCallback<NotificationSendEmailNotificationResponse> _callback) throws ApiException {

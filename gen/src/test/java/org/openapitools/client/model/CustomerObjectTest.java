@@ -21,10 +21,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.openapitools.client.model.GroceryListObject;
-import org.openapitools.client.model.ItemObject;
+import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -133,43 +130,19 @@ public class CustomerObjectTest {
     }
 
     /**
-     * Test the property 'address'
+     * Test the property 'rating'
      */
     @Test
-    public void addressTest() {
-        // TODO: test address
+    public void ratingTest() {
+        // TODO: test rating
     }
 
     /**
-     * Test the property 'groceryLists'
+     * Test the property 'isActive'
      */
     @Test
-    public void groceryListsTest() {
-        // TODO: test groceryLists
-    }
-
-    /**
-     * Test the property 'shoppingCart'
-     */
-    @Test
-    public void shoppingCartTest() {
-        // TODO: test shoppingCart
-    }
-
-    /**
-     * Test the property 'preference'
-     */
-    @Test
-    public void preferenceTest() {
-        // TODO: test preference
-    }
-
-    /**
-     * Test the property 'wallet'
-     */
-    @Test
-    public void walletTest() {
-        // TODO: test wallet
+    public void isActiveTest() {
+        // TODO: test isActive
     }
 
 }

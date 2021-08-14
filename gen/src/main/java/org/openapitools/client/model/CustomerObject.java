@@ -23,15 +23,13 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.openapitools.client.model.GroceryListObject;
-import org.openapitools.client.model.ItemObject;
+import java.math.BigDecimal;
 
 /**
- * CustomerObject
+ * Generic schema for a Customer
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T12:05:00.868146800+02:00[Africa/Harare]")
+@ApiModel(description = "Generic schema for a Customer")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T14:53:01.663657800+02:00[Africa/Harare]")
 public class CustomerObject {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
@@ -77,25 +75,13 @@ public class CustomerObject {
   @SerializedName(SERIALIZED_NAME_CUSTOMER_I_D)
   private String customerID;
 
-  public static final String SERIALIZED_NAME_ADDRESS = "address";
-  @SerializedName(SERIALIZED_NAME_ADDRESS)
-  private String address;
+  public static final String SERIALIZED_NAME_RATING = "rating";
+  @SerializedName(SERIALIZED_NAME_RATING)
+  private BigDecimal rating;
 
-  public static final String SERIALIZED_NAME_GROCERY_LISTS = "groceryLists";
-  @SerializedName(SERIALIZED_NAME_GROCERY_LISTS)
-  private List<GroceryListObject> groceryLists = null;
-
-  public static final String SERIALIZED_NAME_SHOPPING_CART = "shoppingCart";
-  @SerializedName(SERIALIZED_NAME_SHOPPING_CART)
-  private List<ItemObject> shoppingCart = null;
-
-  public static final String SERIALIZED_NAME_PREFERENCE = "preference";
-  @SerializedName(SERIALIZED_NAME_PREFERENCE)
-  private Object preference;
-
-  public static final String SERIALIZED_NAME_WALLET = "wallet";
-  @SerializedName(SERIALIZED_NAME_WALLET)
-  private Object wallet;
+  public static final String SERIALIZED_NAME_IS_ACTIVE = "isActive";
+  @SerializedName(SERIALIZED_NAME_IS_ACTIVE)
+  private Boolean isActive;
 
 
   public CustomerObject name(String name) {
@@ -351,134 +337,49 @@ public class CustomerObject {
   }
 
 
-  public CustomerObject address(String address) {
+  public CustomerObject rating(BigDecimal rating) {
     
-    this.address = address;
+    this.rating = rating;
     return this;
   }
 
    /**
-   * Get address
-   * @return address
+   * Get rating
+   * @return rating
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getAddress() {
-    return address;
+  public BigDecimal getRating() {
+    return rating;
   }
 
 
-  public void setAddress(String address) {
-    this.address = address;
+  public void setRating(BigDecimal rating) {
+    this.rating = rating;
   }
 
 
-  public CustomerObject groceryLists(List<GroceryListObject> groceryLists) {
+  public CustomerObject isActive(Boolean isActive) {
     
-    this.groceryLists = groceryLists;
-    return this;
-  }
-
-  public CustomerObject addGroceryListsItem(GroceryListObject groceryListsItem) {
-    if (this.groceryLists == null) {
-      this.groceryLists = new ArrayList<GroceryListObject>();
-    }
-    this.groceryLists.add(groceryListsItem);
+    this.isActive = isActive;
     return this;
   }
 
    /**
-   * Get groceryLists
-   * @return groceryLists
+   * Get isActive
+   * @return isActive
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public List<GroceryListObject> getGroceryLists() {
-    return groceryLists;
+  public Boolean getIsActive() {
+    return isActive;
   }
 
 
-  public void setGroceryLists(List<GroceryListObject> groceryLists) {
-    this.groceryLists = groceryLists;
-  }
-
-
-  public CustomerObject shoppingCart(List<ItemObject> shoppingCart) {
-    
-    this.shoppingCart = shoppingCart;
-    return this;
-  }
-
-  public CustomerObject addShoppingCartItem(ItemObject shoppingCartItem) {
-    if (this.shoppingCart == null) {
-      this.shoppingCart = new ArrayList<ItemObject>();
-    }
-    this.shoppingCart.add(shoppingCartItem);
-    return this;
-  }
-
-   /**
-   * Get shoppingCart
-   * @return shoppingCart
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public List<ItemObject> getShoppingCart() {
-    return shoppingCart;
-  }
-
-
-  public void setShoppingCart(List<ItemObject> shoppingCart) {
-    this.shoppingCart = shoppingCart;
-  }
-
-
-  public CustomerObject preference(Object preference) {
-    
-    this.preference = preference;
-    return this;
-  }
-
-   /**
-   * Get preference
-   * @return preference
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public Object getPreference() {
-    return preference;
-  }
-
-
-  public void setPreference(Object preference) {
-    this.preference = preference;
-  }
-
-
-  public CustomerObject wallet(Object wallet) {
-    
-    this.wallet = wallet;
-    return this;
-  }
-
-   /**
-   * Get wallet
-   * @return wallet
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public Object getWallet() {
-    return wallet;
-  }
-
-
-  public void setWallet(Object wallet) {
-    this.wallet = wallet;
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
   }
 
 
@@ -502,16 +403,13 @@ public class CustomerObject {
         Objects.equals(this.resetExpiration, customerObject.resetExpiration) &&
         Objects.equals(this.accountType, customerObject.accountType) &&
         Objects.equals(this.customerID, customerObject.customerID) &&
-        Objects.equals(this.address, customerObject.address) &&
-        Objects.equals(this.groceryLists, customerObject.groceryLists) &&
-        Objects.equals(this.shoppingCart, customerObject.shoppingCart) &&
-        Objects.equals(this.preference, customerObject.preference) &&
-        Objects.equals(this.wallet, customerObject.wallet);
+        Objects.equals(this.rating, customerObject.rating) &&
+        Objects.equals(this.isActive, customerObject.isActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, customerID, address, groceryLists, shoppingCart, preference, wallet);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, customerID, rating, isActive);
   }
 
 
@@ -530,11 +428,8 @@ public class CustomerObject {
     sb.append("    resetExpiration: ").append(toIndentedString(resetExpiration)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("    customerID: ").append(toIndentedString(customerID)).append("\n");
-    sb.append("    address: ").append(toIndentedString(address)).append("\n");
-    sb.append("    groceryLists: ").append(toIndentedString(groceryLists)).append("\n");
-    sb.append("    shoppingCart: ").append(toIndentedString(shoppingCart)).append("\n");
-    sb.append("    preference: ").append(toIndentedString(preference)).append("\n");
-    sb.append("    wallet: ").append(toIndentedString(wallet)).append("\n");
+    sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
+    sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");
     return sb.toString();
   }

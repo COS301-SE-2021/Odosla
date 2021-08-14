@@ -29,7 +29,7 @@ import java.math.BigDecimal;
  * Generic schema for an item
  */
 @ApiModel(description = "Generic schema for an item")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T12:05:00.868146800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T14:53:01.663657800+02:00[Africa/Harare]")
 public class ItemObject {
   public static final String SERIALIZED_NAME_PRODUCT_ID = "productId";
   @SerializedName(SERIALIZED_NAME_PRODUCT_ID)
@@ -62,6 +62,18 @@ public class ItemObject {
   public static final String SERIALIZED_NAME_IMAGE_URL = "imageUrl";
   @SerializedName(SERIALIZED_NAME_IMAGE_URL)
   private String imageUrl;
+
+  public static final String SERIALIZED_NAME_BRAND = "brand";
+  @SerializedName(SERIALIZED_NAME_BRAND)
+  private String brand;
+
+  public static final String SERIALIZED_NAME_SIZE = "size";
+  @SerializedName(SERIALIZED_NAME_SIZE)
+  private String size;
+
+  public static final String SERIALIZED_NAME_ITEM_TYPE = "itemType";
+  @SerializedName(SERIALIZED_NAME_ITEM_TYPE)
+  private String itemType;
 
 
   public ItemObject productId(String productId) {
@@ -248,6 +260,75 @@ public class ItemObject {
   }
 
 
+  public ItemObject brand(String brand) {
+    
+    this.brand = brand;
+    return this;
+  }
+
+   /**
+   * Get brand
+   * @return brand
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getBrand() {
+    return brand;
+  }
+
+
+  public void setBrand(String brand) {
+    this.brand = brand;
+  }
+
+
+  public ItemObject size(String size) {
+    
+    this.size = size;
+    return this;
+  }
+
+   /**
+   * Get size
+   * @return size
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getSize() {
+    return size;
+  }
+
+
+  public void setSize(String size) {
+    this.size = size;
+  }
+
+
+  public ItemObject itemType(String itemType) {
+    
+    this.itemType = itemType;
+    return this;
+  }
+
+   /**
+   * Get itemType
+   * @return itemType
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getItemType() {
+    return itemType;
+  }
+
+
+  public void setItemType(String itemType) {
+    this.itemType = itemType;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -264,12 +345,15 @@ public class ItemObject {
         Objects.equals(this.price, itemObject.price) &&
         Objects.equals(this.quantity, itemObject.quantity) &&
         Objects.equals(this.description, itemObject.description) &&
-        Objects.equals(this.imageUrl, itemObject.imageUrl);
+        Objects.equals(this.imageUrl, itemObject.imageUrl) &&
+        Objects.equals(this.brand, itemObject.brand) &&
+        Objects.equals(this.size, itemObject.size) &&
+        Objects.equals(this.itemType, itemObject.itemType);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(productId, name, barcode, storeId, price, quantity, description, imageUrl);
+    return Objects.hash(productId, name, barcode, storeId, price, quantity, description, imageUrl, brand, size, itemType);
   }
 
 
@@ -285,6 +369,9 @@ public class ItemObject {
     sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
+    sb.append("    brand: ").append(toIndentedString(brand)).append("\n");
+    sb.append("    size: ").append(toIndentedString(size)).append("\n");
+    sb.append("    itemType: ").append(toIndentedString(itemType)).append("\n");
     sb.append("}");
     return sb.toString();
   }

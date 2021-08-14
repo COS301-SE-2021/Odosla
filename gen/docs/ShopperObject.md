@@ -7,13 +7,21 @@ Generic schema for a shopper
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **String** |  |  [optional]
-**username** | **String** |  |  [optional]
-**password** | **String** |  |  [optional]
-**storeID** | **String** |  |  [optional]
 **name** | **String** |  |  [optional]
 **surname** | **String** |  |  [optional]
+**email** | **String** |  |  [optional]
+**phoneNumber** | **String** |  |  [optional]
+**password** | **String** |  |  [optional]
+**activationDate** | **String** |  |  [optional]
+**activationCode** | **String** |  |  [optional]
+**resetCode** | **String** |  |  [optional]
+**resetExpiration** | **String** |  |  [optional]
+**accountType** | **String** |  |  [optional]
+**shopperID** | **String** |  |  [optional]
+**storeID** | **String** |  |  [optional]
 **ordersCompleted** | **Integer** |  |  [optional]
+**onShift** | **Boolean** |  |  [optional]
+**isActive** | **Boolean** |  |  [optional]
 
 
 

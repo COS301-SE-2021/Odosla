@@ -2,6 +2,7 @@
 
 # AdminObject
 
+Generic schema for a Admin
 ## Properties
 
 Name | Type | Description | Notes

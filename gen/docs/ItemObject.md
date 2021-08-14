@@ -15,6 +15,9 @@ Name | Type | Description | Notes
 **quantity** | **Integer** |  |  [optional]
 **description** | **String** |  |  [optional]
 **imageUrl** | **String** |  |  [optional]
+**brand** | **String** |  |  [optional]
+**size** | **String** |  |  [optional]
+**itemType** | **String** |  |  [optional]
 
 
 

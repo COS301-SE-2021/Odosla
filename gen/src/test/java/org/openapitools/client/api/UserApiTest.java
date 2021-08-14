@@ -14,10 +14,14 @@
 package org.openapitools.client.api;
 
 import org.openapitools.client.ApiException;
+import org.openapitools.client.model.ShoppingGetNextQueuedRequest;
+import org.openapitools.client.model.ShoppingGetNextQueuedResponse;
 import org.openapitools.client.model.UserAccountVerifyRequest;
 import org.openapitools.client.model.UserAccountVerifyResponse;
 import org.openapitools.client.model.UserClearShoppingCartRequest;
 import org.openapitools.client.model.UserClearShoppingCartResponse;
+import org.openapitools.client.model.UserCompletePackagingOrderRequest;
+import org.openapitools.client.model.UserCompletePackagingOrderResponse;
 import org.openapitools.client.model.UserGetCurrentUserRequest;
 import org.openapitools.client.model.UserGetCurrentUserResponse;
 import org.openapitools.client.model.UserGetShoppingCartRequest;
@@ -36,10 +40,14 @@ import org.openapitools.client.model.UserRegisterShopperRequest;
 import org.openapitools.client.model.UserRegisterShopperResponse;
 import org.openapitools.client.model.UserResetPasswordRequest;
 import org.openapitools.client.model.UserResetPasswordResponse;
+import org.openapitools.client.model.UserScanItemRequest;
+import org.openapitools.client.model.UserScanItemResponse;
 import org.openapitools.client.model.UserSetCartRequest;
 import org.openapitools.client.model.UserSetCartResponse;
 import org.openapitools.client.model.UserSetCurrentLocationRequest;
 import org.openapitools.client.model.UserSetCurrentLocationResponse;
+import org.openapitools.client.model.UserUpdateShopperShiftRequest;
+import org.openapitools.client.model.UserUpdateShopperShiftResponse;
 import org.junit.Test;
 import org.junit.Ignore;
 
@@ -74,6 +82,22 @@ public class UserApiTest {
     }
     
     /**
+     * Endpoint for complete packaging order use case
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void completePackagingOrderTest() throws ApiException {
+        UserCompletePackagingOrderRequest userCompletePackagingOrderRequest = null;
+        UserCompletePackagingOrderResponse response = api.completePackagingOrder(userCompletePackagingOrderRequest);
+
+        // TODO: test validations
+    }
+    
+    /**
      * Endpoint for to get Current user
      *
      * Refer to summary
@@ -85,6 +109,22 @@ public class UserApiTest {
     public void getCurrentUserTest() throws ApiException {
         UserGetCurrentUserRequest userGetCurrentUserRequest = null;
         UserGetCurrentUserResponse response = api.getCurrentUser(userGetCurrentUserRequest);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Endpoint for getting next queue
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void getNextQueuedTest() throws ApiException {
+        ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest = null;
+        ShoppingGetNextQueuedResponse response = api.getNextQueued(shoppingGetNextQueuedRequest);
 
         // TODO: test validations
     }
@@ -218,6 +258,22 @@ public class UserApiTest {
     }
     
     /**
+     * Endpoint for scanning an item
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void scanItemTest() throws ApiException {
+        UserScanItemRequest userScanItemRequest = null;
+        UserScanItemResponse response = api.scanItem(userScanItemRequest);
+
+        // TODO: test validations
+    }
+    
+    /**
      * Endpoint for setting a shopping cart
      *
      * Refer to summary
@@ -245,6 +301,22 @@ public class UserApiTest {
     public void setCurrentLocationTest() throws ApiException {
         UserSetCurrentLocationRequest userSetCurrentLocationRequest = null;
         UserSetCurrentLocationResponse response = api.setCurrentLocation(userSetCurrentLocationRequest);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Endpoint for updating shopper shift
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void updateShopperShiftTest() throws ApiException {
+        UserUpdateShopperShiftRequest userUpdateShopperShiftRequest = null;
+        UserUpdateShopperShiftResponse response = api.updateShopperShift(userUpdateShopperShiftRequest);
 
         // TODO: test validations
     }

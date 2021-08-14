@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**getItems**](ShoppingApi.md#getItems) | **POST** /shopping/getItems | Endpoint for Get Items use case
 [**getShoppers**](ShoppingApi.md#getShoppers) | **POST** /shopping/getShoppers | Endpoint for Get Shoppers use case
 [**getStores**](ShoppingApi.md#getStores) | **POST** /shopping/getStores | Endpoint for Get Stores use case
+[**populateTables**](ShoppingApi.md#populateTables) | **POST** /shopping/populateTables | Endpoint populating tables
 [**removeQueuedOrder**](ShoppingApi.md#removeQueuedOrder) | **POST** /shopping/removeQueuedOrder | Endpoint for removing a queued order.
 
 
@@ -258,6 +259,68 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns upon success |  -  |
+
+<a name="populateTables"></a>
+# **populateTables**
+> Object populateTables(body)
+
+Endpoint populating tables
+
+Refer to summary
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.ShoppingApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+
+    ShoppingApi apiInstance = new ShoppingApi(defaultClient);
+    Object body = null; // Object | The input body required by this request
+    try {
+      Object result = apiInstance.populateTables(body);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling ShoppingApi#populateTables");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | **Object**| The input body required by this request |
+
+### Return type
+
+**Object**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns success |  -  |
 
 <a name="removeQueuedOrder"></a>
 # **removeQueuedOrder**

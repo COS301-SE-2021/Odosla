@@ -28,24 +28,8 @@ import java.io.IOException;
  * Generic schema for a shopper
  */
 @ApiModel(description = "Generic schema for a shopper")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T12:05:00.868146800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T14:53:01.663657800+02:00[Africa/Harare]")
 public class ShopperObject {
-  public static final String SERIALIZED_NAME_ID = "id";
-  @SerializedName(SERIALIZED_NAME_ID)
-  private String id;
-
-  public static final String SERIALIZED_NAME_USERNAME = "username";
-  @SerializedName(SERIALIZED_NAME_USERNAME)
-  private String username;
-
-  public static final String SERIALIZED_NAME_PASSWORD = "password";
-  @SerializedName(SERIALIZED_NAME_PASSWORD)
-  private String password;
-
-  public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
-  @SerializedName(SERIALIZED_NAME_STORE_I_D)
-  private String storeID;
-
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
@@ -54,101 +38,57 @@ public class ShopperObject {
   @SerializedName(SERIALIZED_NAME_SURNAME)
   private String surname;
 
+  public static final String SERIALIZED_NAME_EMAIL = "email";
+  @SerializedName(SERIALIZED_NAME_EMAIL)
+  private String email;
+
+  public static final String SERIALIZED_NAME_PHONE_NUMBER = "phoneNumber";
+  @SerializedName(SERIALIZED_NAME_PHONE_NUMBER)
+  private String phoneNumber;
+
+  public static final String SERIALIZED_NAME_PASSWORD = "password";
+  @SerializedName(SERIALIZED_NAME_PASSWORD)
+  private String password;
+
+  public static final String SERIALIZED_NAME_ACTIVATION_DATE = "activationDate";
+  @SerializedName(SERIALIZED_NAME_ACTIVATION_DATE)
+  private String activationDate;
+
+  public static final String SERIALIZED_NAME_ACTIVATION_CODE = "activationCode";
+  @SerializedName(SERIALIZED_NAME_ACTIVATION_CODE)
+  private String activationCode;
+
+  public static final String SERIALIZED_NAME_RESET_CODE = "resetCode";
+  @SerializedName(SERIALIZED_NAME_RESET_CODE)
+  private String resetCode;
+
+  public static final String SERIALIZED_NAME_RESET_EXPIRATION = "resetExpiration";
+  @SerializedName(SERIALIZED_NAME_RESET_EXPIRATION)
+  private String resetExpiration;
+
+  public static final String SERIALIZED_NAME_ACCOUNT_TYPE = "accountType";
+  @SerializedName(SERIALIZED_NAME_ACCOUNT_TYPE)
+  private String accountType;
+
+  public static final String SERIALIZED_NAME_SHOPPER_I_D = "shopperID";
+  @SerializedName(SERIALIZED_NAME_SHOPPER_I_D)
+  private String shopperID;
+
+  public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
+  @SerializedName(SERIALIZED_NAME_STORE_I_D)
+  private String storeID;
+
   public static final String SERIALIZED_NAME_ORDERS_COMPLETED = "ordersCompleted";
   @SerializedName(SERIALIZED_NAME_ORDERS_COMPLETED)
   private Integer ordersCompleted;
 
+  public static final String SERIALIZED_NAME_ON_SHIFT = "onShift";
+  @SerializedName(SERIALIZED_NAME_ON_SHIFT)
+  private Boolean onShift;
 
-  public ShopperObject id(String id) {
-    
-    this.id = id;
-    return this;
-  }
-
-   /**
-   * Get id
-   * @return id
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getId() {
-    return id;
-  }
-
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-
-  public ShopperObject username(String username) {
-    
-    this.username = username;
-    return this;
-  }
-
-   /**
-   * Get username
-   * @return username
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getUsername() {
-    return username;
-  }
-
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-
-  public ShopperObject password(String password) {
-    
-    this.password = password;
-    return this;
-  }
-
-   /**
-   * Get password
-   * @return password
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getPassword() {
-    return password;
-  }
-
-
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-
-  public ShopperObject storeID(String storeID) {
-    
-    this.storeID = storeID;
-    return this;
-  }
-
-   /**
-   * Get storeID
-   * @return storeID
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getStoreID() {
-    return storeID;
-  }
-
-
-  public void setStoreID(String storeID) {
-    this.storeID = storeID;
-  }
+  public static final String SERIALIZED_NAME_IS_ACTIVE = "isActive";
+  @SerializedName(SERIALIZED_NAME_IS_ACTIVE)
+  private Boolean isActive;
 
 
   public ShopperObject name(String name) {
@@ -197,6 +137,236 @@ public class ShopperObject {
   }
 
 
+  public ShopperObject email(String email) {
+    
+    this.email = email;
+    return this;
+  }
+
+   /**
+   * Get email
+   * @return email
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getEmail() {
+    return email;
+  }
+
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+
+  public ShopperObject phoneNumber(String phoneNumber) {
+    
+    this.phoneNumber = phoneNumber;
+    return this;
+  }
+
+   /**
+   * Get phoneNumber
+   * @return phoneNumber
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getPhoneNumber() {
+    return phoneNumber;
+  }
+
+
+  public void setPhoneNumber(String phoneNumber) {
+    this.phoneNumber = phoneNumber;
+  }
+
+
+  public ShopperObject password(String password) {
+    
+    this.password = password;
+    return this;
+  }
+
+   /**
+   * Get password
+   * @return password
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getPassword() {
+    return password;
+  }
+
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+
+  public ShopperObject activationDate(String activationDate) {
+    
+    this.activationDate = activationDate;
+    return this;
+  }
+
+   /**
+   * Get activationDate
+   * @return activationDate
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getActivationDate() {
+    return activationDate;
+  }
+
+
+  public void setActivationDate(String activationDate) {
+    this.activationDate = activationDate;
+  }
+
+
+  public ShopperObject activationCode(String activationCode) {
+    
+    this.activationCode = activationCode;
+    return this;
+  }
+
+   /**
+   * Get activationCode
+   * @return activationCode
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getActivationCode() {
+    return activationCode;
+  }
+
+
+  public void setActivationCode(String activationCode) {
+    this.activationCode = activationCode;
+  }
+
+
+  public ShopperObject resetCode(String resetCode) {
+    
+    this.resetCode = resetCode;
+    return this;
+  }
+
+   /**
+   * Get resetCode
+   * @return resetCode
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getResetCode() {
+    return resetCode;
+  }
+
+
+  public void setResetCode(String resetCode) {
+    this.resetCode = resetCode;
+  }
+
+
+  public ShopperObject resetExpiration(String resetExpiration) {
+    
+    this.resetExpiration = resetExpiration;
+    return this;
+  }
+
+   /**
+   * Get resetExpiration
+   * @return resetExpiration
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getResetExpiration() {
+    return resetExpiration;
+  }
+
+
+  public void setResetExpiration(String resetExpiration) {
+    this.resetExpiration = resetExpiration;
+  }
+
+
+  public ShopperObject accountType(String accountType) {
+    
+    this.accountType = accountType;
+    return this;
+  }
+
+   /**
+   * Get accountType
+   * @return accountType
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getAccountType() {
+    return accountType;
+  }
+
+
+  public void setAccountType(String accountType) {
+    this.accountType = accountType;
+  }
+
+
+  public ShopperObject shopperID(String shopperID) {
+    
+    this.shopperID = shopperID;
+    return this;
+  }
+
+   /**
+   * Get shopperID
+   * @return shopperID
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getShopperID() {
+    return shopperID;
+  }
+
+
+  public void setShopperID(String shopperID) {
+    this.shopperID = shopperID;
+  }
+
+
+  public ShopperObject storeID(String storeID) {
+    
+    this.storeID = storeID;
+    return this;
+  }
+
+   /**
+   * Get storeID
+   * @return storeID
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getStoreID() {
+    return storeID;
+  }
+
+
+  public void setStoreID(String storeID) {
+    this.storeID = storeID;
+  }
+
+
   public ShopperObject ordersCompleted(Integer ordersCompleted) {
     
     this.ordersCompleted = ordersCompleted;
@@ -220,6 +390,52 @@ public class ShopperObject {
   }
 
 
+  public ShopperObject onShift(Boolean onShift) {
+    
+    this.onShift = onShift;
+    return this;
+  }
+
+   /**
+   * Get onShift
+   * @return onShift
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public Boolean getOnShift() {
+    return onShift;
+  }
+
+
+  public void setOnShift(Boolean onShift) {
+    this.onShift = onShift;
+  }
+
+
+  public ShopperObject isActive(Boolean isActive) {
+    
+    this.isActive = isActive;
+    return this;
+  }
+
+   /**
+   * Get isActive
+   * @return isActive
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public Boolean getIsActive() {
+    return isActive;
+  }
+
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -229,18 +445,26 @@ public class ShopperObject {
       return false;
     }
     ShopperObject shopperObject = (ShopperObject) o;
-    return Objects.equals(this.id, shopperObject.id) &&
-        Objects.equals(this.username, shopperObject.username) &&
-        Objects.equals(this.password, shopperObject.password) &&
-        Objects.equals(this.storeID, shopperObject.storeID) &&
-        Objects.equals(this.name, shopperObject.name) &&
+    return Objects.equals(this.name, shopperObject.name) &&
         Objects.equals(this.surname, shopperObject.surname) &&
-        Objects.equals(this.ordersCompleted, shopperObject.ordersCompleted);
+        Objects.equals(this.email, shopperObject.email) &&
+        Objects.equals(this.phoneNumber, shopperObject.phoneNumber) &&
+        Objects.equals(this.password, shopperObject.password) &&
+        Objects.equals(this.activationDate, shopperObject.activationDate) &&
+        Objects.equals(this.activationCode, shopperObject.activationCode) &&
+        Objects.equals(this.resetCode, shopperObject.resetCode) &&
+        Objects.equals(this.resetExpiration, shopperObject.resetExpiration) &&
+        Objects.equals(this.accountType, shopperObject.accountType) &&
+        Objects.equals(this.shopperID, shopperObject.shopperID) &&
+        Objects.equals(this.storeID, shopperObject.storeID) &&
+        Objects.equals(this.ordersCompleted, shopperObject.ordersCompleted) &&
+        Objects.equals(this.onShift, shopperObject.onShift) &&
+        Objects.equals(this.isActive, shopperObject.isActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, password, storeID, name, surname, ordersCompleted);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, shopperID, storeID, ordersCompleted, onShift, isActive);
   }
 
 
@@ -248,13 +472,21 @@ public class ShopperObject {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ShopperObject {\n");
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    username: ").append(toIndentedString(username)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
-    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    surname: ").append(toIndentedString(surname)).append("\n");
+    sb.append("    email: ").append(toIndentedString(email)).append("\n");
+    sb.append("    phoneNumber: ").append(toIndentedString(phoneNumber)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    activationDate: ").append(toIndentedString(activationDate)).append("\n");
+    sb.append("    activationCode: ").append(toIndentedString(activationCode)).append("\n");
+    sb.append("    resetCode: ").append(toIndentedString(resetCode)).append("\n");
+    sb.append("    resetExpiration: ").append(toIndentedString(resetExpiration)).append("\n");
+    sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
+    sb.append("    shopperID: ").append(toIndentedString(shopperID)).append("\n");
+    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("    ordersCompleted: ").append(toIndentedString(ordersCompleted)).append("\n");
+    sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
+    sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");
     return sb.toString();
   }

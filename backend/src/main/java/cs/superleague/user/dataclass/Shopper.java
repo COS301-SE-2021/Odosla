@@ -31,6 +31,8 @@ public class Shopper extends User {
     @Column(name = "email")
     private String email;
 
+    private Boolean onShift=false;
+
     public String getName() {
         return name;
     }
@@ -201,4 +203,11 @@ public class Shopper extends User {
         this.accountType = accountType;
     }
 
+    public Boolean getOnShift() {
+        return onShift;
+    }
+
+    public void setOnShift(Boolean onShift) {
+        this.onShift = onShift;
+    }
 }

@@ -17,42 +17,50 @@ public class SendEmailNotificationRequest {
 
     public SendEmailNotificationRequest(String message, Map<String, String> properties) {
         this.message = message;
-        if (properties.get("Type") == null){
+        if (properties == null){
             this.type = null;
-        }else{
-            this.type = properties.get("Type");
-        }
-        if (properties.get("Subject") == null){
             this.subject = null;
-        }else{
-            this.subject = properties.get("Subject");
-        }
-        if (properties.get("UserType") != null){
-            switch (properties.get("UserType").toLowerCase()){
-                case "admin":
-                    this.userType = UserType.ADMIN;
-                    break;
-                case "customer":
-                    this.userType = UserType.CUSTOMER;
-                    break;
-                case "driver":
-                    this.userType = UserType.DRIVER;
-                    break;
-                case "shopper":
-                    this.userType = UserType.SHOPPER;
-                    break;
-                default:
-                    this.userType = null;
-                    break;
-            }
-        }else{
             this.userType = null;
-        }
-        if (properties.get("UserID") != null && !properties.get("UserID").equals("")) {
-            this.userID = UUID.fromString(properties.get("UserID"));
-        }else{
             this.userID = null;
+        }else{
+            if (properties.get("Type") == null){
+                this.type = null;
+            }else{
+                this.type = properties.get("Type");
+            }
+            if (properties.get("Subject") == null){
+                this.subject = null;
+            }else{
+                this.subject = properties.get("Subject");
+            }
+            if (properties.get("UserType") != null){
+                switch (properties.get("UserType").toLowerCase()){
+                    case "admin":
+                        this.userType = UserType.ADMIN;
+                        break;
+                    case "customer":
+                        this.userType = UserType.CUSTOMER;
+                        break;
+                    case "driver":
+                        this.userType = UserType.DRIVER;
+                        break;
+                    case "shopper":
+                        this.userType = UserType.SHOPPER;
+                        break;
+                    default:
+                        this.userType = null;
+                        break;
+                }
+            }else{
+                this.userType = null;
+            }
+            if (properties.get("UserID") != null && !properties.get("UserID").equals("")) {
+                this.userID = UUID.fromString(properties.get("UserID"));
+            }else{
+                this.userID = null;
+            }
         }
+
     }
 
     public UserType getUserType() {

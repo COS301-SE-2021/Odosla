@@ -26,9 +26,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
- * AdminObject
+ * Generic schema for a Admin
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T12:05:00.868146800+02:00[Africa/Harare]")
+@ApiModel(description = "Generic schema for a Admin")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T14:53:01.663657800+02:00[Africa/Harare]")
 public class AdminObject {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)

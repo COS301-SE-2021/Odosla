@@ -105,6 +105,22 @@ public class ShoppingApiTest {
     }
     
     /**
+     * Endpoint populating tables
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void populateTablesTest() throws ApiException {
+        Object body = null;
+        Object response = api.populateTables(body);
+
+        // TODO: test validations
+    }
+    
+    /**
      * Endpoint for removing a queued order.
      *
      * Refer to summary

@@ -27,10 +27,14 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import org.openapitools.client.model.ShoppingGetNextQueuedRequest;
+import org.openapitools.client.model.ShoppingGetNextQueuedResponse;
 import org.openapitools.client.model.UserAccountVerifyRequest;
 import org.openapitools.client.model.UserAccountVerifyResponse;
 import org.openapitools.client.model.UserClearShoppingCartRequest;
 import org.openapitools.client.model.UserClearShoppingCartResponse;
+import org.openapitools.client.model.UserCompletePackagingOrderRequest;
+import org.openapitools.client.model.UserCompletePackagingOrderResponse;
 import org.openapitools.client.model.UserGetCurrentUserRequest;
 import org.openapitools.client.model.UserGetCurrentUserResponse;
 import org.openapitools.client.model.UserGetShoppingCartRequest;
@@ -49,10 +53,14 @@ import org.openapitools.client.model.UserRegisterShopperRequest;
 import org.openapitools.client.model.UserRegisterShopperResponse;
 import org.openapitools.client.model.UserResetPasswordRequest;
 import org.openapitools.client.model.UserResetPasswordResponse;
+import org.openapitools.client.model.UserScanItemRequest;
+import org.openapitools.client.model.UserScanItemResponse;
 import org.openapitools.client.model.UserSetCartRequest;
 import org.openapitools.client.model.UserSetCartResponse;
 import org.openapitools.client.model.UserSetCurrentLocationRequest;
 import org.openapitools.client.model.UserSetCurrentLocationResponse;
+import org.openapitools.client.model.UserUpdateShopperShiftRequest;
+import org.openapitools.client.model.UserUpdateShopperShiftResponse;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -191,6 +199,117 @@ public class UserApi {
         return localVarCall;
     }
     /**
+     * Build call for completePackagingOrder
+     * @param userCompletePackagingOrderRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call completePackagingOrderCall(UserCompletePackagingOrderRequest userCompletePackagingOrderRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userCompletePackagingOrderRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/completePackagingOrder";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call completePackagingOrderValidateBeforeCall(UserCompletePackagingOrderRequest userCompletePackagingOrderRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userCompletePackagingOrderRequest' is set
+        if (userCompletePackagingOrderRequest == null) {
+            throw new ApiException("Missing the required parameter 'userCompletePackagingOrderRequest' when calling completePackagingOrder(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = completePackagingOrderCall(userCompletePackagingOrderRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for complete packaging order use case
+     * Refer to summary
+     * @param userCompletePackagingOrderRequest The input body required by this request (required)
+     * @return UserCompletePackagingOrderResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserCompletePackagingOrderResponse completePackagingOrder(UserCompletePackagingOrderRequest userCompletePackagingOrderRequest) throws ApiException {
+        ApiResponse<UserCompletePackagingOrderResponse> localVarResp = completePackagingOrderWithHttpInfo(userCompletePackagingOrderRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for complete packaging order use case
+     * Refer to summary
+     * @param userCompletePackagingOrderRequest The input body required by this request (required)
+     * @return ApiResponse&lt;UserCompletePackagingOrderResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserCompletePackagingOrderResponse> completePackagingOrderWithHttpInfo(UserCompletePackagingOrderRequest userCompletePackagingOrderRequest) throws ApiException {
+        okhttp3.Call localVarCall = completePackagingOrderValidateBeforeCall(userCompletePackagingOrderRequest, null);
+        Type localVarReturnType = new TypeToken<UserCompletePackagingOrderResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for complete packaging order use case (asynchronously)
+     * Refer to summary
+     * @param userCompletePackagingOrderRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call completePackagingOrderAsync(UserCompletePackagingOrderRequest userCompletePackagingOrderRequest, final ApiCallback<UserCompletePackagingOrderResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = completePackagingOrderValidateBeforeCall(userCompletePackagingOrderRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserCompletePackagingOrderResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
      * Build call for getCurrentUser
      * @param userGetCurrentUserRequest The input body required by this request (required)
      * @param _callback Callback for upload/download progress
@@ -298,6 +417,117 @@ public class UserApi {
 
         okhttp3.Call localVarCall = getCurrentUserValidateBeforeCall(userGetCurrentUserRequest, _callback);
         Type localVarReturnType = new TypeToken<UserGetCurrentUserResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for getNextQueued
+     * @param shoppingGetNextQueuedRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getNextQueuedCall(ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = shoppingGetNextQueuedRequest;
+
+        // create path and map variables
+        String localVarPath = "/shopping/getNextQueued";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getNextQueuedValidateBeforeCall(ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'shoppingGetNextQueuedRequest' is set
+        if (shoppingGetNextQueuedRequest == null) {
+            throw new ApiException("Missing the required parameter 'shoppingGetNextQueuedRequest' when calling getNextQueued(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getNextQueuedCall(shoppingGetNextQueuedRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for getting next queue
+     * Refer to summary
+     * @param shoppingGetNextQueuedRequest The input body required by this request (required)
+     * @return ShoppingGetNextQueuedResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ShoppingGetNextQueuedResponse getNextQueued(ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest) throws ApiException {
+        ApiResponse<ShoppingGetNextQueuedResponse> localVarResp = getNextQueuedWithHttpInfo(shoppingGetNextQueuedRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for getting next queue
+     * Refer to summary
+     * @param shoppingGetNextQueuedRequest The input body required by this request (required)
+     * @return ApiResponse&lt;ShoppingGetNextQueuedResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<ShoppingGetNextQueuedResponse> getNextQueuedWithHttpInfo(ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest) throws ApiException {
+        okhttp3.Call localVarCall = getNextQueuedValidateBeforeCall(shoppingGetNextQueuedRequest, null);
+        Type localVarReturnType = new TypeToken<ShoppingGetNextQueuedResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for getting next queue (asynchronously)
+     * Refer to summary
+     * @param shoppingGetNextQueuedRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getNextQueuedAsync(ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest, final ApiCallback<ShoppingGetNextQueuedResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getNextQueuedValidateBeforeCall(shoppingGetNextQueuedRequest, _callback);
+        Type localVarReturnType = new TypeToken<ShoppingGetNextQueuedResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
@@ -1190,6 +1420,117 @@ public class UserApi {
         return localVarCall;
     }
     /**
+     * Build call for scanItem
+     * @param userScanItemRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call scanItemCall(UserScanItemRequest userScanItemRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userScanItemRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/scanItem";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call scanItemValidateBeforeCall(UserScanItemRequest userScanItemRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userScanItemRequest' is set
+        if (userScanItemRequest == null) {
+            throw new ApiException("Missing the required parameter 'userScanItemRequest' when calling scanItem(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = scanItemCall(userScanItemRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for scanning an item
+     * Refer to summary
+     * @param userScanItemRequest The input body required by this request (required)
+     * @return UserScanItemResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserScanItemResponse scanItem(UserScanItemRequest userScanItemRequest) throws ApiException {
+        ApiResponse<UserScanItemResponse> localVarResp = scanItemWithHttpInfo(userScanItemRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for scanning an item
+     * Refer to summary
+     * @param userScanItemRequest The input body required by this request (required)
+     * @return ApiResponse&lt;UserScanItemResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserScanItemResponse> scanItemWithHttpInfo(UserScanItemRequest userScanItemRequest) throws ApiException {
+        okhttp3.Call localVarCall = scanItemValidateBeforeCall(userScanItemRequest, null);
+        Type localVarReturnType = new TypeToken<UserScanItemResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for scanning an item (asynchronously)
+     * Refer to summary
+     * @param userScanItemRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether the email was sent </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call scanItemAsync(UserScanItemRequest userScanItemRequest, final ApiCallback<UserScanItemResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = scanItemValidateBeforeCall(userScanItemRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserScanItemResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
      * Build call for setCart
      * @param userSetCartRequest The input body required by this request (required)
      * @param _callback Callback for upload/download progress
@@ -1408,6 +1749,117 @@ public class UserApi {
 
         okhttp3.Call localVarCall = setCurrentLocationValidateBeforeCall(userSetCurrentLocationRequest, _callback);
         Type localVarReturnType = new TypeToken<UserSetCurrentLocationResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for updateShopperShift
+     * @param userUpdateShopperShiftRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call updateShopperShiftCall(UserUpdateShopperShiftRequest userUpdateShopperShiftRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userUpdateShopperShiftRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/updateShopperShift";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call updateShopperShiftValidateBeforeCall(UserUpdateShopperShiftRequest userUpdateShopperShiftRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userUpdateShopperShiftRequest' is set
+        if (userUpdateShopperShiftRequest == null) {
+            throw new ApiException("Missing the required parameter 'userUpdateShopperShiftRequest' when calling updateShopperShift(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = updateShopperShiftCall(userUpdateShopperShiftRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for updating shopper shift
+     * Refer to summary
+     * @param userUpdateShopperShiftRequest The input body required by this request (required)
+     * @return UserUpdateShopperShiftResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserUpdateShopperShiftResponse updateShopperShift(UserUpdateShopperShiftRequest userUpdateShopperShiftRequest) throws ApiException {
+        ApiResponse<UserUpdateShopperShiftResponse> localVarResp = updateShopperShiftWithHttpInfo(userUpdateShopperShiftRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for updating shopper shift
+     * Refer to summary
+     * @param userUpdateShopperShiftRequest The input body required by this request (required)
+     * @return ApiResponse&lt;UserUpdateShopperShiftResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserUpdateShopperShiftResponse> updateShopperShiftWithHttpInfo(UserUpdateShopperShiftRequest userUpdateShopperShiftRequest) throws ApiException {
+        okhttp3.Call localVarCall = updateShopperShiftValidateBeforeCall(userUpdateShopperShiftRequest, null);
+        Type localVarReturnType = new TypeToken<UserUpdateShopperShiftResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for updating shopper shift (asynchronously)
+     * Refer to summary
+     * @param userUpdateShopperShiftRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call updateShopperShiftAsync(UserUpdateShopperShiftRequest userUpdateShopperShiftRequest, final ApiCallback<UserUpdateShopperShiftResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = updateShopperShiftValidateBeforeCall(userUpdateShopperShiftRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserUpdateShopperShiftResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }

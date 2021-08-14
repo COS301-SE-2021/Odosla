@@ -41,6 +41,94 @@ public class StoreObjectTest {
     }
 
     /**
+     * Test the property 'name'
+     */
+    @Test
+    public void nameTest() {
+        // TODO: test name
+    }
+
+    /**
+     * Test the property 'surname'
+     */
+    @Test
+    public void surnameTest() {
+        // TODO: test surname
+    }
+
+    /**
+     * Test the property 'email'
+     */
+    @Test
+    public void emailTest() {
+        // TODO: test email
+    }
+
+    /**
+     * Test the property 'phoneNumber'
+     */
+    @Test
+    public void phoneNumberTest() {
+        // TODO: test phoneNumber
+    }
+
+    /**
+     * Test the property 'password'
+     */
+    @Test
+    public void passwordTest() {
+        // TODO: test password
+    }
+
+    /**
+     * Test the property 'activationDate'
+     */
+    @Test
+    public void activationDateTest() {
+        // TODO: test activationDate
+    }
+
+    /**
+     * Test the property 'activationCode'
+     */
+    @Test
+    public void activationCodeTest() {
+        // TODO: test activationCode
+    }
+
+    /**
+     * Test the property 'resetCode'
+     */
+    @Test
+    public void resetCodeTest() {
+        // TODO: test resetCode
+    }
+
+    /**
+     * Test the property 'resetExpiration'
+     */
+    @Test
+    public void resetExpirationTest() {
+        // TODO: test resetExpiration
+    }
+
+    /**
+     * Test the property 'accountType'
+     */
+    @Test
+    public void accountTypeTest() {
+        // TODO: test accountType
+    }
+
+    /**
+     * Test the property 'shopperID'
+     */
+    @Test
+    public void shopperIDTest() {
+        // TODO: test shopperID
+    }
+
+    /**
      * Test the property 'storeID'
      */
     @Test
@@ -49,51 +137,27 @@ public class StoreObjectTest {
     }
 
     /**
-     * Test the property 'storeBrand'
+     * Test the property 'ordersCompleted'
      */
     @Test
-    public void storeBrandTest() {
-        // TODO: test storeBrand
+    public void ordersCompletedTest() {
+        // TODO: test ordersCompleted
     }
 
     /**
-     * Test the property 'isOpen'
+     * Test the property 'onShift'
      */
     @Test
-    public void isOpenTest() {
-        // TODO: test isOpen
+    public void onShiftTest() {
+        // TODO: test onShift
     }
 
     /**
-     * Test the property 'maxShoppers'
+     * Test the property 'isActive'
      */
     @Test
-    public void maxShoppersTest() {
-        // TODO: test maxShoppers
-    }
-
-    /**
-     * Test the property 'maxOrders'
-     */
-    @Test
-    public void maxOrdersTest() {
-        // TODO: test maxOrders
-    }
-
-    /**
-     * Test the property 'openingTime'
-     */
-    @Test
-    public void openingTimeTest() {
-        // TODO: test openingTime
-    }
-
-    /**
-     * Test the property 'closingTime'
-     */
-    @Test
-    public void closingTimeTest() {
-        // TODO: test closingTime
+    public void isActiveTest() {
+        // TODO: test isActive
     }
 
 }

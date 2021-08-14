@@ -5,6 +5,8 @@ import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -14,9 +16,13 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -58,6 +61,9 @@ public class UserController implements UserApi {
 
     @Autowired
     ShopperRepo shopperRepo;
+
+    @Autowired
+    OrderRepo orderRepo;
 
     @Autowired
     private UserServiceImpl userService;
@@ -424,6 +430,7 @@ public class UserController implements UserApi {
         UserLoginResponse response=new UserLoginResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
+            UserType userType = null;
             if (body.getUserType().equals("DRIVER")) {
                 userType = UserType.DRIVER;
             } else if (body.getUserType().equals("CUSTOMER")) {
@@ -624,6 +631,33 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<UserUpdateShopperShiftResponse> updateShopperShift(UserUpdateShopperShiftRequest body) {
+
+        UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(UUID.fromString(body.getShopperID()), body.isOnShift());
+            UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
+            try {
+                response.setMessage(response1.getMessage());
+                response.setSuccess(Boolean.valueOf(response1.isSuccess()));
+                response.setTimestamp(String.valueOf(response1.getTimestamp().getTime()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setMessage(e.getMessage());
+                response.setSuccess(false);
+                response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setTimestamp(String.valueOf(Calendar.getInstance().getTime()));
+        }
+        return new ResponseEntity<>(response, status);
+    }
+
+    @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
         JwtUtil jwtTokenUtil = new JwtUtil();
         customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
@@ -748,5 +782,56 @@ public class UserController implements UserApi {
             groceryListObjectList.add(groceryListObject);
         }
         return groceryListObjectList;
+    }
+    @Override
+    public ResponseEntity<UserScanItemResponse> scanItem(UserScanItemRequest body){
+
+        UserScanItemResponse userScanItemResponse = new UserScanItemResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ScanItemRequest request = new ScanItemRequest(body.getBarcode(), UUID.fromString(body.getOrderID()));
+
+            ScanItemResponse response = ServiceSelector.getUserService().scanItem(request);
+            try{
+                userScanItemResponse.setDate(response.getTimestamp().toString());
+                userScanItemResponse.setMessage(response.getMessage());
+                userScanItemResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userScanItemResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserCompletePackagingOrderResponse> completePackagingOrder(UserCompletePackagingOrderRequest body){
+
+        UserCompletePackagingOrderResponse userCompletePackagingOrderResponse = new UserCompletePackagingOrderResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            CompletePackagingOrderRequest request = new CompletePackagingOrderRequest(UUID.fromString(body.getOrderID()), body.isGetNext());
+
+            CompletePackagingOrderResponse response = ServiceSelector.getUserService().completePackagingOrder(request);
+            try{
+                userCompletePackagingOrderResponse.setDate(response.getTimestamp().toString());
+                userCompletePackagingOrderResponse.setMessage(response.getMessage());
+                userCompletePackagingOrderResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userCompletePackagingOrderResponse, status);
     }
 }
