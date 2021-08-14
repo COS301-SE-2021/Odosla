@@ -30,18 +30,18 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:54:17.453730100+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 @Api(value = "payment", description = "the payment API")
 public interface PaymentApi {
 
-    @ApiOperation(value = "Endpoint for Get Items use case", nickname = "getItems", notes = "Refer to summary", response = PaymentGetItemsResponse.class, tags={ "Payment", })
+    @ApiOperation(value = "Endpoint for Get Items use case", nickname = "getItemsPayments", notes = "Refer to summary", response = PaymentGetItemsResponse.class, tags={ "Payment", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Returns status upon success", response = PaymentGetItemsResponse.class) })
     @RequestMapping(value = "/payment/getItems",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<PaymentGetItemsResponse> getItems(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody PaymentGetItemsRequest body
+    ResponseEntity<PaymentGetItemsResponse> getItemsPayments(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody PaymentGetItemsRequest body
 );
 
 

@@ -223,7 +223,7 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
-    public ResponseEntity<PaymentGetItemsResponse> getItems(PaymentGetItemsRequest body) {
+    public ResponseEntity<PaymentGetItemsResponse> getItemsPayments(PaymentGetItemsRequest body) {
 
 
         //add mock data to repo

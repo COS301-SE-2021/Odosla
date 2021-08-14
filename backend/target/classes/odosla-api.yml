@@ -569,6 +569,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetNextQueuedResponse"
 
+  /shopping/getQueue:
+    post:
+      summary: Endpoint for getting the order queue of a shop
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getQueue
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetQueueRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetQueueResponse"
+
+
   /payment/getStatus:
     post:
       summary: Endpoint for Get Status use case
@@ -597,7 +620,7 @@ paths:
       tags:
         - "Payment"
       description: Refer to summary
-      operationId: getItems
+      operationId: getItemsPayments
       requestBody:
         description: The input body required by this request
         required: true
@@ -756,20 +779,36 @@ components:
       description: "Generic schema for a shopper"
       type: object
       properties:
-        id:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        storeID:
-          type: string
         name:
           type: string
         surname:
           type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        shopperID:
+          type: string
+        storeID:
+          type: string
         ordersCompleted:
           type: integer
+        onShift:
+          type: boolean
+        isActive:
+          type: boolean
 
     shopping_GetShoppersRequest:
       description: This object is expected as input
@@ -992,6 +1031,8 @@ components:
           description: generated token used to identify the caller of the endpoint
         barcodes:
           type: array
+          items:
+            type: string
 
     user_SetCartResponse:
       description: This object is returned as output
@@ -1055,6 +1096,8 @@ components:
           description: generated token used to identify the caller of the endpoint
         barcodes:
           type: array
+          items:
+            type: string
         name:
           type: string
 
@@ -1465,6 +1508,27 @@ components:
             $ref: "#/components/schemas/OrderObject"
         newCurrentOrder:
           type: object
+
+    shopping_GetQueueRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetQueueResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        queueOfOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
 
     payment_GetStatusRequest:
       description: This object is expected as input
