@@ -21,11 +21,7 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import org.openapitools.client.model.CustomerObjectAllOf;
-import org.openapitools.client.model.GroceryListObject;
-import org.openapitools.client.model.ItemObject;
+import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -46,6 +42,86 @@ public class CustomerObjectTest {
     }
 
     /**
+     * Test the property 'name'
+     */
+    @Test
+    public void nameTest() {
+        // TODO: test name
+    }
+
+    /**
+     * Test the property 'surname'
+     */
+    @Test
+    public void surnameTest() {
+        // TODO: test surname
+    }
+
+    /**
+     * Test the property 'email'
+     */
+    @Test
+    public void emailTest() {
+        // TODO: test email
+    }
+
+    /**
+     * Test the property 'phoneNumber'
+     */
+    @Test
+    public void phoneNumberTest() {
+        // TODO: test phoneNumber
+    }
+
+    /**
+     * Test the property 'password'
+     */
+    @Test
+    public void passwordTest() {
+        // TODO: test password
+    }
+
+    /**
+     * Test the property 'activationDate'
+     */
+    @Test
+    public void activationDateTest() {
+        // TODO: test activationDate
+    }
+
+    /**
+     * Test the property 'activationCode'
+     */
+    @Test
+    public void activationCodeTest() {
+        // TODO: test activationCode
+    }
+
+    /**
+     * Test the property 'resetCode'
+     */
+    @Test
+    public void resetCodeTest() {
+        // TODO: test resetCode
+    }
+
+    /**
+     * Test the property 'resetExpiration'
+     */
+    @Test
+    public void resetExpirationTest() {
+        // TODO: test resetExpiration
+    }
+
+    /**
+     * Test the property 'accountType'
+     */
+    @Test
+    public void accountTypeTest() {
+        // TODO: test accountType
+    }
+
+    /**
      * Test the property 'customerID'
      */
     @Test
@@ -54,43 +130,19 @@ public class CustomerObjectTest {
     }
 
     /**
-     * Test the property 'address'
+     * Test the property 'rating'
      */
     @Test
-    public void addressTest() {
-        // TODO: test address
+    public void ratingTest() {
+        // TODO: test rating
     }
 
     /**
-     * Test the property 'groceryLists'
+     * Test the property 'isActive'
      */
     @Test
-    public void groceryListsTest() {
-        // TODO: test groceryLists
-    }
-
-    /**
-     * Test the property 'shoppingCart'
-     */
-    @Test
-    public void shoppingCartTest() {
-        // TODO: test shoppingCart
-    }
-
-    /**
-     * Test the property 'preference'
-     */
-    @Test
-    public void preferenceTest() {
-        // TODO: test preference
-    }
-
-    /**
-     * Test the property 'wallet'
-     */
-    @Test
-    public void walletTest() {
-        // TODO: test wallet
+    public void isActiveTest() {
+        // TODO: test isActive
     }
 
 }

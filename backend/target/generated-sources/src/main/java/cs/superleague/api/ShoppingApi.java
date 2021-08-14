@@ -11,6 +11,8 @@ import cs.superleague.models.ShoppingGetItemsRequest;
 import cs.superleague.models.ShoppingGetItemsResponse;
 import cs.superleague.models.ShoppingGetNextQueuedRequest;
 import cs.superleague.models.ShoppingGetNextQueuedResponse;
+import cs.superleague.models.ShoppingGetQueueRequest;
+import cs.superleague.models.ShoppingGetQueueResponse;
 import cs.superleague.models.ShoppingGetShoppersRequest;
 import cs.superleague.models.ShoppingGetShoppersResponse;
 import cs.superleague.models.ShoppingGetStoresRequest;
@@ -36,7 +38,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 @Api(value = "shopping", description = "the shopping API")
 public interface ShoppingApi {
 
@@ -70,6 +72,17 @@ public interface ShoppingApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<ShoppingGetNextQueuedResponse> getNextQueued(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody ShoppingGetNextQueuedRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for getting the order queue of a shop", nickname = "getQueue", notes = "Refer to summary", response = ShoppingGetQueueResponse.class, tags={ "Shopping", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns upon success", response = ShoppingGetQueueResponse.class) })
+    @RequestMapping(value = "/shopping/getQueue",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<ShoppingGetQueueResponse> getQueue(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody ShoppingGetQueueRequest body
 );
 
 

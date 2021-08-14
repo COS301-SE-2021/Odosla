@@ -27,6 +27,12 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import org.openapitools.client.model.PaymentGetItemsRequest;
+import org.openapitools.client.model.PaymentGetItemsResponse;
+import org.openapitools.client.model.PaymentGetStatusRequest;
+import org.openapitools.client.model.PaymentGetStatusResponse;
+import org.openapitools.client.model.PaymentSubmitOrderRequest;
+import org.openapitools.client.model.PaymentSubmitOrderResponse;
 import org.openapitools.client.model.PaymentUpdateOrderRequest;
 import org.openapitools.client.model.PaymentUpdateOrderResponse;
 
@@ -55,6 +61,339 @@ public class PaymentApi {
         this.localVarApiClient = apiClient;
     }
 
+    /**
+     * Build call for getItemsPayments
+     * @param paymentGetItemsRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getItemsPaymentsCall(PaymentGetItemsRequest paymentGetItemsRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = paymentGetItemsRequest;
+
+        // create path and map variables
+        String localVarPath = "/payment/getItems";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getItemsPaymentsValidateBeforeCall(PaymentGetItemsRequest paymentGetItemsRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'paymentGetItemsRequest' is set
+        if (paymentGetItemsRequest == null) {
+            throw new ApiException("Missing the required parameter 'paymentGetItemsRequest' when calling getItemsPayments(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getItemsPaymentsCall(paymentGetItemsRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for Get Items use case
+     * Refer to summary
+     * @param paymentGetItemsRequest The input body required by this request (required)
+     * @return PaymentGetItemsResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public PaymentGetItemsResponse getItemsPayments(PaymentGetItemsRequest paymentGetItemsRequest) throws ApiException {
+        ApiResponse<PaymentGetItemsResponse> localVarResp = getItemsPaymentsWithHttpInfo(paymentGetItemsRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for Get Items use case
+     * Refer to summary
+     * @param paymentGetItemsRequest The input body required by this request (required)
+     * @return ApiResponse&lt;PaymentGetItemsResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<PaymentGetItemsResponse> getItemsPaymentsWithHttpInfo(PaymentGetItemsRequest paymentGetItemsRequest) throws ApiException {
+        okhttp3.Call localVarCall = getItemsPaymentsValidateBeforeCall(paymentGetItemsRequest, null);
+        Type localVarReturnType = new TypeToken<PaymentGetItemsResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for Get Items use case (asynchronously)
+     * Refer to summary
+     * @param paymentGetItemsRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getItemsPaymentsAsync(PaymentGetItemsRequest paymentGetItemsRequest, final ApiCallback<PaymentGetItemsResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getItemsPaymentsValidateBeforeCall(paymentGetItemsRequest, _callback);
+        Type localVarReturnType = new TypeToken<PaymentGetItemsResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for getStatus
+     * @param paymentGetStatusRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getStatusCall(PaymentGetStatusRequest paymentGetStatusRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = paymentGetStatusRequest;
+
+        // create path and map variables
+        String localVarPath = "/payment/getStatus";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getStatusValidateBeforeCall(PaymentGetStatusRequest paymentGetStatusRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'paymentGetStatusRequest' is set
+        if (paymentGetStatusRequest == null) {
+            throw new ApiException("Missing the required parameter 'paymentGetStatusRequest' when calling getStatus(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getStatusCall(paymentGetStatusRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for Get Status use case
+     * Refer to summary
+     * @param paymentGetStatusRequest The input body required by this request (required)
+     * @return PaymentGetStatusResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public PaymentGetStatusResponse getStatus(PaymentGetStatusRequest paymentGetStatusRequest) throws ApiException {
+        ApiResponse<PaymentGetStatusResponse> localVarResp = getStatusWithHttpInfo(paymentGetStatusRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for Get Status use case
+     * Refer to summary
+     * @param paymentGetStatusRequest The input body required by this request (required)
+     * @return ApiResponse&lt;PaymentGetStatusResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<PaymentGetStatusResponse> getStatusWithHttpInfo(PaymentGetStatusRequest paymentGetStatusRequest) throws ApiException {
+        okhttp3.Call localVarCall = getStatusValidateBeforeCall(paymentGetStatusRequest, null);
+        Type localVarReturnType = new TypeToken<PaymentGetStatusResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for Get Status use case (asynchronously)
+     * Refer to summary
+     * @param paymentGetStatusRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns status upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getStatusAsync(PaymentGetStatusRequest paymentGetStatusRequest, final ApiCallback<PaymentGetStatusResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getStatusValidateBeforeCall(paymentGetStatusRequest, _callback);
+        Type localVarReturnType = new TypeToken<PaymentGetStatusResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for submitOrder
+     * @param paymentSubmitOrderRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns submitted order upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call submitOrderCall(PaymentSubmitOrderRequest paymentSubmitOrderRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = paymentSubmitOrderRequest;
+
+        // create path and map variables
+        String localVarPath = "/payment/submitOrder";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call submitOrderValidateBeforeCall(PaymentSubmitOrderRequest paymentSubmitOrderRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'paymentSubmitOrderRequest' is set
+        if (paymentSubmitOrderRequest == null) {
+            throw new ApiException("Missing the required parameter 'paymentSubmitOrderRequest' when calling submitOrder(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = submitOrderCall(paymentSubmitOrderRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for the Submit Order use case
+     * Refer to summary
+     * @param paymentSubmitOrderRequest The input body required by this request (required)
+     * @return PaymentSubmitOrderResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns submitted order upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public PaymentSubmitOrderResponse submitOrder(PaymentSubmitOrderRequest paymentSubmitOrderRequest) throws ApiException {
+        ApiResponse<PaymentSubmitOrderResponse> localVarResp = submitOrderWithHttpInfo(paymentSubmitOrderRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for the Submit Order use case
+     * Refer to summary
+     * @param paymentSubmitOrderRequest The input body required by this request (required)
+     * @return ApiResponse&lt;PaymentSubmitOrderResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns submitted order upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<PaymentSubmitOrderResponse> submitOrderWithHttpInfo(PaymentSubmitOrderRequest paymentSubmitOrderRequest) throws ApiException {
+        okhttp3.Call localVarCall = submitOrderValidateBeforeCall(paymentSubmitOrderRequest, null);
+        Type localVarReturnType = new TypeToken<PaymentSubmitOrderResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for the Submit Order use case (asynchronously)
+     * Refer to summary
+     * @param paymentSubmitOrderRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns submitted order upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call submitOrderAsync(PaymentSubmitOrderRequest paymentSubmitOrderRequest, final ApiCallback<PaymentSubmitOrderResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = submitOrderValidateBeforeCall(paymentSubmitOrderRequest, _callback);
+        Type localVarReturnType = new TypeToken<PaymentSubmitOrderResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
     /**
      * Build call for updateOrder
      * @param paymentUpdateOrderRequest The input body required by this request (required)

@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-13T14:22:29.077005400+02:00[Africa/Harare]
+  - Build date: 2021-08-14T16:46:33.559003800+02:00[Africa/Harare]
 
 The library service
 
@@ -85,12 +85,12 @@ public class Example {
     defaultClient.setBasePath("http://localhost");
 
     NotificationApi apiInstance = new NotificationApi(defaultClient);
-    NotificationSendEmailNotificationRequest notificationSendEmailNotificationRequest = new NotificationSendEmailNotificationRequest(); // NotificationSendEmailNotificationRequest | The input body required by this request
+    NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest = new NotificationSendDirectEmailNotificationRequest(); // NotificationSendDirectEmailNotificationRequest | The input body required by this request
     try {
-      NotificationSendEmailNotificationResponse result = apiInstance.sendEmailNotification(notificationSendEmailNotificationRequest);
+      NotificationSendDirectEmailNotificationResponse result = apiInstance.sendDirectEmailNotification(notificationSendDirectEmailNotificationRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling NotificationApi#sendEmailNotification");
+      System.err.println("Exception when calling NotificationApi#sendDirectEmailNotification");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -107,15 +107,23 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*NotificationApi* | [**sendDirectEmailNotification**](docs/NotificationApi.md#sendDirectEmailNotification) | **POST** /notification/sendDirectEmailNotification | Endpoint for sending a direct email notification
 *NotificationApi* | [**sendEmailNotification**](docs/NotificationApi.md#sendEmailNotification) | **POST** /notification/sendEmailNotification | Endpoint for sending an email notification
+*PaymentApi* | [**getItemsPayments**](docs/PaymentApi.md#getItemsPayments) | **POST** /payment/getItems | Endpoint for Get Items use case
+*PaymentApi* | [**getStatus**](docs/PaymentApi.md#getStatus) | **POST** /payment/getStatus | Endpoint for Get Status use case
+*PaymentApi* | [**submitOrder**](docs/PaymentApi.md#submitOrder) | **POST** /payment/submitOrder | Endpoint for the Submit Order use case
 *PaymentApi* | [**updateOrder**](docs/PaymentApi.md#updateOrder) | **POST** /payment/updateOrder | Endpoint for the Update Order use case
 *ShoppingApi* | [**addShopper**](docs/ShoppingApi.md#addShopper) | **POST** /shopping/addShopper | Endpoint for adding shopper to shopper list
 *ShoppingApi* | [**getItems**](docs/ShoppingApi.md#getItems) | **POST** /shopping/getItems | Endpoint for Get Items use case
+*ShoppingApi* | [**getQueue**](docs/ShoppingApi.md#getQueue) | **POST** /shopping/getQueue | Endpoint for getting the order queue of a shop
 *ShoppingApi* | [**getShoppers**](docs/ShoppingApi.md#getShoppers) | **POST** /shopping/getShoppers | Endpoint for Get Shoppers use case
 *ShoppingApi* | [**getStores**](docs/ShoppingApi.md#getStores) | **POST** /shopping/getStores | Endpoint for Get Stores use case
+*ShoppingApi* | [**populateTables**](docs/ShoppingApi.md#populateTables) | **POST** /shopping/populateTables | Endpoint populating tables
 *ShoppingApi* | [**removeQueuedOrder**](docs/ShoppingApi.md#removeQueuedOrder) | **POST** /shopping/removeQueuedOrder | Endpoint for removing a queued order.
 *UserApi* | [**clearShoppingCart**](docs/UserApi.md#clearShoppingCart) | **POST** /user/clearShoppingCart | Endpoint for clearing a shopping cart
+*UserApi* | [**completePackagingOrder**](docs/UserApi.md#completePackagingOrder) | **POST** /user/completePackagingOrder | Endpoint for complete packaging order use case
 *UserApi* | [**getCurrentUser**](docs/UserApi.md#getCurrentUser) | **POST** /user/getCurrentUser | Endpoint for to get Current user
+*UserApi* | [**getNextQueued**](docs/UserApi.md#getNextQueued) | **POST** /shopping/getNextQueued | Endpoint for getting next queue
 *UserApi* | [**getShoppingCart**](docs/UserApi.md#getShoppingCart) | **POST** /user/getShoppingCart | Endpoint for getting a shopping cart
 *UserApi* | [**loginUser**](docs/UserApi.md#loginUser) | **POST** /user/loginUser | Endpoint for setting a shopping cart
 *UserApi* | [**makeGroceryList**](docs/UserApi.md#makeGroceryList) | **POST** /user/makeGroceryList | Endpoint for making a grocery list
@@ -124,8 +132,10 @@ Class | Method | HTTP request | Description
 *UserApi* | [**registerDriver**](docs/UserApi.md#registerDriver) | **POST** /user/registerDriver | Endpoint for setting a registering driver
 *UserApi* | [**registerShopper**](docs/UserApi.md#registerShopper) | **POST** /user/registerShopper | Endpoint for setting a registering shopper
 *UserApi* | [**resetPassword**](docs/UserApi.md#resetPassword) | **POST** /user/resetPassword | Endpoint for reseting password
+*UserApi* | [**scanItem**](docs/UserApi.md#scanItem) | **POST** /user/scanItem | Endpoint for scanning an item
 *UserApi* | [**setCart**](docs/UserApi.md#setCart) | **POST** /user/setCart | Endpoint for setting a shopping cart
 *UserApi* | [**setCurrentLocation**](docs/UserApi.md#setCurrentLocation) | **POST** /user/setCurrentLocation | Endpoint for setting Current Location Driver
+*UserApi* | [**updateShopperShift**](docs/UserApi.md#updateShopperShift) | **POST** /user/updateShopperShift | Endpoint for updating shopper shift
 *UserApi* | [**verifyAccount**](docs/UserApi.md#verifyAccount) | **POST** /user/verifyAccount | Endpoint for verifying a user account
 
 
@@ -134,11 +144,18 @@ Class | Method | HTTP request | Description
  - [AdminObject](docs/AdminObject.md)
  - [CustomerObject](docs/CustomerObject.md)
  - [DriverObject](docs/DriverObject.md)
- - [GroceryListObject](docs/GroceryListObject.md)
  - [ItemObject](docs/ItemObject.md)
+ - [NotificationSendDirectEmailNotificationRequest](docs/NotificationSendDirectEmailNotificationRequest.md)
+ - [NotificationSendDirectEmailNotificationResponse](docs/NotificationSendDirectEmailNotificationResponse.md)
  - [NotificationSendEmailNotificationRequest](docs/NotificationSendEmailNotificationRequest.md)
  - [NotificationSendEmailNotificationResponse](docs/NotificationSendEmailNotificationResponse.md)
  - [OrderObject](docs/OrderObject.md)
+ - [PaymentGetItemsRequest](docs/PaymentGetItemsRequest.md)
+ - [PaymentGetItemsResponse](docs/PaymentGetItemsResponse.md)
+ - [PaymentGetStatusRequest](docs/PaymentGetStatusRequest.md)
+ - [PaymentGetStatusResponse](docs/PaymentGetStatusResponse.md)
+ - [PaymentSubmitOrderRequest](docs/PaymentSubmitOrderRequest.md)
+ - [PaymentSubmitOrderResponse](docs/PaymentSubmitOrderResponse.md)
  - [PaymentUpdateOrderRequest](docs/PaymentUpdateOrderRequest.md)
  - [PaymentUpdateOrderResponse](docs/PaymentUpdateOrderResponse.md)
  - [ShopperObject](docs/ShopperObject.md)
@@ -146,6 +163,10 @@ Class | Method | HTTP request | Description
  - [ShoppingAddShopperResponse](docs/ShoppingAddShopperResponse.md)
  - [ShoppingGetItemsRequest](docs/ShoppingGetItemsRequest.md)
  - [ShoppingGetItemsResponse](docs/ShoppingGetItemsResponse.md)
+ - [ShoppingGetNextQueuedRequest](docs/ShoppingGetNextQueuedRequest.md)
+ - [ShoppingGetNextQueuedResponse](docs/ShoppingGetNextQueuedResponse.md)
+ - [ShoppingGetQueueRequest](docs/ShoppingGetQueueRequest.md)
+ - [ShoppingGetQueueResponse](docs/ShoppingGetQueueResponse.md)
  - [ShoppingGetShoppersRequest](docs/ShoppingGetShoppersRequest.md)
  - [ShoppingGetShoppersResponse](docs/ShoppingGetShoppersResponse.md)
  - [ShoppingGetStoresResponse](docs/ShoppingGetStoresResponse.md)
@@ -156,6 +177,8 @@ Class | Method | HTTP request | Description
  - [UserAccountVerifyResponse](docs/UserAccountVerifyResponse.md)
  - [UserClearShoppingCartRequest](docs/UserClearShoppingCartRequest.md)
  - [UserClearShoppingCartResponse](docs/UserClearShoppingCartResponse.md)
+ - [UserCompletePackagingOrderRequest](docs/UserCompletePackagingOrderRequest.md)
+ - [UserCompletePackagingOrderResponse](docs/UserCompletePackagingOrderResponse.md)
  - [UserGetCurrentUserRequest](docs/UserGetCurrentUserRequest.md)
  - [UserGetCurrentUserResponse](docs/UserGetCurrentUserResponse.md)
  - [UserGetShoppingCartRequest](docs/UserGetShoppingCartRequest.md)
@@ -164,7 +187,6 @@ Class | Method | HTTP request | Description
  - [UserLoginResponse](docs/UserLoginResponse.md)
  - [UserMakeGroceryListRequest](docs/UserMakeGroceryListRequest.md)
  - [UserMakeGroceryListResponse](docs/UserMakeGroceryListResponse.md)
- - [UserObject](docs/UserObject.md)
  - [UserRegisterAdminRequest](docs/UserRegisterAdminRequest.md)
  - [UserRegisterAdminResponse](docs/UserRegisterAdminResponse.md)
  - [UserRegisterCustomerRequest](docs/UserRegisterCustomerRequest.md)
@@ -175,10 +197,14 @@ Class | Method | HTTP request | Description
  - [UserRegisterShopperResponse](docs/UserRegisterShopperResponse.md)
  - [UserResetPasswordRequest](docs/UserResetPasswordRequest.md)
  - [UserResetPasswordResponse](docs/UserResetPasswordResponse.md)
+ - [UserScanItemRequest](docs/UserScanItemRequest.md)
+ - [UserScanItemResponse](docs/UserScanItemResponse.md)
  - [UserSetCartRequest](docs/UserSetCartRequest.md)
  - [UserSetCartResponse](docs/UserSetCartResponse.md)
  - [UserSetCurrentLocationRequest](docs/UserSetCurrentLocationRequest.md)
  - [UserSetCurrentLocationResponse](docs/UserSetCurrentLocationResponse.md)
+ - [UserUpdateShopperShiftRequest](docs/UserUpdateShopperShiftRequest.md)
+ - [UserUpdateShopperShiftResponse](docs/UserUpdateShopperShiftResponse.md)
 
 
 ## Documentation for Authorization

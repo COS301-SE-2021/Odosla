@@ -29,7 +29,7 @@ import java.math.BigDecimal;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-13T14:22:29.077005400+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
 public class UserSetCurrentLocationRequest {
   public static final String SERIALIZED_NAME_DRIVER_I_D = "driverID";
   @SerializedName(SERIALIZED_NAME_DRIVER_I_D)

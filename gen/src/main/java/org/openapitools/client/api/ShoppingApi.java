@@ -31,6 +31,8 @@ import org.openapitools.client.model.ShoppingAddShopperRequest;
 import org.openapitools.client.model.ShoppingAddShopperResponse;
 import org.openapitools.client.model.ShoppingGetItemsRequest;
 import org.openapitools.client.model.ShoppingGetItemsResponse;
+import org.openapitools.client.model.ShoppingGetQueueRequest;
+import org.openapitools.client.model.ShoppingGetQueueResponse;
 import org.openapitools.client.model.ShoppingGetShoppersRequest;
 import org.openapitools.client.model.ShoppingGetShoppersResponse;
 import org.openapitools.client.model.ShoppingGetStoresResponse;
@@ -285,6 +287,117 @@ public class ShoppingApi {
         return localVarCall;
     }
     /**
+     * Build call for getQueue
+     * @param shoppingGetQueueRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getQueueCall(ShoppingGetQueueRequest shoppingGetQueueRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = shoppingGetQueueRequest;
+
+        // create path and map variables
+        String localVarPath = "/shopping/getQueue";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getQueueValidateBeforeCall(ShoppingGetQueueRequest shoppingGetQueueRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'shoppingGetQueueRequest' is set
+        if (shoppingGetQueueRequest == null) {
+            throw new ApiException("Missing the required parameter 'shoppingGetQueueRequest' when calling getQueue(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getQueueCall(shoppingGetQueueRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for getting the order queue of a shop
+     * Refer to summary
+     * @param shoppingGetQueueRequest The input body required by this request (required)
+     * @return ShoppingGetQueueResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ShoppingGetQueueResponse getQueue(ShoppingGetQueueRequest shoppingGetQueueRequest) throws ApiException {
+        ApiResponse<ShoppingGetQueueResponse> localVarResp = getQueueWithHttpInfo(shoppingGetQueueRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for getting the order queue of a shop
+     * Refer to summary
+     * @param shoppingGetQueueRequest The input body required by this request (required)
+     * @return ApiResponse&lt;ShoppingGetQueueResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<ShoppingGetQueueResponse> getQueueWithHttpInfo(ShoppingGetQueueRequest shoppingGetQueueRequest) throws ApiException {
+        okhttp3.Call localVarCall = getQueueValidateBeforeCall(shoppingGetQueueRequest, null);
+        Type localVarReturnType = new TypeToken<ShoppingGetQueueResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for getting the order queue of a shop (asynchronously)
+     * Refer to summary
+     * @param shoppingGetQueueRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns upon success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getQueueAsync(ShoppingGetQueueRequest shoppingGetQueueRequest, final ApiCallback<ShoppingGetQueueResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getQueueValidateBeforeCall(shoppingGetQueueRequest, _callback);
+        Type localVarReturnType = new TypeToken<ShoppingGetQueueResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
      * Build call for getShoppers
      * @param shoppingGetShoppersRequest The input body required by this request (required)
      * @param _callback Callback for upload/download progress
@@ -503,6 +616,117 @@ public class ShoppingApi {
 
         okhttp3.Call localVarCall = getStoresValidateBeforeCall(body, _callback);
         Type localVarReturnType = new TypeToken<ShoppingGetStoresResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for populateTables
+     * @param body The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call populateTablesCall(Object body, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = body;
+
+        // create path and map variables
+        String localVarPath = "/shopping/populateTables";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call populateTablesValidateBeforeCall(Object body, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'body' is set
+        if (body == null) {
+            throw new ApiException("Missing the required parameter 'body' when calling populateTables(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = populateTablesCall(body, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint populating tables
+     * Refer to summary
+     * @param body The input body required by this request (required)
+     * @return Object
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns success </td><td>  -  </td></tr>
+     </table>
+     */
+    public Object populateTables(Object body) throws ApiException {
+        ApiResponse<Object> localVarResp = populateTablesWithHttpInfo(body);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint populating tables
+     * Refer to summary
+     * @param body The input body required by this request (required)
+     * @return ApiResponse&lt;Object&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns success </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<Object> populateTablesWithHttpInfo(Object body) throws ApiException {
+        okhttp3.Call localVarCall = populateTablesValidateBeforeCall(body, null);
+        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint populating tables (asynchronously)
+     * Refer to summary
+     * @param body The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns success </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call populateTablesAsync(Object body, final ApiCallback<Object> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = populateTablesValidateBeforeCall(body, _callback);
+        Type localVarReturnType = new TypeToken<Object>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }

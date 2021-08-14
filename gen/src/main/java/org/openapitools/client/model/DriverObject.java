@@ -26,9 +26,10 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
- * DriverObject
+ * Generic schema for a Driver
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-13T14:22:29.077005400+02:00[Africa/Harare]")
+@ApiModel(description = "Generic schema for a Driver")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
 public class DriverObject {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)

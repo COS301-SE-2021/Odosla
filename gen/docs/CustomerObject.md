@@ -2,6 +2,7 @@
 
 # CustomerObject
 
+Generic schema for a Customer
 ## Properties
 
 Name | Type | Description | Notes
@@ -17,11 +18,8 @@ Name | Type | Description | Notes
 **resetExpiration** | **String** |  |  [optional]
 **accountType** | **String** |  |  [optional]
 **customerID** | **String** |  |  [optional]
-**address** | **String** |  |  [optional]
-**groceryLists** | [**List&lt;GroceryListObject&gt;**](GroceryListObject.md) |  |  [optional]
-**shoppingCart** | [**List&lt;ItemObject&gt;**](ItemObject.md) |  |  [optional]
-**preference** | **String** |  |  [optional]
-**wallet** | **String** |  |  [optional]
+**rating** | **BigDecimal** |  |  [optional]
+**isActive** | **Boolean** |  |  [optional]
 
 
 

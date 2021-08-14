@@ -14,6 +14,12 @@
 package org.openapitools.client.api;
 
 import org.openapitools.client.ApiException;
+import org.openapitools.client.model.PaymentGetItemsRequest;
+import org.openapitools.client.model.PaymentGetItemsResponse;
+import org.openapitools.client.model.PaymentGetStatusRequest;
+import org.openapitools.client.model.PaymentGetStatusResponse;
+import org.openapitools.client.model.PaymentSubmitOrderRequest;
+import org.openapitools.client.model.PaymentSubmitOrderResponse;
 import org.openapitools.client.model.PaymentUpdateOrderRequest;
 import org.openapitools.client.model.PaymentUpdateOrderResponse;
 import org.junit.Test;
@@ -32,6 +38,54 @@ public class PaymentApiTest {
 
     private final PaymentApi api = new PaymentApi();
 
+    
+    /**
+     * Endpoint for Get Items use case
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void getItemsPaymentsTest() throws ApiException {
+        PaymentGetItemsRequest paymentGetItemsRequest = null;
+        PaymentGetItemsResponse response = api.getItemsPayments(paymentGetItemsRequest);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Endpoint for Get Status use case
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void getStatusTest() throws ApiException {
+        PaymentGetStatusRequest paymentGetStatusRequest = null;
+        PaymentGetStatusResponse response = api.getStatus(paymentGetStatusRequest);
+
+        // TODO: test validations
+    }
+    
+    /**
+     * Endpoint for the Submit Order use case
+     *
+     * Refer to summary
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void submitOrderTest() throws ApiException {
+        PaymentSubmitOrderRequest paymentSubmitOrderRequest = null;
+        PaymentSubmitOrderResponse response = api.submitOrder(paymentSubmitOrderRequest);
+
+        // TODO: test validations
+    }
     
     /**
      * Endpoint for the Update Order use case

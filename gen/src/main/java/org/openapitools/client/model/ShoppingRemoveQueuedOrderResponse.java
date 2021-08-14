@@ -28,7 +28,7 @@ import java.io.IOException;
  * this object is output
  */
 @ApiModel(description = "this object is output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-13T14:22:29.077005400+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
 public class ShoppingRemoveQueuedOrderResponse {
   public static final String SERIALIZED_NAME_IS_REMOVED = "isRemoved";
   @SerializedName(SERIALIZED_NAME_IS_REMOVED)

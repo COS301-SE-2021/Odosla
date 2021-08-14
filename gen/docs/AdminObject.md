@@ -2,6 +2,7 @@
 
 # AdminObject
 
+Generic schema for a Admin
 ## Properties
 
 Name | Type | Description | Notes
@@ -17,8 +18,6 @@ Name | Type | Description | Notes
 **resetExpiration** | **String** |  |  [optional]
 **accountType** | **String** |  |  [optional]
 **adminID** | **String** |  |  [optional]
-**rating** | **BigDecimal** |  |  [optional]
-**isActive** | **Boolean** |  |  [optional]
 
 
 

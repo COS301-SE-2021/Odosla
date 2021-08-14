@@ -105,4 +105,28 @@ public class ItemObjectTest {
         // TODO: test imageUrl
     }
 
+    /**
+     * Test the property 'brand'
+     */
+    @Test
+    public void brandTest() {
+        // TODO: test brand
+    }
+
+    /**
+     * Test the property 'size'
+     */
+    @Test
+    public void sizeTest() {
+        // TODO: test size
+    }
+
+    /**
+     * Test the property 'itemType'
+     */
+    @Test
+    public void itemTypeTest() {
+        // TODO: test itemType
+    }
+
 }

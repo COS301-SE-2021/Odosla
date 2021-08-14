@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -15,13 +16,14 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object is expected as input")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 public class UserSetCartRequest   {
   @JsonProperty("customerID")
   private String customerID = null;
 
   @JsonProperty("barcodes")
-  private List barcodes = null;
+  @Valid
+  private List<String> barcodes = null;
 
   public UserSetCartRequest customerID(String customerID) {
     this.customerID = customerID;
@@ -42,8 +44,16 @@ public class UserSetCartRequest   {
     this.customerID = customerID;
   }
 
-  public UserSetCartRequest barcodes(List barcodes) {
+  public UserSetCartRequest barcodes(List<String> barcodes) {
     this.barcodes = barcodes;
+    return this;
+  }
+
+  public UserSetCartRequest addBarcodesItem(String barcodesItem) {
+    if (this.barcodes == null) {
+      this.barcodes = new ArrayList<String>();
+    }
+    this.barcodes.add(barcodesItem);
     return this;
   }
 
@@ -53,12 +63,11 @@ public class UserSetCartRequest   {
   **/
   @ApiModelProperty(value = "")
   
-    @Valid
-    public List getBarcodes() {
+    public List<String> getBarcodes() {
     return barcodes;
   }
 
-  public void setBarcodes(List barcodes) {
+  public void setBarcodes(List<String> barcodes) {
     this.barcodes = barcodes;
   }
 

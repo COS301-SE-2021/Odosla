@@ -22,7 +22,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.math.BigDecimal;
-import org.openapitools.client.model.AdminObjectAllOf;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,6 +39,86 @@ public class AdminObjectTest {
     @Test
     public void testAdminObject() {
         // TODO: test AdminObject
+    }
+
+    /**
+     * Test the property 'name'
+     */
+    @Test
+    public void nameTest() {
+        // TODO: test name
+    }
+
+    /**
+     * Test the property 'surname'
+     */
+    @Test
+    public void surnameTest() {
+        // TODO: test surname
+    }
+
+    /**
+     * Test the property 'email'
+     */
+    @Test
+    public void emailTest() {
+        // TODO: test email
+    }
+
+    /**
+     * Test the property 'phoneNumber'
+     */
+    @Test
+    public void phoneNumberTest() {
+        // TODO: test phoneNumber
+    }
+
+    /**
+     * Test the property 'password'
+     */
+    @Test
+    public void passwordTest() {
+        // TODO: test password
+    }
+
+    /**
+     * Test the property 'activationDate'
+     */
+    @Test
+    public void activationDateTest() {
+        // TODO: test activationDate
+    }
+
+    /**
+     * Test the property 'activationCode'
+     */
+    @Test
+    public void activationCodeTest() {
+        // TODO: test activationCode
+    }
+
+    /**
+     * Test the property 'resetCode'
+     */
+    @Test
+    public void resetCodeTest() {
+        // TODO: test resetCode
+    }
+
+    /**
+     * Test the property 'resetExpiration'
+     */
+    @Test
+    public void resetExpirationTest() {
+        // TODO: test resetExpiration
+    }
+
+    /**
+     * Test the property 'accountType'
+     */
+    @Test
+    public void accountTypeTest() {
+        // TODO: test accountType
     }
 
     /**

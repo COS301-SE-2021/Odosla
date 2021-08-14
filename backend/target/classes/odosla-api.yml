@@ -14,6 +14,28 @@ tags:
 
 paths:
 
+  /shopping/populateTables:
+    post:
+      summary: Endpoint populating tables
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: populateTables
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PopulateTablesRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PopulateTablesResponse"
+
   /shopping/getItems:
     post:
       summary: Endpoint for Get Items use case
@@ -547,6 +569,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetNextQueuedResponse"
 
+  /shopping/getQueue:
+    post:
+      summary: Endpoint for getting the order queue of a shop
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getQueue
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetQueueRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetQueueResponse"
+
+
   /payment/getStatus:
     post:
       summary: Endpoint for Get Status use case
@@ -575,7 +620,7 @@ paths:
       tags:
         - "Payment"
       description: Refer to summary
-      operationId: getItems
+      operationId: getItemsPayments
       requestBody:
         description: The input body required by this request
         required: true
@@ -734,20 +779,36 @@ components:
       description: "Generic schema for a shopper"
       type: object
       properties:
-        id:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        storeID:
-          type: string
         name:
           type: string
         surname:
           type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        shopperID:
+          type: string
+        storeID:
+          type: string
         ordersCompleted:
           type: integer
+        onShift:
+          type: boolean
+        isActive:
+          type: boolean
 
     shopping_GetShoppersRequest:
       description: This object is expected as input
@@ -789,6 +850,8 @@ components:
           type: integer
         closingTime:
           type: integer
+        imageUrl:
+          type: string
 
     shopping_GetStoresRequest:
       description: This object is expected as input
@@ -968,6 +1031,8 @@ components:
           description: generated token used to identify the caller of the endpoint
         barcodes:
           type: array
+          items:
+            type: string
 
     user_SetCartResponse:
       description: This object is returned as output
@@ -1031,6 +1096,8 @@ components:
           description: generated token used to identify the caller of the endpoint
         barcodes:
           type: array
+          items:
+            type: string
         name:
           type: string
 
@@ -1063,6 +1130,45 @@ components:
         success:
           type: boolean
         resetCode:
+          type: string
+
+    GroceryListObject:
+      description: "Generic schema for a GroceryList"
+      type: object
+      properties:
+        groceryListID:
+          type: string
+        name:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemObject'
+
+
+    UserObject:
+      description: "Generic schema for a User"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
           type: string
 
     user_UpdateShopperShiftRequest:
@@ -1142,14 +1248,22 @@ components:
           type: string
         customerID:
           type: string
-        rating:
-          type: number
-        isActive:
-          type: boolean
+        address:
+          type: string
+        groceryLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+        shoppingCart:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        preference:
+          type: object
+        wallet:
+          type: object
 
     AdminObject:
-      description: "Generic schema for a Admin"
-      type: object
       properties:
         name:
           type: string
@@ -1173,10 +1287,6 @@ components:
           type: string
         adminID:
           type: string
-        rating:
-          type: number
-        isActive:
-          type: boolean
 
     user_LoginRequest:
       description: This object is expected as input
@@ -1378,6 +1488,7 @@ components:
             - $ref: '#/components/schemas/ShopperObject'
             - $ref: '#/components/schemas/AdminObject'
 
+
     user_ScanItemRequest:
       description: This object is expected as input
       type: object
@@ -1442,6 +1553,27 @@ components:
         newCurrentOrder:
           type: object
 
+    shopping_GetQueueRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetQueueResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        queueOfOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
+
     payment_GetStatusRequest:
       description: This object is expected as input
       type: object
@@ -1483,3 +1615,11 @@ components:
           type: string
         timestamp:
           type: string
+
+    shopping_PopulateTablesRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_PopulateTablesResponse:
+      description: This object is expected as output
+      type: object

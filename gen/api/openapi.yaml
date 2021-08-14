@@ -11,6 +11,29 @@ tags:
 - name: User
 - name: Notification
 paths:
+  /shopping/populateTables:
+    post:
+      description: Refer to summary
+      operationId: populateTables
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shopping_PopulateTablesRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shopping_PopulateTablesResponse'
+          description: Returns success
+      summary: Endpoint populating tables
+      tags:
+      - Shopping
+      x-contentType: application/json
+      x-accepts: application/json
   /shopping/getItems:
     post:
       description: Refer to summary
@@ -149,6 +172,29 @@ paths:
       - Payment
       x-contentType: application/json
       x-accepts: application/json
+  /payment/submitOrder:
+    post:
+      description: Refer to summary
+      operationId: submitOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment_SubmitOrderRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_SubmitOrderResponse'
+          description: Returns submitted order upon success
+      summary: Endpoint for the Submit Order use case
+      tags:
+      - Payment
+      x-contentType: application/json
+      x-accepts: application/json
   /notification/sendEmailNotification:
     post:
       description: Refer to summary
@@ -166,8 +212,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/notification_SendEmailNotificationResponse'
-          description: Returns updated order upon success
+          description: Returns whether the email was sent
       summary: Endpoint for sending an email notification
+      tags:
+      - notification
+      x-contentType: application/json
+      x-accepts: application/json
+  /notification/sendDirectEmailNotification:
+    post:
+      description: Refer to summary
+      operationId: sendDirectEmailNotification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/notification_SendDirectEmailNotificationRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notification_SendDirectEmailNotificationResponse'
+          description: Returns whether the email was sent
+      summary: Endpoint for sending a direct email notification
       tags:
       - notification
       x-contentType: application/json
@@ -471,19 +540,183 @@ paths:
       - User
       x-contentType: application/json
       x-accepts: application/json
+  /user/updateShopperShift:
+    post:
+      description: Refer to summary
+      operationId: updateShopperShift
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_UpdateShopperShiftRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_UpdateShopperShiftResponse'
+          description: Returns upon success
+      summary: Endpoint for updating shopper shift
+      tags:
+      - User
+      x-contentType: application/json
+      x-accepts: application/json
+  /shopping/getNextQueued:
+    post:
+      description: Refer to summary
+      operationId: getNextQueued
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shopping_GetNextQueuedRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shopping_GetNextQueuedResponse'
+          description: Returns upon success
+      summary: Endpoint for getting next queue
+      tags:
+      - User
+      x-contentType: application/json
+      x-accepts: application/json
+  /shopping/getQueue:
+    post:
+      description: Refer to summary
+      operationId: getQueue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shopping_GetQueueRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shopping_GetQueueResponse'
+          description: Returns upon success
+      summary: Endpoint for getting the order queue of a shop
+      tags:
+      - Shopping
+      x-contentType: application/json
+      x-accepts: application/json
+  /payment/getStatus:
+    post:
+      description: Refer to summary
+      operationId: getStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment_GetStatusRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_GetStatusResponse'
+          description: Returns status upon success
+      summary: Endpoint for Get Status use case
+      tags:
+      - Payment
+      x-contentType: application/json
+      x-accepts: application/json
+  /payment/getItems:
+    post:
+      description: Refer to summary
+      operationId: getItemsPayments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment_GetItemsRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_GetItemsResponse'
+          description: Returns status upon success
+      summary: Endpoint for Get Items use case
+      tags:
+      - Payment
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/scanItem:
+    post:
+      description: Refer to summary
+      operationId: scanItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_ScanItemRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_ScanItemResponse'
+          description: Returns whether the email was sent
+      summary: Endpoint for scanning an item
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/completePackagingOrder:
+    post:
+      description: Refer to summary
+      operationId: completePackagingOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_CompletePackagingOrderRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_CompletePackagingOrderResponse'
+          description: Returns whether the email was sent
+      summary: Endpoint for complete packaging order use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
 components:
   schemas:
     ItemObject:
       description: Generic schema for an item
       example:
+        itemType: itemType
         quantity: 6
         productId: productId
+        size: size
         price: 0.8008281904610115
         imageUrl: imageUrl
         name: name
         description: description
         storeId: storeId
         barcode: barcode
+        brand: brand
       properties:
         productId:
           type: string
@@ -501,6 +734,12 @@ components:
           type: string
         imageUrl:
           type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
       type: object
     shopping_GetItemsRequest:
       description: This object is expected as input
@@ -516,22 +755,28 @@ components:
       example:
         errorMessage: errorMessage
         items:
-        - quantity: 6
+        - itemType: itemType
+          quantity: 6
           productId: productId
+          size: size
           price: 0.8008281904610115
           imageUrl: imageUrl
           name: name
           description: description
           storeId: storeId
           barcode: barcode
-        - quantity: 6
+          brand: brand
+        - itemType: itemType
+          quantity: 6
           productId: productId
+          size: size
           price: 0.8008281904610115
           imageUrl: imageUrl
           name: name
           description: description
           storeId: storeId
           barcode: barcode
+          brand: brand
       properties:
         errorMessage:
           description: Will contain a descriptive error message if response code is
@@ -590,28 +835,52 @@ components:
     ShopperObject:
       description: Generic schema for a shopper
       example:
+        resetCode: resetCode
+        shopperID: shopperID
+        accountType: accountType
+        onShift: true
+        storeID: storeID
+        isActive: true
+        resetExpiration: resetExpiration
         password: password
         ordersCompleted: 0
+        phoneNumber: phoneNumber
         surname: surname
         name: name
-        id: id
-        storeID: storeID
-        username: username
+        activationCode: activationCode
+        activationDate: activationDate
+        email: email
       properties:
-        id:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-        storeID:
-          type: string
         name:
           type: string
         surname:
           type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        shopperID:
+          type: string
+        storeID:
+          type: string
         ordersCompleted:
           type: integer
+        onShift:
+          type: boolean
+        isActive:
+          type: boolean
       type: object
     shopping_GetShoppersRequest:
       description: This object is expected as input
@@ -627,20 +896,36 @@ components:
       example:
         errorMessage: errorMessage
         shoppers:
-        - password: password
+        - resetCode: resetCode
+          shopperID: shopperID
+          accountType: accountType
+          onShift: true
+          storeID: storeID
+          isActive: true
+          resetExpiration: resetExpiration
+          password: password
           ordersCompleted: 0
+          phoneNumber: phoneNumber
           surname: surname
           name: name
-          id: id
+          activationCode: activationCode
+          activationDate: activationDate
+          email: email
+        - resetCode: resetCode
+          shopperID: shopperID
+          accountType: accountType
+          onShift: true
           storeID: storeID
-          username: username
-        - password: password
+          isActive: true
+          resetExpiration: resetExpiration
+          password: password
           ordersCompleted: 0
+          phoneNumber: phoneNumber
           surname: surname
           name: name
-          id: id
-          storeID: storeID
-          username: username
+          activationCode: activationCode
+          activationDate: activationDate
+          email: email
       properties:
         errorMessage:
           description: Will contain a descriptive error message if response code is
@@ -712,6 +997,42 @@ components:
       type: object
     OrderObject:
       description: Generic schema for an Order
+      example:
+        orderId: orderId
+        totalPrice: 0.8008281904610115
+        shopperId: shopperId
+        discount: 6.027456183070403
+        storeId: storeId
+        userId: userId
+        deliveryAddress: deliveryAddress
+        storeAddress: storeAddress
+        processDate: processDate
+        items:
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        requiresPharmacy: true
+        createDate: createDate
+        status: status
       properties:
         orderId:
           type: string
@@ -781,6 +1102,48 @@ components:
         order:
           type: object
       type: object
+    payment_SubmitOrderRequest:
+      description: This object is expected as input
+      properties:
+        userId:
+          description: generated token used to identify the caller of the endpoint
+          type: string
+        listOfItems:
+          items:
+            $ref: '#/components/schemas/ItemObject'
+          type: array
+        discount:
+          type: number
+        storeId:
+          type: string
+        orderType:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        deliveryAddress:
+          type: string
+      type: object
+    payment_SubmitOrderResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        orderStatus: orderStatus
+        message: message
+        timestamp: timestamp
+      properties:
+        orderStatus:
+          type: string
+        message:
+          description: Will contain a descriptive error message if response code is
+            not 200, else will be empty
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+      type: object
     notification_SendEmailNotificationRequest:
       description: This object is expected as input
       properties:
@@ -795,6 +1158,31 @@ components:
           type: object
       type: object
     notification_SendEmailNotificationResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        responseMessage: responseMessage
+      properties:
+        responseMessage:
+          description: Will contain a descriptive error message if response code is
+            not 200, else will be empty
+          type: string
+        success:
+          type: boolean
+      type: object
+    notification_SendDirectEmailNotificationRequest:
+      description: This object is expected as input
+      properties:
+        message:
+          description: This is the message that will be sent as a notification
+          type: string
+        properties:
+          additionalProperties:
+            type: string
+          description: Hash map that needs to contain the Subject and the email
+          type: object
+      type: object
+    notification_SendDirectEmailNotificationResponse:
       description: This object is expected as output
       example:
         success: true
@@ -866,22 +1254,28 @@ components:
         success: true
         message: message
         items:
-        - quantity: 6
+        - itemType: itemType
+          quantity: 6
           productId: productId
+          size: size
           price: 0.8008281904610115
           imageUrl: imageUrl
           name: name
           description: description
           storeId: storeId
           barcode: barcode
-        - quantity: 6
+          brand: brand
+        - itemType: itemType
+          quantity: 6
           productId: productId
+          size: size
           price: 0.8008281904610115
           imageUrl: imageUrl
           name: name
           description: description
           storeId: storeId
           barcode: barcode
+          brand: brand
       properties:
         message:
           type: string
@@ -941,43 +1335,30 @@ components:
         resetCode:
           type: string
       type: object
-    GroceryListObject:
-      description: Generic schema for a GroceryList
+    user_UpdateShopperShiftRequest:
+      description: This object is expected as input
       properties:
-        groceryListID:
+        shopperID:
           type: string
-        name:
-          type: string
-        items:
-          items:
-            $ref: '#/components/schemas/ItemObject'
-          type: array
+        onShift:
+          type: boolean
       type: object
-    UserObject:
-      description: Generic schema for a User
+    user_UpdateShopperShiftResponse:
+      description: This object is returned as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
       properties:
-        name:
+        success:
+          type: boolean
+        timestamp:
           type: string
-        surname:
-          type: string
-        email:
-          type: string
-        phoneNumber:
-          type: string
-        password:
-          type: string
-        activationDate:
-          type: string
-        activationCode:
-          type: string
-        resetCode:
-          type: string
-        resetExpiration:
-          type: string
-        accountType:
+        message:
           type: string
       type: object
     DriverObject:
+      description: Generic schema for a Driver
       properties:
         name:
           type: string
@@ -1007,6 +1388,7 @@ components:
           type: boolean
       type: object
     CustomerObject:
+      description: Generic schema for a Customer
       properties:
         name:
           type: string
@@ -1030,21 +1412,13 @@ components:
           type: string
         customerID:
           type: string
-        address:
-          type: string
-        groceryLists:
-          items:
-            $ref: '#/components/schemas/GroceryListObject'
-          type: array
-        shoppingCart:
-          items:
-            $ref: '#/components/schemas/ItemObject'
-          type: array
-        preference:
-          type: string
-        wallet:
-          type: string
+        rating:
+          type: number
+        isActive:
+          type: boolean
+      type: object
     AdminObject:
+      description: Generic schema for a Admin
       properties:
         name:
           type: string
@@ -1072,6 +1446,7 @@ components:
           type: number
         isActive:
           type: boolean
+      type: object
     user_LoginRequest:
       description: This object is expected as input
       properties:
@@ -1290,5 +1665,315 @@ components:
           - $ref: '#/components/schemas/CustomerObject'
           - $ref: '#/components/schemas/ShopperObject'
           - $ref: '#/components/schemas/AdminObject'
+      type: object
+    user_ScanItemRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+        barcode:
+          type: string
+      type: object
+    user_ScanItemResponse:
+      description: This object is returned as output
+      example:
+        date: date
+        success: true
+        message: message
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+      type: object
+    user_CompletePackagingOrderRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+        getNext:
+          type: boolean
+      type: object
+    user_CompletePackagingOrderResponse:
+      description: This object is returned as output
+      example:
+        date: date
+        success: true
+        message: message
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+      type: object
+    shopping_GetNextQueuedRequest:
+      description: This object is expected as input
+      properties:
+        storeID:
+          type: string
+      type: object
+    shopping_GetNextQueuedResponse:
+      description: This object is returned as output
+      example:
+        date: date
+        queueOfOrders:
+        - orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
+        - orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
+        newCurrentOrder: '{}'
+        success: true
+        message: message
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        date:
+          type: string
+        queueOfOrders:
+          items:
+            $ref: '#/components/schemas/OrderObject'
+          type: array
+        newCurrentOrder:
+          type: object
+      type: object
+    shopping_GetQueueRequest:
+      description: This object is expected as input
+      properties:
+        storeID:
+          type: string
+      type: object
+    shopping_GetQueueResponse:
+      description: This object is expected as output
+      example:
+        queueOfOrders:
+        - orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
+        - orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
+        response: true
+        message: message
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        queueOfOrders:
+          items:
+            $ref: '#/components/schemas/OrderObject'
+          type: array
+      type: object
+    payment_GetStatusRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+      type: object
+    payment_GetStatusResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        message: message
+        status: status
+        timestamp: timestamp
+      properties:
+        status:
+          type: string
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+      type: object
+    payment_GetItemsRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+      type: object
+    payment_GetItemsResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        message: message
+        items:
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        timestamp: timestamp
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/ItemObject'
+          type: array
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+      type: object
+    shopping_PopulateTablesRequest:
+      description: This object is expected as input
+      type: object
+    shopping_PopulateTablesResponse:
+      description: This object is expected as output
       type: object
 
