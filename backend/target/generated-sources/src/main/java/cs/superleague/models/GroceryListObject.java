@@ -13,44 +13,66 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object is returned as output
+ * Generic schema for a GroceryList
  */
-@ApiModel(description = "This object is returned as output")
+@ApiModel(description = "Generic schema for a GroceryList")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T15:42:59.236683100+02:00[Africa/Harare]")
-public class ShoppingGetItemsResponse   {
-  @JsonProperty("errorMessage")
-  private String errorMessage = null;
+public class GroceryListObject   {
+  @JsonProperty("groceryListID")
+  private String groceryListID = null;
+
+  @JsonProperty("name")
+  private String name = null;
 
   @JsonProperty("items")
   @Valid
   private List<ItemObject> items = null;
 
-  public ShoppingGetItemsResponse errorMessage(String errorMessage) {
-    this.errorMessage = errorMessage;
+  public GroceryListObject groceryListID(String groceryListID) {
+    this.groceryListID = groceryListID;
     return this;
   }
 
   /**
-   * Will contain a descriptive error message if response code is not 200, else will be empty
-   * @return errorMessage
+   * Get groceryListID
+   * @return groceryListID
   **/
-  @ApiModelProperty(value = "Will contain a descriptive error message if response code is not 200, else will be empty")
+  @ApiModelProperty(value = "")
   
-    public String getErrorMessage() {
-    return errorMessage;
+    public String getGroceryListID() {
+    return groceryListID;
   }
 
-  public void setErrorMessage(String errorMessage) {
-    this.errorMessage = errorMessage;
+  public void setGroceryListID(String groceryListID) {
+    this.groceryListID = groceryListID;
   }
 
-  public ShoppingGetItemsResponse items(List<ItemObject> items) {
+  public GroceryListObject name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   * @return name
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public GroceryListObject items(List<ItemObject> items) {
     this.items = items;
     return this;
   }
 
-  public ShoppingGetItemsResponse addItemsItem(ItemObject itemsItem) {
+  public GroceryListObject addItemsItem(ItemObject itemsItem) {
     if (this.items == null) {
       this.items = new ArrayList<ItemObject>();
     }
@@ -81,22 +103,24 @@ public class ShoppingGetItemsResponse   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ShoppingGetItemsResponse shoppingGetItemsResponse = (ShoppingGetItemsResponse) o;
-    return Objects.equals(this.errorMessage, shoppingGetItemsResponse.errorMessage) &&
-        Objects.equals(this.items, shoppingGetItemsResponse.items);
+    GroceryListObject groceryListObject = (GroceryListObject) o;
+    return Objects.equals(this.groceryListID, groceryListObject.groceryListID) &&
+        Objects.equals(this.name, groceryListObject.name) &&
+        Objects.equals(this.items, groceryListObject.items);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(errorMessage, items);
+    return Objects.hash(groceryListID, name, items);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ShoppingGetItemsResponse {\n");
+    sb.append("class GroceryListObject {\n");
     
-    sb.append("    errorMessage: ").append(toIndentedString(errorMessage)).append("\n");
+    sb.append("    groceryListID: ").append(toIndentedString(groceryListID)).append("\n");
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    items: ").append(toIndentedString(items)).append("\n");
     sb.append("}");
     return sb.toString();

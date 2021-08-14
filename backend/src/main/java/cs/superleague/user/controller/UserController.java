@@ -273,6 +273,9 @@ public class UserController implements UserApi {
     private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
 
         List<ItemObject> responseBody = new ArrayList<>();
+        if (responseItems == null){
+            return null;
+        }
 
         for(int i = 0; i < responseItems.size(); i++){
 
@@ -430,7 +433,6 @@ public class UserController implements UserApi {
         UserLoginResponse response=new UserLoginResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
-            UserType userType = null;
             if (body.getUserType().equals("DRIVER")) {
                 userType = UserType.DRIVER;
             } else if (body.getUserType().equals("CUSTOMER")) {
@@ -659,19 +661,18 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
-        JwtUtil jwtTokenUtil = new JwtUtil();
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!driverRepo.findById(customerID).isPresent()){
-            Customer customer = new Customer();
-            customer.setCustomerID(customerID);
-            customer.setAccountType(UserType.CUSTOMER);
-            System.out.println(jwtTokenUtil.generateJWTTokenCustomer(customer));
-            customerRepo.save(customer);
-
-        }
+//        JwtUtil jwtTokenUtil = new JwtUtil();
+//        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
+//        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
+//        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
+//
+//        if(!driverRepo.findById(customerID).isPresent()){
+//            Customer customer = new Customer();
+//            customer.setCustomerID(customerID);
+//            customer.setAccountType(UserType.CUSTOMER);
+//            customerRepo.save(customer);
+//
+//        }
 
         UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
         HttpStatus status = HttpStatus.OK;
@@ -699,14 +700,22 @@ public class UserController implements UserApi {
                 } else if (response.getUser().getAccountType() == UserType.SHOPPER){
                     Shopper shopper = (Shopper) response.getUser();
                     ShopperObject shopperObject = populateShopper(shopper);
+                    userGetCurrentUserResponse.setUser(shopperObject);
+                }else{
+                    userGetCurrentUserResponse.setMessage("User type is invalid.");
+                    userGetCurrentUserResponse.setSuccess(false);
                 }
 
             }catch(Exception e){
                 e.printStackTrace();
+                userGetCurrentUserResponse.setSuccess(false);
+                userGetCurrentUserResponse.setMessage(e.getMessage());
             }
 
         }catch(Exception e){
             e.printStackTrace();
+            userGetCurrentUserResponse.setSuccess(false);
+            userGetCurrentUserResponse.setMessage(e.getMessage());
         }
 
         return new ResponseEntity<>(userGetCurrentUserResponse, status);
@@ -769,10 +778,28 @@ public class UserController implements UserApi {
     }
     public ShopperObject populateShopper(Shopper shopper){
         ShopperObject shopperObject = new ShopperObject();
+        shopperObject.setName(shopper.getName());
+        shopperObject.setSurname(shopper.getSurname());
+        shopperObject.setEmail(shopper.getEmail());
+        shopperObject.setPhoneNumber(shopper.getPhoneNumber());
+        shopperObject.setPassword(shopper.getPassword());
+        shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
+        shopperObject.setActivationCode(shopper.getActivationCode());
+        shopperObject.setResetCode(shopper.getResetCode());
+        shopperObject.setResetExpiration(shopper.getResetExpiration());
+        shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
+        shopperObject.setShopperID(shopper.getShopperID().toString());
+        shopperObject.setStoreID(shopper.getStoreID().toString());
+        shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
+        shopperObject.setOnShift(shopper.getOnShift());
+        shopperObject.setIsActive(shopper.isActive());
         return shopperObject;
     }
     public List<GroceryListObject> populateGroceryList(List<GroceryList> groceryList){
         List<GroceryListObject> groceryListObjectList = new ArrayList<>();
+        if (groceryList == null){
+            return null;
+        }
         for (int i = 0; i < groceryList.size(); i++){
             GroceryListObject groceryListObject = new GroceryListObject();
             groceryListObject.setGroceryListID(String.valueOf(groceryList.get(i).getGroceryListID()));

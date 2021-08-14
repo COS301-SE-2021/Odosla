@@ -6,8 +6,310 @@
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="fixed main application.properties">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/controller/PaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/odosla-api.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/models/AdminObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/cs/superleague/models/AdminObject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/models/CustomerObject.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/cs/superleague/models/CustomerObject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/user/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/cs/superleague/user/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/odosla-api.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/ShoppingApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/ShoppingApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/AdminObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/AdminObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/DriverObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/DriverObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ItemObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ItemObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/OneOfuserGetCurrentUserResponseUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/OneOfuserGetCurrentUserResponseUser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/OrderObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/OrderObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/StoreObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/StoreObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserLoginRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserLoginRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserLoginResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserLoginResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.integration.JwtTokenTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.notification.CreateNotificationUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.notification.SendDirectEmailNotificationUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.notification.SendEmailNotificationUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.notification.integration.CreateNotificationIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.notification.integration.SendDirectEmailNotificationIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.notification.integration.SendEmailNotificationIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.CancelOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.GenerateInvoiceUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.GetInvoiceUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.GetItemsUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.GetOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.GetStatusUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.SetStatusUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.SubmitOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.UpdateOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.CancelOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.GenerateInvoiceIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.GetInvoiceIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.GetItemsIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.GetOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.GetStatusIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.SetStatusIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.SubmitOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.payment.integration.UpdateOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.AddShopperUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.AddToQueueUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.ClearShoppersUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetCatalogueUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetItemsUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetNextQueuedUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetQueueUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetShoppersUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetStoreByUUIDUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetStoreOpenUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.GetStoresUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.RemoveQueuedOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.RemoveShopperUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.UpdateCatalogueUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.UpdateShoppersUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.UpdateStoreUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.AddShopperIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.AddToQueueIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.ClearShoppersIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetCatalogueIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetItemsIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetNextQueuedIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetQueueIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetShoppersIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetStoreOpenIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.GetStoresIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.RemoveQueuedOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.RemoveShopperIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.UpdateCatalogueIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.UpdateShoppersIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.shopping.integration.UpdateStoreIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.ClearShoppingCartUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.CollectOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.CompleteDeliveryUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.CompletePackingOrderUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.FinalisePasswordResetUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.GetCurrentUserUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.GetShopperByUUIDUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.GetShoppingCartUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.GetUsersUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.LoginUserUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.MakeGroceryListUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.RegisterAdminUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.RegisterCustomerUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.RegisterShopperUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.RegitserDriverUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.RemoveFromCartUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.ResetPasswordUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.ScanItemUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.SetCartUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.SetCurrentLocationUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.UpdateAdminDetailsUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.UpdateCustomerDetailsUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.UpdateDriverDetailsUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.UpdateDriverShiftUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.UpdateShopperDetailsUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.UpdateShopperShiftUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.VerifyAccountUnitTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.ClearShoppingCartIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.CollectOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.CompleteDeliveryIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.CompletePackingOrderIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.FinalisePasswordResetIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.GetCurrentUserIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.GetShopperByUUIDIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.GetShoppingCartIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.GetUsersIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.LoginUserIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.MakeGroceryListIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.RegisterAdminIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.RegisterCustomerIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.RegisterDriverInetgrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.RegisterShopperIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.RemoveFromCartIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.ResetPasswordIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.ScanItemIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.SetCartIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.SetCurrentLocationIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.UpdateAdminDetailsIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.UpdateCustomerDetailsIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.UpdateDriverDetailsIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.UpdateDriverShiftIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.UpdateShopperDetailsIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.UpdateShopperShiftIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/TEST-cs.superleague.user.integration.VerifyAccountIntegrationTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.integration.JwtTokenTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.notification.CreateNotificationUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.notification.SendDirectEmailNotificationUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.notification.SendEmailNotificationUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.notification.integration.CreateNotificationIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.notification.integration.SendDirectEmailNotificationIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.notification.integration.SendEmailNotificationIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.CancelOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.GenerateInvoiceUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.GetInvoiceUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.GetItemsUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.GetOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.GetStatusUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.SetStatusUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.SubmitOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.UpdateOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.CancelOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.GenerateInvoiceIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.GetInvoiceIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.GetItemsIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.GetOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.GetStatusIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.SetStatusIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.SubmitOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.payment.integration.UpdateOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.AddShopperUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.AddToQueueUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.ClearShoppersUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetCatalogueUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetItemsUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetNextQueuedUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetQueueUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetShoppersUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetStoreByUUIDUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetStoreOpenUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.GetStoresUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.RemoveQueuedOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.RemoveShopperUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.UpdateCatalogueUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.UpdateShoppersUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.UpdateStoreUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.AddShopperIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.AddToQueueIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.ClearShoppersIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetCatalogueIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetItemsIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetNextQueuedIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetQueueIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetShoppersIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetStoreOpenIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.GetStoresIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.RemoveQueuedOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.RemoveShopperIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.UpdateCatalogueIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.UpdateShoppersIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.shopping.integration.UpdateStoreIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.ClearShoppingCartUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.CollectOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.CompleteDeliveryUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.CompletePackingOrderUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.FinalisePasswordResetUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.GetCurrentUserUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.GetShopperByUUIDUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.GetShoppingCartUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.GetUsersUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.LoginUserUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.MakeGroceryListUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.RegisterAdminUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.RegisterCustomerUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.RegisterShopperUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.RegitserDriverUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.RemoveFromCartUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.ResetPasswordUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.ScanItemUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.SetCartUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.SetCurrentLocationUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.UpdateAdminDetailsUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.UpdateCustomerDetailsUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.UpdateDriverDetailsUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.UpdateDriverShiftUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.UpdateShopperDetailsUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.UpdateShopperShiftUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.VerifyAccountUnitTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.ClearShoppingCartIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.CollectOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.CompleteDeliveryIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.CompletePackingOrderIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.FinalisePasswordResetIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.GetCurrentUserIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.GetShopperByUUIDIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.GetShoppingCartIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.GetUsersIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.LoginUserIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.MakeGroceryListIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.RegisterAdminIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.RegisterCustomerIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.RegisterDriverInetgrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.RegisterShopperIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.RemoveFromCartIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.ResetPasswordIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.ScanItemIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.SetCartIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.SetCurrentLocationIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.UpdateAdminDetailsIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.UpdateCustomerDetailsIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.UpdateDriverDetailsIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.UpdateDriverShiftIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.UpdateShopperDetailsIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.UpdateShopperShiftIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/surefire-reports/cs.superleague.user.integration.VerifyAccountIntegrationTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/test-classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/docs/AdminObject.md" beforeDir="false" afterPath="$PROJECT_DIR$/gen/docs/AdminObject.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/src/main/java/org/openapitools/client/model/GroceryListObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/src/main/java/org/openapitools/client/model/GroceryListObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/src/main/java/org/openapitools/client/model/UserObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/gen/src/main/java/org/openapitools/client/model/UserObject.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,15 +344,18 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -85,13 +390,15 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.Application">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -131,19 +438,36 @@
       <option name="customJreEnabled" value="false" />
       <option name="customTemplatesPath" value="" />
       <option name="enableDebugLogging" value="false" />
-      <option name="generateToPath" value="C:\Code\CrowdBook_Gamma\Odosla\gen" />
+      <option name="generateToPath" value="D:\Odosla 2\gen" />
       <option name="generationParameters">
         <list />
       </option>
       <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
-      <option name="jdkPath" value="" />
+      <option name="jdkPath" value="Default" />
       <option name="language" value="java" />
-      <option name="specificationPath" value="C:\Code\CrowdBook_Gamma\Odosla\backend\src\main\resources\odosla-api.yml" />
+      <option name="specificationPath" value="D:\Odosla 2\backend\src\main\resources\odosla-api.yml" />
+      <method v="2" />
+    </configuration>
+    <configuration name="odosla-api.yml" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="D:\Odosla 2\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="Default" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="D:\Odosla 2\backend\src\main\resources\odosla-api.yml" />
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" />
       <item itemvalue="Spring Boot.Application" />
+      <item itemvalue="Swagger Codegen.odosla-api.yml" />
     </list>
     <recent_temporary>
       <list>
@@ -226,7 +550,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="develop_shopping" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -243,5 +579,11 @@
     <MESSAGE value="fixed main application.properties" />
     <MESSAGE value="fixed small errors to make controller work" />
     <option name="LAST_COMMIT_MESSAGE" value="fixed small errors to make controller work" />
+    <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Odosla_2$RemoveQueuedOrderUnitTest.ic" NAME="RemoveQueuedOrderUnitTest Coverage Results" MODIFIED="1624010921794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.shopping.*</FILTER>
+    </SUITE>
   </component>
 </project>

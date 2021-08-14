@@ -1107,6 +1107,45 @@ components:
         resetCode:
           type: string
 
+    GroceryListObject:
+      description: "Generic schema for a GroceryList"
+      type: object
+      properties:
+        groceryListID:
+          type: string
+        name:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ItemObject'
+
+
+    UserObject:
+      description: "Generic schema for a User"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+
     user_UpdateShopperShiftRequest:
       description: This object is expected as input
       type: object
@@ -1184,14 +1223,22 @@ components:
           type: string
         customerID:
           type: string
-        rating:
-          type: number
-        isActive:
-          type: boolean
+        address:
+          type: string
+        groceryLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+        shoppingCart:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        preference:
+          type: object
+        wallet:
+          type: object
 
     AdminObject:
-      description: "Generic schema for a Admin"
-      type: object
       properties:
         name:
           type: string
@@ -1215,10 +1262,6 @@ components:
           type: string
         adminID:
           type: string
-        rating:
-          type: number
-        isActive:
-          type: boolean
 
     user_LoginRequest:
       description: This object is expected as input
@@ -1419,6 +1462,7 @@ components:
             - $ref: '#/components/schemas/CustomerObject'
             - $ref: '#/components/schemas/ShopperObject'
             - $ref: '#/components/schemas/AdminObject'
+
 
     user_ScanItemRequest:
       description: This object is expected as input

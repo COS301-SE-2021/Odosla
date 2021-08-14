@@ -102,6 +102,7 @@ D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetCustomersReque
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\CompleteDeliveryRequest.java
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusResponse.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Cart.java
+D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserObject.java
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserCompletePackagingOrderResponse.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\GetStatusResponse.java
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserMakeGroceryListRequest.java
@@ -180,6 +181,7 @@ D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\SubmitOrderRe
 D:\Odosla 2\backend\src\main\java\cs\superleague\integration\security\JwtUtil.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\payment\exceptions\NotAuthorisedException.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetNextQueuedResponse.java
+D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\GroceryListObject.java
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShopperObject.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\GetShoppingCartResponse.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\RemoveShopperRequest.java
