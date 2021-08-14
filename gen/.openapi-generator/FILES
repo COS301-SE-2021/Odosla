@@ -31,6 +31,8 @@ docs/ShoppingGetItemsRequest.md
 docs/ShoppingGetItemsResponse.md
 docs/ShoppingGetNextQueuedRequest.md
 docs/ShoppingGetNextQueuedResponse.md
+docs/ShoppingGetQueueRequest.md
+docs/ShoppingGetQueueResponse.md
 docs/ShoppingGetShoppersRequest.md
 docs/ShoppingGetShoppersResponse.md
 docs/ShoppingGetStoresResponse.md
@@ -124,6 +126,8 @@ src/main/java/org/openapitools/client/model/ShoppingGetItemsRequest.java
 src/main/java/org/openapitools/client/model/ShoppingGetItemsResponse.java
 src/main/java/org/openapitools/client/model/ShoppingGetNextQueuedRequest.java
 src/main/java/org/openapitools/client/model/ShoppingGetNextQueuedResponse.java
+src/main/java/org/openapitools/client/model/ShoppingGetQueueRequest.java
+src/main/java/org/openapitools/client/model/ShoppingGetQueueResponse.java
 src/main/java/org/openapitools/client/model/ShoppingGetShoppersRequest.java
 src/main/java/org/openapitools/client/model/ShoppingGetShoppersResponse.java
 src/main/java/org/openapitools/client/model/ShoppingGetStoresResponse.java
@@ -162,3 +166,5 @@ src/main/java/org/openapitools/client/model/UserSetCurrentLocationRequest.java
 src/main/java/org/openapitools/client/model/UserSetCurrentLocationResponse.java
 src/main/java/org/openapitools/client/model/UserUpdateShopperShiftRequest.java
 src/main/java/org/openapitools/client/model/UserUpdateShopperShiftResponse.java
+src/test/java/org/openapitools/client/model/ShoppingGetQueueRequestTest.java
+src/test/java/org/openapitools/client/model/ShoppingGetQueueResponseTest.java

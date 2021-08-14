@@ -5,15 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * AdminObject
+ * Generic schema for a Admin
  */
+@ApiModel(description = "Generic schema for a Admin")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:26:44.499818600+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
   @JsonProperty("name")
   private String name = null;
@@ -47,6 +49,12 @@ public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
 
   @JsonProperty("adminID")
   private String adminID = null;
+
+  @JsonProperty("rating")
+  private BigDecimal rating = null;
+
+  @JsonProperty("isActive")
+  private Boolean isActive = null;
 
   public AdminObject name(String name) {
     this.name = name;
@@ -257,6 +265,45 @@ public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
     this.adminID = adminID;
   }
 
+  public AdminObject rating(BigDecimal rating) {
+    this.rating = rating;
+    return this;
+  }
+
+  /**
+   * Get rating
+   * @return rating
+  **/
+  @ApiModelProperty(value = "")
+  
+    @Valid
+    public BigDecimal getRating() {
+    return rating;
+  }
+
+  public void setRating(BigDecimal rating) {
+    this.rating = rating;
+  }
+
+  public AdminObject isActive(Boolean isActive) {
+    this.isActive = isActive;
+    return this;
+  }
+
+  /**
+   * Get isActive
+   * @return isActive
+  **/
+  @ApiModelProperty(value = "")
+  
+    public Boolean isIsActive() {
+    return isActive;
+  }
+
+  public void setIsActive(Boolean isActive) {
+    this.isActive = isActive;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -277,12 +324,14 @@ public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
         Objects.equals(this.resetCode, adminObject.resetCode) &&
         Objects.equals(this.resetExpiration, adminObject.resetExpiration) &&
         Objects.equals(this.accountType, adminObject.accountType) &&
-        Objects.equals(this.adminID, adminObject.adminID);
+        Objects.equals(this.adminID, adminObject.adminID) &&
+        Objects.equals(this.rating, adminObject.rating) &&
+        Objects.equals(this.isActive, adminObject.isActive);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, adminID);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, adminID, rating, isActive);
   }
 
   @Override
@@ -301,6 +350,8 @@ public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
     sb.append("    resetExpiration: ").append(toIndentedString(resetExpiration)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("    adminID: ").append(toIndentedString(adminID)).append("\n");
+    sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
+    sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");
     return sb.toString();
   }
