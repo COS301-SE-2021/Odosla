@@ -249,36 +249,36 @@ public class ShoppingController implements ShoppingApi{
 
     public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
         //add mock data to repo
-//        List<Shopper> mockShopperList = new ArrayList<>();
-//        Shopper shopper1, shopper2;
-//        shopper1=new Shopper();
-//        shopper2=new Shopper();
-//
-//        shopper1.setShopperID(UUID.randomUUID());
-//        shopper1.setName("Peter");
-//        shopper1.setSurname("Parker");
-//        shopper1.setEmail("PeterParker2021!");
-//        shopper1.setPassword("DontTellMaryJane2021!");
-//        shopper1.setOrdersCompleted(5);
-//        shopper1.setAccountType(UserType.SHOPPER);
-//        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//
-//        shopper2.setShopperID(UUID.randomUUID());
-//        shopper2.setName("Mary");
-//        shopper2.setSurname("Jane");
-//        shopper2.setEmail("MaryJane2021!");
-//        shopper2.setPassword("IKnowWhoPeterIs2021!");
-//        shopper2.setOrdersCompleted(4);
-//        shopper2.setAccountType(UserType.SHOPPER);
-//        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//
-//        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
-//        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
-//
-//        Store store1 = new Store();
-//        store1.setShoppers(mockShopperList);
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        storeRepo.save(store1);
+        List<Shopper> mockShopperList = new ArrayList<>();
+        Shopper shopper1, shopper2;
+        shopper1=new Shopper();
+        shopper2=new Shopper();
+
+        shopper1.setShopperID(UUID.randomUUID());
+        shopper1.setName("Peter");
+        shopper1.setSurname("Parker");
+        shopper1.setEmail("PeterParker2021!");
+        shopper1.setPassword("DontTellMaryJane2021!");
+        shopper1.setOrdersCompleted(5);
+        shopper1.setAccountType(UserType.SHOPPER);
+        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+
+        shopper2.setShopperID(UUID.randomUUID());
+        shopper2.setName("Mary");
+        shopper2.setSurname("Jane");
+        shopper2.setEmail("MaryJane2021!");
+        shopper2.setPassword("IKnowWhoPeterIs2021!");
+        shopper2.setOrdersCompleted(4);
+        shopper2.setAccountType(UserType.SHOPPER);
+        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+
+        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
+        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
+
+        Store store1 = new Store();
+        store1.setShoppers(mockShopperList);
+        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
+        storeRepo.save(store1);
 
         //creating response object and default return status:
         ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
@@ -593,13 +593,20 @@ public class ShoppingController implements ShoppingApi{
             ShopperObject currentShopper = new ShopperObject();
 
             currentShopper.setName(responseShoppers.get(i).getName());
-            currentShopper.setId(responseShoppers.get(i).getShopperID().toString());
             currentShopper.setSurname(responseShoppers.get(i).getSurname());
-            currentShopper.setUsername(responseShoppers.get(i).getEmail());
+            currentShopper.setEmail(responseShoppers.get(i).getEmail());
+            currentShopper.setPhoneNumber(responseShoppers.get(i).getPhoneNumber());
             currentShopper.setPassword(responseShoppers.get(i).getPassword());
-            currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
+            currentShopper.setActivationDate(String.valueOf(responseShoppers.get(i).getActivationDate()));
+            currentShopper.setActivationCode(responseShoppers.get(i).getActivationCode());
+            currentShopper.setResetCode(responseShoppers.get(i).getResetCode());
+            currentShopper.setResetExpiration(responseShoppers.get(i).getResetExpiration());
+            currentShopper.setAccountType(String.valueOf(responseShoppers.get(i).getAccountType()));
+            currentShopper.setShopperID(responseShoppers.get(i).getShopperID().toString());
             currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
-
+            currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
+            currentShopper.setOnShift(responseShoppers.get(i).getOnShift());
+            currentShopper.setIsActive(responseShoppers.get(i).isActive());
             responseBody.add(currentShopper);
 
         }
