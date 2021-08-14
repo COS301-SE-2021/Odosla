@@ -73,7 +73,7 @@ public class Store {
         this.imgUrl=imgUrl;
     }
 
-    public Store(UUID storeID, int openingTime, int closingTime, String storeBrand, int maxShoppers, int maxOrders, Boolean isOpen) {
+    public Store(UUID storeID, int openingTime, int closingTime, String storeBrand, int maxShoppers, int maxOrders, Boolean isOpen, String imgUrl) {
         this.storeID = storeID;
         this.openingTime= openingTime;
         this.closingTime= closingTime;
@@ -81,6 +81,7 @@ public class Store {
         this.maxShoppers = maxShoppers;
         this.maxOrders = maxOrders;
         this.isOpen = isOpen;
+        this.imgUrl= imgUrl;
     }
     public UUID getStoreID() {
         return storeID;

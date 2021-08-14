@@ -811,6 +811,8 @@ components:
           type: integer
         closingTime:
           type: integer
+        imageUrl:
+          type: string
 
     shopping_GetStoresRequest:
       description: This object is expected as input
