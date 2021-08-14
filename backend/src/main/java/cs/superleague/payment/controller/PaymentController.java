@@ -209,7 +209,7 @@ public class PaymentController implements PaymentApi {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());
-                response.setOrderStatus(submitOrderResponse.getOrder().getStatus().toString());
+                response.setOrderId(submitOrderResponse.getOrder().getOrderID().toString());
                 response.setSuccess(submitOrderResponse.getsuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
             }catch(Exception e){
