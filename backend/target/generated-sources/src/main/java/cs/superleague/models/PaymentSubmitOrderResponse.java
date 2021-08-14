@@ -14,10 +14,9 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object is expected as output")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-14T17:15:32.811465800+02:00[Africa/Harare]")
 public class PaymentSubmitOrderResponse   {
-  @JsonProperty("orderStatus")
-  private String orderStatus = null;
+  @JsonProperty("orderId")
+  private String orderId = null;
 
   @JsonProperty("message")
   private String message = null;
@@ -28,23 +27,23 @@ public class PaymentSubmitOrderResponse   {
   @JsonProperty("timestamp")
   private String timestamp = null;
 
-  public PaymentSubmitOrderResponse orderStatus(String orderStatus) {
-    this.orderStatus = orderStatus;
+  public PaymentSubmitOrderResponse orderId(String orderId) {
+    this.orderId = orderId;
     return this;
   }
 
   /**
-   * Get orderStatus
-   * @return orderStatus
+   * Get orderId
+   * @return orderId
   **/
   @ApiModelProperty(value = "")
   
-    public String getOrderStatus() {
-    return orderStatus;
+    public String getOrderId() {
+    return orderId;
   }
 
-  public void setOrderStatus(String orderStatus) {
-    this.orderStatus = orderStatus;
+  public void setOrderId(String orderId) {
+    this.orderId = orderId;
   }
 
   public PaymentSubmitOrderResponse message(String message) {
@@ -114,7 +113,7 @@ public class PaymentSubmitOrderResponse   {
       return false;
     }
     PaymentSubmitOrderResponse paymentSubmitOrderResponse = (PaymentSubmitOrderResponse) o;
-    return Objects.equals(this.orderStatus, paymentSubmitOrderResponse.orderStatus) &&
+    return Objects.equals(this.orderId, paymentSubmitOrderResponse.orderId) &&
         Objects.equals(this.message, paymentSubmitOrderResponse.message) &&
         Objects.equals(this.success, paymentSubmitOrderResponse.success) &&
         Objects.equals(this.timestamp, paymentSubmitOrderResponse.timestamp);
@@ -122,7 +121,7 @@ public class PaymentSubmitOrderResponse   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(orderStatus, message, success, timestamp);
+    return Objects.hash(orderId, message, success, timestamp);
   }
 
   @Override
@@ -130,7 +129,7 @@ public class PaymentSubmitOrderResponse   {
     StringBuilder sb = new StringBuilder();
     sb.append("class PaymentSubmitOrderResponse {\n");
     
-    sb.append("    orderStatus: ").append(toIndentedString(orderStatus)).append("\n");
+    sb.append("    orderId: ").append(toIndentedString(orderId)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");

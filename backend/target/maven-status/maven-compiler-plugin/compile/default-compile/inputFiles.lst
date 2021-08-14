@@ -1,285 +1,285 @@
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetCatalogueRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\delivery\Delivery.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\exceptions\PaymentException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\GetStatusRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetShoppingCartRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\UpdateShopperDetailsRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\StoreObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetCatalogueResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\dataclass\OrderStatus.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\GetUserByUUIDResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetNextQueuedResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetStoreOpenResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendEmailNotificationResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserClearShoppingCartRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserAccountVerifyResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\exceptions\InvalidRequestException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetStoresRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\UpdateStoreRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\ClearShoppingCartResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\CustomerObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\delivery\DeliveryStatus.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\LogoutResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetStoresResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\RemoveShopperResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\repos\InvoiceRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\CollectOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\dataclass\Item.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetShoppersRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\AdminObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\SetStatusResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentSubmitOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\InvalidCredentialsException.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserScanItemRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\dataclass\OrderType.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingRemoveQueuedOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\dataclass\NotificationType.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserResetPasswordRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\PaymentService.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\api\UserApi.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\UpdateAdminDetailsResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendDirectEmailNotificationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetQueueRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\ResendActivationCodeRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\AddToQueueRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\DeleteUserRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\AccountVerifyResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\LoginRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\GetShopperByUUIDResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\mock\CancelOrdersMock.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\UserServiceImpl.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\UpdateStoreResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\AddShopperResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\ResetPasswordRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\AddItemResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\ClearShoppingCartRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\exceptions\NotificationException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\RegisterShopperResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Shopper.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\Application.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetStoresRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterDriverRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\RegisterUserRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Category.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetItemsResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserScanItemResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\OneOfuserGetCurrentUserResponseUser.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\dataclass\Catalogue.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetQueueRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\DriverDoesNotExistException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\UpdateCatalogueRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentUpdateOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\responses\SendDirectEmailNotificationResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\UpdateShoppersRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\UpdateOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\GenerateInvoiceRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserUpdateShopperShiftResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserLoginRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterDriverResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\ScanItemRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\TestController.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\dataclass\Transaction.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\controller\NotificationController.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetUsersRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\MakeGroceryListRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserClearShoppingCartResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\RemoveFromCartResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\exceptions\InvalidRequestException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\RegisterDriverRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\UpdateShoppersResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\RemoveFromCartRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\VerifyPaymentRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\AccountVerifyRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\repos\GroceryListRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\NotificationService.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\CompleteDeliveryResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\exceptions\ShoppingException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\UpdateDriverDetailsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\responses\RetrieveNotificationResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetShoppingCartRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\repos\StoreRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\UserDoesNotExistException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetCustomersRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\CompleteDeliveryRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Cart.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserObject.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserCompletePackagingOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\GetStatusResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserMakeGroceryListRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\CollectOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetCurrentUserRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\UpdateOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\GetOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\RegisterResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\UpdateCatalogueResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\requests\SendEmailNotificationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\ReverseTransactionResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\RegisterAdminRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserAccountVerifyRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserMakeGroceryListResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\AddShopperRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\LoginResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Admin.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\CancelOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\SubmitOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetStoreByUUIDRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\UserService.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentUpdateOrderRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetStoresResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetShoppersResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\dataclass\Order.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterShopperResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Driver.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\api\ShoppingApi.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\NotAuthorisedException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetNextQueuedRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\exceptions\StoreDoesNotExistException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetItemsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetShopperByUUIDRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\UserException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\GetUsersResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCartRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\FinalizePasswordResetRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\RemoveQueuedOrderRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserResetPasswordResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCartResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\GetItemsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Preference.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\RegisterCustomerRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\ClearShoppersResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\dataclass\Notification.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Address.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\exceptions\OrderDoesNotExist.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\SetCartResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingAddShopperRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterShopperRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\NotificationServiceImpl.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\CreateTransactionRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\repos\ItemRepo.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingPopulateTablesRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\ShoppingServiceImpl.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetCurrentUserRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Wallet.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\GetUserByUUIDRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetNextQueuedRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\UpdateDriverShiftResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetItemsResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCurrentLocationResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\AdminDoesNotExistException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\repos\CatalogueRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\UpdateShopperShiftResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\SetStatusRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\CustomerDoesNotExistException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\GetOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\RemoveQueuedOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\ResendActivationCodeResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingAddShopperResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\responses\SendEmailNotificationResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\ResetPasswordResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\SubmitOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\security\JwtUtil.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\exceptions\NotAuthorisedException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetNextQueuedResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\GroceryListObject.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShopperObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\GetShoppingCartResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\RemoveShopperRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\Customer.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\AddToQueueResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCurrentLocationRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendEmailNotificationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\repos\TransactionRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\RegisterDriverResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterAdminRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\api\PaymentApi.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\MakeGroceryListResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\mock\submitOrderMock.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\AlreadyExistsException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\controller\ShoppingController.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentSubmitOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\repos\DriverRepo.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ItemObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\SetCartRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetQueueResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\repos\NotificationRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\SetCurrentLocationResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetQueueResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetStoreOpenRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\controller\UserController.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\CompletePackagingOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetItemsResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\FinalisePasswordResetResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserLoginResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\PaymentServiceImpl.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\CompletePackagingOrderResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetItemsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\repos\ShopperRepo.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingRemoveQueuedOrderRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetShoppersResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\exceptions\InvalidRequestException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\UpdateCustomerDetailsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\GenerateInvoiceResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\UserType.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\requests\SendDirectEmailNotificationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\dataclass\Invoice.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\OrderObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\RegisterCustomerResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\UpdateCustomerDetailsResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\requests\RetrieveNotificationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\dataclass\GeoPoint.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterCustomerRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\RegisterAdminResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterCustomerResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\api\NotificationApi.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\exceptions\StatusCodeException.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetShoppersRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\FinalizePasswordResetResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetCurrentUserResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\CreateTransactionResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\UpdateAdminDetailsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\UpdateShopperShiftRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\VerifyPaymentResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\UpdateDriverDetailsResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\InvalidRequestException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\dataclass\Store.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\responses\CreateNotificationResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\AddItemRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetStoreByUUIDResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\GetInvoiceRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\DriverObject.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\RegisterShopperRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\exceptions\StoreClosedException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\SetCurrentLocationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\GroceryList.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\UpdateShopperDetailsResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterAdminResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendDirectEmailNotificationResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\notification\requests\CreateNotificationRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\dataclass\User.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\GetCurrentUserResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserCompletePackagingOrderRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\security\SpringSecurityConfig.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\controller\PaymentController.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\security\JWTAuthProvider.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\UpdateDriverShiftRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\security\principal\PrincipleUserFactory.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\ShopperDoesNotExistException.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\GetItemsResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\ShoppingService.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\CancelOrderResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\repos\CustomerRepo.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserUpdateShopperShiftRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\repos\OrderRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\requests\ReverseTransactionRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\ScanItemResponse.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingPopulateTablesResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\payment\responses\GetInvoiceResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\security\SecurityConfig.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetItemsRequest.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\integration\ServiceSelector.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\ClearShoppersRequest.java
-D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetShoppingCartResponse.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\repos\AdminRepo.java
-D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\FinalisePasswordResetRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetStoreOpenResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\SetStatusResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetShoppersResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\ResetPasswordRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingPopulateTablesResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\dataclass\NotificationType.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentUpdateOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendDirectEmailNotificationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetStoreByUUIDRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingRemoveQueuedOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\AddItemRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\GetInvoiceResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ItemObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\requests\RetrieveNotificationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\dataclass\Catalogue.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\GeoPoint.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingAddShopperResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\security\SecurityConfig.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetCurrentUserRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\exceptions\PaymentException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\CollectOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendDirectEmailNotificationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\DriverObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RegisterCustomerRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\DriverRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetUsersRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateShopperDetailsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetItemsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\ClearShoppingCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterShopperRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\ResetPasswordResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\SubmitOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterCustomerRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetItemsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetStoresResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\OrderObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\AdminRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\repos\InvoiceRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\exceptions\InvalidRequestException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserCompletePackagingOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\TestController.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\ServiceSelector.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\exceptions\ShoppingException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\FinalisePasswordResetRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\repos\TransactionRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserScanItemRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\RemoveQueuedOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserClearShoppingCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\AddToQueueRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\UpdateAdminDetailsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\UpdateCatalogueRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetNextQueuedResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterCustomerResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\UpdateShoppersResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\MakeGroceryListResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserUpdateShopperShiftResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\AlreadyExistsException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\AddShopperRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\UpdateCatalogueResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\RemoveShopperRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\DeleteUserRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterDriverRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\GetOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Customer.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\controller\PaymentController.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RegisterDriverRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\GetOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\SetStatusRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\delivery\DeliveryStatus.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\repos\StoreRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\VerifyPaymentRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\RegisterDriverResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\api\UserApi.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\responses\CreateNotificationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\security\SpringSecurityConfig.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserCompletePackagingOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RemoveFromCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\GenerateInvoiceResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\GenerateInvoiceRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\NotAuthorisedException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\api\NotificationApi.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\FinalizePasswordResetResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterDriverResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\GroceryListObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\LogoutResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\ShoppingServiceImpl.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\ClearShoppingCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\SubmitOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\AdminDoesNotExistException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\exceptions\NotificationException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetQueueRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\CompleteDeliveryResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\FinalisePasswordResetResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetShoppingCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterAdminResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\UserServiceImpl.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\UpdateShoppersRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserResetPasswordResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\controller\ShoppingController.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\repos\ItemRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterAdminRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingRemoveQueuedOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\controller\NotificationController.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendEmailNotificationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\CancelOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\repos\NotificationRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\exceptions\StoreDoesNotExistException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserClearShoppingCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserMakeGroceryListRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\delivery\Delivery.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\UpdateShopperShiftResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\RemoveQueuedOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\User.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetShoppingCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetStoresResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\CompletePackagingOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserAccountVerifyResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetNextQueuedRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\RemoveShopperResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\CreateTransactionRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\CustomerRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShopperObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\OrderStatus.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserLoginRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\Invoice.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\RemoveFromCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\AddToQueueResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Cart.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\Order.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetShoppersRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\requests\SendDirectEmailNotificationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Wallet.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetShoppersResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\CreateTransactionResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingPopulateTablesRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetStoreByUUIDResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\UserException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Address.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\ScanItemRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateDriverShiftRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\security\JwtUtil.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\api\ShoppingApi.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetQueueResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\GetInvoiceRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\security\JWTAuthProvider.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserAccountVerifyRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RegisterAdminRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\ClearShoppersResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\SetCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\responses\SendEmailNotificationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\UserType.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\UpdateStoreResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\UpdateOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\AccountVerifyResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendEmailNotificationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\AddShopperResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\ShopperDoesNotExistException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\security\principal\PrincipleUserFactory.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\exceptions\NotAuthorisedException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetShoppingCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\repos\OrderRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Admin.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\NotificationService.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\Transaction.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\CustomerDoesNotExistException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\exceptions\OrderDoesNotExist.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentSubmitOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Preference.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\RegisterShopperResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetQueueResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\UserService.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\SetCurrentLocationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\UpdateShopperDetailsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\CustomerObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetItemsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\UpdateDriverShiftResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\GetStatusResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetShopperByUUIDRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\RegisterAdminResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentUpdateOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\LoginResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetNextQueuedResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\InvalidRequestException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\UpdateCustomerDetailsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetItemsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserLoginResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\requests\SendEmailNotificationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetUserByUUIDRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\ResendActivationCodeResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RegisterShopperRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\AccountVerifyRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\AddItemResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\responses\SendDirectEmailNotificationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetCurrentUserRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\mock\CancelOrdersMock.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateShopperShiftRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserUpdateShopperShiftRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateDriverDetailsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\dataclass\Item.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\LoginRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetItemsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCartRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\dataclass\Notification.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetCurrentUserResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateCustomerDetailsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserResetPasswordRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetItemsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\GroceryListRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\repos\CatalogueRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentSubmitOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Shopper.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\PaymentServiceImpl.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\GetItemsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\CompleteDeliveryRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\VerifyPaymentResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\GetItemsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\RegisterCustomerResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\UserDoesNotExistException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\RegisterUserRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\ShopperRepo.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Category.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\ReverseTransactionRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetNextQueuedRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCurrentLocationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateAdminDetailsRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\responses\RetrieveNotificationResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\Application.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Driver.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetShoppersRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\NotificationServiceImpl.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserScanItemResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\GetStatusRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterShopperResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\SetCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetShoppingCartResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\GroceryList.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\dataclass\Store.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetStoresRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetUserByUUIDResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\StoreObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\DriverDoesNotExistException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetCurrentUserResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\mock\submitOrderMock.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\PaymentService.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetStoresRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\exceptions\InvalidRequestException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\exceptions\StoreClosedException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\controller\UserController.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetShopperByUUIDResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\OrderType.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\FinalizePasswordResetRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserMakeGroceryListResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\RegisterResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\UpdateOrderRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\CancelOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\ScanItemResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\api\PaymentApi.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\ClearShoppersRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\SetCurrentLocationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingAddShopperRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\exceptions\InvalidRequestException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\UpdateDriverDetailsResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCurrentLocationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetCatalogueRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\exceptions\StatusCodeException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\ResendActivationCodeRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetCatalogueResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\GetStoreOpenRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\ShoppingService.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetUsersResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\UpdateStoreRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\OneOfuserGetCurrentUserResponseUser.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\ReverseTransactionResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetCustomersRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\CollectOrderResponse.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetQueueRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\AdminObject.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\requests\CreateNotificationRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\MakeGroceryListRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exceptions\InvalidCredentialsException.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\CompletePackagingOrderResponse.java
