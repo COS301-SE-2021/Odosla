@@ -51,6 +51,7 @@
                             <modelPackage>cs.superleague.models</modelPackage>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
                             </configOptions>
                         </configuration>
                     </execution>
