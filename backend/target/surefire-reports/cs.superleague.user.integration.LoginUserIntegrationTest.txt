@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: cs.superleague.user.integration.LoginUserIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 80.602 s - in cs.superleague.user.integration.LoginUserIntegrationTest

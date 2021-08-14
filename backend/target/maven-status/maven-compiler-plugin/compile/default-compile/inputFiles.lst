@@ -65,6 +65,7 @@ D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\UserScanItemResponse.java
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\OneOfuserGetCurrentUserResponseUser.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\dataclass\Catalogue.java
+D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetQueueRequest.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\exceptions\DriverDoesNotExistException.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\UpdateCatalogueRequest.java
 D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentUpdateOrderResponse.java
@@ -202,6 +203,7 @@ D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\SetCartRequest.ja
 D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\responses\GetQueueResponse.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\notification\repos\NotificationRepo.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\responses\SetCurrentLocationResponse.java
+D:\Odosla 2\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetQueueResponse.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\shopping\requests\GetStoreOpenRequest.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\controller\UserController.java
 D:\Odosla 2\backend\src\main\java\cs\superleague\user\requests\CompletePackagingOrderRequest.java

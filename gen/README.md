@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-14T14:53:01.663657800+02:00[Africa/Harare]
+  - Build date: 2021-08-14T16:46:33.559003800+02:00[Africa/Harare]
 
 The library service
 
@@ -115,6 +115,7 @@ Class | Method | HTTP request | Description
 *PaymentApi* | [**updateOrder**](docs/PaymentApi.md#updateOrder) | **POST** /payment/updateOrder | Endpoint for the Update Order use case
 *ShoppingApi* | [**addShopper**](docs/ShoppingApi.md#addShopper) | **POST** /shopping/addShopper | Endpoint for adding shopper to shopper list
 *ShoppingApi* | [**getItems**](docs/ShoppingApi.md#getItems) | **POST** /shopping/getItems | Endpoint for Get Items use case
+*ShoppingApi* | [**getQueue**](docs/ShoppingApi.md#getQueue) | **POST** /shopping/getQueue | Endpoint for getting the order queue of a shop
 *ShoppingApi* | [**getShoppers**](docs/ShoppingApi.md#getShoppers) | **POST** /shopping/getShoppers | Endpoint for Get Shoppers use case
 *ShoppingApi* | [**getStores**](docs/ShoppingApi.md#getStores) | **POST** /shopping/getStores | Endpoint for Get Stores use case
 *ShoppingApi* | [**populateTables**](docs/ShoppingApi.md#populateTables) | **POST** /shopping/populateTables | Endpoint populating tables
@@ -164,6 +165,8 @@ Class | Method | HTTP request | Description
  - [ShoppingGetItemsResponse](docs/ShoppingGetItemsResponse.md)
  - [ShoppingGetNextQueuedRequest](docs/ShoppingGetNextQueuedRequest.md)
  - [ShoppingGetNextQueuedResponse](docs/ShoppingGetNextQueuedResponse.md)
+ - [ShoppingGetQueueRequest](docs/ShoppingGetQueueRequest.md)
+ - [ShoppingGetQueueResponse](docs/ShoppingGetQueueResponse.md)
  - [ShoppingGetShoppersRequest](docs/ShoppingGetShoppersRequest.md)
  - [ShoppingGetShoppersResponse](docs/ShoppingGetShoppersResponse.md)
  - [ShoppingGetStoresResponse](docs/ShoppingGetStoresResponse.md)

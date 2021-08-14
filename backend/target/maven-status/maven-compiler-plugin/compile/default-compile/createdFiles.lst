@@ -27,6 +27,7 @@ cs\superleague\models\UserRegisterShopperResponse.class
 cs\superleague\user\requests\LoginRequest.class
 cs\superleague\user\responses\MakeGroceryListResponse.class
 cs\superleague\user\dataclass\User.class
+cs\superleague\models\ShoppingGetQueueResponse.class
 cs\superleague\payment\requests\GetOrderRequest.class
 cs\superleague\shopping\requests\GetStoreOpenRequest.class
 cs\superleague\shopping\responses\AddToQueueResponse.class
@@ -181,6 +182,7 @@ cs\superleague\user\requests\CollectOrderRequest.class
 cs\superleague\user\responses\SetCartResponse.class
 cs\superleague\api\ShoppingApi.class
 cs\superleague\payment\dataclass\Transaction.class
+cs\superleague\models\ShoppingGetQueueRequest.class
 cs\superleague\models\UserMakeGroceryListRequest.class
 cs\superleague\user\dataclass\Shopper.class
 cs\superleague\integration\TestController.class

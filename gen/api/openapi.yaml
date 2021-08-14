@@ -586,6 +586,29 @@ paths:
       - User
       x-contentType: application/json
       x-accepts: application/json
+  /shopping/getQueue:
+    post:
+      description: Refer to summary
+      operationId: getQueue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shopping_GetQueueRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shopping_GetQueueResponse'
+          description: Returns upon success
+      summary: Endpoint for getting the order queue of a shop
+      tags:
+      - Shopping
+      x-contentType: application/json
+      x-accepts: application/json
   /payment/getStatus:
     post:
       description: Refer to summary
@@ -1784,6 +1807,98 @@ components:
           type: array
         newCurrentOrder:
           type: object
+      type: object
+    shopping_GetQueueRequest:
+      description: This object is expected as input
+      properties:
+        storeID:
+          type: string
+      type: object
+    shopping_GetQueueResponse:
+      description: This object is expected as output
+      example:
+        queueOfOrders:
+        - orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
+        - orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
+        response: true
+        message: message
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        queueOfOrders:
+          items:
+            $ref: '#/components/schemas/OrderObject'
+          type: array
       type: object
     payment_GetStatusRequest:
       description: This object is expected as input
