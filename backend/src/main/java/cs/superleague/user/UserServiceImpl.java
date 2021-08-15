@@ -1556,8 +1556,11 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
+        System.out.println(request.getJWTToken());
         GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
         GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+
+        System.out.println(getCurrentUserRequest);
 
         if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
             message = "Invalid JWTToken for customer userType";

@@ -9,8 +9,8 @@ public class MakeGroceryListRequest {
     private final String name;
 
 
-    public MakeGroceryListRequest(String userID, List<String> productIds, String name) { //if multiple items are parsed in
-        this.JWTToken = userID;
+    public MakeGroceryListRequest(String JWTToken, List<String> productIds, String name) { //if multiple items are parsed in
+        this.JWTToken = JWTToken;
         this.productIds = productIds;
         this.name = name;
     }

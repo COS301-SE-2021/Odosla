@@ -94,7 +94,7 @@ public class MakeGroceryListUnitTest {
         shopper.setShopperID(shopperID);
         shopper.setName("JJ");
         shopper.setAccountType(UserType.SHOPPER);
-        shopper.setEmail("customer@gmailp.com");;
+        shopper.setEmail("customer@gmailp.com");
 
         groceryList = new GroceryList(groceryListID, "Seamus' party", listOfItems);
         groceryLists.add(groceryList);
@@ -178,27 +178,12 @@ public class MakeGroceryListUnitTest {
         }
     }
 
-    @Test
-    @DisplayName("When groceryList with given name exists")
-    void UnitTest_testingExistingGroceryList(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, listOfBarcodes, "Seamus' party");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-
-        try{
-            MakeGroceryListResponse response = userService.makeGroceryList(request);
-            assertFalse(response.isSuccess());
-            assertEquals("Grocery List Name exists - could not make the grocery list", response.getMessage());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
 
     @Test
     @DisplayName("When the barcodes do not exist")
     void UnitTest_testing_Barcodes_DoneExist(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenCustomer, listOfBarcodes, "Seamus' bachelor party");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             when(shoppingService.getStores(Mockito.any())).thenReturn(new GetStoresResponse(true, "", notExistStores));
@@ -215,7 +200,7 @@ public class MakeGroceryListUnitTest {
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenCustomer, listOfBarcodes, "Seamus' bachelor party");
-        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
+        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
             when(shoppingService.getStores(Mockito.any())).thenReturn(new GetStoresResponse(true, "", listOfStores));
