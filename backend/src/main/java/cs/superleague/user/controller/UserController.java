@@ -337,7 +337,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getCustomerID(), body.getBarcodes(), body.getName());
+            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getCustomerID(), body.getProductIds(), body.getName());
 
             MakeGroceryListResponse response = ServiceSelector.getUserService().makeGroceryList(request);
             try{

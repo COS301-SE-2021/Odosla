@@ -1549,7 +1549,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UserID is null - could not make grocery list");
         }
 
-        if(request.getBarcodes() == null || request.getBarcodes().isEmpty()){
+        if(request.getProductIds() == null || request.getProductIds().isEmpty()){
             throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
 
@@ -1590,16 +1590,16 @@ public class UserServiceImpl implements UserService{
             items.addAll(store.getStock().getItems());
         }
 
-        for (String barcode: request.getBarcodes()) {
+        for (String productId: request.getProductIds()) {
             for (Item item: items) {
-                if(item.getBarcode().equals(barcode)){
+                if(item.getProductID().equals(productId)){
                     groceryListItems.add(item);
                 }
             }
         }
 
         if(groceryListItems.isEmpty()){
-            message = "Cannot find item with given barcode - could not make the grocery list";
+            message = "Cannot find item with given productID - could not make the grocery list";
             return new MakeGroceryListResponse(false, message, new Date());
         }
 

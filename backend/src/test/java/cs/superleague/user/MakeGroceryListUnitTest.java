@@ -163,7 +163,7 @@ public class MakeGroceryListUnitTest {
         try{
             when(shoppingService.getStores(Mockito.any())).thenReturn(new GetStoresResponse(true, "", notExistStores));
             MakeGroceryListResponse response = userService.makeGroceryList(request);
-            assertEquals("Cannot find item with given barcode - could not make the grocery list", response.getMessage());
+            assertEquals("Cannot find item with given productID - could not make the grocery list", response.getMessage());
             assertFalse(response.isSuccess());
         }catch(Exception e){
             e.printStackTrace();
