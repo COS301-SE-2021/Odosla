@@ -22,7 +22,6 @@ import cs.superleague.shopping.responses.AddToQueueResponse;
 import cs.superleague.shopping.responses.GetQueueResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
 import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.requests.GetUserByUUIDRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -97,7 +96,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws InvalidRequestException
      */
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -222,7 +221,8 @@ public class PaymentServiceImpl implements PaymentService {
                     if(shop.getStore().getOpen()==true) {
                         if(orderRepo!=null)
                         orderRepo.save(o);
-
+                        CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(orderID);
+                        CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
                         AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
                         shoppingService.addToQueue(addToQueueRequest);
 
@@ -536,13 +536,53 @@ import java.util.List;50"
     // TRANSACTION IMPLEMENTATION
 
     @Override
-    public CreateTransactionResponse createTransaction(CreateTransactionRequest request) {
-        return null;
+    public CreateTransactionResponse createTransaction(CreateTransactionRequest request) throws PaymentException, InterruptedException {
+        if (request == null){
+            throw new InvalidRequestException("Invalid request received - request cannot be null");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Invalid request received - orderID cannot be null");
+        }
+        Thread.sleep(2000);
+        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if (order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
+        }
+        SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.VERIFYING);
+        SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
+        VerifyPaymentRequest verifyPaymentRequest = new VerifyPaymentRequest(setStatusResponse.getOrder().getOrderID());
+        VerifyPaymentResponse verifyPaymentResponse = verifyPayment(verifyPaymentRequest);
+        CreateTransactionResponse createTransactionResponse;
+        if (verifyPaymentResponse.isSuccess()){
+            createTransactionResponse = new CreateTransactionResponse(true, "Transaction successfully created.");
+        }else{
+            createTransactionResponse = new CreateTransactionResponse(false, "Transaction not created.");
+        }
+        return createTransactionResponse;
     }
 
     @Override
-    public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) {
-        return null;
+    public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws PaymentException, InterruptedException {
+        if (request == null){
+            throw new InvalidRequestException("Invalid request received - request cannot be null");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Invalid request received - orderID cannot be null");
+        }
+        Thread.sleep(3000);
+        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if (order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
+        }
+        SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.PURCHASED);
+        SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
+        VerifyPaymentResponse verifyPaymentResponse;
+        if (setStatusResponse.getSuccess() == true){
+            verifyPaymentResponse = new VerifyPaymentResponse(true, "Payment Successfully verified.");
+        }else{
+            verifyPaymentResponse = new VerifyPaymentResponse(false, "Payment was not verified.");
+        }
+        return verifyPaymentResponse;
     }
 
     @Override

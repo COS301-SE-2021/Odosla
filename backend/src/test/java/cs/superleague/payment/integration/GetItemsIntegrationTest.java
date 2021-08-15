@@ -11,6 +11,7 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.GetItemsRequest;
 import cs.superleague.payment.responses.GetItemsResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.repos.ItemRepo;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -33,6 +34,9 @@ public class GetItemsIntegrationTest {
 
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private ItemRepo itemRepo;
 
     Item I1;
     Item I2;
@@ -73,7 +77,7 @@ public class GetItemsIntegrationTest {
         o2 = new Order(o2UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
         listOfOrders.add(o2);
-
+        itemRepo.saveAll(expectedListOfItems);
         orderRepo.saveAll(listOfOrders);
     }
 
