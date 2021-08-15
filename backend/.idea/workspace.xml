@@ -5,10 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="Called createDeliveryRequest in completepackaging order">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/DeliveryApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/DeliveryApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" afterDir="false" />
@@ -18,7 +14,6 @@
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAssignDriverToDeliveryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAssignDriverToDeliveryRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAssignDriverToDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAssignDriverToDeliveryResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryCreateDeliveryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryCreateDeliveryRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryCreateDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DeliveryCreateDeliveryResponse.java" afterDir="false" />
@@ -104,8 +99,6 @@
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
