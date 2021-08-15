@@ -7,7 +7,7 @@ This object is expected as input
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**shopperID** | **String** |  |  [optional]
+**jwtToken** | **String** |  |  [optional]
 **onShift** | **Boolean** |  |  [optional]
 
 
