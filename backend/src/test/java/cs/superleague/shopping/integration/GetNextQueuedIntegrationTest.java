@@ -20,6 +20,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Transactional
 public class GetNextQueuedIntegrationTest {
     @Autowired
     StoreRepo storeRepo;
@@ -138,8 +140,9 @@ public class GetNextQueuedIntegrationTest {
     @DisplayName("Order queue is empty")
     void IntegrationTest_Store_no_orders_in_orderQueue() throws InvalidRequestException, StoreDoesNotExistException {
         GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
-        s.setOrderQueue(null);
-        storeRepo.save(s);
+        Store updateStore = storeRepo.findById(storeUUID1).orElse(null);
+        updateStore.setOrderQueue(null);
+        storeRepo.save(updateStore);
         GetNextQueuedResponse response=ServiceSelector.getShoppingService().getNextQueued(request);
         assertNotNull(response);
         assertEquals("The order queue of shop is empty", response.getMessage());

@@ -2,25 +2,32 @@ package cs.superleague.payment.controller;
 
 import cs.superleague.api.PaymentApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.ItemObject;
-import cs.superleague.models.PaymentUpdateOrderRequest;
-import cs.superleague.models.PaymentUpdateOrderResponse;
+import cs.superleague.models.*;
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.requests.GetItemsRequest;
+import cs.superleague.payment.requests.GetStatusRequest;
+import cs.superleague.payment.requests.SubmitOrderRequest;
 import cs.superleague.payment.requests.UpdateOrderRequest;
+import cs.superleague.payment.responses.GetItemsResponse;
+import cs.superleague.payment.responses.GetStatusResponse;
+import cs.superleague.payment.responses.SubmitOrderResponse;
 import cs.superleague.payment.responses.UpdateOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.ItemRepo;
+import cs.superleague.shopping.repos.StoreRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +46,9 @@ public class PaymentController implements PaymentApi {
 
     @Autowired
     ItemRepo itemRepo;
+
+    @Autowired
+    StoreRepo storeRepo;
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
     UUID shopperID = UUID.randomUUID();
@@ -62,7 +72,6 @@ public class PaymentController implements PaymentApi {
         Item item1, item2;
         item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
         item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-        itemRepo.save(item1); itemRepo.save(item2);
         mockItemList.add(item1); mockItemList.add(item2);
 
         double totalCost = 14.99 + 36.99;
@@ -81,42 +90,33 @@ public class PaymentController implements PaymentApi {
         totalCost = 0;
 
         orders.add(order);
-        orderRepo.save(order);
 
         order.setOrderID(orderId_PURCHASED);
         order.setStatus(OrderStatus.PURCHASED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderId_IN_QUEUE);
         order.setStatus(OrderStatus.IN_QUEUE);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_PACKING);
         order.setStatus(OrderStatus.PACKING);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_COLLECTION);
         order.setStatus(OrderStatus.AWAITING_COLLECTION);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_DELIVERY_COLLECTED);
         order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_CUSTOMER_COLLECTED);
         order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
-        orderRepo.save(order);
         orders.add(order);
 
         order.setOrderID(orderID_DELIVERED);
         order.setStatus(OrderStatus.DELIVERED);
-        orders.add(order);
-        orderRepo.save(order);
 
 
         PaymentUpdateOrderResponse response = new PaymentUpdateOrderResponse();
@@ -152,8 +152,150 @@ public class PaymentController implements PaymentApi {
             e.printStackTrace();
         }
 
-        orderRepo.deleteAll();
-        itemRepo.deleteAll();
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetStatusResponse> getStatus(PaymentGetStatusRequest body) {
+
+        PaymentGetStatusResponse response = new PaymentGetStatusResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try{
+            GetStatusRequest getStatusRequest = new GetStatusRequest(UUID.fromString(body.getOrderID()));
+            GetStatusResponse getStatusResponse = ServiceSelector.getPaymentService().getStatus(getStatusRequest);
+            try {
+                response.setMessage(getStatusResponse.getMessage());
+                response.setStatus(getStatusResponse.getStatus());
+                response.setSuccess(getStatusResponse.isSuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
+
+        //add mock data to repo
+
+//        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "PnP, Hillcrest Boulevard");
+//        Store store1 = new Store();
+//        store1.setStoreID(storeID);
+//        store1.setStoreBrand("PnP");
+//        store1.setOpeningTime(7);
+//        store1.setClosingTime(20);
+//        store1.setOpen(true);
+//        store1.setMaxOrders(5);
+//        store1.setStoreLocation(storeAddress);
+
+        PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        OrderType orderType = null;
+        if(body.getOrderType().equals("DELIVERY")){
+            orderType= OrderType.DELIVERY;
+        } else if(body.getOrderType().equals("COLLECTION")){
+            orderType= OrderType.COLLECTION;
+        }
+
+        try{
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(UUID.fromString(body.getUserId()), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
+            SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
+            try {
+                response.setMessage(submitOrderResponse.getMessage());
+                response.setOrderId(submitOrderResponse.getOrder().getOrderID().toString());
+                response.setSuccess(submitOrderResponse.getsuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetItemsResponse> getItemsPayments(PaymentGetItemsRequest body) {
+
+
+        //add mock data to repo
+        List<Item> mockItemList = new ArrayList<>();
+        Item item1, item2;
+        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
+        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
+        mockItemList.add(item1); mockItemList.add(item2);
+
+        double totalCost = 14.99 + 36.99;
+        Order order = new Order();
+        order.setOrderID(orderId_AWAITNG_PAYMENT);
+        order.setUserID(userID);
+        order.setStoreID(storeID);
+        order.setShopperID(shopperID);
+        order.setCreateDate(Calendar.getInstance());
+        order.setTotalCost(totalCost);
+        order.setType(OrderType.DELIVERY);
+        order.setStatus(OrderStatus.AWAITING_PAYMENT);
+        order.setItems(mockItemList);
+        order.setStoreAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
+        order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
+        totalCost = 0;
+
+        orders.add(order);
+
+        order.setOrderID(orderId_PURCHASED);
+        order.setStatus(OrderStatus.PURCHASED);
+        orders.add(order);
+
+        order.setOrderID(orderId_IN_QUEUE);
+        order.setStatus(OrderStatus.IN_QUEUE);
+        orders.add(order);
+
+        order.setOrderID(orderID_PACKING);
+        order.setStatus(OrderStatus.PACKING);
+        orders.add(order);
+
+        order.setOrderID(orderID_COLLECTION);
+        order.setStatus(OrderStatus.AWAITING_COLLECTION);
+        orders.add(order);
+
+        order.setOrderID(orderID_DELIVERY_COLLECTED);
+        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
+        orders.add(order);
+
+        order.setOrderID(orderID_CUSTOMER_COLLECTED);
+        order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
+        orders.add(order);
+
+        order.setOrderID(orderID_DELIVERED);
+        order.setStatus(OrderStatus.DELIVERED);
+
+
+        PaymentGetItemsResponse response = new PaymentGetItemsResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try{
+
+            GetItemsRequest getItemsRequest = new GetItemsRequest(body.getOrderID());
+            GetItemsResponse getItemsResponse = ServiceSelector.getPaymentService().getItems(getItemsRequest);
+            try {
+                response.setMessage(getItemsResponse.getMessage());
+                response.setItems(populateItems(getItemsResponse.getItems()));
+                response.setSuccess(getItemsResponse.isSuccess());
+                response.setTimestamp(getItemsResponse.getTimestamp().toString());
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -180,10 +322,37 @@ public class PaymentController implements PaymentApi {
 
             item.setPrice(price);
             item.setImageUrl(i.getImageUrl());
-
-            items.add(itemRepo.save(item));
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+            items.add(item);
 
         }
         return items;
+    }
+
+    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
+
+        List<ItemObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseItems.size(); i++){
+
+            ItemObject currentItem = new ItemObject();
+
+            currentItem.setName(responseItems.get(i).getName());
+            currentItem.setDescription(responseItems.get(i).getDescription());
+            currentItem.setBarcode(responseItems.get(i).getBarcode());
+            currentItem.setProductId(responseItems.get(i).getProductID());
+            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
+            currentItem.setQuantity(responseItems.get(i).getQuantity());
+            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+
+            responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
     }
 }

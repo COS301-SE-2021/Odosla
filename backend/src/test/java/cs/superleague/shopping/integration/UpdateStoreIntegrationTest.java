@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Transactional
 public class UpdateStoreIntegrationTest {
     @Autowired
     StoreRepo storeRepo;
@@ -81,10 +83,10 @@ public class UpdateStoreIntegrationTest {
         listOfItems2.add(item2);
         listOfItems2.add(item3);
         listOfItems2.add(item4);
-        store=new Store(storeUUID1,"Woolworths",catalogue1,2,null,null,4,false);
+        store=new Store(storeUUID1,"Woolworth's",catalogue1,2,null,null,4,false);
         store.setOpeningTime(9);
         store.setClosingTime(23);
-        store2=new Store(storeUUID1, 7, 21, "PnP", 2,6,true);
+        store2=new Store(storeUUID1, 7, 21, "PnP", 2,6,true, "img");
         storeRepo.save(store);
     }
 
@@ -92,6 +94,7 @@ public class UpdateStoreIntegrationTest {
     void tearDown() {
         storeRepo.deleteAll();
         catalogueRepo.deleteAll();
+        itemRepo.deleteAll();
     }
 
     @Test

@@ -16,6 +16,7 @@ import cs.superleague.user.responses.RemoveFromCartResponse;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,6 +26,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class RemoveFromCartIntegrationTest {
 
     @Autowired
@@ -129,7 +131,7 @@ public class RemoveFromCartIntegrationTest {
     @Test
     @DisplayName("When barcode attribute is null")
     void IntegrationTest_testingNull_Barcode_Attribute(){
-        request = new RemoveFromCartRequest(UUID.randomUUID(), null);
+        request = new RemoveFromCartRequest(UUID.randomUUID().toString(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> userService.removeFromCart(request));
         assertEquals("Barcode is null - could not remove from cart", thrown.getMessage());
     }
@@ -137,7 +139,7 @@ public class RemoveFromCartIntegrationTest {
     @Test
     @DisplayName("When customer with the provided ID does not exist")
     void IntegrationTest_testing_InvalidUser(){
-        request = new RemoveFromCartRequest(UUID.randomUUID(), "");
+        request = new RemoveFromCartRequest(UUID.randomUUID().toString(), "");
 
         Throwable throwable = Assertions.assertThrows((CustomerDoesNotExistException.class), () -> userService.removeFromCart(request));
         assertEquals("User with given userID does not exist - could not remove from cart", throwable.getMessage());
@@ -146,7 +148,7 @@ public class RemoveFromCartIntegrationTest {
     @Test
     @DisplayName("When does not have a shopping cart")
     void IntegrationTest_testing_NoShoppingCart(){
-        request = new RemoveFromCartRequest(userID, "");
+        request = new RemoveFromCartRequest(userID.toString(), "");
 
         try {
             response = userService.removeFromCart(request);
@@ -161,7 +163,7 @@ public class RemoveFromCartIntegrationTest {
     @Test
     @DisplayName("When shopping cart is Empty")
     void IntegrationTest_testing_ShoppingCartEmpty(){
-        request = new RemoveFromCartRequest(userID, "");
+        request = new RemoveFromCartRequest(userID.toString(), "");
 
         try {
             response = userService.removeFromCart(request);
@@ -176,7 +178,7 @@ public class RemoveFromCartIntegrationTest {
     @Test
     @DisplayName("When a non-matching barcode is given")
     void IntegrationTest_testing_NonMatchingBarcode(){
-        request = new RemoveFromCartRequest(customerID, "");
+        request = new RemoveFromCartRequest(customerID.toString(), "");
 
         try {
             response = userService.removeFromCart(request);
@@ -192,7 +194,7 @@ public class RemoveFromCartIntegrationTest {
     @Test
     @DisplayName("When a matching barcode is given")
     void IntegrationTest_testing_MatchingBarcode(){
-        request = new RemoveFromCartRequest(customerID, "123456");
+        request = new RemoveFromCartRequest(customerID.toString(), "123456");
 
         try {
             response = userService.removeFromCart(request);
