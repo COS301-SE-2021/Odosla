@@ -28,7 +28,7 @@ import java.io.IOException;
  * This object is returned as output
  */
 @ApiModel(description = "This object is returned as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T12:02:13.757045200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T15:58:41.636762500+02:00[Africa/Harare]")
 public class UserUpdateShopperShiftResponse {
   public static final String SERIALIZED_NAME_SUCCESS = "success";
   @SerializedName(SERIALIZED_NAME_SUCCESS)

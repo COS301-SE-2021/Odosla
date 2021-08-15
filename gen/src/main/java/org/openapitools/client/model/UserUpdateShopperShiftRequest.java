@@ -28,7 +28,7 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T12:02:13.757045200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T15:58:41.636762500+02:00[Africa/Harare]")
 public class UserUpdateShopperShiftRequest {
   public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
   @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
@@ -37,6 +37,10 @@ public class UserUpdateShopperShiftRequest {
   public static final String SERIALIZED_NAME_ON_SHIFT = "onShift";
   @SerializedName(SERIALIZED_NAME_ON_SHIFT)
   private Boolean onShift;
+
+  public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
+  @SerializedName(SERIALIZED_NAME_STORE_I_D)
+  private String storeID;
 
 
   public UserUpdateShopperShiftRequest jwtToken(String jwtToken) {
@@ -85,6 +89,29 @@ public class UserUpdateShopperShiftRequest {
   }
 
 
+  public UserUpdateShopperShiftRequest storeID(String storeID) {
+    
+    this.storeID = storeID;
+    return this;
+  }
+
+   /**
+   * Get storeID
+   * @return storeID
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getStoreID() {
+    return storeID;
+  }
+
+
+  public void setStoreID(String storeID) {
+    this.storeID = storeID;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,12 +122,13 @@ public class UserUpdateShopperShiftRequest {
     }
     UserUpdateShopperShiftRequest userUpdateShopperShiftRequest = (UserUpdateShopperShiftRequest) o;
     return Objects.equals(this.jwtToken, userUpdateShopperShiftRequest.jwtToken) &&
-        Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift);
+        Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift) &&
+        Objects.equals(this.storeID, userUpdateShopperShiftRequest.storeID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(jwtToken, onShift);
+    return Objects.hash(jwtToken, onShift, storeID);
   }
 
 
@@ -110,6 +138,7 @@ public class UserUpdateShopperShiftRequest {
     sb.append("class UserUpdateShopperShiftRequest {\n");
     sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
+    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("}");
     return sb.toString();
   }
