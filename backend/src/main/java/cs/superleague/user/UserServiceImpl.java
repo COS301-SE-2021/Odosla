@@ -2,7 +2,6 @@ package cs.superleague.user;
 
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.NotificationService;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
@@ -1545,8 +1544,8 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
         }
 
-        if(request.getUserID() == null){
-            throw new InvalidRequestException("UserID is null - could not make grocery list");
+        if(request.getJWTToken() == null){
+            throw new InvalidRequestException("JWTToken is null - could not make grocery list");
         }
 
         if(request.getProductIds() == null || request.getProductIds().isEmpty()){
@@ -1557,14 +1556,15 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        userID = UUID.fromString(request.getUserID());
-        try {
-            customer = customerRepo.findById(userID).orElse(null);
-        }catch(Exception e){}
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
 
-        if(customer == null){
-            throw new CustomerDoesNotExistException("User with given userID does not exist - could not make the grocery list");
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for customer userType";
+            return new MakeGroceryListResponse(false, message, new Date());
         }
+
+        customer = (Customer)getCurrentUserResponse.getUser();
 
         name = request.getName();
         for (GroceryList list: customer.getGroceryLists()) { // if name exists return false

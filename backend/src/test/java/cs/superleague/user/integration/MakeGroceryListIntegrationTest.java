@@ -128,7 +128,7 @@ public class MakeGroceryListIntegrationTest {
     void IntegrationTest_testingNullRequestUserIDParameter(){
         MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfBarcodes, "Seamus' Party");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
-        assertEquals("UserID is null - could not make grocery list", thrown.getMessage());
+        assertEquals("JWTToken is null - could not make grocery list", thrown.getMessage());
     }
 
     @Test
