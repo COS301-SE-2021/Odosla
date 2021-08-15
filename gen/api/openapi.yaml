@@ -942,6 +942,7 @@ components:
         isOpen: true
         closingTime: 5
         openingTime: 1
+        imageUrl: imageUrl
         maxShoppers: 0
         storeID: storeID
         maxOrders: 6
@@ -961,6 +962,8 @@ components:
           type: integer
         closingTime:
           type: integer
+        imageUrl:
+          type: string
       type: object
     shopping_GetStoresRequest:
       description: This object is expected as input
@@ -973,6 +976,7 @@ components:
         - isOpen: true
           closingTime: 5
           openingTime: 1
+          imageUrl: imageUrl
           maxShoppers: 0
           storeID: storeID
           maxOrders: 6
@@ -980,6 +984,7 @@ components:
         - isOpen: true
           closingTime: 5
           openingTime: 1
+          imageUrl: imageUrl
           maxShoppers: 0
           storeID: storeID
           maxOrders: 6
@@ -1128,12 +1133,12 @@ components:
     payment_SubmitOrderResponse:
       description: This object is expected as output
       example:
+        orderId: orderId
         success: true
-        orderStatus: orderStatus
         message: message
         timestamp: timestamp
       properties:
-        orderStatus:
+        orderId:
           type: string
         message:
           description: Will contain a descriptive error message if response code is
@@ -1335,10 +1340,46 @@ components:
         resetCode:
           type: string
       type: object
+    GroceryListObject:
+      description: Generic schema for a GroceryList
+      properties:
+        groceryListID:
+          type: string
+        name:
+          type: string
+        items:
+          items:
+            $ref: '#/components/schemas/ItemObject'
+          type: array
+      type: object
+    UserObject:
+      description: Generic schema for a User
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+      type: object
     user_UpdateShopperShiftRequest:
       description: This object is expected as input
       properties:
-        shopperID:
+        jwtToken:
           type: string
         onShift:
           type: boolean
@@ -1412,13 +1453,22 @@ components:
           type: string
         customerID:
           type: string
-        rating:
-          type: number
-        isActive:
-          type: boolean
+        address:
+          type: string
+        groceryLists:
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+          type: array
+        shoppingCart:
+          items:
+            $ref: '#/components/schemas/ItemObject'
+          type: array
+        preference:
+          type: object
+        wallet:
+          type: object
       type: object
     AdminObject:
-      description: Generic schema for a Admin
       properties:
         name:
           type: string
@@ -1442,11 +1492,6 @@ components:
           type: string
         adminID:
           type: string
-        rating:
-          type: number
-        isActive:
-          type: boolean
-      type: object
     user_LoginRequest:
       description: This object is expected as input
       properties:

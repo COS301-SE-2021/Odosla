@@ -1,5 +1,6 @@
 package cs.superleague.user.integration;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
@@ -8,6 +9,7 @@ import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.UpdateShopperShiftRequest;
 import cs.superleague.user.responses.UpdateShopperShiftResponse;
 import org.junit.jupiter.api.*;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,17 +32,24 @@ public class UpdateShopperShiftIntegrationTest {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    JwtUtil jwtTokenUtil;
+
     UpdateShopperShiftRequest request;
     UpdateShopperShiftResponse response;
     UUID shopperID= UUID.randomUUID();
     Shopper shopper;
+    String shopperJWT;
 
     @BeforeEach
     void setUp() {
-        request=new UpdateShopperShiftRequest(shopperID,true);
         shopper=new Shopper();
         shopper.setShopperID(shopperID);
+        shopper.setEmail("hello@gmail.com");
         shopper.setOnShift(true);
+        shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
+        request=new UpdateShopperShiftRequest(shopperJWT,true);
+
     }
 
     @AfterEach
