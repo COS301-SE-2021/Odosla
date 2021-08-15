@@ -7,6 +7,8 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.user.requests.GetUsersRequest;
+import cs.superleague.user.responses.GetUsersResponse;
 
 public interface PaymentService {
 
@@ -40,5 +42,7 @@ public interface PaymentService {
     GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) throws InvalidRequestException;
 
     GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException;
+
+    GetOrdersResponse getOrders(GetOrdersRequest request) throws PaymentException;
 
 }

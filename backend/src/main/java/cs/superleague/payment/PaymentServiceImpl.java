@@ -21,8 +21,12 @@ import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.AddToQueueResponse;
 import cs.superleague.shopping.responses.GetQueueResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.dataclass.Admin;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.AdminDoesNotExistException;
+import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.requests.GetUserByUUIDRequest;
+import cs.superleague.user.responses.GetUsersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -46,14 +50,17 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
     private final ShoppingService shoppingService;
+    private final AdminRepo adminRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo) {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
+        this.adminRepo = adminRepo;
     }
+
 
 
     /** What to do
@@ -665,6 +672,39 @@ import java.util.List;50"
         }
 
         return new GetItemsResponse(order.getItems(), true, new Date(), message);
+    }
+
+    @Override
+    public GetOrdersResponse getOrders(GetOrdersRequest request) throws PaymentException {
+
+        String message = "Users successfully returned";
+        Admin admin = null;
+        List<Order> orders = new ArrayList<>();
+
+        if(request == null){
+            throw new InvalidRequestException("GetOrders request is null - could not return orders");
+        }
+
+        if(request.getAdminID() == null){
+            throw new InvalidRequestException("AdminID is null in GetUsersRequest request - could not return orders");
+        }
+
+        try {
+            admin = adminRepo.findById(UUID.fromString(request.getAdminID())).orElse(null);
+        }catch(Exception e){}
+
+        if(admin == null){
+            throw new PaymentException("admin with given userID does not exist - could not return orders");
+        }
+
+        orders.addAll(orderRepo.findAll());
+
+        if(orders.isEmpty()){
+            message = "Could not retrieve orders";
+            return new GetOrdersResponse(orders, false, message, new Date());
+        }
+
+        return new GetOrdersResponse(orders, true, message, new Date());
     }
 
     // Helper
