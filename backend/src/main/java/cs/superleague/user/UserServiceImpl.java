@@ -1544,8 +1544,8 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
         }
 
-        if(request.getUserID() == null){
-            throw new InvalidRequestException("UserID is null - could not make grocery list");
+        if(request.getJWTToken() == null){
+            throw new InvalidRequestException("JWTToken is null - could not make grocery list");
         }
 
         if(request.getProductIds() == null || request.getProductIds().isEmpty()){
@@ -1556,14 +1556,18 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        userID = UUID.fromString(request.getUserID());
-        try {
-            customer = customerRepo.findById(userID).orElse(null);
-        }catch(Exception e){}
+        System.out.println(request.getJWTToken());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
 
-        if(customer == null){
-            throw new CustomerDoesNotExistException("User with given userID does not exist - could not make the grocery list");
+        System.out.println(getCurrentUserRequest);
+
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for customer userType";
+            return new MakeGroceryListResponse(false, message, new Date());
         }
+
+        customer = (Customer)getCurrentUserResponse.getUser();
 
         name = request.getName();
         for (GroceryList list: customer.getGroceryLists()) { // if name exists return false
