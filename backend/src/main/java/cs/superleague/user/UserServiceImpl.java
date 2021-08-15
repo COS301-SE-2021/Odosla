@@ -129,8 +129,6 @@ public class UserServiceImpl implements UserService{
             if(shopperRepo!=null)
                 shopperRepo.save(shopperEntity);
 
-            //TODO check the order type and call the respective user (driver or customer)
-
             orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
             if(orderEntity.getType().equals(OrderType.DELIVERY))
