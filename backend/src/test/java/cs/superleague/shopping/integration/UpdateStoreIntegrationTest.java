@@ -92,9 +92,6 @@ public class UpdateStoreIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
     }
 
     @Test

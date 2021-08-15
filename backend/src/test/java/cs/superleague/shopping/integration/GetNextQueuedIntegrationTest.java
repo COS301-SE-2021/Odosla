@@ -99,10 +99,6 @@ public class GetNextQueuedIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
-        orderRepo.deleteAll();
     }
 
     @Test
@@ -153,7 +149,7 @@ public class GetNextQueuedIntegrationTest {
     @Description("Test for when order and removes previous order from order queue")
     @DisplayName("Removes and returns correct order")
     void IntegrationTest_order_is_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException {
-        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1, "hfasjfhalj");
+        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1, "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ6aXZhbmg3QGdtYWlsLmNvbSIsImp0aSI6IjJhMWU2NDA5LTJkMWMtNDk3Ny1hMWI4LTc1YzliMWQ4ZGQ2ZiIsInVzZXJUeXBlIjoiU0hPUFBFUiIsImlhdCI6MTYyOTAyNzg4NSwiZXhwIjoxNjI5MDYzODg1fQ.aK8imW9Xt25phzJpXqYYn8jBPzSd-vNCSeciciwc3KQ");
         s.setOrderQueue(listOfOrders);
         storeRepo.save(s);
         GetNextQueuedResponse response=ServiceSelector.getShoppingService().getNextQueued(request);
