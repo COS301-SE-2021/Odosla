@@ -154,8 +154,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 invalidMessage = "Invalid request: missing order cost";
                 invalidReq = true;
             } else if (order.getStatus() != OrderStatus.PURCHASED){
-                invalidMessage = "Invalid request: order has incompatible status";
-                invalidReq = true;
+//                invalidMessage = "Invalid request: order has incompatible status";
+//                invalidReq = true;
             } else if (order.getItems() == null || order.getItems().isEmpty()){
                 invalidMessage = "Invalid request: item list is empty or null";
                 invalidReq = true;
@@ -167,6 +167,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         Order updatedOrder = request.getOrder();
 
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
+        System.out.print("In queue");
         updatedOrder.setProcessDate(Calendar.getInstance());
         if(orderRepo!=null)
         orderRepo.save(updatedOrder);
