@@ -543,7 +543,7 @@ components:
         customerID:
           type: string
           description: generated token used to identify the caller of the endpoint
-        barcodes:
+        productIds:
           type: array
         name:
           type: string
