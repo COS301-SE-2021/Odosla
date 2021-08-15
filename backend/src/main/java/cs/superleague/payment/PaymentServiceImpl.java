@@ -221,13 +221,17 @@ public class PaymentServiceImpl implements PaymentService {
                     if(shop.getStore().getOpen()==true) {
                         if(orderRepo!=null)
                         orderRepo.save(o);
-                        CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(orderID);
-                        CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
-                        AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
-                        shoppingService.addToQueue(addToQueueRequest);
+                        try{
+                            response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                            return response;
+                        }finally {
+                            CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(orderID);
+                            CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                            AddToQueueRequest addToQueueRequest = new AddToQueueRequest(o);
+                            shoppingService.addToQueue(addToQueueRequest);
 
-                        System.out.println("Order has been created");
-                        response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                            System.out.println("Order has been created");
+                        }
                     }
                     else {
                         throw new StoreClosedException("Store is currently closed - could not create order");
