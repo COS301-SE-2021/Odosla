@@ -1,8 +1,6 @@
 package cs.superleague.user;
 
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.Notification;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -15,15 +13,10 @@ import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.http.client.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import cs.superleague.user.exceptions.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.requests.*;
 
@@ -1489,7 +1482,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UserID is null - could not make grocery list");
         }
 
-        if(request.getBarcodes() == null || request.getBarcodes().isEmpty()){
+        if(request.getProductIds() == null || request.getProductIds().isEmpty()){
             throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
 
@@ -1529,9 +1522,9 @@ public class UserServiceImpl implements UserService{
             items.addAll(store.getStock().getItems());
         }
 
-        for (String barcode: request.getBarcodes()) {
+        for (String productId: request.getProductIds()) {
             for (Item item: items) {
-                if(item.getBarcode().equals(barcode)){
+                if(item.getProductID().equals(productId)){
                     groceryListItems.add(item);
                 }
             }
