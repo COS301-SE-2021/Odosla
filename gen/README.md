@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-14T16:46:33.559003800+02:00[Africa/Harare]
+  - Build date: 2021-08-15T12:02:13.757045200+02:00[Africa/Harare]
 
 The library service
 
@@ -144,6 +144,7 @@ Class | Method | HTTP request | Description
  - [AdminObject](docs/AdminObject.md)
  - [CustomerObject](docs/CustomerObject.md)
  - [DriverObject](docs/DriverObject.md)
+ - [GroceryListObject](docs/GroceryListObject.md)
  - [ItemObject](docs/ItemObject.md)
  - [NotificationSendDirectEmailNotificationRequest](docs/NotificationSendDirectEmailNotificationRequest.md)
  - [NotificationSendDirectEmailNotificationResponse](docs/NotificationSendDirectEmailNotificationResponse.md)
@@ -187,6 +188,7 @@ Class | Method | HTTP request | Description
  - [UserLoginResponse](docs/UserLoginResponse.md)
  - [UserMakeGroceryListRequest](docs/UserMakeGroceryListRequest.md)
  - [UserMakeGroceryListResponse](docs/UserMakeGroceryListResponse.md)
+ - [UserObject](docs/UserObject.md)
  - [UserRegisterAdminRequest](docs/UserRegisterAdminRequest.md)
  - [UserRegisterAdminResponse](docs/UserRegisterAdminResponse.md)
  - [UserRegisterCustomerRequest](docs/UserRegisterCustomerRequest.md)
