@@ -2,7 +2,6 @@ package cs.superleague.user;
 
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.NotificationService;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
@@ -1556,8 +1555,8 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
         }
 
-        if(request.getUserID() == null){
-            throw new InvalidRequestException("UserID is null - could not make grocery list");
+        if(request.getJWTToken() == null){
+            throw new InvalidRequestException("JWTToken is null - could not make grocery list");
         }
 
         if(request.getProductIds() == null || request.getProductIds().isEmpty()){
@@ -1568,14 +1567,18 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        userID = UUID.fromString(request.getUserID());
-        try {
-            customer = customerRepo.findById(userID).orElse(null);
-        }catch(Exception e){}
+        System.out.println(request.getJWTToken());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
 
-        if(customer == null){
-            throw new CustomerDoesNotExistException("User with given userID does not exist - could not make the grocery list");
+        System.out.println(getCurrentUserRequest);
+
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for customer userType";
+            return new MakeGroceryListResponse(false, message, new Date());
         }
+
+        customer = (Customer)getCurrentUserResponse.getUser();
 
         name = request.getName();
         for (GroceryList list: customer.getGroceryLists()) { // if name exists return false
@@ -2625,6 +2628,30 @@ public class UserServiceImpl implements UserService{
         }
 
         return new GetUsersResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException{
+
+        Customer customer = null;
+        String message;
+        if(request == null){
+            throw new InvalidRequestException("GetGroceryList request is null - could not return groceryList");
+        }
+
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+
+
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for Customer Account type";
+            return new GetGroceryListsResponse(null, false, new Date(), message);
+        }
+
+        customer = (Customer) getCurrentUserResponse.getUser();
+
+        message = "Grocery list successfully retrieved";
+        return new GetGroceryListsResponse(customer.getGroceryLists(), true, new Date(), message);
     }
 
     private boolean emailRegex(String email){

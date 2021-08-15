@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-15T12:02:13.757045200+02:00[Africa/Harare]
+  - Build date: 2021-08-14T22:27:51.898546700+02:00[Africa/Harare]
 
 The library service
 
@@ -77,20 +77,20 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.models.*;
-import org.openapitools.client.api.NotificationApi;
+import org.openapitools.client.api.DeliveryApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost");
 
-    NotificationApi apiInstance = new NotificationApi(defaultClient);
-    NotificationSendDirectEmailNotificationRequest notificationSendDirectEmailNotificationRequest = new NotificationSendDirectEmailNotificationRequest(); // NotificationSendDirectEmailNotificationRequest | The input body required by this request
+    DeliveryApi apiInstance = new DeliveryApi(defaultClient);
+    DeliveryAddDeliveryDetailRequest deliveryAddDeliveryDetailRequest = new DeliveryAddDeliveryDetailRequest(); // DeliveryAddDeliveryDetailRequest | The input body required by this request
     try {
-      NotificationSendDirectEmailNotificationResponse result = apiInstance.sendDirectEmailNotification(notificationSendDirectEmailNotificationRequest);
+      DeliveryAddDeliveryDetailResponse result = apiInstance.addDeliveryDetail(deliveryAddDeliveryDetailRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling NotificationApi#sendDirectEmailNotification");
+      System.err.println("Exception when calling DeliveryApi#addDeliveryDetail");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -107,6 +107,15 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*DeliveryApi* | [**addDeliveryDetail**](docs/DeliveryApi.md#addDeliveryDetail) | **POST** /delivery/addDeliveryDetail | Endpoint for add delivery detail
+*DeliveryApi* | [**assignDriverToDelivery**](docs/DeliveryApi.md#assignDriverToDelivery) | **POST** /delivery/assignDriverToDelivery | Endpoint for assign driver to delivery
+*DeliveryApi* | [**createDelivery**](docs/DeliveryApi.md#createDelivery) | **POST** /delivery/createDelivery | Endpoint for creating a delivery
+*DeliveryApi* | [**getDeliveryDetail**](docs/DeliveryApi.md#getDeliveryDetail) | **POST** /delivery/getDeliveryDetail | Endpoint for getting the detail of a delivery
+*DeliveryApi* | [**getDeliveryStatus**](docs/DeliveryApi.md#getDeliveryStatus) | **POST** /delivery/getDeliveryStatus | Endpoint for getting the status of a delivery
+*DeliveryApi* | [**getNextOrderForDriver**](docs/DeliveryApi.md#getNextOrderForDriver) | **POST** /delivery/getNextOrderForDriver | Endpoint for getting the next order for a driver
+*DeliveryApi* | [**removeDriverFromDelivery**](docs/DeliveryApi.md#removeDriverFromDelivery) | **POST** /delivery/removeDriverFromDelivery | Endpoint for removing a driver from a delivery
+*DeliveryApi* | [**trackDelivery**](docs/DeliveryApi.md#trackDelivery) | **POST** /delivery/trackDelivery | Endpoint for tracking a delivery
+*DeliveryApi* | [**updateDeliveryStatus**](docs/DeliveryApi.md#updateDeliveryStatus) | **POST** /delivery/updateDeliveryStatus | Endpoint for updating the status of a delivery
 *NotificationApi* | [**sendDirectEmailNotification**](docs/NotificationApi.md#sendDirectEmailNotification) | **POST** /notification/sendDirectEmailNotification | Endpoint for sending a direct email notification
 *NotificationApi* | [**sendEmailNotification**](docs/NotificationApi.md#sendEmailNotification) | **POST** /notification/sendEmailNotification | Endpoint for sending an email notification
 *PaymentApi* | [**getItemsPayments**](docs/PaymentApi.md#getItemsPayments) | **POST** /payment/getItems | Endpoint for Get Items use case
@@ -143,7 +152,27 @@ Class | Method | HTTP request | Description
 
  - [AdminObject](docs/AdminObject.md)
  - [CustomerObject](docs/CustomerObject.md)
+ - [DeliveryAddDeliveryDetailRequest](docs/DeliveryAddDeliveryDetailRequest.md)
+ - [DeliveryAddDeliveryDetailResponse](docs/DeliveryAddDeliveryDetailResponse.md)
+ - [DeliveryAssignDriverToDeliveryRequest](docs/DeliveryAssignDriverToDeliveryRequest.md)
+ - [DeliveryAssignDriverToDeliveryResponse](docs/DeliveryAssignDriverToDeliveryResponse.md)
+ - [DeliveryCreateDeliveryRequest](docs/DeliveryCreateDeliveryRequest.md)
+ - [DeliveryCreateDeliveryResponse](docs/DeliveryCreateDeliveryResponse.md)
+ - [DeliveryDetailObject](docs/DeliveryDetailObject.md)
+ - [DeliveryGetDeliveryDetailRequest](docs/DeliveryGetDeliveryDetailRequest.md)
+ - [DeliveryGetDeliveryDetailResponse](docs/DeliveryGetDeliveryDetailResponse.md)
+ - [DeliveryGetDeliveryStatusRequest](docs/DeliveryGetDeliveryStatusRequest.md)
+ - [DeliveryGetDeliveryStatusResponse](docs/DeliveryGetDeliveryStatusResponse.md)
+ - [DeliveryGetNextOrderForDriverRequest](docs/DeliveryGetNextOrderForDriverRequest.md)
+ - [DeliveryGetNextOrderForDriverResponse](docs/DeliveryGetNextOrderForDriverResponse.md)
+ - [DeliveryRemoveDriverFromDeliveryRequest](docs/DeliveryRemoveDriverFromDeliveryRequest.md)
+ - [DeliveryRemoveDriverFromDeliveryResponse](docs/DeliveryRemoveDriverFromDeliveryResponse.md)
+ - [DeliveryTrackDeliveryRequest](docs/DeliveryTrackDeliveryRequest.md)
+ - [DeliveryTrackDeliveryResponse](docs/DeliveryTrackDeliveryResponse.md)
+ - [DeliveryUpdateDeliveryStatusRequest](docs/DeliveryUpdateDeliveryStatusRequest.md)
+ - [DeliveryUpdateDeliveryStatusResponse](docs/DeliveryUpdateDeliveryStatusResponse.md)
  - [DriverObject](docs/DriverObject.md)
+ - [GeoPointObject](docs/GeoPointObject.md)
  - [GroceryListObject](docs/GroceryListObject.md)
  - [ItemObject](docs/ItemObject.md)
  - [NotificationSendDirectEmailNotificationRequest](docs/NotificationSendDirectEmailNotificationRequest.md)

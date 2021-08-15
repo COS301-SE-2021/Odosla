@@ -28,11 +28,11 @@ import java.io.IOException;
  * This object is expected as output
  */
 @ApiModel(description = "This object is expected as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T12:02:13.757045200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
 public class PaymentSubmitOrderResponse {
-  public static final String SERIALIZED_NAME_ORDER_ID = "orderId";
-  @SerializedName(SERIALIZED_NAME_ORDER_ID)
-  private String orderId;
+  public static final String SERIALIZED_NAME_ORDER_STATUS = "orderStatus";
+  @SerializedName(SERIALIZED_NAME_ORDER_STATUS)
+  private String orderStatus;
 
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
@@ -47,26 +47,26 @@ public class PaymentSubmitOrderResponse {
   private String timestamp;
 
 
-  public PaymentSubmitOrderResponse orderId(String orderId) {
+  public PaymentSubmitOrderResponse orderStatus(String orderStatus) {
     
-    this.orderId = orderId;
+    this.orderStatus = orderStatus;
     return this;
   }
 
    /**
-   * Get orderId
-   * @return orderId
+   * Get orderStatus
+   * @return orderStatus
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getOrderId() {
-    return orderId;
+  public String getOrderStatus() {
+    return orderStatus;
   }
 
 
-  public void setOrderId(String orderId) {
-    this.orderId = orderId;
+  public void setOrderStatus(String orderStatus) {
+    this.orderStatus = orderStatus;
   }
 
 
@@ -148,7 +148,7 @@ public class PaymentSubmitOrderResponse {
       return false;
     }
     PaymentSubmitOrderResponse paymentSubmitOrderResponse = (PaymentSubmitOrderResponse) o;
-    return Objects.equals(this.orderId, paymentSubmitOrderResponse.orderId) &&
+    return Objects.equals(this.orderStatus, paymentSubmitOrderResponse.orderStatus) &&
         Objects.equals(this.message, paymentSubmitOrderResponse.message) &&
         Objects.equals(this.success, paymentSubmitOrderResponse.success) &&
         Objects.equals(this.timestamp, paymentSubmitOrderResponse.timestamp);
@@ -156,7 +156,7 @@ public class PaymentSubmitOrderResponse {
 
   @Override
   public int hashCode() {
-    return Objects.hash(orderId, message, success, timestamp);
+    return Objects.hash(orderStatus, message, success, timestamp);
   }
 
 
@@ -164,7 +164,7 @@ public class PaymentSubmitOrderResponse {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PaymentSubmitOrderResponse {\n");
-    sb.append("    orderId: ").append(toIndentedString(orderId)).append("\n");
+    sb.append("    orderStatus: ").append(toIndentedString(orderStatus)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
