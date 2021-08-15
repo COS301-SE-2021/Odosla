@@ -7,6 +7,10 @@ public class AssignDriverToDeliveryRequest {
     private UUID deliveryID;
     private String jwtToken;
 
+    public  AssignDriverToDeliveryRequest()
+    {
+
+    }
     public AssignDriverToDeliveryRequest(UUID driverID, UUID deliveryID) {
         this.driverID = driverID;
         this.deliveryID = deliveryID;

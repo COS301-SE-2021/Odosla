@@ -74,20 +74,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null || request.getDriverID() == null){
+        if (request.getDeliveryID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
 
 
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in the database."));
-
-        if (delivery.getDriverId() != null){
-            if (delivery.getDriverId().compareTo(request.getDriverID()) == 0){
-                AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.");
-                return response;
-            }
-            throw new InvalidRequestException("This delivery has already been taken by another driver.");
-        }
 
         JwtUtil jwtUtil = new JwtUtil();
         if(jwtUtil.extractUserType(request.getJwtToken()).equals("DRIVER"))
@@ -99,6 +91,14 @@ public class DeliveryServiceImpl implements DeliveryService {
                 Driver driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
                 if(driver!=null)
                 {
+                    if (delivery.getDriverId() != null){
+                        if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
+                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.");
+                            return response;
+                        }
+                        throw new InvalidRequestException("This delivery has already been taken by another driver.");
+                    }
+
                     Order updateOrder= orderRepo.findById(delivery.getOrderID()).orElse(null);
                     if(updateOrder!=null){
                         updateOrder.setDriverID(driver.getDriverID());

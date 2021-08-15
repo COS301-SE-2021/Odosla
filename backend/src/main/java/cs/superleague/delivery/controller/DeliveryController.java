@@ -75,7 +75,10 @@ public class DeliveryController implements DeliveryApi {
         DeliveryAssignDriverToDeliveryResponse response = new DeliveryAssignDriverToDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDriverID()), UUID.fromString(body.getDeliveryID()));
+            //AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDriverID()), UUID.fromString(body.getDeliveryID()));
+            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest();
+            request.setJwtToken(body.getJwtToken());
+            request.setDeliveryID(UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = ServiceSelector.getDeliveryService().assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
@@ -89,19 +92,7 @@ public class DeliveryController implements DeliveryApi {
 
     @Override
     public ResponseEntity<DeliveryCreateDeliveryResponse> createDelivery(DeliveryCreateDeliveryRequest body) {
-        UUID storeID = UUID.fromString("e326b4a8-3b9f-41c3-a7f1-c46101fe0c84");
-        UUID customerID = UUID.fromString("da99d98c-b6f8-437e-8631-6aa547ddf59a");
-        UUID orderID = UUID.fromString("cca80500-96a1-4336-96b7-b5f4e1442f4e");
-        UUID shopperID = UUID.randomUUID();
-        GeoPoint dropOffLocation = new GeoPoint(1.0, 1.0, "");
-        Order order = new Order(orderID, customerID, storeID, shopperID, Calendar.getInstance(), null, 50.0, OrderType.DELIVERY, OrderStatus.PURCHASED, null, 0.0, dropOffLocation, null, false);
-        Customer customer = new Customer("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.CUSTOMER,customerID);
-        Store store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true, "");
-        GeoPoint pickUpLocation = new GeoPoint(0.0, 0.0, "address");
-        store.setStoreLocation(pickUpLocation);
-        customerRepo.save(customer);
-        storeRepo.save(store);
-        orderRepo.save(order);
+
         DeliveryCreateDeliveryResponse response = new DeliveryCreateDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
@@ -123,9 +114,7 @@ public class DeliveryController implements DeliveryApi {
 
     @Override
     public ResponseEntity<DeliveryGetDeliveryDetailResponse> getDeliveryDetail(DeliveryGetDeliveryDetailRequest body) {
-        Admin admin = new Admin();
-        admin.setAdminID(UUID.fromString("015e8ddf-25f6-4bcf-99d8-13272f042c4a"));
-        adminRepo.save(admin);
+
         DeliveryGetDeliveryDetailResponse response = new DeliveryGetDeliveryDetailResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
@@ -160,11 +149,7 @@ public class DeliveryController implements DeliveryApi {
 
     @Override
     public ResponseEntity<DeliveryGetNextOrderForDriverResponse> getNextOrderForDriver(DeliveryGetNextOrderForDriverRequest body) {
-        UUID driverID = UUID.fromString("4a7f8c6c-1a7d-4eab-a23b-a4d0aa0d4062");
-        Driver driver = new Driver();
-        driver.setDriverID(driverID);
-        driver.setOnShift(true);
-        driverRepo.save(driver);
+
         DeliveryGetNextOrderForDriverResponse response = new DeliveryGetNextOrderForDriverResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
