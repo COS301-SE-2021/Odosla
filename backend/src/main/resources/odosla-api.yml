@@ -1896,7 +1896,7 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        driverID:
+        jwtToken:
           type: string
         deliveryID:
           type: string
