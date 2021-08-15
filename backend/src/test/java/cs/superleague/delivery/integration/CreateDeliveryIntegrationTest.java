@@ -76,7 +76,7 @@ public class CreateDeliveryIntegrationTest {
         customerID = UUID.randomUUID();
         storeID = UUID.randomUUID();
         customer = new Customer("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.CUSTOMER,customerID);
-        store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true);
+        store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true, "");
         store.setStoreLocation(pickUpLocation);
         order = new Order(orderID, customerID, storeID, shopperID, Calendar.getInstance(), null, 50.0, OrderType.DELIVERY, OrderStatus.PURCHASED, null, 0.0, dropOffLocation, pickUpLocation, false);
         orderRepo.save(order);

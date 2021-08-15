@@ -72,7 +72,12 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Driver does not exist in the database.");
         }
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in the database."));
+
         if (delivery.getDriverId() != null){
+            if (delivery.getDriverId().compareTo(request.getDriverID()) == 0){
+                AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.");
+                return response;
+            }
             throw new InvalidRequestException("This delivery has already been taken by another driver.");
         }
         delivery.setDriverId(request.getDriverID());
@@ -234,7 +239,10 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Null parameters.");
         }
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
-        if (delivery.getDriverId() != request.getDriverID()){
+        if (delivery.getDriverId() == null){
+            throw new InvalidRequestException("No driver is assigned to this delivery.");
+        }
+        if (delivery.getDriverId().compareTo(request.getDriverID()) != 0){
             throw new InvalidRequestException("Driver was not assigned to delivery.");
         }
         delivery.setDriverId(null);

@@ -108,4 +108,18 @@ public class AssignDriverToDeliveryIntegrationTest {
         Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
         assertEquals(delivery1.get().getDriverId(), driverID);
     }
+
+    @Test
+    @Description("Tests for when the driver is already assigned to that delivery.")
+    @DisplayName("Same driver is assigned already")
+    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException{
+        delivery.setDriverId(driverID);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
+        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
+        assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
+        assertEquals(response.isAssigned(), true);
+        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+        assertEquals(delivery1.get().getDriverId(), driverID);
+    }
 }
