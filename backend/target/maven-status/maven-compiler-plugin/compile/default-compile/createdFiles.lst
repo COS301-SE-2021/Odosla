@@ -74,6 +74,7 @@ cs\superleague\user\requests\AccountVerifyRequest.class
 cs\superleague\user\requests\CompleteDeliveryRequest.class
 cs\superleague\shopping\requests\UpdateStoreRequest.class
 cs\superleague\payment\requests\GetInvoiceRequest.class
+cs\superleague\user\requests\GetGroceryListsRequest.class
 cs\superleague\shopping\responses\AddShopperResponse.class
 cs\superleague\payment\responses\ReverseTransactionResponse.class
 cs\superleague\user\repos\AdminRepo.class
@@ -139,6 +140,7 @@ cs\superleague\user\responses\GetUsersResponse.class
 cs\superleague\delivery\requests\TrackDeliveryRequest.class
 cs\superleague\integration\security\JwtUtil.class
 cs\superleague\shopping\responses\UpdateStoreResponse.class
+cs\superleague\models\UserGetGroceryListRequest.class
 cs\superleague\user\responses\UpdateShopperShiftResponse.class
 cs\superleague\user\dataclass\UserType.class
 cs\superleague\user\dataclass\Customer.class
@@ -172,6 +174,7 @@ cs\superleague\models\ShoppingGetStoresRequest.class
 cs\superleague\shopping\ShoppingServiceImpl.class
 cs\superleague\models\UserGetShoppingCartRequest.class
 cs\superleague\delivery\responses\TrackDeliveryResponse.class
+cs\superleague\user\responses\GetGroceryListsResponse.class
 cs\superleague\user\responses\ScanItemResponse.class
 cs\superleague\user\repos\CustomerRepo.class
 cs\superleague\integration\security\SpringSecurityConfig.class
@@ -313,6 +316,7 @@ cs\superleague\models\NotificationSendEmailNotificationResponse.class
 cs\superleague\user\responses\UpdateAdminDetailsResponse.class
 cs\superleague\models\UserScanItemRequest.class
 cs\superleague\user\requests\UpdateAdminDetailsRequest.class
+cs\superleague\models\UserGetGroceryListResponse.class
 cs\superleague\shopping\responses\GetNextQueuedResponse.class
 cs\superleague\delivery\requests\CreateDeliveryRequest.class
 cs\superleague\payment\requests\UpdateOrderRequest.class

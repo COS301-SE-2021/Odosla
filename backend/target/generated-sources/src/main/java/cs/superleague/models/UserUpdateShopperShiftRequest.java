@@ -15,29 +15,29 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object is expected as input")
 @Validated
 public class UserUpdateShopperShiftRequest   {
-  @JsonProperty("shopperID")
-  private String shopperID = null;
+  @JsonProperty("jwtToken")
+  private String jwtToken = null;
 
   @JsonProperty("onShift")
   private Boolean onShift = null;
 
-  public UserUpdateShopperShiftRequest shopperID(String shopperID) {
-    this.shopperID = shopperID;
+  public UserUpdateShopperShiftRequest jwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
     return this;
   }
 
   /**
-   * Get shopperID
-   * @return shopperID
+   * Get jwtToken
+   * @return jwtToken
   **/
   @ApiModelProperty(value = "")
   
-    public String getShopperID() {
-    return shopperID;
+    public String getJwtToken() {
+    return jwtToken;
   }
 
-  public void setShopperID(String shopperID) {
-    this.shopperID = shopperID;
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
   }
 
   public UserUpdateShopperShiftRequest onShift(Boolean onShift) {
@@ -69,13 +69,13 @@ public class UserUpdateShopperShiftRequest   {
       return false;
     }
     UserUpdateShopperShiftRequest userUpdateShopperShiftRequest = (UserUpdateShopperShiftRequest) o;
-    return Objects.equals(this.shopperID, userUpdateShopperShiftRequest.shopperID) &&
+    return Objects.equals(this.jwtToken, userUpdateShopperShiftRequest.jwtToken) &&
         Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shopperID, onShift);
+    return Objects.hash(jwtToken, onShift);
   }
 
   @Override
@@ -83,7 +83,7 @@ public class UserUpdateShopperShiftRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserUpdateShopperShiftRequest {\n");
     
-    sb.append("    shopperID: ").append(toIndentedString(shopperID)).append("\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
     sb.append("}");
     return sb.toString();

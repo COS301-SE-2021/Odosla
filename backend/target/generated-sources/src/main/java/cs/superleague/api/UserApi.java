@@ -13,6 +13,8 @@ import cs.superleague.models.UserCompletePackagingOrderRequest;
 import cs.superleague.models.UserCompletePackagingOrderResponse;
 import cs.superleague.models.UserGetCurrentUserRequest;
 import cs.superleague.models.UserGetCurrentUserResponse;
+import cs.superleague.models.UserGetGroceryListRequest;
+import cs.superleague.models.UserGetGroceryListResponse;
 import cs.superleague.models.UserGetShoppingCartRequest;
 import cs.superleague.models.UserGetShoppingCartResponse;
 import cs.superleague.models.UserLoginRequest;
@@ -87,6 +89,17 @@ public interface UserApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserGetCurrentUserRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for get grocery lists use case", nickname = "getGroceryLists", notes = "Refer to summary", response = UserGetGroceryListResponse.class, tags={ "user", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns the groceryList", response = UserGetGroceryListResponse.class) })
+    @RequestMapping(value = "/user/getGroceryLists",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<UserGetGroceryListResponse> getGroceryLists(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserGetGroceryListRequest body
 );
 
 
