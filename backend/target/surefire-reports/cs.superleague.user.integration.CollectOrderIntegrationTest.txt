@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: cs.superleague.user.integration.CollectOrderIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.07 s - in cs.superleague.user.integration.CollectOrderIntegrationTest
