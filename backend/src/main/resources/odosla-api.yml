@@ -901,6 +901,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/delivery_UpdateDeliveryStatusResponse"
 
+  /user/updateDriverShift:
+    post:
+      summary: Endpoint for updating driver shift
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: updateDriverShift
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_UpdateDriverShiftRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_UpdateDriverShiftResponse"
+
 components:
 
   schemas:
@@ -2067,5 +2089,26 @@ components:
       description: This object is expected as output
       type: object
       properties:
+        message:
+          type: string
+
+
+    user_UpdateDriverShiftRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+        onShift:
+          type: boolean
+
+    user_UpdateDriverShiftResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
         message:
           type: string
