@@ -137,7 +137,7 @@ public class CompletePackingOrderIntegrationTest {
     @Test
     @Description("Test for when Order exists in database - should return correct response")
     @DisplayName("When Order exist and response is returned")
-    void IntegrationTest_Order_exist_completing_order() throws InvalidRequestException, OrderDoesNotExist {
+    void IntegrationTest_Order_exist_completing_order() throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
         request = new CompletePackagingOrderRequest(o1UUID, true);
         response= userService.completePackagingOrder(request);
         assertNotNull(response);

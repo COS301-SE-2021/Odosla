@@ -24,6 +24,7 @@ import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.GetCurrentUserRequest;
 import cs.superleague.user.responses.GetCurrentUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -43,7 +44,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final UserService userService;
 
     @Autowired
-    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, UserService userService) {
+    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, @Lazy UserService userService) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.adminRepo = adminRepo;
