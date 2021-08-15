@@ -1599,7 +1599,7 @@ public class UserServiceImpl implements UserService{
         }
 
         if(groceryListItems.isEmpty()){
-            message = "Cannot find item with given barcode - could not make the grocery list";
+            message = "Cannot find item with given productID - could not make the grocery list";
             return new MakeGroceryListResponse(false, message, new Date());
         }
 
