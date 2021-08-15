@@ -2082,7 +2082,13 @@ public class UserServiceImpl implements UserService{
         if (request.getOnShift() == null){
             throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
         }
-        Optional<Shopper> shopper=shopperRepo.findById(request.getShopperID());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getShopperID());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        Shopper shopper1 = (Shopper) getCurrentUserResponse.getUser();
+        if (shopper1 == null){
+            throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
+        }
+        Optional<Shopper> shopper=shopperRepo.findById(shopper1.getShopperID());
 
         if(shopper==null || !shopper.isPresent()){
             throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
@@ -2103,7 +2109,7 @@ public class UserServiceImpl implements UserService{
             shopperRepo.save(shopper.get());
 
             /*Check updates have happened */
-            shopper=shopperRepo.findById(request.getShopperID());
+            shopper=shopperRepo.findById(shopper1.getShopperID());
 
             if(shopper==null || !shopper.isPresent()|| shopper.get().getOnShift()!=request.getOnShift()){
                 response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),"Couldn't update shopper's shift");
