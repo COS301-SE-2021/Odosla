@@ -9,6 +9,7 @@ import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
@@ -106,7 +107,6 @@ public class UserServiceImpl implements UserService{
             {
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
-            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
             Shopper shopperEntity=null;
             try {
@@ -123,7 +123,18 @@ public class UserServiceImpl implements UserService{
 
             shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
 
+            if(shopperRepo!=null)
+                shopperRepo.save(shopperEntity);
+
             //TODO check the order type and call the respective user (driver or customer)
+
+            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
+
+            if(orderEntity.getType().equals(OrderType.DELIVERY))
+            {
+
+            }
+
             response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
         else{
