@@ -93,39 +93,6 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserSetCartResponse> setCart(UserSetCartRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
-
         UserSetCartResponse userSetCartResponse = new UserSetCartResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -154,39 +121,6 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserClearShoppingCartResponse> clearShoppingCart(UserClearShoppingCartRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
-
         UserClearShoppingCartResponse userClearShoppingCartResponse = new UserClearShoppingCartResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -212,39 +146,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetShoppingCartResponse> getShoppingCart(UserGetShoppingCartRequest body){
-
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserGetShoppingCartResponse userGetShoppingCartResponse = new UserGetShoppingCartResponse();
         HttpStatus status = HttpStatus.OK;
@@ -300,39 +201,6 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserMakeGroceryListResponse> makeGroceryList(UserMakeGroceryListRequest body){
 
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "ds@smallClub.com", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
-
         UserMakeGroceryListResponse makeGroceryListResponse = new UserMakeGroceryListResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -358,39 +226,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserResetPasswordResponse> resetPassword(UserResetPasswordRequest body){
-
-        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-
-        if(!customerRepo.findById(customerID).isPresent()){
-
-            deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-
-            item1 = new Item("Heinz Tamatoe Sauce","123459","123456",storeID,36.99,1,"description","img/");
-            item2 = new Item("Bar one","012340","012345",storeID,14.99,3,"description","img/");
-
-            listOfItems.add(item1);
-
-            barcodes.add("123456");
-            groceryList = new GroceryList(groceryListID, "Shopping List", listOfItems);
-            groceryLists.add(groceryList);
-
-            shoppingCart.add(item2);
-
-            catalogue = new Catalogue(UUID.randomUUID(),listOfItems);
-            store = new Store(storeID,"Checkers",catalogue,2,null,null,4,true);
-            listOfStores.add(store);
-
-            setCartCustomer = new Customer("D", "S", "u14254922@tuks.co.za", "0721234567", "", new Date(), "", "", "", true,
-                    UserType.CUSTOMER, customerID, deliveryAddress, groceryLists, shoppingCart, null, null);
-
-            itemRepo.save(item1);
-            itemRepo.saveAll(shoppingCart);
-            groceryListRepo.save(groceryList);
-            storeRepo.saveAll(listOfStores);
-            customerRepo.save(setCartCustomer);
-        }
 
         UserResetPasswordResponse userMakeGroceryListResponse = new UserResetPasswordResponse();
         HttpStatus status = HttpStatus.OK;
@@ -418,18 +253,7 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserLoginResponse> loginUser(UserLoginRequest body){
 
-        Driver driver=new Driver();
-        UUID driverId= UUID.randomUUID();
-        String driverEmail="driverEmail@gmail.com";
-        String password="Kelcat@01";
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
-        String passwordHashed=passwordEncoder.encode(password);
-
-        driver.setDriverID(driverId);
-        driver.setEmail(driverEmail);
-        driver.setPassword(passwordHashed);
-        UserType userType = null;
-        driverRepo.save(driver);
+        UserType userType=null;
         UserLoginResponse response=new UserLoginResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
@@ -464,10 +288,6 @@ public class UserController implements UserApi {
         }catch(Exception e){
             e.printStackTrace();
         }
-        driverRepo.deleteAll();
-        shopperRepo.deleteAll();
-        customerRepo.deleteAll();
-        adminRepo.deleteAll();
         return new ResponseEntity<>(response, httpStatus);
 
     }
@@ -566,11 +386,7 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserAccountVerifyResponse> verifyAccount(UserAccountVerifyRequest body) {
-        Driver driver=new Driver();
-        driver.setDriverID(UUID.randomUUID());
-        driver.setEmail("driverVerifyEmail@gmail.com");
-        driver.setActivationCode("verifyCode");
-        driverRepo.save(driver);
+
         UserAccountVerifyResponse response=new UserAccountVerifyResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -601,7 +417,6 @@ public class UserController implements UserApi {
         }catch(Exception e){
             e.printStackTrace();
         }
-        driverRepo.deleteAll();
 
         return new ResponseEntity<>(response, status);
 
@@ -661,18 +476,7 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
-//        JwtUtil jwtTokenUtil = new JwtUtil();
-//        customerID = UUID.fromString("99134567-9CBC-FEF0-1254-56789ABCDEF0");
-//        storeID = UUID.fromString("01234567-9CBC-FEF0-1254-56789ABCDEF0");
-//        groceryListID = UUID.fromString("55534567-9CBC-FEF0-1254-56789ABCDEF0");
-//
-//        if(!driverRepo.findById(customerID).isPresent()){
-//            Customer customer = new Customer();
-//            customer.setCustomerID(customerID);
-//            customer.setAccountType(UserType.CUSTOMER);
-//            customerRepo.save(customer);
-//
-//        }
+
 
         UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
         HttpStatus status = HttpStatus.OK;
@@ -777,22 +581,30 @@ public class UserController implements UserApi {
         return customerObject;
     }
     public ShopperObject populateShopper(Shopper shopper){
+
         ShopperObject shopperObject = new ShopperObject();
-        shopperObject.setName(shopper.getName());
-        shopperObject.setSurname(shopper.getSurname());
-        shopperObject.setEmail(shopper.getEmail());
-        shopperObject.setPhoneNumber(shopper.getPhoneNumber());
-        shopperObject.setPassword(shopper.getPassword());
-        shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
-        shopperObject.setActivationCode(shopper.getActivationCode());
-        shopperObject.setResetCode(shopper.getResetCode());
-        shopperObject.setResetExpiration(shopper.getResetExpiration());
-        shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
-        shopperObject.setShopperID(shopper.getShopperID().toString());
-        shopperObject.setStoreID(shopper.getStoreID().toString());
-        shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
-        shopperObject.setOnShift(shopper.getOnShift());
-        shopperObject.setIsActive(shopper.isActive());
+        try {
+            shopperObject.setName(shopper.getName());
+            shopperObject.setSurname(shopper.getSurname());
+            shopperObject.setEmail(shopper.getEmail());
+            shopperObject.setPhoneNumber(shopper.getPhoneNumber());
+            shopperObject.setPassword(shopper.getPassword());
+            shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
+            shopperObject.setActivationCode(shopper.getActivationCode());
+            shopperObject.setResetCode(shopper.getResetCode());
+            shopperObject.setResetExpiration(shopper.getResetExpiration());
+            shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
+            shopperObject.setShopperID(shopper.getShopperID().toString());
+            shopperObject.setStoreID(shopper.getStoreID().toString());
+            shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
+            shopperObject.setOnShift(shopper.getOnShift());
+            shopperObject.setIsActive(shopper.isActive());
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
         return shopperObject;
     }
     public List<GroceryListObject> populateGroceryList(List<GroceryList> groceryList){
