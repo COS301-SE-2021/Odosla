@@ -15,10 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service("analyticsServiceImpl")
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final AdminRepo adminRepo;
@@ -85,10 +86,15 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         UserAnalyticsHelper userAnalyticsHelper = new UserAnalyticsHelper(createUserAnalyticsData.getUserStatisticsData());
 
+        String message;
         if(request.getReportType() == ReportType.PDF){
-            response =  new CreateUserReportResponse(userAnalyticsHelper.createPDF(), null);
+            message = "UserReport.pdf downloaded";
+            userAnalyticsHelper.createPDF();
+            response =  new CreateUserReportResponse(true, message, new Date());
         }else if(request.getReportType() == ReportType.CSV){
-            response = new CreateUserReportResponse(null, userAnalyticsHelper.createCSVReport());
+            message = "UserReport.csv downloaded";
+            userAnalyticsHelper.createCSVReport();
+            response = new CreateUserReportResponse(true, message, new Date());
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
