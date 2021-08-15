@@ -31,7 +31,7 @@ import org.openapitools.client.model.ItemObject;
  * Generic schema for a GroceryList
  */
 @ApiModel(description = "Generic schema for a GroceryList")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T15:24:16.182124800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
 public class GroceryListObject {
   public static final String SERIALIZED_NAME_GROCERY_LIST_I_D = "groceryListID";
   @SerializedName(SERIALIZED_NAME_GROCERY_LIST_I_D)
