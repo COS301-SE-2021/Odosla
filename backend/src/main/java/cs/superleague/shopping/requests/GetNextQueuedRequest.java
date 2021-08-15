@@ -8,6 +8,7 @@ public class GetNextQueuedRequest {
 
     public GetNextQueuedRequest(UUID storeID, String jwtToken) {
         this.storeID = storeID;
+        this.jwtToken=jwtToken;
     }
 
     public UUID getStoreID() {

@@ -84,23 +84,6 @@ public class ShoppingController implements ShoppingApi{
     @Override
     public ResponseEntity<ShoppingAddShopperResponse> addShopper(ShoppingAddShopperRequest body) {
 
-        //mock mem:db
-//        Store store1 = new Store();
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        store1.setStoreBrand("PnP");
-//        store1.setOpeningTime(7);
-//        store1.setClosingTime(20);
-//        store1.setOpen(false);
-//        store1.setMaxOrders(5);
-//        storeRepo.save(store1);
-//
-//        Shopper sh1 = new Shopper();
-//        sh1.setShopperID(userID);
-//        sh1.setName("John");
-//        sh1.setEmail("John123@gmail.com");
-//        sh1.setSurname("Cena");
-//        shopperRepo.save(sh1);
-
         //creating response object  and default return status
         ShoppingAddShopperResponse response = new ShoppingAddShopperResponse();
         HttpStatus status = HttpStatus.OK;
@@ -140,27 +123,6 @@ public class ShoppingController implements ShoppingApi{
     //getItems endpoint
     @Override
     public ResponseEntity<ShoppingGetItemsResponse> getItems(ShoppingGetItemsRequest body) {
-
-        //add mock data to repo
-//        List<Item> mockItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-//        itemRepo.save(item1); itemRepo.save(item2);
-//        mockItemList.add(item1); mockItemList.add(item2);
-//
-//        Catalogue c = new Catalogue();
-//        c.setStoreID(storeID);
-//        c.setItems(mockItemList);
-//        catalogueRepo.save(c);
-//
-//        Store store1 = new Store();
-//        store1.setStock(c);
-//
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        store1.setStock(c);
-//        storeRepo.save(store1);
-        ///
 
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
@@ -205,19 +167,6 @@ public class ShoppingController implements ShoppingApi{
 
     @Override
     public ResponseEntity<ShoppingRemoveQueuedOrderResponse> removeQueuedOrder(ShoppingRemoveQueuedOrderRequest body) {
-        //mock mem:db
-
-//        List<Order> oq = new ArrayList<>();
-//        Order o1 = new Order(); o1.setOrderID(orderID); o1.setType(OrderType.DELIVERY);
-//        Order o2 = new Order(); o2.setOrderID(UUID.randomUUID()); o2.setType(OrderType.DELIVERY);
-//        oq.add(o1); oq.add(o2);
-//        orderRepo.save(o1);
-//        orderRepo.save(o2);
-//
-//        Store store1 = new Store();
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        store1.setOrderQueue(oq);
-//        storeRepo.save(store1);
 
         //creating response object and default return status:
         ShoppingRemoveQueuedOrderResponse response = new ShoppingRemoveQueuedOrderResponse();
@@ -246,37 +195,6 @@ public class ShoppingController implements ShoppingApi{
     }
 
     public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
-        //add mock data to repo
-        List<Shopper> mockShopperList = new ArrayList<>();
-        Shopper shopper1, shopper2;
-        shopper1=new Shopper();
-        shopper2=new Shopper();
-
-        shopper1.setShopperID(UUID.randomUUID());
-        shopper1.setName("Peter");
-        shopper1.setSurname("Parker");
-        shopper1.setEmail("PeterParker2021!");
-        shopper1.setPassword("DontTellMaryJane2021!");
-        shopper1.setOrdersCompleted(5);
-        shopper1.setAccountType(UserType.SHOPPER);
-        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-
-        shopper2.setShopperID(UUID.randomUUID());
-        shopper2.setName("Mary");
-        shopper2.setSurname("Jane");
-        shopper2.setEmail("MaryJane2021!");
-        shopper2.setPassword("IKnowWhoPeterIs2021!");
-        shopper2.setOrdersCompleted(4);
-        shopper2.setAccountType(UserType.SHOPPER);
-        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-
-        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
-        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
-
-        Store store1 = new Store();
-        store1.setShoppers(mockShopperList);
-        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-        storeRepo.save(store1);
 
         //creating response object and default return status:
         ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
@@ -318,31 +236,6 @@ public class ShoppingController implements ShoppingApi{
 
 
     public ResponseEntity<ShoppingGetStoresResponse> getStores(ShoppingGetStoresRequest body) {
-        //add mock data to repo
-//        UUID storeUUID1 = UUID.randomUUID();
-//        UUID storeUUID2 = UUID.randomUUID();
-//
-//        List<Item> ItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","img/");
-//        ItemList.add(item1); ItemList.add(item2);
-//        itemRepo.save(item1); itemRepo.save(item2);
-//
-//        List<Item> ItemList2 = new ArrayList<>();
-//        Item item3, item4;
-//        item3=new Item("Milk","p423523144","69767699-9ABF-HJDS-1234-56789ABCDEFF",storeUUID2,36.99,1,"description","img/");
-//        item4=new Item("Beans","p623235254","65363563-9JBC-DEF0-1234-56789ABCDEFA", storeUUID2,14.99,3,"description","img/");
-//        ItemList2.add(item3); ItemList.add(item4);
-//        itemRepo.save(item3); itemRepo.save(item4);
-//
-//        List<Store> mockStoreList = new ArrayList<>();
-//        Store store1, store2;
-//        store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
-//        store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, false);
-//
-//        storeRepo.save(store1); storeRepo.save(store2);
-//        mockStoreList.add(store1); mockStoreList.add(store2);
 
         //creating response object and default return status:
         ShoppingGetStoresResponse response = new ShoppingGetStoresResponse();
@@ -410,86 +303,6 @@ public class ShoppingController implements ShoppingApi{
     @Override
     public ResponseEntity<ShoppingGetQueueResponse> getQueue(ShoppingGetQueueRequest body) {
         GetQueueRequest getQueueRequest;
-
-        /* StoreID */
-        UUID storeUUID1= UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
-        UUID storeUUID2= UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF9");
-
-        Store s;
-        Store s2;
-
-        Catalogue c;
-        Catalogue c2;
-
-        Order o;
-        Order o2;
-        UUID o1UUID=UUID.randomUUID();
-        UUID o2UUID=UUID.randomUUID();
-
-        UUID expectedU1=UUID.randomUUID();
-        UUID expectedS1=UUID.randomUUID();
-        UUID expectedShopper1=UUID.randomUUID();
-        Double expectedDiscount;
-        Double totalC;
-
-        Item i1;
-        Item i2;
-        Item i3;
-        Item i4;
-        List<Item> listOfItems=new ArrayList<>();
-        List<Item> listOfItems2=new ArrayList<>();
-
-        List<Order> listOfOrders=new ArrayList<>();
-        String expectedMessage;
-        OrderStatus expectedStatus;
-        OrderType expectedType;
-        GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
-        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworths, Hillcrest Boulevard");
-        List<Item> expectedListOfItems=new ArrayList<>();
-
-        i1=new Item("Heinz Tomato Sauce","123456","123456",storeUUID1,36.99,1,"description","img/");
-        i2=new Item("Bar one","012345","012345",storeUUID1,14.99,3,"description","img/");
-        i3=new Item("Milk","901234","901234",storeUUID2,30.00,1,"description","img/");
-        i4=new Item("Bread","890123","890123",storeUUID2,36.99,1,"description","img/");
-        itemRepo.save(i1);
-        itemRepo.save(i2);
-        itemRepo.save(i3);
-        itemRepo.save(i4);
-
-        listOfItems.add(i1);
-        listOfItems.add(i2);
-        listOfItems2.add(i3);
-        listOfItems2.add(i4);
-
-        c=new Catalogue(storeUUID1,listOfItems);
-        c2= new Catalogue(storeUUID2, listOfItems2);
-        catalogueRepo.save(c);
-        catalogueRepo.save(c2);
-
-        Date d1=new Date(2021,06,1,14,30);
-        Date d2=new Date(2021,06,1,14,23);
-        totalC=133.99;
-        expectedDiscount=0.0;
-
-        Calendar c1=Calendar.getInstance();
-        Calendar cal2=Calendar.getInstance();
-
-        c1.setTime(d1);
-        cal2.setTime(d2);
-
-        o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
-        o2=new Order(o2UUID,expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), cal2, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
-        orderRepo.save(o);
-        orderRepo.save(o2);
-        listOfOrders.add(o);
-        listOfOrders.add(o2);
-
-        s=new Store(storeUUID1,"Woolworths",c,2,null,listOfOrders,4,true);
-        s2= new Store(storeUUID2,"PnP",c2,2,null,null,4,true);
-
-        storeRepo.save(s);
-        storeRepo.save(s2);
-
 
         ShoppingGetQueueResponse response = new ShoppingGetQueueResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -713,18 +526,24 @@ public class ShoppingController implements ShoppingApi{
 
             OrderObject currentOrder = new OrderObject();
 
-            currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
-            currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
-            currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
-            currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
-            currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
-            currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
-            currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
-            currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
-            currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
-            currentOrder.setStatus(responseOrders.get(i).getStatus().name());
-            currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
-            currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
+            try{
+                currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
+                currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
+                currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
+                currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
+                currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
+                currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
+                currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
+                currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
+                currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
+                currentOrder.setStatus(responseOrders.get(i).getStatus().name());
+                currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
+                currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
 
             responseBody.add(currentOrder);
         }
