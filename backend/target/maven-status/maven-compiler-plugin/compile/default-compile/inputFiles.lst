@@ -41,7 +41,6 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\jav
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\GetStoresResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\delivery\exceptions\DeliveryException.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\OrderObject.java
-C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetGroceryListRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\repos\AdminRepo.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\repos\InvoiceRepo.java
@@ -75,7 +74,6 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\exc
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\AddShopperRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\DeliveryUpdateDeliveryStatusRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\UpdateCatalogueResponse.java
-C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\GetGroceryListsResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\requests\RemoveShopperRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\DeleteUserRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserRegisterDriverRequest.java
@@ -186,7 +184,6 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\responses\UpdateOrderResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\delivery\repos\DeliveryDetailRepo.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\delivery\repos\DeliveryRepo.java
-C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\GetGroceryListsRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\responses\AccountVerifyResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\NotificationSendEmailNotificationRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\responses\AddShopperResponse.java
@@ -195,7 +192,6 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integrat
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\exceptions\NotAuthorisedException.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetShoppingCartResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\repos\OrderRepo.java
-C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserGetGroceryListResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\PaymentGetStatusRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Admin.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\NotificationService.java
