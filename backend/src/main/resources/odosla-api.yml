@@ -679,6 +679,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_CompletePackagingOrderResponse"
+
+  /user/getGroceryLists:
+    post:
+      summary: Endpoint for get grocery lists use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getGroceryLists
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetGroceryListRequest"
+      responses:
+        "200":
+          description: Returns the groceryList
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetGroceryListResponse"
 components:
 
   schemas:
@@ -1625,3 +1647,26 @@ components:
     shopping_PopulateTablesResponse:
       description: This object is expected as output
       type: object
+
+
+    user_GetGroceryListRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWTToken:
+          type: string
+
+    user_GetGroceryListResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        groceryLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
