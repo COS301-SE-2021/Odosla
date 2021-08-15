@@ -18,8 +18,11 @@ Name | Type | Description | Notes
 **resetExpiration** | **String** |  |  [optional]
 **accountType** | **String** |  |  [optional]
 **customerID** | **String** |  |  [optional]
-**rating** | **BigDecimal** |  |  [optional]
-**isActive** | **Boolean** |  |  [optional]
+**address** | **String** |  |  [optional]
+**groceryLists** | [**List&lt;GroceryListObject&gt;**](GroceryListObject.md) |  |  [optional]
+**shoppingCart** | [**List&lt;ItemObject&gt;**](ItemObject.md) |  |  [optional]
+**preference** | **Object** |  |  [optional]
+**wallet** | **Object** |  |  [optional]
 
 
 

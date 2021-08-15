@@ -71,9 +71,6 @@ public class ClearShoppersIntegrationTest {
 
     @AfterEach
     void tearDown() {
-
-        storeRepo.deleteAll();
-        shopperRepo.deleteAll();
     }
 
     @Test
