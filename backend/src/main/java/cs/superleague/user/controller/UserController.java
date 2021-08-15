@@ -2,7 +2,6 @@ package cs.superleague.user.controller;
 
 import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.repos.OrderRepo;
@@ -21,13 +20,15 @@ import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -545,6 +546,32 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateDriverShiftResponse> updateDriverShift(UserUpdateDriverShiftRequest body){
+
+        UserUpdateDriverShiftResponse userUpdateDriverShiftResponse = new UserUpdateDriverShiftResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateDriverShiftRequest request = new UpdateDriverShiftRequest(body.getJwtToken(), body.isOnShift());
+
+            UpdateDriverShiftResponse response = ServiceSelector.getUserService().updateDriverShift(request);
+            try{
+                userUpdateDriverShiftResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateDriverShiftResponse.setMessage(response.getMessage());
+                userUpdateDriverShiftResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateDriverShiftResponse, status);
     }
 
     //Helper for getCurrentUser

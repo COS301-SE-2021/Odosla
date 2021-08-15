@@ -2148,9 +2148,9 @@ public class UserServiceImpl implements UserService{
         if(request==null){
             isException=true;
             errorMessage="UpdateDriverShiftRequest object is null";
-        }else if(request.getDriverID()==null){
+        }else if(request.getJWTToken()==null){
             isException=true;
-            errorMessage="DriverID in UpdateDriverShiftRequest is null";
+            errorMessage="JWTToken in UpdateDriverShiftRequest is null";
         } else if(request.getOnShift()==null){
             isException=true;
             errorMessage="onShift in UpdateDriverShiftRequest is null";
@@ -2160,13 +2160,21 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Optional<Driver> driver=driverRepo.findById(request.getDriverID());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
 
-        if(driver==null || !driver.isPresent()){
-            throw new DriverDoesNotExistException("Driver with driverID does not exist in database");
+        if(getCurrentUserResponse.getUser() == null){
+            throw new DriverDoesNotExistException("Driver does not exist");
         }
 
-        if(driver.get().getOnShift()==request.getOnShift()){
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.DRIVER){
+            String message = "No driver exist with that JWTToken";
+            return new UpdateDriverShiftResponse(false, Calendar.getInstance().getTime(), message);
+        }
+
+        Driver driver = (Driver)getCurrentUserResponse.getUser();
+
+        if(driver.getOnShift()==request.getOnShift()){
             String message="";
             if(request.getOnShift()==true){
                 message="Driver is already on shift";
@@ -2177,13 +2185,13 @@ public class UserServiceImpl implements UserService{
             response=new UpdateDriverShiftResponse(false,Calendar.getInstance().getTime(),message);
         }
         else{
-            driver.get().setOnShift(request.getOnShift());
-            driverRepo.save(driver.get());
+            driver.setOnShift(request.getOnShift());
+            driverRepo.save(driver);
 
             /*Check updates have happened */
-            driver=driverRepo.findById(request.getDriverID());
+            Optional<Driver> driverOptional = driverRepo.findById(driver.getDriverID());
 
-            if(driver==null || !driver.isPresent()|| driver.get().getOnShift()!=request.getOnShift()){
+            if(driverOptional==null || !driverOptional.isPresent()|| driverOptional.get().getOnShift()!=request.getOnShift()){
                 response=new UpdateDriverShiftResponse(false,Calendar.getInstance().getTime(),"Couldn't update driver's shift");
             }
             else{
