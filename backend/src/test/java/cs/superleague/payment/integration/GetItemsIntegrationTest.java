@@ -77,7 +77,8 @@ public class GetItemsIntegrationTest {
         o2 = new Order(o2UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
         listOfOrders.add(o2);
-        itemRepo.saveAll(expectedListOfItems);
+        itemRepo.save(I1);
+        itemRepo.save(I2);
         orderRepo.saveAll(listOfOrders);
     }
 

@@ -3,6 +3,7 @@ package cs.superleague.notification.integration;
 
 import cs.superleague.notification.NotificationServiceImpl;
 import cs.superleague.notification.exceptions.InvalidRequestException;
+import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
@@ -28,6 +29,9 @@ import java.util.UUID;
 @SpringBootTest
 @Transactional
 class SendEmailNotificationIntegrationTest {
+
+    @Autowired
+    NotificationRepo notificationRepo;
 
     @Autowired
     AdminRepo adminRepo;
@@ -68,6 +72,7 @@ class SendEmailNotificationIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        notificationRepo.deleteAll();
         adminRepo.deleteAll();
     }
 
