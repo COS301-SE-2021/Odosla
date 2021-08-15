@@ -89,7 +89,7 @@ public class RemoveDriverFromDeliveryUnitTest {
         storeID = UUID.randomUUID();
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, status, cost);
         customer = new Customer("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.CUSTOMER, customerID);
-        store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true);
+        store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true, "");
         store.setStoreLocation(pickUpLocation);
         admin = new Admin("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID);
         deliveryDetail1 = new DeliveryDetail(deliveryID, time, status, "detail");
@@ -164,5 +164,16 @@ public class RemoveDriverFromDeliveryUnitTest {
         RemoveDriverFromDeliveryResponse response = deliveryService.removeDriverFromDelivery(request1);
         assertEquals(response.getMessage(), "Driver successfully removed from delivery.");
         assertEquals(response.isSuccess(), true);
+    }
+
+    @Test
+    @Description("Tests for when there is no driver assigned to the delivery")
+    @DisplayName("No driver assigned")
+    void noDriverAssignedToDelivery_UnitTest() throws InvalidRequestException{
+        delivery.setDriverId(null);
+        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
+        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request1));
+        assertEquals("No driver is assigned to this delivery.", thrown1.getMessage());
     }
 }

@@ -90,7 +90,7 @@ public class AssignDriverToDeliveryUnitTest {
         storeID = UUID.randomUUID();
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, status, cost);
         customer = new Customer("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.CUSTOMER, customerID);
-        store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true);
+        store = new Store(storeID, 1, 2, "Woolworth's", 10, 10, true, "/store/woolworths.png");
         store.setStoreLocation(pickUpLocation);
         admin = new Admin("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID);
         deliveryDetail1 = new DeliveryDetail(deliveryID, time, status, "detail");
@@ -168,8 +168,8 @@ public class AssignDriverToDeliveryUnitTest {
     }
 
     @Test
-    @Description("Tests when there is no driver assigned to deliver and the driver passed in is assigned, should throw an exception.")
-    @DisplayName("Driver already assigned")
+    @Description("Tests when there is no driver assigned to deliver and the driver passed in is assigned.")
+    @DisplayName("Driver successfully assigned")
     void driverAssignedSuccessfullyToTheDelivery_UnitTest()throws InvalidRequestException{
         delivery.setDriverId(null);
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
@@ -177,6 +177,19 @@ public class AssignDriverToDeliveryUnitTest {
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(driverID, deliveryID);
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request1);
         assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
+        assertEquals(response.isAssigned(), true);
+    }
+
+    @Test
+    @Description("Tests for when the driver is already assigned to the delivery")
+    @DisplayName("Same driver already assigned")
+    void sameDriverIsAlreadyAssignedToDelivery_UnitTest() throws InvalidRequestException {
+        delivery.setDriverId(driverID);
+        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
+        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(driverID, deliveryID);
+        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request1);
+        assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
         assertEquals(response.isAssigned(), true);
     }
 }

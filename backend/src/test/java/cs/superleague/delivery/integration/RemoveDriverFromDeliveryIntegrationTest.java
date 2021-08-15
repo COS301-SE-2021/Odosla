@@ -89,4 +89,16 @@ public class RemoveDriverFromDeliveryIntegrationTest {
         Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
         assertEquals(delivery1.get().getDriverId(), null);
     }
+
+    @Test
+    @Description("Tests for when there is no driver assigned to the delivery")
+    @DisplayName("No driver assigned")
+    void noDriverAssignedToDelivery_IntegrationTest() {
+        delivery.setDriverId(null);
+        deliveryRepo.save(delivery);
+        RemoveDriverFromDeliveryRequest request = new RemoveDriverFromDeliveryRequest(UUID.randomUUID(), deliveryID);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request));
+        assertEquals("No driver is assigned to this delivery.", thrown.getMessage());
+
+    }
 }

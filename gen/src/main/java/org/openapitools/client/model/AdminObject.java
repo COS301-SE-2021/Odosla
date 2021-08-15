@@ -23,12 +23,11 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.math.BigDecimal;
 
 /**
  * AdminObject
  */
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-13T14:22:29.077005400+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
 public class AdminObject {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
@@ -73,14 +72,6 @@ public class AdminObject {
   public static final String SERIALIZED_NAME_ADMIN_I_D = "adminID";
   @SerializedName(SERIALIZED_NAME_ADMIN_I_D)
   private String adminID;
-
-  public static final String SERIALIZED_NAME_RATING = "rating";
-  @SerializedName(SERIALIZED_NAME_RATING)
-  private BigDecimal rating;
-
-  public static final String SERIALIZED_NAME_IS_ACTIVE = "isActive";
-  @SerializedName(SERIALIZED_NAME_IS_ACTIVE)
-  private Boolean isActive;
 
 
   public AdminObject name(String name) {
@@ -336,52 +327,6 @@ public class AdminObject {
   }
 
 
-  public AdminObject rating(BigDecimal rating) {
-    
-    this.rating = rating;
-    return this;
-  }
-
-   /**
-   * Get rating
-   * @return rating
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public BigDecimal getRating() {
-    return rating;
-  }
-
-
-  public void setRating(BigDecimal rating) {
-    this.rating = rating;
-  }
-
-
-  public AdminObject isActive(Boolean isActive) {
-    
-    this.isActive = isActive;
-    return this;
-  }
-
-   /**
-   * Get isActive
-   * @return isActive
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public Boolean getIsActive() {
-    return isActive;
-  }
-
-
-  public void setIsActive(Boolean isActive) {
-    this.isActive = isActive;
-  }
-
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -401,14 +346,12 @@ public class AdminObject {
         Objects.equals(this.resetCode, adminObject.resetCode) &&
         Objects.equals(this.resetExpiration, adminObject.resetExpiration) &&
         Objects.equals(this.accountType, adminObject.accountType) &&
-        Objects.equals(this.adminID, adminObject.adminID) &&
-        Objects.equals(this.rating, adminObject.rating) &&
-        Objects.equals(this.isActive, adminObject.isActive);
+        Objects.equals(this.adminID, adminObject.adminID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, adminID, rating, isActive);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, adminID);
   }
 
 
@@ -427,8 +370,6 @@ public class AdminObject {
     sb.append("    resetExpiration: ").append(toIndentedString(resetExpiration)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("    adminID: ").append(toIndentedString(adminID)).append("\n");
-    sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
-    sb.append("    isActive: ").append(toIndentedString(isActive)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **maxOrders** | **Integer** |  |  [optional]
 **openingTime** | **Integer** |  |  [optional]
 **closingTime** | **Integer** |  |  [optional]
+**imageUrl** | **String** |  |  [optional]
 
 
 
