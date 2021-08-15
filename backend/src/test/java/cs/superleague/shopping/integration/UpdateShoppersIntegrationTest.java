@@ -97,9 +97,6 @@ public class UpdateShoppersIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        shopperRepo.deleteAll();
     }
 
     @Test

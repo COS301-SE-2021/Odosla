@@ -28,37 +28,37 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T12:02:13.757045200+02:00[Africa/Harare]")
 public class UserUpdateShopperShiftRequest {
-  public static final String SERIALIZED_NAME_SHOPPER_I_D = "shopperID";
-  @SerializedName(SERIALIZED_NAME_SHOPPER_I_D)
-  private String shopperID;
+  public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
+  @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
+  private String jwtToken;
 
   public static final String SERIALIZED_NAME_ON_SHIFT = "onShift";
   @SerializedName(SERIALIZED_NAME_ON_SHIFT)
   private Boolean onShift;
 
 
-  public UserUpdateShopperShiftRequest shopperID(String shopperID) {
+  public UserUpdateShopperShiftRequest jwtToken(String jwtToken) {
     
-    this.shopperID = shopperID;
+    this.jwtToken = jwtToken;
     return this;
   }
 
    /**
-   * Get shopperID
-   * @return shopperID
+   * Get jwtToken
+   * @return jwtToken
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getShopperID() {
-    return shopperID;
+  public String getJwtToken() {
+    return jwtToken;
   }
 
 
-  public void setShopperID(String shopperID) {
-    this.shopperID = shopperID;
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
   }
 
 
@@ -94,13 +94,13 @@ public class UserUpdateShopperShiftRequest {
       return false;
     }
     UserUpdateShopperShiftRequest userUpdateShopperShiftRequest = (UserUpdateShopperShiftRequest) o;
-    return Objects.equals(this.shopperID, userUpdateShopperShiftRequest.shopperID) &&
+    return Objects.equals(this.jwtToken, userUpdateShopperShiftRequest.jwtToken) &&
         Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shopperID, onShift);
+    return Objects.hash(jwtToken, onShift);
   }
 
 
@@ -108,7 +108,7 @@ public class UserUpdateShopperShiftRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserUpdateShopperShiftRequest {\n");
-    sb.append("    shopperID: ").append(toIndentedString(shopperID)).append("\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
     sb.append("}");
     return sb.toString();

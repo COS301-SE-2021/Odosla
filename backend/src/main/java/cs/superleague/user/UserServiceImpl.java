@@ -1548,7 +1548,7 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UserID is null - could not make grocery list");
         }
 
-        if(request.getBarcodes() == null || request.getBarcodes().isEmpty()){
+        if(request.getProductIds() == null || request.getProductIds().isEmpty()){
             throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
 
@@ -1589,16 +1589,16 @@ public class UserServiceImpl implements UserService{
             items.addAll(store.getStock().getItems());
         }
 
-        for (String barcode: request.getBarcodes()) {
+        for (String productId: request.getProductIds()) {
             for (Item item: items) {
-                if(item.getBarcode().equals(barcode)){
+                if(item.getProductID().equals(productId)){
                     groceryListItems.add(item);
                 }
             }
         }
 
         if(groceryListItems.isEmpty()){
-            message = "Cannot find item with given barcode - could not make the grocery list";
+            message = "Cannot find item with given productID - could not make the grocery list";
             return new MakeGroceryListResponse(false, message, new Date());
         }
 
@@ -2081,7 +2081,13 @@ public class UserServiceImpl implements UserService{
         if (request.getOnShift() == null){
             throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
         }
-        Optional<Shopper> shopper=shopperRepo.findById(request.getShopperID());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getShopperID());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        Shopper shopper1 = (Shopper) getCurrentUserResponse.getUser();
+        if (shopper1 == null){
+            throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
+        }
+        Optional<Shopper> shopper=shopperRepo.findById(shopper1.getShopperID());
 
         if(shopper==null || !shopper.isPresent()){
             throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
@@ -2102,7 +2108,7 @@ public class UserServiceImpl implements UserService{
             shopperRepo.save(shopper.get());
 
             /*Check updates have happened */
-            shopper=shopperRepo.findById(request.getShopperID());
+            shopper=shopperRepo.findById(shopper1.getShopperID());
 
             if(shopper==null || !shopper.isPresent()|| shopper.get().getOnShift()!=request.getOnShift()){
                 response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),"Couldn't update shopper's shift");

@@ -7,7 +7,7 @@ This object is expected as output
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**orderStatus** | **String** |  |  [optional]
+**orderId** | **String** |  |  [optional]
 **message** | **String** | Will contain a descriptive error message if response code is not 200, else will be empty |  [optional]
 **success** | **Boolean** |  |  [optional]
 **timestamp** | **String** |  |  [optional]

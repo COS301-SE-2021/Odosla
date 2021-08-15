@@ -135,10 +135,7 @@ public class GetQueueIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
-        orderRepo.deleteAll();
+
     }
 
     @Test
