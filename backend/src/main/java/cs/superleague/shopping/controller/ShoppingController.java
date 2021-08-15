@@ -528,17 +528,27 @@ public class ShoppingController implements ShoppingApi{
 
             try{
                 currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
-                currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
-                currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
-                currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
-                currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
-                currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
-                currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
-                currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
-                currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
-                currentOrder.setStatus(responseOrders.get(i).getStatus().name());
-                currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
                 currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
+                currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
+
+                try{
+                    currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+                currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
+                currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
+                currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
+                currentOrder.setStatus(responseOrders.get(i).getStatus().name());
+                currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
+                currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
+                currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
+                currentOrder.setStoreAddress(responseOrders.get(i).getStoreAddress().getAddress());
+                currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
+
+
             }catch(Exception e)
             {
                 e.printStackTrace();
