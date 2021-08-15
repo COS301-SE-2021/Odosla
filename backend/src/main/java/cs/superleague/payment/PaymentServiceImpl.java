@@ -589,6 +589,7 @@ import java.util.List;50"
         }
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.PURCHASED);
         SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
+        Thread.sleep(2000);
         VerifyPaymentResponse verifyPaymentResponse;
         if (setStatusResponse.getSuccess() == true){
             verifyPaymentResponse = new VerifyPaymentResponse(true, "Payment Successfully verified.");
