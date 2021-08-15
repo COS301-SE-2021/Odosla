@@ -4,8 +4,9 @@ import java.util.UUID;
 
 public class GetNextQueuedRequest {
     private UUID storeID;
+    private String jwtToken;
 
-    public GetNextQueuedRequest(UUID storeID) {
+    public GetNextQueuedRequest(UUID storeID, String jwtToken) {
         this.storeID = storeID;
     }
 
@@ -15,5 +16,13 @@ public class GetNextQueuedRequest {
 
     public void setStoreID(UUID storeID) {
         this.storeID = storeID;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 }

@@ -1,5 +1,6 @@
 package cs.superleague.shopping;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
@@ -9,7 +10,9 @@ import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.ShopperRepo;
+import cs.superleague.user.requests.GetCurrentUserRequest;
 import cs.superleague.user.requests.GetShopperByUUIDRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -178,10 +181,11 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException(e.getMessage());
         }
 
-        store.getOrderQueue().add(updatedOrder);
-
         if(storeRepo!=null)
-        storeRepo.save(store);
+        {
+            store.getOrderQueue().add(updatedOrder);
+            storeRepo.save(store);
+        }
 
         response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
 
@@ -218,7 +222,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * */
 
     @Override
-    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException {
         GetNextQueuedResponse response=null;
 
         if(request!=null){
@@ -226,6 +230,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             if(request.getStoreID()==null){
                 throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
+
+            if(request.getJwtToken()==null)
+            {
+                throw new InvalidRequestException("JwtToken parameter in request can't be null - can't get next queued");
+            }
+
             Store store;
 
             try {
@@ -256,8 +266,40 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
             }
 
-            orderQueue.remove(correspondingOrder);
-            store.setOrderQueue(orderQueue);
+            if(orderRepo!=null)
+            {
+                Order updateOrder= orderRepo.findById(correspondingOrder.getOrderID()).orElse(null);
+
+                if(updateOrder!=null)
+                {
+                    JwtUtil jwtUtil = new JwtUtil();
+                    if(jwtUtil.extractUserType(request.getJwtToken()).equals("SHOPPER"))
+                    {
+                        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+
+                        if(shopperRepo!=null)
+                        {
+                            Shopper shopper = shopperRepo.findByEmail(getCurrentUserResponse.getUser().getEmail()).orElse(null);
+                            assert shopper != null;
+                            updateOrder.setShopperID(shopper.getShopperID());
+                            updateOrder.setStatus(OrderStatus.PACKING);
+                            orderRepo.save(updateOrder);
+                        }
+
+                    }
+                    else
+                    {
+                        throw new InvalidRequestException("Invalid user");
+                    }
+
+                }
+            }
+
+            if(storeRepo!=null)
+            {
+                store.getOrderQueue().remove(correspondingOrder);
+                storeRepo.save(store);
+            }
 
             response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderQueue,correspondingOrder);
 
