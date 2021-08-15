@@ -221,17 +221,26 @@ public class PaymentServiceImpl implements PaymentService {
                     if(shop.getStore().getOpen()==true) {
                         if(orderRepo!=null)
                         orderRepo.save(o);
-                        try{
-                            response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
-                            return response;
-                        }finally {
-                            CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(orderID);
-                            CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
-                            AddToQueueRequest addToQueueRequest = new AddToQueueRequest(o);
-                            shoppingService.addToQueue(addToQueueRequest);
+                        UUID finalOrderID = orderID;
+                        new Thread(()-> {
+                            CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderID);
+                            try {
+                                CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                            } catch (PaymentException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
+                            try {
+                                shoppingService.addToQueue(addToQueueRequest);
+                            } catch (cs.superleague.shopping.exceptions.InvalidRequestException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
 
-                            System.out.println("Order has been created");
-                        }
+                        System.out.println("Order has been created");
+                        response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
                     }
                     else {
                         throw new StoreClosedException("Store is currently closed - could not create order");
