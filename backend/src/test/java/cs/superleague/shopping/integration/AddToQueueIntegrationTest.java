@@ -194,11 +194,17 @@ public class AddToQueueIntegrationTest {
     @Test
     @Description("Test for correct and valid request object passed in - should pass without an exception")
     @DisplayName("Valid request object")
-    void IntegrationTest_validRequest() throws InvalidRequestException {
+    void IntegrationTest_validRequest(){
         AddToQueueRequest request=new AddToQueueRequest(order);
         AddToQueueResponse response;
-        response = shoppingService.addToQueue(request);
-        assertTrue(response.isSuccess());
+        try {
+            response = shoppingService.addToQueue(request);
+            assertTrue(response.isSuccess());
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            fail();
+        }
+
     }
 
 }
