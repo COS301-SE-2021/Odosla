@@ -15,29 +15,29 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object is expected as input")
 @Validated
 public class DeliveryAssignDriverToDeliveryRequest   {
-  @JsonProperty("driverID")
-  private String driverID = null;
+  @JsonProperty("jwtToken")
+  private String jwtToken = null;
 
   @JsonProperty("deliveryID")
   private String deliveryID = null;
 
-  public DeliveryAssignDriverToDeliveryRequest driverID(String driverID) {
-    this.driverID = driverID;
+  public DeliveryAssignDriverToDeliveryRequest jwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
     return this;
   }
 
   /**
-   * Get driverID
-   * @return driverID
+   * Get jwtToken
+   * @return jwtToken
   **/
   @ApiModelProperty(value = "")
   
-    public String getDriverID() {
-    return driverID;
+    public String getJwtToken() {
+    return jwtToken;
   }
 
-  public void setDriverID(String driverID) {
-    this.driverID = driverID;
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
   }
 
   public DeliveryAssignDriverToDeliveryRequest deliveryID(String deliveryID) {
@@ -69,13 +69,13 @@ public class DeliveryAssignDriverToDeliveryRequest   {
       return false;
     }
     DeliveryAssignDriverToDeliveryRequest deliveryAssignDriverToDeliveryRequest = (DeliveryAssignDriverToDeliveryRequest) o;
-    return Objects.equals(this.driverID, deliveryAssignDriverToDeliveryRequest.driverID) &&
+    return Objects.equals(this.jwtToken, deliveryAssignDriverToDeliveryRequest.jwtToken) &&
         Objects.equals(this.deliveryID, deliveryAssignDriverToDeliveryRequest.deliveryID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(driverID, deliveryID);
+    return Objects.hash(jwtToken, deliveryID);
   }
 
   @Override
@@ -83,7 +83,7 @@ public class DeliveryAssignDriverToDeliveryRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryAssignDriverToDeliveryRequest {\n");
     
-    sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
     sb.append("}");
     return sb.toString();

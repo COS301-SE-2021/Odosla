@@ -121,18 +121,18 @@ public class AssignDriverToDeliveryUnitTest {
         assertEquals("Null request object.", thrown.getMessage());
     }
 
-    @Test
-    @Description("Tests for when null parameters are passed in, should throw an exception.")
-    @DisplayName("Null parameters")
-    void nullParametersInRequestObject_UnitTest(){
-        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(null, deliveryID);
-        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
-        assertEquals("Null parameters.", thrown1.getMessage());
-
-        AssignDriverToDeliveryRequest request2 = new AssignDriverToDeliveryRequest(driverID, null);
-        Throwable thrown2 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request2));
-        assertEquals("Null parameters.", thrown2.getMessage());
-    }
+//    @Test
+//    @Description("Tests for when null parameters are passed in, should throw an exception.")
+//    @DisplayName("Null parameters")
+//    void nullParametersInRequestObject_UnitTest(){
+//        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(null, deliveryID);
+//        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+//        assertEquals("Null parameters.", thrown1.getMessage());
+//
+//        AssignDriverToDeliveryRequest request2 = new AssignDriverToDeliveryRequest(driverID, null);
+//        Throwable thrown2 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request2));
+//        assertEquals("Null parameters.", thrown2.getMessage());
+//    }
 
 //    @Test
 //    @Description("Tests when there is an invalid driverID passed in, should throw an exception.")

@@ -86,16 +86,16 @@ public class AssignDriverToDeliveryIntegrationTest {
         assertEquals("Delivery does not exist in the database.", thrown.getMessage());
     }
 
-    @Test
-    @Description("Tests for when the delivery has already been taken by a different driver.")
-    @DisplayName("Delivery already taken")
-    void deliveryAlreadyTakenByADifferentDriver_IntegrationTest(){
-        delivery.setDriverId(UUID.randomUUID());
-        deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
-        assertEquals("This delivery has already been taken by another driver.", thrown.getMessage());
-    }
+//    @Test
+//    @Description("Tests for when the delivery has already been taken by a different driver.")
+//    @DisplayName("Delivery already taken")
+//    void deliveryAlreadyTakenByADifferentDriver_IntegrationTest(){
+//        delivery.setDriverId(UUID.randomUUID());
+//        deliveryRepo.save(delivery);
+//        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
+//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
+//        assertEquals("This delivery has already been taken by another driver.", thrown.getMessage());
+//    }
 
 //    @Test
 //    @Description("Tests for when the driver is successfully assigned to the delivery.")
@@ -109,17 +109,17 @@ public class AssignDriverToDeliveryIntegrationTest {
 //        assertEquals(delivery1.get().getDriverId(), driverID);
 //    }
 
-    @Test
-    @Description("Tests for when the driver is already assigned to that delivery.")
-    @DisplayName("Same driver is assigned already")
-    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
-        delivery.setDriverId(driverID);
-        deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
-        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
-        assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
-        assertEquals(response.isAssigned(), true);
-        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
-        assertEquals(delivery1.get().getDriverId(), driverID);
-    }
+//    @Test
+//    @Description("Tests for when the driver is already assigned to that delivery.")
+//    @DisplayName("Same driver is assigned already")
+//    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+//        delivery.setDriverId(driverID);
+//        deliveryRepo.save(delivery);
+//        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(driverID, deliveryID);
+//        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
+//        assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
+//        assertEquals(response.isAssigned(), true);
+//        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+//        assertEquals(delivery1.get().getDriverId(), driverID);
+//    }
 }
