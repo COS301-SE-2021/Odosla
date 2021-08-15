@@ -637,6 +637,17 @@ import java.util.List;50"
     }
 
     @Override
+    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
+        }
+        if (request.getJwtToken() == null){
+            throw new InvalidRequestException("JWTToken of ");
+        }
+        return null;
+    }
+
+    @Override
     public GetItemsResponse getItems(GetItemsRequest request) throws PaymentException{
 
         String message = "Items successfully retrieved";

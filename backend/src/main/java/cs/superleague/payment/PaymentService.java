@@ -41,4 +41,8 @@ public interface PaymentService {
 
     GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException;
 
+    //CUSTOMER REQUESTS
+
+    GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException;
+
 }
