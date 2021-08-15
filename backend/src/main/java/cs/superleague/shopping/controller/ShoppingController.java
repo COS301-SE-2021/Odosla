@@ -446,13 +446,13 @@ public class ShoppingController implements ShoppingApi{
         Catalogue c2 = new Catalogue(storeUUID2, store2Cat);
         catalogueRepo.save(c2);
 
-        Store store1=new Store(storeUUID1, 7, 4, "Pick n Pay", 2, 5, true, "shop/pnp.png");
-        Store store2=new Store(storeUUID2, 8, 10, "Woolworths", 2, 7, true, "shop/woolworths.png");
-        Store store3=new Store(storeUUID3, 8, 9, "Checkers Hyper", 2, 7, true, "shop/checkers.png");
-        Store store4=new Store(storeUUID4, 8, 10, "SuperSpar", 2, 7, true, "shop/superSpar.png");
-        Store store5=new Store(storeUUID5, 8, 8, "Game", 2, 7, true, "shop/game.png");
-        Store store6=new Store(storeUUID6, 7, 6, "Food Lover's Market", 2, 7, true, "shop/foodLoversMarket.png");
-        Store store7=new Store(storeUUID7, 8, 8, "Pep", 2, 7, true, "shop/pep.png");
+        Store store1=new Store(storeUUID1, 7, 16, "Pick n Pay", 2, 5, true, "shop/pnp.png");
+        Store store2=new Store(storeUUID2, 8, 20, "Woolworths", 2, 7, true, "shop/woolworths.png");
+        Store store3=new Store(storeUUID3, 8, 21, "Checkers Hyper", 2, 7, true, "shop/checkers.png");
+        Store store4=new Store(storeUUID4, 8, 22, "SuperSpar", 2, 7, true, "shop/superSpar.png");
+        Store store5=new Store(storeUUID5, 8, 20, "Game", 2, 7, true, "shop/game.png");
+        Store store6=new Store(storeUUID6, 7, 18, "Food Lover's Market", 2, 7, true, "shop/foodLoversMarket.png");
+        Store store7=new Store(storeUUID7, 8, 20, "Pep", 2, 7, true, "shop/pep.png");
         GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
         GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
         GeoPoint store3Location = new GeoPoint(-25.782541156164545, 28.261452959595255, "Grape street");
