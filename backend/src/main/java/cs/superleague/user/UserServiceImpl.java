@@ -2,7 +2,6 @@ package cs.superleague.user;
 
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.NotificationService;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
@@ -2608,6 +2607,30 @@ public class UserServiceImpl implements UserService{
         }
 
         return new GetUsersResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException{
+
+        Customer customer = null;
+        String message;
+        if(request == null){
+            throw new InvalidRequestException("GetGroceryList request is null - could not return groceryList");
+        }
+
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+
+
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for Customer Account type";
+            return new GetGroceryListsResponse(null, false, new Date(), message);
+        }
+
+        customer = (Customer) getCurrentUserResponse.getUser();
+
+        message = "Grocery list successfully retrieved";
+        return new GetGroceryListsResponse(customer.getGroceryLists(), true, new Date(), message);
     }
 
     private boolean emailRegex(String email){
