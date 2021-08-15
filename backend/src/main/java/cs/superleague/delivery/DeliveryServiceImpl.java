@@ -8,14 +8,21 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
+import cs.superleague.user.requests.GetCurrentUserRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +40,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final CustomerRepo customerRepo;
     private final StoreRepo storeRepo;
     private final OrderRepo orderRepo;
+    private final UserService userService;
 
     @Autowired
-    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo) {
+    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, UserService userService) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.adminRepo = adminRepo;
@@ -43,6 +51,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         this.customerRepo = customerRepo;
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
+        this.userService=userService;
     }
 
     @Override
@@ -61,16 +70,15 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException {
+    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
         if (request.getDeliveryID() == null || request.getDriverID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
-        if(!driverRepo.findById(request.getDriverID()).isPresent()){
-            throw new InvalidRequestException("Driver does not exist in the database.");
-        }
+
+
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in the database."));
 
         if (delivery.getDriverId() != null){
@@ -80,10 +88,45 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             throw new InvalidRequestException("This delivery has already been taken by another driver.");
         }
-        delivery.setDriverId(request.getDriverID());
-        deliveryRepo.save(delivery);
-        AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.");
-        return response;
+
+        JwtUtil jwtUtil = new JwtUtil();
+        if(jwtUtil.extractUserType(request.getJwtToken()).equals("DRIVER"))
+        {
+            GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+
+            if(driverRepo!=null)
+            {
+                Driver driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
+                if(driver!=null)
+                {
+                    Order updateOrder= orderRepo.findById(delivery.getOrderID()).orElse(null);
+                    if(updateOrder!=null){
+                        updateOrder.setDriverID(driver.getDriverID());
+                        orderRepo.save(updateOrder);
+
+                        delivery.setDriverId(driver.getDriverID());
+                        deliveryRepo.save(delivery);
+                        AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.");
+                        return response;
+                    }
+                    else
+                    {
+                        throw new InvalidRequestException("Invalid order");
+                    }
+                }
+                else
+                {
+                    throw new InvalidRequestException("Invalid user");
+                }
+            }
+
+        }
+        else
+        {
+            throw new InvalidRequestException("Invalid user");
+        }
+
+        return null;
     }
 
     @Override
