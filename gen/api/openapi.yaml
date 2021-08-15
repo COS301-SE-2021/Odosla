@@ -701,6 +701,29 @@ paths:
       - user
       x-contentType: application/json
       x-accepts: application/json
+  /payment/getCustomersActiveOrders:
+    post:
+      description: Refer to summary
+      operationId: getCustomerActiveOrders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/payment_GetCustomersActiveOrdersRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/payment_GetCustomersActiveOrdersResponse'
+          description: Returns the orderID of the active order
+      summary: Endpoint for the customers getting their active order
+      tags:
+      - payment
+      x-contentType: application/json
+      x-accepts: application/json
 components:
   schemas:
     ItemObject:
@@ -2020,5 +2043,25 @@ components:
       type: object
     shopping_PopulateTablesResponse:
       description: This object is expected as output
+      type: object
+    payment_GetCustomersActiveOrdersRequest:
+      description: This object is expected as input
+      properties:
+        jwtToken:
+          type: string
+      type: object
+    payment_GetCustomersActiveOrdersResponse:
+      description: This object is expected as output
+      example:
+        orderID: orderID
+        hasActiveOrder: true
+        message: message
+      properties:
+        orderID:
+          type: string
+        hasActiveOrder:
+          type: boolean
+        message:
+          type: string
       type: object
 

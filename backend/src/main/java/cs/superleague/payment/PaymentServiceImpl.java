@@ -1,7 +1,6 @@
 package cs.superleague.payment;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
@@ -14,8 +13,12 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
-import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToQueueRequest;
+import cs.superleague.user.UserService;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.requests.GetCurrentUserRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
 import cs.superleague.shopping.requests.GetQueueRequest;
 import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.AddToQueueResponse;
@@ -30,8 +33,6 @@ import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -45,13 +46,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
     private final ShoppingService shoppingService;
+    private final UserService userService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, UserService userService) {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
+        this.userService = userService;
     }
 
 
@@ -691,14 +694,34 @@ import java.util.List;50"
     }
 
     @Override
-    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException {
+    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+        GetCustomersActiveOrdersResponse response;
         if (request == null){
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
         }
         if (request.getJwtToken() == null){
-            throw new InvalidRequestException("JWTToken of ");
+            throw new InvalidRequestException("JWTToken of Get Customers Active Orders is null");
         }
-        return null;
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
+        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
+        if (getCurrentUserResponse.getUser() == null){
+            throw new UserDoesNotExistException("Invalid jwtToken, no user found");
+        }
+        Customer customer = (Customer) getCurrentUserResponse.getUser();
+        List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
+        if (orders == null){
+            throw new OrderDoesNotExist("No Orders found for this user in the database.");
+        }
+        for (Order o : orders){
+            if(o.getStatus().equals(OrderStatus.CUSTOMER_COLLECTED) || o.getStatus().equals(OrderStatus.DELIVERED)){
+                continue;
+            }else{
+                response = new GetCustomersActiveOrdersResponse(o.getOrderID(), true, "Order successfully returned to customer.");
+                return response;
+            }
+        }
+        response = new GetCustomersActiveOrdersResponse(null, false, "This customer has no active orders.");
+        return response;
     }
 
     @Override

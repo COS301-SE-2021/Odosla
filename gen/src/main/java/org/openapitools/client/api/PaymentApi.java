@@ -27,6 +27,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import org.openapitools.client.model.PaymentGetCustomersActiveOrdersRequest;
+import org.openapitools.client.model.PaymentGetCustomersActiveOrdersResponse;
 import org.openapitools.client.model.PaymentGetItemsRequest;
 import org.openapitools.client.model.PaymentGetItemsResponse;
 import org.openapitools.client.model.PaymentGetStatusRequest;
@@ -61,6 +63,117 @@ public class PaymentApi {
         this.localVarApiClient = apiClient;
     }
 
+    /**
+     * Build call for getCustomerActiveOrders
+     * @param paymentGetCustomersActiveOrdersRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns the orderID of the active order </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getCustomerActiveOrdersCall(PaymentGetCustomersActiveOrdersRequest paymentGetCustomersActiveOrdersRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = paymentGetCustomersActiveOrdersRequest;
+
+        // create path and map variables
+        String localVarPath = "/payment/getCustomersActiveOrders";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getCustomerActiveOrdersValidateBeforeCall(PaymentGetCustomersActiveOrdersRequest paymentGetCustomersActiveOrdersRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'paymentGetCustomersActiveOrdersRequest' is set
+        if (paymentGetCustomersActiveOrdersRequest == null) {
+            throw new ApiException("Missing the required parameter 'paymentGetCustomersActiveOrdersRequest' when calling getCustomerActiveOrders(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getCustomerActiveOrdersCall(paymentGetCustomersActiveOrdersRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for the customers getting their active order
+     * Refer to summary
+     * @param paymentGetCustomersActiveOrdersRequest The input body required by this request (required)
+     * @return PaymentGetCustomersActiveOrdersResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns the orderID of the active order </td><td>  -  </td></tr>
+     </table>
+     */
+    public PaymentGetCustomersActiveOrdersResponse getCustomerActiveOrders(PaymentGetCustomersActiveOrdersRequest paymentGetCustomersActiveOrdersRequest) throws ApiException {
+        ApiResponse<PaymentGetCustomersActiveOrdersResponse> localVarResp = getCustomerActiveOrdersWithHttpInfo(paymentGetCustomersActiveOrdersRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for the customers getting their active order
+     * Refer to summary
+     * @param paymentGetCustomersActiveOrdersRequest The input body required by this request (required)
+     * @return ApiResponse&lt;PaymentGetCustomersActiveOrdersResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns the orderID of the active order </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<PaymentGetCustomersActiveOrdersResponse> getCustomerActiveOrdersWithHttpInfo(PaymentGetCustomersActiveOrdersRequest paymentGetCustomersActiveOrdersRequest) throws ApiException {
+        okhttp3.Call localVarCall = getCustomerActiveOrdersValidateBeforeCall(paymentGetCustomersActiveOrdersRequest, null);
+        Type localVarReturnType = new TypeToken<PaymentGetCustomersActiveOrdersResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for the customers getting their active order (asynchronously)
+     * Refer to summary
+     * @param paymentGetCustomersActiveOrdersRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns the orderID of the active order </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getCustomerActiveOrdersAsync(PaymentGetCustomersActiveOrdersRequest paymentGetCustomersActiveOrdersRequest, final ApiCallback<PaymentGetCustomersActiveOrdersResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getCustomerActiveOrdersValidateBeforeCall(paymentGetCustomersActiveOrdersRequest, _callback);
+        Type localVarReturnType = new TypeToken<PaymentGetCustomersActiveOrdersResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
     /**
      * Build call for getItemsPayments
      * @param paymentGetItemsRequest The input body required by this request (required)
