@@ -9,7 +9,7 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist;
+    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException;
     ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
     RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
