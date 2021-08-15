@@ -178,6 +178,9 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException(e.getMessage());
         }
 
+        if (store.getOrderQueue() == null){
+            store.setOrderQueue(new ArrayList<>());
+        }
         store.getOrderQueue().add(updatedOrder);
 
         if(storeRepo!=null)
