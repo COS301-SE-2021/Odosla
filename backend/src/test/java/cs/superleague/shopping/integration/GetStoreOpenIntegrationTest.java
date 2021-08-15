@@ -87,9 +87,6 @@ public class GetStoreOpenIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
     }
 
     @Test
