@@ -31,7 +31,7 @@ import org.openapitools.client.model.ItemObject;
  * This object is expected as output
  */
 @ApiModel(description = "This object is expected as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T15:58:41.636762500+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
 public class PaymentGetItemsResponse {
   public static final String SERIALIZED_NAME_ITEMS = "items";
   @SerializedName(SERIALIZED_NAME_ITEMS)

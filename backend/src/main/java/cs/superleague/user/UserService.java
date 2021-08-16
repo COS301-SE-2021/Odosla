@@ -43,4 +43,6 @@ public interface UserService {
 
     /* Analytics user data*/
     GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
+
+    GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
 }
