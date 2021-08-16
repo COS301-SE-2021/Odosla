@@ -70,6 +70,8 @@ docs/UserCompletePackagingOrderRequest.md
 docs/UserCompletePackagingOrderResponse.md
 docs/UserGetCurrentUserRequest.md
 docs/UserGetCurrentUserResponse.md
+docs/UserGetGroceryListRequest.md
+docs/UserGetGroceryListResponse.md
 docs/UserGetShoppingCartRequest.md
 docs/UserGetShoppingCartResponse.md
 docs/UserLoginRequest.md
@@ -93,6 +95,8 @@ docs/UserSetCartRequest.md
 docs/UserSetCartResponse.md
 docs/UserSetCurrentLocationRequest.md
 docs/UserSetCurrentLocationResponse.md
+docs/UserUpdateDriverShiftRequest.md
+docs/UserUpdateDriverShiftResponse.md
 docs/UserUpdateShopperShiftRequest.md
 docs/UserUpdateShopperShiftResponse.md
 git_push.sh
@@ -187,6 +191,8 @@ src/main/java/org/openapitools/client/model/UserCompletePackagingOrderRequest.ja
 src/main/java/org/openapitools/client/model/UserCompletePackagingOrderResponse.java
 src/main/java/org/openapitools/client/model/UserGetCurrentUserRequest.java
 src/main/java/org/openapitools/client/model/UserGetCurrentUserResponse.java
+src/main/java/org/openapitools/client/model/UserGetGroceryListRequest.java
+src/main/java/org/openapitools/client/model/UserGetGroceryListResponse.java
 src/main/java/org/openapitools/client/model/UserGetShoppingCartRequest.java
 src/main/java/org/openapitools/client/model/UserGetShoppingCartResponse.java
 src/main/java/org/openapitools/client/model/UserLoginRequest.java
@@ -210,5 +216,11 @@ src/main/java/org/openapitools/client/model/UserSetCartRequest.java
 src/main/java/org/openapitools/client/model/UserSetCartResponse.java
 src/main/java/org/openapitools/client/model/UserSetCurrentLocationRequest.java
 src/main/java/org/openapitools/client/model/UserSetCurrentLocationResponse.java
+src/main/java/org/openapitools/client/model/UserUpdateDriverShiftRequest.java
+src/main/java/org/openapitools/client/model/UserUpdateDriverShiftResponse.java
 src/main/java/org/openapitools/client/model/UserUpdateShopperShiftRequest.java
 src/main/java/org/openapitools/client/model/UserUpdateShopperShiftResponse.java
+src/test/java/org/openapitools/client/model/UserGetGroceryListRequestTest.java
+src/test/java/org/openapitools/client/model/UserGetGroceryListResponseTest.java
+src/test/java/org/openapitools/client/model/UserUpdateDriverShiftRequestTest.java
+src/test/java/org/openapitools/client/model/UserUpdateDriverShiftResponseTest.java

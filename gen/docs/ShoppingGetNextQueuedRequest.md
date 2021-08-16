@@ -7,6 +7,7 @@ This object is expected as input
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**jwtToken** | **String** |  |  [optional]
 **storeID** | **String** |  |  [optional]
 
 

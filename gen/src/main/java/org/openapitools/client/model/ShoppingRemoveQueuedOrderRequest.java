@@ -28,7 +28,7 @@ import java.io.IOException;
  * this object is expected as input
  */
 @ApiModel(description = "this object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class ShoppingRemoveQueuedOrderRequest {
   public static final String SERIALIZED_NAME_ORDER_I_D = "orderID";
   @SerializedName(SERIALIZED_NAME_ORDER_I_D)
