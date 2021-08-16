@@ -3,7 +3,6 @@ package cs.superleague.integration.security;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.dataclass.Shopper;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

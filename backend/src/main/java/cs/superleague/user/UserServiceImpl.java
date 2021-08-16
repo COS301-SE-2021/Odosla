@@ -1,5 +1,7 @@
 package cs.superleague.user;
 
+import cs.superleague.delivery.DeliveryService;
+import cs.superleague.delivery.requests.CreateDeliveryRequest;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
@@ -8,6 +10,7 @@ import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
@@ -46,10 +49,11 @@ public class UserServiceImpl implements UserService{
     private JwtUtil jwtTokenUtil=new JwtUtil();
     private final ShoppingService shoppingService;
     private final StoreRepo storeRepo;
+    private final DeliveryService deliveryService;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
@@ -58,6 +62,7 @@ public class UserServiceImpl implements UserService{
         this.orderRepo= orderRepo;
         this.shoppingService = shoppingService;
         this.storeRepo = storeRepo;
+        this.deliveryService= deliveryService;
     }
 
     /**
@@ -89,7 +94,7 @@ public class UserServiceImpl implements UserService{
      * @throws OrderDoesNotExist
      */
     @Override
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist {
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
         CompletePackagingOrderResponse response = null;
         if(request != null){
 
@@ -109,7 +114,6 @@ public class UserServiceImpl implements UserService{
             {
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
-            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
             Shopper shopperEntity=null;
             try {
@@ -126,7 +130,18 @@ public class UserServiceImpl implements UserService{
 
             shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
 
-            //TODO check the order type and call the respective user (driver or customer)
+            if(shopperRepo!=null)
+                shopperRepo.save(shopperEntity);
+
+            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
+
+            if(orderEntity.getType().equals(OrderType.DELIVERY))
+            {
+                CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
+                if(deliveryService!=null)
+                deliveryService.createDelivery(createDeliveryRequest);
+            }
+
             response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
         else{

@@ -10,6 +10,7 @@ import cs.superleague.delivery.requests.AssignDriverToDeliveryRequest;
 import cs.superleague.delivery.requests.RemoveDriverFromDeliveryRequest;
 import cs.superleague.delivery.responses.RemoveDriverFromDeliveryResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Admin;
@@ -157,7 +158,7 @@ public class RemoveDriverFromDeliveryUnitTest {
     @Test
     @Description("Tests for when the driver is successfully removed from the delivery.")
     @DisplayName("Successful removal")
-    void successfulRemovalOfDriverFromDelivery_UnitTest()throws InvalidRequestException{
+    void successfulRemovalOfDriverFromDelivery_UnitTest() throws InvalidRequestException, PaymentException {
         delivery.setDriverId(driverID);
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
         RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
