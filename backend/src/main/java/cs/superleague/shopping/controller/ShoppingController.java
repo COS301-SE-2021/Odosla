@@ -483,6 +483,18 @@ public class ShoppingController implements ShoppingApi{
         storeRepo.save(store6);
         storeRepo.save(store7);
 
+        Customer customer = new Customer();
+        customer.setName("Adam");
+        customer.setSurname("Isenberg");
+        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
+        customer.setAccountType(UserType.CUSTOMER);
+        customer.setEmail("adamisenberg@gmail.com");
+        customer.setPassword("fhkjdfh534534!");
+        customer.setPhoneNumber("0835233041");
+
+        customerRepo.save(customer);
+
+
        // HttpStatus httpStatus = HttpStatus.OK;
 
         //Shoppers
