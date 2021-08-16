@@ -1341,12 +1341,12 @@ components:
     payment_SubmitOrderResponse:
       description: This object is expected as output
       example:
+        orderId: orderId
         success: true
-        orderStatus: orderStatus
         message: message
         timestamp: timestamp
       properties:
-        orderStatus:
+        orderId:
           type: string
         message:
           description: Will contain a descriptive error message if response code is
@@ -1587,10 +1587,12 @@ components:
     user_UpdateShopperShiftRequest:
       description: This object is expected as input
       properties:
-        shopperID:
+        jwtToken:
           type: string
         onShift:
           type: boolean
+        storeID:
+          type: string
       type: object
     user_UpdateShopperShiftResponse:
       description: This object is returned as output

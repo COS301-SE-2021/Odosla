@@ -208,7 +208,7 @@ public class SubmitOrderIntegrationTest {
     @Test
     @Description("This test tests whether an order is created correctly - should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
-    void IntegrationTest_CreatOrderConstruction() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException {
+    void IntegrationTest_CreatOrderConstruction() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException {
         Order order=null;
         submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
