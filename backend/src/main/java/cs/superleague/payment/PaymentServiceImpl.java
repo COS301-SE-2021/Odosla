@@ -2,6 +2,7 @@ package cs.superleague.payment;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import cs.superleague.integration.ServiceSelector;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
@@ -21,7 +22,17 @@ import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.AddToQueueResponse;
 import cs.superleague.shopping.responses.GetQueueResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.UserService;
+import cs.superleague.user.UserServiceImpl;
+import cs.superleague.user.dataclass.Admin;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.AdminDoesNotExistException;
+import cs.superleague.user.repos.AdminRepo;
+import cs.superleague.user.requests.GetCurrentUserRequest;
+import cs.superleague.user.requests.GetUserByUUIDRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
+import cs.superleague.user.responses.GetUsersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -45,13 +56,17 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
     private final ShoppingService shoppingService;
+    private final AdminRepo adminRepo;
+    private final UserService userService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService) {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
+        this.adminRepo = adminRepo;
+        this.userService = userService;
     }
 
 
@@ -719,6 +734,51 @@ import java.util.List;50"
         }
 
         return new GetItemsResponse(order.getItems(), true, new Date(), message);
+    }
+
+    @Override
+    public GetOrdersResponse getOrders(GetOrdersRequest request) throws PaymentException {
+
+        String message = "Users successfully returned";
+        Admin admin = null;
+        List<Order> orders = new ArrayList<>();
+        ServiceSelector serviceSelector;
+
+        if(request == null){
+            throw new InvalidRequestException("GetOrders request is null - could not return orders");
+        }
+
+        if(request.getJWTToken() == null){
+            throw new InvalidRequestException("JWTToken is null in GetUsersRequest request - could not return orders");
+        }
+
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse;
+
+        try {
+            getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
+        }catch (Exception e){
+            throw new InvalidRequestException("Invalid JWTToken - could not get Orders");
+        }
+
+        if(getCurrentUserResponse.getUser() == null){
+            message = "No Admin Found - could not get Orders";
+            return new GetOrdersResponse(null, false, message, new Date());
+        }
+
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
+            message = "JWTToken returns an invalid user type - could not get Orders";
+            return new GetOrdersResponse(null, false, message, new Date());
+        }
+
+        orders.addAll(orderRepo.findAll());
+
+        if(orders.isEmpty()){
+            message = "There no orders";
+            return new GetOrdersResponse(orders, true, message, new Date());
+        }
+
+        return new GetOrdersResponse(orders, true, message, new Date());
     }
 
     // Helper

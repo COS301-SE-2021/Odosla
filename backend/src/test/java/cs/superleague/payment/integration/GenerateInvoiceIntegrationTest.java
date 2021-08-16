@@ -27,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
-@DirtiesContext
 @Transactional
 public class GenerateInvoiceIntegrationTest {
 
@@ -117,11 +116,6 @@ public class GenerateInvoiceIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        transactionRepo.delete(transaction);
-
-        orderRepo.delete(order);
-
-        invoiceRepo.delete(invoice);
     }
 
     @Test
