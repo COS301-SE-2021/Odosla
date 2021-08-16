@@ -101,7 +101,7 @@ to achieve the objective. I am most passionate about using my programming and de
          </ul>
        </li>
      </ul>
-   </li
+   </li>
   </ul>
  </li>
 </ul>

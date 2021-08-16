@@ -225,7 +225,7 @@ public class SubmitOrderUnitTest {
     @Test
     @Description("This test is to check order is created correctly- should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
-    void UnitTest_StartOrderConstruction() throws PaymentException, StoreClosedException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException {
+    void UnitTest_StartOrderConstruction() throws PaymentException, StoreClosedException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, InterruptedException {
         SubmitOrderRequest request=new SubmitOrderRequest(expectedU1,expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
         when(orderRepo.findById(Mockito.any())).thenReturn(null);
         GetStoreByUUIDResponse storeResponse=new GetStoreByUUIDResponse(expectedStore,Calendar.getInstance().getTime(), "Store successfully returned");

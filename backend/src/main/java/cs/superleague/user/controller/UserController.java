@@ -4,7 +4,6 @@ import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Catalogue;
@@ -15,22 +14,21 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
-import cs.superleague.user.exceptions.InvalidRequestException;
-import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -69,6 +67,24 @@ public class UserController implements UserApi {
     @Autowired
     private ShoppingService shoppingService;
 
+    Customer setCartCustomer;
+    GroceryList groceryList;
+    Item item1;
+    Item item2;
+    Store store;
+    Catalogue catalogue;
+
+    UUID storeID;
+    UUID customerID;
+    UUID groceryListID;
+
+    GeoPoint deliveryAddress;
+
+    List<Item> listOfItems = new ArrayList<>();
+    List<GroceryList> groceryLists = new ArrayList<>();
+    List<Item> shoppingCart = new ArrayList<>();
+    List<String> barcodes = new ArrayList<>();
+    List<Store> listOfStores = new ArrayList<>();
 
     @Override
     public ResponseEntity<UserSetCartResponse> setCart(UserSetCartRequest body){
@@ -78,6 +94,8 @@ public class UserController implements UserApi {
 
         try{
             SetCartRequest request = new SetCartRequest(body.getCustomerID(), body.getBarcodes());
+
+            System.out.println(barcodes.get(0));
 
             SetCartResponse response = ServiceSelector.getUserService().setCart(request);
             try{
@@ -152,6 +170,9 @@ public class UserController implements UserApi {
     private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
 
         List<ItemObject> responseBody = new ArrayList<>();
+        if (responseItems == null){
+            return null;
+        }
 
         for(int i = 0; i < responseItems.size(); i++){
 
@@ -176,12 +197,11 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserMakeGroceryListResponse> makeGroceryList(UserMakeGroceryListRequest body){
 
-
         UserMakeGroceryListResponse makeGroceryListResponse = new UserMakeGroceryListResponse();
         HttpStatus status = HttpStatus.OK;
 
         try{
-            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getCustomerID(), body.getBarcodes(), body.getName());
+            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getJwTToken(), body.getProductIds(), body.getName());
 
             MakeGroceryListResponse response = ServiceSelector.getUserService().makeGroceryList(request);
             try{
@@ -202,7 +222,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserResetPasswordResponse> resetPassword(UserResetPasswordRequest body){
-
 
         UserResetPasswordResponse userMakeGroceryListResponse = new UserResetPasswordResponse();
         HttpStatus status = HttpStatus.OK;
@@ -230,10 +249,10 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserLoginResponse> loginUser(UserLoginRequest body){
 
+        UserType userType=null;
         UserLoginResponse response=new UserLoginResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
-            UserType userType = null;
             if (body.getUserType().equals("DRIVER")) {
                 userType = UserType.DRIVER;
             } else if (body.getUserType().equals("CUSTOMER")) {
@@ -363,6 +382,7 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserAccountVerifyResponse> verifyAccount(UserAccountVerifyRequest body) {
+
         UserAccountVerifyResponse response=new UserAccountVerifyResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -429,7 +449,7 @@ public class UserController implements UserApi {
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
         try {
-            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(UUID.fromString(body.getShopperID()), body.isOnShift());
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.getJwtToken(), body.isOnShift(), UUID.fromString(body.getStoreID()));
             UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
             try {
                 response.setMessage(response1.getMessage());
@@ -453,6 +473,7 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(UserGetCurrentUserRequest body){
 
+
         UserGetCurrentUserResponse userGetCurrentUserResponse = new UserGetCurrentUserResponse();
         HttpStatus status = HttpStatus.OK;
 
@@ -464,7 +485,57 @@ public class UserController implements UserApi {
                 userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
                 userGetCurrentUserResponse.setMessage(response.getMessage());
                 userGetCurrentUserResponse.setSuccess(response.isSuccess());
-                userGetCurrentUserResponse.setUser((OneOfuserGetCurrentUserResponseUser) response.getUser());
+                if (response.getUser().getAccountType() == UserType.CUSTOMER){
+                    Customer customer = (Customer) response.getUser();
+                    CustomerObject customerObject = populateCustomer(customer);
+                    userGetCurrentUserResponse.setUser(customerObject);
+                }else if (response.getUser().getAccountType() == UserType.ADMIN){
+                    Admin admin = (Admin) response.getUser();
+                    AdminObject adminObject = populateAdmin(admin);
+                    userGetCurrentUserResponse.setUser(adminObject);
+                }else if (response.getUser().getAccountType() == UserType.DRIVER){
+                    Driver driver = (Driver) response.getUser();
+                    DriverObject driverObject = populateDriver(driver);
+                    userGetCurrentUserResponse.setUser(driverObject);
+                } else if (response.getUser().getAccountType() == UserType.SHOPPER){
+                    Shopper shopper = (Shopper) response.getUser();
+                    ShopperObject shopperObject = populateShopper(shopper);
+                    userGetCurrentUserResponse.setUser(shopperObject);
+                }else{
+                    userGetCurrentUserResponse.setMessage("User type is invalid.");
+                    userGetCurrentUserResponse.setSuccess(false);
+                }
+
+            }catch(Exception e){
+                e.printStackTrace();
+                userGetCurrentUserResponse.setSuccess(false);
+                userGetCurrentUserResponse.setMessage(e.getMessage());
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            userGetCurrentUserResponse.setSuccess(false);
+            userGetCurrentUserResponse.setMessage(e.getMessage());
+        }
+
+        return new ResponseEntity<>(userGetCurrentUserResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetGroceryListResponse> getGroceryLists(UserGetGroceryListRequest body){
+
+        UserGetGroceryListResponse userGetGroceryListResponse = new UserGetGroceryListResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetGroceryListsRequest request = new GetGroceryListsRequest(body.getJwTToken());
+
+            GetGroceryListsResponse response = ServiceSelector.getUserService().getGroceryLists(request);
+            try{
+                userGetGroceryListResponse.setTimestamp(response.getTimestamp().toString());
+                userGetGroceryListResponse.setMessage(response.getMessage());
+                userGetGroceryListResponse.setSuccess(response.isSuccess());
+                userGetGroceryListResponse.setGroceryLists(populateGroceryList(response.getGroceryLists()));
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -474,9 +545,132 @@ public class UserController implements UserApi {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>(userGetCurrentUserResponse, status);
+        return new ResponseEntity<>(userGetGroceryListResponse, status);
     }
 
+    @Override
+    public ResponseEntity<UserUpdateDriverShiftResponse> updateDriverShift(UserUpdateDriverShiftRequest body){
+
+        UserUpdateDriverShiftResponse userUpdateDriverShiftResponse = new UserUpdateDriverShiftResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateDriverShiftRequest request = new UpdateDriverShiftRequest(body.getJwtToken(), body.isOnShift());
+
+            UpdateDriverShiftResponse response = ServiceSelector.getUserService().updateDriverShift(request);
+            try{
+                userUpdateDriverShiftResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateDriverShiftResponse.setMessage(response.getMessage());
+                userUpdateDriverShiftResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateDriverShiftResponse, status);
+    }
+
+    //Helper for getCurrentUser
+    public AdminObject populateAdmin(Admin admin){
+        AdminObject adminObject = new AdminObject();
+        adminObject.setName(admin.getName());
+        adminObject.setSurname(admin.getSurname());
+        adminObject.setEmail(admin.getEmail());
+        adminObject.setPhoneNumber(admin.getPhoneNumber());
+        adminObject.setPassword(admin.getPassword());
+        adminObject.setActivationDate(String.valueOf(admin.getActivationDate()));
+        adminObject.setActivationCode(admin.getActivationCode());
+        adminObject.setResetCode(admin.getResetCode());
+        adminObject.setResetExpiration(admin.getResetExpiration());
+        adminObject.setAccountType(String.valueOf(admin.getAccountType()));
+        adminObject.setAdminID(String.valueOf(admin.getAdminID()));
+        return adminObject;
+    }
+    public DriverObject populateDriver(Driver driver){
+        DriverObject driverObject = new DriverObject();
+        driverObject.setName(driver.getName());
+        driverObject.setSurname(driver.getSurname());
+        driverObject.setEmail(driver.getEmail());
+        driverObject.setPhoneNumber(driver.getPhoneNumber());
+        driverObject.setPassword(driver.getPassword());
+        driverObject.setActivationDate(String.valueOf(driver.getActivationDate()));
+        driverObject.setActivationCode(driver.getActivationCode());
+        driverObject.setResetCode(driver.getResetCode());
+        driverObject.setResetExpiration(driver.getResetExpiration());
+        driverObject.setAccountType(String.valueOf(driver.getAccountType()));
+        driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
+        driverObject.setOnShift(driver.getOnShift());
+        return driverObject;
+    }
+    public CustomerObject populateCustomer(Customer customer){
+        CustomerObject customerObject = new CustomerObject();
+        customerObject.setName(customer.getName());
+        customerObject.setSurname(customer.getSurname());
+        customerObject.setEmail(customer.getEmail());
+        customerObject.setPhoneNumber(customer.getPhoneNumber());
+        customerObject.setPassword(customer.getPassword());
+        customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
+        customerObject.setActivationCode(customer.getActivationCode());
+        customerObject.setResetCode(customer.getResetCode());
+        customerObject.setResetExpiration(customer.getResetExpiration());
+        customerObject.setAccountType(String.valueOf(customer.getAccountType()));
+        customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        customerObject.setAddress(String.valueOf(customer.getAddress()));
+        List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
+        customerObject.setGroceryLists(groceryListObjectList);
+        List<ItemObject> itemObjects = populateItems(customer.getShoppingCart());
+        customerObject.setShoppingCart(itemObjects);
+        customerObject.setPreference(customer.getPreference());
+        customerObject.setWallet(customer.getWallet());
+        return customerObject;
+    }
+    public ShopperObject populateShopper(Shopper shopper){
+
+        ShopperObject shopperObject = new ShopperObject();
+        try {
+            shopperObject.setName(shopper.getName());
+            shopperObject.setSurname(shopper.getSurname());
+            shopperObject.setEmail(shopper.getEmail());
+            shopperObject.setPhoneNumber(shopper.getPhoneNumber());
+            shopperObject.setPassword(shopper.getPassword());
+            shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
+            shopperObject.setActivationCode(shopper.getActivationCode());
+            shopperObject.setResetCode(shopper.getResetCode());
+            shopperObject.setResetExpiration(shopper.getResetExpiration());
+            shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
+            shopperObject.setShopperID(shopper.getShopperID().toString());
+            shopperObject.setStoreID(shopper.getStoreID().toString());
+            shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
+            shopperObject.setOnShift(shopper.getOnShift());
+            shopperObject.setIsActive(shopper.isActive());
+
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return shopperObject;
+    }
+    public List<GroceryListObject> populateGroceryList(List<GroceryList> groceryList){
+        List<GroceryListObject> groceryListObjectList = new ArrayList<>();
+        if (groceryList == null){
+            return null;
+        }
+        for (int i = 0; i < groceryList.size(); i++){
+            GroceryListObject groceryListObject = new GroceryListObject();
+            groceryListObject.setGroceryListID(String.valueOf(groceryList.get(i).getGroceryListID()));
+            List<ItemObject> itemObjects = populateItems(groceryList.get(i).getItems());
+            groceryListObject.setItems(itemObjects);
+            groceryListObject.setName(groceryList.get(i).getName());
+            groceryListObjectList.add(groceryListObject);
+        }
+        return groceryListObjectList;
+    }
     @Override
     public ResponseEntity<UserScanItemResponse> scanItem(UserScanItemRequest body){
 

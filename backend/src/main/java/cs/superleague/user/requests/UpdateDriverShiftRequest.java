@@ -4,24 +4,24 @@ import java.util.UUID;
 
 public class UpdateDriverShiftRequest {
 
-    private UUID driverID;
+    private String JWTToken;
     private Boolean onShift;
 
-    public UpdateDriverShiftRequest(UUID driverID, Boolean onShift) {
-        this.driverID = driverID;
+    public UpdateDriverShiftRequest(String JWTToken, Boolean onShift) {
+        this.JWTToken = JWTToken;
         this.onShift = onShift;
     }
 
-    public UUID getDriverID() {
-        return driverID;
+    public String getJWTToken() {
+        return JWTToken;
     }
 
     public Boolean getOnShift() {
         return onShift;
     }
 
-    public void setDriverID(UUID driverID) {
-        this.driverID = driverID;
+    public void setJWTToken(String driverID) {
+        this.JWTToken = driverID;
     }
 
     public void setOnShift(Boolean onShift) {

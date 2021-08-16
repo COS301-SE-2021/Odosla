@@ -184,15 +184,15 @@ public class PaymentController implements PaymentApi {
 
         //add mock data to repo
 
-        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "PnP, Hillcrest Boulevard");
-        Store store1 = new Store();
-        store1.setStoreID(storeID);
-        store1.setStoreBrand("PnP");
-        store1.setOpeningTime(7);
-        store1.setClosingTime(20);
-        store1.setOpen(true);
-        store1.setMaxOrders(5);
-        store1.setStoreLocation(storeAddress);
+//        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "PnP, Hillcrest Boulevard");
+//        Store store1 = new Store();
+//        store1.setStoreID(storeID);
+//        store1.setStoreBrand("PnP");
+//        store1.setOpeningTime(7);
+//        store1.setClosingTime(20);
+//        store1.setOpen(true);
+//        store1.setMaxOrders(5);
+//        store1.setStoreLocation(storeAddress);
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -209,7 +209,7 @@ public class PaymentController implements PaymentApi {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());
-                response.setOrderStatus(submitOrderResponse.getOrder().getStatus().toString());
+                response.setOrderId(submitOrderResponse.getOrder().getOrderID().toString());
                 response.setSuccess(submitOrderResponse.getsuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
             }catch(Exception e){
@@ -223,7 +223,7 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
-    public ResponseEntity<PaymentGetItemsResponse> getItems(PaymentGetItemsRequest body) {
+    public ResponseEntity<PaymentGetItemsResponse> getItemsPayments(PaymentGetItemsRequest body) {
 
 
         //add mock data to repo
@@ -304,7 +304,7 @@ public class PaymentController implements PaymentApi {
     List<Item> assignItems(List<ItemObject> itemObjectList){
 
         double price = 0.00;
-        Item item = new Item();
+
         List<Item> items = new ArrayList<>();
 
         if(itemObjectList == null){
@@ -312,6 +312,7 @@ public class PaymentController implements PaymentApi {
         }
 
         for (ItemObject i: itemObjectList) {
+            Item item = new Item();
             item.setProductID(i.getProductId());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());

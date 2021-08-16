@@ -5,6 +5,7 @@ import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
@@ -37,10 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -86,23 +84,6 @@ public class ShoppingController implements ShoppingApi{
     @Override
     public ResponseEntity<ShoppingAddShopperResponse> addShopper(ShoppingAddShopperRequest body) {
 
-        //mock mem:db
-//        Store store1 = new Store();
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        store1.setStoreBrand("PnP");
-//        store1.setOpeningTime(7);
-//        store1.setClosingTime(20);
-//        store1.setOpen(false);
-//        store1.setMaxOrders(5);
-//        storeRepo.save(store1);
-//
-//        Shopper sh1 = new Shopper();
-//        sh1.setShopperID(userID);
-//        sh1.setName("John");
-//        sh1.setEmail("John123@gmail.com");
-//        sh1.setSurname("Cena");
-//        shopperRepo.save(sh1);
-
         //creating response object  and default return status
         ShoppingAddShopperResponse response = new ShoppingAddShopperResponse();
         HttpStatus status = HttpStatus.OK;
@@ -142,27 +123,6 @@ public class ShoppingController implements ShoppingApi{
     //getItems endpoint
     @Override
     public ResponseEntity<ShoppingGetItemsResponse> getItems(ShoppingGetItemsRequest body) {
-
-        //add mock data to repo
-//        List<Item> mockItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-//        itemRepo.save(item1); itemRepo.save(item2);
-//        mockItemList.add(item1); mockItemList.add(item2);
-//
-//        Catalogue c = new Catalogue();
-//        c.setStoreID(storeID);
-//        c.setItems(mockItemList);
-//        catalogueRepo.save(c);
-//
-//        Store store1 = new Store();
-//        store1.setStock(c);
-//
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        store1.setStock(c);
-//        storeRepo.save(store1);
-        ///
 
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
@@ -207,19 +167,6 @@ public class ShoppingController implements ShoppingApi{
 
     @Override
     public ResponseEntity<ShoppingRemoveQueuedOrderResponse> removeQueuedOrder(ShoppingRemoveQueuedOrderRequest body) {
-        //mock mem:db
-
-//        List<Order> oq = new ArrayList<>();
-//        Order o1 = new Order(); o1.setOrderID(orderID); o1.setType(OrderType.DELIVERY);
-//        Order o2 = new Order(); o2.setOrderID(UUID.randomUUID()); o2.setType(OrderType.DELIVERY);
-//        oq.add(o1); oq.add(o2);
-//        orderRepo.save(o1);
-//        orderRepo.save(o2);
-//
-//        Store store1 = new Store();
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        store1.setOrderQueue(oq);
-//        storeRepo.save(store1);
 
         //creating response object and default return status:
         ShoppingRemoveQueuedOrderResponse response = new ShoppingRemoveQueuedOrderResponse();
@@ -248,37 +195,6 @@ public class ShoppingController implements ShoppingApi{
     }
 
     public ResponseEntity<ShoppingGetShoppersResponse> getShoppers(ShoppingGetShoppersRequest body) {
-        //add mock data to repo
-//        List<Shopper> mockShopperList = new ArrayList<>();
-//        Shopper shopper1, shopper2;
-//        shopper1=new Shopper();
-//        shopper2=new Shopper();
-//
-//        shopper1.setShopperID(UUID.randomUUID());
-//        shopper1.setName("Peter");
-//        shopper1.setSurname("Parker");
-//        shopper1.setEmail("PeterParker2021!");
-//        shopper1.setPassword("DontTellMaryJane2021!");
-//        shopper1.setOrdersCompleted(5);
-//        shopper1.setAccountType(UserType.SHOPPER);
-//        shopper1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//
-//        shopper2.setShopperID(UUID.randomUUID());
-//        shopper2.setName("Mary");
-//        shopper2.setSurname("Jane");
-//        shopper2.setEmail("MaryJane2021!");
-//        shopper2.setPassword("IKnowWhoPeterIs2021!");
-//        shopper2.setOrdersCompleted(4);
-//        shopper2.setAccountType(UserType.SHOPPER);
-//        shopper2.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//
-//        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
-//        mockShopperList.add(shopper1); mockShopperList.add(shopper2);
-//
-//        Store store1 = new Store();
-//        store1.setShoppers(mockShopperList);
-//        store1.setStoreID(UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0"));
-//        storeRepo.save(store1);
 
         //creating response object and default return status:
         ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
@@ -320,31 +236,6 @@ public class ShoppingController implements ShoppingApi{
 
 
     public ResponseEntity<ShoppingGetStoresResponse> getStores(ShoppingGetStoresRequest body) {
-        //add mock data to repo
-//        UUID storeUUID1 = UUID.randomUUID();
-//        UUID storeUUID2 = UUID.randomUUID();
-//
-//        List<Item> ItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","img/");
-//        ItemList.add(item1); ItemList.add(item2);
-//        itemRepo.save(item1); itemRepo.save(item2);
-//
-//        List<Item> ItemList2 = new ArrayList<>();
-//        Item item3, item4;
-//        item3=new Item("Milk","p423523144","69767699-9ABF-HJDS-1234-56789ABCDEFF",storeUUID2,36.99,1,"description","img/");
-//        item4=new Item("Beans","p623235254","65363563-9JBC-DEF0-1234-56789ABCDEFA", storeUUID2,14.99,3,"description","img/");
-//        ItemList2.add(item3); ItemList.add(item4);
-//        itemRepo.save(item3); itemRepo.save(item4);
-//
-//        List<Store> mockStoreList = new ArrayList<>();
-//        Store store1, store2;
-//        store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
-//        store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, false);
-//
-//        storeRepo.save(store1); storeRepo.save(store2);
-//        mockStoreList.add(store1); mockStoreList.add(store2);
 
         //creating response object and default return status:
         ShoppingGetStoresResponse response = new ShoppingGetStoresResponse();
@@ -383,104 +274,171 @@ public class ShoppingController implements ShoppingApi{
     }
 
     public ResponseEntity<ShoppingGetNextQueuedResponse> getNextQueued(ShoppingGetNextQueuedRequest body) {
-        //add mock data to repo
-//        UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
-//        UUID orderID = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a278");
-//
-//        List<Item> ItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","img/");
-//        ItemList.add(item1); ItemList.add(item2);
-//        itemRepo.save(item1); itemRepo.save(item2);
-//
-//        List<Order> orders = new ArrayList<>();
-//        Order order = new Order();
-//        order.setItems(ItemList);
-//        order.setOrderID(orderID);
-//        order.setStoreID(storeUUID1);
-//        order.setProcessDate(Calendar.getInstance());
-//        orders.add(order);
-//
-//        orderRepo.saveAll(orders);
-//
-//        Store store = new Store(storeUUID1, "Boxer", null, 6,null,  orders,5, true);
-//
-//        System.out.println(store.getOrderQueue().size());
 
-        //creating response object and default return status:
         ShoppingGetNextQueuedResponse response = new ShoppingGetNextQueuedResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
-        //storeRepo.save(store);
-        if (mockMode){
-            List<StoreObject> mockStores = new ArrayList<>();
-            StoreObject a = new StoreObject();
-            a.setStoreBrand("mockA");
-            StoreObject b = new StoreObject();
-            b.setStoreBrand("mockB");
-            mockStores.add(a);
-            mockStores.add(b);
-
-            //System.out.println(storeUUID1);
-//            storeRepo.save(store1);
-           // storeRepo.save(store);
-
-//            response.setStores(mockStores);
-        } else {
-
+        try {
+            GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()), body.getJwtToken());
+            GetNextQueuedResponse getNextQueuedResponse = ServiceSelector.getShoppingService().getNextQueued(getNextQueuedRequest);
             try {
-                GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
-                GetNextQueuedResponse getNextQueuedResponse = ServiceSelector.getShoppingService().getNextQueued(getNextQueuedRequest);
-                try {
 
-                    response.setDate(getNextQueuedResponse.getTimeStamp().toString());
-                    response.setMessage(getNextQueuedResponse.getMessage());
-                    response.setSuccess(getNextQueuedResponse.isResponse());
-                    response.setNewCurrentOrder(getNextQueuedResponse.getNewCurrentOrder());
-                    response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
+                response.setDate(getNextQueuedResponse.getTimeStamp().toString());
+                response.setMessage(getNextQueuedResponse.getMessage());
+                response.setSuccess(getNextQueuedResponse.isResponse());
+                response.setNewCurrentOrder(getNextQueuedResponse.getNewCurrentOrder());
+                response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
 
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            } catch (Exception e) {
+            } catch (Exception e){
                 e.printStackTrace();
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<ShoppingGetQueueResponse> getQueue(ShoppingGetQueueRequest body) {
+        GetQueueRequest getQueueRequest;
+
+        ShoppingGetQueueResponse response = new ShoppingGetQueueResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetQueueRequest request = new GetQueueRequest(UUID.fromString(body.getStoreID()));
+            GetQueueResponse getQueueResponse = ServiceSelector.getShoppingService().getQueue(request);
+            try {
+                response.setResponse(getQueueResponse.getResponse());
+                response.setMessage(getQueueResponse.getMessage());
+                response.setQueueOfOrders(populateOrders(getQueueResponse.getQueueOfOrders()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setResponse(false);
+                response.setMessage(e.getMessage());
+                response.setQueueOfOrders(null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setResponse(false);
+            response.setMessage(e.getMessage());
+            response.setQueueOfOrders(null);
+        }
         return new ResponseEntity<>(response, httpStatus);
     }
 
     public ResponseEntity<ShoppingPopulateTablesResponse> populateTables(ShoppingPopulateTablesRequest body) {
         //Items
 
+
         UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
         UUID storeUUID2 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f");
+        UUID storeUUID3 = UUID.fromString("f29c3a2b-0f5e-45ef-b06b-7e564e70a7af");
+        UUID storeUUID4 = UUID.fromString("ac0d5977-dca2-43b8-b5c7-d098cae44b1d");
+        UUID storeUUID5 = UUID.fromString("701be3e1-c23c-4409-a851-9cae63861881");
+        UUID storeUUID6 = UUID.fromString("5eb21285-f45c-43d9-b32d-8b979263d49d");
+        UUID storeUUID7 = UUID.fromString("438a347b-e863-420a-b86f-69db6ab44ad5");
 
-        Item item1, item2,item3, item4, item5;
-        item1=new Item("Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","item/", "Heinz", "250g", "Sauce");
-        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeUUID1,14.99,3,"description","item/", "Nestle", "90g", "Chocolate");
-        item3=new Item("Milk","p423523144","69767699-9ABF-HJDS-1234-56789ABCDEFF",storeUUID1,36.99,1,"description","item/", "Pick n Pay", "2l", "Dairy");
-        item4=new Item("Baked Beans","p623235254","65363563-9JBC-DEF0-1234-56789ABCDEFA", storeUUID2,14.99,3,"description","item/", "Koo", "410g", "Canned");
-        item5=new Item("Bread", "p903932918", "6001710010253", storeUUID2, 16.99, 9, "description", "item/", "Sasko", "700g", "Bakery" );
+        Item item1, item2,item3, item4, item5, item6, item7, item8, item9, item10, item11, item12, item13, item14, item15, item16, item17, item18, item19, item20, item21, item22, item23, item24, item25, item26, item27, item28, item29, item30;
+        item1=new Item("Tomato Sauce","p234058925","60019578",storeUUID1,31.99,1,"South Africa's firm favourite! It has a thick, smooth texture that can easily be poured and enjoyed on a variety of dishes.","item/tomatoSauce.png", "All Gold", "700ml", "Sauce");
+        item2=new Item("Bar one","p123984123","6001068595808", storeUUID1,10.99,1,"Thick milk chocolate with nougat and caramel centre.","item/barOne.png", "Nestle", "55g", "Chocolate");
+        item3=new Item("Milk","p423523144","6001007162474",storeUUID1,27.99,1,"Pasteurised, homogenised Full cream fresh milk","item/pnpMilk.png", "Pick n Pay", "2l", "Dairy");
+        item4=new Item("Baked Beans","p623235254","6009522300586", storeUUID1,14.99,1,"Our iconic KOO Baked Beans in a rich tomato sauce, is extremely versatile and convenient.","item/kooBeans.png", "Koo", "410g", "Canned");
+        item5=new Item("Bread", "p903932918", "6001205733520", storeUUID1, 15.49, 1, "Blue Ribbon has four delicious ranges of quality bread: Standard, Classic, Toaster and Lifestyle.", "item/blueRibbon.png", "Blue Ribbon", "700g", "Bakery" );
+        item6=new Item("Jolly Jammers", "p930458594", "6001056412360", storeUUID1, 28.99, 1, "Delicious buttery biscuits with choc cream sandwiched between, in a delightful smiley face to bring joy while you have your sweet treat.", "item/jammers.png", "Bakers", "200g", "Biscuit");
+        item7=new Item("Ricoffy In Tin", "p434565787", "6001068323500", storeUUID1, 84.99, 1, "Ricoffy is South Africa's No. 1 coffee brand. Sharing memorable moments over a mug of hot coffee has been the tradition of many South African families.", "item/ricoffy.png", "Nestle", "750g", "Beverages");
+        item8=new Item("Creamy Tomato Soup", "p4352546788", "6001007286309", storeUUID1, 39.99, 1, "Delicious creamy tomato soup prepared by the chefs at Pick n Pay.", "item/creamyTomato.png", "Pick n Pay", "600g", "Soup");
+        item9=new Item("Creamy Butternut Soup", "p543523442", "6001007286323", storeUUID1, 29.99, 1, "Delicious butternut soup prepared by the chefs at Pick n Pay.", "item/creamyButternut.png", "Pick n Pay", "600g", "Soup");
+        item10=new Item("Oros Original Orange Squash", "p6980402934", "6001324011172", storeUUID1, 41.99, 1, "Mix this 2L tartrazine-free concentrate with cold water for a quick drink, the party table or your kids' school bags.", "item/originalOros.png", "Brooks", "2l", "Beverages");
+        item11=new Item("Noodle's beef", "p3872948374", "6001306002457", storeUUID1, 28.99, 1, "A convenient and easy meal to prepare, it can be used as a main meal ingredient or simply be enjoyed on its' own.", "item/kellogNoodles.png", "Kelloggs", "70g", "Pantry");
+        item12=new Item("Ultra Mel Vanilla Flavoured Custard", "p493082605986", "6009708460257", storeUUID1, 20.99, 1, "Our creamy, thick and ultra-smooth blend of the finest vanilla makes it the perfect 100% treat to serve at every occasion.", "item/custard.png", "Danone", "1l", "Dairy");
+        item13=new Item("Weet-Bix", "p473203872049", "6001052001018", storeUUID1, 28.99, 1, "Wholegrain wheat biscuits.", "item/weetBix.png", "Bokomo", "450g", "Cereal");
+        item14=new Item("Nescafe Classic Coffee", "p048375923", "7613033677724", storeUUID1, 85.99, 1, "Only the best coffee beans are selected. Blended. Roasted to perfection. So, dare to break the seal.", "item/nescaffeCoffee.png", "Nescafe", "500g", "Beverages");
+        item15=new Item("Oreo original", "p392874287", "7622201779030", storeUUID1, 15.99, 1, "Oreo biscuits with vanilla flavoured filling, coated with milk chocolate.", "item/oreo.png", "OREO", "133g", "Biscuit");
+        item16=new Item("Nescafe Classic Coffee", "w435435345", "7613033677724", storeUUID2, 85.99, 1, "Only the best coffee beans are selected. Blended. Roasted to perfection. So, dare to break the seal.", "item/nescaffeCoffee.png", "Nescafe", "500g", "Beverages");
+        item17=new Item("Jolly Jammers", "w423546657", "6001056412360", storeUUID2, 28.99, 1, "Delicious buttery biscuits with choc cream sandiwched between, in a delightful smiley face to bring joy while you have your sweet treat.", "item/jammers.png", "Bakers", "200g", "Biscuit");
+        item18=new Item("Ultra Mel Vanilla Flavoured Custard", "w786453324", "6009708460257", storeUUID2, 20.99, 1, "Our creamy, thick and ultra-smooth blend of the finest vanilla makes it the perfect 100% treat to serve at every occasion.", "item/custard.png", "Danone", "1l", "Dairy");
+        item19=new Item("Weet-Bix", "w5438768098", "6001052001018", storeUUID2, 28.99, 1, "Wholegrain wheat biscuits.", "item/weetBix.png", "Bokomo", "450g", "Cereal");
+        item20=new Item("Oreo original", "w546789058", "7622201779030", storeUUID2, 15.99, 1, "Oreo biscuits with vanilla flavoured filling, coated with milk chocolate.", "item/oreo.png", "OREO", "133g", "Biscuit");
+        item21=new Item("Strawberry yoghurt", "w213564876", "20048976", storeUUID2, 28.99, 1, "While no preservatives have been added, we have packed our delicious low fat strawberry yoghurt with an extra 16% fruit and added millions of live Bifidobacterium cultures.", "item/strawberryYoghurt.png", "Woolworths", "1kg", "Dairy");
+        item22=new Item("White Thick Slice Bread", "w342678678", "20018702", storeUUID2, 16.69, 1, "A soft and fine textured white thick sliced bread.", "item/thickSlice.png", "Woolworths", "700g", "Bakery");
+        item23=new Item("Fresh Full Cream Ayrshire Milk", "w657577567", "20026875", storeUUID2, 39.99, 1, "Our full cream Ayrshire milk promises a fresh, delicious taste. It may look like a glass of ordinary milk, but it isn't. It's our Ayrshire milk.", "item/woolworthsMilk.png", "Woolworths", "2l", "Dairy");
+        item24=new Item("Bulk Cheddar Cheese", "w3247657765", "6009182131636", storeUUID2, 134.99, 1, "Enjoy our mild and slightly savoury cheddar cheese. Matured for a minimum of 2 months.", "item/woolworthsCheese.png", "Woolworths", "900g", "Dairy");
+        item25=new Item("100% Apple Juice", "w097567878", "6009173967152", storeUUID2, 48.99, 1, "Our 100% Apple Juice contains no added preservatives and is a source of vitamin C.", "item/woolworthsAppleJuice.png", "Woolworths", "1.5l", "Beverages");
+        item26=new Item("Ricoffy In Tin", "w97546564", "6001068323500", storeUUID2, 84.99, 1, "Ricoffy is South Africa's No. 1 coffee brand. Sharing memorable moments over a mug of hot coffee has been the tradition of many South African families.", "item/ricoffy.png", "Nestle", "750g", "Beverages");
+        item27=new Item("Tomato Sauce","w786456345","60019578",storeUUID2,31.99,1,"South Africa's firm favourite! It has a thick, smooth texture that can easily be poured and enjoyed on a variety of dishes.","item/sauce.png", "All Gold", "700ml", "Sauce");
+        item28=new Item("Bar one","w3456757896","6001068595808", storeUUID2,10.99,1,"Thick milk chocolate with nougat and caramel centre.","item/barOne.png", "Nestle", "55g", "Chocolate");
+        item29=new Item("Baked Beans","w897321657","6009522300586", storeUUID2,14.99,1,"Our iconic KOO Baked Beans in a rich tomato sauce, is extremely versatile and convenient.","item/kooBeans.png", "Koo", "410g", "Canned");
+        item30=new Item("Noodle's beef", "w45387609564", "6001306002457", storeUUID2, 28.99, 1, "A convenient and easy meal to prepare, it can be used as a main meal ingredient or simply be enjoyed on its' own.", "item/kellogNoodles.png", "Kelloggs", "70g", "Pantry");
+
 
         itemRepo.save(item1);
         itemRepo.save(item2);
         itemRepo.save(item3);
         itemRepo.save(item4);
         itemRepo.save(item5);
+        itemRepo.save(item6);
+        itemRepo.save(item7);
+        itemRepo.save(item8);
+        itemRepo.save(item9);
+        itemRepo.save(item10);
+        itemRepo.save(item11);
+        itemRepo.save(item12);
+        itemRepo.save(item13);
+        itemRepo.save(item14);
+        itemRepo.save(item15);
+        itemRepo.save(item16);
+        itemRepo.save(item17);
+        itemRepo.save(item18);
+        itemRepo.save(item19);
+        itemRepo.save(item20);
+        itemRepo.save(item21);
+        itemRepo.save(item22);
+        itemRepo.save(item23);
+        itemRepo.save(item24);
+        itemRepo.save(item25);
+        itemRepo.save(item26);
+        itemRepo.save(item27);
+        itemRepo.save(item28);
+        itemRepo.save(item29);
+        itemRepo.save(item30);
+
 
         //Catalogues
         List<Item> store1Cat = new ArrayList<>();
         store1Cat.add(item1);
         store1Cat.add(item2);
         store1Cat.add(item3);
+        store1Cat.add(item4);
+        store1Cat.add(item5);
+        store1Cat.add(item6);
+        store1Cat.add(item7);
+        store1Cat.add(item8);
+        store1Cat.add(item9);
+        store1Cat.add(item10);
+        store1Cat.add(item11);
+        store1Cat.add(item12);
+        store1Cat.add(item13);
+        store1Cat.add(item14);
+        store1Cat.add(item15);
 
         List<Item> store2Cat = new ArrayList<>();
-        store2Cat.add(item4);
-        store2Cat.add(item5);
+        store2Cat.add(item16);
+        store2Cat.add(item17);
+        store2Cat.add(item18);
+        store2Cat.add(item19);
+        store2Cat.add(item20);
+        store2Cat.add(item21);
+        store2Cat.add(item22);
+        store2Cat.add(item23);
+        store2Cat.add(item24);
+        store2Cat.add(item25);
+        store2Cat.add(item26);
+        store2Cat.add(item27);
+        store2Cat.add(item28);
+        store2Cat.add(item29);
+        store2Cat.add(item30);
 
         Catalogue c1 = new Catalogue(storeUUID1, store1Cat);
         catalogueRepo.save(c1);
@@ -488,10 +446,20 @@ public class ShoppingController implements ShoppingApi{
         Catalogue c2 = new Catalogue(storeUUID2, store2Cat);
         catalogueRepo.save(c2);
 
-        Store store1=new Store(storeUUID1, 7, 20, "PnP", 2, 5, true);
-        Store store2=new Store(storeUUID2, 8, 21, "Woolworths", 2, 7, true);
+        Store store1=new Store(storeUUID1, -1, 24, "Pick n Pay", 2, 5, true, "shop/pnp.png");
+        Store store2=new Store(storeUUID2, -1, 24, "Woolworths", 2, 7, true, "shop/woolworths.png");
+        Store store3=new Store(storeUUID3, 8, 21, "Checkers Hyper", 2, 7, true, "shop/checkers.png");
+        Store store4=new Store(storeUUID4, 8, 22, "SuperSpar", 2, 7, true, "shop/superSpar.png");
+        Store store5=new Store(storeUUID5, 8, 20, "Game", 2, 7, true, "shop/game.png");
+        Store store6=new Store(storeUUID6, 7, 18, "Food Lover's Market", 2, 7, true, "shop/foodLoversMarket.png");
+        Store store7=new Store(storeUUID7, 8, 20, "Pep", 2, 7, true, "shop/pep.png");
         GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
         GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
+        GeoPoint store3Location = new GeoPoint(-25.782541156164545, 28.261452959595255, "Grape street");
+        GeoPoint store4Location = new GeoPoint(-25.705154853561545, 28.296656215156128, "Avo Street");
+        GeoPoint store5Location = new GeoPoint(-25.725151681616511, 28.262516128952825, "Strawberry street");
+        GeoPoint store6Location = new GeoPoint(-25.735282861315611, 28.225254252452454, "Blueberry Street");
+        GeoPoint store7Location = new GeoPoint(-25.715615161561516, 28.265748988985454, "Raspberry street");
 
         store1.setStoreLocation(store1Location);
         store1.setStock(c1);
@@ -499,9 +467,33 @@ public class ShoppingController implements ShoppingApi{
         store2.setStoreLocation(store2Location);
         store2.setStock(c2);
 
+        store3.setStoreLocation(store3Location);
+        store4.setStoreLocation(store4Location);
+        store5.setStoreLocation(store5Location);
+        store6.setStoreLocation(store6Location);
+        store7.setStoreLocation(store7Location);
+
+
 
         storeRepo.save(store1);
         storeRepo.save(store2);
+        storeRepo.save(store3);
+        storeRepo.save(store4);
+        storeRepo.save(store5);
+        storeRepo.save(store6);
+        storeRepo.save(store7);
+
+        Customer customer = new Customer();
+        customer.setName("Adam");
+        customer.setSurname("Isenberg");
+        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
+        customer.setAccountType(UserType.CUSTOMER);
+        customer.setEmail("adamisenberg@gmail.com");
+        customer.setPassword("fhkjdfh534534!");
+        customer.setPhoneNumber("0835233041");
+
+        customerRepo.save(customer);
+
 
        // HttpStatus httpStatus = HttpStatus.OK;
 
@@ -575,6 +567,9 @@ public class ShoppingController implements ShoppingApi{
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+            currentItem.setBrand(responseItems.get(i).getBrand());
+            currentItem.setItemType(responseItems.get(i).getItemType());
+            currentItem.setSize(responseItems.get(i).getSize());
 
             responseBody.add(currentItem);
 
@@ -593,13 +588,20 @@ public class ShoppingController implements ShoppingApi{
             ShopperObject currentShopper = new ShopperObject();
 
             currentShopper.setName(responseShoppers.get(i).getName());
-            currentShopper.setId(responseShoppers.get(i).getShopperID().toString());
             currentShopper.setSurname(responseShoppers.get(i).getSurname());
-            currentShopper.setUsername(responseShoppers.get(i).getEmail());
+            currentShopper.setEmail(responseShoppers.get(i).getEmail());
+            currentShopper.setPhoneNumber(responseShoppers.get(i).getPhoneNumber());
             currentShopper.setPassword(responseShoppers.get(i).getPassword());
-            currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
+            currentShopper.setActivationDate(String.valueOf(responseShoppers.get(i).getActivationDate()));
+            currentShopper.setActivationCode(responseShoppers.get(i).getActivationCode());
+            currentShopper.setResetCode(responseShoppers.get(i).getResetCode());
+            currentShopper.setResetExpiration(responseShoppers.get(i).getResetExpiration());
+            currentShopper.setAccountType(String.valueOf(responseShoppers.get(i).getAccountType()));
+            currentShopper.setShopperID(responseShoppers.get(i).getShopperID().toString());
             currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
-
+            currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
+            currentShopper.setOnShift(responseShoppers.get(i).getOnShift());
+            currentShopper.setIsActive(responseShoppers.get(i).isActive());
             responseBody.add(currentShopper);
 
         }
@@ -622,6 +624,7 @@ public class ShoppingController implements ShoppingApi{
             currentStore.setMaxOrders(responseStores.get(i).getMaxOrders());
             currentStore.setMaxShoppers(responseStores.get(i).getMaxShoppers());
             currentStore.setIsOpen(responseStores.get(i).getOpen());
+            currentStore.setImageUrl(responseStores.get(i).getImgUrl());
 
             responseBody.add(currentStore);
 
@@ -633,23 +636,41 @@ public class ShoppingController implements ShoppingApi{
     private List<OrderObject> populateOrders(List<Order> responseOrders) throws NullPointerException{
 
         List<OrderObject> responseBody = new ArrayList<>();
-
+        if (responseOrders == null){
+            return null;
+        }
         for(int i = 0; i < responseOrders.size(); i++){
 
             OrderObject currentOrder = new OrderObject();
 
-            currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
-            currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
-            currentOrder.setCreateDate(responseOrders.get(i).toString());
-            currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
-            currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
-            currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
-            currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
-            currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
-            currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
-            currentOrder.setStatus(responseOrders.get(i).getStatus().name());
-            currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
-            currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
+            try{
+                currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
+                currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
+                currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
+
+                try{
+                    currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+                currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
+                currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
+                currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
+                currentOrder.setStatus(responseOrders.get(i).getStatus().name());
+                currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
+                currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
+                currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
+                currentOrder.setStoreAddress(responseOrders.get(i).getStoreAddress().getAddress());
+                currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
+
+
+            }catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+
 
             responseBody.add(currentOrder);
         }

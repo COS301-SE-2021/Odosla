@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -15,54 +16,61 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object is expected as input")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
 public class UserMakeGroceryListRequest   {
-  @JsonProperty("customerID")
-  private String customerID = null;
+  @JsonProperty("JWTToken")
+  private String jwTToken = null;
 
-  @JsonProperty("barcodes")
-  private List barcodes = null;
+  @JsonProperty("productIds")
+  @Valid
+  private List<String> productIds = null;
 
   @JsonProperty("name")
   private String name = null;
 
-  public UserMakeGroceryListRequest customerID(String customerID) {
-    this.customerID = customerID;
+  public UserMakeGroceryListRequest jwTToken(String jwTToken) {
+    this.jwTToken = jwTToken;
     return this;
   }
 
   /**
    * generated token used to identify the caller of the endpoint
-   * @return customerID
+   * @return jwTToken
   **/
   @ApiModelProperty(value = "generated token used to identify the caller of the endpoint")
   
-    public String getCustomerID() {
-    return customerID;
+    public String getJwTToken() {
+    return jwTToken;
   }
 
-  public void setCustomerID(String customerID) {
-    this.customerID = customerID;
+  public void setJwTToken(String jwTToken) {
+    this.jwTToken = jwTToken;
   }
 
-  public UserMakeGroceryListRequest barcodes(List barcodes) {
-    this.barcodes = barcodes;
+  public UserMakeGroceryListRequest productIds(List<String> productIds) {
+    this.productIds = productIds;
+    return this;
+  }
+
+  public UserMakeGroceryListRequest addProductIdsItem(String productIdsItem) {
+    if (this.productIds == null) {
+      this.productIds = new ArrayList<String>();
+    }
+    this.productIds.add(productIdsItem);
     return this;
   }
 
   /**
-   * Get barcodes
-   * @return barcodes
+   * Get productIds
+   * @return productIds
   **/
   @ApiModelProperty(value = "")
   
-    @Valid
-    public List getBarcodes() {
-    return barcodes;
+    public List<String> getProductIds() {
+    return productIds;
   }
 
-  public void setBarcodes(List barcodes) {
-    this.barcodes = barcodes;
+  public void setProductIds(List<String> productIds) {
+    this.productIds = productIds;
   }
 
   public UserMakeGroceryListRequest name(String name) {
@@ -94,14 +102,14 @@ public class UserMakeGroceryListRequest   {
       return false;
     }
     UserMakeGroceryListRequest userMakeGroceryListRequest = (UserMakeGroceryListRequest) o;
-    return Objects.equals(this.customerID, userMakeGroceryListRequest.customerID) &&
-        Objects.equals(this.barcodes, userMakeGroceryListRequest.barcodes) &&
+    return Objects.equals(this.jwTToken, userMakeGroceryListRequest.jwTToken) &&
+        Objects.equals(this.productIds, userMakeGroceryListRequest.productIds) &&
         Objects.equals(this.name, userMakeGroceryListRequest.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerID, barcodes, name);
+    return Objects.hash(jwTToken, productIds, name);
   }
 
   @Override
@@ -109,8 +117,8 @@ public class UserMakeGroceryListRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserMakeGroceryListRequest {\n");
     
-    sb.append("    customerID: ").append(toIndentedString(customerID)).append("\n");
-    sb.append("    barcodes: ").append(toIndentedString(barcodes)).append("\n");
+    sb.append("    jwTToken: ").append(toIndentedString(jwTToken)).append("\n");
+    sb.append("    productIds: ").append(toIndentedString(productIds)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();

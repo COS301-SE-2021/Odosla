@@ -14,10 +14,31 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "This object is expected as input")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
 public class ShoppingGetNextQueuedRequest   {
+  @JsonProperty("jwtToken")
+  private String jwtToken = null;
+
   @JsonProperty("storeID")
   private String storeID = null;
+
+  public ShoppingGetNextQueuedRequest jwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
+    return this;
+  }
+
+  /**
+   * Get jwtToken
+   * @return jwtToken
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getJwtToken() {
+    return jwtToken;
+  }
+
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
+  }
 
   public ShoppingGetNextQueuedRequest storeID(String storeID) {
     this.storeID = storeID;
@@ -48,12 +69,13 @@ public class ShoppingGetNextQueuedRequest   {
       return false;
     }
     ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest = (ShoppingGetNextQueuedRequest) o;
-    return Objects.equals(this.storeID, shoppingGetNextQueuedRequest.storeID);
+    return Objects.equals(this.jwtToken, shoppingGetNextQueuedRequest.jwtToken) &&
+        Objects.equals(this.storeID, shoppingGetNextQueuedRequest.storeID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(storeID);
+    return Objects.hash(jwtToken, storeID);
   }
 
   @Override
@@ -61,6 +83,7 @@ public class ShoppingGetNextQueuedRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ShoppingGetNextQueuedRequest {\n");
     
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("}");
     return sb.toString();

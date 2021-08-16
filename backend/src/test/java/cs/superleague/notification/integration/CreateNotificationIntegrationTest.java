@@ -1,6 +1,8 @@
 package cs.superleague.notification.integration;
 
 import cs.superleague.notification.NotificationServiceImpl;
+import cs.superleague.notification.dataclass.Notification;
+import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.CreateNotificationRequest;
 import cs.superleague.notification.responses.CreateNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
@@ -29,6 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 public class CreateNotificationIntegrationTest {
+
+    @Autowired
+    NotificationRepo notificationRepo;
 
     @Autowired
     AdminRepo adminRepo;
@@ -69,6 +74,7 @@ public class CreateNotificationIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        notificationRepo.deleteAll();
         adminRepo.deleteAll();
     }
 

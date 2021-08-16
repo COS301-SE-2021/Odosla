@@ -17,6 +17,7 @@ public class Driver extends User {
     private UUID driverID;
     private double rating;
     private Boolean onShift=false;
+    private Boolean isCurrentlyDelivering=false;
 
     @OneToOne(cascade={CascadeType.ALL})
     private GeoPoint currentAddress;
@@ -33,6 +34,14 @@ public class Driver extends User {
     }
 
     public Driver() {}
+
+    public Boolean getCurrentlyDelivering() {
+        return isCurrentlyDelivering;
+    }
+
+    public void setCurrentlyDelivering(Boolean currentlyDelivering) {
+        isCurrentlyDelivering = currentlyDelivering;
+    }
 
     public UUID getDriverID() {
         return driverID;

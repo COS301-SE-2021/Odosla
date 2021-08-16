@@ -14,7 +14,6 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a store")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-13T18:57:36.804039800+02:00[Africa/Harare]")
 public class StoreObject   {
   @JsonProperty("storeID")
   private String storeID = null;
@@ -36,6 +35,9 @@ public class StoreObject   {
 
   @JsonProperty("closingTime")
   private Integer closingTime = null;
+
+  @JsonProperty("imageUrl")
+  private String imageUrl = null;
 
   public StoreObject storeID(String storeID) {
     this.storeID = storeID;
@@ -170,6 +172,25 @@ public class StoreObject   {
     this.closingTime = closingTime;
   }
 
+  public StoreObject imageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+    return this;
+  }
+
+  /**
+   * Get imageUrl
+   * @return imageUrl
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getImageUrl() {
+    return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -186,12 +207,13 @@ public class StoreObject   {
         Objects.equals(this.maxShoppers, storeObject.maxShoppers) &&
         Objects.equals(this.maxOrders, storeObject.maxOrders) &&
         Objects.equals(this.openingTime, storeObject.openingTime) &&
-        Objects.equals(this.closingTime, storeObject.closingTime);
+        Objects.equals(this.closingTime, storeObject.closingTime) &&
+        Objects.equals(this.imageUrl, storeObject.imageUrl);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(storeID, storeBrand, isOpen, maxShoppers, maxOrders, openingTime, closingTime);
+    return Objects.hash(storeID, storeBrand, isOpen, maxShoppers, maxOrders, openingTime, closingTime, imageUrl);
   }
 
   @Override
@@ -206,6 +228,7 @@ public class StoreObject   {
     sb.append("    maxOrders: ").append(toIndentedString(maxOrders)).append("\n");
     sb.append("    openingTime: ").append(toIndentedString(openingTime)).append("\n");
     sb.append("    closingTime: ").append(toIndentedString(closingTime)).append("\n");
+    sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
     sb.append("}");
     return sb.toString();
   }
