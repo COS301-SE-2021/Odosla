@@ -8,6 +8,7 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.RemoveDriverFromDeliveryRequest;
 import cs.superleague.delivery.responses.RemoveDriverFromDeliveryResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.DriverRepo;
@@ -81,7 +82,7 @@ public class RemoveDriverFromDeliveryIntegrationTest {
     @Test
     @Description("Driver successfully removed from delivery.")
     @DisplayName("Driver removed")
-    void driverSuccessfullyRemovedFromDelivery_IntegrationTest() throws InvalidRequestException{
+    void driverSuccessfullyRemovedFromDelivery_IntegrationTest() throws InvalidRequestException, PaymentException {
         RemoveDriverFromDeliveryRequest request = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
         RemoveDriverFromDeliveryResponse response = deliveryService.removeDriverFromDelivery(request);
         assertEquals(response.getMessage(), "Driver successfully removed from delivery.");

@@ -10,6 +10,7 @@ import cs.superleague.delivery.requests.TrackDeliveryRequest;
 import cs.superleague.delivery.requests.UpdateDeliveryStatusRequest;
 import cs.superleague.delivery.responses.UpdateDeliveryStatusResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Admin;
@@ -151,7 +152,7 @@ public class UpdateDeliveryStatusUnitTest {
     @Test
     @Description("Tests that the response object returns for valid delivery update")
     @DisplayName("Valid update")
-    void deliveryStatusSuccessfullyUpdated_UnitTest() throws InvalidRequestException{
+    void deliveryStatusSuccessfullyUpdated_UnitTest() throws InvalidRequestException, PaymentException {
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
         UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(status, deliveryID, "detail");
         UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);
