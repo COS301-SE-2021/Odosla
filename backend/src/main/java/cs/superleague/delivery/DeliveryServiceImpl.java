@@ -47,7 +47,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final PaymentService paymentService;
 
     @Autowired
-    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, @Lazy UserService userService, PaymentService paymentService) {
+    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, @Lazy UserService userService, @Lazy PaymentService paymentService) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.adminRepo = adminRepo;
