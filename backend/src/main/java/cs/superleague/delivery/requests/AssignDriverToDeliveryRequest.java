@@ -3,25 +3,12 @@ package cs.superleague.delivery.requests;
 import java.util.UUID;
 
 public class AssignDriverToDeliveryRequest {
-    private UUID driverID;
     private UUID deliveryID;
     private String jwtToken;
 
-    public  AssignDriverToDeliveryRequest()
-    {
-
-    }
-    public AssignDriverToDeliveryRequest(UUID driverID, UUID deliveryID) {
-        this.driverID = driverID;
+    public AssignDriverToDeliveryRequest(String jwtToken, UUID deliveryID) {
+        this.jwtToken = jwtToken;
         this.deliveryID = deliveryID;
-    }
-
-    public UUID getDriverID() {
-        return driverID;
-    }
-
-    public void setDriverID(UUID driverID) {
-        this.driverID = driverID;
     }
 
     public UUID getDeliveryID() {

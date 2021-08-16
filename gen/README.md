@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-14T22:27:51.898546700+02:00[Africa/Harare]
+  - Build date: 2021-08-16T17:50:09.822513100+02:00[Africa/Harare]
 
 The library service
 
@@ -132,6 +132,7 @@ Class | Method | HTTP request | Description
 *UserApi* | [**clearShoppingCart**](docs/UserApi.md#clearShoppingCart) | **POST** /user/clearShoppingCart | Endpoint for clearing a shopping cart
 *UserApi* | [**completePackagingOrder**](docs/UserApi.md#completePackagingOrder) | **POST** /user/completePackagingOrder | Endpoint for complete packaging order use case
 *UserApi* | [**getCurrentUser**](docs/UserApi.md#getCurrentUser) | **POST** /user/getCurrentUser | Endpoint for to get Current user
+*UserApi* | [**getGroceryLists**](docs/UserApi.md#getGroceryLists) | **POST** /user/getGroceryLists | Endpoint for get grocery lists use case
 *UserApi* | [**getNextQueued**](docs/UserApi.md#getNextQueued) | **POST** /shopping/getNextQueued | Endpoint for getting next queue
 *UserApi* | [**getShoppingCart**](docs/UserApi.md#getShoppingCart) | **POST** /user/getShoppingCart | Endpoint for getting a shopping cart
 *UserApi* | [**loginUser**](docs/UserApi.md#loginUser) | **POST** /user/loginUser | Endpoint for setting a shopping cart
@@ -144,6 +145,7 @@ Class | Method | HTTP request | Description
 *UserApi* | [**scanItem**](docs/UserApi.md#scanItem) | **POST** /user/scanItem | Endpoint for scanning an item
 *UserApi* | [**setCart**](docs/UserApi.md#setCart) | **POST** /user/setCart | Endpoint for setting a shopping cart
 *UserApi* | [**setCurrentLocation**](docs/UserApi.md#setCurrentLocation) | **POST** /user/setCurrentLocation | Endpoint for setting Current Location Driver
+*UserApi* | [**updateDriverShift**](docs/UserApi.md#updateDriverShift) | **POST** /user/updateDriverShift | Endpoint for updating driver shift
 *UserApi* | [**updateShopperShift**](docs/UserApi.md#updateShopperShift) | **POST** /user/updateShopperShift | Endpoint for updating shopper shift
 *UserApi* | [**verifyAccount**](docs/UserApi.md#verifyAccount) | **POST** /user/verifyAccount | Endpoint for verifying a user account
 
@@ -211,6 +213,8 @@ Class | Method | HTTP request | Description
  - [UserCompletePackagingOrderResponse](docs/UserCompletePackagingOrderResponse.md)
  - [UserGetCurrentUserRequest](docs/UserGetCurrentUserRequest.md)
  - [UserGetCurrentUserResponse](docs/UserGetCurrentUserResponse.md)
+ - [UserGetGroceryListRequest](docs/UserGetGroceryListRequest.md)
+ - [UserGetGroceryListResponse](docs/UserGetGroceryListResponse.md)
  - [UserGetShoppingCartRequest](docs/UserGetShoppingCartRequest.md)
  - [UserGetShoppingCartResponse](docs/UserGetShoppingCartResponse.md)
  - [UserLoginRequest](docs/UserLoginRequest.md)
@@ -234,6 +238,8 @@ Class | Method | HTTP request | Description
  - [UserSetCartResponse](docs/UserSetCartResponse.md)
  - [UserSetCurrentLocationRequest](docs/UserSetCurrentLocationRequest.md)
  - [UserSetCurrentLocationResponse](docs/UserSetCurrentLocationResponse.md)
+ - [UserUpdateDriverShiftRequest](docs/UserUpdateDriverShiftRequest.md)
+ - [UserUpdateDriverShiftResponse](docs/UserUpdateDriverShiftResponse.md)
  - [UserUpdateShopperShiftRequest](docs/UserUpdateShopperShiftRequest.md)
  - [UserUpdateShopperShiftResponse](docs/UserUpdateShopperShiftResponse.md)
 

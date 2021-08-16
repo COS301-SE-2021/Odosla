@@ -7,8 +7,8 @@ This object is expected as input
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**customerID** | **String** | generated token used to identify the caller of the endpoint |  [optional]
-**barcodes** | **List&lt;String&gt;** |  |  [optional]
+**jwTToken** | **String** | generated token used to identify the caller of the endpoint |  [optional]
+**productIds** | **List&lt;String&gt;** |  |  [optional]
 **name** | **String** |  |  [optional]
 
 
