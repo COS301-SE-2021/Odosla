@@ -28,37 +28,41 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class UserUpdateShopperShiftRequest {
-  public static final String SERIALIZED_NAME_SHOPPER_I_D = "shopperID";
-  @SerializedName(SERIALIZED_NAME_SHOPPER_I_D)
-  private String shopperID;
+  public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
+  @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
+  private String jwtToken;
 
   public static final String SERIALIZED_NAME_ON_SHIFT = "onShift";
   @SerializedName(SERIALIZED_NAME_ON_SHIFT)
   private Boolean onShift;
 
+  public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
+  @SerializedName(SERIALIZED_NAME_STORE_I_D)
+  private String storeID;
 
-  public UserUpdateShopperShiftRequest shopperID(String shopperID) {
+
+  public UserUpdateShopperShiftRequest jwtToken(String jwtToken) {
     
-    this.shopperID = shopperID;
+    this.jwtToken = jwtToken;
     return this;
   }
 
    /**
-   * Get shopperID
-   * @return shopperID
+   * Get jwtToken
+   * @return jwtToken
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getShopperID() {
-    return shopperID;
+  public String getJwtToken() {
+    return jwtToken;
   }
 
 
-  public void setShopperID(String shopperID) {
-    this.shopperID = shopperID;
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
   }
 
 
@@ -85,6 +89,29 @@ public class UserUpdateShopperShiftRequest {
   }
 
 
+  public UserUpdateShopperShiftRequest storeID(String storeID) {
+    
+    this.storeID = storeID;
+    return this;
+  }
+
+   /**
+   * Get storeID
+   * @return storeID
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getStoreID() {
+    return storeID;
+  }
+
+
+  public void setStoreID(String storeID) {
+    this.storeID = storeID;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -94,13 +121,14 @@ public class UserUpdateShopperShiftRequest {
       return false;
     }
     UserUpdateShopperShiftRequest userUpdateShopperShiftRequest = (UserUpdateShopperShiftRequest) o;
-    return Objects.equals(this.shopperID, userUpdateShopperShiftRequest.shopperID) &&
-        Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift);
+    return Objects.equals(this.jwtToken, userUpdateShopperShiftRequest.jwtToken) &&
+        Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift) &&
+        Objects.equals(this.storeID, userUpdateShopperShiftRequest.storeID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(shopperID, onShift);
+    return Objects.hash(jwtToken, onShift, storeID);
   }
 
 
@@ -108,8 +136,9 @@ public class UserUpdateShopperShiftRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserUpdateShopperShiftRequest {\n");
-    sb.append("    shopperID: ").append(toIndentedString(shopperID)).append("\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
+    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

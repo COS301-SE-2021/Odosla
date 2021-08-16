@@ -2,10 +2,8 @@ package cs.superleague.user.controller;
 
 import cs.superleague.api.UserApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Catalogue;
@@ -16,23 +14,21 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
-import cs.superleague.user.dataclass.*;
-import cs.superleague.user.exceptions.InvalidRequestException;
-import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -205,7 +201,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getCustomerID(), body.getBarcodes(), body.getName());
+            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getJwTToken(), body.getProductIds(), body.getName());
 
             MakeGroceryListResponse response = ServiceSelector.getUserService().makeGroceryList(request);
             try{
@@ -453,7 +449,7 @@ public class UserController implements UserApi {
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
         try {
-            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(UUID.fromString(body.getShopperID()), body.isOnShift());
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.getJwtToken(), body.isOnShift(), UUID.fromString(body.getStoreID()));
             UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
             try {
                 response.setMessage(response1.getMessage());
@@ -523,6 +519,59 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetCurrentUserResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetGroceryListResponse> getGroceryLists(UserGetGroceryListRequest body){
+
+        UserGetGroceryListResponse userGetGroceryListResponse = new UserGetGroceryListResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetGroceryListsRequest request = new GetGroceryListsRequest(body.getJwTToken());
+
+            GetGroceryListsResponse response = ServiceSelector.getUserService().getGroceryLists(request);
+            try{
+                userGetGroceryListResponse.setTimestamp(response.getTimestamp().toString());
+                userGetGroceryListResponse.setMessage(response.getMessage());
+                userGetGroceryListResponse.setSuccess(response.isSuccess());
+                userGetGroceryListResponse.setGroceryLists(populateGroceryList(response.getGroceryLists()));
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateDriverShiftResponse> updateDriverShift(UserUpdateDriverShiftRequest body){
+
+        UserUpdateDriverShiftResponse userUpdateDriverShiftResponse = new UserUpdateDriverShiftResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateDriverShiftRequest request = new UpdateDriverShiftRequest(body.getJwtToken(), body.isOnShift());
+
+            UpdateDriverShiftResponse response = ServiceSelector.getUserService().updateDriverShift(request);
+            try{
+                userUpdateDriverShiftResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateDriverShiftResponse.setMessage(response.getMessage());
+                userUpdateDriverShiftResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateDriverShiftResponse, status);
     }
 
     //Helper for getCurrentUser

@@ -682,6 +682,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_CompletePackagingOrderResponse"
 
+  /user/getGroceryLists:
+    post:
+      summary: Endpoint for get grocery lists use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getGroceryLists
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetGroceryListRequest"
+      responses:
+        "200":
+          description: Returns the groceryList
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetGroceryListResponse"
+
   /delivery/addDeliveryDetail:
     post:
       summary: Endpoint for add delivery detail
@@ -879,6 +901,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/delivery_UpdateDeliveryStatusResponse"
+
+  /user/updateDriverShift:
+    post:
+      summary: Endpoint for updating driver shift
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: updateDriverShift
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_UpdateDriverShiftRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_UpdateDriverShiftResponse"
 
 
   /analytics/createUserReport:
@@ -1315,10 +1359,10 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        customerID:
+        JWTToken:
           type: string
           description: generated token used to identify the caller of the endpoint
-        barcodes:
+        productIds:
           type: array
           items:
             type: string
@@ -1399,10 +1443,12 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        shopperID:
+        jwtToken:
           type: string
         onShift:
           type: boolean
+        storeID:
+          type: string
 
     user_UpdateShopperShiftResponse:
       description: This object is returned as output
@@ -1850,6 +1896,28 @@ components:
       description: This object is expected as output
       type: object
 
+    user_GetGroceryListRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWTToken:
+          type: string
+
+    user_GetGroceryListResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        groceryLists:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
     delivery_AddDeliveryDetailRequest:
       description: This object is expected as input
       type: object
@@ -2047,6 +2115,27 @@ components:
       description: This object is expected as output
       type: object
       properties:
+        message:
+          type: string
+
+
+    user_UpdateDriverShiftRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+        onShift:
+          type: boolean
+
+    user_UpdateDriverShiftResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
         message:
           type: string
 

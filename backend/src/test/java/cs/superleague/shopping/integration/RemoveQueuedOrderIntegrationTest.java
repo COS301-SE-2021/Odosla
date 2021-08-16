@@ -91,7 +91,7 @@ public class RemoveQueuedOrderIntegrationTest {
     List<Order> orderQueue=new ArrayList<>();
 
     @BeforeEach
-    void setup() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException {
+    void setup() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException {
         item1=new Item("name1","productID1","barcode1",storeID,10.0,2,"Description1","imageURL1");
         item2=new Item("name2","productID2","barcode2",storeID,30.0,1,"Description2","imageURL2");
         item3=new Item("name3","productID3","barcode3",storeID,27.0,1,"Description3","imageURL3");

@@ -13,6 +13,8 @@ import cs.superleague.models.UserCompletePackagingOrderRequest;
 import cs.superleague.models.UserCompletePackagingOrderResponse;
 import cs.superleague.models.UserGetCurrentUserRequest;
 import cs.superleague.models.UserGetCurrentUserResponse;
+import cs.superleague.models.UserGetGroceryListRequest;
+import cs.superleague.models.UserGetGroceryListResponse;
 import cs.superleague.models.UserGetShoppingCartRequest;
 import cs.superleague.models.UserGetShoppingCartResponse;
 import cs.superleague.models.UserLoginRequest;
@@ -35,6 +37,8 @@ import cs.superleague.models.UserSetCartRequest;
 import cs.superleague.models.UserSetCartResponse;
 import cs.superleague.models.UserSetCurrentLocationRequest;
 import cs.superleague.models.UserSetCurrentLocationResponse;
+import cs.superleague.models.UserUpdateDriverShiftRequest;
+import cs.superleague.models.UserUpdateDriverShiftResponse;
 import cs.superleague.models.UserUpdateShopperShiftRequest;
 import cs.superleague.models.UserUpdateShopperShiftResponse;
 import io.swagger.annotations.*;
@@ -87,6 +91,17 @@ public interface UserApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<UserGetCurrentUserResponse> getCurrentUser(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserGetCurrentUserRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for get grocery lists use case", nickname = "getGroceryLists", notes = "Refer to summary", response = UserGetGroceryListResponse.class, tags={ "user", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns the groceryList", response = UserGetGroceryListResponse.class) })
+    @RequestMapping(value = "/user/getGroceryLists",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<UserGetGroceryListResponse> getGroceryLists(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserGetGroceryListRequest body
 );
 
 
@@ -208,6 +223,17 @@ public interface UserApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<UserSetCurrentLocationResponse> setCurrentLocation(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserSetCurrentLocationRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for updating driver shift", nickname = "updateDriverShift", notes = "Refer to summary", response = UserUpdateDriverShiftResponse.class, tags={ "User", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns upon success", response = UserUpdateDriverShiftResponse.class) })
+    @RequestMapping(value = "/user/updateDriverShift",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<UserUpdateDriverShiftResponse> updateDriverShift(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserUpdateDriverShiftRequest body
 );
 
 
