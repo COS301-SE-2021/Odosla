@@ -1,6 +1,9 @@
 package cs.superleague.user.integration;
 
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
@@ -30,6 +34,9 @@ public class UpdateShopperShiftIntegrationTest {
     ShopperRepo shopperRepo;
 
     @Autowired
+    StoreRepo storeRepo;
+
+    @Autowired
     private UserServiceImpl userService;
 
     @Autowired
@@ -40,21 +47,27 @@ public class UpdateShopperShiftIntegrationTest {
     UUID shopperID= UUID.randomUUID();
     Shopper shopper;
     String shopperJWT;
+    Store store;
+    UUID storeID = UUID.randomUUID();
 
     @BeforeEach
     void setUp() {
+        store = new Store();
+        store.setStoreID(storeID);
         shopper=new Shopper();
         shopper.setShopperID(shopperID);
         shopper.setEmail("hello@gmail.com");
         shopper.setOnShift(true);
         shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
-        request=new UpdateShopperShiftRequest(shopperJWT,true);
-
+        request=new UpdateShopperShiftRequest(shopperJWT,true, storeID);
+        storeRepo.save(store);
     }
 
     @AfterEach
     void tearDown(){
+        storeRepo.deleteAll();
         shopperRepo.deleteAll();
+
     }
 
     @Test
@@ -65,9 +78,9 @@ public class UpdateShopperShiftIntegrationTest {
     }
 
     @Test
-    @DisplayName("When shopperID parameter is not specified")
-    void IntegrationTest_testingNullRequestShopperIDParameter(){
-        request.setShopperID(null);
+    @DisplayName("When jwtToken parameter is not specified")
+    void IntegrationTest_testingNullRequestJWTTokenParameter(){
+        request.setJwtToken(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(request));
         assertEquals("ShopperID in UpdateShopperShiftRequest is null", thrown.getMessage());
     }
@@ -81,6 +94,14 @@ public class UpdateShopperShiftIntegrationTest {
     }
 
     @Test
+    @DisplayName("When storeID parameter is not specified")
+    void IntegrationTest_testingNullRequestStoreIDParameter(){
+        request.setStoreID(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(request));
+        assertEquals("StoreID in UpdateShopperShiftRequest is null", thrown.getMessage());
+    }
+
+    @Test
     @DisplayName("When shopper with shopperID does not exist")
     void IntegrationTest_testingShopperDoesNotExist(){
         Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> userService.updateShopperShift(request));
@@ -89,7 +110,7 @@ public class UpdateShopperShiftIntegrationTest {
 
     @Test
     @DisplayName("When shopper is already on Shift")
-    void IntegrationTest_testingShopperAlreadyOnShift() throws InvalidRequestException, ShopperDoesNotExistException {
+    void IntegrationTest_testingShopperAlreadyOnShift() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         shopperRepo.save(shopper);
         response= userService.updateShopperShift(request);
         assertNotNull(response);
@@ -100,7 +121,7 @@ public class UpdateShopperShiftIntegrationTest {
 
     @Test
     @DisplayName("When shopper is already not on Shift")
-    void IntegrationTest_testingShopperAlreadyNotOnShift() throws InvalidRequestException, ShopperDoesNotExistException {
+    void IntegrationTest_testingShopperAlreadyNotOnShift() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         request.setOnShift(false);
         shopper.setOnShift(false);
         shopperRepo.save(shopper);
@@ -112,8 +133,8 @@ public class UpdateShopperShiftIntegrationTest {
     }
 
     @Test
-    @DisplayName("When shopper's shift successfully updated")
-    void IntegrationTest_testingShopperShiftSuccessfullyUpdated() throws InvalidRequestException, ShopperDoesNotExistException {
+    @DisplayName("When shopper's shift successfully changed to false")
+    void IntegrationTest_testingShopperShiftSuccessfullyUpdatedToFalse() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         request.setOnShift(false);
         shopper.setOnShift(true);
         shopperRepo.save(shopper);
@@ -122,5 +143,35 @@ public class UpdateShopperShiftIntegrationTest {
         assertTrue(response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("Shopper's shift correctly updated",response.getMessage());
+        Optional<Store> store = storeRepo.findById(storeID);
+        assertFalse(store.get().getShoppers().contains(shopper));
+    }
+
+    @Test
+    @DisplayName("When shopper's shift successfully changed to true")
+    void IntegrationTest_testingShopperShiftSuccessfullyUpdatedToTrue() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
+        request.setOnShift(true);
+        shopper.setOnShift(false);
+        shopperRepo.save(shopper);
+        response= userService.updateShopperShift(request);
+        assertNotNull(response);
+        assertTrue(response.isSuccess());
+        assertNotNull(response.getTimestamp());
+        assertEquals("Shopper's shift correctly updated",response.getMessage());
+        Optional<Store> store = storeRepo.findById(storeID);
+        Optional<Shopper> shopper = shopperRepo.findById(shopperID);
+        assertTrue(store.get().getShoppers().get(0).getShopperID().equals(shopperID));
+    }
+
+
+    @Test
+    @DisplayName("When the shop isn't in the database")
+    void IntegrationTest_ShopIsNotInTheDataBase() {
+        request.setStoreID(UUID.randomUUID());
+        request.setOnShift(false);
+        shopper.setOnShift(true);
+        shopperRepo.save(shopper);
+        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> userService.updateShopperShift(request));
+        assertEquals(thrown.getMessage(), "Store is not saved in database.");
     }
 }

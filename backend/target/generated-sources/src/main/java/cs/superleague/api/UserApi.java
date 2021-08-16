@@ -37,6 +37,8 @@ import cs.superleague.models.UserSetCartRequest;
 import cs.superleague.models.UserSetCartResponse;
 import cs.superleague.models.UserSetCurrentLocationRequest;
 import cs.superleague.models.UserSetCurrentLocationResponse;
+import cs.superleague.models.UserUpdateDriverShiftRequest;
+import cs.superleague.models.UserUpdateDriverShiftResponse;
 import cs.superleague.models.UserUpdateShopperShiftRequest;
 import cs.superleague.models.UserUpdateShopperShiftResponse;
 import io.swagger.annotations.*;
@@ -221,6 +223,17 @@ public interface UserApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<UserSetCurrentLocationResponse> setCurrentLocation(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserSetCurrentLocationRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for updating driver shift", nickname = "updateDriverShift", notes = "Refer to summary", response = UserUpdateDriverShiftResponse.class, tags={ "User", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns upon success", response = UserUpdateDriverShiftResponse.class) })
+    @RequestMapping(value = "/user/updateDriverShift",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<UserUpdateDriverShiftResponse> updateDriverShift(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody UserUpdateDriverShiftRequest body
 );
 
 

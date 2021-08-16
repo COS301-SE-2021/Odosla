@@ -449,7 +449,7 @@ public class UserController implements UserApi {
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
         try {
-            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.getJwtToken(), body.isOnShift());
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.getJwtToken(), body.isOnShift(), UUID.fromString(body.getStoreID()));
             UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
             try {
                 response.setMessage(response1.getMessage());
