@@ -14,7 +14,7 @@ public interface PaymentService {
 
     // ORDER
 
-    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException;
 
     CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException;
 
@@ -30,9 +30,9 @@ public interface PaymentService {
 
     // TRANSACTION
 
-    CreateTransactionResponse createTransaction(CreateTransactionRequest request);
+    CreateTransactionResponse createTransaction(CreateTransactionRequest request) throws PaymentException, InterruptedException;
 
-    VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request);
+    VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws PaymentException, InterruptedException;
 
     ReverseTransactionResponse  reverseTransaction(ReverseTransactionRequest request);
 

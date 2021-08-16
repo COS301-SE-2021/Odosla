@@ -3,20 +3,22 @@ package cs.superleague.user.requests;
 import java.util.UUID;
 
 public class UpdateShopperShiftRequest {
-    private UUID shopperID;
+    private String jwtToken;
     private Boolean onShift;
+    private UUID storeID;
 
-    public UpdateShopperShiftRequest(UUID shopperID, boolean onShift) {
-        this.shopperID = shopperID;
+    public UpdateShopperShiftRequest(String jwtToken, boolean onShift, UUID storeID) {
+        this.jwtToken = jwtToken;
         this.onShift = onShift;
+        this.storeID = storeID;
     }
 
-    public UUID getShopperID() {
-        return shopperID;
+    public String getJwtToken() {
+        return jwtToken;
     }
 
-    public void setShopperID(UUID shopperID) {
-        this.shopperID = shopperID;
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 
     public Boolean getOnShift() {
@@ -25,5 +27,13 @@ public class UpdateShopperShiftRequest {
 
     public void setOnShift(Boolean onShift) {
         this.onShift = onShift;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
     }
 }
