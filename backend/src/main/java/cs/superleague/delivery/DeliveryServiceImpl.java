@@ -9,15 +9,17 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.payment.PaymentService;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.requests.SetStatusRequest;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
@@ -41,9 +43,10 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final StoreRepo storeRepo;
     private final OrderRepo orderRepo;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @Autowired
-    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, UserService userService) {
+    public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, AdminRepo adminRepo, DriverRepo driverRepo, CustomerRepo customerRepo, StoreRepo storeRepo, OrderRepo orderRepo, UserService userService, PaymentService paymentService) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.adminRepo = adminRepo;
@@ -52,6 +55,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         this.storeRepo = storeRepo;
         this.orderRepo = orderRepo;
         this.userService=userService;
+        this.paymentService = paymentService;
     }
 
     @Override
@@ -274,7 +278,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException {
+    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException, PaymentException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -321,7 +325,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException {
+    public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, PaymentException {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -333,6 +337,11 @@ public class DeliveryServiceImpl implements DeliveryService {
         addDeliveryDetail(requestAdd);
         delivery.setStatus(request.getStatus());
         deliveryRepo.save(delivery);
+        if (request.getStatus() == DeliveryStatus.Delivered){
+            Order order = orderRepo.findById(delivery.getOrderID()).orElse(null);
+            SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.DELIVERED);
+            paymentService.setStatus(setStatusRequest);
+        }
         UpdateDeliveryStatusResponse response = new UpdateDeliveryStatusResponse("Successful status update.");
         return response;
     }

@@ -8,6 +8,9 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.UpdateDeliveryStatusRequest;
 import cs.superleague.delivery.responses.UpdateDeliveryStatusResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.OrderRepo;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +30,8 @@ public class UpdateDeliveryStatusIntegrationTest {
     private DeliveryServiceImpl deliveryService;
     @Autowired
     DeliveryRepo deliveryRepo;
+    @Autowired
+    OrderRepo orderRepo;
 
     UUID deliveryID;
     Delivery delivery;
@@ -37,6 +42,7 @@ public class UpdateDeliveryStatusIntegrationTest {
     DeliveryStatus status;
     GeoPoint pickUpLocation;
     GeoPoint dropOffLocation;
+    Order order;
 
     @BeforeEach
     void setUp(){
@@ -49,6 +55,11 @@ public class UpdateDeliveryStatusIntegrationTest {
         pickUpLocation = new GeoPoint(0.0, 0.0, "address");
         dropOffLocation = new GeoPoint(1.0, 1.0, "address");
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, DeliveryStatus.WaitingForShoppers, 0.0);
+        order = new Order();
+        orderID = UUID.randomUUID();
+        order.setOrderID(orderID);
+        delivery.setOrderID(orderID);
+        orderRepo.save(order);
         deliveryRepo.save(delivery);
     }
 
@@ -69,7 +80,7 @@ public class UpdateDeliveryStatusIntegrationTest {
     @Test
     @Description("Delivery successfully updated in the database")
     @DisplayName("Successful update")
-    void deliveryStatusUpdatedSuccessfully_IntegrationTest() throws InvalidRequestException{
+    void deliveryStatusUpdatedSuccessfully_IntegrationTest() throws InvalidRequestException, PaymentException {
         UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
         UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request);
         assertEquals(response.getMessage(), "Successful status update.");
