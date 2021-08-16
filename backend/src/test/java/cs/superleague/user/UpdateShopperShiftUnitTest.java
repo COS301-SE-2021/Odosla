@@ -1,6 +1,9 @@
 package cs.superleague.user;
 
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.ShopperDoesNotExistException;
@@ -14,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
@@ -27,6 +31,9 @@ public class UpdateShopperShiftUnitTest {
     @Mock
     ShopperRepo shopperRepo;
 
+    @Mock
+    StoreRepo storeRepo;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -38,15 +45,20 @@ public class UpdateShopperShiftUnitTest {
     UUID shopperID= UUID.randomUUID();
     Shopper shopper;
     String shopperJWT;
+    Store store;
+    UUID storeID;
 
     @BeforeEach
     void setUp() {
+        storeID = UUID.randomUUID();
+        store = new Store();
+        store.setStoreID(storeID);
         shopper=new Shopper();
         shopper.setEmail("hello@gmail.com");
         shopper.setShopperID(shopperID);
         shopper.setOnShift(true);
         shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
-        request=new UpdateShopperShiftRequest(shopperJWT,true);
+        request=new UpdateShopperShiftRequest(shopperJWT,true, storeID);
     }
 
     @AfterEach
@@ -60,9 +72,9 @@ public class UpdateShopperShiftUnitTest {
     }
 
     @Test
-    @DisplayName("When shopperID parameter is not specified")
-    void UnitTest_testingNullRequestShopperIDParameter(){
-        request.setShopperID(null);
+    @DisplayName("When jwtToken parameter is not specified")
+    void UnitTest_testingNullRequestJwtTokenParameter(){
+        request.setJwtToken(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(request));
         assertEquals("ShopperID in UpdateShopperShiftRequest is null", thrown.getMessage());
     }
@@ -76,6 +88,14 @@ public class UpdateShopperShiftUnitTest {
     }
 
     @Test
+    @DisplayName("When storeID parameter is not specified")
+    void UnitTest_testingNullRequestStoreIDParameter(){
+        request.setStoreID(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(request));
+        assertEquals("StoreID in UpdateShopperShiftRequest is null", thrown.getMessage());
+    }
+
+    @Test
     @DisplayName("When shopper with shopperID does not exist")
     void UnitTest_testingShopperDoesNotExist(){
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(null));
@@ -85,7 +105,7 @@ public class UpdateShopperShiftUnitTest {
 
     @Test
     @DisplayName("When shopper is already on Shift")
-    void UnitTest_testingShopperAlreadyOnShift() throws InvalidRequestException, ShopperDoesNotExistException {
+    void UnitTest_testingShopperAlreadyOnShift() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         response= userService.updateShopperShift(request);
@@ -97,7 +117,7 @@ public class UpdateShopperShiftUnitTest {
 
     @Test
     @DisplayName("When shopper is already not on Shift")
-    void UnitTest_testingShopperAlreadyNotOnShift() throws InvalidRequestException, ShopperDoesNotExistException {
+    void UnitTest_testingShopperAlreadyNotOnShift() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         request.setOnShift(false);
         shopper.setOnShift(false);
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
@@ -111,13 +131,14 @@ public class UpdateShopperShiftUnitTest {
 
     @Test
     @DisplayName("When shopper couldn't be updated on database")
-    void UnitTest_testingShopperCouldntBeUpdated() throws InvalidRequestException, ShopperDoesNotExistException {
+    void UnitTest_testingShopperCouldntBeUpdated() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         request.setOnShift(false);
         shopper.setOnShift(true);
         Shopper newShopper = new Shopper();
         newShopper.setShopperID(shopperID);
         newShopper.setOnShift(true);
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper)).thenReturn(java.util.Optional.of(newShopper));
         response= userService.updateShopperShift(request);
         assertNotNull(response);
@@ -127,16 +148,44 @@ public class UpdateShopperShiftUnitTest {
     }
 
     @Test
-    @DisplayName("When shopper's shift successfully updated")
-    void UnitTest_testingShopperShiftSuccesfullyUpdated() throws InvalidRequestException, ShopperDoesNotExistException {
+    @DisplayName("When shopper's shift successfully updated to false")
+    void UnitTest_testingShopperShiftSuccesfullyUpdatedToFalse() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         request.setOnShift(false);
         shopper.setOnShift(true);
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         response= userService.updateShopperShift(request);
         assertNotNull(response);
         assertTrue(response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("Shopper's shift correctly updated",response.getMessage());
+    }
+
+    @Test
+    @DisplayName("When shopper's shift successfully updated to true")
+    void UnitTest_testingShopperShiftSuccesfullyUpdatedToTrue() throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
+        request.setOnShift(true);
+        shopper.setOnShift(false);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
+        response= userService.updateShopperShift(request);
+        assertNotNull(response);
+        assertTrue(response.isSuccess());
+        assertNotNull(response.getTimestamp());
+        assertEquals("Shopper's shift correctly updated",response.getMessage());
+    }
+
+    @Test
+    @DisplayName("When invalid ShopID is passed in")
+    void UnitTest_InvalidShopIDPassedInRequestObject(){
+        request.setOnShift(false);
+        shopper.setOnShift(true);
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
+        Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
+        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> response= userService.updateShopperShift(request));
+        assertEquals(thrown.getMessage(), "Store is not saved in database.");
     }
 }

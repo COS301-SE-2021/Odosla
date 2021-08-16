@@ -1,6 +1,7 @@
 package cs.superleague.user;
 
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
@@ -38,8 +39,10 @@ public interface UserService {
     CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
-    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException;
+    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException;
 
     /* Analytics user data*/
     GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
+
+    GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
 }
