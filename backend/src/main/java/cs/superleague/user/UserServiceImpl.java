@@ -138,6 +138,7 @@ public class UserServiceImpl implements UserService{
             if(orderEntity.getType().equals(OrderType.DELIVERY))
             {
                 CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
+                if(deliveryService!=null)
                 deliveryService.createDelivery(createDeliveryRequest);
             }
 

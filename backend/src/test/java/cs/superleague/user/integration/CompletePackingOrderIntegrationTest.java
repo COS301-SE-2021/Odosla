@@ -7,10 +7,15 @@ import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.CompletePackagingOrderRequest;
 import cs.superleague.user.responses.CompletePackagingOrderResponse;
@@ -38,6 +43,12 @@ public class CompletePackingOrderIntegrationTest {
     ShopperRepo shopperRepo;
 
     @Autowired
+    CustomerRepo customerRepo;
+
+    @Autowired
+    StoreRepo storeRepo;
+
+    @Autowired
     private UserServiceImpl userService;
 
     Shopper shopper;
@@ -45,7 +56,6 @@ public class CompletePackingOrderIntegrationTest {
     Order o2;
     UUID o1UUID=UUID.randomUUID();
     UUID o2UUID=UUID.randomUUID();
-    UUID storeUUID1= UUID.randomUUID();
     UUID expectedU1=UUID.randomUUID();
     UUID expectedS1=UUID.randomUUID();
     UUID expectedShopper1=UUID.randomUUID();
@@ -63,6 +73,10 @@ public class CompletePackingOrderIntegrationTest {
     CompletePackagingOrderRequest request;
     CompletePackagingOrderResponse response;
 
+    UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
+
+    Customer customer;
+
     @BeforeEach
     void setUp()
     {
@@ -79,8 +93,26 @@ public class CompletePackingOrderIntegrationTest {
         Date d1=new Date(2021,06,1,14,30);
         c1.setTime(d1);
 
-        o=new Order(o1UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+        customer = new Customer();
+        customer.setName("Adam");
+        customer.setSurname("Isenberg");
+        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
+        customer.setAccountType(UserType.CUSTOMER);
+        customer.setEmail("adamisenberg@gmail.com");
+        customer.setPassword("fhkjdfh534534!");
+        customer.setPhoneNumber("0835233041");
+
+        customerRepo.save(customer);
+
+        Store store1=new Store(storeUUID1, -1, 24, "Pick n Pay", 2, 5, true, "shop/pnp.png");
+        GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
+        store1.setStoreLocation(store1Location);
+        storeRepo.save(store1);
+
+        o=new Order(o1UUID, expectedU1, storeUUID1, expectedShopper1, Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         o2=new Order(o2UUID, expectedU1, expectedS1, UUID.randomUUID(), Calendar.getInstance(), c1, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, listOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
+
+        o.setUserID(customer.getCustomerID());
 
         orderRepo.save(o);
         orderRepo.save(o2);
@@ -90,6 +122,7 @@ public class CompletePackingOrderIntegrationTest {
         shopper.setName("JJ");
 
         shopperRepo.save(shopper);
+
     }
 
     @AfterEach
