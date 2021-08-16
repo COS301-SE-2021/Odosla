@@ -1423,6 +1423,8 @@ components:
           type: string
         onShift:
           type: boolean
+        storeID:
+          type: string
 
     user_UpdateShopperShiftResponse:
       description: This object is returned as output

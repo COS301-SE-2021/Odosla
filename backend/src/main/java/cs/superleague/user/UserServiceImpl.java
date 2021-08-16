@@ -16,6 +16,8 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.GetStoresRequest;
 import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
@@ -46,11 +48,12 @@ public class UserServiceImpl implements UserService{
     private final OrderRepo orderRepo;
     private JwtUtil jwtTokenUtil=new JwtUtil();
     private final ShoppingService shoppingService;
+    private final StoreRepo storeRepo;
     private final DeliveryService deliveryService;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, DeliveryService deliveryService){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
@@ -58,6 +61,7 @@ public class UserServiceImpl implements UserService{
         this.groceryListRepo=groceryListRepo;
         this.orderRepo= orderRepo;
         this.shoppingService = shoppingService;
+        this.storeRepo = storeRepo;
         this.deliveryService= deliveryService;
     }
 
@@ -2088,18 +2092,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         UpdateShopperShiftResponse response;
         if (request == null){
             throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
         }
-        if (request.getShopperID() == null){
+        if (request.getJwtToken() == null){
             throw new InvalidRequestException("ShopperID in UpdateShopperShiftRequest is null");
         }
         if (request.getOnShift() == null){
             throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
         }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getShopperID());
+        if (request.getStoreID() == null){
+            throw new InvalidRequestException("StoreID in UpdateShopperShiftRequest is null");
+        }
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
         GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
         Shopper shopper1 = (Shopper) getCurrentUserResponse.getUser();
         if (shopper1 == null){
@@ -2122,8 +2129,34 @@ public class UserServiceImpl implements UserService{
             response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
         }
         else{
+            Store store = storeRepo.findById(request.getStoreID()).orElse(null);
+            if (store == null){
+                throw new StoreDoesNotExistException("Store is not saved in database.");
+            }
             shopper.get().setOnShift(request.getOnShift());
+            shopper.get().setStoreID(request.getStoreID());
             shopperRepo.save(shopper.get());
+            if (request.getOnShift() == true){
+                if (store.getShoppers() == null){
+                    store.setShoppers(new ArrayList<>());
+                }
+                store.getShoppers().add(shopper.get());
+            }else{
+                List<Shopper> shoppersAtStore = store.getShoppers();
+                if (shoppersAtStore == null){
+                    store.setShoppers(new ArrayList<>());
+                }else {
+                    if (shoppersAtStore != null) {
+                        for (Shopper s : shoppersAtStore) {
+                            if (s.getShopperID().compareTo(shopper.get().getShopperID()) == 0) {
+                                shoppersAtStore.remove(s);
+                            }
+                        }
+                    }
+                    store.setShoppers(shoppersAtStore);
+                }
+            }
+            storeRepo.save(store);
 
             /*Check updates have happened */
             shopper=shopperRepo.findById(shopper1.getShopperID());
@@ -2132,6 +2165,7 @@ public class UserServiceImpl implements UserService{
                 response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),"Couldn't update shopper's shift");
             }
             else{
+
                 response=new UpdateShopperShiftResponse(true,Calendar.getInstance(),"Shopper's shift correctly updated");
             }
         }
