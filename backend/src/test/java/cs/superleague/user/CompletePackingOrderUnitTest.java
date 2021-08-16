@@ -1,5 +1,6 @@
 package cs.superleague.user;
 
+import cs.superleague.delivery.DeliveryServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -44,6 +45,9 @@ public class CompletePackingOrderUnitTest {
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    @InjectMocks
+    private DeliveryServiceImpl deliveryService;
 
     Shopper shopper;
     Order o;
