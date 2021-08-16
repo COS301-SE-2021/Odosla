@@ -11,6 +11,7 @@ tags:
   - name: "User"
   - name: "Notification"
   - name: "Delivery"
+  - name: "Analytics"
 
 
 paths:
@@ -922,6 +923,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_UpdateDriverShiftResponse"
+
+
+  /analytics/createUserReport:
+    post:
+      summary: Endpoint for creating user report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createUserReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateUserReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateUserReportResponse"
 
 components:
 
@@ -2113,4 +2137,28 @@ components:
         timestamp:
           type: string
         message:
+          type: string
+
+    analytics_CreateUserReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        adminID:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateUserReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
           type: string

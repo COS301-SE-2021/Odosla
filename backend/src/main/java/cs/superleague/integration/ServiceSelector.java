@@ -1,6 +1,7 @@
 package cs.superleague.integration;
 
 import cs.superleague.delivery.DeliveryService;
+import cs.superleague.analytics.AnalyticsService;
 import cs.superleague.notification.NotificationService;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.shopping.ShoppingService;
@@ -30,11 +31,16 @@ public class ServiceSelector {
     @Value("${deliveryService}")
     private String deliveryService = "";
 
+    @Value("${env.ANALYTICS_SERVICE}")
+    private String analyticsService = "";
+
     private NotificationService notification;
     private PaymentService payment;
     private ShoppingService shopping;
     private UserService user;
     private DeliveryService delivery;
+    private AnalyticsService analytics;
+
     @Autowired
     public ServiceSelector() {
         singleton = this;
@@ -48,6 +54,7 @@ public class ServiceSelector {
         singleton.shopping=(ShoppingService) context.getBean(shoppingService);
         singleton.user=(UserService) context.getBean(userService);
         singleton.delivery=(DeliveryService) context.getBean(deliveryService);
+        singleton.analytics = (AnalyticsService) context.getBean(analyticsService);
     }
 
     public static PaymentService getPaymentService() {
@@ -68,5 +75,9 @@ public class ServiceSelector {
 
     public static DeliveryService getDeliveryService(){
         return singleton.delivery;
+    }
+
+    public static AnalyticsService getAnalyticsService(){
+        return singleton.analytics;
     }
 }
