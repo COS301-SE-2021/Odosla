@@ -7,6 +7,7 @@ Method | HTTP request | Description
 [**clearShoppingCart**](UserApi.md#clearShoppingCart) | **POST** /user/clearShoppingCart | Endpoint for clearing a shopping cart
 [**completePackagingOrder**](UserApi.md#completePackagingOrder) | **POST** /user/completePackagingOrder | Endpoint for complete packaging order use case
 [**getCurrentUser**](UserApi.md#getCurrentUser) | **POST** /user/getCurrentUser | Endpoint for to get Current user
+[**getGroceryLists**](UserApi.md#getGroceryLists) | **POST** /user/getGroceryLists | Endpoint for get grocery lists use case
 [**getNextQueued**](UserApi.md#getNextQueued) | **POST** /shopping/getNextQueued | Endpoint for getting next queue
 [**getShoppingCart**](UserApi.md#getShoppingCart) | **POST** /user/getShoppingCart | Endpoint for getting a shopping cart
 [**loginUser**](UserApi.md#loginUser) | **POST** /user/loginUser | Endpoint for setting a shopping cart
@@ -19,6 +20,7 @@ Method | HTTP request | Description
 [**scanItem**](UserApi.md#scanItem) | **POST** /user/scanItem | Endpoint for scanning an item
 [**setCart**](UserApi.md#setCart) | **POST** /user/setCart | Endpoint for setting a shopping cart
 [**setCurrentLocation**](UserApi.md#setCurrentLocation) | **POST** /user/setCurrentLocation | Endpoint for setting Current Location Driver
+[**updateDriverShift**](UserApi.md#updateDriverShift) | **POST** /user/updateDriverShift | Endpoint for updating driver shift
 [**updateShopperShift**](UserApi.md#updateShopperShift) | **POST** /user/updateShopperShift | Endpoint for updating shopper shift
 [**verifyAccount**](UserApi.md#verifyAccount) | **POST** /user/verifyAccount | Endpoint for verifying a user account
 
@@ -208,6 +210,68 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns upon success |  -  |
+
+<a name="getGroceryLists"></a>
+# **getGroceryLists**
+> UserGetGroceryListResponse getGroceryLists(userGetGroceryListRequest)
+
+Endpoint for get grocery lists use case
+
+Refer to summary
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.UserApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+
+    UserApi apiInstance = new UserApi(defaultClient);
+    UserGetGroceryListRequest userGetGroceryListRequest = new UserGetGroceryListRequest(); // UserGetGroceryListRequest | The input body required by this request
+    try {
+      UserGetGroceryListResponse result = apiInstance.getGroceryLists(userGetGroceryListRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#getGroceryLists");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userGetGroceryListRequest** | [**UserGetGroceryListRequest**](UserGetGroceryListRequest.md)| The input body required by this request |
+
+### Return type
+
+[**UserGetGroceryListResponse**](UserGetGroceryListResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns the groceryList |  -  |
 
 <a name="getNextQueued"></a>
 # **getNextQueued**
@@ -938,6 +1002,68 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**UserSetCurrentLocationResponse**](UserSetCurrentLocationResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns upon success |  -  |
+
+<a name="updateDriverShift"></a>
+# **updateDriverShift**
+> UserUpdateDriverShiftResponse updateDriverShift(userUpdateDriverShiftRequest)
+
+Endpoint for updating driver shift
+
+Refer to summary
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.UserApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+
+    UserApi apiInstance = new UserApi(defaultClient);
+    UserUpdateDriverShiftRequest userUpdateDriverShiftRequest = new UserUpdateDriverShiftRequest(); // UserUpdateDriverShiftRequest | The input body required by this request
+    try {
+      UserUpdateDriverShiftResponse result = apiInstance.updateDriverShift(userUpdateDriverShiftRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling UserApi#updateDriverShift");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **userUpdateDriverShiftRequest** | [**UserUpdateDriverShiftRequest**](UserUpdateDriverShiftRequest.md)| The input body required by this request |
+
+### Return type
+
+[**UserUpdateDriverShiftResponse**](UserUpdateDriverShiftResponse.md)
 
 ### Authorization
 

@@ -702,6 +702,29 @@ paths:
       - user
       x-contentType: application/json
       x-accepts: application/json
+  /user/getGroceryLists:
+    post:
+      description: Refer to summary
+      operationId: getGroceryLists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_GetGroceryListRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_GetGroceryListResponse'
+          description: Returns the groceryList
+      summary: Endpoint for get grocery lists use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
   /delivery/addDeliveryDetail:
     post:
       description: Refer to summary
@@ -907,6 +930,29 @@ paths:
       summary: Endpoint for updating the status of a delivery
       tags:
       - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/updateDriverShift:
+    post:
+      description: Refer to summary
+      operationId: updateDriverShift
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_UpdateDriverShiftRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_UpdateDriverShiftResponse'
+          description: Returns upon success
+      summary: Endpoint for updating driver shift
+      tags:
+      - User
       x-contentType: application/json
       x-accepts: application/json
 components:
@@ -1502,10 +1548,10 @@ components:
     user_MakeGroceryListRequest:
       description: This object is expected as input
       properties:
-        customerID:
+        JWTToken:
           description: generated token used to identify the caller of the endpoint
           type: string
-        barcodes:
+        productIds:
           items:
             type: string
           type: array
@@ -1550,6 +1596,32 @@ components:
       type: object
     GroceryListObject:
       description: Generic schema for a GroceryList
+      example:
+        name: name
+        items:
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        groceryListID: groceryListID
       properties:
         groceryListID:
           type: string
@@ -1968,6 +2040,8 @@ components:
     shopping_GetNextQueuedRequest:
       description: This object is expected as input
       properties:
+        jwtToken:
+          type: string
         storeID:
           type: string
       type: object
@@ -2231,6 +2305,81 @@ components:
     shopping_PopulateTablesResponse:
       description: This object is expected as output
       type: object
+    user_GetGroceryListRequest:
+      description: This object is expected as input
+      properties:
+        JWTToken:
+          type: string
+      type: object
+    user_GetGroceryListResponse:
+      description: This object is expected as output
+      example:
+        groceryLists:
+        - name: name
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          groceryListID: groceryListID
+        - name: name
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          groceryListID: groceryListID
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        groceryLists:
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+          type: array
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+      type: object
     delivery_AddDeliveryDetailRequest:
       description: This object is expected as input
       properties:
@@ -2257,7 +2406,7 @@ components:
     delivery_AssignDriverToDeliveryRequest:
       description: This object is expected as input
       properties:
-        driverID:
+        jwtToken:
           type: string
         deliveryID:
           type: string
@@ -2458,6 +2607,28 @@ components:
       example:
         message: message
       properties:
+        message:
+          type: string
+      type: object
+    user_UpdateDriverShiftRequest:
+      description: This object is expected as input
+      properties:
+        jwtToken:
+          type: string
+        onShift:
+          type: boolean
+      type: object
+    user_UpdateDriverShiftResponse:
+      description: This object is returned as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
         message:
           type: string
       type: object

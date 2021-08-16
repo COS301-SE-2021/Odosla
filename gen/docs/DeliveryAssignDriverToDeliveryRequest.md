@@ -7,7 +7,7 @@ This object is expected as input
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**driverID** | **String** |  |  [optional]
+**jwtToken** | **String** |  |  [optional]
 **deliveryID** | **String** |  |  [optional]
 
 

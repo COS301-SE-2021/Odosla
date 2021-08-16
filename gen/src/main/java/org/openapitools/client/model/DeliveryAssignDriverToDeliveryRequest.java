@@ -28,37 +28,37 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T22:27:51.898546700+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class DeliveryAssignDriverToDeliveryRequest {
-  public static final String SERIALIZED_NAME_DRIVER_I_D = "driverID";
-  @SerializedName(SERIALIZED_NAME_DRIVER_I_D)
-  private String driverID;
+  public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
+  @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
+  private String jwtToken;
 
   public static final String SERIALIZED_NAME_DELIVERY_I_D = "deliveryID";
   @SerializedName(SERIALIZED_NAME_DELIVERY_I_D)
   private String deliveryID;
 
 
-  public DeliveryAssignDriverToDeliveryRequest driverID(String driverID) {
+  public DeliveryAssignDriverToDeliveryRequest jwtToken(String jwtToken) {
     
-    this.driverID = driverID;
+    this.jwtToken = jwtToken;
     return this;
   }
 
    /**
-   * Get driverID
-   * @return driverID
+   * Get jwtToken
+   * @return jwtToken
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getDriverID() {
-    return driverID;
+  public String getJwtToken() {
+    return jwtToken;
   }
 
 
-  public void setDriverID(String driverID) {
-    this.driverID = driverID;
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
   }
 
 
@@ -94,13 +94,13 @@ public class DeliveryAssignDriverToDeliveryRequest {
       return false;
     }
     DeliveryAssignDriverToDeliveryRequest deliveryAssignDriverToDeliveryRequest = (DeliveryAssignDriverToDeliveryRequest) o;
-    return Objects.equals(this.driverID, deliveryAssignDriverToDeliveryRequest.driverID) &&
+    return Objects.equals(this.jwtToken, deliveryAssignDriverToDeliveryRequest.jwtToken) &&
         Objects.equals(this.deliveryID, deliveryAssignDriverToDeliveryRequest.deliveryID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(driverID, deliveryID);
+    return Objects.hash(jwtToken, deliveryID);
   }
 
 
@@ -108,7 +108,7 @@ public class DeliveryAssignDriverToDeliveryRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryAssignDriverToDeliveryRequest {\n");
-    sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
     sb.append("}");
     return sb.toString();

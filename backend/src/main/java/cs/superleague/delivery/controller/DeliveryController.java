@@ -76,9 +76,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             //AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDriverID()), UUID.fromString(body.getDeliveryID()));
-            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest();
-            request.setJwtToken(body.getJwtToken());
-            request.setDeliveryID(UUID.fromString(body.getDeliveryID()));
+            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(body.getJwtToken(), UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = ServiceSelector.getDeliveryService().assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());

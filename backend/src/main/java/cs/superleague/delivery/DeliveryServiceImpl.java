@@ -78,11 +78,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null){
+        if (request.getDeliveryID() == null || request.getJwtToken() == null){
             throw new InvalidRequestException("Null parameters.");
         }
-
-
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in the database."));
 
         JwtUtil jwtUtil = new JwtUtil();
@@ -115,19 +113,19 @@ public class DeliveryServiceImpl implements DeliveryService {
                     }
                     else
                     {
-                        throw new InvalidRequestException("Invalid order");
+                        throw new InvalidRequestException("Invalid order.");
                     }
                 }
                 else
                 {
-                    throw new InvalidRequestException("Invalid user");
+                    throw new InvalidRequestException("Invalid user.");
                 }
             }
 
         }
         else
         {
-            throw new InvalidRequestException("Invalid user");
+            throw new InvalidRequestException("Invalid user.");
         }
 
         return null;
