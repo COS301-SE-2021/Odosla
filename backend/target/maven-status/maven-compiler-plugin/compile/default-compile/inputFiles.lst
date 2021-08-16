@@ -16,6 +16,7 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\jav
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\requests\RetrieveNotificationRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\shopping\dataclass\Catalogue.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\dataclass\GeoPoint.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserUpdateDriverShiftRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\DeliveryCreateDeliveryRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingAddShopperResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\integration\security\SecurityConfig.java
@@ -271,6 +272,7 @@ C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\rep
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\dataclass\Category.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\payment\requests\ReverseTransactionRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\ShoppingGetNextQueuedRequest.java
+C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserUpdateDriverShiftResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\target\generated-sources\src\main\java\cs\superleague\models\UserSetCurrentLocationResponse.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\user\requests\UpdateAdminDetailsRequest.java
 C:\Users\zivan\IdeaProjects\Odosla\backend\src\main\java\cs\superleague\notification\responses\RetrieveNotificationResponse.java

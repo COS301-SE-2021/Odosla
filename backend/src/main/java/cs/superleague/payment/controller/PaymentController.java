@@ -304,7 +304,7 @@ public class PaymentController implements PaymentApi {
     List<Item> assignItems(List<ItemObject> itemObjectList){
 
         double price = 0.00;
-        Item item = new Item();
+
         List<Item> items = new ArrayList<>();
 
         if(itemObjectList == null){
@@ -312,6 +312,7 @@ public class PaymentController implements PaymentApi {
         }
 
         for (ItemObject i: itemObjectList) {
+            Item item = new Item();
             item.setProductID(i.getProductId());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
