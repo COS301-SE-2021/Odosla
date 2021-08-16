@@ -2,13 +2,13 @@ package cs.superleague.payment.requests;
 
 public class GetOrdersRequest {
 
-    private final String adminID;
+    private final String JWTToken;
 
-    public GetOrdersRequest(String adminID) {
-        this.adminID = adminID;
+    public GetOrdersRequest(String JWTToken) {
+        this.JWTToken = JWTToken;
     }
 
-    public String getAdminID() {
-        return adminID;
+    public String getJWTToken() {
+        return JWTToken;
     }
 }

@@ -19,7 +19,7 @@ public class GetOrdersResponse {
         this.timestamp = timestamp;
     }
 
-    public List<Order> getUsers() {
+    public List<Order> getOrders() {
         return orders;
     }
 
