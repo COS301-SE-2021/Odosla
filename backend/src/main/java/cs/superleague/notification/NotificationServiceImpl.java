@@ -3,14 +3,8 @@ package cs.superleague.notification;
 import cs.superleague.notification.dataclass.Notification;
 import cs.superleague.notification.dataclass.NotificationType;
 import cs.superleague.notification.repos.NotificationRepo;
-import cs.superleague.notification.requests.CreateNotificationRequest;
-import cs.superleague.notification.requests.RetrieveNotificationRequest;
-import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.notification.requests.SendEmailNotificationRequest;
-import cs.superleague.notification.responses.CreateNotificationResponse;
-import cs.superleague.notification.responses.RetrieveNotificationResponse;
-import cs.superleague.notification.responses.SendDirectEmailNotificationResponse;
-import cs.superleague.notification.responses.SendEmailNotificationResponse;
+import cs.superleague.notification.requests.*;
+import cs.superleague.notification.responses.*;
 import cs.superleague.notification.exceptions.InvalidRequestException;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.AdminRepo;
@@ -22,10 +16,16 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -231,6 +231,62 @@ public class NotificationServiceImpl implements NotificationService {
         return new SendEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",email, request.getSubject(), request.getMessage()));
     }
 
+    @Override
+    public SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException {
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getPDF() == null || request.getUserID() == null || request.getMessage() == null || request.getSubject() == null || request.getUserType() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        String email="";
+        if (request.getUserType() == UserType.ADMIN){
+            Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
+            if (admin == null){
+                throw new InvalidRequestException("User not found in database.");
+            }
+            email = admin.getEmail();
+        } else if (request.getUserType() == UserType.CUSTOMER){
+            Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
+            if (customer == null){
+                throw new InvalidRequestException("User not found in database.");
+            }
+            email = customer.getEmail();
+        }else if (request.getUserType() == UserType.DRIVER){
+            Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
+            if (driver == null){
+                throw new InvalidRequestException("User not found in database.");
+            }
+            email = driver.getEmail();
+        }else if (request.getUserType() == UserType.SHOPPER) {
+            Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
+            if (shopper == null) {
+                throw new InvalidRequestException("User not found in database.");
+            }
+            email = shopper.getEmail();
+        }
+        if (email == null){
+            throw new InvalidRequestException("Null recipient email address.");
+        }
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches()){
+            throw new InvalidRequestException("Invalid recipient email address.");
+        }
+        if(request.getSubject().equals("") || request.getMessage().equals("")){
+            throw new InvalidRequestException("Empty parameters.");
+        }
+        SendPDFEmailNotificationResponse response;
+        try{
+            sendEmailWithPDF(email, request.getSubject(), request.getMessage(), request.getPDF());
+            response = new SendPDFEmailNotificationResponse(true, "Email sent successfully");
+        }catch(Exception e){
+             response = new SendPDFEmailNotificationResponse(false, e.getMessage());
+        }
+        return response;
+    }
+
     public void sendEmail(String email, String Subject, String Body) {
 
         SimpleMailMessage msg = new SimpleMailMessage();
@@ -239,5 +295,44 @@ public class NotificationServiceImpl implements NotificationService {
         msg.setText(Body);
 
         javaMailSender.send(msg);
+    }
+
+    public void sendEmailWithPDF(String email, String subject, String body, byte[] pdf){
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", 587);
+        Session session = Session.getDefaultInstance(properties, null);
+        try {
+            MimeBodyPart textBodyPart = new MimeBodyPart();
+            textBodyPart.setText(body);
+
+            //construct the pdf body part
+            DataSource dataSource = new ByteArrayDataSource(pdf, "application/pdf");
+            MimeBodyPart pdfBodyPart = new MimeBodyPart();
+            pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+            pdfBodyPart.setFileName("test.pdf");
+
+            //construct the mime multi part
+            MimeMultipart mimeMultipart = new MimeMultipart();
+            mimeMultipart.addBodyPart(textBodyPart);
+            mimeMultipart.addBodyPart(pdfBodyPart);
+
+            //create the sender/recipient addresses
+            InternetAddress iaSender = new InternetAddress("cos332Prac6u19060468@gmail.com");
+            InternetAddress iaRecipient = new InternetAddress(email);
+
+            //construct the mime message
+            MimeMessage mimeMessage = new MimeMessage(session);
+            mimeMessage.setSender(iaSender);
+            mimeMessage.setSubject(subject);
+            mimeMessage.setRecipient(Message.RecipientType.TO, iaRecipient);
+            mimeMessage.setContent(mimeMultipart);
+
+            //send off the email
+            javaMailSender.send(mimeMessage);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
