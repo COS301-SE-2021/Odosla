@@ -13,6 +13,8 @@ import cs.superleague.payment.requests.GetInvoiceRequest;
 import cs.superleague.payment.responses.GetInvoiceResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.repos.ItemRepo;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.repos.CustomerRepo;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,11 +47,16 @@ public class GetInvoiceIntegrationTest {
     @Autowired
     ItemRepo itemRepo;
 
+    @Autowired
+    CustomerRepo customerRepo;
+
     Item item;
 
     Order order;
 
     Invoice invoice;
+
+    Customer customer;
 
     // IDs
     UUID userID;
@@ -91,6 +98,11 @@ public class GetInvoiceIntegrationTest {
 
         // Adding items to the items list
         listOfItems.add(item);
+
+        customer = new Customer();
+        customer.setEmail("u14254922@tuks.co.za");
+        customer.setCustomerID(userID);
+        customerRepo.save(customer);
 
         // Assigning addresses
         deliveryAddress = new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");

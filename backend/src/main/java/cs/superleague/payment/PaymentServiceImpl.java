@@ -3,50 +3,39 @@ package cs.superleague.payment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.payment.repos.InvoiceRepo;
-import cs.superleague.payment.repos.TransactionRepo;
-import cs.superleague.shopping.ShoppingService;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.notification.requests.SendPDFEmailNotificationRequest;
 import cs.superleague.payment.dataclass.*;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.exceptions.NotAuthorisedException;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.exceptions.*;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.requests.AddToQueueRequest;
-import cs.superleague.shopping.requests.GetQueueRequest;
-import cs.superleague.shopping.requests.GetShoppersRequest;
-import cs.superleague.shopping.responses.AddToQueueResponse;
-import cs.superleague.shopping.responses.GetQueueResponse;
-import cs.superleague.shopping.responses.GetShoppersResponse;
-import cs.superleague.user.UserService;
-import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Admin;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.exceptions.AdminDoesNotExistException;
-import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.requests.GetUserByUUIDRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
-import cs.superleague.user.responses.GetUsersResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import cs.superleague.shopping.ShoppingService;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.user.UserService;
+import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.repos.AdminRepo;
+import cs.superleague.user.requests.GetCurrentUserRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("paymentServiceImpl")
@@ -660,8 +649,16 @@ import java.util.List;50"
 
         byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getItems(), invoice.getTotalCost());
 
-        // send email
-        // notificationService.sendEmail(PDF);
+        String subject = "Invoice for Order with ID: " + order.getOrderID();
+        String message = "Dear Customer\n\nBelow you will find the invoice to the order with ID: " + order.getOrderID() + "\n\nRegards,\n\nThe Odosla Team." ;
+        SendPDFEmailNotificationRequest sendPDFEmailNotificationRequest = new SendPDFEmailNotificationRequest(PDF, request.getCustomerID(), subject, message, UserType.CUSTOMER);
+
+        try {
+            ServiceSelector.getNotificationService().sendPDFEmailNotification(sendPDFEmailNotificationRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new GenerateInvoiceResponse(invoiceID, timestamp, "Could not send email");
+        }
 
         return new GenerateInvoiceResponse(invoiceID, timestamp, "Invoice successfully generated.");
     }
@@ -699,8 +696,16 @@ import java.util.List;50"
 
         byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), invoice.getItem(), invoice.getTotalCost());
 
-        // send email
-        // notificationService.sendEmail(PDF);
+        String subject = "Invoice for your Order";
+        String message = "Dear Customer\n\nBelow you will find the invoice to your order \n\nRegards,\n\nThe Odosla Team." ;
+        SendPDFEmailNotificationRequest sendPDFEmailNotificationRequest = new SendPDFEmailNotificationRequest(PDF, request.getUserID(), subject, message, UserType.CUSTOMER);
+
+        try {
+            ServiceSelector.getNotificationService().sendPDFEmailNotification(sendPDFEmailNotificationRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new GetInvoiceResponse(invoiceID, PDF, Calendar.getInstance(), "Could not send email");
+        }
 
         return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
     }
@@ -795,25 +800,30 @@ import java.util.List;50"
     public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<Item> ITEM, double TOTAL_PRICE) {
         String home = System.getProperty("user.home");
         String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
-        Document pdf = new Document();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
+        Document pdf = new Document();
         try {
-//            PdfWriter.getInstance(pdf, new FileOutputStream(file_name));
+            PdfWriter.getInstance(pdf, output);
             pdf.open();
             com.itextpdf.text.Font header = FontFactory.getFont(FontFactory.COURIER, 24, Font.BOLD);
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
             pdf.add(new Paragraph("This is an invoice from Odosla", header));
 
+
+            pdf.add(new Paragraph("\nItems:", body));
             for (Item item: ITEM) {
                 pdf.add(new Paragraph("Item: " + item.getName(), body));
                 pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
                 pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
+                pdf.add(new Paragraph("Quantity: " + item.getQuantity(), body));
+                pdf.add(new Paragraph("Price: R" + item.getPrice(), body));
             }
+            pdf.add(new Paragraph("\n", body));
 
             //pdf.add(new Paragraph("BuyerID: " + BuyerID, body));
             pdf.add(new Paragraph("Date: " + INVOICED_DATE.getTime(), body));
             pdf.add(new Paragraph("Details: " + DETAILS, body));
-            pdf.add(new Paragraph("Price: " + TOTAL_PRICE, body));
+            pdf.add(new Paragraph("Total Price: R" + TOTAL_PRICE, body));
             //pdf.add(new Paragraph("ShippingID: " + SHIPMENT.getShipmentId(), body));
             pdf.add(new Paragraph("InvoiceID: " + invoiceID, body));
             pdf.close();
