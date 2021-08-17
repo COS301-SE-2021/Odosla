@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:odosla/page/wallet_page.dart';
 import 'package:odosla/provider/wallet_provider.dart';
 import 'package:provider/provider.dart';
@@ -61,18 +57,13 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
           )),
           buildHeader(context),
           buildSettings(context),
-          Expanded(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                SizedBox(height: 70),
-              ])),
+          SizedBox(height: 100),
         ]));
   }
 
   Widget buildHeader(BuildContext context) {
-    return Column(
+    return Expanded(
+        child: Column(
       children: [
         SizedBox(
           height: 25,
@@ -92,7 +83,7 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
           height: 75,
         )
       ],
-    );
+    ));
   }
 
   Widget buildSettings(BuildContext context) {

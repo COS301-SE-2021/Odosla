@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 //import 'dart:js_util';
 
 import 'package:flutter/cupertino.dart';
@@ -14,8 +15,8 @@ import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ApiService {
-  final endpoint = "http://localhost:8080";
-  //final endpoint = "https://c71682b066b8.ngrok.io";
+  //final endpoint = "http://localhost:8080";
+  final endpoint = "http://45bffa53a9b3.ngrok.io";
 
   Future<List<CartItem>> getItems(String storeID) async {
     String sId = storeID;

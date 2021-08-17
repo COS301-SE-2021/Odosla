@@ -1,24 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:odosla/data/products.dart';
-import 'package:odosla/main.dart';
 import 'package:odosla/model/cart_item.dart';
-import 'package:odosla/model/store.dart';
 import 'package:odosla/page/account_page.dart';
 import 'package:odosla/page/account_settings_page.dart';
 import 'package:odosla/page/cart_page.dart';
 import 'package:odosla/page/item_detail_page.dart';
 import 'package:odosla/page/order_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
-import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/services/api_service.dart';
+import 'package:odosla/widget/cart_bar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-import 'package:odosla/widget/cart_bar_widget.dart';
-import 'package:http/http.dart' as http;
-import 'package:convert/convert.dart';
 
 class ItemsPage extends StatefulWidget {
   final String storeID;
@@ -106,11 +98,11 @@ class _ItemsPageState extends State<ItemsPage> {
           return GridView.builder(
               physics: BouncingScrollPhysics(),
               padding: EdgeInsets.only(
-                  left: spacing, right: spacing, top: spacing, bottom: 140),
+                  left: spacing, right: spacing, top: spacing, bottom: 160),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 15,
+                crossAxisSpacing: 7,
+                mainAxisSpacing: 7,
                 childAspectRatio: 4 / 4,
               ),
               itemCount: items.length,
@@ -175,12 +167,15 @@ class _ItemsPageState extends State<ItemsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    product.brand,
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: Colors.grey[600],
-                        fontSize: 14),
+                  Expanded(
+                    child: Text(
+                      product.brand,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[600],
+                          fontSize: 12),
+                    ),
                   ),
                   Text(
                     'R' + product.price.toString(),
