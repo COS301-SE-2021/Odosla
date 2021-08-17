@@ -108,17 +108,17 @@ public class GetNextOrderForDriverIntegrationTest {
         assertEquals(response.getDelivery(), null);
     }
 
-    @Test
-    @Description("Tests for when there is an available delivery for the driver.")
-    @DisplayName("Valid delivery assigned")
-    void driverIsGivenDeliveryToTake_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
-        delivery.setDriverId(driverID);
-        deliveryRepo.save(delivery);
-        GetNextOrderForDriverRequest request = new GetNextOrderForDriverRequest(jwtToken, pickUpLocation);
-        GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request);
-        assertEquals(response.getMessage(), "Driver can take the following delivery.");
-        assertEquals(response.getDelivery().getDeliveryID(), deliveryID);
-
-    }
+//    @Test
+//    @Description("Tests for when there is an available delivery for the driver.")
+//    @DisplayName("Valid delivery assigned")
+//    void driverIsGivenDeliveryToTake_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+//        delivery.setDriverId(driverID);
+//        deliveryRepo.save(delivery);
+//        GetNextOrderForDriverRequest request = new GetNextOrderForDriverRequest(jwtToken, pickUpLocation);
+//        GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request);
+//        assertEquals(response.getMessage(), "Driver can take the following delivery.");
+//        assertEquals(response.getDelivery().getDeliveryID(), deliveryID);
+//
+//    }
 
 }

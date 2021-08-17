@@ -266,7 +266,15 @@ public class DeliveryServiceImpl implements DeliveryService {
 
             if(driverRepo!=null)
             {
-                Driver driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
+                Driver driver= null;
+                try{
+                    driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
+                }
+                catch(NullPointerException e)
+                {
+                    driver=null;
+                }
+
                 if(driver!=null)
                 {
                     driver.setCurrentAddress(request.getCurrentLocation());
@@ -276,6 +284,10 @@ public class DeliveryServiceImpl implements DeliveryService {
                 {
                     throw new InvalidRequestException("Driver not found in database.");
                 }
+            }
+            else
+            {
+                throw new InvalidRequestException("Driver not found in database.");
             }
 
         }
