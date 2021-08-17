@@ -30,10 +30,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         _name = value!.name;
         _surname = value.surname;
         _email = value.email;
-        _numberOfDeliveriesCompleted=value.getOrdersCompleted();
-        if(_numberOfDeliveriesCompleted==null){
-          _numberOfDeliveriesCompleted="0";
-        }
+        _rating=value.rating;
+        _numberOfDeliveriesCompleted=value.deliveriesCompleted;
       })
     }
 
@@ -175,11 +173,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                         child:Column(
                                           children: <Widget>[
                                             Text(
-                                                "Deliveries Completed",
-                                                style: kTitleTextStyle.copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: kSpacingUnit.w*1.7,
-                                                ),textAlign: TextAlign.center,
+                                              "Deliveries Completed",
+                                              style: kTitleTextStyle.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: kSpacingUnit.w*1.7,
+                                              ),textAlign: TextAlign.center,
                                             ),
                                             SizedBox(height:kSpacingUnit.w*2),
                                             Text(
@@ -197,11 +195,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                         child:Column(
                                           children: <Widget>[
                                             Text(
-                                                "Rating",
-                                                style: kTitleTextStyle.copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: kSpacingUnit.w*1.7,
-                                                ),
+                                              "Rating",
+                                              style: kTitleTextStyle.copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: kSpacingUnit.w*1.7,
+                                              ),
                                               textAlign: TextAlign.center,
                                             ),
                                             SizedBox(height:kSpacingUnit.w*2),

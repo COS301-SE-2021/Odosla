@@ -153,11 +153,11 @@ class UserService{
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data)).timeout(
-      Duration(seconds: 15),
-      onTimeout:(){ return(http.Response('TimeOut',500));
-      }
+        Duration(seconds: 15),
+        onTimeout:(){ return(http.Response('TimeOut',500));
+        }
     );
-    
+
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -239,8 +239,8 @@ class UserService{
     };
     String jwt="";
     await this.getJWTAsString().then((value) => {
-        jwt=value!
-      }
+      jwt=value!
+    }
 
     );
     while (jwt==""){
@@ -276,10 +276,22 @@ class UserService{
             Provider.of<UserProvider>(context,listen: false).user.onShift=shopper.onShift;
           }
           return shopper;
+        } else if (userType=="DRIVER"){
+          Shopper shopper = Shopper.fromJson(responseData["user"]);
+          Provider.of<UserProvider>(context,listen: false).user=shopper;
+          //shopper.setOrdersCompleted(responseData["user"]["ordersCompleted"].toString());
+          //Provider.of<UserProvider>(context,listen: false).user.ordersCompleted=(responseData["user"]["ordersCompleted"]).toString();
+          shopper.setOnShift(responseData["user"]["onShift"]);
+          shopper.setRating(responseData["user"]["rating"].toString());
+          if(shopper.onShift==null){
+            shopper.onShift=false;
+          }else{
+            Provider.of<UserProvider>(context,listen: false).user.onShift=shopper.onShift;
+          }
+          return shopper;
         }
       }else if (responseData["message"].contains("JWT expired at")){
         MyNavigator.goToLogin(context);
-
       }
     }else{
       return null;
@@ -317,6 +329,50 @@ class UserService{
       "jwtToken":jwt,
       "onShift":onShift,
       "storeID":storeID
+    };
+
+    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+
+    if (response.statusCode==200) {
+      Map<String,dynamic> responseData = json.decode(response.body);
+      print(responseData);
+      if (responseData["success"] == true) {
+        Provider.of<UserProvider>(context,listen: false).user.onShift=(onShift);
+
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> setDriverShift(bool onShift, BuildContext context) async {
+
+    final loginURL = Uri.parse("http://"+endPoint+"user/updateDriverShift");
+
+    Map<String,String> headers =new Map<String,String>();
+
+    headers =
+    {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS"
+    };
+    String jwt="";
+    await this.getJWTAsString().then((value) => {
+      jwt=value!
+    }
+
+    );
+    while (jwt==""){
+      await getJWTAsString().then((value) =>
+      jwt=value!,
+      );
+    }
+
+    final data = {
+      "jwtToken":jwt,
+      "onShift":onShift,
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
