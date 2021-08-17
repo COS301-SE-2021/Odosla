@@ -272,7 +272,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 if (driverDistanceFromStore > range){
                     continue;
                 }else{
-                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d.getDeliveryID());
+                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d);
                     return response;
                 }
             }

@@ -722,4 +722,30 @@ public class UserController implements UserApi {
 
         return new ResponseEntity<>(userCompletePackagingOrderResponse, status);
     }
+
+    @Override
+    public ResponseEntity<UserCompleteDeliveryResponse> completeDelivery(UserCompleteDeliveryRequest body){
+
+        UserCompleteDeliveryResponse userCompleteDeliveryResponse = new UserCompleteDeliveryResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            CompleteDeliveryRequest request = new CompleteDeliveryRequest(UUID.fromString(body.getOrderID()));
+
+            CompleteDeliveryResponse response = ServiceSelector.getUserService().completeDelivery(request);
+            try{
+                userCompleteDeliveryResponse.setTimestamp(response.getTimestamp().toString());
+                userCompleteDeliveryResponse.setMessage(response.getMessage());
+                userCompleteDeliveryResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userCompleteDeliveryResponse, status);
+    }
 }
