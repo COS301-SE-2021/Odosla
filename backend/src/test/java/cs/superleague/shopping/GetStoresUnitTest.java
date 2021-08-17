@@ -92,7 +92,7 @@ public class GetStoresUnitTest {
     @DisplayName("When Stores dont exist in database and return null")
     void UnitTest_Stores_dont_exist_fetching_Stores() throws InvalidRequestException {
         GetStoresRequest request=new GetStoresRequest();
-
+        when(storeRepo.findAll()).thenReturn(null);
         GetStoresResponse response= shoppingService.getStores(request);
         assertNotNull(response);
         assertEquals(false,response.getResponse());

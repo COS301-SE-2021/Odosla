@@ -11,6 +11,7 @@ tags:
 - name: User
 - name: Notification
 - name: Delivery
+- name: Analytics
 paths:
   /shopping/populateTables:
     post:
@@ -953,6 +954,29 @@ paths:
       summary: Endpoint for updating driver shift
       tags:
       - User
+      x-contentType: application/json
+      x-accepts: application/json
+  /analytics/createUserReport:
+    post:
+      description: Refer to summary
+      operationId: createUserReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analytics_CreateUserReportRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analytics_CreateUserReportResponse'
+          description: Returns whether Report was downloaded
+      summary: Endpoint for creating user report
+      tags:
+      - Analytics
       x-contentType: application/json
       x-accepts: application/json
 components:
@@ -2414,13 +2438,25 @@ components:
     delivery_AssignDriverToDeliveryResponse:
       description: This object is expected as output
       example:
+        dropOffLocation:
+          address: address
+          latitude: 0.8008281904610115
+          longitude: 6.027456183070403
         isAssigned: true
         message: message
+        pickUpLocation:
+          address: address
+          latitude: 0.8008281904610115
+          longitude: 6.027456183070403
       properties:
         isAssigned:
           type: boolean
         message:
           type: string
+        pickUpLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        dropOffLocation:
+          $ref: '#/components/schemas/GeoPointObject'
       type: object
     delivery_CreateDeliveryRequest:
       description: This object is expected as input
@@ -2630,6 +2666,32 @@ components:
         timestamp:
           type: string
         message:
+          type: string
+      type: object
+    analytics_CreateUserReportRequest:
+      description: This object is expected as input
+      properties:
+        adminID:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+      type: object
+    analytics_CreateUserReportResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
           type: string
       type: object
 
