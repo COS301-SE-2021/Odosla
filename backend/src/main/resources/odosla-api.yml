@@ -970,6 +970,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/payment_GetCustomersActiveOrdersResponse"
 
+  /user/completeDelivery:
+    post:
+      summary: Endpoint for complete delivery use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: completeDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_CompleteDeliveryRequest"
+      responses:
+        "200":
+          description: Returns delivery is completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_CompleteDeliveryResponse"
+
+
 components:
 
   schemas:
@@ -2090,8 +2113,8 @@ components:
       properties:
         message:
           type: string
-        deliveryID:
-          type: string
+        delivery:
+          $ref: "#/components/schemas/DeliveryObject"
 
     delivery_RemoveDriverFromDeliveryRequest:
       description: This object is expected as input
@@ -2207,3 +2230,50 @@ components:
           type: boolean
         message:
           type: string
+
+    user_CompleteDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    user_CompleteDeliveryResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+
+    DeliveryObject:
+      description: This is a delivery object
+      type: object
+      properties:
+        deliveryID:
+          type: string
+        pickUpLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        dropOffLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        orderID:
+          type: string
+        customerId:
+          type: string
+        storeId:
+          type: string
+        driverId:
+          type: string
+        status:
+          type: string
+        cost:
+          type: number
+        completed:
+          type: boolean
+        deliveryDetail:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryDetailObject"

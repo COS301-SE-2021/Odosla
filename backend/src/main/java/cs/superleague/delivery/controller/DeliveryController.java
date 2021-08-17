@@ -163,29 +163,37 @@ public class DeliveryController implements DeliveryApi {
                 request = new GetNextOrderForDriverRequest(UUID.fromString(body.getDriverID()), driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = ServiceSelector.getDeliveryService().getNextOrderForDriver(request);
-            response.setDeliveryID(String.valueOf(getNextOrderForDriverResponse.getDeliveryID()));
-            response.setMessage(getNextOrderForDriverResponse.getMessage());
-        }catch (Exception e){
-            e.printStackTrace();
-            response.setMessage(e.getMessage());
-            response.setDeliveryID(null);
-        }
-        return new ResponseEntity<>(response, httpStatus);
-    }
 
-    @Override
-    public ResponseEntity<DeliveryRemoveDriverFromDeliveryResponse> removeDriverFromDelivery(DeliveryRemoveDriverFromDeliveryRequest body) {
-        DeliveryRemoveDriverFromDeliveryResponse response = new DeliveryRemoveDriverFromDeliveryResponse();
-        HttpStatus httpStatus = HttpStatus.OK;
-        try{
-            RemoveDriverFromDeliveryRequest request = new RemoveDriverFromDeliveryRequest(UUID.fromString(body.getDriverID()), UUID.fromString(body.getDeliveryID()));
-            RemoveDriverFromDeliveryResponse removeDriverFromDeliveryResponse = ServiceSelector.getDeliveryService().removeDriverFromDelivery(request);
-            response.setIsSuccess(removeDriverFromDeliveryResponse.isSuccess());
-            response.setMessage(removeDriverFromDeliveryResponse.getMessage());
+            DeliveryObject deliveryObject = new DeliveryObject();
+            deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());
+
+            GeoPointObject dropOffLocation=new GeoPointObject();
+            dropOffLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getAddress());
+            dropOffLocation.setLatitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getLatitude()));
+            dropOffLocation.setLongitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getLongitude()));
+            GeoPointObject pickUpLocation = new GeoPointObject();
+            pickUpLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getPickUpLocation().getAddress());
+            pickUpLocation.setLatitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getPickUpLocation().getLatitude()));
+            pickUpLocation.setLongitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getPickUpLocation().getLongitude()));
+
+            deliveryObject.setDropOffLocation(dropOffLocation);
+            deliveryObject.setPickUpLocation(pickUpLocation);
+            deliveryObject.setOrderID(getNextOrderForDriverResponse.getDelivery().getOrderID().toString());
+            deliveryObject.setCustomerId(getNextOrderForDriverResponse.getDelivery().getCustomerId().toString());
+            deliveryObject.setStoreId(getNextOrderForDriverResponse.getDelivery().getStoreId().toString());
+            deliveryObject.setDriverId(getNextOrderForDriverResponse.getDelivery().getDriverId().toString());
+            deliveryObject.setStatus(getNextOrderForDriverResponse.getDelivery().getStatus().toString());
+            deliveryObject.setCost(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getCost()));
+            deliveryObject.setCompleted(getNextOrderForDriverResponse.getDelivery().isCompleted());
+            deliveryObject.setDeliveryDetail(populateDeliveryDetails(getNextOrderForDriverResponse.getDelivery().getDeliveryDetail()));
+
+            response.setDelivery(deliveryObject);
+            response.setMessage(getNextOrderForDriverResponse.getMessage());
+
         }catch (Exception e){
             e.printStackTrace();
             response.setMessage(e.getMessage());
-            response.setIsSuccess(false);
+            response.setDelivery(null);
         }
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -264,5 +272,10 @@ public class DeliveryController implements DeliveryApi {
         locationObject.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         locationObject.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         return locationObject;
+    }
+
+    @Override
+    public ResponseEntity<DeliveryRemoveDriverFromDeliveryResponse> removeDriverFromDelivery(DeliveryRemoveDriverFromDeliveryRequest body) {
+        return null;
     }
 }
