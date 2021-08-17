@@ -10,7 +10,6 @@ tags:
 - name: Payment
 - name: User
 - name: Notification
-- name: Delivery
 paths:
   /shopping/populateTables:
     post:
@@ -702,15 +701,15 @@ paths:
       - user
       x-contentType: application/json
       x-accepts: application/json
-  /user/getGroceryLists:
+  /payment/getCustomersActiveOrders:
     post:
       description: Refer to summary
-      operationId: getGroceryLists
+      operationId: getCustomerActiveOrders
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/user_GetGroceryListRequest'
+              $ref: '#/components/schemas/payment_GetCustomersActiveOrdersRequest'
         description: The input body required by this request
         required: true
       responses:
@@ -718,241 +717,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user_GetGroceryListResponse'
-          description: Returns the groceryList
-      summary: Endpoint for get grocery lists use case
+                $ref: '#/components/schemas/payment_GetCustomersActiveOrdersResponse'
+          description: Returns the orderID of the active order
+      summary: Endpoint for the customers getting their active order
       tags:
-      - user
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/addDeliveryDetail:
-    post:
-      description: Refer to summary
-      operationId: addDeliveryDetail
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_AddDeliveryDetailRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_AddDeliveryDetailResponse'
-          description: Returns whether the detail was added and the ID of that detail
-      summary: Endpoint for add delivery detail
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/assignDriverToDelivery:
-    post:
-      description: Refer to summary
-      operationId: assignDriverToDelivery
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_AssignDriverToDeliveryRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_AssignDriverToDeliveryResponse'
-          description: Returns whether the driver was assigned to the delivery
-      summary: Endpoint for assign driver to delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/createDelivery:
-    post:
-      description: Refer to summary
-      operationId: createDelivery
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_CreateDeliveryRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_CreateDeliveryResponse'
-          description: Returns whether the delivery was created or not
-      summary: Endpoint for creating a delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/getDeliveryDetail:
-    post:
-      description: Refer to summary
-      operationId: getDeliveryDetail
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_GetDeliveryDetailRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_GetDeliveryDetailResponse'
-          description: Returns the delivery detail
-      summary: Endpoint for getting the detail of a delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/getDeliveryStatus:
-    post:
-      description: Refer to summary
-      operationId: getDeliveryStatus
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_GetDeliveryStatusRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_GetDeliveryStatusResponse'
-          description: Returns the delivery status
-      summary: Endpoint for getting the status of a delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/getNextOrderForDriver:
-    post:
-      description: Refer to summary
-      operationId: getNextOrderForDriver
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_GetNextOrderForDriverRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_GetNextOrderForDriverResponse'
-          description: Returns the next order for a driver
-      summary: Endpoint for getting the next order for a driver
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/removeDriverFromDelivery:
-    post:
-      description: Refer to summary
-      operationId: removeDriverFromDelivery
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_RemoveDriverFromDeliveryRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_RemoveDriverFromDeliveryResponse'
-          description: Returns whether the driver was removed from the order
-      summary: Endpoint for removing a driver from a delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/trackDelivery:
-    post:
-      description: Refer to summary
-      operationId: trackDelivery
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_TrackDeliveryRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_TrackDeliveryResponse'
-          description: Returns the location of the delivery
-      summary: Endpoint for tracking a delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /delivery/updateDeliveryStatus:
-    post:
-      description: Refer to summary
-      operationId: updateDeliveryStatus
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/delivery_UpdateDeliveryStatusRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/delivery_UpdateDeliveryStatusResponse'
-          description: Returns whether the status of the delivery was updated
-      summary: Endpoint for updating the status of a delivery
-      tags:
-      - delivery
-      x-contentType: application/json
-      x-accepts: application/json
-  /user/updateDriverShift:
-    post:
-      description: Refer to summary
-      operationId: updateDriverShift
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/user_UpdateDriverShiftRequest'
-        description: The input body required by this request
-        required: true
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/user_UpdateDriverShiftResponse'
-          description: Returns upon success
-      summary: Endpoint for updating driver shift
-      tags:
-      - User
+      - payment
       x-contentType: application/json
       x-accepts: application/json
 components:
@@ -1548,10 +1317,10 @@ components:
     user_MakeGroceryListRequest:
       description: This object is expected as input
       properties:
-        JWTToken:
+        customerID:
           description: generated token used to identify the caller of the endpoint
           type: string
-        productIds:
+        barcodes:
           items:
             type: string
           type: array
@@ -1596,32 +1365,6 @@ components:
       type: object
     GroceryListObject:
       description: Generic schema for a GroceryList
-      example:
-        name: name
-        items:
-        - itemType: itemType
-          quantity: 6
-          productId: productId
-          size: size
-          price: 0.8008281904610115
-          imageUrl: imageUrl
-          name: name
-          description: description
-          storeId: storeId
-          barcode: barcode
-          brand: brand
-        - itemType: itemType
-          quantity: 6
-          productId: productId
-          size: size
-          price: 0.8008281904610115
-          imageUrl: imageUrl
-          name: name
-          description: description
-          storeId: storeId
-          barcode: barcode
-          brand: brand
-        groceryListID: groceryListID
       properties:
         groceryListID:
           type: string
@@ -1663,8 +1406,6 @@ components:
           type: string
         onShift:
           type: boolean
-        storeID:
-          type: string
       type: object
     user_UpdateShopperShiftResponse:
       description: This object is returned as output
@@ -2040,8 +1781,6 @@ components:
     shopping_GetNextQueuedRequest:
       description: This object is expected as input
       properties:
-        jwtToken:
-          type: string
         storeID:
           type: string
       type: object
@@ -2305,330 +2044,23 @@ components:
     shopping_PopulateTablesResponse:
       description: This object is expected as output
       type: object
-    user_GetGroceryListRequest:
-      description: This object is expected as input
-      properties:
-        JWTToken:
-          type: string
-      type: object
-    user_GetGroceryListResponse:
-      description: This object is expected as output
-      example:
-        groceryLists:
-        - name: name
-          items:
-          - itemType: itemType
-            quantity: 6
-            productId: productId
-            size: size
-            price: 0.8008281904610115
-            imageUrl: imageUrl
-            name: name
-            description: description
-            storeId: storeId
-            barcode: barcode
-            brand: brand
-          - itemType: itemType
-            quantity: 6
-            productId: productId
-            size: size
-            price: 0.8008281904610115
-            imageUrl: imageUrl
-            name: name
-            description: description
-            storeId: storeId
-            barcode: barcode
-            brand: brand
-          groceryListID: groceryListID
-        - name: name
-          items:
-          - itemType: itemType
-            quantity: 6
-            productId: productId
-            size: size
-            price: 0.8008281904610115
-            imageUrl: imageUrl
-            name: name
-            description: description
-            storeId: storeId
-            barcode: barcode
-            brand: brand
-          - itemType: itemType
-            quantity: 6
-            productId: productId
-            size: size
-            price: 0.8008281904610115
-            imageUrl: imageUrl
-            name: name
-            description: description
-            storeId: storeId
-            barcode: barcode
-            brand: brand
-          groceryListID: groceryListID
-        success: true
-        message: message
-        timestamp: timestamp
-      properties:
-        groceryLists:
-          items:
-            $ref: '#/components/schemas/GroceryListObject'
-          type: array
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-      type: object
-    delivery_AddDeliveryDetailRequest:
-      description: This object is expected as input
-      properties:
-        deliveryStatus:
-          type: string
-        detail:
-          type: string
-        deliveryID:
-          type: string
-        timestamp:
-          type: string
-      type: object
-    delivery_AddDeliveryDetailResponse:
-      description: This object is expected as output
-      example:
-        id: 0
-        message: message
-      properties:
-        message:
-          type: string
-        id:
-          type: integer
-      type: object
-    delivery_AssignDriverToDeliveryRequest:
+    payment_GetCustomersActiveOrdersRequest:
       description: This object is expected as input
       properties:
         jwtToken:
           type: string
-        deliveryID:
-          type: string
       type: object
-    delivery_AssignDriverToDeliveryResponse:
+    payment_GetCustomersActiveOrdersResponse:
       description: This object is expected as output
       example:
-        isAssigned: true
+        orderID: orderID
+        hasActiveOrder: true
         message: message
-      properties:
-        isAssigned:
-          type: boolean
-        message:
-          type: string
-      type: object
-    delivery_CreateDeliveryRequest:
-      description: This object is expected as input
       properties:
         orderID:
           type: string
-        customerID:
-          type: string
-        storeID:
-          type: string
-        timeOfDelivery:
-          type: string
-        placeOfDelivery:
-          $ref: '#/components/schemas/GeoPointObject'
-      type: object
-    delivery_CreateDeliveryResponse:
-      description: This object is expected as output
-      example:
-        deliveryID: deliveryID
-        message: message
-        isSuccess: true
-      properties:
-        isSuccess:
+        hasActiveOrder:
           type: boolean
-        message:
-          type: string
-        deliveryID:
-          type: string
-      type: object
-    GeoPointObject:
-      description: This is a geoPoint object
-      example:
-        address: address
-        latitude: 0.8008281904610115
-        longitude: 6.027456183070403
-      properties:
-        latitude:
-          type: number
-        longitude:
-          type: number
-        address:
-          type: string
-      type: object
-    delivery_GetDeliveryDetailRequest:
-      description: This object is expected as input
-      properties:
-        deliveryID:
-          type: string
-        adminID:
-          type: string
-      type: object
-    delivery_GetDeliveryDetailResponse:
-      description: This object is expected as output
-      example:
-        detail:
-        - deliveryID: deliveryID
-          id: 0
-          time: time
-          detail: detail
-          deliveryStatus: deliveryStatus
-        - deliveryID: deliveryID
-          id: 0
-          time: time
-          detail: detail
-          deliveryStatus: deliveryStatus
-        message: message
-      properties:
-        message:
-          type: string
-        detail:
-          items:
-            $ref: '#/components/schemas/DeliveryDetailObject'
-          type: array
-      type: object
-    DeliveryDetailObject:
-      description: The details of the delivery
-      example:
-        deliveryID: deliveryID
-        id: 0
-        time: time
-        detail: detail
-        deliveryStatus: deliveryStatus
-      properties:
-        id:
-          type: integer
-        deliveryID:
-          type: string
-        time:
-          type: string
-        deliveryStatus:
-          type: string
-        detail:
-          type: string
-      type: object
-    delivery_GetDeliveryStatusRequest:
-      description: This object is expected as input
-      properties:
-        deliveryID:
-          type: string
-      type: object
-    delivery_GetDeliveryStatusResponse:
-      description: This object is expected as output
-      example:
-        message: message
-        status: status
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-      type: object
-    delivery_GetNextOrderForDriverRequest:
-      description: This object is expected as input
-      properties:
-        driverID:
-          type: string
-        currentLocation:
-          $ref: '#/components/schemas/GeoPointObject'
-        rangeOfDelivery:
-          type: number
-      type: object
-    delivery_GetNextOrderForDriverResponse:
-      description: This object is expected as output
-      example:
-        deliveryID: deliveryID
-        message: message
-      properties:
-        message:
-          type: string
-        deliveryID:
-          type: string
-      type: object
-    delivery_RemoveDriverFromDeliveryRequest:
-      description: This object is expected as input
-      properties:
-        driverID:
-          type: string
-        deliveryID:
-          type: string
-      type: object
-    delivery_RemoveDriverFromDeliveryResponse:
-      description: This object is expected as output
-      example:
-        message: message
-        isSuccess: true
-      properties:
-        isSuccess:
-          type: boolean
-        message:
-          type: string
-      type: object
-    delivery_TrackDeliveryRequest:
-      description: This object is expected as input
-      properties:
-        deliveryID:
-          type: string
-      type: object
-    delivery_TrackDeliveryResponse:
-      description: This object is expected as output
-      example:
-        message: message
-        currentLocation:
-          address: address
-          latitude: 0.8008281904610115
-          longitude: 6.027456183070403
-      properties:
-        currentLocation:
-          $ref: '#/components/schemas/GeoPointObject'
-        message:
-          type: string
-      type: object
-    delivery_UpdateDeliveryStatusRequest:
-      description: This object is expected as input
-      properties:
-        status:
-          type: string
-        deliveryID:
-          type: string
-        detail:
-          type: string
-      type: object
-    delivery_UpdateDeliveryStatusResponse:
-      description: This object is expected as output
-      example:
-        message: message
-      properties:
-        message:
-          type: string
-      type: object
-    user_UpdateDriverShiftRequest:
-      description: This object is expected as input
-      properties:
-        jwtToken:
-          type: string
-        onShift:
-          type: boolean
-      type: object
-    user_UpdateDriverShiftResponse:
-      description: This object is returned as output
-      example:
-        success: true
-        message: message
-        timestamp: timestamp
-      properties:
-        success:
-          type: boolean
-        timestamp:
-          type: string
         message:
           type: string
       type: object

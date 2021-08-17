@@ -23,12 +23,13 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import org.openapitools.client.model.GeoPointObject;
 
 /**
  * This object is expected as output
  */
 @ApiModel(description = "This object is expected as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
 public class DeliveryAssignDriverToDeliveryResponse {
   public static final String SERIALIZED_NAME_IS_ASSIGNED = "isAssigned";
   @SerializedName(SERIALIZED_NAME_IS_ASSIGNED)
@@ -37,6 +38,14 @@ public class DeliveryAssignDriverToDeliveryResponse {
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   private String message;
+
+  public static final String SERIALIZED_NAME_PICK_UP_LOCATION = "pickUpLocation";
+  @SerializedName(SERIALIZED_NAME_PICK_UP_LOCATION)
+  private GeoPointObject pickUpLocation;
+
+  public static final String SERIALIZED_NAME_DROP_OFF_LOCATION = "dropOffLocation";
+  @SerializedName(SERIALIZED_NAME_DROP_OFF_LOCATION)
+  private GeoPointObject dropOffLocation;
 
 
   public DeliveryAssignDriverToDeliveryResponse isAssigned(Boolean isAssigned) {
@@ -85,6 +94,52 @@ public class DeliveryAssignDriverToDeliveryResponse {
   }
 
 
+  public DeliveryAssignDriverToDeliveryResponse pickUpLocation(GeoPointObject pickUpLocation) {
+    
+    this.pickUpLocation = pickUpLocation;
+    return this;
+  }
+
+   /**
+   * Get pickUpLocation
+   * @return pickUpLocation
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public GeoPointObject getPickUpLocation() {
+    return pickUpLocation;
+  }
+
+
+  public void setPickUpLocation(GeoPointObject pickUpLocation) {
+    this.pickUpLocation = pickUpLocation;
+  }
+
+
+  public DeliveryAssignDriverToDeliveryResponse dropOffLocation(GeoPointObject dropOffLocation) {
+    
+    this.dropOffLocation = dropOffLocation;
+    return this;
+  }
+
+   /**
+   * Get dropOffLocation
+   * @return dropOffLocation
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public GeoPointObject getDropOffLocation() {
+    return dropOffLocation;
+  }
+
+
+  public void setDropOffLocation(GeoPointObject dropOffLocation) {
+    this.dropOffLocation = dropOffLocation;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,12 +150,14 @@ public class DeliveryAssignDriverToDeliveryResponse {
     }
     DeliveryAssignDriverToDeliveryResponse deliveryAssignDriverToDeliveryResponse = (DeliveryAssignDriverToDeliveryResponse) o;
     return Objects.equals(this.isAssigned, deliveryAssignDriverToDeliveryResponse.isAssigned) &&
-        Objects.equals(this.message, deliveryAssignDriverToDeliveryResponse.message);
+        Objects.equals(this.message, deliveryAssignDriverToDeliveryResponse.message) &&
+        Objects.equals(this.pickUpLocation, deliveryAssignDriverToDeliveryResponse.pickUpLocation) &&
+        Objects.equals(this.dropOffLocation, deliveryAssignDriverToDeliveryResponse.dropOffLocation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(isAssigned, message);
+    return Objects.hash(isAssigned, message, pickUpLocation, dropOffLocation);
   }
 
 
@@ -110,6 +167,8 @@ public class DeliveryAssignDriverToDeliveryResponse {
     sb.append("class DeliveryAssignDriverToDeliveryResponse {\n");
     sb.append("    isAssigned: ").append(toIndentedString(isAssigned)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    pickUpLocation: ").append(toIndentedString(pickUpLocation)).append("\n");
+    sb.append("    dropOffLocation: ").append(toIndentedString(dropOffLocation)).append("\n");
     sb.append("}");
     return sb.toString();
   }
