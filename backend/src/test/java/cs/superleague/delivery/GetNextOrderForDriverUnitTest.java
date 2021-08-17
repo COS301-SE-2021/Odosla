@@ -10,6 +10,7 @@ import cs.superleague.delivery.requests.TrackDeliveryRequest;
 import cs.superleague.delivery.requests.UpdateDeliveryStatusRequest;
 import cs.superleague.delivery.responses.GetNextOrderForDriverResponse;
 import cs.superleague.delivery.responses.UpdateDeliveryStatusResponse;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
@@ -50,6 +51,8 @@ public class GetNextOrderForDriverUnitTest {
     CustomerRepo customerRepo;
     @Mock
     StoreRepo storeRepo;
+    @InjectMocks
+    JwtUtil jwtTokenUtil;
 
     UUID deliveryID1;
     UUID deliveryID2;
@@ -74,9 +77,11 @@ public class GetNextOrderForDriverUnitTest {
     Driver driver;
     GeoPoint driverLocation;
     List<Delivery> deliveries = new ArrayList<>();
+    String jwtToken;
 
     @BeforeEach
     void setUp() {
+
         cost = 0.0;
         adminID = UUID.randomUUID();
         driverID = UUID.randomUUID();
@@ -99,6 +104,7 @@ public class GetNextOrderForDriverUnitTest {
         deliveryDetail1 = new DeliveryDetail(deliveryID1, time, status, "detail");
         deliveryDetail2 = new DeliveryDetail(deliveryID1, Calendar.getInstance(), DeliveryStatus.CollectedByDriver, "detail");
         driver = new Driver("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.DRIVER, driverID);
+        jwtToken=jwtTokenUtil.generateJWTTokenDriver(driver);
         driverLocation = new GeoPoint(50.0, 50.0, "address");
     }
 
@@ -111,12 +117,12 @@ public class GetNextOrderForDriverUnitTest {
     @Description("Tests that the request object is created successfully.")
     @DisplayName("Request object creation.")
     void checkRequestObjectCreation_UnitTest() {
-        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 20.0);
-        assertEquals(request1.getDriverID(), driverID);
+        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(jwtToken, driverLocation, 20.0);
+        assertEquals(request1.getJwtToken(), jwtToken);
         assertEquals(request1.getCurrentLocation(), driverLocation);
         assertEquals(request1.getRangeOfDelivery(), 20.0);
-        GetNextOrderForDriverRequest request2 = new GetNextOrderForDriverRequest(driverID, driverLocation);
-        assertEquals(request2.getDriverID(), driverID);
+        GetNextOrderForDriverRequest request2 = new GetNextOrderForDriverRequest(jwtToken, driverLocation);
+        assertEquals(request2.getJwtToken(), jwtToken);
         assertEquals(request2.getCurrentLocation(), driverLocation);
         assertEquals(request2.getRangeOfDelivery(), 10.0);
     }
@@ -137,7 +143,7 @@ public class GetNextOrderForDriverUnitTest {
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, () -> deliveryService.getNextOrderForDriver(request1));
         assertEquals("Null parameters.", thrown1.getMessage());
 
-        GetNextOrderForDriverRequest request2 = new GetNextOrderForDriverRequest(driverID, null, 10.0);
+        GetNextOrderForDriverRequest request2 = new GetNextOrderForDriverRequest(jwtToken, null, 10.0);
         Throwable thrown2 = Assertions.assertThrows(InvalidRequestException.class, () -> deliveryService.getNextOrderForDriver(request2));
         assertEquals("Null parameters.", thrown2.getMessage());
     }
@@ -147,7 +153,7 @@ public class GetNextOrderForDriverUnitTest {
     @DisplayName("Invalid DriverID")
     void invalidDriverIDDriverNotFound_UnitTest(){
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
-        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
+        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(jwtToken, driverLocation, 10.0);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, () -> deliveryService.getNextOrderForDriver(request1));
         assertEquals("Driver not found in database.", thrown1.getMessage());
     }
@@ -155,10 +161,10 @@ public class GetNextOrderForDriverUnitTest {
     @Test
     @Description("Tests for when there are no available deliveries in the repo.")
     @DisplayName("No available deliveries")
-    void noAvailableDeliveriesForDriver_UnitTest() throws InvalidRequestException{
+    void noAvailableDeliveriesForDriver_UnitTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(null);
-        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
+        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(jwtToken, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
         assertEquals(response.getDelivery(), null);
         assertEquals(response.getMessage(), "No available deliveries in the database.");
@@ -167,10 +173,10 @@ public class GetNextOrderForDriverUnitTest {
     @Test
     @Description("Tests for when there is an empty list of deliveries.")
     @DisplayName("Empty list of deliveries")
-    void emptyListOfDeliveries_UnitTest() throws InvalidRequestException{
+    void emptyListOfDeliveries_UnitTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(deliveries);
-        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
+        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(jwtToken, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
         assertEquals(response.getDelivery(), null);
         assertEquals(response.getMessage(), "No available deliveries in the database.");
@@ -179,12 +185,12 @@ public class GetNextOrderForDriverUnitTest {
     @Test
     @Description("Tests for when the driver is too far away to take a delivery.")
     @DisplayName("Driver too far for any delivery")
-    void driverIsTooFarAwayFromAnyDeliveryies_UnitTest() throws InvalidRequestException{
+    void driverIsTooFarAwayFromAnyDeliveryies_UnitTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         deliveries.add(delivery1);
         deliveries.add(delivery2);
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(deliveries);
-        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
+        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(jwtToken, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
         assertEquals(response.getDelivery(), null);
         assertEquals(response.getMessage(), "No available deliveries in the range specified.");
@@ -193,12 +199,12 @@ public class GetNextOrderForDriverUnitTest {
     @Test
     @Description("Successful allocation of delivery to driver.")
     @DisplayName("Successful allocation")
-    void successfulAllocationOfDelivery_UnitTest() throws InvalidRequestException{
+    void successfulAllocationOfDelivery_UnitTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         deliveries.add(delivery2);
         driverLocation = new GeoPoint(0.0, 0.0, "address");
         when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(deliveries);
-        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
+        GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(jwtToken, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
         assertEquals(response.getDelivery(), delivery2);
         assertEquals(response.getMessage(), "Driver can take the following delivery.");

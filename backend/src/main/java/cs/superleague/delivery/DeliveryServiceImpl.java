@@ -20,6 +20,7 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
@@ -249,17 +250,36 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
+    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         if (request==null){
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getDriverID() == null || request.getCurrentLocation() == null){
+        if(request.getJwtToken()==null || request.getCurrentLocation() == null){
             throw new InvalidRequestException("Null parameters.");
         }
         double range = request.getRangeOfDelivery();
-        Driver driver = driverRepo.findById(request.getDriverID()).orElseThrow(()->new InvalidRequestException("Driver not found in database."));
-        driver.setCurrentAddress(request.getCurrentLocation());
-        driverRepo.save(driver);
+
+        JwtUtil jwtUtil = new JwtUtil();
+        if(jwtUtil.extractUserType(request.getJwtToken()).equals("DRIVER"))
+        {
+            GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+
+            if(driverRepo!=null)
+            {
+                Driver driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
+                if(driver!=null)
+                {
+                    driver.setCurrentAddress(request.getCurrentLocation());
+                    driverRepo.save(driver);
+                }
+                else
+                {
+                    throw new InvalidRequestException("Driver not found in database.");
+                }
+            }
+
+        }
+
         List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
         if (deliveries == null){
             GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);

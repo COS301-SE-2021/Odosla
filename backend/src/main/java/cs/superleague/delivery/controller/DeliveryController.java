@@ -158,9 +158,9 @@ public class DeliveryController implements DeliveryApi {
             GeoPoint driversCurrentLocation = new GeoPoint(body.getCurrentLocation().getLatitude().doubleValue(), body.getCurrentLocation().getLongitude().doubleValue(), body.getCurrentLocation().getAddress());
             GetNextOrderForDriverRequest request;
             if (body.getRangeOfDelivery().doubleValue() == 0) {
-                request = new GetNextOrderForDriverRequest(UUID.fromString(body.getDriverID()), driversCurrentLocation);
+                request = new GetNextOrderForDriverRequest(body.getDriverID(), driversCurrentLocation);
             }else {
-                request = new GetNextOrderForDriverRequest(UUID.fromString(body.getDriverID()), driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
+                request = new GetNextOrderForDriverRequest(body.getDriverID(), driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = ServiceSelector.getDeliveryService().getNextOrderForDriver(request);
 
