@@ -29,10 +29,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -293,7 +290,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629203236637</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added Save Shopping list with dialog box">
+      <created>1629204971077</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1629204971077</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -335,7 +339,8 @@
     <MESSAGE value="Finished getCurrentUser in UserController" />
     <MESSAGE value="Added Flutter Customer App" />
     <MESSAGE value="Fixed spacing and text wrap on wallet as well as items page." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed spacing and text wrap on wallet as well as items page." />
+    <MESSAGE value="Added Save Shopping list with dialog box" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added Save Shopping list with dialog box" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">

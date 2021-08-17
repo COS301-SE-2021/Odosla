@@ -96,7 +96,7 @@ class _CartPage extends State<CartPage> {
                             .clearItems(),
                   ),
                 ),
-                SizedBox(height: 70),
+                SizedBox(height: 110),
               ],
             ),
           ),
