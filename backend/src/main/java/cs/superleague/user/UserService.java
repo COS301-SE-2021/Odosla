@@ -1,6 +1,7 @@
 package cs.superleague.user;
 
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
@@ -9,7 +10,7 @@ public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist;
+    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException;
     ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
     RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
@@ -38,8 +39,10 @@ public interface UserService {
     CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
-    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException;
+    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException;
 
     /* Analytics user data*/
     GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
+
+    GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
 }

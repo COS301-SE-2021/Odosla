@@ -1,6 +1,7 @@
 package cs.superleague.shopping.integration;
 
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -16,6 +17,8 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.GetNextQueuedRequest;
 import cs.superleague.shopping.responses.GetNextQueuedResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.repos.ShopperRepo;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -42,7 +45,14 @@ public class GetNextQueuedIntegrationTest {
     @Autowired
     OrderRepo orderRepo;
 
+    @Autowired
+    ShopperRepo shopperRepo;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
     UUID storeUUID1= UUID.randomUUID();
+    Shopper shopper;
     Store s;
     Catalogue c;
     Order o;
@@ -61,6 +71,7 @@ public class GetNextQueuedIntegrationTest {
     GeoPoint deliveryAddress=new GeoPoint(2.0, 2.0, "2616 Urban Quarters, Hatfield");
     GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "Woolworthes, Hillcrest Boulevard");
     List<Item> expectedListOfItems=new ArrayList<>();
+    String jwtToken;
 
     @BeforeEach
     void setUp() {
@@ -74,7 +85,18 @@ public class GetNextQueuedIntegrationTest {
         c=new Catalogue(storeUUID1,listOfItems);
         catalogueRepo.save(c);
 
+        shopper = new Shopper();
+        shopper.setShopperID(expectedShopper1);
+        shopper.setName("Zivan");
+        shopper.setEmail("zivanh7@gmail.com");
+
+        List<Shopper> shopperList= new ArrayList<>();
+        shopperList.add(shopper);
+
+        shopperRepo.save(shopper);
+
         s=new Store(storeUUID1,"Woolworthes",c,2,null,null,4,true);
+        s.setShoppers(shopperList);
         storeRepo.save(s);
 
         Date d1=new Date(2021,06,1,14,30);
@@ -99,10 +121,6 @@ public class GetNextQueuedIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
-        orderRepo.deleteAll();
     }
 
     @Test
@@ -117,7 +135,7 @@ public class GetNextQueuedIntegrationTest {
     @Description("Tests for when storeID in request object is null- exception should be thrown")
     @DisplayName("When request object parameter -storeID - is not specificed")
     void IntegrationTest_testingNull_storeID_Parameter_RequestObject(){
-        GetNextQueuedRequest request=new GetNextQueuedRequest(null);
+        GetNextQueuedRequest request=new GetNextQueuedRequest(null, "hfasjfhalj");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getShoppingService().getNextQueued(request));
         assertEquals("Store ID parameter in request can't be null - can't get next queued", thrown.getMessage());
     }
@@ -130,7 +148,7 @@ public class GetNextQueuedIntegrationTest {
         while(invalidStoreID == storeUUID1){
             invalidStoreID = UUID.randomUUID();
         }
-        GetNextQueuedRequest request=new GetNextQueuedRequest(invalidStoreID);
+        GetNextQueuedRequest request=new GetNextQueuedRequest(invalidStoreID, "hfasjfhalj");
         Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().getNextQueued(request));
         assertEquals("Store with ID does not exist in repository - could not get next queued entity", thrown.getMessage());
     }
@@ -138,8 +156,8 @@ public class GetNextQueuedIntegrationTest {
     @Test
     @Description("Test for when Store with storeID does not have any current orders in order queue")
     @DisplayName("Order queue is empty")
-    void IntegrationTest_Store_no_orders_in_orderQueue() throws InvalidRequestException, StoreDoesNotExistException {
-        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
+    void IntegrationTest_Store_no_orders_in_orderQueue() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException {
+        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1, "hfasjfhalj");
         Store updateStore = storeRepo.findById(storeUUID1).orElse(null);
         updateStore.setOrderQueue(null);
         storeRepo.save(updateStore);
@@ -152,8 +170,10 @@ public class GetNextQueuedIntegrationTest {
     @Test
     @Description("Test for when order and removes previous order from order queue")
     @DisplayName("Removes and returns correct order")
-    void IntegrationTest_order_is_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException {
-        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1);
+    void IntegrationTest_order_is_correctly_removed() throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException {
+
+        jwtToken= jwtUtil.generateJWTTokenShopper(shopper);
+        GetNextQueuedRequest request=new GetNextQueuedRequest(storeUUID1, jwtToken);
         s.setOrderQueue(listOfOrders);
         storeRepo.save(s);
         GetNextQueuedResponse response=ServiceSelector.getShoppingService().getNextQueued(request);
@@ -171,7 +191,7 @@ public class GetNextQueuedIntegrationTest {
     @Description("Tests whether the GetNextQueued request object was created correctly")
     @DisplayName("GetNextQueueRequest correctly constructed")
     void IntegrationTest_AddToQueueRequestConstruction() {
-        GetNextQueuedRequest request = new GetNextQueuedRequest(storeUUID1);
+        GetNextQueuedRequest request = new GetNextQueuedRequest(storeUUID1, "hfasjfhalj");
         assertNotNull(request);
         assertEquals(storeUUID1, request.getStoreID());
     }

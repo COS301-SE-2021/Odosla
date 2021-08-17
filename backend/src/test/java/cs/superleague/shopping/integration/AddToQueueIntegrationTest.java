@@ -172,16 +172,6 @@ public class AddToQueueIntegrationTest {
     }
 
     @Test
-    @Description("Test for checking if correct status value was passed in the order object when calling AddToQueue - exception should be thrown")
-    @DisplayName("Incorrect OrderStatus object value in passed in request")
-    void IntegrationTest_incorrect_orderStatus(){
-        order.setStatus(OrderStatus.DELIVERED);
-        AddToQueueRequest request=new AddToQueueRequest(order);
-        Throwable thrown = Assertions.assertThrows(cs.superleague.shopping.exceptions.InvalidRequestException.class, ()-> shoppingService.addToQueue(request));
-        assertEquals("Invalid request: order has incompatible status", thrown.getMessage());
-    }
-
-    @Test
     @Description("Test for checking if a null or empty item list was passed in the order object when calling AddToQueue - exception should be thrown")
     @DisplayName("No items in passed in request")
     void IntegrationTest_missing_orderItems(){
@@ -201,6 +191,8 @@ public class AddToQueueIntegrationTest {
             response = shoppingService.addToQueue(request);
             assertTrue(response.isSuccess());
         } catch (Exception e){
+            System.out.println(e.getMessage());
+            fail();
         }
 
     }

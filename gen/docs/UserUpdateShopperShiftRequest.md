@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **jwtToken** | **String** |  |  [optional]
 **onShift** | **Boolean** |  |  [optional]
+**storeID** | **String** |  |  [optional]
 
 
 

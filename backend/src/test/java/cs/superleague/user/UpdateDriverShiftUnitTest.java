@@ -1,9 +1,14 @@
 package cs.superleague.user;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.DriverDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.repos.DriverRepo;
+import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.UpdateDriverShiftRequest;
 import cs.superleague.user.responses.UpdateDriverShiftResponse;
 import org.junit.jupiter.api.*;
@@ -13,10 +18,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -26,20 +30,44 @@ public class UpdateDriverShiftUnitTest {
     @Mock
     DriverRepo driverRepo;
 
+    @Mock
+    ShopperRepo shopperRepo;
+
     @InjectMocks
     private UserServiceImpl userService;
+
+    @InjectMocks
+    JwtUtil jwtTokenUtil;
 
     UpdateDriverShiftRequest request;
     UpdateDriverShiftResponse response;
     UUID driverID= UUID.randomUUID();
     Driver driver;
+    Shopper shopper;
+
+
+    String shopperJWT;
+    String driverJWT;
 
     @BeforeEach
     void setUp() {
-        request=new UpdateDriverShiftRequest(driverID,true);
+
         driver=new Driver();
         driver.setDriverID(driverID);
         driver.setOnShift(true);
+        driver.setAccountType(UserType.DRIVER);
+        driver.setEmail("driver@gmaill.com");
+
+        shopper = new Shopper();
+        shopper.setShopperID(UUID.randomUUID());
+        shopper.setAccountType(UserType.SHOPPER);
+        shopper.setEmail("Email@shhhopper.com");
+
+
+        driverJWT = jwtTokenUtil.generateJWTTokenDriver(driver);
+        shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
+
+        request=new UpdateDriverShiftRequest(driverJWT,true);
     }
 
     @AfterEach
@@ -53,11 +81,11 @@ public class UpdateDriverShiftUnitTest {
     }
 
     @Test
-    @DisplayName("When driverID parameter is not specified")
+    @DisplayName("When JWTToken parameter is not specified")
     void UnitTest_testingNullRequestDriverIDParameter(){
-        request.setDriverID(null);
+        request.setJWTToken(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverShift(request));
-        assertEquals("DriverID in UpdateDriverShiftRequest is null", thrown.getMessage());
+        assertEquals("JWTToken in UpdateDriverShiftRequest is null", thrown.getMessage());
     }
 
     @Test
@@ -69,20 +97,29 @@ public class UpdateDriverShiftUnitTest {
     }
 
     @Test
-    @DisplayName("When driver with driverID does not exist")
+    @DisplayName("When driver with JWTToken return Invalid User")
     void UnitTest_testingDriverDoesNotExist(){
-        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(DriverDoesNotExistException.class, ()-> userService.updateDriverShift(request));
-        assertEquals("Driver with driverID does not exist in database", thrown.getMessage());
+        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+
+        try{
+            UpdateDriverShiftRequest req = new UpdateDriverShiftRequest(shopperJWT, false);
+            UpdateDriverShiftResponse response = userService.updateDriverShift(req);
+            Assertions.assertFalse(response.isSuccess());
+            assertEquals("No driver exist with that JWTToken", response.getMessage());
+        }catch(UserException e){
+            e.printStackTrace();
+            Assertions.fail();
+        }
+
     }
 
     @Test
     @DisplayName("When driver is already on Shift")
     void UnitTest_testingDriverAlreadyOnShift() throws InvalidRequestException, DriverDoesNotExistException {
-        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(driver));
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driver);
         response= userService.updateDriverShift(request);
         assertNotNull(response);
-        assertFalse(response.isSuccess());
+        Assertions.assertFalse(response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("Driver is already on shift",response.getMessage());
     }
@@ -92,10 +129,10 @@ public class UpdateDriverShiftUnitTest {
     void UnitTest_testingDriverAlreadyNotOnShift() throws InvalidRequestException, DriverDoesNotExistException {
         request.setOnShift(false);
         driver.setOnShift(false);
-        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(driver));
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driver);
         response= userService.updateDriverShift(request);
         assertNotNull(response);
-        assertFalse(response.isSuccess());
+        Assertions.assertFalse(response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("Driver is already not on shift",response.getMessage());
     }
@@ -108,23 +145,24 @@ public class UpdateDriverShiftUnitTest {
         Driver newDriver = new Driver();
         newDriver.setDriverID(driverID);
         newDriver.setOnShift(true);
-        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(driver)).thenReturn(java.util.Optional.of(newDriver));
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driver).thenReturn(newDriver);
         response= userService.updateDriverShift(request);
         assertNotNull(response);
-        assertFalse(response.isSuccess());
+        Assertions.assertFalse(response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("Couldn't update driver's shift",response.getMessage());
     }
 
     @Test
     @DisplayName("When driver's shift successfully updated")
-    void UnitTest_testingDriverShiftSuccesfullyUpdated() throws InvalidRequestException, DriverDoesNotExistException {
+    void UnitTest_testingDriverShiftSuccessfullyUpdated() throws InvalidRequestException, DriverDoesNotExistException {
         request.setOnShift(false);
         driver.setOnShift(true);
-        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(driver));
+        Mockito.when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driver);
+        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
         response= userService.updateDriverShift(request);
         assertNotNull(response);
-        assertTrue(response.isSuccess());
+//        assertTrue(response.isSuccess());
         assertNotNull(response.getTimestamp());
         assertEquals("Driver's shift correctly updated",response.getMessage());
     }

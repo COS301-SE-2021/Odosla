@@ -1,19 +1,23 @@
 package cs.superleague.user;
 
+import cs.superleague.delivery.DeliveryService;
+import cs.superleague.delivery.requests.CreateDeliveryRequest;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.NotificationService;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.GetStoresRequest;
 import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
@@ -44,10 +48,12 @@ public class UserServiceImpl implements UserService{
     private final OrderRepo orderRepo;
     private JwtUtil jwtTokenUtil=new JwtUtil();
     private final ShoppingService shoppingService;
+    private final StoreRepo storeRepo;
+    private final DeliveryService deliveryService;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
@@ -55,6 +61,8 @@ public class UserServiceImpl implements UserService{
         this.groceryListRepo=groceryListRepo;
         this.orderRepo= orderRepo;
         this.shoppingService = shoppingService;
+        this.storeRepo = storeRepo;
+        this.deliveryService= deliveryService;
     }
 
     /**
@@ -86,7 +94,7 @@ public class UserServiceImpl implements UserService{
      * @throws OrderDoesNotExist
      */
     @Override
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist {
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
         CompletePackagingOrderResponse response = null;
         if(request != null){
 
@@ -106,7 +114,6 @@ public class UserServiceImpl implements UserService{
             {
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
-            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
             Shopper shopperEntity=null;
             try {
@@ -123,7 +130,18 @@ public class UserServiceImpl implements UserService{
 
             shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
 
-            //TODO check the order type and call the respective user (driver or customer)
+            if(shopperRepo!=null)
+                shopperRepo.save(shopperEntity);
+
+            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
+
+            if(orderEntity.getType().equals(OrderType.DELIVERY))
+            {
+                CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
+                if(deliveryService!=null)
+                deliveryService.createDelivery(createDeliveryRequest);
+            }
+
             response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
         }
         else{
@@ -1545,11 +1563,11 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
         }
 
-        if(request.getUserID() == null){
-            throw new InvalidRequestException("UserID is null - could not make grocery list");
+        if(request.getJWTToken() == null){
+            throw new InvalidRequestException("JWTToken is null - could not make grocery list");
         }
 
-        if(request.getBarcodes() == null || request.getBarcodes().isEmpty()){
+        if(request.getProductIds() == null || request.getProductIds().isEmpty()){
             throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
 
@@ -1557,14 +1575,18 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        userID = UUID.fromString(request.getUserID());
-        try {
-            customer = customerRepo.findById(userID).orElse(null);
-        }catch(Exception e){}
+        System.out.println(request.getJWTToken());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
 
-        if(customer == null){
-            throw new CustomerDoesNotExistException("User with given userID does not exist - could not make the grocery list");
+        System.out.println(getCurrentUserRequest);
+
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for customer userType";
+            return new MakeGroceryListResponse(false, message, new Date());
         }
+
+        customer = (Customer)getCurrentUserResponse.getUser();
 
         name = request.getName();
         for (GroceryList list: customer.getGroceryLists()) { // if name exists return false
@@ -1590,16 +1612,16 @@ public class UserServiceImpl implements UserService{
             items.addAll(store.getStock().getItems());
         }
 
-        for (String barcode: request.getBarcodes()) {
+        for (String productId: request.getProductIds()) {
             for (Item item: items) {
-                if(item.getBarcode().equals(barcode)){
+                if(item.getProductID().equals(productId)){
                     groceryListItems.add(item);
                 }
             }
         }
 
         if(groceryListItems.isEmpty()){
-            message = "Cannot find item with given barcode - could not make the grocery list";
+            message = "Cannot find item with given productID - could not make the grocery list";
             return new MakeGroceryListResponse(false, message, new Date());
         }
 
@@ -2071,18 +2093,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
         UpdateShopperShiftResponse response;
         if (request == null){
             throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
         }
-        if (request.getShopperID() == null){
+        if (request.getJwtToken() == null){
             throw new InvalidRequestException("ShopperID in UpdateShopperShiftRequest is null");
         }
         if (request.getOnShift() == null){
             throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
         }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getShopperID());
+        if (request.getStoreID() == null){
+            throw new InvalidRequestException("StoreID in UpdateShopperShiftRequest is null");
+        }
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
         GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
         Shopper shopper1 = (Shopper) getCurrentUserResponse.getUser();
         if (shopper1 == null){
@@ -2105,8 +2130,34 @@ public class UserServiceImpl implements UserService{
             response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
         }
         else{
+            Store store = storeRepo.findById(request.getStoreID()).orElse(null);
+            if (store == null){
+                throw new StoreDoesNotExistException("Store is not saved in database.");
+            }
             shopper.get().setOnShift(request.getOnShift());
+            shopper.get().setStoreID(request.getStoreID());
             shopperRepo.save(shopper.get());
+            if (request.getOnShift() == true){
+                if (store.getShoppers() == null){
+                    store.setShoppers(new ArrayList<>());
+                }
+                store.getShoppers().add(shopper.get());
+            }else{
+                List<Shopper> shoppersAtStore = store.getShoppers();
+                if (shoppersAtStore == null){
+                    store.setShoppers(new ArrayList<>());
+                }else {
+                    if (shoppersAtStore != null) {
+                        for (Shopper s : shoppersAtStore) {
+                            if (s.getShopperID().compareTo(shopper.get().getShopperID()) == 0) {
+                                shoppersAtStore.remove(s);
+                            }
+                        }
+                    }
+                    store.setShoppers(shoppersAtStore);
+                }
+            }
+            storeRepo.save(store);
 
             /*Check updates have happened */
             shopper=shopperRepo.findById(shopper1.getShopperID());
@@ -2115,6 +2166,7 @@ public class UserServiceImpl implements UserService{
                 response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),"Couldn't update shopper's shift");
             }
             else{
+
                 response=new UpdateShopperShiftResponse(true,Calendar.getInstance(),"Shopper's shift correctly updated");
             }
         }
@@ -2131,9 +2183,9 @@ public class UserServiceImpl implements UserService{
         if(request==null){
             isException=true;
             errorMessage="UpdateDriverShiftRequest object is null";
-        }else if(request.getDriverID()==null){
+        }else if(request.getJWTToken()==null){
             isException=true;
-            errorMessage="DriverID in UpdateDriverShiftRequest is null";
+            errorMessage="JWTToken in UpdateDriverShiftRequest is null";
         } else if(request.getOnShift()==null){
             isException=true;
             errorMessage="onShift in UpdateDriverShiftRequest is null";
@@ -2143,13 +2195,21 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Optional<Driver> driver=driverRepo.findById(request.getDriverID());
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
 
-        if(driver==null || !driver.isPresent()){
-            throw new DriverDoesNotExistException("Driver with driverID does not exist in database");
+        if(getCurrentUserResponse.getUser() == null){
+            throw new DriverDoesNotExistException("Driver does not exist");
         }
 
-        if(driver.get().getOnShift()==request.getOnShift()){
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.DRIVER){
+            String message = "No driver exist with that JWTToken";
+            return new UpdateDriverShiftResponse(false, Calendar.getInstance().getTime(), message);
+        }
+
+        Driver driver = (Driver)getCurrentUserResponse.getUser();
+
+        if(driver.getOnShift()==request.getOnShift()){
             String message="";
             if(request.getOnShift()==true){
                 message="Driver is already on shift";
@@ -2160,13 +2220,13 @@ public class UserServiceImpl implements UserService{
             response=new UpdateDriverShiftResponse(false,Calendar.getInstance().getTime(),message);
         }
         else{
-            driver.get().setOnShift(request.getOnShift());
-            driverRepo.save(driver.get());
+            driver.setOnShift(request.getOnShift());
+            driverRepo.save(driver);
 
             /*Check updates have happened */
-            driver=driverRepo.findById(request.getDriverID());
+            Optional<Driver> driverOptional = driverRepo.findById(driver.getDriverID());
 
-            if(driver==null || !driver.isPresent()|| driver.get().getOnShift()!=request.getOnShift()){
+            if(driverOptional==null || !driverOptional.isPresent()|| driverOptional.get().getOnShift()!=request.getOnShift()){
                 response=new UpdateDriverShiftResponse(false,Calendar.getInstance().getTime(),"Couldn't update driver's shift");
             }
             else{
@@ -2614,6 +2674,30 @@ public class UserServiceImpl implements UserService{
         }
 
         return new GetUsersResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException{
+
+        Customer customer = null;
+        String message;
+        if(request == null){
+            throw new InvalidRequestException("GetGroceryList request is null - could not return groceryList");
+        }
+
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+
+
+        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
+            message = "Invalid JWTToken for Customer Account type";
+            return new GetGroceryListsResponse(null, false, new Date(), message);
+        }
+
+        customer = (Customer) getCurrentUserResponse.getUser();
+
+        message = "Grocery list successfully retrieved";
+        return new GetGroceryListsResponse(customer.getGroceryLists(), true, new Date(), message);
     }
 
     private boolean emailRegex(String email){
