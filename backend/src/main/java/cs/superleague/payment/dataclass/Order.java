@@ -187,4 +187,12 @@ public class Order {
     public void setRequiresPharmacy(boolean requiresPharmacy) {
         this.requiresPharmacy = requiresPharmacy;
     }
+
+    public UUID getDriverID() {
+        return driverID;
+    }
+
+    public void setDriverID(UUID driverID) {
+        this.driverID = driverID;
+    }
 }

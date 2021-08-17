@@ -28,7 +28,7 @@ import java.io.IOException;
  * Generic schema for a store
  */
 @ApiModel(description = "Generic schema for a store")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class StoreObject {
   public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
   @SerializedName(SERIALIZED_NAME_STORE_I_D)
@@ -57,6 +57,10 @@ public class StoreObject {
   public static final String SERIALIZED_NAME_CLOSING_TIME = "closingTime";
   @SerializedName(SERIALIZED_NAME_CLOSING_TIME)
   private Integer closingTime;
+
+  public static final String SERIALIZED_NAME_IMAGE_URL = "imageUrl";
+  @SerializedName(SERIALIZED_NAME_IMAGE_URL)
+  private String imageUrl;
 
 
   public StoreObject storeID(String storeID) {
@@ -220,6 +224,29 @@ public class StoreObject {
   }
 
 
+  public StoreObject imageUrl(String imageUrl) {
+    
+    this.imageUrl = imageUrl;
+    return this;
+  }
+
+   /**
+   * Get imageUrl
+   * @return imageUrl
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
+
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -235,12 +262,13 @@ public class StoreObject {
         Objects.equals(this.maxShoppers, storeObject.maxShoppers) &&
         Objects.equals(this.maxOrders, storeObject.maxOrders) &&
         Objects.equals(this.openingTime, storeObject.openingTime) &&
-        Objects.equals(this.closingTime, storeObject.closingTime);
+        Objects.equals(this.closingTime, storeObject.closingTime) &&
+        Objects.equals(this.imageUrl, storeObject.imageUrl);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(storeID, storeBrand, isOpen, maxShoppers, maxOrders, openingTime, closingTime);
+    return Objects.hash(storeID, storeBrand, isOpen, maxShoppers, maxOrders, openingTime, closingTime, imageUrl);
   }
 
 
@@ -255,6 +283,7 @@ public class StoreObject {
     sb.append("    maxOrders: ").append(toIndentedString(maxOrders)).append("\n");
     sb.append("    openingTime: ").append(toIndentedString(openingTime)).append("\n");
     sb.append("    closingTime: ").append(toIndentedString(closingTime)).append("\n");
+    sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
     sb.append("}");
     return sb.toString();
   }

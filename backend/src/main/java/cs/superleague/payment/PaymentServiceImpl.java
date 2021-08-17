@@ -2,6 +2,7 @@ package cs.superleague.payment;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import cs.superleague.integration.ServiceSelector;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
@@ -21,8 +22,17 @@ import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.AddToQueueResponse;
 import cs.superleague.shopping.responses.GetQueueResponse;
 import cs.superleague.shopping.responses.GetShoppersResponse;
+import cs.superleague.user.UserService;
+import cs.superleague.user.UserServiceImpl;
+import cs.superleague.user.dataclass.Admin;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.exceptions.AdminDoesNotExistException;
+import cs.superleague.user.repos.AdminRepo;
+import cs.superleague.user.requests.GetCurrentUserRequest;
 import cs.superleague.user.requests.GetUserByUUIDRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
+import cs.superleague.user.responses.GetUsersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -46,13 +56,17 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
     private final ShoppingService shoppingService;
+    private final AdminRepo adminRepo;
+    private final UserService userService;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService) {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
+        this.adminRepo = adminRepo;
+        this.userService = userService;
     }
 
 
@@ -97,7 +111,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws InvalidRequestException
      */
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -201,7 +215,7 @@ public class PaymentServiceImpl implements PaymentService {
             GeoPoint customerLocation= new GeoPoint(request.getLatitude(),request.getLongitude(), request.getAddress());
 
             assert shop != null;
-            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.PURCHASED,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
+            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
 
             Order alreadyExists=null;
             while (true) {
@@ -222,9 +236,23 @@ public class PaymentServiceImpl implements PaymentService {
                     if(shop.getStore().getOpen()==true) {
                         if(orderRepo!=null)
                         orderRepo.save(o);
-
-                        AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
-                        shoppingService.addToQueue(addToQueueRequest);
+                        UUID finalOrderID = orderID;
+                        new Thread(()-> {
+                            CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderID);
+                            try {
+                                CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                            } catch (PaymentException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
+                            try {
+                                shoppingService.addToQueue(addToQueueRequest);
+                            } catch (cs.superleague.shopping.exceptions.InvalidRequestException e) {
+                                e.printStackTrace();
+                            }
+                        }).start();
 
                         System.out.println("Order has been created");
                         response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
@@ -536,13 +564,54 @@ import java.util.List;50"
     // TRANSACTION IMPLEMENTATION
 
     @Override
-    public CreateTransactionResponse createTransaction(CreateTransactionRequest request) {
-        return null;
+    public CreateTransactionResponse createTransaction(CreateTransactionRequest request) throws PaymentException, InterruptedException {
+        if (request == null){
+            throw new InvalidRequestException("Invalid request received - request cannot be null");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Invalid request received - orderID cannot be null");
+        }
+        Thread.sleep(2000);
+        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if (order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
+        }
+        SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.VERIFYING);
+        SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
+        VerifyPaymentRequest verifyPaymentRequest = new VerifyPaymentRequest(setStatusResponse.getOrder().getOrderID());
+        VerifyPaymentResponse verifyPaymentResponse = verifyPayment(verifyPaymentRequest);
+        CreateTransactionResponse createTransactionResponse;
+        if (verifyPaymentResponse.isSuccess()){
+            createTransactionResponse = new CreateTransactionResponse(true, "Transaction successfully created.");
+        }else{
+            createTransactionResponse = new CreateTransactionResponse(false, "Transaction not created.");
+        }
+        return createTransactionResponse;
     }
 
     @Override
-    public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) {
-        return null;
+    public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws PaymentException, InterruptedException {
+        if (request == null){
+            throw new InvalidRequestException("Invalid request received - request cannot be null");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Invalid request received - orderID cannot be null");
+        }
+        Thread.sleep(3000);
+        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if (order == null){
+            throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
+        }
+        SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.PURCHASED);
+        SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
+        Thread.sleep(2000);
+        VerifyPaymentResponse verifyPaymentResponse;
+        if (setStatusResponse.getSuccess() == true){
+            verifyPaymentResponse = new VerifyPaymentResponse(true, "Payment Successfully verified.");
+        }else{
+            verifyPaymentResponse = new VerifyPaymentResponse(false, "Payment was not verified.");
+        }
+        return verifyPaymentResponse;
     }
 
     @Override
@@ -665,6 +734,51 @@ import java.util.List;50"
         }
 
         return new GetItemsResponse(order.getItems(), true, new Date(), message);
+    }
+
+    @Override
+    public GetOrdersResponse getOrders(GetOrdersRequest request) throws PaymentException {
+
+        String message = "Users successfully returned";
+        Admin admin = null;
+        List<Order> orders = new ArrayList<>();
+        ServiceSelector serviceSelector;
+
+        if(request == null){
+            throw new InvalidRequestException("GetOrders request is null - could not return orders");
+        }
+
+        if(request.getJWTToken() == null){
+            throw new InvalidRequestException("JWTToken is null in GetUsersRequest request - could not return orders");
+        }
+
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
+        GetCurrentUserResponse getCurrentUserResponse;
+
+        try {
+            getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
+        }catch (Exception e){
+            throw new InvalidRequestException("Invalid JWTToken - could not get Orders");
+        }
+
+        if(getCurrentUserResponse.getUser() == null){
+            message = "No Admin Found - could not get Orders";
+            return new GetOrdersResponse(null, false, message, new Date());
+        }
+
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
+            message = "JWTToken returns an invalid user type - could not get Orders";
+            return new GetOrdersResponse(null, false, message, new Date());
+        }
+
+        orders.addAll(orderRepo.findAll());
+
+        if(orders.isEmpty()){
+            message = "There no orders";
+            return new GetOrdersResponse(orders, true, message, new Date());
+        }
+
+        return new GetOrdersResponse(orders, true, message, new Date());
     }
 
     // Helper

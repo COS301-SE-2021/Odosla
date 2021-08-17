@@ -4,370 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="made change to populate function">
-      <change beforePath="$PROJECT_DIR$/target/classes/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/Application.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/api/NotificationApi.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/api/PaymentApi.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/api/ShoppingApi.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/api/UserApi.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/integration/ServiceSelector.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/integration/TestController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/integration/security/JwtUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/integration/security/SpringSecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/integration/security/principal/PrincipleUserFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/AdminObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/CustomerObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/DriverObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/GroceryListObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ItemObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/NotificationSendDirectEmailNotificationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/NotificationSendDirectEmailNotificationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/NotificationSendEmailNotificationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/NotificationSendEmailNotificationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/OneOfuserGetCurrentUserResponseUser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/OrderObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentGetItemsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentGetItemsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentGetStatusRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentGetStatusResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentSubmitOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentSubmitOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentUpdateOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/PaymentUpdateOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShopperObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingAddShopperRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingAddShopperResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetItemsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetItemsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetNextQueuedRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetNextQueuedResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetQueueRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetQueueResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetShoppersRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetShoppersResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetStoresRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingGetStoresResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingPopulateTablesRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingPopulateTablesResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingRemoveQueuedOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/ShoppingRemoveQueuedOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/StoreObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserAccountVerifyRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserAccountVerifyResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserClearShoppingCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserClearShoppingCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserCompletePackagingOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserCompletePackagingOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserGetCurrentUserRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserGetCurrentUserResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserGetShoppingCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserGetShoppingCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserLoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserLoginResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserMakeGroceryListRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserMakeGroceryListResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserObject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterAdminRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterAdminResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterCustomerRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterCustomerResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterDriverRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterDriverResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterShopperRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserRegisterShopperResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserResetPasswordRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserResetPasswordResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserScanItemRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserScanItemResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserSetCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserSetCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserSetCurrentLocationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserSetCurrentLocationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserUpdateShopperShiftRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/models/UserUpdateShopperShiftResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/NotificationService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/NotificationServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/controller/NotificationController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/dataclass/Notification.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/dataclass/NotificationType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/exceptions/InvalidRequestException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/exceptions/NotificationException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/repos/NotificationRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/requests/CreateNotificationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/requests/RetrieveNotificationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/requests/SendDirectEmailNotificationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/requests/SendEmailNotificationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/responses/CreateNotificationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/responses/RetrieveNotificationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/responses/SendDirectEmailNotificationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/notification/responses/SendEmailNotificationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/controller/PaymentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/GeoPoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/Invoice.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/Order.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/OrderStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/OrderType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/Transaction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/exceptions/InvalidRequestException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/exceptions/NotAuthorisedException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/exceptions/OrderDoesNotExist.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/exceptions/PaymentException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/exceptions/StatusCodeException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/mock/CancelOrdersMock.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/mock/submitOrderMock.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/repos/InvoiceRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/repos/OrderRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/repos/TransactionRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/AddItemRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/CancelOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/CreateTransactionRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/GenerateInvoiceRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/GetInvoiceRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/GetItemsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/GetOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/GetStatusRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/ReverseTransactionRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/SetStatusRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/SubmitOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/UpdateOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/VerifyPaymentRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/AddItemResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/CancelOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/CreateTransactionResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/GenerateInvoiceResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/GetInvoiceResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/GetItemsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/GetOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/GetStatusResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/ReverseTransactionResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/SetStatusResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/SubmitOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/UpdateOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/VerifyPaymentResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/ShoppingService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/ShoppingServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/controller/ShoppingController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/dataclass/Catalogue.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/dataclass/Item.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/dataclass/Store.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/exceptions/InvalidRequestException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/exceptions/ShoppingException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/exceptions/StoreClosedException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/exceptions/StoreDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/repos/CatalogueRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/repos/ItemRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/repos/StoreRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/AddShopperRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/AddToQueueRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/ClearShoppersRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetCatalogueRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetItemsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetNextQueuedRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetQueueRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetShoppersRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetStoreByUUIDRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetStoreOpenRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/GetStoresRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/RemoveQueuedOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/RemoveShopperRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/UpdateCatalogueRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/UpdateShoppersRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/requests/UpdateStoreRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/AddShopperResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/AddToQueueResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/ClearShoppersResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetCatalogueResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetItemsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetNextQueuedResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetQueueResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetShoppersResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetStoreByUUIDResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetStoreOpenResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/GetStoresResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/RemoveQueuedOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/RemoveShopperResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/UpdateCatalogueResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/UpdateShoppersResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/responses/UpdateStoreResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/controller/UserController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Address.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Admin.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Cart.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Category.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Customer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Driver.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/GroceryList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Preference.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Shopper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/UserType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/dataclass/Wallet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/AdminDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/AlreadyExistsException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/CustomerDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/DriverDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/InvalidCredentialsException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/InvalidRequestException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/NotAuthorisedException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/ShopperDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/UserDoesNotExistException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/exceptions/UserException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/repos/AdminRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/repos/CustomerRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/repos/DriverRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/repos/GroceryListRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/repos/ShopperRepo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/AccountVerifyRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/ClearShoppingCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/CollectOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/CompleteDeliveryRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/CompletePackagingOrderRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/DeleteUserRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/FinalisePasswordResetRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/FinalizePasswordResetRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/GetCurrentUserRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/GetCustomersRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/GetShopperByUUIDRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/GetShoppingCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/GetUserByUUIDRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/GetUsersRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/LoginRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/MakeGroceryListRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/RegisterAdminRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/RegisterCustomerRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/RegisterDriverRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/RegisterShopperRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/RegisterUserRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/RemoveFromCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/ResendActivationCodeRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/ResetPasswordRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/ScanItemRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/SetCartRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/SetCurrentLocationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/UpdateAdminDetailsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/UpdateCustomerDetailsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/UpdateDriverDetailsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/UpdateDriverShiftRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/UpdateShopperDetailsRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/requests/UpdateShopperShiftRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/AccountVerifyResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/ClearShoppingCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/CollectOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/CompleteDeliveryResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/CompletePackagingOrderResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/FinalisePasswordResetResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/FinalizePasswordResetResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/GetCurrentUserResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/GetShopperByUUIDResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/GetShoppingCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/GetUserByUUIDResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/GetUsersResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/LoginResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/LogoutResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/MakeGroceryListResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/RegisterAdminResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/RegisterCustomerResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/RegisterDriverResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/RegisterResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/RegisterShopperResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/RemoveFromCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/ResendActivationCodeResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/ResetPasswordResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/ScanItemResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/SetCartResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/SetCurrentLocationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/UpdateAdminDetailsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/UpdateCustomerDetailsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/UpdateDriverDetailsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/UpdateDriverShiftResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/UpdateShopperDetailsResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/responses/UpdateShopperShiftResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/odosla-api.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/NotificationApi.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/PaymentApi.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/ShoppingApi.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/AdminObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/DriverObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/GroceryListObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ItemObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendDirectEmailNotificationResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/NotificationSendEmailNotificationResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/OneOfuserGetCurrentUserResponseUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/OrderObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetItemsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentGetStatusResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentSubmitOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/PaymentUpdateOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingAddShopperResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetItemsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetNextQueuedResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetQueueRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetQueueResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetShoppersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingGetStoresResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingPopulateTablesResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/ShoppingRemoveQueuedOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/StoreObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserAccountVerifyResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserClearShoppingCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserCompletePackagingOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetCurrentUserResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserGetShoppingCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserLoginRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserLoginResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterAdminResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterCustomerResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterDriverResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserRegisterShopperResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserResetPasswordResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserScanItemResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserSetCurrentLocationResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/cs/superleague/user/CompletePackingOrderUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/user/CompletePackingOrderUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/OrderStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/OrderStatus.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/CreateTransactionRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/CreateTransactionRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/VerifyPaymentRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/VerifyPaymentRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/CreateTransactionResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/CreateTransactionResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/VerifyPaymentResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/VerifyPaymentResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/ShoppingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/ShoppingServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/controller/ShoppingController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/controller/ShoppingController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -387,7 +44,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature_order_submitOrder" />
+        <entry key="$PROJECT_DIR$/.." value="feature_user_completePackingOrder" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -437,7 +94,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.31274638" />
     <property name="project.structure.side.proportion" value="0.152439" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
   </component>
   <component name="ReaderModeSettings">
     <option name="enabled" value="false" />
@@ -452,7 +109,7 @@
       <recent name="cs.superleague.payment.repos" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application">
+  <component name="RunManager" selected="JUnit.cs.superleague.user in backend">
     <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -526,21 +183,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GetOrderIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="backend" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="cs.superleague.payment.integration.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="cs.superleague.payment.integration" />
-      <option name="MAIN_CLASS_NAME" value="cs.superleague.payment.integration.GetOrderIntegrationTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="allTests" type="JUnit" factoryName="JUnit">
       <module name="backend" />
       <extension name="net.ashald.envfile">
@@ -561,21 +203,35 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="cs.superleague.user in backend" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.user.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.user" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.Application" />
       <item itemvalue="JUnit.allTests" />
-      <item itemvalue="JUnit.GetOrderIntegrationTest" />
       <item itemvalue="JUnit.GenerateInvoiceIntegrationTest" />
       <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" />
       <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" />
+      <item itemvalue="JUnit.cs.superleague.user in backend" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.cs.superleague.user in backend" />
         <item itemvalue="Application.Application" />
         <item itemvalue="JUnit.GenerateInvoiceIntegrationTest" />
         <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.UnitTest_Valid_TransactionID" />
         <item itemvalue="JUnit.GenerateInvoiceIntegrationTest.IntegrationTest_testingNullRequestObject" />
-        <item itemvalue="JUnit.GetOrderIntegrationTest" />
       </list>
     </recent_temporary>
   </component>
@@ -694,7 +350,35 @@
       <option name="project" value="LOCAL" />
       <updated>1628871516959</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="changed delivery status in createDelivery">
+      <created>1629059287592</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1629059287592</updated>
+    </task>
+    <task id="LOCAL-00016" summary="fixed circular dependency in DeliveryService">
+      <created>1629090488695</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1629090488695</updated>
+    </task>
+    <task id="LOCAL-00017" summary="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest">
+      <created>1629143820824</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1629143820825</updated>
+    </task>
+    <task id="LOCAL-00018" summary="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest">
+      <created>1629143865963</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1629143865963</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -726,13 +410,19 @@
     <MESSAGE value="merged master" />
     <MESSAGE value="added populating function" />
     <MESSAGE value="made change to populate function" />
-    <option name="LAST_COMMIT_MESSAGE" value="made change to populate function" />
+    <MESSAGE value="changed delivery status in createDelivery" />
+    <MESSAGE value="fixed circular dependency in DeliveryService" />
+    <MESSAGE value="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>cs.superleague.payment.integration.*</FILTER>
       <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
       <FILTER>cs.superleague.payment.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/backend$Application.ic" NAME="Application Coverage Results" MODIFIED="1629073172435" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>

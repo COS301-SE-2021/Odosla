@@ -1,5 +1,6 @@
 package cs.superleague.user;
 
+import cs.superleague.delivery.DeliveryServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -44,6 +45,9 @@ public class CompletePackingOrderUnitTest {
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    @InjectMocks
+    private DeliveryServiceImpl deliveryService;
 
     Shopper shopper;
     Order o;
@@ -117,7 +121,7 @@ public class CompletePackingOrderUnitTest {
     @Test
     @Description("Test for when order does exist")
     @DisplayName("When Order with ID does exist")
-    void UnitTest_Order_does_exist() throws OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException {
+    void UnitTest_Order_does_exist() throws OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, cs.superleague.delivery.exceptions.InvalidRequestException {
 
         CompletePackagingOrderRequest request= new CompletePackagingOrderRequest(expectedShopper1, true);
         when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(o));

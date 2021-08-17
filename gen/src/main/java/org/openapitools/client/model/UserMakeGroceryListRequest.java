@@ -30,72 +30,72 @@ import java.util.List;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class UserMakeGroceryListRequest {
-  public static final String SERIALIZED_NAME_CUSTOMER_I_D = "customerID";
-  @SerializedName(SERIALIZED_NAME_CUSTOMER_I_D)
-  private String customerID;
+  public static final String SERIALIZED_NAME_JW_T_TOKEN = "JWTToken";
+  @SerializedName(SERIALIZED_NAME_JW_T_TOKEN)
+  private String jwTToken;
 
-  public static final String SERIALIZED_NAME_BARCODES = "barcodes";
-  @SerializedName(SERIALIZED_NAME_BARCODES)
-  private List<String> barcodes = null;
+  public static final String SERIALIZED_NAME_PRODUCT_IDS = "productIds";
+  @SerializedName(SERIALIZED_NAME_PRODUCT_IDS)
+  private List<String> productIds = null;
 
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
   private String name;
 
 
-  public UserMakeGroceryListRequest customerID(String customerID) {
+  public UserMakeGroceryListRequest jwTToken(String jwTToken) {
     
-    this.customerID = customerID;
+    this.jwTToken = jwTToken;
     return this;
   }
 
    /**
    * generated token used to identify the caller of the endpoint
-   * @return customerID
+   * @return jwTToken
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "generated token used to identify the caller of the endpoint")
 
-  public String getCustomerID() {
-    return customerID;
+  public String getJwTToken() {
+    return jwTToken;
   }
 
 
-  public void setCustomerID(String customerID) {
-    this.customerID = customerID;
+  public void setJwTToken(String jwTToken) {
+    this.jwTToken = jwTToken;
   }
 
 
-  public UserMakeGroceryListRequest barcodes(List<String> barcodes) {
+  public UserMakeGroceryListRequest productIds(List<String> productIds) {
     
-    this.barcodes = barcodes;
+    this.productIds = productIds;
     return this;
   }
 
-  public UserMakeGroceryListRequest addBarcodesItem(String barcodesItem) {
-    if (this.barcodes == null) {
-      this.barcodes = new ArrayList<String>();
+  public UserMakeGroceryListRequest addProductIdsItem(String productIdsItem) {
+    if (this.productIds == null) {
+      this.productIds = new ArrayList<String>();
     }
-    this.barcodes.add(barcodesItem);
+    this.productIds.add(productIdsItem);
     return this;
   }
 
    /**
-   * Get barcodes
-   * @return barcodes
+   * Get productIds
+   * @return productIds
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public List<String> getBarcodes() {
-    return barcodes;
+  public List<String> getProductIds() {
+    return productIds;
   }
 
 
-  public void setBarcodes(List<String> barcodes) {
-    this.barcodes = barcodes;
+  public void setProductIds(List<String> productIds) {
+    this.productIds = productIds;
   }
 
 
@@ -131,14 +131,14 @@ public class UserMakeGroceryListRequest {
       return false;
     }
     UserMakeGroceryListRequest userMakeGroceryListRequest = (UserMakeGroceryListRequest) o;
-    return Objects.equals(this.customerID, userMakeGroceryListRequest.customerID) &&
-        Objects.equals(this.barcodes, userMakeGroceryListRequest.barcodes) &&
+    return Objects.equals(this.jwTToken, userMakeGroceryListRequest.jwTToken) &&
+        Objects.equals(this.productIds, userMakeGroceryListRequest.productIds) &&
         Objects.equals(this.name, userMakeGroceryListRequest.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(customerID, barcodes, name);
+    return Objects.hash(jwTToken, productIds, name);
   }
 
 
@@ -146,8 +146,8 @@ public class UserMakeGroceryListRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserMakeGroceryListRequest {\n");
-    sb.append("    customerID: ").append(toIndentedString(customerID)).append("\n");
-    sb.append("    barcodes: ").append(toIndentedString(barcodes)).append("\n");
+    sb.append("    jwTToken: ").append(toIndentedString(jwTToken)).append("\n");
+    sb.append("    productIds: ").append(toIndentedString(productIds)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();

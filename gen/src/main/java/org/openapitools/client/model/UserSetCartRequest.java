@@ -30,7 +30,7 @@ import java.util.List;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class UserSetCartRequest {
   public static final String SERIALIZED_NAME_CUSTOMER_I_D = "customerID";
   @SerializedName(SERIALIZED_NAME_CUSTOMER_I_D)

@@ -28,11 +28,38 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-14T16:46:33.559003800+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-16T17:50:09.822513100+02:00[Africa/Harare]")
 public class ShoppingGetNextQueuedRequest {
+  public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
+  @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
+  private String jwtToken;
+
   public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
   @SerializedName(SERIALIZED_NAME_STORE_I_D)
   private String storeID;
+
+
+  public ShoppingGetNextQueuedRequest jwtToken(String jwtToken) {
+    
+    this.jwtToken = jwtToken;
+    return this;
+  }
+
+   /**
+   * Get jwtToken
+   * @return jwtToken
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getJwtToken() {
+    return jwtToken;
+  }
+
+
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
+  }
 
 
   public ShoppingGetNextQueuedRequest storeID(String storeID) {
@@ -67,12 +94,13 @@ public class ShoppingGetNextQueuedRequest {
       return false;
     }
     ShoppingGetNextQueuedRequest shoppingGetNextQueuedRequest = (ShoppingGetNextQueuedRequest) o;
-    return Objects.equals(this.storeID, shoppingGetNextQueuedRequest.storeID);
+    return Objects.equals(this.jwtToken, shoppingGetNextQueuedRequest.jwtToken) &&
+        Objects.equals(this.storeID, shoppingGetNextQueuedRequest.storeID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(storeID);
+    return Objects.hash(jwtToken, storeID);
   }
 
 
@@ -80,6 +108,7 @@ public class ShoppingGetNextQueuedRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class ShoppingGetNextQueuedRequest {\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("}");
     return sb.toString();
