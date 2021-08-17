@@ -1181,7 +1181,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             }catch (Exception e){}
 
-            if(storeEntity!=null) {
+            if(storeEntity!=null && !storeEntity.isEmpty()) {
 
                 response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
             }
