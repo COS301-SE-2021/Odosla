@@ -50,6 +50,8 @@ dependencies:
 
   flutter_slider_drawer: ^2.0.0
 
+  ars_dialog: ^1.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

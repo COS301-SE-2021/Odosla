@@ -19,12 +19,20 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:develop_frontend" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
-      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/grocery_list.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -278,7 +286,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629202501488</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Fixed spacing and text wrap on wallet as well as items page.">
+      <created>1629203236637</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1629203236637</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,7 +310,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="develop_user_getCurrentUser" />
+                        <option value="develop_frontend" />
                       </list>
                     </value>
                   </entry>
@@ -324,22 +339,22 @@
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1875" height="209" key="GridCell.Tab.0.bottom" timestamp="1629202214331">
+    <state width="1875" height="209" key="GridCell.Tab.0.bottom" timestamp="1629204123745">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629202214331" />
-    <state width="1875" height="209" key="GridCell.Tab.0.center" timestamp="1629202214331">
+    <state width="1875" height="209" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
+    <state width="1875" height="209" key="GridCell.Tab.0.center" timestamp="1629204123745">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629202214331" />
-    <state width="1875" height="209" key="GridCell.Tab.0.left" timestamp="1629202214331">
+    <state width="1875" height="209" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
+    <state width="1875" height="209" key="GridCell.Tab.0.left" timestamp="1629204123745">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629202214331" />
-    <state width="1875" height="209" key="GridCell.Tab.0.right" timestamp="1629202214331">
+    <state width="1875" height="209" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
+    <state width="1875" height="209" key="GridCell.Tab.0.right" timestamp="1629204123745">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629202214331" />
+    <state width="1875" height="209" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Odosla_2$RemoveQueuedOrderUnitTest.ic" NAME="RemoveQueuedOrderUnitTest Coverage Results" MODIFIED="1624010921794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
