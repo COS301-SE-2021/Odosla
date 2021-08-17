@@ -25,48 +25,25 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 
 /**
- * This object is returned as output
+ * This object is expected as output
  */
-@ApiModel(description = "This object is returned as output")
+@ApiModel(description = "This object is expected as output")
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
-public class UserRegisterCustomerResponse {
-  public static final String SERIALIZED_NAME_MESSAGE = "message";
-  @SerializedName(SERIALIZED_NAME_MESSAGE)
-  private String message;
-
+public class AnalyticsCreateUserReportResponse {
   public static final String SERIALIZED_NAME_SUCCESS = "success";
   @SerializedName(SERIALIZED_NAME_SUCCESS)
   private Boolean success;
 
-  public static final String SERIALIZED_NAME_DATE = "date";
-  @SerializedName(SERIALIZED_NAME_DATE)
-  private String date;
+  public static final String SERIALIZED_NAME_MESSAGE = "message";
+  @SerializedName(SERIALIZED_NAME_MESSAGE)
+  private String message;
+
+  public static final String SERIALIZED_NAME_TIMESTAMP = "timestamp";
+  @SerializedName(SERIALIZED_NAME_TIMESTAMP)
+  private String timestamp;
 
 
-  public UserRegisterCustomerResponse message(String message) {
-    
-    this.message = message;
-    return this;
-  }
-
-   /**
-   * Get message
-   * @return message
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getMessage() {
-    return message;
-  }
-
-
-  public void setMessage(String message) {
-    this.message = message;
-  }
-
-
-  public UserRegisterCustomerResponse success(Boolean success) {
+  public AnalyticsCreateUserReportResponse success(Boolean success) {
     
     this.success = success;
     return this;
@@ -89,26 +66,49 @@ public class UserRegisterCustomerResponse {
   }
 
 
-  public UserRegisterCustomerResponse date(String date) {
+  public AnalyticsCreateUserReportResponse message(String message) {
     
-    this.date = date;
+    this.message = message;
     return this;
   }
 
    /**
-   * Get date
-   * @return date
+   * Get message
+   * @return message
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getDate() {
-    return date;
+  public String getMessage() {
+    return message;
   }
 
 
-  public void setDate(String date) {
-    this.date = date;
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+
+  public AnalyticsCreateUserReportResponse timestamp(String timestamp) {
+    
+    this.timestamp = timestamp;
+    return this;
+  }
+
+   /**
+   * Get timestamp
+   * @return timestamp
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getTimestamp() {
+    return timestamp;
+  }
+
+
+  public void setTimestamp(String timestamp) {
+    this.timestamp = timestamp;
   }
 
 
@@ -120,25 +120,25 @@ public class UserRegisterCustomerResponse {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserRegisterCustomerResponse userRegisterCustomerResponse = (UserRegisterCustomerResponse) o;
-    return Objects.equals(this.message, userRegisterCustomerResponse.message) &&
-        Objects.equals(this.success, userRegisterCustomerResponse.success) &&
-        Objects.equals(this.date, userRegisterCustomerResponse.date);
+    AnalyticsCreateUserReportResponse analyticsCreateUserReportResponse = (AnalyticsCreateUserReportResponse) o;
+    return Objects.equals(this.success, analyticsCreateUserReportResponse.success) &&
+        Objects.equals(this.message, analyticsCreateUserReportResponse.message) &&
+        Objects.equals(this.timestamp, analyticsCreateUserReportResponse.timestamp);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message, success, date);
+    return Objects.hash(success, message, timestamp);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UserRegisterCustomerResponse {\n");
-    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("class AnalyticsCreateUserReportResponse {\n");
     sb.append("    success: ").append(toIndentedString(success)).append("\n");
-    sb.append("    date: ").append(toIndentedString(date)).append("\n");
+    sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1957,6 +1957,10 @@ components:
           type: boolean
         message:
           type: string
+        pickUpLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        dropOffLocation:
+          $ref: "#/components/schemas/GeoPointObject"
 
     delivery_CreateDeliveryRequest:
       description: This object is expected as input
