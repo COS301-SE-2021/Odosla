@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-16T17:50:09.822513100+02:00[Africa/Harare]
+  - Build date: 2021-08-17T14:13:21.516052200+02:00[Africa/Harare]
 
 The library service
 
@@ -77,20 +77,20 @@ import org.openapitools.client.ApiClient;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.Configuration;
 import org.openapitools.client.models.*;
-import org.openapitools.client.api.DeliveryApi;
+import org.openapitools.client.api.AnalyticsApi;
 
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
     defaultClient.setBasePath("http://localhost");
 
-    DeliveryApi apiInstance = new DeliveryApi(defaultClient);
-    DeliveryAddDeliveryDetailRequest deliveryAddDeliveryDetailRequest = new DeliveryAddDeliveryDetailRequest(); // DeliveryAddDeliveryDetailRequest | The input body required by this request
+    AnalyticsApi apiInstance = new AnalyticsApi(defaultClient);
+    AnalyticsCreateUserReportRequest analyticsCreateUserReportRequest = new AnalyticsCreateUserReportRequest(); // AnalyticsCreateUserReportRequest | The input body required by this request
     try {
-      DeliveryAddDeliveryDetailResponse result = apiInstance.addDeliveryDetail(deliveryAddDeliveryDetailRequest);
+      AnalyticsCreateUserReportResponse result = apiInstance.createUserReport(analyticsCreateUserReportRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling DeliveryApi#addDeliveryDetail");
+      System.err.println("Exception when calling AnalyticsApi#createUserReport");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -107,6 +107,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AnalyticsApi* | [**createUserReport**](docs/AnalyticsApi.md#createUserReport) | **POST** /analytics/createUserReport | Endpoint for creating user report
 *DeliveryApi* | [**addDeliveryDetail**](docs/DeliveryApi.md#addDeliveryDetail) | **POST** /delivery/addDeliveryDetail | Endpoint for add delivery detail
 *DeliveryApi* | [**assignDriverToDelivery**](docs/DeliveryApi.md#assignDriverToDelivery) | **POST** /delivery/assignDriverToDelivery | Endpoint for assign driver to delivery
 *DeliveryApi* | [**createDelivery**](docs/DeliveryApi.md#createDelivery) | **POST** /delivery/createDelivery | Endpoint for creating a delivery
@@ -153,6 +154,8 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [AdminObject](docs/AdminObject.md)
+ - [AnalyticsCreateUserReportRequest](docs/AnalyticsCreateUserReportRequest.md)
+ - [AnalyticsCreateUserReportResponse](docs/AnalyticsCreateUserReportResponse.md)
  - [CustomerObject](docs/CustomerObject.md)
  - [DeliveryAddDeliveryDetailRequest](docs/DeliveryAddDeliveryDetailRequest.md)
  - [DeliveryAddDeliveryDetailResponse](docs/DeliveryAddDeliveryDetailResponse.md)
