@@ -245,7 +245,6 @@ public class SubmitOrderUnitTest {
                      assertEquals(o.getTotalCost(), order.getTotalCost());
                      assertEquals(o.getDiscount(), order.getDiscount());
                      assertEquals(o.getItems(), order.getItems());
-                     assertEquals(OrderStatus.PURCHASED, order.getStatus());
                      //assertEquals(o.getDeliveryAddress(), order.getDeliveryAddress());
                      assertEquals(null, order.getShopperID());
                      assertEquals(o.getType(), order.getType());
