@@ -4,11 +4,74 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**getCustomerActiveOrders**](PaymentApi.md#getCustomerActiveOrders) | **POST** /payment/getCustomersActiveOrders | Endpoint for the customers getting their active order
 [**getItemsPayments**](PaymentApi.md#getItemsPayments) | **POST** /payment/getItems | Endpoint for Get Items use case
 [**getStatus**](PaymentApi.md#getStatus) | **POST** /payment/getStatus | Endpoint for Get Status use case
 [**submitOrder**](PaymentApi.md#submitOrder) | **POST** /payment/submitOrder | Endpoint for the Submit Order use case
 [**updateOrder**](PaymentApi.md#updateOrder) | **POST** /payment/updateOrder | Endpoint for the Update Order use case
 
+
+<a name="getCustomerActiveOrders"></a>
+# **getCustomerActiveOrders**
+> PaymentGetCustomersActiveOrdersResponse getCustomerActiveOrders(paymentGetCustomersActiveOrdersRequest)
+
+Endpoint for the customers getting their active order
+
+Refer to summary
+
+### Example
+```java
+// Import classes:
+import org.openapitools.client.ApiClient;
+import org.openapitools.client.ApiException;
+import org.openapitools.client.Configuration;
+import org.openapitools.client.models.*;
+import org.openapitools.client.api.PaymentApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+
+    PaymentApi apiInstance = new PaymentApi(defaultClient);
+    PaymentGetCustomersActiveOrdersRequest paymentGetCustomersActiveOrdersRequest = new PaymentGetCustomersActiveOrdersRequest(); // PaymentGetCustomersActiveOrdersRequest | The input body required by this request
+    try {
+      PaymentGetCustomersActiveOrdersResponse result = apiInstance.getCustomerActiveOrders(paymentGetCustomersActiveOrdersRequest);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling PaymentApi#getCustomerActiveOrders");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **paymentGetCustomersActiveOrdersRequest** | [**PaymentGetCustomersActiveOrdersRequest**](PaymentGetCustomersActiveOrdersRequest.md)| The input body required by this request |
+
+### Return type
+
+[**PaymentGetCustomersActiveOrdersResponse**](PaymentGetCustomersActiveOrdersResponse.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns the orderID of the active order |  -  |
 
 <a name="getItemsPayments"></a>
 # **getItemsPayments**
