@@ -26,7 +26,8 @@ public class UserAnalyticsHelper {
         Document document = new Document();
         try{
 
-            String file_name = "C:\\createReports\\UserReport.pdf";
+            String home = System.getProperty("user.home");
+            String file_name = home + "/Downloads/Odosla_Invoice.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
@@ -117,7 +118,9 @@ public class UserAnalyticsHelper {
 
     public StringBuilder createCSVReport() {
         try {
-            String file_name = "C:\\createReports\\UserReport.csv";
+
+            String home = System.getProperty("user.home");
+            String file_name = home + "/Downloads/Odosla_Invoice.csv";
             PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
