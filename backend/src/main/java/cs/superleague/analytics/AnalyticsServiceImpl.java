@@ -1,16 +1,25 @@
 package cs.superleague.analytics;
 
+import cs.superleague.analytics.AnalyticsHelpers.FinancialAnalyticsHelper;
 import cs.superleague.analytics.AnalyticsHelpers.UserAnalyticsHelper;
+import cs.superleague.analytics.CreateAnalyticsDataHelpers.CreateFinancialAnalyticsData;
 import cs.superleague.analytics.CreateAnalyticsDataHelpers.CreateUserAnalyticsData;
 import cs.superleague.analytics.dataclass.ReportType;
 import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.analytics.exceptions.NotAuthorizedException;
+import cs.superleague.analytics.requests.CreateFinancialReportRequest;
 import cs.superleague.analytics.requests.CreateUserReportRequest;
+import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
+import cs.superleague.payment.PaymentService;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.AdminRepo;
+import cs.superleague.user.requests.GetCurrentUserRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +32,16 @@ import java.util.UUID;
 public class AnalyticsServiceImpl implements AnalyticsService {
 
     private final AdminRepo adminRepo;
+    private final StoreRepo storeRepo;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @Autowired
-    public AnalyticsServiceImpl(AdminRepo adminRepo, UserService userService) {
+    public AnalyticsServiceImpl(AdminRepo adminRepo, StoreRepo storeRepo, UserService userService, PaymentService paymentService) {
         this.adminRepo = adminRepo;
         this.userService = userService;
+        this.paymentService = paymentService;
+        this.storeRepo = storeRepo;
     }
 
     /**
@@ -102,6 +115,56 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return response;
     }
 
+    @Override
+    public CreateFinancialReportResponse createFinancialReport(CreateFinancialReportRequest request) throws Exception {
+
+        Admin admin;
+        String message = "Report successfully created";
+        CreateFinancialReportResponse response;
+        CreateFinancialAnalyticsData createFinancialAnalyticsData;
+        GetCurrentUserResponse getCurrentUserResponse;
+
+        if (request == null) {
+            throw new InvalidRequestException("CreateFinancialReportRequest is null- Cannot create report");
+        }
+
+        validAnalyticsRequestJWT(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getJWTToken());
+
+        getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJWTToken()));
+
+        if(getCurrentUserResponse.getUser() == null){
+            message = "User Not Found - Could not create report";
+            return new CreateFinancialReportResponse(false, message, new Date());
+        }
+
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
+            message = "User is not an admin - Could not create report";
+            return new CreateFinancialReportResponse(false, message, new Date());
+        }
+
+        try{
+            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(), request.getEndDate(), request.getJWTToken(),
+                    paymentService);
+        }catch (Exception e){
+            throw new AnalyticsException("Problem with creating financial statistics report");
+        }
+
+        FinancialAnalyticsHelper financialAnalyticsHelper = new FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(), storeRepo);
+
+        if(request.getReportType() == ReportType.PDF){
+            message = "FinancialReport.pdf downloaded";
+            financialAnalyticsHelper.createPDF();
+            response =  new CreateFinancialReportResponse(true, message, new Date());
+        }else if(request.getReportType() == ReportType.CSV){
+            message = "FinancialReport.csv downloaded";
+            financialAnalyticsHelper.createCSVReport();
+            response = new CreateFinancialReportResponse(true, message, new Date());
+        }else{
+            throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
+        }
+        return response;
+    }
+
     private void validAnalyticsRequest(ReportType reportType, Calendar startDate, Calendar endDate, UUID userID) throws InvalidRequestException {
         if (reportType == null) {
             throw new InvalidRequestException("Exception: Report Type in request object is null");
@@ -114,6 +177,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
         if (userID == null) {
             throw new InvalidRequestException("Exception: User ID in request object is null");
+        }
+    }
+
+    private void validAnalyticsRequestJWT(ReportType reportType, Calendar startDate, Calendar endDate, String userID) throws InvalidRequestException {
+        if (reportType == null) {
+            throw new InvalidRequestException("Exception: Report Type in request object is null");
+        }
+        if (startDate == null) {
+            throw new InvalidRequestException("Exception: Start Date in request object is null");
+        }
+        if (endDate == null) {
+            throw new InvalidRequestException("Exception: End Date in request object is null");
+        }
+        if (userID == null) {
+            throw new InvalidRequestException("Exception: JWTToken in request object is null");
         }
     }
 
