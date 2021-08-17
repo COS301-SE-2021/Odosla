@@ -4,6 +4,7 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.CollectOrderRequest;
@@ -41,12 +42,17 @@ public class CompleteDeliveryUnitTest {
     Order order;
     UUID orderId= UUID.randomUUID();
 
+    Driver driver;
+    UUID driverId= UUID.randomUUID();
+
     @BeforeEach
     void setup(){
         request=new CompleteDeliveryRequest(orderId);
         order=new Order();
-
+        driver = new Driver();
+        driver.setDriverID(driverId);
         order.setOrderID(orderId);
+        order.setDriverID(driverId);
     }
 
     @AfterEach
@@ -93,6 +99,7 @@ public class CompleteDeliveryUnitTest {
     @DisplayName("Order correctly collected")
     void UnitTest_testingCorrectlyCollected() throws InvalidRequestException, OrderDoesNotExist {
         order.setStatus(OrderStatus.DELIVERY_COLLECTED);
+        Mockito.when(driverRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(driver));
         Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(order));
         response=userService.completeDelivery(request);
         assertNotNull(response);
