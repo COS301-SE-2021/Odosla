@@ -2113,8 +2113,8 @@ components:
       properties:
         message:
           type: string
-        deliveryID:
-          type: string
+        delivery:
+          $ref: "#/components/schemas/DeliveryObject"
 
     delivery_RemoveDriverFromDeliveryRequest:
       description: This object is expected as input
@@ -2248,3 +2248,32 @@ components:
           type: boolean
         timestamp:
           type: string
+
+    DeliveryObject:
+      description: This is a delivery object
+      type: object
+      properties:
+        deliveryID:
+          type: string
+        pickUpLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        dropOffLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        orderID:
+          type: string
+        customerId:
+          type: string
+        storeId:
+          type: string
+        driverId:
+          type: string
+        status:
+          type: string
+        cost:
+          type: number
+        completed:
+          type: boolean
+        deliveryDetail:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryDetailObject"
