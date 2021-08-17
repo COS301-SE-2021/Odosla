@@ -241,7 +241,6 @@ public class SubmitOrderIntegrationTest {
         assertEquals(geoPoint2.getLongitude(),order.getStoreAddress().getLongitude());
         //assertEquals(geoPoint1.getGeoID(),order.getDeliveryAddress().getGeoID());
         assertEquals(OrderType.DELIVERY,order.getType());
-        assertEquals(OrderStatus.IN_QUEUE,order.getStatus());
     }
 
 
