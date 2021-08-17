@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
@@ -34,9 +33,10 @@ class _WalletPageState extends State<WalletPage> {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.all(12),
-              child: buildPage(context),
-            ),
+                padding: const EdgeInsets.all(12),
+                child: Expanded(
+                  child: buildPage(context),
+                )),
             Positioned(
                 top: 5,
                 left: 5,
@@ -55,7 +55,7 @@ class _WalletPageState extends State<WalletPage> {
       children: <Widget>[
         Text("Save", style: TextStyle(fontSize: 24)),
         SizedBox(
-          height: 100,
+          height: 20,
         ),
         CreditCardWidget(
           cardNumber: cardNumber,
