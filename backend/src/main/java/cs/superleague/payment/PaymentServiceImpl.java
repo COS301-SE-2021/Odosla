@@ -17,6 +17,11 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToQueueRequest;
+import cs.superleague.user.UserService;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.requests.GetCurrentUserRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
 import cs.superleague.shopping.requests.GetQueueRequest;
 import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.AddToQueueResponse;
@@ -703,6 +708,37 @@ import java.util.List;50"
         // notificationService.sendEmail(PDF);
 
         return new GetInvoiceResponse(invoiceID, PDF, invoice.getDate(), invoice.getDetails());
+    }
+
+    @Override
+    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+        GetCustomersActiveOrdersResponse response;
+        if (request == null){
+            throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
+        }
+        if (request.getJwtToken() == null){
+            throw new InvalidRequestException("JWTToken of Get Customers Active Orders is null");
+        }
+        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
+        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
+        if (getCurrentUserResponse.getUser() == null){
+            throw new UserDoesNotExistException("Invalid jwtToken, no user found");
+        }
+        Customer customer = (Customer) getCurrentUserResponse.getUser();
+        List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
+        if (orders == null){
+            throw new OrderDoesNotExist("No Orders found for this user in the database.");
+        }
+        for (Order o : orders){
+            if(o.getStatus().equals(OrderStatus.CUSTOMER_COLLECTED) || o.getStatus().equals(OrderStatus.DELIVERED)){
+                continue;
+            }else{
+                response = new GetCustomersActiveOrdersResponse(o.getOrderID(), true, "Order successfully returned to customer.");
+                return response;
+            }
+        }
+        response = new GetCustomersActiveOrdersResponse(null, false, "This customer has no active orders.");
+        return response;
     }
 
     @Override

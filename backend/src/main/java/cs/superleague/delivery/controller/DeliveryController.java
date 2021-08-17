@@ -75,15 +75,19 @@ public class DeliveryController implements DeliveryApi {
         DeliveryAssignDriverToDeliveryResponse response = new DeliveryAssignDriverToDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            //AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDriverID()), UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(body.getJwtToken(), UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = ServiceSelector.getDeliveryService().assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
+            response.setPickUpLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getPickUpLocation()));
+            response.setDropOffLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getDropOffLocation()));
+
         }catch (Exception e){
             e.printStackTrace();
             response.setMessage(e.getMessage());
             response.setIsAssigned(false);
+            response.setPickUpLocation(null);
+            response.setDropOffLocation(null);
         }
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -253,5 +257,12 @@ public class DeliveryController implements DeliveryApi {
             deliveryDetailObjects.add(deliveryDetailObject);
         }
         return deliveryDetailObjects;
+    }
+    public GeoPointObject populateGeoPointObject(GeoPoint location){
+        GeoPointObject locationObject = new GeoPointObject();
+        locationObject.setAddress(location.getAddress());
+        locationObject.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+        locationObject.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+        return locationObject;
     }
 }

@@ -947,6 +947,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/analytics_CreateUserReportResponse"
 
+
+  /payment/getCustomersActiveOrders:
+    post:
+      summary: Endpoint for the customers getting their active order
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getCustomerActiveOrders
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetCustomersActiveOrdersRequest"
+      responses:
+        "200":
+          description: Returns the orderID of the active order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetCustomersActiveOrdersResponse"
+
 components:
 
   schemas:
@@ -1957,6 +1980,10 @@ components:
           type: boolean
         message:
           type: string
+        pickUpLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        dropOffLocation:
+          $ref: "#/components/schemas/GeoPointObject"
 
     delivery_CreateDeliveryRequest:
       description: This object is expected as input
@@ -2161,4 +2188,22 @@ components:
         message:
           type: string
         timestamp:
+          type: string
+
+    payment_GetCustomersActiveOrdersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        jwtToken:
+          type: string
+
+    payment_GetCustomersActiveOrdersResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        orderID:
+          type: string
+        hasActiveOrder:
+          type: boolean
+        message:
           type: string
