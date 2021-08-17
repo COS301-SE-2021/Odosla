@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:odosla/page/login/login_screen.dart';
 import 'package:odosla/page/wallet_page.dart';
 import 'package:odosla/provider/wallet_provider.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +58,7 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
           )),
           buildHeader(context),
           buildSettings(context),
-          SizedBox(height: 100),
+          SizedBox(height: 70),
         ]));
   }
 
@@ -79,9 +80,6 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
           "japh.tang@goatmail.com",
           style: TextStyle(fontSize: 16, color: Colors.black87),
         ),
-        SizedBox(
-          height: 75,
-        )
       ],
     ));
   }
@@ -137,6 +135,16 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
             ),
           ],
         ),
+        SizedBox(height: 40),
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Colors.deepOrangeAccent)),
+            onPressed: () => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => LoginScreen()))
+                },
+            child: Text("Logout", style: TextStyle(fontSize: 18)))
       ],
     );
   }

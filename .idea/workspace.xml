@@ -29,7 +29,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/activate_shopper_account_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/forgot_password_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/help_and_support_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/intro_screen_shopper.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/login_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/register_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/settings_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/splash_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/UserService.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/settings.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/utilities/Odosla.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/utilities/constants.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/utilities/functions.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/utilities/profile_list_item.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/widget/walkthrough.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Odosla.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Odosla.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/account_settings_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/account_settings_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,9 +116,8 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/frontend/customer/odosla/lib/widget" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -110,11 +130,15 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Code\Capstone\backend\src\main\java\user\exceptions" />
-    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="user.repos" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\widget" />
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib" />
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\services" />
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\page" />
+      <recent name="C:\Code\Capstone\backend\src\main\java\user\exceptions" />
     </key>
   </component>
   <component name="RunManager" selected="Flutter.main.dart">
@@ -152,6 +176,7 @@
       </method>
     </configuration>
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" nameIsGenerated="true">
+      <option name="additionalArgs" value="--no-sound-null-safety" />
       <option name="filePath" value="$PROJECT_DIR$/frontend/customer/odosla/lib/main.dart" />
       <method v="2" />
     </configuration>
@@ -297,7 +322,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629204971077</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Fixed padding for clear cart button">
+      <created>1629205071335</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1629205071335</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -340,26 +372,47 @@
     <MESSAGE value="Added Flutter Customer App" />
     <MESSAGE value="Fixed spacing and text wrap on wallet as well as items page." />
     <MESSAGE value="Added Save Shopping list with dialog box" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Save Shopping list with dialog box" />
+    <MESSAGE value="Fixed padding for clear cart button" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed padding for clear cart button" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1875" height="209" key="GridCell.Tab.0.bottom" timestamp="1629204123745">
+    <state x="413" y="173" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1629209837767">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
-    <state width="1875" height="209" key="GridCell.Tab.0.center" timestamp="1629204123745">
+    <state x="413" y="173" key="#com.intellij.execution.impl.EditConfigurationsDialog/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629209837767" />
+    <state width="937" height="209" key="GridCell.Tab.0.bottom" timestamp="1629213354358">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
-    <state width="1875" height="209" key="GridCell.Tab.0.left" timestamp="1629204123745">
+    <state width="937" height="209" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629213354358" />
+    <state width="937" height="209" key="GridCell.Tab.0.center" timestamp="1629213354358">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
-    <state width="1875" height="209" key="GridCell.Tab.0.right" timestamp="1629204123745">
+    <state width="937" height="209" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629213354358" />
+    <state width="937" height="209" key="GridCell.Tab.0.left" timestamp="1629213354358">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1875" height="209" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629204123745" />
+    <state width="937" height="209" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629213354358" />
+    <state width="937" height="209" key="GridCell.Tab.0.right" timestamp="1629213354358">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="937" height="209" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629213354358" />
+    <state x="551" y="251" key="Vcs.Push.Dialog.v2" timestamp="1629207201756">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="551" y="251" key="Vcs.Push.Dialog.v2/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629207201756" />
+    <state x="768" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1629208048471">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="768" y="432" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629208048471" />
+    <state x="667" y="119" width="585" height="801" key="find.popup" timestamp="1629210803965">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="667" y="119" width="585" height="801" key="find.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629210803965" />
+    <state x="616" y="240" key="run.anything.popup" timestamp="1629208295613">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="616" y="240" key="run.anything.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629208295613" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Odosla_2$RemoveQueuedOrderUnitTest.ic" NAME="RemoveQueuedOrderUnitTest Coverage Results" MODIFIED="1624010921794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
