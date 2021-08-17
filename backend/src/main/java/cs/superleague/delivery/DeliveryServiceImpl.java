@@ -96,21 +96,29 @@ public class DeliveryServiceImpl implements DeliveryService {
                 {
                     if (delivery.getDriverId() != null){
                         if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
-                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.");
-                            return response;
+                            if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+                                AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation());
+                                return response;
+                            } else{
+                                throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
+                            }
                         }
                         throw new InvalidRequestException("This delivery has already been taken by another driver.");
                     }
 
                     Order updateOrder= orderRepo.findById(delivery.getOrderID()).orElse(null);
                     if(updateOrder!=null){
-                        updateOrder.setDriverID(driver.getDriverID());
-                        orderRepo.save(updateOrder);
+                        if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+                            updateOrder.setDriverID(driver.getDriverID());
+                            orderRepo.save(updateOrder);
 
-                        delivery.setDriverId(driver.getDriverID());
-                        deliveryRepo.save(delivery);
-                        AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.");
-                        return response;
+                            delivery.setDriverId(driver.getDriverID());
+                            deliveryRepo.save(delivery);
+                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation());
+                            return response;
+                        } else{
+                            throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
+                        }
                     }
                     else
                     {
