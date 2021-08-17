@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 //import 'dart:js_util';
 
 import 'package:flutter/cupertino.dart';
@@ -10,13 +11,11 @@ import 'package:odosla/page/order_page.dart';
 import 'package:odosla/page/store_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/provider/status_provider.dart';
+import 'package:odosla/services/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class ApiService {
-  final endpoint = "http://localhost:8080";
-  //final endpoint = "https://c71682b066b8.ngrok.io";
-
   Future<List<CartItem>> getItems(String storeID) async {
     String sId = storeID;
 
@@ -201,5 +200,26 @@ class ApiService {
     s = json.decode(json.encode(j['status'])) as String;
 
     return s;
+  }
+
+  Future<Map<String, List<CartItem>>> getShopLists() async {
+    final response =
+        await http.post(Uri.parse(endpoint + '/shopping/getStores'),
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+            },
+            body: jsonEncode({}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      return Map();
+    } else {
+      List<Store> list = List.empty();
+      debugPrint("___ err " + response.statusCode.toString());
+      return Map();
+    }
   }
 }

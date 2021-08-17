@@ -2039,6 +2039,17 @@ public class UserServiceImpl implements UserService{
             response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
         }
         else{
+            Driver driver = driverRepo.findById(currentOrder.get().getDriverID()).orElse(null);
+            if(driver!=null)
+            {
+                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+                driverRepo.save(driver);
+            }
+            else
+            {
+                throw new InvalidRequestException("Driver isn't set in order");
+            }
+
             response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
         }
 

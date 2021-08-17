@@ -1,15 +1,14 @@
+import 'package:ars_dialog/ars_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounce/flutter_bounce.dart';
+import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:odosla/model/cart_item.dart';
-import 'package:odosla/page/order_page.dart';
 import 'package:odosla/page/wallet_page.dart';
-import 'package:odosla/provider/status_provider.dart';
+import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/provider/wallet_provider.dart';
 import 'package:odosla/services/api_service.dart';
 import 'package:provider/provider.dart';
-import 'package:odosla/provider/cart_provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:flutter_bounce/flutter_bounce.dart';
-import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -53,10 +52,9 @@ class _CartPage extends State<CartPage> {
                   height: 50,
                   width: 200,
                   child: TextButton(
-                    child: Text("Save list",
-                        style: TextStyle(fontSize: 22, color: Colors.white)),
-                    onPressed: () => {},
-                  ),
+                      child: Text("Save list",
+                          style: TextStyle(fontSize: 22, color: Colors.white)),
+                      onPressed: () => {}),
                 ),
                 SizedBox(
                   height: 10,
@@ -67,7 +65,22 @@ class _CartPage extends State<CartPage> {
                   child: TextButton(
                     child: Text("Load list",
                         style: TextStyle(fontSize: 22, color: Colors.white)),
-                    onPressed: () => {},
+                    onPressed: () => {
+                      ArsDialog(
+                              title: Text("Saved lists:"),
+                              content: Container(
+                                height: 200,
+                                child: Column(
+                                  children: [
+                                    TextButton(
+                                        onPressed: () => {},
+                                        child: Text("List 1"))
+                                  ],
+                                ),
+                              ))
+                          .show(context,
+                              transitionType: DialogTransitionType.Bubble)
+                    },
                   ),
                 ),
                 SizedBox(height: 100),
@@ -83,7 +96,7 @@ class _CartPage extends State<CartPage> {
                             .clearItems(),
                   ),
                 ),
-                SizedBox(height: 70),
+                SizedBox(height: 110),
               ],
             ),
           ),

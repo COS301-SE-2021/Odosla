@@ -145,6 +145,8 @@ public class AssignDriverToDeliveryIntegrationTest {
         assertEquals(response.isAssigned(), true);
         Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
         assertEquals(delivery1.get().getDriverId(), driverID);
+        assertEquals(response.getDropOffLocation(), delivery1.get().getDropOffLocation());
+        assertEquals(response.getPickUpLocation(), delivery1.get().getPickUpLocation());
     }
 
     @Test
@@ -156,5 +158,27 @@ public class AssignDriverToDeliveryIntegrationTest {
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
         assertEquals(thrown1.getMessage(), "Invalid order.");
+    }
+
+    @Test
+    @Description("Tests for when no pick up location is specified.")
+    @DisplayName("No pick up location")
+    void noPickUpLocationIsSpecified_IntegrationTest(){
+        delivery.setPickUpLocation(null);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
+    }
+
+    @Test
+    @Description("Tests for when no drop off location is specified.")
+    @DisplayName("No drop off location")
+    void noDropOffLocationIsSpecified_IntegrationTest(){
+        delivery.setDropOffLocation(null);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
     }
 }
