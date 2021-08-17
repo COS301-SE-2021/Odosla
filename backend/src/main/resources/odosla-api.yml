@@ -947,10 +947,31 @@ paths:
               schema:
                 $ref: "#/components/schemas/analytics_CreateUserReportResponse"
 
+  /analytics/createFinancialReport:
+    post:
+      summary: Endpoint for creating user report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createFinancialReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateFinancialReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
+
 components:
 
   schemas:
-
 
     ItemObject:
       description: "Generic schema for an item"
@@ -2153,6 +2174,30 @@ components:
           type: string
 
     analytics_CreateUserReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    analytics_CreateFinancialReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWWTToken:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateFinancialReportResponse:
       description: This object is expected as output
       type: object
       properties:

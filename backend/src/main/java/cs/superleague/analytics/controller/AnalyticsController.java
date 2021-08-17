@@ -2,10 +2,14 @@ package cs.superleague.analytics.controller;
 
 import cs.superleague.analytics.AnalyticsServiceImpl;
 import cs.superleague.analytics.dataclass.ReportType;
+import cs.superleague.analytics.requests.CreateFinancialReportRequest;
 import cs.superleague.analytics.requests.CreateUserReportRequest;
+import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
 import cs.superleague.api.AnalyticsApi;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.models.AnalyticsCreateFinancialReportRequest;
+import cs.superleague.models.AnalyticsCreateFinancialReportResponse;
 import cs.superleague.models.AnalyticsCreateUserReportRequest;
 import cs.superleague.models.AnalyticsCreateUserReportResponse;
 import cs.superleague.payment.repos.OrderRepo;
@@ -14,10 +18,8 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -138,6 +140,35 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setMessage(createUserReportResponse.getMessage());
                 response.setSuccess(createUserReportResponse.isSuccess());
                 response.setTimestamp(createUserReportResponse.getTimestamp().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, status);
+
+    }
+
+    @Override
+    public ResponseEntity<AnalyticsCreateFinancialReportResponse> createFinancialReport(AnalyticsCreateFinancialReportRequest body) {
+
+        //creating response object  and default return status
+        AnalyticsCreateFinancialReportResponse response = new AnalyticsCreateFinancialReportResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+
+            CreateFinancialReportRequest req = new CreateFinancialReportRequest(body.getJwWTToken(),
+                    Calendar.getInstance(), Calendar.getInstance(), ReportType.valueOf(body.getReportType()));
+            CreateFinancialReportResponse createFinancialReportResponse = ServiceSelector.getAnalyticsService().createFinancialReport(req);
+
+            try {
+                response.setMessage(createFinancialReportResponse.getMessage());
+                response.setSuccess(createFinancialReportResponse.isSuccess());
+                response.setTimestamp(createFinancialReportResponse.getTimestamp().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
