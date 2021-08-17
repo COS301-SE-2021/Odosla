@@ -111,18 +111,18 @@ public class GenerateInvoiceUnitTest {
         assertEquals("Invalid transactionID passed in - transaction does not exist.", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("When the transactionID exists")
-    void UnitTest_Valid_TransactionID(){
-        GenerateInvoiceRequest request = new GenerateInvoiceRequest(transactionID, userID);
-
-        Mockito.when(transactionRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(transaction));
-        try{
-            GenerateInvoiceResponse response =  paymentService.generateInvoice(request);
-            assertEquals("Invoice successfully generated.", response.getMessage());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
+//    @Test
+//    @DisplayName("When the transactionID exists")
+//    void UnitTest_Valid_TransactionID(){
+//        GenerateInvoiceRequest request = new GenerateInvoiceRequest(transactionID, userID);
+//
+//        Mockito.when(transactionRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(transaction));
+//        try{
+//            GenerateInvoiceResponse response =  paymentService.generateInvoice(request);
+//            assertEquals("Invoice successfully generated.", response.getMessage());
+//        }catch(Exception e){
+//            e.printStackTrace();
+//            fail();
+//        }
+//    }
 }

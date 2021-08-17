@@ -9,19 +9,14 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.payment.requests.GetItemsRequest;
-import cs.superleague.payment.requests.GetStatusRequest;
-import cs.superleague.payment.requests.SubmitOrderRequest;
-import cs.superleague.payment.requests.UpdateOrderRequest;
-import cs.superleague.payment.responses.GetItemsResponse;
-import cs.superleague.payment.responses.GetStatusResponse;
-import cs.superleague.payment.responses.SubmitOrderResponse;
-import cs.superleague.payment.responses.UpdateOrderResponse;
+import cs.superleague.payment.requests.*;
+import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -290,6 +285,62 @@ public class PaymentController implements PaymentApi {
                 response.setItems(populateItems(getItemsResponse.getItems()));
                 response.setSuccess(getItemsResponse.isSuccess());
                 response.setTimestamp(getItemsResponse.getTimestamp().toString());
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGenerateInvoiceResponse> generateInvoice(PaymentGenerateInvoiceRequest body) {
+        PaymentGenerateInvoiceResponse response = new PaymentGenerateInvoiceResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try{
+
+            UUID invoiceID = UUID.fromString(body.getTransactionID());
+            UUID userID = UUID.fromString(body.getCustomerID());
+
+
+            GenerateInvoiceRequest generateInvoiceRequest = new GenerateInvoiceRequest(invoiceID, userID);
+            GenerateInvoiceResponse generateInvoiceResponse = ServiceSelector.getPaymentService().generateInvoice(generateInvoiceRequest);
+            try {
+                response.setMessage(generateInvoiceResponse.getMessage());
+                response.setInvoiceID(generateInvoiceResponse.getInvoiceID().toString());
+                response.setTimestamp(generateInvoiceResponse.getTimestamp().toString());
+            }catch(Exception e){
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetInvoiceResponse> getInvoice(PaymentGetInvoiceRequest body) {
+
+        PaymentGetInvoiceResponse response = new PaymentGetInvoiceResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try{
+
+            UUID invoiceID = UUID.fromString(body.getInvoiceID());
+            UUID userID = UUID.fromString(body.getUserID());
+
+
+            GetInvoiceRequest getInvoiceRequest = new GetInvoiceRequest(invoiceID, userID);
+            GetInvoiceResponse getInvoiceResponse = ServiceSelector.getPaymentService().getInvoice(getInvoiceRequest);
+            try {
+                response.setMessage(getInvoiceResponse.getMessage());
+                response.setInvoiceID(getInvoiceResponse.getInvoiceID().toString());
+                response.setTimestamp(getInvoiceResponse.getTimestamp().toString());
+                response.setPDF(new ByteArrayResource(getInvoiceResponse.getPDF()));
             }catch(Exception e){
 
             }
