@@ -79,7 +79,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:DriverHomeScreen(),
+            home:SplashScreen(),
             routes: routes,
           );
         },
