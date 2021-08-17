@@ -15,6 +15,7 @@ import 'package:flutter_employee_app/pages/shopper/barcode_scanner_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
+import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
@@ -37,7 +38,7 @@ var routes = <String, WidgetBuilder>{
   "/activateDriverAccount":(BuildContext context) =>ActivateDriverAccountScreen(),
   "/activateShopperAccount":(BuildContext context) =>ActivateShopperAccountScreen(),
   "/shopperHomePage":(BuildContext context) =>ShopperHomeScreen(),
-  "/driverHomePage":(BuildContext context) =>DriverHomeScreen(),
+  "/driverHomePage":(BuildContext context) =>DriverHomeScreen(1),
   "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(),
   "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(),
 };
@@ -68,10 +69,11 @@ class OdoslaApp extends StatelessWidget  {
   final orderProviderState=OrderProvider();
   final shopProviderState=ShopProvider();
   final userProviderState=UserProvider();
+  final deliveryProviderState=DeliveryProvider();
 
   @override
   Widget build(BuildContext context) => MultiProvider (
-    providers: [ChangeNotifierProvider(create: (_)=> orderProviderState),ChangeNotifierProvider(create: (_)=> shopProviderState),ChangeNotifierProvider(create: (_)=>userProviderState)],
+    providers: [ChangeNotifierProvider(create: (_)=> orderProviderState),ChangeNotifierProvider(create: (_)=> shopProviderState),ChangeNotifierProvider(create: (_)=>userProviderState),ChangeNotifierProvider(create: (_)=> deliveryProviderState)],
     child: ThemeProvider(
       initTheme: kLightTheme,
       child: Builder(

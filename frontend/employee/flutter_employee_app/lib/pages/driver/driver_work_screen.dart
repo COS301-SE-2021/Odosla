@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/Delivery.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
+import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+
+import 'driver_main_screen.dart';
 
 class DriverWorkScreen extends StatefulWidget {
   @override
@@ -25,13 +30,16 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
   bool _collectedFromStore=false;
   DeliveryService _deliveryService=GetIt.I.get();
   Widget _popUpSuccessfulFoundDeliveries(BuildContext context){
+
+    Delivery _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
+
     return new AlertDialog(
       title: const Text('FOUND A DELIVERY'),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("There is a delivery"+"\n Accept it?",
+          Text("There is a delivery from "+_delivery.pickUpLocation.address+"to "+_delivery.dropOffLocation.address+"\n Accept it?",
               textAlign: TextAlign.center
           ),
         ],
@@ -39,7 +47,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
       actions: <Widget>[
         new FlatButton(
           onPressed: () async {
-            await _deliveryService.assignDriverToDelivery(deliveryID, context).then((value) =>
+            await _deliveryService.assignDriverToDelivery(_delivery.deliveryID, context).then((value) =>
             {
               setState((){
                 if(value==true){
@@ -47,7 +55,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                 }else{
                   ScaffoldMessenger.of(context)
                       .showSnackBar(SnackBar(content: Text(
-                      "Could not get deliver")));
+                      "Could not get delivery")));
                   MyNavigator.goToDriverHomePage(context);
                 }
               })
@@ -88,7 +96,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
             maxHeight: MediaQuery.of(context).size.height),
         designSize: Size(414, 896),
         orientation: Orientation.portrait);
-
+    Delivery _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
     return Scaffold(
       body: Align(
           alignment: Alignment.center,
@@ -142,7 +150,12 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                                   _onShift?RaisedButton(onPressed: () async {
                                     _userService.setDriverShift(false,context).then((value) =>
                                     {
-                                      if(value==true){
+                                      if(_isDelivery){
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(content: Text(
+                                            "Please complete trip before ending shift")))
+                                      }
+                                      else if(value==true){
                                         setState((){
                                           _onShift=false;
                                         })
@@ -271,7 +284,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                             ),
                             Container(
                               child: Text(
-                                "deliveryID",
+                                _delivery.deliveryID,
                                 style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11
@@ -302,7 +315,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                             ),
                             Container(
                               child: Text(
-                                "Collected",
+                                _delivery.deliveryStatus,
                                 style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11
@@ -324,7 +337,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                           children: [
                             Container(
                               child: Text(
-                                "For customer: ",
+                                "Customer: ",
                                 style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w400,
                                     fontSize: 20
@@ -333,7 +346,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                             ),
                             Container(
                               child: Text(
-                                "name and surname",
+                                _delivery.customerID,
                                 style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11
@@ -365,7 +378,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                             ),
                             Container(
                               child: Text(
-                                "name of store",
+                                _delivery.pickUpLocation.address,
                                 style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11
@@ -398,7 +411,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                             ),
                             Container(
                               child: Text(
-                                "user address",
+                                _delivery.dropOffLocation.address,
                                 style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: 11
@@ -416,11 +429,13 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
               _isDelivery?SizedBox(height: 50):Container(),
               _onShift?RaisedButton(onPressed: (){
                 if(_isDelivery){
+                  _deliveryService.addDeliveryDetail("CollectingFromStore", "Driver has accepted delivery and collecting it from the store", _delivery.deliveryID, context);
+                  _deliveryService.UpdateDeliveryStatus(deliveryID, "CollectingFromStore", context);
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => DriverMapScreen(context, deliveryID: deliveryID) //ProductPage(product: product),
+                      builder: (BuildContext context) => DriverHomeScreen(0)//ProductPage(product: product),
                   ));
                 }else {
-                  _deliveryService.getNextOrderForDriver(deliveryID, context)
+                  _deliveryService.getNextOrderForDriver(context)
                       .then((value) =>
                   {
                     print(value),
@@ -471,7 +486,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
               SizedBox(height:13),
               _isDelivery&&(_collectedFromStore==false)?RaisedButton(onPressed: (){
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => DriverMapScreen(context, deliveryID: deliveryID) //ProductPage(product: product),
+                    builder: (BuildContext context) => DriverHomeScreen(0) //ProductPage(product: product),
                 ));
               },
                   padding: EdgeInsets.all(15.0),

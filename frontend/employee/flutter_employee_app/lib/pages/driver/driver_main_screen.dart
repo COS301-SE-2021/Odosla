@@ -15,6 +15,11 @@ import 'driver_profile_screen.dart';
 import 'driver_work_screen.dart';
 
 class DriverHomeScreen extends StatefulWidget {
+  int index=1;
+
+
+  DriverHomeScreen(this.index);
+
   @override
   _DriverHomeScreenState createState() => _DriverHomeScreenState();
 }
@@ -35,7 +40,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         pageChanged(index);
       },
       children: <Widget>[
-        DriverMapScreen(context, deliveryID: ""),
+        DriverMapScreen(),
         DriverWorkScreen(),
         DriverProfileScreen(),
       ],
@@ -45,6 +50,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   void initState() {
     super.initState();
+    pageChanged(widget.index);
+    bottomTapped(widget.index);
   }
 
   void pageChanged(int index) {

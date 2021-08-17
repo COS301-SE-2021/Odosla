@@ -11,9 +11,6 @@ import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 class DriverMapScreen extends StatefulWidget {
-  final String deliveryID;
-
-  const DriverMapScreen(BuildContext context, {Key? key, required this.deliveryID}) : super(key: key);
   @override
   _DriverMapScreenState createState() =>  _DriverMapScreenState();
 }
@@ -146,7 +143,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
         polylineId: id, color: Colors.red, points: polylineCoordinates);
     polylines[id] = polyline;
     setState(() {});
-    simulateMoving();
+   //simulateMoving();
   }
 
   void showPinsOnMap() {
@@ -208,46 +205,47 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
     });
   }
 
-  void simulateMoving() {
-
-    int i=0;
-    Timer.periodic(Duration(milliseconds: 250), (Timer t) =>
-        setState((){
-          print(widget.deliveryID);
-          if((currentLocation.latitude==destinationLocation.latitude && currentLocation.longitude==destinationLocation.longitude)||i==110){
-            _deliveryService.UpdateDeliveryStatus(widget.deliveryID, context).then((value) => {
-              if(value==true){
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) =>
-                      _popUpSuccessfulActivation(
-                          context),
-                )
-              }else{
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(
-                    "false")))
-              }
-            });
-          }
-          if(i>=polylineCoordinates.length){
-            showDialog(
-              context: context,
-              builder: (BuildContext context) =>
-                  _popUpSuccessfulActivation(
-                      context),
-            );
-          }else{
-            currentLocation=LocationData.fromMap({
-              "latitude": polylineCoordinates[i].latitude,
-              "longitude": polylineCoordinates[i].longitude,
-            });
-            updatePinOnMap();
-            i++;
-          }
-        })
-    );
-  }
+  // void simulateMoving() {
+  //
+  //   int i=0;
+  //   Timer.periodic(Duration(milliseconds: 250), (Timer t) =>
+  //       setState((){
+  //         print(widget.deliveryID);
+  //         if((currentLocation.latitude==destinationLocation.latitude && currentLocation.longitude==destinationLocation.longitude)||i==110){
+  //           _deliveryService.UpdateDeliveryStatus(widget.deliveryID, context).then((value) => {
+  //             if(value==true){
+  //               showDialog(
+  //                 context: context,
+  //                 builder: (BuildContext context) =>
+  //                     _popUpSuccessfulActivation(
+  //                         context),
+  //               )
+  //             }else{
+  //               ScaffoldMessenger.of(context)
+  //                   .showSnackBar(SnackBar(content: Text(
+  //                   "false")))
+  //             }
+  //           });
+  //         }
+  //         if(i>=polylineCoordinates.length){
+  //           showDialog(
+  //             context: context,
+  //             builder: (BuildContext context) =>
+  //                 _popUpSuccessfulActivation(
+  //                     context),
+  //           );
+  //         }else{
+  //           currentLocation=LocationData.fromMap({
+  //             "latitude": polylineCoordinates[i].latitude,
+  //             "longitude": polylineCoordinates[i].longitude,
+  //           });
+  //           updatePinOnMap();
+  //           i++;
+  //         }
+  //       }
+  //       )
+  //   );
+  // }
   Widget buildMap(BuildContext context) {
 
     CameraPosition initialCameraPosition = CameraPosition(
