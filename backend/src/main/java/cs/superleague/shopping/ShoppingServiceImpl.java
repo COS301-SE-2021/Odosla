@@ -156,9 +156,6 @@ public class ShoppingServiceImpl implements ShoppingService {
             } else if (order.getTotalCost() == null){
                 invalidMessage = "Invalid request: missing order cost";
                 invalidReq = true;
-            } else if (order.getStatus() != OrderStatus.PURCHASED){
-//                invalidMessage = "Invalid request: order has incompatible status";
-//                invalidReq = true;
             } else if (order.getItems() == null || order.getItems().isEmpty()){
                 invalidMessage = "Invalid request: item list is empty or null";
                 invalidReq = true;
@@ -1184,7 +1181,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             }catch (Exception e){}
 
-            if(storeEntity!=null) {
+            if(storeEntity!=null && !storeEntity.isEmpty()) {
 
                 response = new GetStoresResponse(true, "List of Stores successfully returned", storeEntity);
             }

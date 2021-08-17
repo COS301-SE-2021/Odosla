@@ -202,6 +202,8 @@ public class AssignDriverToDeliveryUnitTest {
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request1);
         assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
         assertEquals(response.isAssigned(), true);
+        assertEquals(response.getDropOffLocation(), delivery.getDropOffLocation());
+        assertEquals(response.getPickUpLocation(), delivery.getPickUpLocation());
     }
 
     @Test
@@ -217,6 +219,8 @@ public class AssignDriverToDeliveryUnitTest {
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request1);
         assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
         assertEquals(response.isAssigned(), true);
+        assertEquals(response.getDropOffLocation(), delivery.getDropOffLocation());
+        assertEquals(response.getPickUpLocation(), delivery.getPickUpLocation());
     }
 
     @Test
@@ -232,5 +236,37 @@ public class AssignDriverToDeliveryUnitTest {
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
         assertEquals(thrown1.getMessage(), "Invalid order.");
+    }
+
+    @Test
+    @Description("Tests for when no drop off location is specified.")
+    @DisplayName("No drop off location")
+    void noDropOffLocationSpecified_UnitTest() throws cs.superleague.user.exceptions.InvalidRequestException {
+        delivery.setDriverId(null);
+        delivery.setDropOffLocation(null);
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
+        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
+        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
+        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
+    }
+
+    @Test
+    @Description("Tests for when no pick up location is specified.")
+    @DisplayName("No pick up location")
+    void noPickUpLocationSpecified_UnitTest() throws cs.superleague.user.exceptions.InvalidRequestException {
+        delivery.setDriverId(null);
+        delivery.setPickUpLocation(null);
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
+        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
+        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
+        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
     }
 }

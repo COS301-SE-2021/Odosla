@@ -21,9 +21,6 @@ public class UserUpdateShopperShiftRequest   {
   @JsonProperty("onShift")
   private Boolean onShift = null;
 
-  @JsonProperty("storeID")
-  private String storeID = null;
-
   public UserUpdateShopperShiftRequest jwtToken(String jwtToken) {
     this.jwtToken = jwtToken;
     return this;
@@ -62,25 +59,6 @@ public class UserUpdateShopperShiftRequest   {
     this.onShift = onShift;
   }
 
-  public UserUpdateShopperShiftRequest storeID(String storeID) {
-    this.storeID = storeID;
-    return this;
-  }
-
-  /**
-   * Get storeID
-   * @return storeID
-  **/
-  @ApiModelProperty(value = "")
-  
-    public String getStoreID() {
-    return storeID;
-  }
-
-  public void setStoreID(String storeID) {
-    this.storeID = storeID;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -92,13 +70,12 @@ public class UserUpdateShopperShiftRequest   {
     }
     UserUpdateShopperShiftRequest userUpdateShopperShiftRequest = (UserUpdateShopperShiftRequest) o;
     return Objects.equals(this.jwtToken, userUpdateShopperShiftRequest.jwtToken) &&
-        Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift) &&
-        Objects.equals(this.storeID, userUpdateShopperShiftRequest.storeID);
+        Objects.equals(this.onShift, userUpdateShopperShiftRequest.onShift);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(jwtToken, onShift, storeID);
+    return Objects.hash(jwtToken, onShift);
   }
 
   @Override
@@ -108,7 +85,6 @@ public class UserUpdateShopperShiftRequest   {
     
     sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
-    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

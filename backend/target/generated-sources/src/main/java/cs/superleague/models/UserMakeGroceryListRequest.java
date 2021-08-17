@@ -17,60 +17,60 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object is expected as input")
 @Validated
 public class UserMakeGroceryListRequest   {
-  @JsonProperty("JWTToken")
-  private String jwTToken = null;
+  @JsonProperty("customerID")
+  private String customerID = null;
 
-  @JsonProperty("productIds")
+  @JsonProperty("barcodes")
   @Valid
-  private List<String> productIds = null;
+  private List<String> barcodes = null;
 
   @JsonProperty("name")
   private String name = null;
 
-  public UserMakeGroceryListRequest jwTToken(String jwTToken) {
-    this.jwTToken = jwTToken;
+  public UserMakeGroceryListRequest customerID(String customerID) {
+    this.customerID = customerID;
     return this;
   }
 
   /**
    * generated token used to identify the caller of the endpoint
-   * @return jwTToken
+   * @return customerID
   **/
   @ApiModelProperty(value = "generated token used to identify the caller of the endpoint")
   
-    public String getJwTToken() {
-    return jwTToken;
+    public String getCustomerID() {
+    return customerID;
   }
 
-  public void setJwTToken(String jwTToken) {
-    this.jwTToken = jwTToken;
+  public void setCustomerID(String customerID) {
+    this.customerID = customerID;
   }
 
-  public UserMakeGroceryListRequest productIds(List<String> productIds) {
-    this.productIds = productIds;
+  public UserMakeGroceryListRequest barcodes(List<String> barcodes) {
+    this.barcodes = barcodes;
     return this;
   }
 
-  public UserMakeGroceryListRequest addProductIdsItem(String productIdsItem) {
-    if (this.productIds == null) {
-      this.productIds = new ArrayList<String>();
+  public UserMakeGroceryListRequest addBarcodesItem(String barcodesItem) {
+    if (this.barcodes == null) {
+      this.barcodes = new ArrayList<String>();
     }
-    this.productIds.add(productIdsItem);
+    this.barcodes.add(barcodesItem);
     return this;
   }
 
   /**
-   * Get productIds
-   * @return productIds
+   * Get barcodes
+   * @return barcodes
   **/
   @ApiModelProperty(value = "")
   
-    public List<String> getProductIds() {
-    return productIds;
+    public List<String> getBarcodes() {
+    return barcodes;
   }
 
-  public void setProductIds(List<String> productIds) {
-    this.productIds = productIds;
+  public void setBarcodes(List<String> barcodes) {
+    this.barcodes = barcodes;
   }
 
   public UserMakeGroceryListRequest name(String name) {
@@ -102,14 +102,14 @@ public class UserMakeGroceryListRequest   {
       return false;
     }
     UserMakeGroceryListRequest userMakeGroceryListRequest = (UserMakeGroceryListRequest) o;
-    return Objects.equals(this.jwTToken, userMakeGroceryListRequest.jwTToken) &&
-        Objects.equals(this.productIds, userMakeGroceryListRequest.productIds) &&
+    return Objects.equals(this.customerID, userMakeGroceryListRequest.customerID) &&
+        Objects.equals(this.barcodes, userMakeGroceryListRequest.barcodes) &&
         Objects.equals(this.name, userMakeGroceryListRequest.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(jwTToken, productIds, name);
+    return Objects.hash(customerID, barcodes, name);
   }
 
   @Override
@@ -117,8 +117,8 @@ public class UserMakeGroceryListRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class UserMakeGroceryListRequest {\n");
     
-    sb.append("    jwTToken: ").append(toIndentedString(jwTToken)).append("\n");
-    sb.append("    productIds: ").append(toIndentedString(productIds)).append("\n");
+    sb.append("    customerID: ").append(toIndentedString(customerID)).append("\n");
+    sb.append("    barcodes: ").append(toIndentedString(barcodes)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
     return sb.toString();

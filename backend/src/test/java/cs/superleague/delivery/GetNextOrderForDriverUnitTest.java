@@ -160,7 +160,7 @@ public class GetNextOrderForDriverUnitTest {
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(null);
         GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
-        assertEquals(response.getDeliveryID(), null);
+        assertEquals(response.getDelivery(), null);
         assertEquals(response.getMessage(), "No available deliveries in the database.");
     }
 
@@ -172,7 +172,7 @@ public class GetNextOrderForDriverUnitTest {
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(deliveries);
         GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
-        assertEquals(response.getDeliveryID(), null);
+        assertEquals(response.getDelivery(), null);
         assertEquals(response.getMessage(), "No available deliveries in the database.");
     }
 
@@ -186,7 +186,7 @@ public class GetNextOrderForDriverUnitTest {
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(deliveries);
         GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
-        assertEquals(response.getDeliveryID(), null);
+        assertEquals(response.getDelivery(), null);
         assertEquals(response.getMessage(), "No available deliveries in the range specified.");
     }
 
@@ -200,7 +200,7 @@ public class GetNextOrderForDriverUnitTest {
         when(deliveryRepo.findAllByDriverIdIsNull()).thenReturn(deliveries);
         GetNextOrderForDriverRequest request1 = new GetNextOrderForDriverRequest(driverID, driverLocation, 10.0);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request1);
-        assertEquals(response.getDeliveryID(), deliveryID2);
+        assertEquals(response.getDelivery(), delivery2);
         assertEquals(response.getMessage(), "Driver can take the following delivery.");
     }
 }

@@ -5,6 +5,8 @@
  */
 package cs.superleague.api;
 
+import cs.superleague.models.PaymentGetCustomersActiveOrdersRequest;
+import cs.superleague.models.PaymentGetCustomersActiveOrdersResponse;
 import cs.superleague.models.PaymentGetItemsRequest;
 import cs.superleague.models.PaymentGetItemsResponse;
 import cs.superleague.models.PaymentGetStatusRequest;
@@ -32,6 +34,17 @@ import java.util.List;
 import java.util.Map;
 @Api(value = "payment", description = "the payment API")
 public interface PaymentApi {
+
+    @ApiOperation(value = "Endpoint for the customers getting their active order", nickname = "getCustomerActiveOrders", notes = "Refer to summary", response = PaymentGetCustomersActiveOrdersResponse.class, tags={ "payment", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns the orderID of the active order", response = PaymentGetCustomersActiveOrdersResponse.class) })
+    @RequestMapping(value = "/payment/getCustomersActiveOrders",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<PaymentGetCustomersActiveOrdersResponse> getCustomerActiveOrders(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody PaymentGetCustomersActiveOrdersRequest body
+);
+
 
     @ApiOperation(value = "Endpoint for Get Items use case", nickname = "getItemsPayments", notes = "Refer to summary", response = PaymentGetItemsResponse.class, tags={ "Payment", })
     @ApiResponses(value = { 

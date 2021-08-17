@@ -85,7 +85,7 @@ public class GetNextOrderForDriverIntegrationTest {
         GetNextOrderForDriverRequest request = new GetNextOrderForDriverRequest(driverID, pickUpLocation);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request);
         assertEquals(response.getMessage(), "No available deliveries in the database.");
-        assertEquals(response.getDeliveryID(), null);
+        assertEquals(response.getDelivery(), null);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class GetNextOrderForDriverIntegrationTest {
         GetNextOrderForDriverRequest request = new GetNextOrderForDriverRequest(driverID, driverLocationFar);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request);
         assertEquals(response.getMessage(), "No available deliveries in the range specified.");
-        assertEquals(response.getDeliveryID(), null);
+        assertEquals(response.getDelivery(), null);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class GetNextOrderForDriverIntegrationTest {
         GetNextOrderForDriverRequest request = new GetNextOrderForDriverRequest(driverID, pickUpLocation);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request);
         assertEquals(response.getMessage(), "Driver can take the following delivery.");
-        assertEquals(response.getDeliveryID(), deliveryID);
+        assertEquals(response.getDelivery().getDeliveryID(), deliveryID);
 
     }
 
