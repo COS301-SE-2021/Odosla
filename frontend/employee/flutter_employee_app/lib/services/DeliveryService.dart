@@ -13,7 +13,7 @@ class DeliveryService{
 
    final UserService _userService=GetIt.I.get();
 
-   Future<String> getNextOrderForDriver(String storeID, BuildContext context) async {
+   Future<String> getNextOrderForDriver(BuildContext context) async {
 
      final loginURL = Uri.parse("http://"+endPoint+"delivery/getNextOrderForDriver");
 
@@ -27,10 +27,22 @@ class DeliveryService{
        "Access-Control-Allow-Methods": "POST, OPTIONS"
      };
 
-     String driverID="e693ca68-7575-4a52-9535-a141ba9ca64c";
+     String jwt="";
+     await _userService.getJWTAsString().then((value) => {
+       jwt=value!
+     }
+
+     );
+     while (jwt==""){
+       await _userService.getJWTAsString().then((value) =>
+       jwt=value!,
+       );
+     }
+
+     print(jwt);
 
      final data = {
-       "driverID":driverID,
+       "jwtToken":jwt,
        "rangeOfDelivery":1000,
        "currentLocation":{
          "latitude":-25.748931,
@@ -44,6 +56,8 @@ class DeliveryService{
 
      if (response.statusCode==200) {
        Map<String,dynamic> responseData = json.decode(response.body);
+       print("RESPONSE DATA");
+       print(responseData);
        if (responseData["message"] == "Driver can take the following delivery.") {
          return responseData["deliveryID"];
          }

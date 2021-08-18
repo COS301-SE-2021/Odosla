@@ -429,8 +429,8 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
               _isDelivery?SizedBox(height: 50):Container(),
               _onShift?RaisedButton(onPressed: (){
                 if(_isDelivery){
-                  _deliveryService.addDeliveryDetail("CollectingFromStore", "Driver has accepted delivery and collecting it from the store", _delivery.deliveryID, context);
-                  _deliveryService.UpdateDeliveryStatus(deliveryID, "CollectingFromStore", context);
+                  // _deliveryService.addDeliveryDetail("CollectingFromStore", "Driver has accepted delivery and collecting it from the store", _delivery.deliveryID, context);
+                  // _deliveryService.UpdateDeliveryStatus(deliveryID, "CollectingFromStore", context);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => DriverHomeScreen(0)//ProductPage(product: product),
                   ));
