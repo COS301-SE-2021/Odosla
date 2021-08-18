@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:odosla/model/cart_item.dart';
 import 'package:odosla/model/store.dart';
@@ -14,6 +15,8 @@ import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/services/settings.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'UserService.dart';
 
 class ApiService {
   Future<List<CartItem>> getItems(String storeID) async {
@@ -97,6 +100,7 @@ class ApiService {
     final storeID = items.first.storeID;
     String pi = items.first.id;
     List<dynamic> itemsList = itemListToJson(items);
+    UserService _userService = GetIt.I.get();
     debugPrint('_-_');
     debugPrint(itemsList.toString());
     final response =
@@ -108,7 +112,7 @@ class ApiService {
               "Access-Control-Allow-Methods": "POST, OPTIONS",
             },
             body: jsonEncode({
-              "userId": "7bc59ea6-aa30-465d-bcab-64e894bef586", //getCurrentUser
+              "userId": _userService.getJWTAsString(), //getCurrentUser
               "listOfItems": itemsList,
               "discount": 0,
               "storeId": "$storeID",
@@ -202,24 +206,53 @@ class ApiService {
     return s;
   }
 
-  Future<Map<String, List<CartItem>>> getShopLists() async {
+  Future<Map<String, List<CartItem>>> getGroceryLists(String jwt) async {
     final response =
-        await http.post(Uri.parse(endpoint + '/shopping/getStores'),
+        await http.post(Uri.parse(endpoint + '/user/getGroceryLists'),
             headers: {
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "POST, OPTIONS",
             },
-            body: jsonEncode({}));
+            body: jsonEncode({"JWTToken": jwt}));
 
     if (response.statusCode == 200) {
       debugPrint("code _ 200");
-      return Map();
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
+      return map['groceryLists']; //CartItem.fromJson(map)
     } else {
-      List<Store> list = List.empty();
+      debugPrint(jwt);
       debugPrint("___ err " + response.statusCode.toString());
-      return Map();
+      return Map(); //artItem.fromJson(map)
+
+    }
+  }
+
+  void setGroceryLists(String jwt) async {
+    final response =
+        await http.post(Uri.parse(endpoint + '/user/makeGroceryList'),
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+            },
+            body: jsonEncode({
+              "JWTToken": jwt,
+              "productIds": ["p123984123", "p392874287"],
+              "name": "grocery list namt"
+            }));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
+      return map['groceryLists']; //CartItem.fromJson(map)
+    } else {
+      debugPrint(jwt);
+      debugPrint("___ err " + response.statusCode.toString());
     }
   }
 }

@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.only(top: 2.0),
               prefixIcon: Icon(
                 Icons.create_rounded,
                 color: Colors.white,
@@ -119,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.only(top: 2.0),
               prefixIcon: Icon(
                 Icons.create_rounded,
                 color: Colors.white,
