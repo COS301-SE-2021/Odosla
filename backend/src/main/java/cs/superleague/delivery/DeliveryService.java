@@ -28,4 +28,6 @@ public interface DeliveryService {
     TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException;
 
     UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, PaymentException;
+
+    GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException;
 }

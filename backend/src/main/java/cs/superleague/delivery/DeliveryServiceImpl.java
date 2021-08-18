@@ -30,10 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service("deliveryServiceImpl")
 public class DeliveryServiceImpl implements DeliveryService {
@@ -403,5 +400,45 @@ public class DeliveryServiceImpl implements DeliveryService {
         distance = Math.toDegrees(distance);
         distance = distance * 60 * 1.1515 * 1.609344;
         return distance;
+    }
+
+    @Override
+    public GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException {
+
+        if(request!=null)
+        {
+            if(request.getOrderID()!=null)
+            {
+                if(deliveryRepo!=null)
+                {
+                    List<Delivery> deliveries = new ArrayList<>();
+                    Optional.of(deliveries = deliveryRepo.findAll()).orElse(null);
+
+                    if(deliveries!=null)
+                    {
+                        for(int k=0; k<deliveries.size(); k++)
+                        {
+                            if(deliveries.get(k).getOrderID().equals(request.getOrderID()))
+                            {
+                                Driver driver = driverRepo.findById(deliveries.get(k).getDriverId()).orElse(null);
+                                GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(driver, "Driver successfully retrieved");
+                            }
+                        }
+                        GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(null, "Driver not found");
+                    }
+
+                }
+
+            }
+            else
+            {
+                throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
+            }
+        }else
+        {
+            throw new InvalidRequestException("Request object is null");
+        }
+
+        return null;
     }
 }
