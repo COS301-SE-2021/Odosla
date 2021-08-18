@@ -108,6 +108,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                     if(updateOrder!=null){
                         if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
                             updateOrder.setDriverID(driver.getDriverID());
+                            updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
                             orderRepo.save(updateOrder);
 
                             delivery.setDriverId(driver.getDriverID());
