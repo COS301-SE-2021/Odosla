@@ -427,12 +427,12 @@ public class DeliveryServiceImpl implements DeliveryService {
                                     Driver driver = driverRepo.findById(deliveries.get(k).getDriverId()).orElse(null);
                                     if(driver!=null)
                                     {
-                                        GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(driver, "Driver successfully retrieved");
+                                        GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(driver, "Driver successfully retrieved", deliveries.get(k).getDeliveryID());
                                         return response;
                                     }
                                 }
                             }
-                            GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(null, "Driver not found");
+                            GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(null, "Driver not found", null);
                             return response;
                         }
 
