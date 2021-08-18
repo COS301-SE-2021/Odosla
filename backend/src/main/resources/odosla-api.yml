@@ -2033,6 +2033,8 @@ components:
           $ref: "#/components/schemas/GeoPointObject"
         dropOffLocation:
           $ref: "#/components/schemas/GeoPointObject"
+        driverID:
+          type: string
 
     delivery_CreateDeliveryRequest:
       description: This object is expected as input

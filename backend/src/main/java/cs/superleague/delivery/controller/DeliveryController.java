@@ -81,7 +81,7 @@ public class DeliveryController implements DeliveryApi {
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
             response.setPickUpLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getPickUpLocation()));
             response.setDropOffLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getDropOffLocation()));
-
+            response.setDriverID(assignDriverToDeliveryResponse.getDriverID().toString());
         }catch (Exception e){
             e.printStackTrace();
             response.setMessage(e.getMessage());
