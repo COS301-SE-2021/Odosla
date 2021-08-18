@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/Delivery.dart';
 import 'package:flutter_employee_app/models/Order.dart';
+import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'UserService.dart';
 class DeliveryService{
@@ -59,15 +62,15 @@ class DeliveryService{
        print("RESPONSE DATA");
        print(responseData);
        if (responseData["message"] == "Driver can take the following delivery.") {
-         return responseData["deliveryID"];
+         Delivery _delivery=Delivery.fromJson(responseData["delivery"]);
+         Provider.of<DeliveryProvider>(context,listen: false).delivery=_delivery;
+         return responseData["delivery"]["deliveryID"];
          }
 
          return "";
        }
      return "";
      }
-
-
 
    Future<bool> assignDriverToDelivery(String deliveryID, BuildContext context) async {
 
@@ -114,7 +117,7 @@ class DeliveryService{
      return false;
    }
 
-   Future<bool> UpdateDeliveryStatus(String deliveryID, BuildContext context) async {
+   Future<bool> UpdateDeliveryStatus(String deliveryID, String status,BuildContext context) async {
 
      final loginURL = Uri.parse("http://"+endPoint+"delivery/updateDeliveryStatus");
 
@@ -130,9 +133,9 @@ class DeliveryService{
 
 
      final data = {
-       "status":"Delivered",
+       "status":status,
        "deliveryID":deliveryID,
-       "detail":""
+       "detail":"Driver is on way to collect delivery from store"
      };
 
      final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));

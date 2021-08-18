@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Delivery.dart';
+import 'package:flutter_employee_app/models/GeoPoint.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
@@ -28,10 +29,13 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
   String _email="";
   bool _startedDelivery=false;
   bool _collectedFromStore=false;
+  bool _startedDeliveringToCustomer=false;
+  bool _collectedByCustomer=false;
+  bool _delivered=false;
   DeliveryService _deliveryService=GetIt.I.get();
   Widget _popUpSuccessfulFoundDeliveries(BuildContext context){
 
-    Delivery _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
+    Delivery _delivery=Provider.of<DeliveryProvider>(context).delivery;
 
     return new AlertDialog(
       title: const Text('FOUND A DELIVERY'),
@@ -427,13 +431,111 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                 ],
               ),
               _isDelivery?SizedBox(height: 50):Container(),
-              _onShift?RaisedButton(onPressed: (){
+              _onShift?RaisedButton(onPressed: () async {
                 if(_isDelivery){
-                  // _deliveryService.addDeliveryDetail("CollectingFromStore", "Driver has accepted delivery and collecting it from the store", _delivery.deliveryID, context);
-                  // _deliveryService.UpdateDeliveryStatus(deliveryID, "CollectingFromStore", context);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => DriverHomeScreen(0)//ProductPage(product: product),
-                  ));
+                  if(_startedDelivery==false) {
+                    await _deliveryService.UpdateDeliveryStatus(
+                        deliveryID, "CollectingFromStore", context).then((
+                        value) =>
+                    {
+                      if(value == true){
+                        setState(() {
+                          _startedDelivery = true;
+                        }),
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                DriverHomeScreen(
+                                    0) //ProductPage(product: product),
+                        ))
+                      }
+                      else{
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(
+                            "Couldn't start delivery")))
+                      }
+                    }
+                    );
+                  }
+                  else if(_collectedFromStore==false){
+                    await _deliveryService.UpdateDeliveryStatus(
+                        deliveryID, "CollectedByDriver", context).then((
+                        value) =>
+                    {
+                      if(value == true){
+                        setState(() {
+                          _collectedFromStore= true;
+                        }),
+                      }
+                      else{
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(
+                            "Couldn't update status of delivery")))
+                      }
+                    }
+                    );
+
+                  }
+                  else if(_startedDeliveringToCustomer==false){
+                    await _deliveryService.UpdateDeliveryStatus(
+                        deliveryID, "DeliveringToCustomer", context).then((
+                        value) =>
+                    {
+                      if(value == true){
+                        setState(() {
+                          _startedDeliveringToCustomer= true;
+                        }),
+                      }
+                      else{
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(
+                            "Couldn't update status of delivery")))
+                      }
+                    }
+                    );
+                  }
+                  else if(_collectedByCustomer==false){
+                    await _deliveryService.UpdateDeliveryStatus(
+                        deliveryID, "Collected", context).then((
+                        value) =>
+                    {
+                      if(value == true){
+                        setState(() {
+                          _startedDeliveringToCustomer= true;
+                        }),
+                      }
+                      else{
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(
+                            "Couldn't update status of delivery")))
+                      }
+                    }
+                    );
+                  }
+                  else if(_delivered==false){
+                    _deliveryService.UpdateDeliveryStatus(
+                        deliveryID, "Delivered", context).then((
+                        value) =>
+                    {
+                      if(value == true){
+                        setState(() {
+                          _isDelivery=false;
+                          _delivered=false;
+                          _collectedByCustomer=false;
+                          _startedDeliveringToCustomer=false;
+                          _collectedFromStore=false;
+                          _startedDelivery=false;
+                          Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("",new GeoPoint(0, 0, ""),new GeoPoint(0, 0, ""),"","","","","",0,false);
+                        }),
+                      }
+                      else{
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text(
+                            "Couldn't update status of delivery")))
+                      }
+                    }
+                    );
+                  }
+
                 }else {
                   _deliveryService.getNextOrderForDriver(context)
                       .then((value) =>
@@ -466,7 +568,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                 color: Theme.of(context).backgroundColor,
                 elevation: 5.0,
                 child: Text(
-                  _isDelivery==false?"Get Next Delivery":_startedDelivery==false?"Start delivery":_collectedFromStore?"Complete delivery":"Complete collection from store",
+                  _isDelivery==false?"Get Next Delivery":_startedDelivery==false?"Start delivery":_collectedFromStore==false?"Complete collection from store":_startedDeliveringToCustomer==false?"Start delivering to customer":_collectedByCustomer==false?"Customer collected delivery":"Complete delivery",
                   style: TextStyle(
                     color: Color(0xFFE9884A),
                     letterSpacing: 1.5,

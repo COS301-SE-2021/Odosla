@@ -21,7 +21,7 @@ class Delivery{
   Delivery.fromJson(Map<String, dynamic> json):
       deliveryID=json["deliveryID"],
       pickUpLocation=GeoPoint.fromJson(json["pickUpLocation"]),
-      dropOffLocation=GeoPoint.fromJson(json["dropOffLocaton"]),
+      dropOffLocation=GeoPoint.fromJson(json["dropOffLocation"]),
       orderID=json["orderID"],
       customerID=json["customerId"],
       storeID=json["storeId"],
