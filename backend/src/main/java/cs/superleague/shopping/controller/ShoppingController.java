@@ -454,7 +454,7 @@ public class ShoppingController implements ShoppingApi{
         Store store6=new Store(storeUUID6, 7, 18, "Food Lover's Market", 2, 7, true, "shop/foodLoversMarket.png");
         Store store7=new Store(storeUUID7, 8, 20, "Pep", 2, 7, true, "shop/pep.png");
         GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
-        GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
+        GeoPoint store2Location = new GeoPoint(-25.7588746 , 28.2429369, "Hillcrest Boulevard");
         GeoPoint store3Location = new GeoPoint(-25.782541156164545, 28.261452959595255, "Grape street");
         GeoPoint store4Location = new GeoPoint(-25.705154853561545, 28.296656215156128, "Avo Street");
         GeoPoint store5Location = new GeoPoint(-25.725151681616511, 28.262516128952825, "Strawberry street");
@@ -483,16 +483,16 @@ public class ShoppingController implements ShoppingApi{
         storeRepo.save(store6);
         storeRepo.save(store7);
 
-        Customer customer = new Customer();
-        customer.setName("Adam");
-        customer.setSurname("Isenberg");
-        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
-        customer.setAccountType(UserType.CUSTOMER);
-        customer.setEmail("adamisenberg@gmail.com");
-        customer.setPassword("fhkjdfh534534!");
-        customer.setPhoneNumber("0835233041");
-
-        customerRepo.save(customer);
+//        Customer customer = new Customer();
+//        customer.setName("Adam");
+//        customer.setSurname("Isenberg");
+//        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
+//        customer.setAccountType(UserType.CUSTOMER);
+//        customer.setEmail("adamisenberg@gmail.com");
+//        customer.setPassword("fhkjdfh534534!");
+//        customer.setPhoneNumber("0835233041");
+//
+//        customerRepo.save(customer);
 
 
        // HttpStatus httpStatus = HttpStatus.OK;
@@ -597,8 +597,15 @@ public class ShoppingController implements ShoppingApi{
             currentShopper.setResetCode(responseShoppers.get(i).getResetCode());
             currentShopper.setResetExpiration(responseShoppers.get(i).getResetExpiration());
             currentShopper.setAccountType(String.valueOf(responseShoppers.get(i).getAccountType()));
-            currentShopper.setShopperID(responseShoppers.get(i).getShopperID().toString());
-            currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
+            if(responseShoppers.get(i).getShopperID()!=null)
+            {
+                currentShopper.setShopperID(responseShoppers.get(i).getShopperID().toString());
+            }
+            if(responseShoppers.get(i).getStoreID()!=null)
+            {
+                currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
+            }
+
             currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
             currentShopper.setOnShift(responseShoppers.get(i).getOnShift());
             currentShopper.setIsActive(responseShoppers.get(i).isActive());
@@ -617,7 +624,11 @@ public class ShoppingController implements ShoppingApi{
 
             StoreObject currentStore = new StoreObject();
 
-            currentStore.setStoreID(responseStores.get(i).getStoreID().toString());
+            if(responseStores.get(i).getStoreID()!=null)
+            {
+                currentStore.setStoreID(responseStores.get(i).getStoreID().toString());
+            }
+
             currentStore.setStoreBrand(responseStores.get(i).getStoreBrand());
             currentStore.setOpeningTime(responseStores.get(i).getOpeningTime());
             currentStore.setClosingTime(responseStores.get(i).getClosingTime());
