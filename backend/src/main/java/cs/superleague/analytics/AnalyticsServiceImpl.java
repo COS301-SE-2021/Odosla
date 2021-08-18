@@ -1,16 +1,20 @@
 package cs.superleague.analytics;
 
 import cs.superleague.analytics.AnalyticsHelpers.FinancialAnalyticsHelper;
+import cs.superleague.analytics.AnalyticsHelpers.MonthlyAnalyticsHelper;
 import cs.superleague.analytics.AnalyticsHelpers.UserAnalyticsHelper;
 import cs.superleague.analytics.CreateAnalyticsDataHelpers.CreateFinancialAnalyticsData;
+import cs.superleague.analytics.CreateAnalyticsDataHelpers.CreateMonthlyAnalyticsData;
 import cs.superleague.analytics.CreateAnalyticsDataHelpers.CreateUserAnalyticsData;
 import cs.superleague.analytics.dataclass.ReportType;
 import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.analytics.exceptions.NotAuthorizedException;
 import cs.superleague.analytics.requests.CreateFinancialReportRequest;
+import cs.superleague.analytics.requests.CreateMonthlyReportRequest;
 import cs.superleague.analytics.requests.CreateUserReportRequest;
 import cs.superleague.analytics.responses.CreateFinancialReportResponse;
+import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.shopping.repos.StoreRepo;
@@ -165,6 +169,60 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return response;
     }
 
+    @Override
+    public CreateMonthlyReportResponse createMonthlyReport(CreateMonthlyReportRequest request) throws Exception {
+
+        Admin admin;
+        String message = "Report successfully created";
+        CreateMonthlyReportResponse response;
+        CreateMonthlyAnalyticsData createMonthlyAnalyticsData;
+        GetCurrentUserResponse getCurrentUserResponse;
+
+        if (request == null) {
+            throw new InvalidRequestException("CreateMonthlyReportRequest is null- Cannot create report");
+        }
+
+        validAnalyticsRequestJWT(request.getReportType(), Calendar.getInstance(), Calendar.getInstance(), request.getJWTToken());
+
+        getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJWTToken()));
+
+        if(getCurrentUserResponse.getUser() == null){
+            message = "User Not Found - Could not create report";
+            return new CreateMonthlyReportResponse(false, message, new Date());
+        }
+
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
+            message = "User is not an admin - Could not create report";
+            return new CreateMonthlyReportResponse(false, message, new Date());
+        }
+
+        admin = (Admin)getCurrentUserResponse.getUser();
+        UUID adminID = admin.getAdminID();
+
+        try{
+            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(request.getJWTToken(),
+                    paymentService, userService, adminID);
+        }catch (Exception e){
+            throw new AnalyticsException("Problem with creating monthly statistics report");
+        }
+
+        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData.getMonthlyStatisticsData(), storeRepo);
+
+        if(request.getReportType() == ReportType.PDF){
+            message = "MonthlyReport.pdf downloaded";
+            monthlyAnalyticsHelper.createPDF();
+            response =  new CreateMonthlyReportResponse(true, message, new Date());
+        }else if(request.getReportType() == ReportType.CSV){
+            message = "MonthlyReport.csv downloaded";
+            monthlyAnalyticsHelper.createCSVReport();
+            response = new CreateMonthlyReportResponse(true, message, new Date());
+        }else{
+            throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
+        }
+
+        return response;
+    }
+
     private void validAnalyticsRequest(ReportType reportType, Calendar startDate, Calendar endDate, UUID userID) throws InvalidRequestException {
         if (reportType == null) {
             throw new InvalidRequestException("Exception: Report Type in request object is null");
@@ -206,6 +264,5 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
 
     }
-
 
 }
