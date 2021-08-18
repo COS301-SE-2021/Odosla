@@ -219,9 +219,6 @@ public class PaymentServiceImpl implements PaymentService {
 
             GeoPoint customerLocation= new GeoPoint(request.getLatitude(),request.getLongitude(), request.getAddress());
 
-            assert shop != null;
-            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
-
             Order alreadyExists=null;
             while (true) {
                 try {
@@ -236,6 +233,10 @@ public class PaymentServiceImpl implements PaymentService {
                     break;
                 }
             }
+
+            assert shop != null;
+            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
+
             if (o != null) {
 
                     if(shop.getStore().getOpen()==true) {
