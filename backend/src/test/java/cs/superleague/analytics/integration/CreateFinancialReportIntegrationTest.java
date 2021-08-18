@@ -9,7 +9,6 @@ import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.payment.responses.GetOrdersResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
@@ -18,11 +17,6 @@ import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.responses.GetCurrentUserResponse;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -31,7 +25,6 @@ import java.util.*;
 
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional

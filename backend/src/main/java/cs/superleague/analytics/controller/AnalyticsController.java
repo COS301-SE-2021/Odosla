@@ -3,15 +3,14 @@ package cs.superleague.analytics.controller;
 import cs.superleague.analytics.AnalyticsServiceImpl;
 import cs.superleague.analytics.dataclass.ReportType;
 import cs.superleague.analytics.requests.CreateFinancialReportRequest;
+import cs.superleague.analytics.requests.CreateMonthlyReportRequest;
 import cs.superleague.analytics.requests.CreateUserReportRequest;
 import cs.superleague.analytics.responses.CreateFinancialReportResponse;
+import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
 import cs.superleague.api.AnalyticsApi;
 import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.AnalyticsCreateFinancialReportRequest;
-import cs.superleague.models.AnalyticsCreateFinancialReportResponse;
-import cs.superleague.models.AnalyticsCreateUserReportRequest;
-import cs.superleague.models.AnalyticsCreateUserReportResponse;
+import cs.superleague.models.*;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.repos.CatalogueRepo;
@@ -169,6 +168,35 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setMessage(createFinancialReportResponse.getMessage());
                 response.setSuccess(createFinancialReportResponse.isSuccess());
                 response.setTimestamp(createFinancialReportResponse.getTimestamp().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, status);
+
+    }
+
+    @Override
+    public ResponseEntity<AnalyticsCreateMonthlyReportResponse> createMonthlyReport(AnalyticsCreateMonthlyReportRequest body) {
+
+        //creating response object  and default return status
+        AnalyticsCreateMonthlyReportResponse response = new AnalyticsCreateMonthlyReportResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+
+            CreateMonthlyReportRequest req = new CreateMonthlyReportRequest(body.getJwWTToken(),
+                    ReportType.valueOf(body.getReportType()));
+            CreateMonthlyReportResponse createMonthlyReportResponse = ServiceSelector.getAnalyticsService().createMonthlyReport(req);
+
+            try {
+                response.setMessage(createMonthlyReportResponse.getMessage());
+                response.setSuccess(createMonthlyReportResponse.isSuccess());
+                response.setTimestamp(createMonthlyReportResponse.getTimestamp().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
