@@ -3,6 +3,7 @@ package cs.superleague.payment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.shopping.ShoppingService;
@@ -20,6 +21,7 @@ import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.requests.GetCurrentUserRequest;
 import cs.superleague.user.responses.GetCurrentUserResponse;
 import cs.superleague.shopping.requests.GetQueueRequest;
@@ -63,15 +65,17 @@ public class PaymentServiceImpl implements PaymentService {
     private final ShoppingService shoppingService;
     private final AdminRepo adminRepo;
     private final UserService userService;
+    private final CustomerRepo customerRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.shoppingService = shoppingService;
         this.adminRepo = adminRepo;
         this.userService = userService;
+        this.customerRepo= customerRepo;
     }
 
 
@@ -116,7 +120,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws InvalidRequestException
      */
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -125,13 +129,15 @@ public class PaymentServiceImpl implements PaymentService {
         boolean invalidReq = false;
         String invalidMessage = "";
 
+        UUID customerID=null;
+
         GetStoreByUUIDResponse shop=null;
         if (request!=null) {
 
             /* checking for invalid requests */
-            if(request.getUserID()==null){
+            if(request.getJwtToken()==null){
                 invalidReq = true;
-                invalidMessage = ("UserID cannot be null in request object - order unsuccessfully created.");
+                invalidMessage = ("JwtToken cannot be null in request object - order unsuccessfully created.");
             }
 
             else if(request.getListOfItems()==null){
@@ -184,6 +190,26 @@ public class PaymentServiceImpl implements PaymentService {
                     }
                 }
 
+                JwtUtil jwtUtil = new JwtUtil();
+                if(jwtUtil.extractUserType(request.getJwtToken()).equals("CUSTOMER"))
+                {
+                    GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+
+                    if(customerRepo!=null)
+                    {
+                        Customer customer = customerRepo.findByEmail(getCurrentUserResponse.getUser().getEmail()).orElse(null);
+                        assert customer != null;
+                        customerID = customer.getCustomerID();
+                    }
+
+                }
+                else
+                {
+                    invalidReq = true;
+                    invalidMessage = ("Invalid User");
+
+                }
+
             }
 
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
@@ -219,9 +245,6 @@ public class PaymentServiceImpl implements PaymentService {
 
             GeoPoint customerLocation= new GeoPoint(request.getLatitude(),request.getLongitude(), request.getAddress());
 
-            assert shop != null;
-            Order o = new Order(orderID, request.getUserID(), request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
-
             Order alreadyExists=null;
             while (true) {
                 try {
@@ -236,6 +259,10 @@ public class PaymentServiceImpl implements PaymentService {
                     break;
                 }
             }
+
+            assert shop != null;
+            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
+
             if (o != null) {
 
                     if(shop.getStore().getOpen()==true) {
