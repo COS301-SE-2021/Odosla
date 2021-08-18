@@ -1559,6 +1559,10 @@ components:
           type: number
         onShift:
           type: boolean
+        currentAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        deliveriesCompleted:
+          type: number
 
     CustomerObject:
       description: "Generic schema for a Customer"
