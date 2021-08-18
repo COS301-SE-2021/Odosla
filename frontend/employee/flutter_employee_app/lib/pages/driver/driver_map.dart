@@ -4,12 +4,16 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/Delivery.dart';
+import 'package:flutter_employee_app/models/GeoPoint.dart';
+import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 class DriverMapScreen extends StatefulWidget {
   @override
   _DriverMapScreenState createState() =>  _DriverMapScreenState();
@@ -18,13 +22,13 @@ class DriverMapScreen extends StatefulWidget {
 class  _DriverMapScreenState extends State<DriverMapScreen> {
 
   DeliveryService _deliveryService=GetIt.I.get();
-
+  Delivery _delivery=new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
   static const double CAMERA_ZOOM = 15;
   static const double CAMERA_TILT = 80;
   static const double CAMERA_BEARING = 30;
 
-  static const LatLng SOURCE_LOCATION = LatLng(-25.754618, 28.233255);
-  static const LatLng DEST_LOCATION = LatLng(-25.788660, 28.242833);
+  LatLng SOURCE_LOCATION = LatLng(-25.754618, 28.233255);
+  LatLng DEST_LOCATION = LatLng(-25.788660, 28.242833);
 
 
   Completer<GoogleMapController> _controller = Completer();
@@ -248,6 +252,14 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   // }
   Widget buildMap(BuildContext context) {
 
+    if(_delivery.deliveryStatus=="CollectingFromStore"){
+      //SOURCE_LOCATION=
+      DEST_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
+    }else if(_delivery.deliveryStatus=="_collectedFromStore"||_delivery.deliveryStatus=="DeliveringToCustomer"){
+      SOURCE_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
+      DEST_LOCATION=LatLng(_delivery.dropOffLocation.latitude, _delivery.dropOffLocation.longitude);
+    }
+
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
@@ -276,8 +288,10 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
-              print("OKAY COOL");
-              showPinsOnMap();
+              if(_delivery.deliveryStatus=="CollectingFromStore" || _delivery.deliveryStatus=="DeliveringToCustomer"|| _delivery.deliveryStatus=="CollectedByDriver"){
+                showPinsOnMap();
+              }
+
             })
     );
 

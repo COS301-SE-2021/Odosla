@@ -142,6 +142,8 @@ class DeliveryService{
      print(response.body);
 
      if (response.statusCode==200) {
+       //check message here
+       Provider.of<DeliveryProvider>(context,listen: false).delivery.deliveryStatus=status;
        return true;
      }else{
        return false;
