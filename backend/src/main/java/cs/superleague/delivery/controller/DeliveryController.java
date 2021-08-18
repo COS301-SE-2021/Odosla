@@ -181,7 +181,11 @@ public class DeliveryController implements DeliveryApi {
             deliveryObject.setOrderID(getNextOrderForDriverResponse.getDelivery().getOrderID().toString());
             deliveryObject.setCustomerId(getNextOrderForDriverResponse.getDelivery().getCustomerId().toString());
             deliveryObject.setStoreId(getNextOrderForDriverResponse.getDelivery().getStoreId().toString());
-            deliveryObject.setDriverId(getNextOrderForDriverResponse.getDelivery().getDriverId().toString());
+            if(getNextOrderForDriverResponse.getDelivery().getDriverId()!=null)
+            {
+                deliveryObject.setDriverId(getNextOrderForDriverResponse.getDelivery().getDriverId().toString());
+            }
+
             deliveryObject.setStatus(getNextOrderForDriverResponse.getDelivery().getStatus().toString());
             deliveryObject.setCost(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getCost()));
             deliveryObject.setCompleted(getNextOrderForDriverResponse.getDelivery().isCompleted());

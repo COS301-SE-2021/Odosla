@@ -289,7 +289,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         }
 
-        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
+        List<Delivery> deliveries = deliveryRepo.findAll();
         if (deliveries == null){
             GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
             return response;
