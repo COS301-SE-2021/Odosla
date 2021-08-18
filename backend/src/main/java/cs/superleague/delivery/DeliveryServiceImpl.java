@@ -409,24 +409,38 @@ public class DeliveryServiceImpl implements DeliveryService {
         {
             if(request.getOrderID()!=null)
             {
-                if(deliveryRepo!=null)
+                Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+
+                if(order!=null)
                 {
-                    List<Delivery> deliveries = new ArrayList<>();
-                    Optional.of(deliveries = deliveryRepo.findAll()).orElse(null);
-
-                    if(deliveries!=null)
+                    if(deliveryRepo!=null)
                     {
-                        for(int k=0; k<deliveries.size(); k++)
-                        {
-                            if(deliveries.get(k).getOrderID().equals(request.getOrderID()))
-                            {
-                                Driver driver = driverRepo.findById(deliveries.get(k).getDriverId()).orElse(null);
-                                GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(driver, "Driver successfully retrieved");
-                            }
-                        }
-                        GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(null, "Driver not found");
-                    }
+                        List<Delivery> deliveries;
+                        Optional.of(deliveries = deliveryRepo.findAll()).orElse(null);
 
+                        if(deliveries!=null)
+                        {
+                            for(int k=0; k<deliveries.size(); k++)
+                            {
+                                if(deliveries.get(k).getOrderID().equals(request.getOrderID()))
+                                {
+                                    Driver driver = driverRepo.findById(deliveries.get(k).getDriverId()).orElse(null);
+                                    if(driver!=null)
+                                    {
+                                        GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(driver, "Driver successfully retrieved");
+                                        return response;
+                                    }
+                                }
+                            }
+                            GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(null, "Driver not found");
+                            return response;
+                        }
+
+                    }
+                }
+                else
+                {
+                    throw new InvalidRequestException("Order does not exist");
                 }
 
             }
