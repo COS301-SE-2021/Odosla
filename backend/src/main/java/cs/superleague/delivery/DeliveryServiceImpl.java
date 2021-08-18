@@ -171,7 +171,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         GetDeliveryCostRequest getDeliveryCostRequest = new GetDeliveryCostRequest(locationOfStore, request.getPlaceOfDelivery());
         GetDeliveryCostResponse getDeliveryCostResponse = getDeliveryCost(getDeliveryCostRequest);
-        Delivery delivery = new Delivery(deliveryID, request.getOrderID(), locationOfStore, request.getPlaceOfDelivery(), request.getCustomerID(), request.getStoreID(), DeliveryStatus.CollectingFromStore, getDeliveryCostResponse.getCost());
+        Delivery delivery = new Delivery(deliveryID, request.getOrderID(), locationOfStore, request.getPlaceOfDelivery(), request.getCustomerID(), request.getStoreID(), DeliveryStatus.WaitingForShoppers, getDeliveryCostResponse.getCost());
         deliveryRepo.save(delivery);
         CreateDeliveryResponse response = new CreateDeliveryResponse(true, "Delivery request placed.", deliveryID);
         return response;
@@ -298,7 +298,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (deliveries.size()>0){
             for (Delivery d : deliveries){
                 double driverDistanceFromStore = getDistanceBetweenTwoPoints(d.getPickUpLocation(), request.getCurrentLocation());
-                if (driverDistanceFromStore > range){
+                if (driverDistanceFromStore > range || d.getDriverId()!=null || d.getStatus().compareTo(DeliveryStatus.WaitingForShoppers)!=0){
                     continue;
                 }else{
                     GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d);
