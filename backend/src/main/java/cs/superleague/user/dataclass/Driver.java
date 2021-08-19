@@ -15,10 +15,20 @@ public class Driver extends User {
     @Column(unique = true)
     @Id
     private UUID driverID;
+
+    @Column(name = "total_ratings")
+    private double totalRatings=0;
+
+    @Column(name = "rating")
     private double rating;
+
     private Boolean onShift=false;
     private Boolean isCurrentlyDelivering=false;
+
+    @Column(name = "deliveries_completed")
     private int deliveriesCompleted=0;
+
+    @Column(name = "number_of_ratings")
     private int numberOfRatings=0;
 
     @OneToOne(cascade={CascadeType.ALL})
@@ -91,6 +101,14 @@ public class Driver extends User {
 
     public void setNumberOfRatings(int numberOfRatings) {
         this.numberOfRatings = numberOfRatings;
+    }
+
+    public double getTotalRatings() {
+        return totalRatings;
+    }
+
+    public void setTotalRatings(double totalRatings) {
+        this.totalRatings = totalRatings;
     }
 
 }

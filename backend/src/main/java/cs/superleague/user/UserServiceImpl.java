@@ -2020,24 +2020,22 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
 
-        if(currentOrder==null || !currentOrder.isPresent()){
+        if(order==null){
             throw new OrderDoesNotExist("Order does not exist in database");
         }
 
-        Order order=currentOrder.get();
         order.setStatus(OrderStatus.DELIVERED);
-
         orderRepo.save(order);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        currentOrder= orderRepo.findById(request.getOrderID());
-        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERED){
+        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
+        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
             response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
         }
         else{
-            Driver driver = driverRepo.findById(currentOrder.get().getDriverID()).orElse(null);
+            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
             if(driver!=null)
             {
                 driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
@@ -2854,10 +2852,12 @@ public class UserServiceImpl implements UserService{
                     throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
                 }
 
+                double totalRatings= request.getRating()+driver.getTotalRatings();
+                driver.setTotalRatings(totalRatings);
                 int numRatings= driver.getNumberOfRatings()+1;
-                double rating = driver.getRating() + request.getRating();
-
-                driver.setRating(rating/numRatings);
+                driver.setNumberOfRatings(numRatings);
+                double newRating= totalRatings/numRatings;
+                driver.setRating(Math.round(newRating));
                 driverRepo.save(driver);
 
                 response = new DriverSetRatingResponse(true, Calendar.getInstance().getTime(), "Rating complete");
