@@ -45,4 +45,6 @@ public interface UserService {
     GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
 
     GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
+    GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws UserException;
+
 }

@@ -2752,4 +2752,54 @@ public class UserServiceImpl implements UserService{
         return sb.toString();
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                userID - user ID to fetch the corresponding shopper from the database
+     *  GetShoppersByUUID should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if shopper exists in database, else throw ShopperDoesNotExist
+     *                5.Return response object
+     * Request object (GetShopperByUUIDRequest)
+     * {
+     *               "userID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     *
+     * Response object (GetShopperByUUIDResponse)
+     * {
+     *                "shopperEntity": shopperEntity
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Shopper entity with corresponding user id was returned"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws ShopperDoesNotExistException
+     */
+    @Override
+    public GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+        GetCustomerByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetCustomerByUUIDRequest request - could not return customer entity");
+            }
+
+            Customer customer=null;
+            try {
+                customer = customerRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get customer entity");
+            }
+            if(customer==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get customer entity");
+            }
+            response=new GetCustomerByUUIDResponse(customer, Calendar.getInstance().getTime(),"Customer entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetCustomerByUUID request is null - could not return customer entity");
+        }
+        return response;
+    }
 }
