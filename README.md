@@ -93,9 +93,9 @@ to achieve the objective. I am most passionate about using my programming and de
 <ul>
   <li>master
    <ul>
-    <li>Development
+    <li>develop
       <ul>
-       <li>Shopping_development
+       <li>develop_shopping
         <ul>
          <li>feature_shopping_getCatalogue</li>
          </ul>
