@@ -2029,8 +2029,6 @@ public class UserServiceImpl implements UserService{
         Order order=currentOrder.get();
         order.setStatus(OrderStatus.DELIVERED);
 
-        /* Send notification to User saying order has been delivered and ask to rate driver*/
-
         orderRepo.save(order);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */

@@ -608,6 +608,7 @@ public class UserController implements UserApi {
         }
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
+        driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
         return driverObject;
     }
     public CustomerObject populateCustomer(Customer customer){
