@@ -31,13 +31,15 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
   final ShoppingService _shoppingService = GetIt.I.get();
   String _email="";
   int variableSet = 0;
-  ScrollController? _scrollController;
   double? width;
   double? height;
   bool _isCurrentOrder=false;
   var currentAmountPacked=<int>[];
 
   var completePackagingForItem=<bool>[];
+  FixedExtentScrollController _scrollController =
+  FixedExtentScrollController(initialItem: 1);
+
 
   int counter=0;
 
@@ -62,7 +64,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                       "Could send request")))
                 } else{
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ShopperHomeScreen()))
+                      builder: (BuildContext context) => ShopperHomeScreen(1)))
                 }
               }
               );
@@ -159,135 +161,137 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
       }
     });
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              if(completed){
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(
-                    "Already finished packing for item")));
-              }else {
-                MyNavigator.goToBarcodeScanPage(context);
-              }
-            },
-            child: Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: 75.0,
-                    width: 75.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      color: Color(0xffFFE4E0),
-                    ),
-                    child:  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Image(fit: BoxFit.cover, image: AssetImage(img)),
-                    ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            if(completed){
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(
+                  "Already finished packing for item")));
+            }else {
+              MyNavigator.goToBarcodeScanPage(context);
+            }
+          },
+          child: Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 75.0,
+                  width: 75.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Color(0xffFFE4E0),
                   ),
-                  SizedBox(
-                    width: 20.0,
+                  child:  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image(fit: BoxFit.cover, image: AssetImage("assets/"+img)),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            text,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 17.0,
-                              letterSpacing: 0.75,
-                            ),
+                ),
+                SizedBox(
+                  width: 20.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+                        padding: EdgeInsets.only(right:15),
+                        width: MediaQuery.of(context).size.width*0.7,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          text,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                            letterSpacing: 0.75,
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              brand.toString(),
-                              style: TextStyle(
-                                color: Colors.orangeAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            brand.toString(),
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 10.0,
                             ),
-                            SizedBox(
-                              width: 12.0,
-                            ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Price",
-                              style: TextStyle(
-                                color: Colors.orangeAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Price",
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0,
                             ),
-                            SizedBox(
-                              width: 12.0,
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                          Text(
+                            "R "+price.toString(),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
                             ),
-                            Text(
-                              "R "+price.toString(),
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Quantity",
-                              style: TextStyle(
-                                color: Colors.orangeAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Quantity",
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0,
                             ),
-                            SizedBox(
-                              width: 12.0,
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                          Text(
+                            "$quantity",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
                             ),
-                            Text(
-                              "$quantity",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                    ),
 
-                    ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
     @override
     Widget build(BuildContext context) {
@@ -299,80 +303,80 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
 
   Widget _currentOrder(order){
     return Column(
-      children: [
-        SizedBox(
-          height: 22.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            "Created date: " + order.createdDate,
-            style: TextStyle(
-              fontSize: 10.0,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.75,
+        children: [
+          SizedBox(
+            height: 22.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              "Created date: " + order.createdDate,
+              style: TextStyle(
+                fontSize: 10.0,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.75,
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 5.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            "Total : R " +
-                (order.totalCost + double.parse(order.discount)).toString(),
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.75,
+          SizedBox(
+            height: 5.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              "Total : R "+(order.totalCost).toString(),
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.75,
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            "Discount : R" + order.discount.toString(),
-            style: TextStyle(
-              fontSize: 15.0,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.75,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              "Discount : R" + order.discount.toString(),
+              style: TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.75,
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 11.0,
-        ),
+          SizedBox(
+            height: 11.0,
+          ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Text(
-            "ITEMS",
-            style: TextStyle(
-              fontSize: 20.0,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.75,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              "ITEMS",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.75,
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 22.0,
-        ),
-        Container(
-          child: Column(
-            children: [
-              for (var i in order.items) customMenuItem(
-                  i.imgUrl,
-                  i.name,
-                  i.price,
-                  i.brand,
-                  i.quantity,
-                  i.barcode,
-                  currentAmountPacked[counter])
-            ],
+          SizedBox(
+            height: 22.0,
           ),
-        ),
-      ],
+          Container(
+            child: Column(
+              children: [
+                for (var i in order.items) customMenuItem(
+                    i.imgUrl,
+                    i.name,
+                    i.price,
+                    i.brand,
+                    i.quantity,
+                    i.barcode,
+                    currentAmountPacked[counter])
+              ],
+            ),
+          ),
+        ],
+
     );
   }
 
@@ -402,7 +406,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
             ],
           ),
         ),
-        Text("Currently not packing an order\n Start packing order \n by clicking below",
+        Text(_onShift?"Currently not packing an order\n Start packing order \n by clicking below":"Start a shift to get \n new orders",
           style: TextStyle(
               color: Colors.orange,
               fontWeight: FontWeight.w600,
@@ -501,7 +505,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                                       Provider.of<ShopProvider>(context,listen: false).store=Store("","",0,0,true,""),
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              ShopperHomeScreen() //ProductPage(product: product),
+                                              ShopperHomeScreen(1) //ProductPage(product: product),
                                       ))
                                     }
                                     else{
@@ -521,19 +525,12 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                                   // color: Color(0xFFFA8940),
                                 ):RaisedButton(onPressed: () async {
                                   Store store=Provider.of<ShopProvider>(context,listen: false).store;
+
+                                  //fix
                                   await _userService.setShopperShift(false, store.id, context).then((value) =>
                                   {
-                                    if(value==true){
-                                      Provider.of<ShopProvider>(context,listen: false).store=Store("","",0,0,true,""),
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              ShopperHomeScreen() //ProductPage(product: product),
-                                      ))
-                                    } else{
-                                      ScaffoldMessenger.of(context)
-                                      .showSnackBar(SnackBar(content: Text(
-                                      "Something went wrong")))
-                                    }
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (BuildContext context) => ShopperHomeScreen(0)))
                                   });
                                 },
                                   child: Text(
@@ -582,8 +579,15 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                     )
                 )
             ),
-            _isCurrentOrder?_currentOrder(_order):_notCurrentOrder(),
-            _onShift? _other():Container(),
+            Expanded(
+              child: ListView(
+                children: [
+                  _isCurrentOrder?_currentOrder(_order):_notCurrentOrder(),
+                  _onShift? _other():Container(),
+                ],
+              ),
+            )
+
           ],
         ),
       )

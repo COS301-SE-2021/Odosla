@@ -10,5 +10,6 @@ class DeliveryProvider with ChangeNotifier{
   DeliveryProvider();
 
   Delivery get delivery=>_delivery;
-  set delivery(Delivery s){_delivery;notifyListeners();}
+
+  set delivery(Delivery s){_delivery=s;notifyListeners();}
 }

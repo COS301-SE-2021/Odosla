@@ -39,7 +39,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                   "Could send request")))
             } else{
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ShopperHomeScreen()))
+                  builder: (BuildContext context) => ShopperHomeScreen(1)))
             }
           }
           );
@@ -73,12 +73,10 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
       }
     });
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          GestureDetector(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        GestureDetector(
           onTap: () {
             if(completed){
               ScaffoldMessenger.of(context)
@@ -88,133 +86,132 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
               MyNavigator.goToBarcodeScanPage(context);
             }
           },
-            child: Container(
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    height: 75.0,
-                    width: 75.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.0),
-                      color: Color(0xffFFE4E0),
-                    ),
-                    child:  Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image(fit: BoxFit.cover, image: AssetImage("assets/"+img)),
-                      ),
-                    ),
-                  SizedBox(
-                    width: 20.0,
+          child: Container(
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 75.0,
+                  width: 75.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    color: Color(0xffFFE4E0),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Expanded(
-                            child: Text(
-                              text,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                              softWrap: false,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 13.0,
-                                letterSpacing: 0.75,
-                              ),
-                            ),
+                  child:  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image(fit: BoxFit.cover, image: AssetImage("assets/"+img)),
+                  ),
+                ),
+                SizedBox(
+                  width: 20.0,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(3.0),
+                      child: Container(
+                        padding: EdgeInsets.only(right:15),
+                        width: MediaQuery.of(context).size.width*0.7,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          text,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                          softWrap: false,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14.0,
+                            letterSpacing: 0.75,
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              brand.toString(),
-                              style: TextStyle(
-                                color: Colors.orangeAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 10.0,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            brand.toString(),
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 10.0,
                             ),
-                            SizedBox(
-                              width: 12.0,
-                            ),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Price",
-                              style: TextStyle(
-                                color: Colors.orangeAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Price",
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0,
                             ),
-                            SizedBox(
-                              width: 12.0,
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                          Text(
+                            "R "+price.toString(),
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
                             ),
-                            Text(
-                              "R "+price.toString(),
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              "Quantity",
-                              style: TextStyle(
-                                color: Colors.orangeAccent,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0,
-                              ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Quantity",
+                            style: TextStyle(
+                              color: Colors.orangeAccent,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16.0,
                             ),
-                            SizedBox(
-                              width: 12.0,
+                          ),
+                          SizedBox(
+                            width: 12.0,
+                          ),
+                          Text(
+                            "$quantity",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.0,
                             ),
-                            Text(
-                              "$quantity",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                    ),
 
-                    ],
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    @override
+    Widget build(BuildContext context) {
+      // TODO: implement build
+      throw UnimplementedError();
+    }
+
   }
-  
-}
 
   @override
   Widget build(BuildContext context) {

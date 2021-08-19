@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/Delivery.dart';
 import 'package:flutter_employee_app/models/Order.dart';
 import 'package:flutter_employee_app/models/Shopper.dart';
 import 'package:flutter_employee_app/models/User.dart';
+import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
@@ -16,8 +18,8 @@ import 'package:provider/provider.dart';
 class UserService{
 
   final _storage = new FlutterSecureStorage();
-  //final String endPoint = "c71682b066b8.ngrok.io/";
-  final String endPoint = "10.0.2.2:8080/";
+  final String endPoint = "75c59b94a2f1.ngrok.io/";
+  //final String endPoint = "10.0.2.2:8080/";
 
   Future<bool> loginUser(String email, String password, String userType, BuildContext context) async{
     final loginURL = Uri.parse("http://"+endPoint+"user/loginUser");
@@ -132,7 +134,7 @@ class UserService{
 
   Future<String> registerShopper(String name,String surname, String email, String password, String phoneNumber) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/registerShopper");
+    final loginURL = Uri.parse("https://"+endPoint+"user/registerShopper");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -153,7 +155,7 @@ class UserService{
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data)).timeout(
-        Duration(seconds: 15),
+        Duration(seconds: 17),
         onTimeout:(){ return(http.Response('TimeOut',500));
         }
     );
@@ -163,9 +165,6 @@ class UserService{
       Map<String,dynamic> responseData = json.decode(response.body);
       if (responseData["success"] == true) {
         print("successfully registerDriver");
-        // await Future.wait([
-        //   _storage.write(key: "jwt", value: token),
-        // ]);
         return "true";
       } else {
         if(responseData["message"] == "Email has already been used"){
@@ -248,7 +247,6 @@ class UserService{
       jwt=value!,
       );
     }
-
     print(jwt);
     final data = {
       "JWTToken":jwt
@@ -266,6 +264,8 @@ class UserService{
         if(userType=="SHOPPER"){
           Shopper shopper = Shopper.fromJson(responseData["user"]);
           Provider.of<UserProvider>(context,listen: false).user=shopper;
+
+          //fix this for get current driver!!!!!!!!!!!
           shopper.setOrdersCompleted(responseData["user"]["ordersCompleted"].toString());
           Provider.of<UserProvider>(context,listen: false).user.ordersCompleted=(responseData["user"]["ordersCompleted"]).toString();
           shopper.setOnShift(responseData["user"]["onShift"]);
@@ -416,6 +416,39 @@ class UserService{
       if (responseData["success"] == true) {
         Provider.of<OrderProvider>(context,listen: false).order=Order("","","","",0.0,List.empty(),"");
 
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Future<bool> updateDriverLocation(double latitude, double longitude, BuildContext context) async {
+
+    final loginURL = Uri.parse("http://"+endPoint+"user/setCurrentLocation");
+
+    Map<String,String> headers =new Map<String,String>();
+
+    headers =
+    {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS"
+    };
+    Delivery _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
+    final data = {
+      "driverID":_delivery.driverID,
+      "latitude":latitude,
+      "longitude":longitude,
+      "address":"Driver current location"
+    };
+
+    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+
+    if (response.statusCode==200) {
+      Map<String,dynamic> responseData = json.decode(response.body);
+      print(responseData);
+      if (responseData["success"] == true) {
         return true;
       }
     }

@@ -11,8 +11,7 @@ import 'package:provider/provider.dart';
 import 'UserService.dart';
 class DeliveryService{
 
-   final String endPoint = "10.0.2.2:8080/";
-   //final String endPoint = "c71682b066b8.ngrok.io/";
+   final String endPoint = "75c59b94a2f1.ngrok.io/";
 
    final UserService _userService=GetIt.I.get();
 
@@ -62,11 +61,17 @@ class DeliveryService{
        print("RESPONSE DATA");
        print(responseData);
        if (responseData["message"] == "Driver can take the following delivery.") {
-         Delivery _delivery=Delivery.fromJson(responseData["delivery"]);
-         Provider.of<DeliveryProvider>(context,listen: false).delivery=_delivery;
+         Delivery delivery=Delivery.fromJson(responseData["delivery"]);
+         print("FROM JSON");
+         print(delivery.deliveryID);
+         print(delivery.customerID);
+         Provider.of<DeliveryProvider>(context,listen: false).delivery=delivery;
+         print("Provider");
+         print(Provider.of<DeliveryProvider>(context,listen: false).delivery.deliveryID);
+         print("??????????????");
+         print(Provider.of<DeliveryProvider>(context,listen: false).delivery.customerID);
          return responseData["delivery"]["deliveryID"];
          }
-
          return "";
        }
      return "";
@@ -111,6 +116,9 @@ class DeliveryService{
      if (response.statusCode==200) {
        Map<String,dynamic> responseData = json.decode(response.body);
        if (responseData["isAssigned"] == true) {
+         print("driver id get returned");
+         print(responseData["driverID"]);
+         Provider.of<DeliveryProvider>(context,listen: false).delivery.driverID=responseData["driverID"];
          return true;
        }
      }
@@ -131,7 +139,9 @@ class DeliveryService{
        "Access-Control-Allow-Methods": "POST, OPTIONS"
      };
 
-
+     deliveryID=Provider
+         .of<DeliveryProvider>(context, listen: false)
+         .delivery.deliveryID;
      final data = {
        "status":status,
        "deliveryID":deliveryID,
@@ -139,12 +149,18 @@ class DeliveryService{
      };
 
      final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
-     print(response.body);
 
      if (response.statusCode==200) {
-       //check message here
-       Provider.of<DeliveryProvider>(context,listen: false).delivery.deliveryStatus=status;
-       return true;
+       Map<String,dynamic> responseData = json.decode(response.body);
+       print(responseData["message"]);
+       if(responseData["message"]=="Successful status update.") {
+         Provider
+             .of<DeliveryProvider>(context, listen: false)
+             .delivery
+             .deliveryStatus = status;
+         return true;
+       }
+       else return false;
      }else{
        return false;
      }

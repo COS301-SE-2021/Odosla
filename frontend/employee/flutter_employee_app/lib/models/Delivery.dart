@@ -26,7 +26,7 @@ class Delivery{
       customerID=json["customerId"],
       storeID=json["storeId"],
       deliveryStatus=json["status"],
-      driverID=json["driverId"],
+      driverID=json["driverId"].toString(),
       cost=json["cost"],
       completed=json["completed"];
 

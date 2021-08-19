@@ -41,15 +41,8 @@ class _StorePageState extends State<StorePage> {
     return FutureBuilder(
       future: _shoppingService.getStores(),
       builder: (BuildContext context, snapshot) {
-        //let's check if we got a response or not
-        debugPrint(snapshot.data.toString() + "__");
-
-        if (snapshot.hasError) {
-          debugPrint("snapshot error: " + snapshot.error.toString());
-        }
 
         if (snapshot.hasData) {
-          debugPrint("HasData");
           //Now let's make a list of articles
           List<Store> items = snapshot.data as List<Store>;
           return GridView.builder(
@@ -97,7 +90,6 @@ class _StorePageState extends State<StorePage> {
                 ),
               ));
         }
-        debugPrint("_2");
         return Center(
           child: CircularProgressIndicator(),
         );

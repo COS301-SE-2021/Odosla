@@ -8,6 +8,7 @@ import 'package:flutter_employee_app/models/Delivery.dart';
 import 'package:flutter_employee_app/models/GeoPoint.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
+import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get_it/get_it.dart';
@@ -21,8 +22,10 @@ class DriverMapScreen extends StatefulWidget {
 
 class  _DriverMapScreenState extends State<DriverMapScreen> {
 
-  DeliveryService _deliveryService=GetIt.I.get();
+  UserService _userService=GetIt.I.get();
+  bool _updatingOnline=true;
   Delivery _delivery=new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
+
   static const double CAMERA_ZOOM = 15;
   static const double CAMERA_TILT = 80;
   static const double CAMERA_BEARING = 30;
@@ -34,7 +37,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = Set<Marker>();
   Map<PolylineId, Polyline> polylines = {};
-  //Set<Polyline> _polylines = Set<Polyline>();
   List<LatLng> polylineCoordinates = [];
   late PolylinePoints polylinePoints;
   Location _location=Location();
@@ -47,6 +49,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
     "latitude": DEST_LOCATION.latitude,
     "longitude": DEST_LOCATION.longitude
   });
+
 // a reference to the destination location
   late LocationData destinationLocation=LocationData.fromMap({
     "latitude": DEST_LOCATION.latitude,
@@ -60,7 +63,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
     super.initState();
 
     // create an instance of Location
-    location = new Location();
+    //location = new Location();
     polylinePoints = PolylinePoints();
     // location.onLocationChanged().listen((LocationData cLoc) {
     //   currentLocation = cLoc;
@@ -71,26 +74,43 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
     // set the initial location
     setInitialLocation();
   }
+  @override
+  void dispose(){
+    _timer?.cancel();
+    _timer=null;
+    super.dispose();
+  }
 
-  Widget _popUpSuccessfulActivation(BuildContext context){
+  Widget _popUpSuccessfulEndLocation(BuildContext context){
     return new AlertDialog(
-      title: const Text('Delivery successfully delivered'),
+      title: const Text('Looks like you are at your destination Location'),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text("The order has been deliverd",
+          Text("Update status of delivery on work page",
               textAlign: TextAlign.center
           ),
         ],
       ),
+      actionsPadding: EdgeInsets.only(right:30),
       actions: <Widget>[
+        new FlatButton(
+          onPressed: () async {
+            Navigator.pop(context, false);
+          },
+          child: Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        ),
         new FlatButton(
           onPressed: (){
             MyNavigator.goToDriverHomePage(context);
           },
           child: const Text('Done'),
         ),
+
       ],
     );
   }
@@ -106,6 +126,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   void setInitialLocation() async {
+    print("_____________________________2");
     // set the initial location by pulling the user's
     // current location from the location's getLocation()
     //currentLocation = await location.getLocation();
@@ -122,7 +143,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   void setPolylines() async {
-
     PointLatLng origin = PointLatLng(
         currentLocation.latitude, currentLocation.longitude);
     PointLatLng desination = PointLatLng(
@@ -132,7 +152,8 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
         origin,
         desination,
         travelMode: TravelMode.driving,
-        wayPoints: [PolylineWayPoint(location: "Woolworthes, Hillcrest Boulevard")]);
+        // wayPoints: [PolylineWayPoint(location: "Woolworthes, Hillcrest Boulevard")]
+    );
     if (result.points.isNotEmpty) {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
@@ -142,16 +163,17 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   _addPolyLine() {
+    print("_____________________________4");
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
         polylineId: id, color: Colors.red, points: polylineCoordinates);
     polylines[id] = polyline;
     setState(() {});
-   //simulateMoving();
+    simulateMoving();
   }
 
   void showPinsOnMap() {
-
+    print("_____________________________5");
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition = LatLng(currentLocation.latitude,
@@ -177,7 +199,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   void updatePinOnMap() async {
-
+    print("_____________________________6");
     // create a new CameraPosition instance
     // every time the location changes, so the camera
     // follows the pin as it moves with an animation
@@ -196,7 +218,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
       // updated position
       var pinPosition = LatLng(currentLocation.latitude,
           currentLocation.longitude);
-
       // the trick is to remove the marker (by id)
       // and add it again at the updated location
       _markers.removeWhere(
@@ -208,64 +229,66 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
       ));
     });
   }
+  Timer? _timer;
+  void simulateMoving() {
+    print("_____________________________8");
+    int i=0;
+    int j=0;
+    _timer=Timer.periodic(Duration(milliseconds: 350), (Timer t) {
+      if(mounted){
+        setState((){
+          if(i<polylineCoordinates.length){
+            currentLocation=LocationData.fromMap({
+              "latitude": polylineCoordinates[i].latitude,
+              "longitude": polylineCoordinates[i].longitude,
+            });
+            updatePinOnMap();
+            i+=3;
+            j++;
+            if(j==3){
+              _userService.updateDriverLocation(currentLocation.latitude, currentLocation.longitude, context).then((value) =>
+                  {
+                    if(value==true){
+                      if(mounted){
+                        setState(() {
+                          _updatingOnline = true;
+                        })
+                      }
+                    }else
+                      {
+                        if(mounted){
+                          setState(() {
+                            _updatingOnline = false;
+                          })
+                        }
+                      }
+                  }
+              );
+              j=0;
+            }
+          }else {
+            t.cancel();
+            showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  _popUpSuccessfulEndLocation(
+                      context),
+            );
+          }
 
-  // void simulateMoving() {
-  //
-  //   int i=0;
-  //   Timer.periodic(Duration(milliseconds: 250), (Timer t) =>
-  //       setState((){
-  //         print(widget.deliveryID);
-  //         if((currentLocation.latitude==destinationLocation.latitude && currentLocation.longitude==destinationLocation.longitude)||i==110){
-  //           _deliveryService.UpdateDeliveryStatus(widget.deliveryID, context).then((value) => {
-  //             if(value==true){
-  //               showDialog(
-  //                 context: context,
-  //                 builder: (BuildContext context) =>
-  //                     _popUpSuccessfulActivation(
-  //                         context),
-  //               )
-  //             }else{
-  //               ScaffoldMessenger.of(context)
-  //                   .showSnackBar(SnackBar(content: Text(
-  //                   "false")))
-  //             }
-  //           });
-  //         }
-  //         if(i>=polylineCoordinates.length){
-  //           showDialog(
-  //             context: context,
-  //             builder: (BuildContext context) =>
-  //                 _popUpSuccessfulActivation(
-  //                     context),
-  //           );
-  //         }else{
-  //           currentLocation=LocationData.fromMap({
-  //             "latitude": polylineCoordinates[i].latitude,
-  //             "longitude": polylineCoordinates[i].longitude,
-  //           });
-  //           updatePinOnMap();
-  //           i++;
-  //         }
-  //       }
-  //       )
-  //   );
-  // }
+        });}},
+    );
+  }
+
   Widget buildMap(BuildContext context) {
-
-    if(_delivery.deliveryStatus=="CollectingFromStore"){
-      //SOURCE_LOCATION=
-      DEST_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
-    }else if(_delivery.deliveryStatus=="_collectedFromStore"||_delivery.deliveryStatus=="DeliveringToCustomer"){
-      SOURCE_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
-      DEST_LOCATION=LatLng(_delivery.dropOffLocation.latitude, _delivery.dropOffLocation.longitude);
-    }
-
+    print("_____________________________7");
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
         bearing: CAMERA_BEARING,
         target: SOURCE_LOCATION
     );
+
     if (currentLocation != null) {
       initialCameraPosition = CameraPosition(
           target: LatLng(currentLocation.latitude,
@@ -276,7 +299,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
       );
     }
     return SizedBox(
-        height: MediaQuery.of(context).size.height-70,
+        height: MediaQuery.of(context).size.height-130,
         width: MediaQuery.of(context).size.width,
         child: GoogleMap(
             myLocationEnabled: true,
@@ -288,7 +311,10 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
             initialCameraPosition: initialCameraPosition,
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
-              if(_delivery.deliveryStatus=="CollectingFromStore" || _delivery.deliveryStatus=="DeliveringToCustomer"|| _delivery.deliveryStatus=="CollectedByDriver"){
+              print(_delivery.deliveryStatus);
+              if(_delivery.deliveryStatus=="CollectingFromStore" ){
+                showPinsOnMap();
+              } else if(_delivery.deliveryStatus=="DeliveringToCustomer"){
                 showPinsOnMap();
               }
 
@@ -298,10 +324,35 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    print("_____________________________9");
+    _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
+    _delivery.deliveryStatus="DeliveringToCustomer";
+    if(_delivery.deliveryStatus=="CollectingFromStore"){
+      DEST_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
+    }else if(_delivery.deliveryStatus=="DeliveringToCustomer"){
+      print(_delivery.pickUpLocation.latitude);
+      print(_delivery.pickUpLocation.longitude);
+      SOURCE_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
+      print("???????????????????????????????????????????");
+      print(SOURCE_LOCATION.latitude);
+      print(SOURCE_LOCATION.longitude);
+      DEST_LOCATION=LatLng(_delivery.dropOffLocation.latitude, _delivery.dropOffLocation.longitude);
+    }
     return Scaffold(
-      body: Stack(
+      body: Column(
         children: [
-          buildMap(context)
+          Stack(
+            children: [
+              buildMap(context),
+
+            ],
+          ),
+          Column(
+            children: [
+              Text("Status (updating on customer app): \n"+_updatingOnline.toString()),
+              Text("Currently driving to: \n"+_delivery.deliveryStatus=="CollectingFromStore"?_delivery.pickUpLocation.address:_delivery.deliveryStatus=="DeliveringToCustomer"?_delivery.dropOffLocation.address:""),
+            ],
+          )
         ],
       ),
     );

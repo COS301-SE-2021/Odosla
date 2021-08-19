@@ -10,6 +10,11 @@ import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
 
 class ShopperHomeScreen extends StatefulWidget {
+  int index=1;
+
+
+  ShopperHomeScreen(this.index);
+
   @override
   _ShopperHomeScreenState createState() => _ShopperHomeScreenState();
 }
@@ -18,24 +23,7 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
 
   int bottomSelectedIndex = 1;
   Order? currentOrder=null;
-  Store? currentStore=null;
 
-  List<BottomNavigationBarItem> buildBottomNavBarItems() {
-    return [
-      BottomNavigationBarItem(
-        icon: Icon(Icons.settings),
-        title: Text('Stores'),
-      ),
-      BottomNavigationBarItem(
-        icon: new Icon(Icons.home),
-        title: new Text('Work'),
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.account_circle_sharp),
-        title: Text('Profile'),
-      )
-    ];
-  }
 
   PageController pageController = PageController(
     initialPage: 1,
@@ -59,6 +47,12 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
   @override
   void initState() {
     super.initState();
+    bottomSelectedIndex=widget.index;
+    pageController = PageController(
+      initialPage: bottomSelectedIndex,
+      keepPage: true,
+    );
+
   }
 
   void pageChanged(int index) {
@@ -83,6 +77,7 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         buttonBackgroundColor: Colors.deepOrangeAccent,
         height: 50,
+        index: bottomSelectedIndex,
         onTap: (index) {
           bottomTapped(index);
         },

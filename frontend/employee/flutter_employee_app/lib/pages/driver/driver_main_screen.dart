@@ -50,7 +50,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   void initState() {
     super.initState();
-    bottomSelectedIndex=1;
+    bottomSelectedIndex=widget.index;
+    pageController = PageController(
+      initialPage: bottomSelectedIndex,
+      keepPage: true,
+    );
   }
 
   void pageChanged(int index) {
