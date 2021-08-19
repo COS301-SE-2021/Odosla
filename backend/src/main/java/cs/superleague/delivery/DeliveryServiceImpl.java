@@ -73,7 +73,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -108,8 +108,11 @@ public class DeliveryServiceImpl implements DeliveryService {
                     if(updateOrder!=null){
                         if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
                             updateOrder.setDriverID(driver.getDriverID());
-                            updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
                             orderRepo.save(updateOrder);
+                            //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
+                            Order updateOrder2= orderRepo.findById(delivery.getOrderID()).orElse(null);
+                            SetStatusRequest setStatusRequest= new SetStatusRequest(updateOrder2, OrderStatus.ASSIGNED_DRIVER);
+                            paymentService.setStatus(setStatusRequest);
 
                             delivery.setDriverId(driver.getDriverID());
                             deliveryRepo.save(delivery);
