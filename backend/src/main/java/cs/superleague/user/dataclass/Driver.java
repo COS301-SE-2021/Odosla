@@ -19,6 +19,7 @@ public class Driver extends User {
     private Boolean onShift=false;
     private Boolean isCurrentlyDelivering=false;
     private int deliveriesCompleted=0;
+    private int numberOfRatings=0;
 
     @OneToOne(cascade={CascadeType.ALL})
     private GeoPoint currentAddress;
@@ -82,6 +83,14 @@ public class Driver extends User {
 
     public void setDeliveriesCompleted(int deliveriesCompleted) {
         this.deliveriesCompleted = deliveriesCompleted;
+    }
+
+    public int getNumberOfRatings() {
+        return numberOfRatings;
+    }
+
+    public void setNumberOfRatings(int numberOfRatings) {
+        this.numberOfRatings = numberOfRatings;
     }
 
 }
