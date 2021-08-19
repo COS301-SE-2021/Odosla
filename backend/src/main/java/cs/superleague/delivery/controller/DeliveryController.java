@@ -81,7 +81,7 @@ public class DeliveryController implements DeliveryApi {
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
             response.setPickUpLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getPickUpLocation()));
             response.setDropOffLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getDropOffLocation()));
-
+            response.setDriverID(assignDriverToDeliveryResponse.getDriverID().toString());
         }catch (Exception e){
             e.printStackTrace();
             response.setMessage(e.getMessage());
@@ -181,7 +181,11 @@ public class DeliveryController implements DeliveryApi {
             deliveryObject.setOrderID(getNextOrderForDriverResponse.getDelivery().getOrderID().toString());
             deliveryObject.setCustomerId(getNextOrderForDriverResponse.getDelivery().getCustomerId().toString());
             deliveryObject.setStoreId(getNextOrderForDriverResponse.getDelivery().getStoreId().toString());
-            deliveryObject.setDriverId(getNextOrderForDriverResponse.getDelivery().getDriverId().toString());
+            if(getNextOrderForDriverResponse.getDelivery().getDriverId()!=null)
+            {
+                deliveryObject.setDriverId(getNextOrderForDriverResponse.getDelivery().getDriverId().toString());
+            }
+
             deliveryObject.setStatus(getNextOrderForDriverResponse.getDelivery().getStatus().toString());
             deliveryObject.setCost(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getCost()));
             deliveryObject.setCompleted(getNextOrderForDriverResponse.getDelivery().isCompleted());
@@ -277,5 +281,37 @@ public class DeliveryController implements DeliveryApi {
     @Override
     public ResponseEntity<DeliveryRemoveDriverFromDeliveryResponse> removeDriverFromDelivery(DeliveryRemoveDriverFromDeliveryRequest body) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<DeliveryGetDeliveryDriverByOrderIdResponse> getDeliveryDriverByOrderId(DeliveryGetDeliveryDriverByOrderIdRequest body) {
+        DeliveryGetDeliveryDriverByOrderIdResponse response = new DeliveryGetDeliveryDriverByOrderIdResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetDeliveryDriverByOrderIDRequest request = new GetDeliveryDriverByOrderIDRequest(UUID.fromString(body.getOrderID()));
+            GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderIDResponse = ServiceSelector.getDeliveryService().getDeliveryDriverByOrderID(request);
+            response.setMessage(getDeliveryDriverByOrderIDResponse.getMessage());
+            response.setDeliveryID(getDeliveryDriverByOrderIDResponse.getDeliveryID().toString());
+
+            DriverObject driverObject = new DriverObject();
+            Driver driver = getDeliveryDriverByOrderIDResponse.getDriver();
+            driverObject.setDriverID(driver.getDriverID().toString());
+            driverObject.setAccountType(driver.getAccountType().toString());
+            driverObject.setName(driver.getName());
+            driverObject.setSurname(driver.getSurname());
+            driverObject.setPhoneNumber(driver.getPhoneNumber());
+            driverObject.setEmail(driver.getEmail());
+            driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
+            driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
+            driverObject.setCurrentAddress(populateGeoPointObject(driver.getCurrentAddress()));
+            driverObject.setOnShift(driver.getOnShift());
+
+            response.setDriver(driverObject);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<>(response, httpStatus);
     }
 }

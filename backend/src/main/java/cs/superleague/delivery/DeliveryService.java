@@ -9,7 +9,7 @@ public interface DeliveryService {
 
     AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request) throws InvalidRequestException;
 
-    AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException;
+    AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException;
 
     CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException;
 
@@ -28,4 +28,6 @@ public interface DeliveryService {
     TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException;
 
     UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, PaymentException;
+
+    GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException;
 }

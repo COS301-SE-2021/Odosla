@@ -10,6 +10,7 @@ import cs.superleague.delivery.responses.AssignDriverToDeliveryResponse;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.Driver;
@@ -124,7 +125,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Test
     @Description("Tests for when the driver is successfully assigned to the delivery.")
     @DisplayName("Successful assigning")
-    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
         assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
@@ -136,7 +137,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Test
     @Description("Tests for when the driver is already assigned to that delivery.")
     @DisplayName("Same driver is assigned already")
-    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         delivery.setDriverId(driverID);
         deliveryRepo.save(delivery);
         AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);

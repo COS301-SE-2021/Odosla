@@ -2158,12 +2158,14 @@ public class UserServiceImpl implements UserService{
                 if (shoppersAtStore == null){
                     store.setShoppers(new ArrayList<>());
                 }else {
+                    Shopper foundShopper = null;
                     if (shoppersAtStore != null) {
                         for (Shopper s : shoppersAtStore) {
                             if (s.getShopperID().compareTo(shopper.get().getShopperID()) == 0) {
-                                shoppersAtStore.remove(s);
+                                foundShopper= s;
                             }
                         }
+                        shoppersAtStore.remove(foundShopper);
                     }
                     store.setShoppers(shoppersAtStore);
                 }
