@@ -758,4 +758,29 @@ public class UserController implements UserApi {
 
         return new ResponseEntity<>(userCompleteDeliveryResponse, status);
     }
+
+    @Override
+    public ResponseEntity<UserGetCustomerByUUIDResponse> getCustomerByUUID(UserGetCustomerByUUIDRequest body) {
+        UserGetCustomerByUUIDResponse userGetCustomerByUUIDResponse = new UserGetCustomerByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCustomerByUUIDRequest request = new GetCustomerByUUIDRequest(UUID.fromString(body.getUserID()));
+
+            GetCustomerByUUIDResponse response = ServiceSelector.getUserService().getCustomerByUUID(request);
+            try{
+                userGetCustomerByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+                userGetCustomerByUUIDResponse.setMessage(response.getMessage());
+                userGetCustomerByUUIDResponse.setCustomer(populateCustomer(response.getCustomer()));
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetCustomerByUUIDResponse, status);
+    }
 }
