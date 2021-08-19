@@ -261,7 +261,28 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             assert shop != null;
-            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation  ,shop.getStore().getStoreLocation(), requiresPharmacy);
+//            List<OrderItems> orderItems = new ArrayList<>();
+//            for(int k=0; k<request.getListOfItems().size(); k++)
+//            {
+//                OrderItems orderItems1 = new OrderItems();
+//                orderItems1.setOrderID(orderID);
+//                orderItems1.setBarcode(request.getListOfItems().get(k).getBarcode());
+//                orderItems1.setName(request.getListOfItems().get(k).getName());
+//                orderItems1.setDescription(request.getListOfItems().get(k).getDescription());
+//                orderItems1.setBrand(request.getListOfItems().get(k).getBrand());
+//                orderItems1.setItemType(request.getListOfItems().get(k).getItemType());
+//                orderItems1.setImageUrl(request.getListOfItems().get(k).getImageUrl());
+//                orderItems1.setPrice(request.getListOfItems().get(k).getPrice());
+//                orderItems1.setQuantity(request.getListOfItems().get(k).getQuantity());
+//                orderItems1.setProductID(request.getListOfItems().get(k).getProductID());
+//                orderItems1.setSize(request.getListOfItems().get(k).getSize());
+//                orderItems1.setTotalCost(request.getListOfItems().get(k).getQuantity()* request.getListOfItems().get(k).getPrice());
+//
+//                orderItems.add(orderItems1);
+//            }
+            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation , shop.getStore().getStoreLocation(), requiresPharmacy);
+
+            //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
 
             if (o != null) {
 
@@ -456,6 +477,7 @@ import java.util.List;50"
         // once the order has been paid for and sent to the  shoppers
         // if the order has not yet been delivered, collected and process by the shoppers
         if (status != OrderStatus.AWAITING_COLLECTION &&
+                status!= OrderStatus.ASSIGNED_DRIVER &&
                 status != OrderStatus.CUSTOMER_COLLECTED &&
                 status != OrderStatus.DELIVERY_COLLECTED &&
                 status != OrderStatus.DELIVERED &&
