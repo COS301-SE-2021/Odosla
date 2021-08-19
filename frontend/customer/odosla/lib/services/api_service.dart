@@ -76,6 +76,7 @@ class ApiService {
     if (response.statusCode == 200) {
       debugPrint("code _ 200");
       Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
       List<Store> list = StoresFromJson(map);
       debugPrint(list.toString());
       return list; //CartItem.fromJson(map)
@@ -120,8 +121,8 @@ class ApiService {
               "discount": 0,
               "storeId": "$storeID",
               "orderType": "DELIVERY",
-              "latitude": 3.4, //get lat
-              "longitude": 4.6, //get long
+              "latitude": -25.763428, //get lat
+              "longitude": 28.260879, //get long
               "deliveryAddress": "23 Sigard Street, Pretoria" //get address
             }));
 
@@ -172,42 +173,26 @@ class ApiService {
       if (result == "ASSIGNED_DRIVER") {
         allocateDriver(context, orderID);
       } else if (result == "DELIVERED") {
-        Provider.of<DriverProvider>(context).allocated = false;
+        Provider.of<DriverProvider>(context, listen: false).allocated = false;
         Provider.of<CartProvider>(context, listen: false).activeOrder = false;
         Navigator.of(context).push(
             MaterialPageRoute(builder: (BuildContext context) => StorePage()));
-        // Alert(
-        //   context: context,
-        //   title: "Order delivered",
-        //   content: Column(
-        //     children: [],
-        //   ),
-        //   buttons: [
-        //     DialogButton(
-        //       color: Colors.deepOrange,
-        //       child: Text(
-        //         "THANKS",
-        //         style: TextStyle(color: Colors.white, fontSize: 20),
-        //       ),
-        //       onPressed: () => Navigator.pop(context),
-        //       width: 120,
-        //     )
-        //   ],
-        // ).show();
-        RatingDialog(
-          // your app's name?
-          title: 'Rating Dialog',
-          // encourage your user to leave a high rating?
-          message:
-              'Tap a star to set your rating. Add more description here if you want.',
-          // your app's logo?
-          submitButton: 'Submit',
-          onCancelled: () => print('cancelled'),
-          onSubmitted: (response) {
-            rateDriver(
-                Provider.of<DriverProvider>(context).id, response.rating);
-          },
-        );
+        showDialog(
+            context: context,
+            builder: (context) => RatingDialog(
+                  // your app's name?
+                  title: 'Order Delivered!',
+                  // encourage your user to leave a high rating?
+                  message: 'Rate your driver.',
+                  // your app's logo?
+                  submitButton: 'Thanks!',
+                  onCancelled: () => print('cancelled'),
+                  onSubmitted: (response) {
+                    rateDriver(
+                        Provider.of<DriverProvider>(context, listen: false).id,
+                        response.rating);
+                  },
+                ));
       }
 
       return result;
@@ -237,7 +222,24 @@ class ApiService {
       debugPrint("_____DRIVER_INFO_____");
       debugPrint(response.body.toString());
       Provider.of<DriverProvider>(context, listen: false).id =
-          json.decode(response.body)['driver']['driverID'];
+          json.decode(response.body)['driver']['driverID'].toString();
+
+      Provider.of<DriverProvider>(context, listen: false).initialize(
+          json.decode(response.body)['driver']['driverID'].toString(),
+          json.decode(response.body)['driver']['name'].toString(),
+          json.decode(response.body)['driver']['phoneNumber'].toString(),
+          int.parse(json
+              .decode(response.body)['driver']['deliveriesCompleted']
+              .toString()),
+          double.parse(
+              json.decode(response.body)['driver']['rating'].toString()),
+          double.parse(json
+              .decode(response.body)['driver']['currentAddress']['latitude']
+              .toString()),
+          double.parse(json
+              .decode(response.body)['driver']['currentAddress']['longitude']
+              .toString()));
+
       Provider.of<DriverProvider>(context, listen: false).allocated = true;
     }
   }
@@ -279,8 +281,9 @@ class ApiService {
   //user/driverSetRating
 
   rateDriver(String driverID, int rating) async {
+    debugPrint("__" + driverID);
     final response =
-        await http.post(Uri.parse(endpoint + '/user/getGroceryLists'),
+        await http.post(Uri.parse(endpoint + '/user/driverSetRating'),
             headers: {
               "Accept": "application/json",
               "content-type": "application/json",
@@ -291,12 +294,12 @@ class ApiService {
 
     if (response.statusCode == 200) {
       debugPrint("code _ 200");
-      Map<String, dynamic> map = jsonDecode(response.body);
-      debugPrint(map['groceryLists'][0].toString());
-      return map['groceryLists']; //CartItem.fromJson(map)
+      // Map<String, dynamic> map = jsonDecode(response.body);
+      // debugPrint(map['groceryLists'][0].toString());
+      // return map['groceryLists']; //CartItem.fromJson(map)
     } else {
       debugPrint("rating err " + response.statusCode.toString());
-      return Map(); //artItem.fromJson(map)
+      // return Map(); //artItem.fromJson(map)
 
     }
   }

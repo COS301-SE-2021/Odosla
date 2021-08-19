@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:odosla/provider/cart_provider.dart';
+import 'package:odosla/provider/driver_provider.dart';
 import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/services/api_service.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,7 @@ class _OrderPage extends State<OrderPage> {
     if (Provider.of<CartProvider>(context, listen: false).activeOrder) {
       setStatus(api.getStatus(context, widget.orderID));
       _timer = new Timer.periodic(
-          Duration(milliseconds: 1000),
+          Duration(milliseconds: 950),
           (_) => {
                 setStatus(api.getStatus(context, widget.orderID)),
                 if (!Provider.of<CartProvider>(context, listen: false)
@@ -104,7 +105,9 @@ class _OrderPage extends State<OrderPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                   buildProgressBar(context),
-                  SizedBox(height: 30),
+                  SizedBox(height: 10),
+                  buildEmployeeInfo(context),
+                  SizedBox(height: 10),
                   buildMap(context),
                   SizedBox(height: 70),
                 ])),
@@ -191,7 +194,7 @@ class _OrderPage extends State<OrderPage> {
 
   Widget buildMap(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 280,
       width: MediaQuery.of(context).size.width,
       child: GoogleMap(
         myLocationButtonEnabled: false,
@@ -199,5 +202,20 @@ class _OrderPage extends State<OrderPage> {
         initialCameraPosition: _initialCameraPosition,
       ),
     );
+  }
+
+  Widget buildEmployeeInfo(BuildContext context) {
+    if (Provider.of<DriverProvider>(context).allocated) {
+      return Container(
+        height: 100,
+        child: Text(Provider.of<DriverProvider>(context).name +
+            "\n" +
+            Provider.of<DriverProvider>(context).rating.toString() +
+            "\n" +
+            Provider.of<DriverProvider>(context).lat.toString()),
+      );
+    } else
+      return Container(
+          height: 100, child: Text("A driver will be assigned shortly"));
   }
 }
