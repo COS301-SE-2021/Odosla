@@ -602,7 +602,10 @@ public class UserController implements UserApi {
         driverObject.setResetCode(driver.getResetCode());
         driverObject.setResetExpiration(driver.getResetExpiration());
         driverObject.setAccountType(String.valueOf(driver.getAccountType()));
-        driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        if(driver.getDriverID()!=null)
+        {
+            driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        }
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
         return driverObject;
@@ -619,7 +622,11 @@ public class UserController implements UserApi {
         customerObject.setResetCode(customer.getResetCode());
         customerObject.setResetExpiration(customer.getResetExpiration());
         customerObject.setAccountType(String.valueOf(customer.getAccountType()));
-        customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        if(customer.getCustomerID()!=null)
+        {
+            customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        }
+
         customerObject.setAddress(String.valueOf(customer.getAddress()));
         List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
         customerObject.setGroceryLists(groceryListObjectList);
@@ -644,7 +651,10 @@ public class UserController implements UserApi {
             shopperObject.setResetExpiration(shopper.getResetExpiration());
             shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
             shopperObject.setShopperID(shopper.getShopperID().toString());
-            shopperObject.setStoreID(shopper.getStoreID().toString());
+            if(shopper.getStoreID()!=null)
+            {
+                shopperObject.setStoreID(shopper.getStoreID().toString());
+            }
             shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
             shopperObject.setOnShift(shopper.getOnShift());
             shopperObject.setIsActive(shopper.isActive());
@@ -721,5 +731,31 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userCompletePackagingOrderResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserCompleteDeliveryResponse> completeDelivery(UserCompleteDeliveryRequest body){
+
+        UserCompleteDeliveryResponse userCompleteDeliveryResponse = new UserCompleteDeliveryResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            CompleteDeliveryRequest request = new CompleteDeliveryRequest(UUID.fromString(body.getOrderID()));
+
+            CompleteDeliveryResponse response = ServiceSelector.getUserService().completeDelivery(request);
+            try{
+                userCompleteDeliveryResponse.setTimestamp(response.getTimestamp().toString());
+                userCompleteDeliveryResponse.setMessage(response.getMessage());
+                userCompleteDeliveryResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userCompleteDeliveryResponse, status);
     }
 }

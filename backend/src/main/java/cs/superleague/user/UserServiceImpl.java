@@ -2039,6 +2039,17 @@ public class UserServiceImpl implements UserService{
             response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
         }
         else{
+            Driver driver = driverRepo.findById(currentOrder.get().getDriverID()).orElse(null);
+            if(driver!=null)
+            {
+                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+                driverRepo.save(driver);
+            }
+            else
+            {
+                throw new InvalidRequestException("Driver isn't set in order");
+            }
+
             response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
         }
 
@@ -2147,12 +2158,14 @@ public class UserServiceImpl implements UserService{
                 if (shoppersAtStore == null){
                     store.setShoppers(new ArrayList<>());
                 }else {
+                    Shopper foundShopper = null;
                     if (shoppersAtStore != null) {
                         for (Shopper s : shoppersAtStore) {
                             if (s.getShopperID().compareTo(shopper.get().getShopperID()) == 0) {
-                                shoppersAtStore.remove(s);
+                                foundShopper= s;
                             }
                         }
+                        shoppersAtStore.remove(foundShopper);
                     }
                     store.setShoppers(shoppersAtStore);
                 }

@@ -2,17 +2,21 @@ package cs.superleague.delivery.responses;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 
+import java.util.UUID;
+
 public class AssignDriverToDeliveryResponse {
     private boolean isAssigned;
     private String message;
     private GeoPoint pickUpLocation;
     private GeoPoint dropOffLocation;
+    private UUID driverID;
 
-    public AssignDriverToDeliveryResponse(boolean isAssigned, String message, GeoPoint pickUpLocation, GeoPoint dropOffLocation) {
+    public AssignDriverToDeliveryResponse(boolean isAssigned, String message, GeoPoint pickUpLocation, GeoPoint dropOffLocation, UUID driverID) {
         this.isAssigned = isAssigned;
         this.message = message;
         this.pickUpLocation = pickUpLocation;
         this.dropOffLocation = dropOffLocation;
+        this.driverID= driverID;
     }
 
     public GeoPoint getPickUpLocation() {
@@ -45,5 +49,13 @@ public class AssignDriverToDeliveryResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public UUID getDriverID() {
+        return driverID;
+    }
+
+    public void setDriverID(UUID driverID) {
+        this.driverID = driverID;
     }
 }
