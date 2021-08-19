@@ -1036,6 +1036,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_GetCustomerByUUIDResponse"
 
+  /user/driverSetRating:
+    post:
+      summary: Endpoint for setting rating use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: driverSetRating
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_DriverSetRatingRequest"
+      responses:
+        "200":
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_DriverSetRatingResponse"
+
 
 components:
 
@@ -2391,4 +2413,24 @@ components:
         timestamp:
           type: string
         message:
+          type: string
+
+    user_DriverSetRatingRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        driverID:
+          type: string
+        rating:
+          type: number
+
+    user_DriverSetRatingResponse:
+      description: This object is output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
           type: string

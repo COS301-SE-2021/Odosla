@@ -784,4 +784,29 @@ public class UserController implements UserApi {
 
         return new ResponseEntity<>(userGetCustomerByUUIDResponse, status);
     }
+
+    @Override
+    public ResponseEntity<UserDriverSetRatingResponse> driverSetRating(UserDriverSetRatingRequest body) {
+        UserDriverSetRatingResponse userDriverSetRatingResponse = new UserDriverSetRatingResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            DriverSetRatingRequest request = new DriverSetRatingRequest(UUID.fromString(body.getDriverID()), body.getRating().doubleValue());
+
+            DriverSetRatingResponse response = ServiceSelector.getUserService().driverSetRating(request);
+            try{
+                userDriverSetRatingResponse.setTimestamp(response.getTimestamp().toString());
+                userDriverSetRatingResponse.setMessage(response.getMessage());
+                userDriverSetRatingResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userDriverSetRatingResponse, status);
+    }
 }

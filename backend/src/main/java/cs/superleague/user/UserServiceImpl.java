@@ -2754,26 +2754,26 @@ public class UserServiceImpl implements UserService{
      *
      * @param request is used to bring in:
      *                userID - user ID to fetch the corresponding shopper from the database
-     *  GetShoppersByUUID should:
+     *  GetCustomerUUID should:
      *                1.Check if request object is not null else throw InvalidRequestException
      *                2.Check if request object's ID is null, else throw InvalidRequestException
-     *                3.Check if shopper exists in database, else throw ShopperDoesNotExist
+     *                3.Check if customer exists in database, else throw CustomerDoesNotExist
      *                5.Return response object
-     * Request object (GetShopperByUUIDRequest)
+     * Request object (GetCustomerUUIDRequest)
      * {
      *               "userID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
      *
      * }
      *
-     * Response object (GetShopperByUUIDResponse)
+     * Response object (GetCustomerUUIDResponse)
      * {
-     *                "shopperEntity": shopperEntity
+     *                "customer": customer
      *                "timeStamp":"2021-01-05T11:50:55"
-     *                "message":"Shopper entity with corresponding user id was returned"
+     *                "message":"Customer with corresponding user id was returned"
      * }
      * @return
      * @throws InvalidRequestException
-     * @throws ShopperDoesNotExistException
+     * @throws CustomerDoesNotExistException
      */
     @Override
     public GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
@@ -2799,5 +2799,74 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("GetCustomerByUUID request is null - could not return customer entity");
         }
         return response;
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                driverID - driver ID to fetch the corresponding driver from the database
+     *                rating- rating given by the customer
+     *  driverSetRating should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if driver exists in database, else throw DriverDoesNotExist
+     *                4.Calculate the rating of the driver and set it
+     *                5.Return response object
+     * Request object (DriverSetRatingRequest)
+     * {
+     *               "driverID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a",
+     *               "rating": 4
+     *
+     * }
+     *
+     * Response object (DriverSetRatingResponse)
+     * {
+     *                "success": true
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"DriverSetRating request is null - could not set rating"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws DriverDoesNotExistException
+     */
+    @Override
+    public DriverSetRatingResponse driverSetRating(DriverSetRatingRequest request) throws InvalidRequestException, DriverDoesNotExistException
+    {
+        DriverSetRatingResponse response=null;
+        if(request != null){
+
+            if(request.getDriverID()==null){
+                throw new InvalidRequestException("Driver ID is null in request object - could not find driver");
+            }
+
+            if(request.getRating()==-1){
+                response = new DriverSetRatingResponse(false, Calendar.getInstance().getTime(), "No rating was set");
+            }
+            else
+            {
+                Driver driver=null;
+                try {
+                    driver = driverRepo.findById(request.getDriverID()).orElse(null);
+                }catch(Exception e){
+                    throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+                }
+                if(driver==null) {
+                    throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+                }
+
+                int numRatings= driver.getNumberOfRatings()+1;
+                double rating = driver.getRating() + request.getRating();
+
+                driver.setRating(rating/numRatings);
+                driverRepo.save(driver);
+
+                response = new DriverSetRatingResponse(true, Calendar.getInstance().getTime(), "Rating complete");
+
+            }
+            return response;
+        }
+        else{
+            throw new InvalidRequestException("DriverSetRating request is null - could not set rating");
+        }
     }
 }
