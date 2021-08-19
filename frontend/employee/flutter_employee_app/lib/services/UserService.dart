@@ -18,8 +18,8 @@ import 'package:provider/provider.dart';
 class UserService{
 
   final _storage = new FlutterSecureStorage();
-  final String endPoint = "75c59b94a2f1.ngrok.io/";
-  //final String endPoint = "10.0.2.2:8080/";
+  //final String endPoint = "75c59b94a2f1.ngrok.io/";
+  final String endPoint = "10.0.2.2:8080/";
 
   Future<bool> loginUser(String email, String password, String userType, BuildContext context) async{
     final loginURL = Uri.parse("http://"+endPoint+"user/loginUser");

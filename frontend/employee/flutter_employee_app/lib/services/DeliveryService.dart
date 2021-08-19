@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 import 'UserService.dart';
 class DeliveryService{
 
-   final String endPoint = "75c59b94a2f1.ngrok.io/";
-
+   //final String endPoint = "75c59b94a2f1.ngrok.io/";
+   final String endPoint = "10.0.2.2:8080/";
    final UserService _userService=GetIt.I.get();
 
    Future<String> getNextOrderForDriver(BuildContext context) async {

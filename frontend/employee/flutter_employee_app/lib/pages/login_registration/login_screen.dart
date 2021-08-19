@@ -32,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   int itemCount = 3;
   int selected = 1;
   bool _isInAsyncCall = false;
+  bool _showPassword=false;
 
   final List<String> _pictures = <String>[
     "assets/shopper.png",
@@ -123,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            obscureText: true,
+            obscureText: _showPassword?false:true,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
@@ -136,6 +137,17 @@ class _LoginScreenState extends State<LoginScreen> {
               }),
             },
             decoration: InputDecoration(
+              suffixIcon:
+              IconButton(
+                  onPressed: (){
+                    setState(() {
+                      _showPassword=!_showPassword;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  )),
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
