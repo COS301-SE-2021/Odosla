@@ -290,11 +290,11 @@ public class ShoppingController implements ShoppingApi{
                 orderObject.setOrderId(order.getOrderID().toString());
                 orderObject.setItems(populateItems(order.getItems()));
                 //orderObject.setOrderItems(populateOrderItems(order.getOrderItems()));
-                orderObject.setCreateDate(order.getCreateDate().toString());
+                orderObject.setCreateDate(order.getCreateDate().getTime().toString());
                 orderObject.setStatus(order.getStatus().toString());
                 orderObject.setDeliveryAddress(order.getDeliveryAddress().getAddress());
                 orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
-                orderObject.setProcessDate(order.getProcessDate().toString());
+                orderObject.setProcessDate(order.getProcessDate().getTime().toString());
                 orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
                 orderObject.setUserId(order.getUserID().toString());
                 orderObject.setStoreId(order.getStoreID().toString());

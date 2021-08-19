@@ -6,7 +6,6 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table()
 public class OrderItems {
 
     @Id
