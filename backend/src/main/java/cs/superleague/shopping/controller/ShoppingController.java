@@ -3,10 +3,7 @@ package cs.superleague.shopping.controller;
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
@@ -286,7 +283,25 @@ public class ShoppingController implements ShoppingApi{
                 response.setDate(getNextQueuedResponse.getTimeStamp().toString());
                 response.setMessage(getNextQueuedResponse.getMessage());
                 response.setSuccess(getNextQueuedResponse.isResponse());
-                response.setNewCurrentOrder(getNextQueuedResponse.getNewCurrentOrder());
+                OrderObject orderObject = new OrderObject();
+                Order order = getNextQueuedResponse.getNewCurrentOrder();
+
+                orderObject.setStoreAddress(order.getStoreAddress().getAddress());
+                orderObject.setOrderId(order.getOrderID().toString());
+                orderObject.setItems(populateItems(order.getItems()));
+                //orderObject.setOrderItems(populateOrderItems(order.getOrderItems()));
+                orderObject.setCreateDate(order.getCreateDate().toString());
+                orderObject.setStatus(order.getStatus().toString());
+                orderObject.setDeliveryAddress(order.getDeliveryAddress().getAddress());
+                orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
+                orderObject.setProcessDate(order.getProcessDate().toString());
+                orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
+                orderObject.setUserId(order.getUserID().toString());
+                orderObject.setStoreId(order.getStoreID().toString());
+                orderObject.setShopperId(order.getShopperID().toString());
+                orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+
+                response.setNewCurrentOrder(orderObject);
                 response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
 
             } catch (Exception e){
@@ -684,6 +699,34 @@ public class ShoppingController implements ShoppingApi{
 
 
             responseBody.add(currentOrder);
+        }
+
+        return responseBody;
+    }
+
+    private List<OrderItemsObject> populateOrderItems(List<OrderItems> responseItems) throws NullPointerException{
+
+        List<OrderItemsObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseItems.size(); i++){
+
+            OrderItemsObject currentItem = new OrderItemsObject();
+
+            currentItem.setName(responseItems.get(i).getName());
+            currentItem.setDescription(responseItems.get(i).getDescription());
+            currentItem.setBarcode(responseItems.get(i).getBarcode());
+            currentItem.setProductId(responseItems.get(i).getProductID());
+            currentItem.setOrderId(responseItems.get(i).getOrderID().toString());
+            currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
+            currentItem.setQuantity(responseItems.get(i).getQuantity());
+            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+            currentItem.setBrand(responseItems.get(i).getBrand());
+            currentItem.setItemType(responseItems.get(i).getItemType());
+            currentItem.setSize(responseItems.get(i).getSize());
+            currentItem.setTotalCost(BigDecimal.valueOf(responseItems.get(i).getTotalCost()));
+
+            responseBody.add(currentItem);
+
         }
 
         return responseBody;
