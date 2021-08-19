@@ -11,6 +11,8 @@ import cs.superleague.delivery.requests.AssignDriverToDeliveryRequest;
 import cs.superleague.delivery.responses.AddDeliveryDetailResponse;
 import cs.superleague.delivery.responses.AssignDriverToDeliveryResponse;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.payment.PaymentService;
+import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.exceptions.PaymentException;
@@ -59,6 +61,8 @@ public class AssignDriverToDeliveryUnitTest {
     StoreRepo storeRepo;
     @InjectMocks
     JwtUtil jwtTokenUtil;
+    @Mock
+    PaymentServiceImpl paymentService;
     @Mock
     UserServiceImpl userService;
     @Mock

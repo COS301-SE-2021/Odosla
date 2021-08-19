@@ -92,7 +92,7 @@ public class GetNextOrderForDriverIntegrationTest {
         deliveryRepo.save(delivery);
         GetNextOrderForDriverRequest request = new GetNextOrderForDriverRequest(jwtToken, pickUpLocation);
         GetNextOrderForDriverResponse response = deliveryService.getNextOrderForDriver(request);
-        assertEquals(response.getMessage(), "No available deliveries in the database.");
+        assertEquals(response.getMessage(), "No available deliveries in the range specified.");
         assertEquals(response.getDelivery(), null);
     }
 
