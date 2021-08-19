@@ -1014,6 +1014,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdResponse"
 
+  /user/getCustomerByUUID:
+    post:
+      summary: Endpoint for get customer by UUID use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getCustomerByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetCustomerByUUIDRequest"
+      responses:
+        "200":
+          description: Returns customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetCustomerByUUIDResponse"
+
 
 components:
 
@@ -2352,3 +2374,21 @@ components:
           type: string
         totalCost:
           type: number
+
+    user_GetCustomerByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userID:
+          type: string
+
+    user_GetCustomerByUUIDResponse:
+      description: This object is output
+      type: object
+      properties:
+        customer:
+          $ref: "#/components/schemas/CustomerObject"
+        timestamp:
+          type: string
+        message:
+          type: string
