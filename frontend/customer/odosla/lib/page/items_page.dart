@@ -142,7 +142,7 @@ class _ItemsPageState extends State<ItemsPage> {
                 //),
                 child: Center(
                   child: Image.asset(
-                    './' + product.imgUrl,
+                    'assets/' + product.imgUrl,
                   ), //product.imgUrl),
                 ),
               ),

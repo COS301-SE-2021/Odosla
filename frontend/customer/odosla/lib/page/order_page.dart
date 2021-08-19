@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/provider/status_provider.dart';
@@ -37,7 +35,8 @@ class _OrderPage extends State<OrderPage> {
 
   @override
   void initState() {
-    setStatus(api.getStatus(context, widget.orderID));
+    if (Provider.of<CartProvider>(context, listen: false).activeOrder)
+      setStatus(api.getStatus(context, widget.orderID));
     //debugPrint("_A_SD_ASD: " + widget.orderID);
     if (Provider.of<CartProvider>(context, listen: false).activeOrder) {
       setStatus(api.getStatus(context, widget.orderID));
@@ -47,8 +46,7 @@ class _OrderPage extends State<OrderPage> {
                 setStatus(api.getStatus(context, widget.orderID)),
                 if (!Provider.of<CartProvider>(context, listen: false)
                     .activeOrder)
-                  _timer.cancel(),
-                debugPrint("CANCELLED")
+                  {_timer.cancel(), debugPrint("CANCELLED")}
               });
     }
 
@@ -171,9 +169,9 @@ class _OrderPage extends State<OrderPage> {
                         },
                       ),
 
-                      Text("eta: 43m",
-                          style: TextStyle(
-                              fontSize: 23, fontWeight: FontWeight.normal)),
+                      // Text("eta: 43m",
+                      //     style: TextStyle(
+                      //         fontSize: 23, fontWeight: FontWeight.normal)),
                     ])),
             SizedBox(
               height: 10,

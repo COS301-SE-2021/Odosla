@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:odosla/data/products.dart';
 import 'package:odosla/model/cart_item.dart';
 import 'package:odosla/provider/cart_provider.dart';
-import 'package:odosla/provider/status_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -86,7 +84,7 @@ class _ItemDetailPage extends State<ItemDetailPage> {
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 30),
             child: Image.asset(
-              './' + widget.item.imgUrl,
+              'assets/' + widget.item.imgUrl,
               fit: BoxFit.cover,
             ),
           ),
@@ -127,6 +125,7 @@ class _ItemDetailPage extends State<ItemDetailPage> {
                           debugPrint("!!"),
                           Provider.of<CartProvider>(context, listen: false)
                               .addItem(widget.item, _count),
+                          debugPrint("COUNT: " + _count.toString()),
                           Provider.of<CartProvider>(context, listen: false)
                               .store = storeID,
                           Navigator.pop(context),

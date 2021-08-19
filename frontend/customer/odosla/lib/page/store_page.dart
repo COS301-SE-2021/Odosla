@@ -1,10 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:odosla/data/products.dart';
 import 'package:odosla/main.dart';
-import 'package:odosla/model/cart_item.dart';
 import 'package:odosla/model/store.dart';
 import 'package:odosla/page/account_page.dart';
 import 'package:odosla/page/account_settings_page.dart';
@@ -12,15 +8,11 @@ import 'package:odosla/page/cart_page.dart';
 import 'package:odosla/page/items_page.dart';
 import 'package:odosla/page/order_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
-import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/services/api_service.dart';
-import 'package:odosla/widget/track_bar_widget.dart';
-import 'package:provider/provider.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:odosla/widget/cart_bar_widget.dart';
-import 'package:http/http.dart' as http;
-import 'package:convert/convert.dart';
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class StorePage extends StatefulWidget {
   @override
@@ -169,7 +161,7 @@ class _StorePageState extends State<StorePage> {
                 //),
                 child: Center(
                   child: Image.asset(
-                    product.imgUrl,
+                    "assets/" + product.imgUrl,
                   ), //product.imgUrl),
                 ),
               ),

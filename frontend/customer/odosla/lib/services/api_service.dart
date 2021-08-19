@@ -11,10 +11,11 @@ import 'package:odosla/model/store.dart';
 import 'package:odosla/page/order_page.dart';
 import 'package:odosla/page/store_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
+import 'package:odosla/provider/driver_provider.dart';
 import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/services/settings.dart';
 import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 import 'UserService.dart';
 
@@ -97,6 +98,7 @@ class ApiService {
   }
 
   void submitOrder(List<CartItem> items, BuildContext context) async {
+    debugPrint(items.toString());
     final storeID = items.first.storeID;
     String pi = items.first.id;
     List<dynamic> itemsList = itemListToJson(items);
@@ -112,7 +114,8 @@ class ApiService {
               "Access-Control-Allow-Methods": "POST, OPTIONS",
             },
             body: jsonEncode({
-              "userId": _userService.getJWTAsString(), //getCurrentUser
+              "jwtToken": Provider.of<StatusProvider>(context, listen: false)
+                  .jwt, //getCurrentUser
               "listOfItems": itemsList,
               "discount": 0,
               "storeId": "$storeID",
@@ -166,26 +169,45 @@ class ApiService {
       debugPrint(result);
       Provider.of<StatusProvider>(context, listen: false).status = result;
 
-      if (result == "DELIVERED") {
+      if (result == "ASSIGNED_DRIVER") {
+        allocateDriver(context, orderID);
+      } else if (result == "DELIVERED") {
+        Provider.of<DriverProvider>(context).allocated = false;
         Provider.of<CartProvider>(context, listen: false).activeOrder = false;
         Navigator.of(context).push(
             MaterialPageRoute(builder: (BuildContext context) => StorePage()));
-        Alert(
-          context: context,
-          title: "Order delivered",
-          desc: "Enjoy your day!",
-          buttons: [
-            DialogButton(
-              color: Colors.deepOrange,
-              child: Text(
-                "THANKS",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () => Navigator.pop(context),
-              width: 120,
-            )
-          ],
-        ).show();
+        // Alert(
+        //   context: context,
+        //   title: "Order delivered",
+        //   content: Column(
+        //     children: [],
+        //   ),
+        //   buttons: [
+        //     DialogButton(
+        //       color: Colors.deepOrange,
+        //       child: Text(
+        //         "THANKS",
+        //         style: TextStyle(color: Colors.white, fontSize: 20),
+        //       ),
+        //       onPressed: () => Navigator.pop(context),
+        //       width: 120,
+        //     )
+        //   ],
+        // ).show();
+        RatingDialog(
+          // your app's name?
+          title: 'Rating Dialog',
+          // encourage your user to leave a high rating?
+          message:
+              'Tap a star to set your rating. Add more description here if you want.',
+          // your app's logo?
+          submitButton: 'Submit',
+          onCancelled: () => print('cancelled'),
+          onSubmitted: (response) {
+            rateDriver(
+                Provider.of<DriverProvider>(context).id, response.rating);
+          },
+        );
       }
 
       return result;
@@ -194,6 +216,29 @@ class ApiService {
       debugPrint("error " + response.statusCode.toString());
       debugPrint(response.body.toString());
       return "error getting status";
+    }
+  }
+
+  void allocateDriver(BuildContext context, String id) async {
+    final response = await http.post(
+        Uri.parse(endpoint + '/delivery/getDeliveryDriverByOrderId'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({
+          "orderID": "$id",
+        }));
+
+    if (response.statusCode == 200 &&
+        !Provider.of<DriverProvider>(context, listen: false).allocated) {
+      debugPrint("_____DRIVER_INFO_____");
+      debugPrint(response.body.toString());
+      Provider.of<DriverProvider>(context, listen: false).id =
+          json.decode(response.body)['driver']['driverID'];
+      Provider.of<DriverProvider>(context, listen: false).allocated = true;
     }
   }
 
@@ -207,6 +252,7 @@ class ApiService {
   }
 
   Future<Map<String, List<CartItem>>> getGroceryLists(String jwt) async {
+    debugPrint(jwt);
     final response =
         await http.post(Uri.parse(endpoint + '/user/getGroceryLists'),
             headers: {
@@ -220,7 +266,7 @@ class ApiService {
     if (response.statusCode == 200) {
       debugPrint("code _ 200");
       Map<String, dynamic> map = jsonDecode(response.body);
-      debugPrint(map.entries.toString());
+      debugPrint(map['groceryLists'][0].toString());
       return map['groceryLists']; //CartItem.fromJson(map)
     } else {
       debugPrint(jwt);
@@ -229,6 +275,36 @@ class ApiService {
 
     }
   }
+
+  //user/driverSetRating
+
+  rateDriver(String driverID, int rating) async {
+    final response =
+        await http.post(Uri.parse(endpoint + '/user/getGroceryLists'),
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+            },
+            body: jsonEncode({"driverID": driverID, "rating": rating}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map['groceryLists'][0].toString());
+      return map['groceryLists']; //CartItem.fromJson(map)
+    } else {
+      debugPrint("rating err " + response.statusCode.toString());
+      return Map(); //artItem.fromJson(map)
+
+    }
+  }
+
+  // Map<String, List<CartItem>> createLists(Map<String, dynamic> input) {
+  //   Map<String, List<CartItem>> map = Map();
+  //   List<(json.decode(json.encode(input['groceryLists'])) as List)
+  // }
 
   void setGroceryLists(String jwt) async {
     final response =
