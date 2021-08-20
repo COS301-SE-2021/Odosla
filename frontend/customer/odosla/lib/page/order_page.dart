@@ -28,10 +28,26 @@ class _OrderPage extends State<OrderPage> {
   late Future<String> _status;
   late Timer _timer = Timer(Duration.zero, () {});
 
+  late GoogleMapController controller;
+
+  late List<Marker> markers = [];
+
+  late BitmapDescriptor sourceIcon;
+  late BitmapDescriptor destinationIcon;
+
   void setStatus(Future<String> s) {
     setState(() {
       _status = s;
     });
+  }
+
+  void setSourceAndDestinationIcons() async {
+    sourceIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5, size: Size(5, 5)),
+        'assets/shop/me.png');
+
+    destinationIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), 'assets/map/shop.png');
   }
 
   @override
@@ -49,9 +65,42 @@ class _OrderPage extends State<OrderPage> {
                     .activeOrder)
                   {_timer.cancel(), debugPrint("CANCELLED")}
               });
+      setSourceAndDestinationIcons();
     }
 
+    markers = [
+      Marker(
+          markerId: MarkerId("you"),
+          position: LatLng(-25.763428, 28.260879),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+          infoWindow: InfoWindow(title: "me")),
+      Marker(
+        markerId: MarkerId("shop"),
+        position: LatLng(
+            Provider.of<CartProvider>(context, listen: false)
+                .activeStoreLocation['lat']!,
+            Provider.of<CartProvider>(context, listen: false)
+                .activeStoreLocation['long']!),
+        icon: BitmapDescriptor.defaultMarker,
+        infoWindow: InfoWindow(title: "store")),
+
+    ];
+
     super.initState();
+  }
+
+  void driver() {
+    setState(() {
+      if (markers.length > 2) markers.removeLast();
+      markers.add(Marker(
+        markerId: MarkerId("driver"),
+        position: LatLng(
+            Provider.of<DriverProvider>(context, listen: false).lat,
+            Provider.of<DriverProvider>(context, listen: false).lat),
+        icon: BitmapDescriptor.defaultMarker,
+          infoWindow: InfoWindow(title: Provider.of<DriverProvider>(context, listen: false).name),
+      ));
+    });
   }
 
   @override
@@ -107,7 +156,6 @@ class _OrderPage extends State<OrderPage> {
                   buildProgressBar(context),
                   SizedBox(height: 10),
                   buildEmployeeInfo(context),
-                  SizedBox(height: 10),
                   buildMap(context),
                   SizedBox(height: 70),
                 ])),
@@ -197,25 +245,54 @@ class _OrderPage extends State<OrderPage> {
       height: 280,
       width: MediaQuery.of(context).size.width,
       child: GoogleMap(
+        onMapCreated: _onMapCreated,
         myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
+        zoomControlsEnabled: true,
+        markers: markers.toSet(),
         initialCameraPosition: _initialCameraPosition,
       ),
     );
+  }
+
+  void _onMapCreated(GoogleMapController control) {
+    controller = control;
+    controller.showMarkerInfoWindow(MarkerId("you"));
+    controller.showMarkerInfoWindow(MarkerId("shop"));
+    controller.showMarkerInfoWindow(MarkerId("driver"));
   }
 
   Widget buildEmployeeInfo(BuildContext context) {
     if (Provider.of<DriverProvider>(context).allocated) {
       return Container(
         height: 100,
-        child: Text(Provider.of<DriverProvider>(context).name +
-            "\n" +
-            Provider.of<DriverProvider>(context).rating.toString() +
-            "\n" +
-            Provider.of<DriverProvider>(context).lat.toString()),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text("Driver: "),
+                Text(Provider.of<DriverProvider>(context).name)
+              ],
+            ),
+            Row(
+              children: [
+                Text("Deliveries completed: "),
+                Text(Provider.of<DriverProvider>(context).trips.toString())
+              ],
+            ),
+            Row(
+              children: [
+                Text("Rating: "),
+                Text(Provider.of<DriverProvider>(context).rating.toString() +
+                    "/5")
+              ],
+            )
+          ],
+        ),
       );
     } else
       return Container(
-          height: 100, child: Text("A driver will be assigned shortly"));
+          height: 100,
+          child: Text("A driver will be assigned shortly",
+              style: TextStyle(fontSize: 16)));
   }
 }

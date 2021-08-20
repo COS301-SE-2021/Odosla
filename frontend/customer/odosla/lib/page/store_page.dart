@@ -105,9 +105,10 @@ class _StorePageState extends State<StorePage> {
                           items[index].openTime, items[index].closeTime)) {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => ItemsPage(
-                                  items[index].id,
-                                  items[index].name,
-                                ) //ProductPage(product: product),
+                                    items[index].id, items[index].name, {
+                                  'lat': items[index].lat,
+                                  'long': items[index].long
+                                }) //ProductPage(product: product),
                             ));
                       } else {
                         Alert(

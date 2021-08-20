@@ -10,11 +10,12 @@ class DriverProvider with ChangeNotifier {
   bool _allocated = false;
   double _lat = -25;
   double _long = 28;
+  String _deliveryID = "";
 
   DriverProvider() {}
 
   void initialize(String id, String name, String contact, int trips,
-      double rating, double lat, double long) {
+      double rating, double lat, double long, String deliveryID) {
     _id = id;
     _name = name;
     _contact = contact;
@@ -22,12 +23,19 @@ class DriverProvider with ChangeNotifier {
     _rating = rating;
     _lat = lat;
     _long = long;
+    _deliveryID = deliveryID;
   }
 
+  String get deliveryID => _deliveryID;
   String get name => _name;
   String get contact => _contact;
   int get trips => _trips;
   double get rating => _rating;
+
+  set deliveryID(String id) {
+    _deliveryID = id;
+    notifyListeners();
+  }
 
   String get id {
     return _id;

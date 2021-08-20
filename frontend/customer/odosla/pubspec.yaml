@@ -104,6 +104,9 @@ flutter:
     - assets/item/woolworthsAppleJuice.png
     - assets/item/woolworthsCheese.png
     - assets/item/woolworthsMilk.png
+    - assets/map/car.png
+    - assets/map/me.png
+    - assets/map/shop.png
     #   - images/a_dot_burr.jpeg
     #  - images/a_dot_ham.jpeg
 

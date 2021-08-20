@@ -238,7 +238,8 @@ class ApiService {
               .toString()),
           double.parse(json
               .decode(response.body)['driver']['currentAddress']['longitude']
-              .toString()));
+              .toString()),
+          json.decode(response.body)['deliveryID'].toString());
 
       Provider.of<DriverProvider>(context, listen: false).allocated = true;
     }
@@ -332,6 +333,32 @@ class ApiService {
     } else {
       debugPrint(jwt);
       debugPrint("___ err " + response.statusCode.toString());
+    }
+  }
+
+  void updateDriverLocation(BuildContext context, String deliveryID) async {
+    final response =
+        await http.post(Uri.parse(endpoint + '/delivery/trackDelivery'),
+            headers: {
+              "Accept": "application/json",
+              "content-type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "POST, OPTIONS",
+            },
+            body: jsonEncode({"deliveryID": deliveryID}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint("_TRACKING_");
+      debugPrint(map.entries.toString());
+
+      Provider.of<DriverProvider>(context, listen: false).lat =
+          jsonDecode(response.body)['currentLocation']['latitude'];
+      Provider.of<DriverProvider>(context, listen: false).lat =
+          jsonDecode(response.body)['currentLocation']['longitude'];
+    } else {
+      debugPrint("_track_ err " + response.statusCode.toString());
     }
   }
 }
