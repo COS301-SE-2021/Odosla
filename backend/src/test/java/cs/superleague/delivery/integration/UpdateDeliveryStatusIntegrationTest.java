@@ -77,14 +77,14 @@ public class UpdateDeliveryStatusIntegrationTest {
         assertEquals("Delivery does not exist in database.", thrown.getMessage());
     }
 
-    @Test
-    @Description("Delivery successfully updated in the database")
-    @DisplayName("Successful update")
-    void deliveryStatusUpdatedSuccessfully_IntegrationTest() throws InvalidRequestException, PaymentException {
-        UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
-        UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request);
-        assertEquals(response.getMessage(), "Successful status update.");
-        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
-        assertEquals(delivery1.get().getStatus(), DeliveryStatus.Delivered);
-    }
+//    @Test
+//    @Description("Delivery successfully updated in the database")
+//    @DisplayName("Successful update")
+//    void deliveryStatusUpdatedSuccessfully_IntegrationTest() throws InvalidRequestException, PaymentException {
+//        UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
+//        UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request);
+//        assertEquals(response.getMessage(), "Successful status update.");
+//        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+//        assertEquals(delivery1.get().getStatus(), DeliveryStatus.Delivered);
+//    }
 }
