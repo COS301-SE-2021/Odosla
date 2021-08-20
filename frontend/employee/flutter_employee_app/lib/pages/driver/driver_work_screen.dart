@@ -37,6 +37,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
   bool _delivered=false;
   bool _isLoading=true;
   DeliveryService _deliveryService=GetIt.I.get();
+
   Widget _popUpSuccessfulFoundDeliveries(BuildContext context){
 
     Delivery _delivery=Provider.of<DeliveryProvider>(context).delivery;
@@ -84,8 +85,8 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
       ],
     );
   }
-  Widget _popUpGoToMap(BuildContext context){
 
+  Widget _popUpGoToMap(BuildContext context){
     return new AlertDialog(
       title: const Text('Go to map'),
       content: new Column(
@@ -122,7 +123,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
 
   initState(){
     setDelivery();
-    // Provider.of<UtilityProvider>(context, listen: false).redo=true;
   }
 
   void setDelivery() async {
@@ -167,6 +167,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
         Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
       });
     }
+
     await _userService.getCurrentUser(context).then((value) =>
     {
       setState(() {

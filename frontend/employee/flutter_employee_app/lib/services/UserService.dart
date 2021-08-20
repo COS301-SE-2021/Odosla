@@ -238,12 +238,13 @@ class UserService{
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS"
     };
+
     String jwt="";
+
     await this.getJWTAsString().then((value) => {
       jwt=value!
-    }
+    });
 
-    );
     while (jwt==""){
       await getJWTAsString().then((value) =>
       jwt=value!,
