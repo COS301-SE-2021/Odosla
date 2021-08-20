@@ -3,10 +3,7 @@ package cs.superleague.shopping.controller;
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
@@ -286,7 +283,25 @@ public class ShoppingController implements ShoppingApi{
                 response.setDate(getNextQueuedResponse.getTimeStamp().toString());
                 response.setMessage(getNextQueuedResponse.getMessage());
                 response.setSuccess(getNextQueuedResponse.isResponse());
-                response.setNewCurrentOrder(getNextQueuedResponse.getNewCurrentOrder());
+                OrderObject orderObject = new OrderObject();
+                Order order = getNextQueuedResponse.getNewCurrentOrder();
+
+                orderObject.setStoreAddress(order.getStoreAddress().getAddress());
+                orderObject.setOrderId(order.getOrderID().toString());
+                orderObject.setItems(populateItems(order.getItems()));
+                //orderObject.setOrderItems(populateOrderItems(order.getOrderItems()));
+                orderObject.setCreateDate(order.getCreateDate().getTime().toString());
+                orderObject.setStatus(order.getStatus().toString());
+                orderObject.setDeliveryAddress(order.getDeliveryAddress().getAddress());
+                orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
+                orderObject.setProcessDate(order.getProcessDate().getTime().toString());
+                orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
+                orderObject.setUserId(order.getUserID().toString());
+                orderObject.setStoreId(order.getStoreID().toString());
+                orderObject.setShopperId(order.getShopperID().toString());
+                orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+
+                response.setNewCurrentOrder(orderObject);
                 response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
 
             } catch (Exception e){
@@ -453,8 +468,8 @@ public class ShoppingController implements ShoppingApi{
         Store store5=new Store(storeUUID5, 8, 20, "Game", 2, 7, true, "shop/game.png");
         Store store6=new Store(storeUUID6, 7, 18, "Food Lover's Market", 2, 7, true, "shop/foodLoversMarket.png");
         Store store7=new Store(storeUUID7, 8, 20, "Pep", 2, 7, true, "shop/pep.png");
-        GeoPoint store1Location = new GeoPoint(-25.762862391432126, 28.261305943073157, "Apple street");
-        GeoPoint store2Location = new GeoPoint(-25.760319754713873, 28.278808593750004, "Banana Street");
+        GeoPoint store1Location = new GeoPoint(-25.770344, 28.234631, "Pick n Pay Brooklyn");
+        GeoPoint store2Location = new GeoPoint(-25.7588746 , 28.2429369, "Hillcrest Boulevard");
         GeoPoint store3Location = new GeoPoint(-25.782541156164545, 28.261452959595255, "Grape street");
         GeoPoint store4Location = new GeoPoint(-25.705154853561545, 28.296656215156128, "Avo Street");
         GeoPoint store5Location = new GeoPoint(-25.725151681616511, 28.262516128952825, "Strawberry street");
@@ -483,16 +498,16 @@ public class ShoppingController implements ShoppingApi{
         storeRepo.save(store6);
         storeRepo.save(store7);
 
-        Customer customer = new Customer();
-        customer.setName("Adam");
-        customer.setSurname("Isenberg");
-        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
-        customer.setAccountType(UserType.CUSTOMER);
-        customer.setEmail("adamisenberg@gmail.com");
-        customer.setPassword("fhkjdfh534534!");
-        customer.setPhoneNumber("0835233041");
-
-        customerRepo.save(customer);
+//        Customer customer = new Customer();
+//        customer.setName("Adam");
+//        customer.setSurname("Isenberg");
+//        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
+//        customer.setAccountType(UserType.CUSTOMER);
+//        customer.setEmail("adamisenberg@gmail.com");
+//        customer.setPassword("fhkjdfh534534!");
+//        customer.setPhoneNumber("0835233041");
+//
+//        customerRepo.save(customer);
 
 
        // HttpStatus httpStatus = HttpStatus.OK;
@@ -597,8 +612,15 @@ public class ShoppingController implements ShoppingApi{
             currentShopper.setResetCode(responseShoppers.get(i).getResetCode());
             currentShopper.setResetExpiration(responseShoppers.get(i).getResetExpiration());
             currentShopper.setAccountType(String.valueOf(responseShoppers.get(i).getAccountType()));
-            currentShopper.setShopperID(responseShoppers.get(i).getShopperID().toString());
-            currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
+            if(responseShoppers.get(i).getShopperID()!=null)
+            {
+                currentShopper.setShopperID(responseShoppers.get(i).getShopperID().toString());
+            }
+            if(responseShoppers.get(i).getStoreID()!=null)
+            {
+                currentShopper.setStoreID(responseShoppers.get(i).getStoreID().toString());
+            }
+
             currentShopper.setOrdersCompleted(responseShoppers.get(i).getOrdersCompleted());
             currentShopper.setOnShift(responseShoppers.get(i).getOnShift());
             currentShopper.setIsActive(responseShoppers.get(i).isActive());
@@ -617,7 +639,11 @@ public class ShoppingController implements ShoppingApi{
 
             StoreObject currentStore = new StoreObject();
 
-            currentStore.setStoreID(responseStores.get(i).getStoreID().toString());
+            if(responseStores.get(i).getStoreID()!=null)
+            {
+                currentStore.setStoreID(responseStores.get(i).getStoreID().toString());
+            }
+
             currentStore.setStoreBrand(responseStores.get(i).getStoreBrand());
             currentStore.setOpeningTime(responseStores.get(i).getOpeningTime());
             currentStore.setClosingTime(responseStores.get(i).getClosingTime());
@@ -625,6 +651,11 @@ public class ShoppingController implements ShoppingApi{
             currentStore.setMaxShoppers(responseStores.get(i).getMaxShoppers());
             currentStore.setIsOpen(responseStores.get(i).getOpen());
             currentStore.setImageUrl(responseStores.get(i).getImgUrl());
+
+            if(responseStores.get(i).getStoreLocation()!=null)
+            {
+                currentStore.setStoreLocation(populateGeoPointObject(responseStores.get(i).getStoreLocation()));
+            }
 
             responseBody.add(currentStore);
 
@@ -678,4 +709,39 @@ public class ShoppingController implements ShoppingApi{
         return responseBody;
     }
 
+    private List<OrderItemsObject> populateOrderItems(List<OrderItems> responseItems) throws NullPointerException{
+
+        List<OrderItemsObject> responseBody = new ArrayList<>();
+
+        for(int i = 0; i < responseItems.size(); i++){
+
+            OrderItemsObject currentItem = new OrderItemsObject();
+
+            currentItem.setName(responseItems.get(i).getName());
+            currentItem.setDescription(responseItems.get(i).getDescription());
+            currentItem.setBarcode(responseItems.get(i).getBarcode());
+            currentItem.setProductId(responseItems.get(i).getProductID());
+            currentItem.setOrderId(responseItems.get(i).getOrderID().toString());
+            currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
+            currentItem.setQuantity(responseItems.get(i).getQuantity());
+            currentItem.setImageUrl(responseItems.get(i).getImageUrl());
+            currentItem.setBrand(responseItems.get(i).getBrand());
+            currentItem.setItemType(responseItems.get(i).getItemType());
+            currentItem.setSize(responseItems.get(i).getSize());
+            currentItem.setTotalCost(BigDecimal.valueOf(responseItems.get(i).getTotalCost()));
+
+            responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
+    public GeoPointObject populateGeoPointObject(GeoPoint location){
+        GeoPointObject locationObject = new GeoPointObject();
+        locationObject.setAddress(location.getAddress());
+        locationObject.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+        locationObject.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+        return locationObject;
+    }
 }

@@ -1,14 +1,15 @@
 package cs.superleague.delivery.responses;
 
-import java.util.UUID;
+import cs.superleague.delivery.dataclass.Delivery;
+
 
 public class GetNextOrderForDriverResponse {
     private String message;
-    private UUID deliveryID;
+    private Delivery delivery;
 
-    public GetNextOrderForDriverResponse(String message, UUID deliveryID) {
+    public GetNextOrderForDriverResponse(String message, Delivery delivery) {
         this.message = message;
-        this.deliveryID = deliveryID;
+        this.delivery = delivery;
     }
 
     public String getMessage() {
@@ -19,11 +20,11 @@ public class GetNextOrderForDriverResponse {
         this.message = message;
     }
 
-    public UUID getDeliveryID() {
-        return deliveryID;
+    public Delivery getDelivery() {
+        return delivery;
     }
 
-    public void setDeliveryID(UUID deliveryID) {
-        this.deliveryID = deliveryID;
+    public void setDeliveryID(Delivery delivery) {
+        this.delivery = delivery;
     }
 }

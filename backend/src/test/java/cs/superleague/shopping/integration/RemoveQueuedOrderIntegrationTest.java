@@ -1,6 +1,7 @@
 package cs.superleague.shopping.integration;
 
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
@@ -25,6 +26,9 @@ import cs.superleague.shopping.requests.RemoveQueuedOrderRequest;
 import cs.superleague.shopping.responses.AddToQueueResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.UserServiceImpl;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.repos.CustomerRepo;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +59,12 @@ public class RemoveQueuedOrderIntegrationTest {
 
     @Autowired
     ItemRepo itemRepo;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
+    CustomerRepo customerRepo;
 
     /* Requests */
     RemoveQueuedOrderRequest removeQueuedOrderRequest;
@@ -90,8 +100,18 @@ public class RemoveQueuedOrderIntegrationTest {
     List<Order> currentOrders=new ArrayList<>();
     List<Order> orderQueue=new ArrayList<>();
 
+    Customer customer;
+    String jwtToken;
+
     @BeforeEach
-    void setup() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException {
+    void setup() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException {
+        customer=new Customer();
+        customer.setCustomerID(userID);
+        customer.setEmail("hello@gmail.com");
+        customer.setAccountType(UserType.CUSTOMER);
+        customerRepo.save(customer);
+        jwtToken=jwtUtil.generateJWTTokenCustomer(customer);
+
         item1=new Item("name1","productID1","barcode1",storeID,10.0,2,"Description1","imageURL1");
         item2=new Item("name2","productID2","barcode2",storeID,30.0,1,"Description2","imageURL2");
         item3=new Item("name3","productID3","barcode3",storeID,27.0,1,"Description3","imageURL3");
@@ -116,7 +136,7 @@ public class RemoveQueuedOrderIntegrationTest {
         itemRepo.save(item5);
         catalogueRepo.save(stock);
         storeRepo.save(store);
-        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID1 = submitOrderResponse.getOrder().getOrderID();
         order1 = submitOrderResponse.getOrder();
@@ -124,7 +144,7 @@ public class RemoveQueuedOrderIntegrationTest {
         orderRepo.save(order1);
         store.getOrderQueue().add(order1);
         storeRepo.save(store);
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID2 = submitOrderResponse.getOrder().getOrderID();
         order2 = submitOrderResponse.getOrder();

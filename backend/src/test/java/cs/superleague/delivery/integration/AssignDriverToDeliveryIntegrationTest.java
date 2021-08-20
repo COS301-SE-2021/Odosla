@@ -10,6 +10,7 @@ import cs.superleague.delivery.responses.AssignDriverToDeliveryResponse;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.Driver;
@@ -124,7 +125,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Test
     @Description("Tests for when the driver is successfully assigned to the delivery.")
     @DisplayName("Successful assigning")
-    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
         assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
@@ -136,7 +137,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Test
     @Description("Tests for when the driver is already assigned to that delivery.")
     @DisplayName("Same driver is assigned already")
-    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         delivery.setDriverId(driverID);
         deliveryRepo.save(delivery);
         AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
@@ -145,6 +146,8 @@ public class AssignDriverToDeliveryIntegrationTest {
         assertEquals(response.isAssigned(), true);
         Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
         assertEquals(delivery1.get().getDriverId(), driverID);
+        assertEquals(response.getDropOffLocation(), delivery1.get().getDropOffLocation());
+        assertEquals(response.getPickUpLocation(), delivery1.get().getPickUpLocation());
     }
 
     @Test
@@ -156,5 +159,27 @@ public class AssignDriverToDeliveryIntegrationTest {
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
         assertEquals(thrown1.getMessage(), "Invalid order.");
+    }
+
+    @Test
+    @Description("Tests for when no pick up location is specified.")
+    @DisplayName("No pick up location")
+    void noPickUpLocationIsSpecified_IntegrationTest(){
+        delivery.setPickUpLocation(null);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
+    }
+
+    @Test
+    @Description("Tests for when no drop off location is specified.")
+    @DisplayName("No drop off location")
+    void noDropOffLocationIsSpecified_IntegrationTest(){
+        delivery.setDropOffLocation(null);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
     }
 }

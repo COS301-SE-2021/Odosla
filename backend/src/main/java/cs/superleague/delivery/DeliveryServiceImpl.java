@@ -20,6 +20,7 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
@@ -29,10 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service("deliveryServiceImpl")
 public class DeliveryServiceImpl implements DeliveryService {
@@ -75,7 +73,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
+    public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -96,21 +94,33 @@ public class DeliveryServiceImpl implements DeliveryService {
                 {
                     if (delivery.getDriverId() != null){
                         if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
-                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.");
-                            return response;
+                            if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+                                AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
+                                return response;
+                            } else{
+                                throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
+                            }
                         }
                         throw new InvalidRequestException("This delivery has already been taken by another driver.");
                     }
 
                     Order updateOrder= orderRepo.findById(delivery.getOrderID()).orElse(null);
                     if(updateOrder!=null){
-                        updateOrder.setDriverID(driver.getDriverID());
-                        orderRepo.save(updateOrder);
+                        if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+                            updateOrder.setDriverID(driver.getDriverID());
+                            orderRepo.save(updateOrder);
+                            //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
+                            Order updateOrder2= orderRepo.findById(delivery.getOrderID()).orElse(null);
+                            SetStatusRequest setStatusRequest= new SetStatusRequest(updateOrder2, OrderStatus.ASSIGNED_DRIVER);
+                            paymentService.setStatus(setStatusRequest);
 
-                        delivery.setDriverId(driver.getDriverID());
-                        deliveryRepo.save(delivery);
-                        AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.");
-                        return response;
+                            delivery.setDriverId(driver.getDriverID());
+                            deliveryRepo.save(delivery);
+                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
+                            return response;
+                        } else{
+                            throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
+                        }
                     }
                     else
                     {
@@ -165,7 +175,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         GetDeliveryCostRequest getDeliveryCostRequest = new GetDeliveryCostRequest(locationOfStore, request.getPlaceOfDelivery());
         GetDeliveryCostResponse getDeliveryCostResponse = getDeliveryCost(getDeliveryCostRequest);
-        Delivery delivery = new Delivery(deliveryID, request.getOrderID(), locationOfStore, request.getPlaceOfDelivery(), request.getCustomerID(), request.getStoreID(), DeliveryStatus.CollectingFromStore, getDeliveryCostResponse.getCost());
+        Delivery delivery = new Delivery(deliveryID, request.getOrderID(), locationOfStore, request.getPlaceOfDelivery(), request.getCustomerID(), request.getStoreID(), DeliveryStatus.WaitingForShoppers, getDeliveryCostResponse.getCost());
         deliveryRepo.save(delivery);
         CreateDeliveryResponse response = new CreateDeliveryResponse(true, "Delivery request placed.", deliveryID);
         return response;
@@ -241,18 +251,49 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
+    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException {
         if (request==null){
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getDriverID() == null || request.getCurrentLocation() == null){
+        if(request.getJwtToken()==null || request.getCurrentLocation() == null){
             throw new InvalidRequestException("Null parameters.");
         }
         double range = request.getRangeOfDelivery();
-        Driver driver = driverRepo.findById(request.getDriverID()).orElseThrow(()->new InvalidRequestException("Driver not found in database."));
-        driver.setCurrentAddress(request.getCurrentLocation());
-        driverRepo.save(driver);
-        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
+
+        JwtUtil jwtUtil = new JwtUtil();
+        if(jwtUtil.extractUserType(request.getJwtToken()).equals("DRIVER"))
+        {
+            GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+
+            if(driverRepo!=null)
+            {
+                Driver driver= null;
+                try{
+                    driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
+                }
+                catch(NullPointerException e)
+                {
+                    driver=null;
+                }
+
+                if(driver!=null)
+                {
+                    driver.setCurrentAddress(request.getCurrentLocation());
+                    driverRepo.save(driver);
+                }
+                else
+                {
+                    throw new InvalidRequestException("Driver not found in database.");
+                }
+            }
+            else
+            {
+                throw new InvalidRequestException("Driver not found in database.");
+            }
+
+        }
+
+        List<Delivery> deliveries = deliveryRepo.findAll();
         if (deliveries == null){
             GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
             return response;
@@ -261,10 +302,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (deliveries.size()>0){
             for (Delivery d : deliveries){
                 double driverDistanceFromStore = getDistanceBetweenTwoPoints(d.getPickUpLocation(), request.getCurrentLocation());
-                if (driverDistanceFromStore > range){
+                if (driverDistanceFromStore > range || d.getDriverId()!=null || d.getStatus().compareTo(DeliveryStatus.WaitingForShoppers)!=0){
                     continue;
                 }else{
-                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d.getDeliveryID());
+                    GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("Driver can take the following delivery.", d);
                     return response;
                 }
             }
@@ -337,6 +378,15 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setStatus(request.getStatus());
         deliveryRepo.save(delivery);
         if (request.getStatus() == DeliveryStatus.Delivered){
+            delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
+            delivery.setCompleted(true);
+            Driver driver= driverRepo.findById(delivery.getDriverId()).orElse(null);
+            if(driver!=null)
+            {
+                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+                driverRepo.save(driver);
+            }
+            deliveryRepo.save(delivery);
             Order order = orderRepo.findById(delivery.getOrderID()).orElse(null);
             SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.DELIVERED);
             paymentService.setStatus(setStatusRequest);
@@ -363,5 +413,59 @@ public class DeliveryServiceImpl implements DeliveryService {
         distance = Math.toDegrees(distance);
         distance = distance * 60 * 1.1515 * 1.609344;
         return distance;
+    }
+
+    @Override
+    public GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException {
+
+        if(request!=null)
+        {
+            if(request.getOrderID()!=null)
+            {
+                Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+
+                if(order!=null)
+                {
+                    if(deliveryRepo!=null)
+                    {
+                        List<Delivery> deliveries;
+                        Optional.of(deliveries = deliveryRepo.findAll()).orElse(null);
+
+                        if(deliveries!=null)
+                        {
+                            for(int k=0; k<deliveries.size(); k++)
+                            {
+                                if(deliveries.get(k).getOrderID().equals(request.getOrderID()))
+                                {
+                                    Driver driver = driverRepo.findById(deliveries.get(k).getDriverId()).orElse(null);
+                                    if(driver!=null)
+                                    {
+                                        GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(driver, "Driver successfully retrieved", deliveries.get(k).getDeliveryID());
+                                        return response;
+                                    }
+                                }
+                            }
+                            GetDeliveryDriverByOrderIDResponse response= new GetDeliveryDriverByOrderIDResponse(null, "Driver not found", null);
+                            return response;
+                        }
+
+                    }
+                }
+                else
+                {
+                    throw new InvalidRequestException("Order does not exist");
+                }
+
+            }
+            else
+            {
+                throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
+            }
+        }else
+        {
+            throw new InvalidRequestException("Request object is null");
+        }
+
+        return null;
     }
 }

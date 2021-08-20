@@ -4,27 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest">
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="compiler file">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/cs/superleague/user/CompletePackingOrderUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/cs/superleague/user/CompletePackingOrderUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/delivery/DeliveryServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/PaymentServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/OrderStatus.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/dataclass/OrderStatus.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/CreateTransactionRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/CreateTransactionRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/VerifyPaymentRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/requests/VerifyPaymentRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/CreateTransactionResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/CreateTransactionResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/VerifyPaymentResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/payment/responses/VerifyPaymentResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/ShoppingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/ShoppingServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/controller/ShoppingController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/shopping/controller/ShoppingController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cs/superleague/user/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/api/UserApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserMakeGroceryListRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/src/main/java/cs/superleague/models/UserUpdateShopperShiftRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/assets/shop/superspar.png" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/assets/shop/superSpar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/models/Delivery.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/models/Delivery.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/models/Order.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/models/Order.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/driver/driver_main_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/driver/driver_main_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/driver/driver_map.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/driver/driver_map.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/driver/driver_work_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/driver/driver_work_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/current_order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/current_order_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/shopper_main_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/shopper_main_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/shopper_work_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/shopper_work_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/stores_information_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/pages/shopper/stores_information_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/provider/delivery_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/provider/delivery_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/provider/shop_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/provider/shop_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/services/DeliveryService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/services/DeliveryService.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/services/ShoppingService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/services/ShoppingService.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/services/UserService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/employee/flutter_employee_app/lib/services/UserService.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,17 +32,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/develop_shopping" />
+    <option name="BRANCH" value="develop_frontend" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="feature_user_completePackingOrder" />
+        <entry key="$PROJECT_DIR$/.." value="develop" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -85,16 +84,18 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../CrowdBook_Alpha/CrowdBook_Alpha/CrowdBook_Alpha/CrowdBook_Alpha/backend" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.31274638" />
-    <property name="project.structure.side.proportion" value="0.152439" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode" />
+    <property name="project.structure.side.proportion" value="0.24074072" />
+    <property name="settings.editor.selected.configurable" value="project.propCompiler" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="ReaderModeSettings">
     <option name="enabled" value="false" />
@@ -110,19 +111,6 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.cs.superleague.user in backend">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="cs.superleague.Application" />
       <module name="backend" />
@@ -251,6 +239,7 @@
       <workItem from="1626870915380" duration="10679000" />
       <workItem from="1627417690631" duration="37812000" />
       <workItem from="1627647527615" duration="4720000" />
+      <workItem from="1629293436791" duration="5255000" />
     </task>
     <task id="LOCAL-00001" summary="Changed file name to payment">
       <created>1622641408400</created>
@@ -378,7 +367,21 @@
       <option name="project" value="LOCAL" />
       <updated>1629143865963</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="compiler file">
+      <created>1629151508372</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1629151508372</updated>
+    </task>
+    <task id="LOCAL-00020" summary="compiler file">
+      <created>1629245278698</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1629245278698</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -413,9 +416,17 @@
     <MESSAGE value="changed delivery status in createDelivery" />
     <MESSAGE value="fixed circular dependency in DeliveryService" />
     <MESSAGE value="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed integration and unit tests for CompletePackingOrderIntegrationTest and CompletePackingOrderUnitTest" />
+    <MESSAGE value="compiler file" />
+    <option name="LAST_COMMIT_MESSAGE" value="compiler file" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
+    </SUITE>
     <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>cs.superleague.payment.integration.*</FILTER>
       <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
@@ -423,9 +434,6 @@
     </SUITE>
     <SUITE FILE_PATH="coverage/backend$Application.ic" NAME="Application Coverage Results" MODIFIED="1629073172435" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>cs.superleague.*</FILTER>
-    </SUITE>
-    <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
-      <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/backend$allTests.ic" NAME="allTests Coverage Results" MODIFIED="1623967032024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>

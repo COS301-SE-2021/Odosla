@@ -9,14 +9,8 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.payment.requests.GetItemsRequest;
-import cs.superleague.payment.requests.GetStatusRequest;
-import cs.superleague.payment.requests.SubmitOrderRequest;
-import cs.superleague.payment.requests.UpdateOrderRequest;
-import cs.superleague.payment.responses.GetItemsResponse;
-import cs.superleague.payment.responses.GetStatusResponse;
-import cs.superleague.payment.responses.SubmitOrderResponse;
-import cs.superleague.payment.responses.UpdateOrderResponse;
+import cs.superleague.payment.requests.*;
+import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.ItemRepo;
@@ -205,7 +199,7 @@ public class PaymentController implements PaymentApi {
         }
 
         try{
-            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(UUID.fromString(body.getUserId()), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(body.getJwtToken(), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());
@@ -219,6 +213,25 @@ public class PaymentController implements PaymentApi {
             e.printStackTrace();
         }
 
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetCustomersActiveOrdersResponse> getCustomerActiveOrders(PaymentGetCustomersActiveOrdersRequest body) {
+        PaymentGetCustomersActiveOrdersResponse response = new PaymentGetCustomersActiveOrdersResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            GetCustomersActiveOrdersRequest request = new GetCustomersActiveOrdersRequest(body.getJwtToken());
+            GetCustomersActiveOrdersResponse getCustomersActiveOrdersResponse = ServiceSelector.getPaymentService().getCustomersActiveOrders(request);
+            response.setHasActiveOrder(getCustomersActiveOrdersResponse.isHasActiveOrder());
+            response.setMessage(getCustomersActiveOrdersResponse.getMessage());
+            response.setOrderID(String.valueOf(getCustomersActiveOrdersResponse.getOrderID()));
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setOrderID(null);
+            response.setMessage(e.getMessage());
+            response.setHasActiveOrder(false);
+        }
         return new ResponseEntity<>(response, httpStatus);
     }
 

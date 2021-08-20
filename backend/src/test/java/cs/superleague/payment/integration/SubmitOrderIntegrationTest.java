@@ -1,6 +1,7 @@
 package cs.superleague.payment.integration;
 
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
@@ -21,6 +22,9 @@ import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.repos.CustomerRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,6 +63,12 @@ public class SubmitOrderIntegrationTest {
     @Autowired
     ItemRepo itemRepo;
 
+    @Autowired
+    CustomerRepo customerRepo;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
 
     /* Requests */
     SubmitOrderRequest submitOrderRequest;
@@ -86,8 +96,20 @@ public class SubmitOrderIntegrationTest {
     List<Order> currentOrders=new ArrayList<>();
     List<Order> orderQueue=new ArrayList<>();
 
+    Customer customer;
+
+    String jwtToken;
+
     @BeforeEach
     void setup(){
+
+        customer=new Customer();
+        customer.setCustomerID(userID);
+        customer.setEmail("hello@gmail.com");
+        customer.setAccountType(UserType.CUSTOMER);
+        customerRepo.save(customer);
+        jwtToken=jwtUtil.generateJWTTokenCustomer(customer);
+
         item1=new Item("name1","productID1","barcode1",storeID,10.0,2,"Description1","imageURL1");
         item2=new Item("name2","productID2","barcode2",storeID,30.0,1,"Description2","imageURL2");
         item3=new Item("name3","productID3","barcode3",storeID,27.0,1,"Description3","imageURL3");
@@ -142,19 +164,19 @@ public class SubmitOrderIntegrationTest {
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,null,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,null,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,null,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,null,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,null,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,null,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,null, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,null, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -165,7 +187,7 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("When order parameter gives id of a store that does not exist")
     void IntegrationTest_StoreDoesNotExist() throws InvalidRequestException {
         UUID storeID2=UUID.randomUUID();
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID2,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID2,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(StoreDoesNotExistException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -181,7 +203,7 @@ public class SubmitOrderIntegrationTest {
         //store.setOpen(false);
         //storeRepo.save(store);
         storeRepo.save(updateStore);
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(StoreClosedException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -195,10 +217,10 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("SubmitOrderRequest correct construction")
     void IntegrationTest_SubmitOrderRequestConstruction() {
 
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
 
         assertNotNull(submitOrderRequest);
-        assertEquals(userID, submitOrderRequest.getUserID());
+        assertEquals(jwtToken, submitOrderRequest.getJwtToken());
         assertEquals(itemList,submitOrderRequest.getListOfItems());
         assertEquals(3.0,submitOrderRequest.getDiscount());
         assertEquals(storeID,submitOrderRequest.getStoreID());
@@ -208,9 +230,9 @@ public class SubmitOrderIntegrationTest {
     @Test
     @Description("This test tests whether an order is created correctly - should return valid data stored in order entity")
     @DisplayName("When Order is created correctly")
-    void IntegrationTest_CreatOrderConstruction() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException {
+    void IntegrationTest_CreatOrderConstruction() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException {
         Order order=null;
-        submitOrderRequest=new SubmitOrderRequest(userID,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
 
         if(orderRepo.findById(submitOrderResponse.getOrder().getOrderID()).isPresent()){
@@ -241,7 +263,6 @@ public class SubmitOrderIntegrationTest {
         assertEquals(geoPoint2.getLongitude(),order.getStoreAddress().getLongitude());
         //assertEquals(geoPoint1.getGeoID(),order.getDeliveryAddress().getGeoID());
         assertEquals(OrderType.DELIVERY,order.getType());
-        assertEquals(OrderStatus.IN_QUEUE,order.getStatus());
     }
 
 

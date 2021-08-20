@@ -1222,7 +1222,7 @@ public class UserServiceImpl implements UserService{
     public UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException {
 
         String message;
-        UUID shopperID;
+        String shopperID;
         Shopper shopper;
         boolean success;
         boolean emptyUpdate = true;
@@ -1232,17 +1232,21 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UpdateShopper Request is null - Could not update shopper");
         }
 
-        if(request.getShopperID() == null){
+        if(request.getJwtToken() == null){
             throw new InvalidRequestException("ShopperId is null - could not update shopper");
         }
 
-        shopperID = request.getShopperID();
-        shopperOptional = shopperRepo.findById(shopperID);
+        shopperID = request.getJwtToken();
+        JwtUtil utils=new JwtUtil();
+        String userType=utils.extractUserType(shopperID);
+        String email= utils.extractEmail(shopperID);
+        if(!userType.equals("SHOPPER")){
+            throw new InvalidRequestException("User isn't a shopper");
+        }
+        shopperOptional = shopperRepo.findByEmail(email);
         if(shopperOptional == null || !shopperOptional.isPresent()){
             throw new ShopperDoesNotExistException("User with given userID does not exist - could not update shopper");
         }
-
-        // authentication ??
 
         shopper = shopperOptional.get();
 
@@ -1255,30 +1259,38 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             shopper.setSurname(request.getSurname());
         }
-
+        String jwtToken=null;
         if(request.getEmail() != null && !request.getEmail().equals(shopper.getEmail())){
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateShopperDetailsResponse(message, false, new Date());
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
             }else{
                 if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
-                    return new UpdateShopperDetailsResponse(message, false, new Date());
+                    return new UpdateShopperDetailsResponse(message, false, new Date(),null);
                 }
                 shopper.setEmail(request.getEmail());
+                jwtToken=utils.generateJWTTokenShopper(shopper);
             }
         }
 
+
         if(request.getPassword() != null){
             emptyUpdate = false;
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck=shopper.getPassword();
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateShopperDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 shopper.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateShopperDetailsResponse(message, false, new Date());
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1297,7 +1309,7 @@ public class UserServiceImpl implements UserService{
             message = "Shopper successfully updated";
         }
 
-        return new UpdateShopperDetailsResponse(message, success, new Date());
+        return new UpdateShopperDetailsResponse(message, success, new Date(),jwtToken);
     }
 
     @Override
@@ -2020,25 +2032,34 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
 
-        if(currentOrder==null || !currentOrder.isPresent()){
+        if(order==null){
             throw new OrderDoesNotExist("Order does not exist in database");
         }
 
-        Order order=currentOrder.get();
         order.setStatus(OrderStatus.DELIVERED);
-
-        /* Send notification to User saying order has been delivered and ask to rate driver*/
-
         orderRepo.save(order);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        currentOrder= orderRepo.findById(request.getOrderID());
-        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERED){
+        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
+        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
             response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
         }
         else{
+            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
+            if(driver!=null)
+            {
+                int numDeliveries=0;
+                numDeliveries= driver.getDeliveriesCompleted()+1;
+                driver.setDeliveriesCompleted(numDeliveries);
+                driverRepo.save(driver);
+            }
+            else
+            {
+                throw new InvalidRequestException("Driver isn't set in order");
+            }
+
             response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
         }
 
@@ -2147,12 +2168,14 @@ public class UserServiceImpl implements UserService{
                 if (shoppersAtStore == null){
                     store.setShoppers(new ArrayList<>());
                 }else {
+                    Shopper foundShopper = null;
                     if (shoppersAtStore != null) {
                         for (Shopper s : shoppersAtStore) {
                             if (s.getShopperID().compareTo(shopper.get().getShopperID()) == 0) {
-                                shoppersAtStore.remove(s);
+                                foundShopper= s;
                             }
                         }
+                        shoppersAtStore.remove(foundShopper);
                     }
                     store.setShoppers(shoppersAtStore);
                 }
@@ -2739,4 +2762,125 @@ public class UserServiceImpl implements UserService{
         return sb.toString();
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                userID - user ID to fetch the corresponding shopper from the database
+     *  GetCustomerUUID should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if customer exists in database, else throw CustomerDoesNotExist
+     *                5.Return response object
+     * Request object (GetCustomerUUIDRequest)
+     * {
+     *               "userID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     *
+     * Response object (GetCustomerUUIDResponse)
+     * {
+     *                "customer": customer
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Customer with corresponding user id was returned"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws CustomerDoesNotExistException
+     */
+    @Override
+    public GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+        GetCustomerByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetCustomerByUUIDRequest request - could not return customer entity");
+            }
+
+            Customer customer=null;
+            try {
+                customer = customerRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get customer entity");
+            }
+            if(customer==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get customer entity");
+            }
+            response=new GetCustomerByUUIDResponse(customer, Calendar.getInstance().getTime(),"Customer entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetCustomerByUUID request is null - could not return customer entity");
+        }
+        return response;
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                driverID - driver ID to fetch the corresponding driver from the database
+     *                rating- rating given by the customer
+     *  driverSetRating should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if driver exists in database, else throw DriverDoesNotExist
+     *                4.Calculate the rating of the driver and set it
+     *                5.Return response object
+     * Request object (DriverSetRatingRequest)
+     * {
+     *               "driverID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a",
+     *               "rating": 4
+     *
+     * }
+     *
+     * Response object (DriverSetRatingResponse)
+     * {
+     *                "success": true
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"DriverSetRating request is null - could not set rating"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws DriverDoesNotExistException
+     */
+    @Override
+    public DriverSetRatingResponse driverSetRating(DriverSetRatingRequest request) throws InvalidRequestException, DriverDoesNotExistException
+    {
+        DriverSetRatingResponse response=null;
+        if(request != null){
+
+            if(request.getDriverID()==null){
+                throw new InvalidRequestException("Driver ID is null in request object - could not find driver");
+            }
+
+            if(request.getRating()==-1){
+                response = new DriverSetRatingResponse(false, Calendar.getInstance().getTime(), "No rating was set");
+            }
+            else
+            {
+                Driver driver=null;
+                try {
+                    driver = driverRepo.findById(request.getDriverID()).orElse(null);
+                }catch(Exception e){
+                    throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+                }
+                if(driver==null) {
+                    throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+                }
+
+                double totalRatings= request.getRating()+driver.getTotalRatings();
+                driver.setTotalRatings(totalRatings);
+                int numRatings= driver.getNumberOfRatings()+1;
+                driver.setNumberOfRatings(numRatings);
+                double newRating= totalRatings/numRatings;
+                driver.setRating(Math.round(newRating*100.0)/100.0);
+                driverRepo.save(driver);
+
+                response = new DriverSetRatingResponse(true, Calendar.getInstance().getTime(), "Rating complete");
+
+            }
+            return response;
+        }
+        else{
+            throw new InvalidRequestException("DriverSetRating request is null - could not set rating");
+        }
+    }
 }
