@@ -53,6 +53,8 @@ dependencies:
 
   ars_dialog: ^1.0.8
   email_validator: '^1.0.6'
+  rating_dialog: ^2.0.1
+  flutter_phone_direct_caller: ^2.0.0
 
 
 dev_dependencies:
@@ -71,7 +73,41 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/
+    - assets/shop/boxer.png
+    - assets/shop/checkers.png
+    - assets/shop/foodLoversMarket.png
+    - assets/shop/game.png
+    - assets/shop/pep.png
+    - assets/shop/pnp.png
+    - assets/shop/checkers.png
+    - assets/shop/superSpar.png
+    - assets/shop/woolworths.png
+    - assets/item/barOne.png
+    - assets/item/blueRibbon.png
+    - assets/item/creamyButternut.png
+    - assets/item/creamyTomato.png
+    - assets/item/custard.png
+    - assets/item/jammers.png
+    - assets/item/kellogNoodles.png
+    - assets/item/kooBeans.png
+    - assets/item/nescaffeCoffee.png
+    - assets/item/oreo.png
+    - assets/item/originalOros.png
+    - assets/item/pnp_milk.png
+    - assets/item/pnpMilk.png
+    - assets/item/ricoffy.png
+    - assets/item/sasko_bread.png
+    - assets/item/strawberryYoghurt.png
+    - assets/item/thickSlice.png
+    - assets/item/tomato.png
+    - assets/item/sauce.png
+    - assets/item/weetBix.png
+    - assets/item/woolworthsAppleJuice.png
+    - assets/item/woolworthsCheese.png
+    - assets/item/woolworthsMilk.png
+    - assets/map/car.png
+    - assets/map/me.png
+    - assets/map/shop.png
     #   - images/a_dot_burr.jpeg
     #  - images/a_dot_ham.jpeg
 

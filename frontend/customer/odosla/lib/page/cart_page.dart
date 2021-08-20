@@ -2,10 +2,12 @@ import 'package:ars_dialog/ars_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:get_it/get_it.dart';
 import 'package:odosla/model/cart_item.dart';
 import 'package:odosla/page/wallet_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/provider/wallet_provider.dart';
+import 'package:odosla/services/UserService.dart';
 import 'package:odosla/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -19,6 +21,8 @@ class _CartPage extends State<CartPage> {
   GlobalKey<SliderMenuContainerState> _key =
       new GlobalKey<SliderMenuContainerState>();
   late String title;
+
+  UserService _userService = GetIt.I.get();
 
   @override
   void initState() {
@@ -54,7 +58,10 @@ class _CartPage extends State<CartPage> {
                   child: TextButton(
                       child: Text("Save list",
                           style: TextStyle(fontSize: 22, color: Colors.white)),
-                      onPressed: () => {}),
+                      onPressed: () => {
+                            _userService.getJWTAsString().then(
+                                (value) => apiService.setGroceryLists(value!))
+                          }),
                 ),
                 SizedBox(
                   height: 10,
@@ -66,6 +73,9 @@ class _CartPage extends State<CartPage> {
                     child: Text("Load list",
                         style: TextStyle(fontSize: 22, color: Colors.white)),
                     onPressed: () => {
+                      _userService
+                          .getJWTAsString()
+                          .then((value) => apiService.getGroceryLists(value!)),
                       ArsDialog(
                               title: Text("Saved lists:"),
                               content: Container(

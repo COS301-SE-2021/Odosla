@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:odosla/model/user.dart';
 import 'package:odosla/page/login/login_screen.dart';
 import 'package:odosla/page/wallet_page.dart';
 import 'package:odosla/provider/wallet_provider.dart';
+import 'package:odosla/services/api_service.dart';
 import 'package:provider/provider.dart';
 
 class AccountSettingsPage extends StatefulWidget {
@@ -63,25 +65,65 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
   }
 
   Widget buildHeader(BuildContext context) {
-    return Expanded(
-        child: Column(
-      children: [
-        SizedBox(
-          height: 25,
-        ),
-        Icon(
-          Icons.person_sharp,
-          size: 200,
-          color: Colors.deepOrange,
-        ),
-        SizedBox(height: 5),
-        Text("Japhet T", style: TextStyle(fontSize: 28)),
-        Text(
-          "japh.tang@goatmail.com",
-          style: TextStyle(fontSize: 16, color: Colors.black87),
-        ),
-      ],
-    ));
+    return FutureBuilder(
+        future: ApiService().getCurrentUser(context),
+        builder: (BuildContext context, snapshot) {
+          //let's check if we got a response or not
+          debugPrint(snapshot.data.toString() + "__");
+
+          if (snapshot.hasError) {
+            debugPrint("snapshot error: " + snapshot.error.toString());
+          }
+
+          if (snapshot.hasData) {
+            debugPrint("HasData");
+            //Now let's make a list of articles
+            User u = snapshot.data as User;
+            return Expanded(
+                child: Column(
+              children: [
+                SizedBox(
+                  height: 25,
+                ),
+                Icon(
+                  Icons.person_sharp,
+                  size: 200,
+                  color: Colors.deepOrange,
+                ),
+                SizedBox(height: 5),
+                Text(u.name, style: TextStyle(fontSize: 28)),
+                Text(
+                  u.email,
+                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                ),
+              ],
+            ));
+          }
+          return Expanded(
+              child: Center(
+            child: CircularProgressIndicator(),
+          ));
+        });
+
+    // return Expanded(
+    //     child: Column(
+    //   children: [
+    //     SizedBox(
+    //       height: 25,
+    //     ),
+    //     Icon(
+    //       Icons.person_sharp,
+    //       size: 200,
+    //       color: Colors.deepOrange,
+    //     ),
+    //     SizedBox(height: 5),
+    //     Text("Japhet T", style: TextStyle(fontSize: 28)),
+    //     Text(
+    //       "japh.tang@goatmail.com",
+    //       style: TextStyle(fontSize: 16, color: Colors.black87),
+    //     ),
+    //   ],
+    // ));
   }
 
   Widget buildSettings(BuildContext context) {

@@ -1,14 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:odosla/provider/cart_provider.dart';
-import 'package:odosla/services/api_service.dart';
-import 'dart:async';
-
-import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class StatusProvider with ChangeNotifier {
+  String _jwt = "";
   String _status = "PENDING";
   Map<String, double> p = {
     'PENDING': 0.0,
@@ -17,7 +12,8 @@ class StatusProvider with ChangeNotifier {
     'PURCHASED': 0.3,
     'IN_QUEUE': 0.4,
     'PACKING': 0.5,
-    'AWAITING_COLLECTION': 0.69,
+    'AWAITING_COLLECTION': 0.6,
+    'ASSIGNED_DRIVER': 0.7,
     'DELIVERY_COLLECTED': 0.84,
     'CUSTOMER_COLLECTED': 1.0,
     'DELIVERED': 1.0,
@@ -30,6 +26,7 @@ class StatusProvider with ChangeNotifier {
     'IN_QUEUE': 'In queue..',
     'PACKING': 'Packing cart..',
     'AWAITING_COLLECTION': 'Awaiting collection..',
+    'ASSIGNED_DRIVER': 'Driver on way..',
     'DELIVERY_COLLECTED': 'Collected by driver..',
     'CUSTOMER_COLLECTED': 'Collected by customer',
     'DELIVERED': 'Order delivered',
@@ -38,6 +35,14 @@ class StatusProvider with ChangeNotifier {
   // Timer timer = Timer(, callback);
 
   StatusProvider() {}
+
+  String get jwt {
+    return _jwt;
+  }
+
+  set jwt(String jwt) {
+    _jwt = jwt;
+  }
 
   String get status {
     return t[_status] as String;
