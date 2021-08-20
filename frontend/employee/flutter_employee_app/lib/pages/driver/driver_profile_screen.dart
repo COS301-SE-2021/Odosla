@@ -30,13 +30,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         _surname = value.surname;
         _email = value.email;
         _rating=value.rating;
-        print("*****************************************");
-        print(_numberOfDeliveriesCompleted);
         _numberOfDeliveriesCompleted=value.deliveriesCompleted;
       })
-    }
-
-    );
+    });
   }
 
   @override
@@ -145,7 +141,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           return Scaffold(
             body: Column(
               children: <Widget>[
-
                 SizedBox(height: kSpacingUnit.w * 3),
                 header,
                 Expanded(

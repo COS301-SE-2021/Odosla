@@ -256,7 +256,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                                     }
                                   }
                                   );
-
                                 },
                                   child: Text(
                                     "END SHIFT",
@@ -279,8 +278,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                                           .showSnackBar(SnackBar(content: Text(
                                           "Couldn't update shift")))
                                     }
-                                  }
-                                  );
+                                  });
                                 },
                                   child: Text(
                                     "START SHIFT",
@@ -318,8 +316,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                                     fontSize: kSpacingUnit.w*1,
                                   ),
                                 )
-
-
                               ],
                             )
                         ),
@@ -505,9 +501,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                               ),
                             ),
                           ),
-
                         ],
-
                       ),
                     )
                 ),
@@ -516,7 +510,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                       child: Row(
-
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
@@ -621,8 +614,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                     }
                   }
                   );
-                }
-                else if(_collectedByCustomer==false){
+                } else if(_collectedByCustomer==false){
                   await _deliveryService.UpdateDeliveryStatus(
                       deliveryID, "CollectedByCustomer", context).then((
                       value) =>
@@ -671,9 +663,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                 _deliveryService.getNextOrderForDriver(context)
                     .then((value) =>
                 {
-                  print(value),
-                  print("OKAY HERE2"),
-                  //Provider.of<UtilityProvider>(context, listen: false).redo=true,
                   if(value != ""){
                     setState(() {
                       deliveryID = value;
@@ -682,8 +671,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                         builder: (BuildContext context) =>
                             _popUpSuccessfulFoundDeliveries(
                                 context),
-                      );
-                    })
+                      );})
                   } else
                     {
                       ScaffoldMessenger.of(context)

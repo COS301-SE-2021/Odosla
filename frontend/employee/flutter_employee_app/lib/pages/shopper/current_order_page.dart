@@ -52,7 +52,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
         child: Text(
           'COMPLETE PACKAGING',
           style: TextStyle(
-            color: Color(0xFFE9884A),
+            color: Colors.deepOrangeAccent,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
