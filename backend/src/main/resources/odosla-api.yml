@@ -924,6 +924,73 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_UpdateDriverShiftResponse"
 
+  /user/updateShopperDetails:
+    post:
+      summary: Endpoint for updating shopper details
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: updateShopperDetails
+      requestBody:
+        description: The input body require by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_UpdateShopperDetailsRequest"
+      responses:
+        "200":
+          description: Returns if updating details was successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_UpdateShopperDetailsResponse"
+#
+#  /user/updateCustomerDetails:
+#    post:
+#      summary: Endpoint for updating customer details
+#      tags:
+#        - "User"
+#      description: Refer to summary
+#      operationId: updateCustomerDetails
+#      requestBody:
+#        description: The input body require by this request
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/user_UpdateCustomerDetailsRequest"
+#      responses:
+#        "200":
+#          description: Returns if updating details was successful
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/user_UpdateCustomerDetailsResponse"
+#
+#  /user/updateAdminDetails:
+#    post:
+#      summary: Endpoint for updating admin details
+#      tags:
+#        - "User"
+#      description: Refer to summary
+#      operationId: updateAdminDetails
+#      requestBody:
+#        description: The input body require by this request
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/user_UpdateAdminDetailsRequest"
+#      responses:
+#        "200":
+#          description: Returns if updating details was successful
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/user_UpdateAdminDetailsResponse"
+#
+
 
   /analytics/createUserReport:
     post:
@@ -992,6 +1059,115 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_CompleteDeliveryResponse"
 
+  /delivery/getDeliveryDriverByOrderId:
+    post:
+      summary: Endpoint for get delivery driver by order id use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getDeliveryDriverByOrderId
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdRequest"
+      responses:
+        "200":
+          description: Returns delivery and driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdResponse"
+
+  /user/getCustomerByUUID:
+    post:
+      summary: Endpoint for get customer by UUID use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getCustomerByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetCustomerByUUIDRequest"
+      responses:
+        "200":
+          description: Returns customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetCustomerByUUIDResponse"
+
+  /user/driverSetRating:
+    post:
+      summary: Endpoint for setting rating use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: driverSetRating
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_DriverSetRatingRequest"
+      responses:
+        "200":
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_DriverSetRatingResponse"
+
+  /analytics/createFinancialReport:
+    post:
+      summary: Endpoint for creating user report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createFinancialReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateFinancialReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
+
+  /analytics/createMonthlyReport:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createMonthlyReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateMonthlyReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
 
 components:
 
@@ -1166,6 +1342,9 @@ components:
           type: integer
         imageUrl:
           type: string
+        storeLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+
 
     shopping_GetStoresRequest:
       description: This object is expected as input
@@ -1256,7 +1435,7 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        userId:
+        jwtToken:
           type: string
           description: generated token used to identify the caller of the endpoint
         listOfItems:
@@ -1537,6 +1716,10 @@ components:
           type: number
         onShift:
           type: boolean
+        currentAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        deliveriesCompleted:
+          type: number
 
     CustomerObject:
       description: "Generic schema for a Customer"
@@ -1869,7 +2052,7 @@ components:
           items:
             $ref: "#/components/schemas/OrderObject"
         newCurrentOrder:
-          type: object
+          $ref: "#/components/schemas/OrderObject"
 
     shopping_GetQueueRequest:
       description: This object is expected as input
@@ -2007,6 +2190,8 @@ components:
           $ref: "#/components/schemas/GeoPointObject"
         dropOffLocation:
           $ref: "#/components/schemas/GeoPointObject"
+        driverID:
+          type: string
 
     delivery_CreateDeliveryRequest:
       description: This object is expected as input
@@ -2100,7 +2285,7 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        driverID:
+        jwtToken:
           type: string
         currentLocation:
           $ref: "#/components/schemas/GeoPointObject"
@@ -2277,3 +2462,166 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/DeliveryDetailObject"
+
+    delivery_GetDeliveryDriverByOrderIdRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    delivery_GetDeliveryDriverByOrderIdResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        driver:
+          $ref: "#/components/schemas/DriverObject"
+        message:
+          type: string
+        deliveryID:
+          type: string
+
+    OrderItemsObject:
+      description: "Generic schema for an order item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        orderId:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        totalCost:
+          type: number
+
+    user_GetCustomerByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userID:
+          type: string
+
+    user_GetCustomerByUUIDResponse:
+      description: This object is output
+      type: object
+      properties:
+        customer:
+          $ref: "#/components/schemas/CustomerObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    user_DriverSetRatingRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        driverID:
+          type: string
+        rating:
+          type: number
+
+    user_DriverSetRatingResponse:
+      description: This object is output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+
+    user_UpdateShopperDetailsRequest:
+      description: This object is returned as output
+      type: object
+      properties:
+        jwtToken:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        currentPassword:
+          type: string
+
+    user_updateShopperDetailsResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        jwtToken:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+
+
+    analytics_CreateFinancialReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWWTToken:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateFinancialReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+
+    analytics_CreateMonthlyReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWWTToken:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateMonthlyReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string

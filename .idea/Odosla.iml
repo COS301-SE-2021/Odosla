@@ -3,12 +3,16 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.idea/dictionaries" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/httpRequests" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/inspectionProfiles" />
-      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/customer/odosla/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/customer/odosla/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/customer/odosla/build" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/employee/flutter_employee_app/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/employee/flutter_employee_app/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/employee/flutter_employee_app/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
   </component>
 </module>

@@ -1,18 +1,19 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.*;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.User;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.requests.GetUsersRequest;
 import cs.superleague.user.responses.GetUsersResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
 public class CreateUserAnalyticsData {
 
-    private List<User> users;
-    private List<Driver> drivers;
+    private final List<User> users;
+    private final List<Driver> drivers;
     private int totalUsers;
     private int totalCustomers;
     private int totalAdmins;
@@ -27,8 +28,8 @@ public class CreateUserAnalyticsData {
     private GetUsersResponse response;
     private UserType userType;
 
-    private Calendar startDate;
-    private Calendar endDate;
+    private final Calendar startDate;
+    private final Calendar endDate;
     private UUID adminID;
 
     public CreateUserAnalyticsData(Calendar startDate, Calendar endDate, UUID adminID, UserService userService){
@@ -130,13 +131,7 @@ public class CreateUserAnalyticsData {
 
     private void getTopDrivers(List<Driver> drivers){
 
-        int size;
-
-        if(drivers.size() > 10){
-            size = 10;
-        }else{
-            size = drivers.size();
-        }
+        int size = Math.min(drivers.size(), 10);
 
         topDrivers = new Driver[size];
 

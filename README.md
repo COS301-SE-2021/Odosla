@@ -13,13 +13,34 @@
  
 <h4 align="center">You can watch our demo 2 here: </h4>
 <div align="center"><a href="https://youtu.be/XCzTA11hocs">📺Demo 2</a></div>
-
-<h4 align="center"> Our SRS document:</h4>
+ 
+<h4 align="center">You can watch our demo 3 here: </h4>
+<div align="center"><a href="https://drive.google.com/file/d/1hjA8lwxxnqWCcqhJVelS3THr9C8SG152/view">📺Demo 3</a></div>
+ 
+ <h4 align="center"> Our SRS document version 1:</h4>
 <div align="center"><a href="https://www.overleaf.com/read/gmnfnhvhddnc" target="blank">📄SRS Document</a></div>
  
-<h4 align="center"> Our Architecture document:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄Architecture Requirements Document</a></div>
+<h4 align="center"> Our SRS document version 2:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/pqrmhjwhmbzy" target="blank">📄SRS Document</a></div>
+ 
+<h4 align="center"> Our SRS document version 3:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/pxkfskchnjbv" target="blank">📄SRS Document</a></div>
+ 
+ <h4 align="center"> Our Architectural Requirements document version 1:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄Architectural Requirements Document</a></div>
+ 
+<h4 align="center"> Our Architectural Requirements document version 2:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a></div>
 
+<h4 align="center"> Our Coding Standards document:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></div>
+ 
+<h4 align="center"> Our Installation Guide:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄Our Installation Guide</a></div>
+ 
+<h4 align="center"> Our User Manual:</h4>
+<div align="center"><a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄Our User Manual</a></div>
+ 
 <h4 align="center"> Our GitHub Project Board:</h4>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
 <br>
@@ -93,9 +114,9 @@ to achieve the objective. I am most passionate about using my programming and de
 <ul>
   <li>master
    <ul>
-    <li>Development
+    <li>develop
       <ul>
-       <li>Shopping_development
+       <li>develop_shopping
         <ul>
          <li>feature_shopping_getCatalogue</li>
          </ul>

@@ -602,9 +602,13 @@ public class UserController implements UserApi {
         driverObject.setResetCode(driver.getResetCode());
         driverObject.setResetExpiration(driver.getResetExpiration());
         driverObject.setAccountType(String.valueOf(driver.getAccountType()));
-        driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        if(driver.getDriverID()!=null)
+        {
+            driverObject.setDriverID(String.valueOf(driver.getDriverID()));
+        }
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
+        driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
         return driverObject;
     }
     public CustomerObject populateCustomer(Customer customer){
@@ -619,7 +623,11 @@ public class UserController implements UserApi {
         customerObject.setResetCode(customer.getResetCode());
         customerObject.setResetExpiration(customer.getResetExpiration());
         customerObject.setAccountType(String.valueOf(customer.getAccountType()));
-        customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        if(customer.getCustomerID()!=null)
+        {
+            customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
+        }
+
         customerObject.setAddress(String.valueOf(customer.getAddress()));
         List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
         customerObject.setGroceryLists(groceryListObjectList);
@@ -644,7 +652,10 @@ public class UserController implements UserApi {
             shopperObject.setResetExpiration(shopper.getResetExpiration());
             shopperObject.setAccountType(String.valueOf(shopper.getAccountType()));
             shopperObject.setShopperID(shopper.getShopperID().toString());
-            shopperObject.setStoreID(shopper.getStoreID().toString());
+            if(shopper.getStoreID()!=null)
+            {
+                shopperObject.setStoreID(shopper.getStoreID().toString());
+            }
             shopperObject.setOrdersCompleted(shopper.getOrdersCompleted());
             shopperObject.setOnShift(shopper.getOnShift());
             shopperObject.setIsActive(shopper.isActive());
@@ -747,5 +758,81 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userCompleteDeliveryResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetCustomerByUUIDResponse> getCustomerByUUID(UserGetCustomerByUUIDRequest body) {
+        UserGetCustomerByUUIDResponse userGetCustomerByUUIDResponse = new UserGetCustomerByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCustomerByUUIDRequest request = new GetCustomerByUUIDRequest(UUID.fromString(body.getUserID()));
+
+            GetCustomerByUUIDResponse response = ServiceSelector.getUserService().getCustomerByUUID(request);
+            try{
+                userGetCustomerByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+                userGetCustomerByUUIDResponse.setMessage(response.getMessage());
+                userGetCustomerByUUIDResponse.setCustomer(populateCustomer(response.getCustomer()));
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetCustomerByUUIDResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserDriverSetRatingResponse> driverSetRating(UserDriverSetRatingRequest body) {
+        UserDriverSetRatingResponse userDriverSetRatingResponse = new UserDriverSetRatingResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            DriverSetRatingRequest request = new DriverSetRatingRequest(UUID.fromString(body.getDriverID()), body.getRating().doubleValue());
+
+            DriverSetRatingResponse response = ServiceSelector.getUserService().driverSetRating(request);
+            try{
+                userDriverSetRatingResponse.setTimestamp(response.getTimestamp().toString());
+                userDriverSetRatingResponse.setMessage(response.getMessage());
+                userDriverSetRatingResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userDriverSetRatingResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateShopperDetailsResponse> updateShopperDetails(UserUpdateShopperDetailsRequest body) {
+        UserUpdateShopperDetailsResponse userUpdateShopperDetailsResponse = new UserUpdateShopperDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateShopperDetailsRequest request = new UpdateShopperDetailsRequest(body.getJwtToken(),body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateShopperDetailsResponse response = ServiceSelector.getUserService().updateShopperDetails(request);
+            try{
+                userUpdateShopperDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateShopperDetailsResponse.setMessage(response.getMessage());
+                userUpdateShopperDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateShopperDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateShopperDetailsResponse, status);
     }
 }

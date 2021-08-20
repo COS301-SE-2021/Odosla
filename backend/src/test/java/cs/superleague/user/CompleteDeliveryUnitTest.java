@@ -73,13 +73,13 @@ public class CompleteDeliveryUnitTest {
         assertEquals("OrderID in CompleteDeliveryRequest object is null", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("When order with OrderID does not exist - OrderDoesNotExistException")
-    void UnitTest_testingOrderDoesNotExistException(){
-        Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completeDelivery(request));
-        assertEquals("Order does not exist in database", thrown.getMessage());
-    }
+//    @Test
+//    @DisplayName("When order with OrderID does not exist - OrderDoesNotExistException")
+//    void UnitTest_testingOrderDoesNotExistException(){
+//        Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(null);
+//        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completeDelivery(request));
+//        assertEquals("Order does not exist in database", thrown.getMessage());
+//    }
 
     @Test
     @DisplayName("When order with OrderID exists - but couldn't update Order")
