@@ -1125,6 +1125,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_DriverSetRatingResponse"
 
+  /analytics/createFinancialReport:
+    post:
+      summary: Endpoint for creating user report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createFinancialReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateFinancialReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
+
+  /analytics/createMonthlyReport:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createMonthlyReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateMonthlyReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
+
 components:
 
   schemas:
@@ -2533,5 +2577,51 @@ components:
           type: string
         success:
           type: boolean
+        timestamp:
+          type: string
+
+
+    analytics_CreateFinancialReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWWTToken:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateFinancialReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+
+    analytics_CreateMonthlyReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        JWWTToken:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateMonthlyReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
         timestamp:
           type: string
