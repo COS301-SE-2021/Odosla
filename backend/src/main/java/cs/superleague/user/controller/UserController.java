@@ -809,4 +809,30 @@ public class UserController implements UserApi {
 
         return new ResponseEntity<>(userDriverSetRatingResponse, status);
     }
+
+    @Override
+    public ResponseEntity<UserUpdateShopperDetailsResponse> updateShopperDetails(UserUpdateShopperDetailsRequest body) {
+        UserUpdateShopperDetailsResponse userUpdateShopperDetailsResponse = new UserUpdateShopperDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateShopperDetailsRequest request = new UpdateShopperDetailsRequest(body.getJwtToken(),body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateShopperDetailsResponse response = ServiceSelector.getUserService().updateShopperDetails(request);
+            try{
+                userUpdateShopperDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateShopperDetailsResponse.setMessage(response.getMessage());
+                userUpdateShopperDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateShopperDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateShopperDetailsResponse, status);
+    }
 }
