@@ -29,9 +29,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
+      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/model/user.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/account_settings_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/account_settings_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/wallet_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/wallet_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +127,7 @@
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\services" />
     </key>
   </component>
-  <component name="RunManager" selected="Flutter.main.dart">
+  <component name="RunManager" selected="Android JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction">
     <configuration default="true" type="SwaggerCodegen">
       <option name="activeConfigurationType" value="FILE" />
       <option name="configurationPath" value="" />
@@ -361,7 +365,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629431313126</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="formatted driver info">
+      <created>1629432084591</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1629432084591</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -412,7 +423,8 @@
     <MESSAGE value="added map pins" />
     <MESSAGE value="added tracking of driver location" />
     <MESSAGE value="added moving pin showing the drivers live location on map" />
-    <option name="LAST_COMMIT_MESSAGE" value="added moving pin showing the drivers live location on map" />
+    <MESSAGE value="formatted driver info" />
+    <option name="LAST_COMMIT_MESSAGE" value="formatted driver info" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -444,10 +456,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="616" y="240" key="run.anything.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629384253094" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1629400271557">
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1629432582542">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629400271557" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629432582542" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Odosla_2$RemoveQueuedOrderUnitTest.ic" NAME="RemoveQueuedOrderUnitTest Coverage Results" MODIFIED="1624010921794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

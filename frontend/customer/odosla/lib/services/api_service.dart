@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:odosla/model/cart_item.dart';
 import 'package:odosla/model/store.dart';
+import 'package:odosla/model/user.dart';
 import 'package:odosla/page/order_page.dart';
 import 'package:odosla/page/store_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
@@ -360,6 +361,34 @@ class ApiService {
           jsonDecode(response.body)['currentLocation']['longitude'];
     } else {
       debugPrint("_track_ err " + response.statusCode.toString());
+    }
+  }
+
+  Future<User?> getCurrentUser(BuildContext context) async {
+    final loginURL = Uri.parse(endpoint + "/user/getCurrentUser");
+
+    Map<String, String> headers = new Map<String, String>();
+
+    headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS"
+    };
+
+    String jwt = Provider.of<StatusProvider>(context, listen: false).jwt;
+    final data = {"JWTToken": jwt};
+
+    final response =
+        await http.post(loginURL, headers: headers, body: jsonEncode(data));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print(responseData);
+      if (responseData["success"] == true) {
+        User u = User.fromJson(responseData["user"]);
+        return u;
+      }
     }
   }
 }
