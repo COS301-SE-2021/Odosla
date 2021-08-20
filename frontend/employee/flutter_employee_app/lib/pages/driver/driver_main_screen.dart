@@ -10,11 +10,18 @@ import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/list_of_stores_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
+import 'package:flutter_employee_app/provider/UtilityProvider.dart';
+import 'package:provider/provider.dart';
 
 import 'driver_profile_screen.dart';
 import 'driver_work_screen.dart';
 
 class DriverHomeScreen extends StatefulWidget {
+  int index=1;
+
+
+  DriverHomeScreen(this.index);
+
   @override
   _DriverHomeScreenState createState() => _DriverHomeScreenState();
 }
@@ -35,7 +42,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         pageChanged(index);
       },
       children: <Widget>[
-        DriverMapScreen(context, deliveryID: ""),
+        DriverMapScreen(),
         DriverWorkScreen(),
         DriverProfileScreen(),
       ],
@@ -45,12 +52,21 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   void initState() {
     super.initState();
+    bottomSelectedIndex=widget.index;
+    pageController = PageController(
+      initialPage: bottomSelectedIndex,
+      keepPage: true,
+    );
   }
 
   void pageChanged(int index) {
     setState(() {
+
       bottomSelectedIndex = index;
     });
+    // if(index==0){
+    //   Provider.of<UtilityProvider>(context, listen: false).redo=true;
+    // }
   }
 
   void bottomTapped(int index) {
@@ -58,6 +74,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
       bottomSelectedIndex = index;
       pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
+    // Provider.of<UtilityProvider>(context, listen: false).redo=true;
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/pages/shopper/edit_profile_page.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
@@ -218,7 +219,10 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditProfilePage()));
+                        },
                         child:ProfileListItem(
                           LineAwesomeIcons.cog,
                           'Settings',
@@ -226,6 +230,7 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
+
                           MyNavigator.goToLogin(context);
                           /* implement dleting from storage */
                         },

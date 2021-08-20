@@ -23,19 +23,17 @@
       <path>
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="BRANCH:feature_frontend_customer" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:develop_frontend" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="front_end employee">
       <change beforePath="$PROJECT_DIR$/.idea/Odosla.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Odosla.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/AdminRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/AdminRepo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,10 +51,13 @@
   <component name="Git.Merge.Settings">
     <option name="BRANCH" value="Development" />
   </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="develop_frontend" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop_frontend" />
+        <entry key="$PROJECT_DIR$" value="feature_shopping_mockData" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -71,17 +72,17 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/resources/application.properties" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingService.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/resources/application.properties" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Catalogue.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Store.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Catalogue.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
   <component name="ProjectLevelVcsManager">
@@ -103,7 +104,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/frontend/customer/odosla/assets/map" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/frontend/customer/odosla/lib/widget" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -120,30 +121,14 @@
       <recent name="user.repos" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\assets\map" />
-      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\model" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\widget" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\services" />
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\page" />
+      <recent name="C:\Code\Capstone\backend\src\main\java\user\exceptions" />
     </key>
   </component>
   <component name="RunManager" selected="Flutter.main.dart">
-    <configuration default="true" type="SwaggerCodegen">
-      <option name="activeConfigurationType" value="FILE" />
-      <option name="configurationPath" value="" />
-      <option name="customJreEnabled" value="false" />
-      <option name="customTemplatesPath" value="" />
-      <option name="enableDebugLogging" value="false" />
-      <option name="generateToPath" value="D:\Odosla 2\gen" />
-      <option name="generationParameters">
-        <list />
-      </option>
-      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
-      <option name="jdkPath" value="Default" />
-      <option name="language" value="java" />
-      <option name="specificationPath" value="D:\Odosla 2\backend\src\main\resources\odosla-api.yml" />
-      <method v="2" />
-    </configuration>
     <configuration name="SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
@@ -166,6 +151,41 @@
       <option name="filePath" value="$PROJECT_DIR$/frontend/customer/odosla/lib/main.dart" />
       <method v="2" />
     </configuration>
+    <configuration name="main_employee.dart" type="FlutterRunConfigurationType" factoryName="Flutter" temporary="true">
+      <option name="additionalArgs" value="--no-sound-null-safety" />
+      <option name="filePath" value="$PROJECT_DIR$/frontend/employee/flutter_employee_app/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+    <configuration name="GetNextOrderForDriverIntegrationTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.delivery.integration.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.delivery.integration" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.delivery.integration.GetNextOrderForDriverIntegrationTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GetNextOrderForDriverUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="cs.superleague.delivery.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="cs.superleague.delivery" />
+      <option name="MAIN_CLASS_NAME" value="cs.superleague.delivery.GetNextOrderForDriverUnitTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
@@ -178,6 +198,22 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="D:\Odosla 2\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="Default" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="D:\Odosla 2\backend\src\main\resources\odosla-api.yml" />
+      <method v="2" />
     </configuration>
     <configuration name="odosla-api.yml" type="SwaggerCodegen">
       <option name="activeConfigurationType" value="FILE" />
@@ -198,14 +234,23 @@
     <list>
       <item itemvalue="Android JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" />
       <item itemvalue="Flutter.main.dart" />
+      <item itemvalue="Spring Boot.Application" />
+      <item itemvalue="Swagger Codegen.odosla-api.yml" />
+      <item itemvalue="Flutter.main_employee.dart" />
+      <item itemvalue="JUnit.GetNextOrderForDriverUnitTest" />
+      <item itemvalue="JUnit.GetNextOrderForDriverIntegrationTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Spring Boot.Application" />
+        <item itemvalue="JUnit.GetNextOrderForDriverIntegrationTest" />
+        <item itemvalue="JUnit.GetNextOrderForDriverUnitTest" />
+        <item itemvalue="Flutter.main_employee.dart" />
         <item itemvalue="Android JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -223,7 +268,8 @@
       <workItem from="1623957879008" duration="1768000" />
       <workItem from="1629199205343" duration="1208000" />
       <workItem from="1629200432757" duration="1132000" />
-      <workItem from="1629378622806" duration="546000" />
+      <workItem from="1629228551496" duration="1222000" />
+      <workItem from="1629230734224" duration="450000" />
     </task>
     <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
       <created>1623142688992</created>
@@ -316,70 +362,7 @@
       <option name="project" value="LOCAL" />
       <updated>1629205071335</updated>
     </task>
-    <task id="LOCAL-00014" summary="Added login and adjusted for customer app">
-      <created>1629218300352</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1629218300352</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Added grocery list requests to api service and clean up login,register screens.">
-      <created>1629290743227</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1629290743228</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Added rating and driver info retrieval">
-      <created>1629397420113</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1629397420113</updated>
-    </task>
-    <task id="LOCAL-00017" summary="basic handling of driver information on order page">
-      <created>1629414916910</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1629414916910</updated>
-    </task>
-    <task id="LOCAL-00018" summary="added map pins">
-      <created>1629425778199</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1629425778199</updated>
-    </task>
-    <task id="LOCAL-00019" summary="added tracking of driver location">
-      <created>1629427259071</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1629427259071</updated>
-    </task>
-    <task id="LOCAL-00020" summary="added moving pin showing the drivers live location on map">
-      <created>1629431313126</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1629431313126</updated>
-    </task>
-    <task id="LOCAL-00021" summary="formatted driver info">
-      <created>1629432084591</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1629432084591</updated>
-    </task>
-    <task id="LOCAL-00022" summary="fixed profile page info">
-      <created>1629433553520</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1629433553520</updated>
-    </task>
-    <option name="localTasksCounter" value="23" />
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -396,7 +379,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature_frontend_customer" />
+                        <option value="develop_frontend" />
                       </list>
                     </value>
                   </entry>
@@ -423,51 +406,8 @@
     <MESSAGE value="Fixed spacing and text wrap on wallet as well as items page." />
     <MESSAGE value="Added Save Shopping list with dialog box" />
     <MESSAGE value="Fixed padding for clear cart button" />
-    <MESSAGE value="Added login and adjusted for customer app" />
-    <MESSAGE value="Added grocery list requests to api service and clean up login,register screens." />
-    <MESSAGE value="Added rating and driver info retrieval" />
-    <MESSAGE value="basic handling of driver information on order page" />
-    <MESSAGE value="added map pins" />
-    <MESSAGE value="added tracking of driver location" />
-    <MESSAGE value="added moving pin showing the drivers live location on map" />
-    <MESSAGE value="formatted driver info" />
-    <MESSAGE value="fixed profile page info" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed profile page info" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed padding for clear cart button" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="92" y="92" width="1736" height="856" key="AVDManager" timestamp="1629409401550">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="92" y="92" width="1736" height="856" key="AVDManager/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629409401550" />
-    <state width="936" height="158" key="GridCell.Tab.0.bottom" timestamp="1629433723942">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="158" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629433723942" />
-    <state width="936" height="158" key="GridCell.Tab.0.center" timestamp="1629433723942">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="158" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629433723942" />
-    <state width="936" height="158" key="GridCell.Tab.0.left" timestamp="1629433723942">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="158" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629433723942" />
-    <state width="936" height="158" key="GridCell.Tab.0.right" timestamp="1629433723942">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="158" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629433723942" />
-    <state x="460" y="163" key="SettingsEditor" timestamp="1629391553567">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="460" y="163" key="SettingsEditor/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629391553567" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1629384253094">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="616" y="240" key="run.anything.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629384253094" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1629432582542">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629432582542" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Odosla_2$RemoveQueuedOrderUnitTest.ic" NAME="RemoveQueuedOrderUnitTest Coverage Results" MODIFIED="1624010921794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">

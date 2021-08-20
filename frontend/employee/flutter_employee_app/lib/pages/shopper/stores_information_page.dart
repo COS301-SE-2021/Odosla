@@ -57,7 +57,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                 await _userService.setShopperShift(true, widget.store.id, context).then((value) =>
                 {
                   if(value==true){
-                    Provider.of<ShopProvider>(context,listen: false).store.id=widget.store.id,
+                    Provider.of<ShopProvider>(context,listen: false).store=widget.store,
                     Navigator.of(context).push(MaterialPageRoute(
                     builder: (BuildContext context) =>
                         GetNewOrderScreen(context, store: widget
@@ -72,7 +72,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
               borderRadius: BorderRadius.circular(40.0),
             ),
             color: Colors.white,
-            textColor: Color(0xFFE9884A),
+            textColor: Colors.deepOrangeAccent,
             disabledColor:Color(0xA65A5959),
             disabledElevation: 0.0,
             disabledTextColor: Colors.white,
@@ -106,7 +106,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                Provider.of<ShopProvider>(context,listen: false).store==Store("","",0,0,true,""),
                Navigator.of(context).push(MaterialPageRoute(
                    builder: (BuildContext context) =>
-                       ShopperHomeScreen() //ProductPage(product: product),
+                       ShopperHomeScreen(1) //ProductPage(product: product),
                ))
              }
            });
@@ -165,13 +165,14 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   ),
                 height: 250,
               ),
+              SizedBox(height:40),
               Container(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                   child: Row(
-
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+
                       Container(
                         child: Text(
                           "Store ID: ",
@@ -191,7 +192,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                         ),
                       ),
                     ],
-
                   ),
                 )
               ),
@@ -200,7 +200,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -262,7 +261,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -293,7 +291,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -305,9 +302,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                             ),
                           ),
                         ),
-
                       ],
-
                     ),
                   )
               ),
@@ -326,7 +321,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 55),
+              SizedBox(height: 30),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                   children: [

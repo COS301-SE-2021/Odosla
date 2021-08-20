@@ -10,5 +10,5 @@ class UserProvider with ChangeNotifier{
 
   User get user=>_user;
 
-  set user(User u){_user;notifyListeners();}
+  set user(User u){_user=u;notifyListeners();}
 }

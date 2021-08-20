@@ -16,45 +16,8 @@ class ShoppingService {
 
   UserService _userService=GetIt.I.get();
 
-  //final String endPoint = "c71682b066b8.ngrok.io/";
-  final String endPoint = "10.0.2.2:8080/";
-  Future<List<CartItem>> getItems(String storeID) async {
-    String sId = "01234567-9ABC-DEF0-1234-56789ABCDEF0";
-
-    //localhost:8080/shopping/getItems
-    final response = await http.post(
-        Uri.parse('http://a70dc1d7d5d0.ngrok.io/shopping/getItems'),
-        headers: {
-          "Accept": "application/json",
-          "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-        },
-        body: jsonEncode({"storeId": "01234567-9ABC-DEF0-1234-56789ABCDEF0"}));
-
-    if (response.statusCode == 200) {
-      debugPrint("code _ 200");
-      Map<String, dynamic> map = jsonDecode(response.body);
-      List<CartItem> list = cartItemsFromJson(map);
-      debugPrint(list.toString());
-      return list; //CartItem.fromJson(map)
-    } else {
-      List<CartItem> list = List.empty();
-      debugPrint("___ err " + response.statusCode.toString());
-      return list; //CartItem.fromJson(map)
-    }
-  }
-
-  List<CartItem> cartItemsFromJson(Map<String, dynamic> j) {
-    List<CartItem> list;
-
-    //Iterable i = json.decode(j['items']);
-    list = (json.decode(json.encode(j['items'])) as List)
-        .map((i) => CartItem.fromJson(i))
-        .toList();
-
-    return list;
-  }
+  final String endPoint = "f1de7630b01d.ngrok.io/";
+  //final String endPoint = "10.0.2.2:8080/";
 
   Future<List<Store>> getStores() async {
     final response = await http.post(
@@ -68,14 +31,11 @@ class ShoppingService {
         body: jsonEncode({}));
 
     if (response.statusCode == 200) {
-      debugPrint("code _ 200");
       Map<String, dynamic> map = jsonDecode(response.body);
       List<Store> list = StoresFromJson(map);
-      debugPrint(list.toString());
       return list; //CartItem.fromJson(map)
     } else {
       List<Store> list = List.empty();
-      debugPrint("___ err " + response.statusCode.toString());
       return list; //CartItem.fromJson(map)
     }
   }
@@ -108,8 +68,6 @@ class ShoppingService {
       );
     }
 
-    print("JWT: "+jwt);
-    print(storeID);
     final data = {
       "storeID":storeID,
       "jwtToken":jwt
@@ -122,16 +80,14 @@ class ShoppingService {
       Map<String,dynamic> responseData = json.decode(response.body);
       if (responseData["success"] == true) {
         Order order= Order.fromJson(responseData["newCurrentOrder"]);
-        for(var i in order.items){
-          print(i.price);
-          print(i.brand);
-        }
+
+        print("Total cost from response:   ");
+        print(responseData["newCurrentOrder"]["totalPrice"]);
+        print("Total cost from response after order from json:   ");
+        print(order.totalCost);
 
         Provider.of<OrderProvider>(context,listen: false).order=order;
-        print(order.totalCost);
-        Provider.of<OrderProvider>(context,listen: false).order.totalCost=order.totalCost;
-        print(Provider.of<OrderProvider>(context,listen: false).order.totalCost);
-        Provider.of<OrderProvider>(context,listen: false).order.orderID=order.orderID;
+        print("Total cost from provider:   ");
         print(Provider.of<OrderProvider>(context,listen: false).order.totalCost);
         return order;
       }
