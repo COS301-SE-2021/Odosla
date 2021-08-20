@@ -6,9 +6,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Delivery.dart';
 import 'package:flutter_employee_app/models/GeoPoint.dart';
+import 'package:flutter_employee_app/provider/UtilityProvider.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
+import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get_it/get_it.dart';
@@ -22,6 +24,7 @@ class DriverMapScreen extends StatefulWidget {
 
 class  _DriverMapScreenState extends State<DriverMapScreen> {
 
+  bool _done=false;
   UserService _userService=GetIt.I.get();
   bool _updatingOnline=true;
   Delivery _delivery=new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
@@ -126,7 +129,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   void setInitialLocation() async {
-    print("_____________________________2");
     // set the initial location by pulling the user's
     // current location from the location's getLocation()
     //currentLocation = await location.getLocation();
@@ -163,7 +165,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   _addPolyLine() {
-    print("_____________________________4");
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
         polylineId: id, color: Colors.red, points: polylineCoordinates);
@@ -173,7 +174,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   void showPinsOnMap() {
-    print("_____________________________5");
     // get a LatLng for the source location
     // from the LocationData currentLocation object
     var pinPosition = LatLng(currentLocation.latitude,
@@ -199,7 +199,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   void updatePinOnMap() async {
-    print("_____________________________6");
     // create a new CameraPosition instance
     // every time the location changes, so the camera
     // follows the pin as it moves with an animation
@@ -231,10 +230,9 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
   Timer? _timer;
   void simulateMoving() {
-    print("_____________________________8");
     int i=0;
     int j=0;
-    _timer=Timer.periodic(Duration(milliseconds: 350), (Timer t) {
+    _timer=Timer.periodic(Duration(seconds: 1), (Timer t) {
       if(mounted){
         setState((){
           if(i<polylineCoordinates.length){
@@ -245,7 +243,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
             updatePinOnMap();
             i+=3;
             j++;
-            if(j==3){
+            if(j==1){
               _userService.updateDriverLocation(currentLocation.latitude, currentLocation.longitude, context).then((value) =>
                   {
                     if(value==true){
@@ -281,7 +279,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
 
   Widget buildMap(BuildContext context) {
-    print("_____________________________7");
     CameraPosition initialCameraPosition = CameraPosition(
         zoom: CAMERA_ZOOM,
         tilt: CAMERA_TILT,
@@ -298,48 +295,59 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
           bearing: CAMERA_BEARING
       );
     }
-    return SizedBox(
-        height: MediaQuery.of(context).size.height-130,
-        width: MediaQuery.of(context).size.width,
-        child: GoogleMap(
-            myLocationEnabled: true,
-            compassEnabled: true,
-            tiltGesturesEnabled: false,
-            markers: _markers,
-            polylines: Set<Polyline>.of(polylines.values),
-            mapType: MapType.normal,
-            initialCameraPosition: initialCameraPosition,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              print(_delivery.deliveryStatus);
-              if(_delivery.deliveryStatus=="CollectingFromStore" ){
-                showPinsOnMap();
-              } else if(_delivery.deliveryStatus=="DeliveringToCustomer"){
-                showPinsOnMap();
-              }
+    return Padding(
+      padding: const EdgeInsets.all(9.0),
+      child: SizedBox(
+          height: MediaQuery.of(context).size.height-140,
+          width: MediaQuery.of(context).size.width,
+          child: GoogleMap(
+              myLocationEnabled: true,
+              compassEnabled: true,
+              tiltGesturesEnabled: false,
+              markers: _markers,
+              polylines: Set<Polyline>.of(polylines.values),
+              mapType: MapType.normal,
+              initialCameraPosition: initialCameraPosition,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                print(_delivery.deliveryStatus);
+                if(_delivery.deliveryStatus=="CollectingFromStore" ){
+                  showPinsOnMap();
+                } else if(_delivery.deliveryStatus=="DeliveringToCustomer"){
+                  showPinsOnMap();
+                }
 
-            })
+              })
+      ),
     );
 
   }
   @override
   Widget build(BuildContext context) {
-    print("_____________________________9");
-    _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
-    _delivery.deliveryStatus="DeliveringToCustomer";
-    if(_delivery.deliveryStatus=="CollectingFromStore"){
-      DEST_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
-    }else if(_delivery.deliveryStatus=="DeliveringToCustomer"){
-      print(_delivery.pickUpLocation.latitude);
-      print(_delivery.pickUpLocation.longitude);
-      SOURCE_LOCATION=LatLng(_delivery.pickUpLocation.latitude, _delivery.pickUpLocation.longitude);
-      print("???????????????????????????????????????????");
-      print(SOURCE_LOCATION.latitude);
-      print(SOURCE_LOCATION.longitude);
-      DEST_LOCATION=LatLng(_delivery.dropOffLocation.latitude, _delivery.dropOffLocation.longitude);
+    print(Provider.of<UtilityProvider>(context).redo);
+    if(_done==false) {
+      setState(() {
+        _delivery = Provider
+            .of<DeliveryProvider>(context, listen: false)
+            .delivery;
+        if (_delivery.deliveryStatus == "CollectingFromStore") {
+          DEST_LOCATION = LatLng(_delivery.pickUpLocation.latitude,
+              _delivery.pickUpLocation.longitude);
+        } else if (_delivery.deliveryStatus == "DeliveringToCustomer") {
+          SOURCE_LOCATION = LatLng(_delivery.pickUpLocation.latitude,
+              _delivery.pickUpLocation.longitude);
+          DEST_LOCATION = LatLng(_delivery.dropOffLocation.latitude,
+              _delivery.dropOffLocation.longitude);
+        }
+      });
+      setInitialLocation();
+      setState(() {
+        _done=true;
+      });
     }
     return Scaffold(
       body: Column(
+
         children: [
           Stack(
             children: [
@@ -347,12 +355,54 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
 
             ],
           ),
-          Column(
-            children: [
-              Text("Status (updating on customer app): \n"+_updatingOnline.toString()),
-              Text("Currently driving to: \n"+_delivery.deliveryStatus=="CollectingFromStore"?_delivery.pickUpLocation.address:_delivery.deliveryStatus=="DeliveringToCustomer"?_delivery.dropOffLocation.address:""),
-            ],
-          )
+          Padding(
+            padding: const EdgeInsets.only(left: 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                    "Status (updating on customer app):          ",
+                    textAlign: TextAlign.left,
+                    style: kTitleTextStyle.copyWith(
+                        fontWeight: FontWeight.w600
+                    ),
+                ),
+                Text(
+                    _updatingOnline.toString(),
+                    textAlign: TextAlign.right,
+                    style: kTitleTextStyle.copyWith(
+                        fontWeight: FontWeight.w600
+                    ),
+                )
+              ],
+            ),
+          ),
+          SizedBox(height:5),
+          Padding(
+            padding: const EdgeInsets.only(left: 6),
+            child: Row(
+              children:[
+                Text(
+                  "Currently driving to: ",
+                  textAlign: TextAlign.left,
+                  style: kTitleTextStyle.copyWith(
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    _delivery.deliveryStatus=="CollectingFromStore"?_delivery.pickUpLocation.address:_delivery.deliveryStatus=="DeliveringToCustomer"?_delivery.dropOffLocation.address:"",
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: kTitleTextStyle.copyWith(
+                      fontWeight: FontWeight.w600
+                    )
+                  ),
+                )
+              ]
+            ),
+          ),
         ],
       ),
     );

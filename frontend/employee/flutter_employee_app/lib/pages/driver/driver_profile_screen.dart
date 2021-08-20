@@ -25,12 +25,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   void initState() {
     _userService.getCurrentUser(context).then((value) =>
     {
-      print(value),
       setState(() {
         _name = value!.name;
         _surname = value.surname;
         _email = value.email;
         _rating=value.rating;
+        print("*****************************************");
+        print(_numberOfDeliveriesCompleted);
         _numberOfDeliveriesCompleted=value.deliveriesCompleted;
       })
     }

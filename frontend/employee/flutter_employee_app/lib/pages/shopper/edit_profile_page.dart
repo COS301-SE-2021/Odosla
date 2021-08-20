@@ -1,6 +1,9 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
+import 'package:flutter_employee_app/utilities/functions.dart';
 import 'package:get_it/get_it.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -14,6 +17,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String _name="";
   String _surname="";
   String _phoneNumber="";
+  String _currentPassword="";
+  String _newPassword="";
   bool _changingPassword=false;
   final UserService _userService=GetIt.I.get();
   void initState() {
@@ -43,7 +48,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => ShopperProfileScreen()));
+                builder: (BuildContext context) => ShopperHomeScreen(2)));
           },
         ),
         actions: [
@@ -116,10 +121,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               SizedBox(
                 height: 35,
               ),
-              _changingPassword==false?buildTextField("Name",_name, false):buildTextField("Current password","", true),
-              _changingPassword==false?buildTextField("Surname", _surname, false):buildTextField("New password","", true),
-              _changingPassword==false?buildTextField("Phone number", _phoneNumber, false):Container(),
-              _changingPassword==false?buildTextField("Email", _email, false):Container(),
+              _changingPassword==false?buildTextField("Name",_name, false,"name"):buildTextField("Current password","", true,"currentPassword"),
+              _changingPassword==false?buildTextField("Surname", _surname, false,"surname"):buildTextField("New password","", true,"newPassword"),
+              _changingPassword==false?buildTextField("Phone number", _phoneNumber, false,"phoneNumber"):Container(),
+              _changingPassword==false?buildTextField("Email", _email, false,"email"):Container(),
               SizedBox(
                 height: 35,
               ),
@@ -141,7 +146,44 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             color: Colors.black)),
                   ),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_changingPassword == false) {
+                        bool validEmail = EmailValidator.validate(_email);
+                        bool validPhoneNumber = validatePhoneNumber(
+                            _phoneNumber);
+                        if (!validEmail) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Invalid email")));
+                        } else if (!validPhoneNumber) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Invalid phone number")));
+                        } else{
+                          _userService.updateShopperDetails(_name, _surname, _email, _phoneNumber, "noChange", "noChange", context).then((value) =>
+                          {
+                            if(value==true){
+                              ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text("Successfully updated details")))
+                            }
+                          }
+                          );
+                        }
+                      }else{
+                        bool _validNewPassword=validateStructure(_newPassword);
+                        if(!_validNewPassword){
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(content: Text("Please enter a valid password")));
+                        }else{
+                          _userService.updateShopperDetails("noChange", "noChange", "noChange", "noChange", _currentPassword, _newPassword, context).then((value) =>
+                              {
+                                if(value==true){
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(content: Text("Successfully updated password")))
+                                }
+                              }
+                          );
+                        }
+                      }
+                    },
                     color: Colors.deepOrangeAccent,
                     padding: EdgeInsets.symmetric(horizontal: 50),
                     elevation: 2,
@@ -165,10 +207,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   Widget buildTextField(
-      String labelText, String placeholder, bool isPasswordTextField) {
+      String labelText, String placeholder, bool isPasswordTextField,String valueChanging) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 35.0),
       child: TextField(
+        onChanged: (String s){
+          setState(() {
+            if(valueChanging=="name"){
+              _name=s;
+            }else if(valueChanging=="surname"){
+              _surname=s;
+            }else if(valueChanging=="phoneNumber"){
+              _phoneNumber=s;
+            }else if(valueChanging=="currentPassword"){
+              _currentPassword=s;
+            }else if(valueChanging=="newPassword"){
+              _newPassword=s;
+            }else if(valueChanging=="email"){
+              _email=s;
+            }
+          });
+        },
         obscureText: isPasswordTextField ? showPassword : false,
         decoration: InputDecoration(
             suffixIcon: isPasswordTextField

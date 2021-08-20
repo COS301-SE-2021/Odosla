@@ -10,6 +10,8 @@ import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/list_of_stores_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
+import 'package:flutter_employee_app/provider/UtilityProvider.dart';
+import 'package:provider/provider.dart';
 
 import 'driver_profile_screen.dart';
 import 'driver_work_screen.dart';
@@ -59,8 +61,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   void pageChanged(int index) {
     setState(() {
+
       bottomSelectedIndex = index;
     });
+    // if(index==0){
+    //   Provider.of<UtilityProvider>(context, listen: false).redo=true;
+    // }
   }
 
   void bottomTapped(int index) {
@@ -68,6 +74,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
       bottomSelectedIndex = index;
       pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
+    // Provider.of<UtilityProvider>(context, listen: false).redo=true;
   }
 
   @override
