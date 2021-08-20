@@ -192,7 +192,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                         ),
                       ),
                     ],
-
                   ),
                 )
               ),
@@ -201,7 +200,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -263,7 +261,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -294,7 +291,6 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                     child: Row(
-
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
@@ -306,9 +302,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                             ),
                           ),
                         ),
-
                       ],
-
                     ),
                   )
               ),
