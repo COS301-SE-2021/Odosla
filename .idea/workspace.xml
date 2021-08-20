@@ -32,7 +32,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/UserService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/UserService.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/settings.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -383,7 +384,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629433860866</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Adjust driver info styling">
+      <created>1629436200977</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1629436200977</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,46 +445,9 @@
     <MESSAGE value="formatted driver info" />
     <MESSAGE value="fixed profile page info" />
     <MESSAGE value="added contact driver button" />
-    <option name="LAST_COMMIT_MESSAGE" value="added contact driver button" />
+    <MESSAGE value="Adjust driver info styling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adjust driver info styling" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="92" y="92" width="1736" height="856" key="AVDManager" timestamp="1629409401550">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="92" y="92" width="1736" height="856" key="AVDManager/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629409401550" />
-    <state width="936" height="102" key="GridCell.Tab.0.bottom" timestamp="1629434006363">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="102" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629434006363" />
-    <state width="936" height="102" key="GridCell.Tab.0.center" timestamp="1629434006363">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="102" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629434006363" />
-    <state width="936" height="102" key="GridCell.Tab.0.left" timestamp="1629434006363">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="102" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629434006363" />
-    <state width="936" height="102" key="GridCell.Tab.0.right" timestamp="1629434006363">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="936" height="102" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629434006363" />
-    <state x="460" y="163" key="SettingsEditor" timestamp="1629391553567">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="460" y="163" key="SettingsEditor/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629391553567" />
-    <state x="551" y="251" key="Vcs.Push.Dialog.v2" timestamp="1629433951710">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="551" y="251" key="Vcs.Push.Dialog.v2/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629433951710" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1629384253094">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="616" y="240" key="run.anything.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629384253094" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1629432582542">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629432582542" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Odosla_2$RemoveQueuedOrderUnitTest.ic" NAME="RemoveQueuedOrderUnitTest Coverage Results" MODIFIED="1624010921794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
