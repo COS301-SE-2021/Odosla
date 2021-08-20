@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:odosla/page/account_settings_page.dart';
-import 'package:odosla/page/order_page.dart';
-import 'package:odosla/provider/cart_provider.dart';
-import 'package:provider/provider.dart';
 
 class AccountPage extends StatefulWidget {
   final String orderID;
@@ -17,9 +14,6 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   int _page = 0;
-  //PageController _pageController = PageController();
-
-  //List<Widget> _pages = [widget.orderPage, buildAccountPage()];
 
   @override
   void initState() {

@@ -461,37 +461,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   });
                 });
               } else {
-                {
-                  // _userService
-                  //     .registerCustomer(
-                  //         _name, _surname, _email, _password, _phoneNumber)
-                  //     .then((success) async {
-                  //   if (success == "true") {
-                  //     _userService.setRegistrationPassword(_password);
-                  //     showDialog(
-                  //       context: context,
-                  //       builder: (BuildContext context) =>
-                  //           _popUpSuccessfulRegisteration(context),
-                  //     );
-                  //   } else if (success == "Email has already been used") {
-                  //     setState(() {
-                  //       _emailAlreadyInUse = true;
-                  //     });
-                  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //         content: Text(
-                  //             "Email has already been used for a Shopper account")));
-                  //   } else if (success == "timeout") {
-                  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //         content: Text("Request timed out - please retry")));
-                  //   } else {
-                  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  //         content: Text("Failed to Register Shopper")));
-                  //   }
-                  //   setState(() {
-                  //     _isInAsyncCall = false;
-                  //   });
-                  // });
-                }
+                {}
               }
             } else {
               var text = "";

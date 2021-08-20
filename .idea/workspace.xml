@@ -32,8 +32,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/UserService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/UserService.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/settings.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/settings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/account_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/account_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/register_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/login/register_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +101,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/frontend/customer/odosla/assets/map" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/frontend/customer/odosla/assets/item" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -118,11 +118,11 @@
       <recent name="user.repos" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\assets\item" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\assets\map" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\model" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\widget" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib" />
-      <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\services" />
     </key>
   </component>
   <component name="RunManager" selected="Android JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction">
@@ -391,7 +391,21 @@
       <option name="project" value="LOCAL" />
       <updated>1629436200977</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="removed unused function">
+      <created>1629436705898</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1629436705898</updated>
+    </task>
+    <task id="LOCAL-00026" summary="added image asset for necessary item">
+      <created>1629436826582</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1629436826582</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -422,7 +436,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Setup shopper structure and request objects" />
     <MESSAGE value="Added ShopperRepo" />
     <MESSAGE value="Added InvalidRequest Exception for User subsystem" />
     <MESSAGE value="Created application file" />
@@ -446,7 +459,9 @@
     <MESSAGE value="fixed profile page info" />
     <MESSAGE value="added contact driver button" />
     <MESSAGE value="Adjust driver info styling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adjust driver info styling" />
+    <MESSAGE value="removed unused function" />
+    <MESSAGE value="added image asset for necessary item" />
+    <option name="LAST_COMMIT_MESSAGE" value="added image asset for necessary item" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
