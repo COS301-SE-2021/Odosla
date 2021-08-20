@@ -11,6 +11,7 @@ class DriverProvider with ChangeNotifier {
   double _lat = -25;
   double _long = 28;
   String _deliveryID = "";
+  bool _tracking = false;
 
   DriverProvider() {}
 
@@ -24,6 +25,12 @@ class DriverProvider with ChangeNotifier {
     _lat = lat;
     _long = long;
     _deliveryID = deliveryID;
+  }
+
+  bool get tracking => _tracking;
+  set tracking(bool b) {
+    _tracking = b;
+    notifyListeners();
   }
 
   String get deliveryID => _deliveryID;

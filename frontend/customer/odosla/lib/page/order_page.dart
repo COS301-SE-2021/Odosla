@@ -29,7 +29,7 @@ class _OrderPage extends State<OrderPage> {
   late Timer _timer = Timer(Duration.zero, () {});
   late Timer _timerDriver = Timer(Duration.zero, () {});
 
-  late GoogleMapController controller;
+  Completer<GoogleMapController> _controller = Completer();
 
   late List<Marker> markers = [];
 
@@ -64,29 +64,44 @@ class _OrderPage extends State<OrderPage> {
                 setStatus(api.getStatus(context, widget.orderID)),
                 if (!Provider.of<CartProvider>(context, listen: false)
                     .activeOrder)
-                  {_timer.cancel(), debugPrint("CANCELLED")}
-              });
-    }
+                  {_timer.cancel(), debugPrint("CANCELLED")},
+//.
 
-    if (Provider.of<DriverProvider>(context, listen: false).allocated)
-      api.updateDriverLocation(context,
-          Provider.of<DriverProvider>(context, listen: false).deliveryID);
-    if (Provider.of<DriverProvider>(context, listen: false).allocated) {
-      api.updateDriverLocation(context,
-          Provider.of<DriverProvider>(context, listen: false).deliveryID);
-      driver();
-      _timerDriver = new Timer.periodic(
-          Duration(milliseconds: 1150),
-          (_) => {
-                driver(),
-                api.updateDriverLocation(
-                    context,
+                if (Provider.of<DriverProvider>(context, listen: false)
+                        .allocated &&
+                    !Provider.of<DriverProvider>(context, listen: false)
+                        .tracking)
+                  {
                     Provider.of<DriverProvider>(context, listen: false)
-                        .deliveryID),
-                driver(),
-                if (!Provider.of<CartProvider>(context, listen: false)
-                    .activeOrder)
-                  {_timerDriver.cancel(), debugPrint("CANCELLED")}
+                        .tracking = true,
+                    api.updateDriverLocation(
+                        context,
+                        Provider.of<DriverProvider>(context, listen: false)
+                            .deliveryID),
+                    updatePinOnMap(),
+                    _timerDriver = new Timer.periodic(
+                        Duration(milliseconds: 800),
+                        (_) => {
+                              debugPrint("tick"),
+                              updatePinOnMap(),
+                              api.updateDriverLocation(
+                                  context,
+                                  Provider.of<DriverProvider>(context,
+                                          listen: false)
+                                      .deliveryID),
+                              updatePinOnMap(),
+                              if (!Provider.of<CartProvider>(context,
+                                      listen: false)
+                                  .activeOrder)
+                                {
+                                  _timerDriver.cancel(),
+                                  Provider.of<DriverProvider>(context,
+                                          listen: false)
+                                      .tracking = false,
+                                  debugPrint("CANCELLED")
+                                },
+                            }),
+                  }
               });
     }
 
@@ -110,18 +125,51 @@ class _OrderPage extends State<OrderPage> {
     super.initState();
   }
 
-  void driver() {
+  // void driver() {
+  //   setState(() {
+  //     if (markers.length > 2) markers.removeLast();
+  //     markers.add(Marker(
+  //       markerId: MarkerId("driver"),
+  //       position: LatLng(
+  //           Provider.of<DriverProvider>(context, listen: false).lat,
+  //           Provider.of<DriverProvider>(context, listen: false).lat),
+  //       icon: BitmapDescriptor.defaultMarker,
+  //       infoWindow: InfoWindow(
+  //           title: Provider.of<DriverProvider>(context, listen: false).name),
+  //     ));
+  //   });
+  //   debugPrint(markers.length.toString());
+  // }
+
+  void updatePinOnMap() async {
+    // create a new CameraPosition instance
+    // every time the location changes, so the camera
+    // follows the pin as it moves with an animation
+    // CameraPosition cPosition = CameraPosition(
+    //   zoom: CAMERA_ZOOM,
+    //   tilt: CAMERA_TILT,
+    //   bearing: CAMERA_BEARING,
+    //   target: LatLng(currentLocation.latitude,
+    //       currentLocation.longitude),
+    // );
+    final GoogleMapController controller = await _controller.future;
+    // controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
+    // do this inside the setState() so Flutter gets notified
+    // that a widget update is due
     setState(() {
-      if (markers.length > 2) markers.removeLast();
+      // updated position
+      var pinPosition = LatLng(
+          Provider.of<DriverProvider>(context, listen: false).lat,
+          Provider.of<DriverProvider>(context, listen: false).long);
+      // the trick is to remove the marker (by id)
+      // and add it again at the updated location
+      markers.removeWhere((m) => m.markerId.value == "driver");
       markers.add(Marker(
-        markerId: MarkerId("driver"),
-        position: LatLng(
-            Provider.of<DriverProvider>(context, listen: false).lat,
-            Provider.of<DriverProvider>(context, listen: false).lat),
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(
-            title: Provider.of<DriverProvider>(context, listen: false).name),
-      ));
+          markerId: MarkerId("driver"),
+          position: pinPosition, // updated position
+          icon:
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+          infoWindow: InfoWindow(title: "driver")));
     });
   }
 
@@ -277,10 +325,11 @@ class _OrderPage extends State<OrderPage> {
   }
 
   void _onMapCreated(GoogleMapController control) {
-    controller = control;
-    controller.showMarkerInfoWindow(MarkerId("you"));
-    controller.showMarkerInfoWindow(MarkerId("shop"));
-    controller.showMarkerInfoWindow(MarkerId("driver"));
+    _controller.complete(control);
+    // (_controller as GoogleMapController).showMarkerInfoWindow(MarkerId("you"));
+    // _controller.showMarkerInfoWindow(MarkerId("shop"));
+    // _controller.showMarkerInfoWindow(MarkerId("driver"));
+    //showPinsOnMap();
   }
 
   Widget buildEmployeeInfo(BuildContext context) {

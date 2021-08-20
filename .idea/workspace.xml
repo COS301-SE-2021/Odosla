@@ -33,7 +33,7 @@
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/driver_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/driver_provider.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -349,7 +349,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629425778199</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="added tracking of driver location">
+      <created>1629427259071</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1629427259071</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -398,7 +405,8 @@
     <MESSAGE value="Added rating and driver info retrieval" />
     <MESSAGE value="basic handling of driver information on order page" />
     <MESSAGE value="added map pins" />
-    <option name="LAST_COMMIT_MESSAGE" value="added map pins" />
+    <MESSAGE value="added tracking of driver location" />
+    <option name="LAST_COMMIT_MESSAGE" value="added tracking of driver location" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">
