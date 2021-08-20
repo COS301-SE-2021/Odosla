@@ -608,6 +608,7 @@ public class UserController implements UserApi {
         }
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
+        driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
         return driverObject;
     }
     public CustomerObject populateCustomer(Customer customer){
@@ -757,5 +758,81 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userCompleteDeliveryResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetCustomerByUUIDResponse> getCustomerByUUID(UserGetCustomerByUUIDRequest body) {
+        UserGetCustomerByUUIDResponse userGetCustomerByUUIDResponse = new UserGetCustomerByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCustomerByUUIDRequest request = new GetCustomerByUUIDRequest(UUID.fromString(body.getUserID()));
+
+            GetCustomerByUUIDResponse response = ServiceSelector.getUserService().getCustomerByUUID(request);
+            try{
+                userGetCustomerByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+                userGetCustomerByUUIDResponse.setMessage(response.getMessage());
+                userGetCustomerByUUIDResponse.setCustomer(populateCustomer(response.getCustomer()));
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetCustomerByUUIDResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserDriverSetRatingResponse> driverSetRating(UserDriverSetRatingRequest body) {
+        UserDriverSetRatingResponse userDriverSetRatingResponse = new UserDriverSetRatingResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            DriverSetRatingRequest request = new DriverSetRatingRequest(UUID.fromString(body.getDriverID()), body.getRating().doubleValue());
+
+            DriverSetRatingResponse response = ServiceSelector.getUserService().driverSetRating(request);
+            try{
+                userDriverSetRatingResponse.setTimestamp(response.getTimestamp().toString());
+                userDriverSetRatingResponse.setMessage(response.getMessage());
+                userDriverSetRatingResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userDriverSetRatingResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateShopperDetailsResponse> updateShopperDetails(UserUpdateShopperDetailsRequest body) {
+        UserUpdateShopperDetailsResponse userUpdateShopperDetailsResponse = new UserUpdateShopperDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateShopperDetailsRequest request = new UpdateShopperDetailsRequest(body.getJwtToken(),body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateShopperDetailsResponse response = ServiceSelector.getUserService().updateShopperDetails(request);
+            try{
+                userUpdateShopperDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateShopperDetailsResponse.setMessage(response.getMessage());
+                userUpdateShopperDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateShopperDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateShopperDetailsResponse, status);
     }
 }
