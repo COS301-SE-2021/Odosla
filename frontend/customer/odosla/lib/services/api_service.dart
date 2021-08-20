@@ -193,6 +193,7 @@ class ApiService {
                         response.rating);
                   },
                 ));
+        Provider.of<StatusProvider>(context).status = "PENDING";
       }
 
       return result;
@@ -355,7 +356,7 @@ class ApiService {
 
       Provider.of<DriverProvider>(context, listen: false).lat =
           jsonDecode(response.body)['currentLocation']['latitude'];
-      Provider.of<DriverProvider>(context, listen: false).lat =
+      Provider.of<DriverProvider>(context, listen: false).long =
           jsonDecode(response.body)['currentLocation']['longitude'];
     } else {
       debugPrint("_track_ err " + response.statusCode.toString());

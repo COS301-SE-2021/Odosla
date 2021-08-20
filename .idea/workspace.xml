@@ -29,21 +29,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
-      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/assets/map/car.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/assets/map/me.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/frontend/customer/odosla/assets/map/shop.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/model/store.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/model/store.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/item_detail_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/item_detail_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/items_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/items_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/store_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/store_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/cart_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/cart_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/driver_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/driver_provider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/services/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +125,7 @@
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\frontend\customer\odosla\lib\services" />
     </key>
   </component>
-  <component name="RunManager" selected="Android JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction">
+  <component name="RunManager" selected="Flutter.main.dart">
     <configuration default="true" type="SwaggerCodegen">
       <option name="activeConfigurationType" value="FILE" />
       <option name="configurationPath" value="" />
@@ -352,7 +342,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629414916910</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="added map pins">
+      <created>1629425778199</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1629425778199</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -400,7 +397,8 @@
     <MESSAGE value="Added grocery list requests to api service and clean up login,register screens." />
     <MESSAGE value="Added rating and driver info retrieval" />
     <MESSAGE value="basic handling of driver information on order page" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic handling of driver information on order page" />
+    <MESSAGE value="added map pins" />
+    <option name="LAST_COMMIT_MESSAGE" value="added map pins" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -408,22 +406,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="AVDManager/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629409401550" />
-    <state width="936" height="102" key="GridCell.Tab.0.bottom" timestamp="1629422730029">
+    <state width="936" height="205" key="GridCell.Tab.0.bottom" timestamp="1629427123422">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="936" height="102" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629422730029" />
-    <state width="936" height="102" key="GridCell.Tab.0.center" timestamp="1629422730029">
+    <state width="936" height="205" key="GridCell.Tab.0.bottom/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629427123422" />
+    <state width="936" height="205" key="GridCell.Tab.0.center" timestamp="1629427123422">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="936" height="102" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629422730029" />
-    <state width="936" height="102" key="GridCell.Tab.0.left" timestamp="1629422730029">
+    <state width="936" height="205" key="GridCell.Tab.0.center/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629427123422" />
+    <state width="936" height="205" key="GridCell.Tab.0.left" timestamp="1629427123421">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="936" height="102" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629422730029" />
-    <state width="936" height="102" key="GridCell.Tab.0.right" timestamp="1629422730029">
+    <state width="936" height="205" key="GridCell.Tab.0.left/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629427123421" />
+    <state width="936" height="205" key="GridCell.Tab.0.right" timestamp="1629427123422">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="936" height="102" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629422730029" />
+    <state width="936" height="205" key="GridCell.Tab.0.right/4.1080.1536.832/0.0.1920.1040@0.0.1920.1040" timestamp="1629427123422" />
     <state x="460" y="163" key="SettingsEditor" timestamp="1629391553567">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

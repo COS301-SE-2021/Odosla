@@ -27,6 +27,7 @@ class _OrderPage extends State<OrderPage> {
 
   late Future<String> _status;
   late Timer _timer = Timer(Duration.zero, () {});
+  late Timer _timerDriver = Timer(Duration.zero, () {});
 
   late GoogleMapController controller;
 
@@ -65,25 +66,45 @@ class _OrderPage extends State<OrderPage> {
                     .activeOrder)
                   {_timer.cancel(), debugPrint("CANCELLED")}
               });
-      setSourceAndDestinationIcons();
+    }
+
+    if (Provider.of<DriverProvider>(context, listen: false).allocated)
+      api.updateDriverLocation(context,
+          Provider.of<DriverProvider>(context, listen: false).deliveryID);
+    if (Provider.of<DriverProvider>(context, listen: false).allocated) {
+      api.updateDriverLocation(context,
+          Provider.of<DriverProvider>(context, listen: false).deliveryID);
+      driver();
+      _timerDriver = new Timer.periodic(
+          Duration(milliseconds: 1150),
+          (_) => {
+                driver(),
+                api.updateDriverLocation(
+                    context,
+                    Provider.of<DriverProvider>(context, listen: false)
+                        .deliveryID),
+                driver(),
+                if (!Provider.of<CartProvider>(context, listen: false)
+                    .activeOrder)
+                  {_timerDriver.cancel(), debugPrint("CANCELLED")}
+              });
     }
 
     markers = [
       Marker(
           markerId: MarkerId("you"),
           position: LatLng(-25.763428, 28.260879),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+          icon: BitmapDescriptor.defaultMarker,
           infoWindow: InfoWindow(title: "me")),
       Marker(
-        markerId: MarkerId("shop"),
-        position: LatLng(
-            Provider.of<CartProvider>(context, listen: false)
-                .activeStoreLocation['lat']!,
-            Provider.of<CartProvider>(context, listen: false)
-                .activeStoreLocation['long']!),
-        icon: BitmapDescriptor.defaultMarker,
-        infoWindow: InfoWindow(title: "store")),
-
+          markerId: MarkerId("shop"),
+          position: LatLng(
+              Provider.of<CartProvider>(context, listen: false)
+                  .activeStoreLocation['lat']!,
+              Provider.of<CartProvider>(context, listen: false)
+                  .activeStoreLocation['long']!),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+          infoWindow: InfoWindow(title: "store")),
     ];
 
     super.initState();
@@ -98,7 +119,8 @@ class _OrderPage extends State<OrderPage> {
             Provider.of<DriverProvider>(context, listen: false).lat,
             Provider.of<DriverProvider>(context, listen: false).lat),
         icon: BitmapDescriptor.defaultMarker,
-          infoWindow: InfoWindow(title: Provider.of<DriverProvider>(context, listen: false).name),
+        infoWindow: InfoWindow(
+            title: Provider.of<DriverProvider>(context, listen: false).name),
       ));
     });
   }
