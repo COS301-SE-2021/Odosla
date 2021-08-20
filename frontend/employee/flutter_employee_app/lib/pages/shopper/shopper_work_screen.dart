@@ -221,7 +221,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                           Text(
                             brand.toString(),
                             style: TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 10.0,
                             ),
@@ -239,7 +239,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                           Text(
                             "Price",
                             style: TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 16.0,
                             ),
@@ -265,7 +265,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                           Text(
                             "Quantity",
                             style: TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 16.0,
                             ),
@@ -408,7 +408,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
         ),
         Text(_onShift?"Currently not packing an order\n Start packing order \n by clicking below":"Start a shift to get \n new orders",
           style: TextStyle(
-              color: Colors.orange,
+              color: Colors.deepOrangeAccent,
               fontWeight: FontWeight.w600,
             fontSize: 20,
           ),
@@ -460,7 +460,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                 margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*1.7,vertical: kSpacingUnit.w*1),
                 clipBehavior: Clip.antiAlias,
                 color:Colors.deepOrangeAccent,
-                shadowColor: Color(0xFFE9884A),
+                shadowColor: Colors.deepOrangeAccent,
                 elevation: 5.0,
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),

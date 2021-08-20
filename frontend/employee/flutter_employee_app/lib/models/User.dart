@@ -9,7 +9,7 @@ class User{
   String ordersCompleted="0";
 
   String deliveriesCompleted="0";
-  String rating="5/5";
+  String rating="0.0";
 
   User(this.name, this.surname, this.email, this.userType, this.phoneNumber);
   User.withParameters(this.name, this.surname, this.email, this.userType, this.phoneNumber,this.onShift,this.ordersCompleted);

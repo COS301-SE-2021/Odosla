@@ -80,7 +80,7 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
         child: Text(
           'GET NEXT ORDER',
           style: TextStyle(
-            color: Color(0xFFE9884A),
+            color: Colors.deepOrangeAccent,
             letterSpacing: 1.5,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
@@ -136,7 +136,7 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
                           Text(
                             "Number of items:"+itemsLength.toString(),
                             style: TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 12.0,
                             ),
@@ -154,7 +154,7 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
                           Text(
                             "price",
                             style: TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 12.0,
                             ),
@@ -180,7 +180,7 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
                           Text(
                             createdDate.substring(0, createdDate.indexOf('CAT')),
                             style: TextStyle(
-                              color: Colors.orangeAccent,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.w500,
                               fontSize: 12.0,
                             ),

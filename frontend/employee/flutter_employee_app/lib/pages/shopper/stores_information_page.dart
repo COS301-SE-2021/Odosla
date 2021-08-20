@@ -72,7 +72,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
               borderRadius: BorderRadius.circular(40.0),
             ),
             color: Colors.white,
-            textColor: Color(0xFFE9884A),
+            textColor: Colors.deepOrangeAccent,
             disabledColor:Color(0xA65A5959),
             disabledElevation: 0.0,
             disabledTextColor: Colors.white,

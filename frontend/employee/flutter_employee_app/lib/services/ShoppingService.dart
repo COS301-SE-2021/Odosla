@@ -15,8 +15,9 @@ import 'package:provider/provider.dart';
 class ShoppingService {
 
   UserService _userService=GetIt.I.get();
-  //final String endPoint = "75c59b94a2f1.ngrok.io/";
-  final String endPoint = "10.0.2.2:8080/";
+
+  final String endPoint = "f1de7630b01d.ngrok.io/";
+  //final String endPoint = "10.0.2.2:8080/";
 
   Future<List<Store>> getStores() async {
     final response = await http.post(
