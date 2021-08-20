@@ -1222,7 +1222,7 @@ public class UserServiceImpl implements UserService{
     public UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException {
 
         String message;
-        UUID shopperID;
+        String shopperID;
         Shopper shopper;
         boolean success;
         boolean emptyUpdate = true;
@@ -1232,17 +1232,21 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UpdateShopper Request is null - Could not update shopper");
         }
 
-        if(request.getShopperID() == null){
+        if(request.getJwtToken() == null){
             throw new InvalidRequestException("ShopperId is null - could not update shopper");
         }
 
-        shopperID = request.getShopperID();
-        shopperOptional = shopperRepo.findById(shopperID);
+        shopperID = request.getJwtToken();
+        JwtUtil utils=new JwtUtil();
+        String userType=utils.extractUserType(shopperID);
+        String email= utils.extractEmail(shopperID);
+        if(!userType.equals("SHOPPER")){
+            throw new InvalidRequestException("User isn't a shopper");
+        }
+        shopperOptional = shopperRepo.findByEmail(email);
         if(shopperOptional == null || !shopperOptional.isPresent()){
             throw new ShopperDoesNotExistException("User with given userID does not exist - could not update shopper");
         }
-
-        // authentication ??
 
         shopper = shopperOptional.get();
 
@@ -1255,30 +1259,38 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             shopper.setSurname(request.getSurname());
         }
-
+        String jwtToken=null;
         if(request.getEmail() != null && !request.getEmail().equals(shopper.getEmail())){
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateShopperDetailsResponse(message, false, new Date());
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
             }else{
                 if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
-                    return new UpdateShopperDetailsResponse(message, false, new Date());
+                    return new UpdateShopperDetailsResponse(message, false, new Date(),null);
                 }
                 shopper.setEmail(request.getEmail());
+                jwtToken=utils.generateJWTTokenShopper(shopper);
             }
         }
 
+
         if(request.getPassword() != null){
             emptyUpdate = false;
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck=shopper.getPassword();
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateShopperDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 shopper.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateShopperDetailsResponse(message, false, new Date());
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1297,7 +1309,7 @@ public class UserServiceImpl implements UserService{
             message = "Shopper successfully updated";
         }
 
-        return new UpdateShopperDetailsResponse(message, success, new Date());
+        return new UpdateShopperDetailsResponse(message, success, new Date(),jwtToken);
     }
 
     @Override
@@ -2038,7 +2050,9 @@ public class UserServiceImpl implements UserService{
             Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
             if(driver!=null)
             {
-                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+                int numDeliveries=0;
+                numDeliveries= driver.getDeliveriesCompleted()+1;
+                driver.setDeliveriesCompleted(numDeliveries);
                 driverRepo.save(driver);
             }
             else
@@ -2857,7 +2871,7 @@ public class UserServiceImpl implements UserService{
                 int numRatings= driver.getNumberOfRatings()+1;
                 driver.setNumberOfRatings(numRatings);
                 double newRating= totalRatings/numRatings;
-                driver.setRating(Math.round(newRating));
+                driver.setRating(Math.round(newRating*100.0)/100.0);
                 driverRepo.save(driver);
 
                 response = new DriverSetRatingResponse(true, Calendar.getInstance().getTime(), "Rating complete");
