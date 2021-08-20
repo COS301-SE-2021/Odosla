@@ -1125,29 +1125,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_DriverSetRatingResponse"
 
-  /user/updateShopperDetails:
-    post:
-      summary: Endpoint for updating shopper details
-      tags:
-        - "user"
-      description: Refer to summary
-      operationId: updateShopperDetails
-      requestBody:
-        description: The input body require by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/user_UpdateShopperDetailsRequest"
-      responses:
-        "200":
-          description: Returns if updating details was successful
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/user_UpdateShopperDetailsResponse"
-
-
 components:
 
   schemas:
@@ -1603,40 +1580,6 @@ components:
           type: boolean
         resetCode:
           type: string
-
-    user_UpdateShopperDetailsRequest:
-      description: This object is returned as output
-      type: object
-      properties:
-        jwtToken:
-          type: string
-        name:
-          type: string
-        surname:
-          type: string
-        email:
-          type: string
-        phoneNumber:
-          type: string
-        password:
-          type: string
-        currentPassword:
-          type: string
-
-    user_updateShopperDetailsResponse:
-      description: This object is returned as output
-      type: object
-      properties:
-        jwtToken:
-          type: string
-        message:
-          type: string
-        success:
-          type: boolean
-        timestamp:
-          type: string
-
-
 
     GroceryListObject:
       description: "Generic schema for a GroceryList"
