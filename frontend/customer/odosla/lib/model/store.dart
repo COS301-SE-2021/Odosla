@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
-
 class Store {
   final String id;
   final String name;
@@ -8,6 +5,8 @@ class Store {
   final int closeTime;
   final bool open;
   final String imgUrl;
+  final double lat;
+  final double long;
 
   const Store(
     this.id,
@@ -16,11 +15,13 @@ class Store {
     this.closeTime,
     this.open,
     this.imgUrl,
+    this.lat,
+    this.long,
   );
 
   Store copy(String id, String name, int openTime, int closeTime, bool open,
-          String imgUrl) =>
-      Store(id, name, openTime, closeTime, open, imgUrl);
+          String imgUrl, double lat, double long) =>
+      Store(id, name, openTime, closeTime, open, imgUrl, lat, long);
 
   Store.fromJson(Map<String, dynamic> json)
       : id = json['storeID'],
@@ -28,5 +29,7 @@ class Store {
         open = json['isOpen'],
         openTime = json['openingTime'],
         closeTime = json['closingTime'],
-        imgUrl = json['imageUrl'];
+        imgUrl = json['imageUrl'],
+        lat = json['storeLocation']['latitude'],
+        long = json['storeLocation']['longitude'];
 }

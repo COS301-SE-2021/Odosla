@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:odosla/services/api_service.dart';
-import 'dart:async';
 
 class WalletProvider with ChangeNotifier {
+  String _name = "";
+  String _email = "";
+
   String _cardEnding = "";
   bool _present = false;
 
@@ -28,4 +29,17 @@ class WalletProvider with ChangeNotifier {
     debugPrint(_cardEnding);
     notifyListeners();
   }
+
+  set name(String n) {
+    _name = n;
+    notifyListeners();
+  }
+
+  set email(String n) {
+    _email = n;
+    notifyListeners();
+  }
+
+  String get name => _name;
+  String get email => _email;
 }

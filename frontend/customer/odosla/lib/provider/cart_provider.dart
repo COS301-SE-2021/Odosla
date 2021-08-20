@@ -8,8 +8,15 @@ class CartProvider with ChangeNotifier {
   String currStore = "";
   bool _activeOrder = false;
   String _activeOrderID = "";
+  Map<String, double> _activeStoreLocation = {"lat": 0, "long": 0};
 
   ApiService api = ApiService();
+
+  Map<String, double> get activeStoreLocation => _activeStoreLocation;
+
+  set activeStoreLocation(Map<String, double> location) {
+    _activeStoreLocation = location;
+  }
 
   CartProvider() {
     _items = {};

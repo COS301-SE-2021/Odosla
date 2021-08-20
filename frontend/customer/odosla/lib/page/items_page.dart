@@ -15,19 +15,22 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class ItemsPage extends StatefulWidget {
   final String storeID;
   final String storeName;
+  final Map<String, double> location;
 
-  const ItemsPage(this.storeID, this.storeName);
+  const ItemsPage(this.storeID, this.storeName, this.location);
 
   @override
-  _ItemsPageState createState() => _ItemsPageState(storeID, storeName);
+  _ItemsPageState createState() =>
+      _ItemsPageState(storeID, storeName, location);
 }
 
 class _ItemsPageState extends State<ItemsPage> {
   ApiService apiService = ApiService();
   final String storeID;
   final String storeName;
+  final Map<String, double> location;
 
-  _ItemsPageState(this.storeID, this.storeName);
+  _ItemsPageState(this.storeID, this.storeName, this.location);
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +114,8 @@ class _ItemsPageState extends State<ItemsPage> {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => ItemDetailPage(
                               items[index],
-                              storeID) //ProductPage(product: product),
+                              storeID,
+                              location) //ProductPage(product: product),
                           ));
                     },
                     child: buildItem(items[index]),
@@ -142,7 +146,7 @@ class _ItemsPageState extends State<ItemsPage> {
                 //),
                 child: Center(
                   child: Image.asset(
-                    './' + product.imgUrl,
+                    'assets/' + product.imgUrl,
                   ), //product.imgUrl),
                 ),
               ),

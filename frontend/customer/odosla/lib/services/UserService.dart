@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/services/settings.dart';
+import 'package:provider/provider.dart';
 
 class UserService {
   final _storage = new FlutterSecureStorage();
@@ -42,6 +44,7 @@ class UserService {
         await Future.wait([
           _storage.write(key: "jwt", value: token),
         ]);
+        Provider.of<StatusProvider>(context, listen: false).jwt = token;
 
         return true;
       } else if (responseData["message"] != null &&
