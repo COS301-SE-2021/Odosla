@@ -29,11 +29,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/order_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/driver_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/provider/driver_provider.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -356,7 +354,14 @@
       <option name="project" value="LOCAL" />
       <updated>1629427259071</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="added moving pin showing the drivers live location on map">
+      <created>1629431313126</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1629431313126</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -406,7 +411,8 @@
     <MESSAGE value="basic handling of driver information on order page" />
     <MESSAGE value="added map pins" />
     <MESSAGE value="added tracking of driver location" />
-    <option name="LAST_COMMIT_MESSAGE" value="added tracking of driver location" />
+    <MESSAGE value="added moving pin showing the drivers live location on map" />
+    <option name="LAST_COMMIT_MESSAGE" value="added moving pin showing the drivers live location on map" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="WindowStateProjectService">

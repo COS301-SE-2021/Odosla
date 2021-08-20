@@ -335,26 +335,44 @@ class _OrderPage extends State<OrderPage> {
   Widget buildEmployeeInfo(BuildContext context) {
     if (Provider.of<DriverProvider>(context).allocated) {
       return Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         height: 100,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Driver: "),
-                Text(Provider.of<DriverProvider>(context).name)
+                Text("Driver: ",
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                Text(Provider.of<DriverProvider>(context).name,
+                    style: TextStyle(fontSize: 17))
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Deliveries completed: "),
-                Text(Provider.of<DriverProvider>(context).trips.toString())
+                Text("Deliveries completed: ",
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                Text(Provider.of<DriverProvider>(context).trips.toString(),
+                    style: TextStyle(
+                      fontSize: 17,
+                    ))
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Rating: "),
-                Text(Provider.of<DriverProvider>(context).rating.toString() +
-                    "/5")
+                Text("Rating: ",
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                Text(
+                    Provider.of<DriverProvider>(context).rating.toString() +
+                        "/5",
+                    style: TextStyle(fontSize: 17))
               ],
             )
           ],
