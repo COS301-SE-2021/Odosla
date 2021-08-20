@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:liquid_progress_indicator_ns/liquid_progress_indicator.dart';
 import 'package:odosla/provider/cart_provider.dart';
@@ -374,7 +375,15 @@ class _OrderPage extends State<OrderPage> {
                         "/5",
                     style: TextStyle(fontSize: 17))
               ],
-            )
+            ),
+            TextButton(
+                onPressed: () => {
+                      _callNumber(
+                          Provider.of<DriverProvider>(context, listen: false)
+                              .contact)
+                    },
+                child: Text("Call Driver",
+                    style: TextStyle(fontSize: 18, color: Colors.blueGrey)))
           ],
         ),
       );
@@ -383,5 +392,10 @@ class _OrderPage extends State<OrderPage> {
           height: 100,
           child: Text("A driver will be assigned shortly",
               style: TextStyle(fontSize: 16)));
+  }
+
+  _callNumber(String num) async {
+    String number = num; //set the number here
+    await FlutterPhoneDirectCaller.callNumber(number);
   }
 }
