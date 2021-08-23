@@ -3,10 +3,14 @@ package cs.superleague.integration.security;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.dataclass.Shopper;
 import io.jsonwebtoken.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
@@ -16,6 +20,7 @@ public class JwtUtil {
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }
+
     public Date extractExpiration(String token){
         return extractClaim(token,Claims::getExpiration);
     }
@@ -37,30 +42,46 @@ public class JwtUtil {
     }
 
     public String generateJWTTokenShopper(Shopper shopper){
+
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),UserType.SHOPPER);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_SHOPPER");
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),UserType.SHOPPER,grantedAuthorities);
     }
 
     public String generateJWTTokenDriver(Driver driver){
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,driver.getDriverID(),driver.getEmail(),UserType.DRIVER);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_DRIVER");
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,driver.getDriverID(),driver.getEmail(),UserType.DRIVER,grantedAuthorities);
     }
 
     public String generateJWTTokenAdmin(Admin admin){
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,admin.getAdminID(),admin.getEmail(),UserType.ADMIN);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,admin.getAdminID(),admin.getEmail(),UserType.ADMIN,grantedAuthorities);
     }
 
     public String generateJWTTokenCustomer(Customer customer){
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,customer.getCustomerID(),customer.getEmail(),UserType.CUSTOMER);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_CUSTOMER");
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,customer.getCustomerID(),customer.getEmail(),UserType.CUSTOMER,grantedAuthorities);
     }
 
-    private String createToken(Map<String, Object> claims, UUID userID, String email, UserType userType) {
-
-        return Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString()).claim("userType",userType)
+    private String createToken(Map<String, Object> claims, UUID userID, String email, UserType userType, List<GrantedAuthority> grantedAuthorities) {
+       return "Bearer " +Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString()).claim("userType",userType)
                 .setIssuedAt(new Date(Calendar.getInstance().getTimeInMillis())).setExpiration(new Date(Calendar.getInstance().getTimeInMillis()+1000*60*60*10))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
     public Boolean validateToken(String token, User user){
