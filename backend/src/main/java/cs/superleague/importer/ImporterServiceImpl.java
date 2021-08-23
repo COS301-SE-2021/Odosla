@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -148,13 +149,15 @@ public class ImporterServiceImpl implements ImporterService{
                     }
                 }
             }
+
+            return new ItemsCSVImporterResponse(true, Calendar.getInstance().getTime(), "Items have been successfully imported.");
+
         }
         else
         {
             throw new InvalidRequestException("Request object is null");
         }
 
-        return null;
     }
 
     @Override
@@ -266,12 +269,14 @@ public class ImporterServiceImpl implements ImporterService{
                     }
                 }
             }
+
+            return new StoreCSVImporterResponse(true, Calendar.getInstance().getTime(), "Stores have been successfully imported.");
+
         }
         else
         {
             throw new InvalidRequestException("Request object is null");
         }
 
-        return null;
     }
 }
