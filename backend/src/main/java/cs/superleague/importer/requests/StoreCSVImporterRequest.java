@@ -2,7 +2,7 @@ package cs.superleague.importer.requests;
 
 public class StoreCSVImporterRequest {
 
-    String file;
+    private String file;
 
     public StoreCSVImporterRequest(String file)
     {
