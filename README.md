@@ -22,7 +22,7 @@
  <h3 align="center"> You can view our latest Architectural Requirements document here:</h3>
 <div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a></div>
 <h4 align="center"> or previous versions: </h4>
-<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄 version 1 </div>
+<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄 version 1 </a></div>
 
 <h3 align="center"> You can view our latest Coding Standards document: <a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></h3>
  
