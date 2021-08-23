@@ -68,7 +68,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_800_800/0/1620256271448?e=1622854800&v=beta&t=mrwJyOZi2Mb_Y3VF--UrJSqKt_4_D80OrYJU5IG-7YY" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_200_200/0/1620256271448?e=1629802800&v=beta&t=ACj9KX67hqhHQKjXxI5t4rYYNyJ0wGUqkXry0uxXCxc" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Seamus Brennan </h4>
 <p align="center">I have been coding for many years and have gained a lot of experience in the process. I am always interested in learning new technologies to help solve problems in the most efficient way possible. I have experience in all the technologies listed and this makes me very confident that our final product will be able to meet the requirements and to exceed them.</p>
@@ -77,7 +77,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQHtIazyivbLig/profile-displayphoto-shrink_800_800/0/1621472357683?e=1628121600&v=beta&t=QWexFuIWEiZB9eWh2U-Ctfqtg1VtYXBJLfKNwDPFCDw" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5603AQHtIazyivbLig/profile-displayphoto-shrink_200_200/0/1621472357683?e=1635379200&v=beta&t=gKfVRmWTc_CPCA8TPGAZfrp9jfjvXEwNKzywE_d9uLY" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Zivan Haripershad </h4>
 <p align="center">I am a Multimedia student who is very dedicated to my studies and hardworking. My determination to deliver what is required and to the best of my abilities is
@@ -88,7 +88,7 @@ photoshop.</p>
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQHeYjm3Iamx7Q/profile-displayphoto-shrink_800_800/0/1574435254531?e=1628121600&v=beta&t=k-TJdzH-oczgiZfFGQdKrdcUXE8mx-T4_98IvCoaVPQ" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5603AQHeYjm3Iamx7Q/profile-displayphoto-shrink_200_200/0/1574435254531?e=1635379200&v=beta&t=GWYoUBL3jWG6OLsyCuc4Q7hPx4Yu0hhOmQSIjIqGv6A" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Ofentse Mogoatlhe </h4>
 <p align="center">I am a final year BSc IT student, aspiring to be a software engineer as it has always been interesting to me how something can go from being an idea, to becoming a fully-fledged product for the world to use. I have experience in various technologies, and I am always willing to learn ones that I have not yet come across
