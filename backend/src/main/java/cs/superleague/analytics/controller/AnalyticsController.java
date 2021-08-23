@@ -131,7 +131,7 @@ public class AnalyticsController implements AnalyticsApi {
 
         try{
 
-            CreateUserReportRequest req = new CreateUserReportRequest(UUID.fromString(body.getAdminID()),
+            CreateUserReportRequest req = new CreateUserReportRequest(body.getJwTToken(),
                     Calendar.getInstance(), Calendar.getInstance(), ReportType.valueOf(body.getReportType()));
             CreateUserReportResponse createUserReportResponse = ServiceSelector.getAnalyticsService().createUserReport(req);
 
