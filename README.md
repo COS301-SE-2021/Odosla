@@ -6,7 +6,7 @@
 <br>
 
 <div align="center">
-<kbd>
+
  
 <h3 align="center">You can watch our latest demo here: <a href="https://drive.google.com/file/d/1hjA8lwxxnqWCcqhJVelS3THr9C8SG152/view">📺demo 3</a></h4>
 <h4 align="center">or previous demos: </h4>
@@ -41,7 +41,7 @@
 <h4 align="center"> Our GitHub Project Board:</h4>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
 <br>
-</kbd>
+
 </div>
 <br>
 <br>
