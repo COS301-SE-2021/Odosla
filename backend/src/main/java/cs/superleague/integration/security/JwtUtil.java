@@ -45,58 +45,66 @@ public class JwtUtil {
 
         Map<String,Object> claims=new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_SHOPPER");
+        claims.put("email",shopper.getEmail());
+        claims.put("userType","SHOPPER");
         claims.put("authorities",grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),UserType.SHOPPER,grantedAuthorities);
+        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),grantedAuthorities);
     }
 
     public String generateJWTTokenDriver(Driver driver){
         Map<String,Object> claims=new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_DRIVER");
+        claims.put("email",driver.getEmail());
+        claims.put("userType","DRIVER");
         claims.put("authorities",grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,driver.getDriverID(),driver.getEmail(),UserType.DRIVER,grantedAuthorities);
+        return createToken(claims,driver.getDriverID(),driver.getEmail(),grantedAuthorities);
     }
 
     public String generateJWTTokenAdmin(Admin admin){
         Map<String,Object> claims=new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
+        claims.put("userType","ADMIN");
+        claims.put("email",admin.getEmail());
         claims.put("authorities",grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,admin.getAdminID(),admin.getEmail(),UserType.ADMIN,grantedAuthorities);
+        return createToken(claims,admin.getAdminID(),admin.getEmail(),grantedAuthorities);
     }
 
     public String generateJWTTokenCustomer(Customer customer){
         Map<String,Object> claims=new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_CUSTOMER");
+        claims.put("userType","CUSTOMER");
+        claims.put("email",customer.getEmail());
         claims.put("authorities",grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,customer.getCustomerID(),customer.getEmail(),UserType.CUSTOMER,grantedAuthorities);
+        return createToken(claims,customer.getCustomerID(),customer.getEmail(),grantedAuthorities);
     }
 
-    private String createToken(Map<String, Object> claims, UUID userID, String email, UserType userType, List<GrantedAuthority> grantedAuthorities) {
-       return "Bearer " +Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString()).claim("userType",userType)
+    private String createToken(Map<String, Object> claims, UUID userID, String email, List<GrantedAuthority> grantedAuthorities) {
+       return "Bearer " +Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())
                 .setIssuedAt(new Date(Calendar.getInstance().getTimeInMillis())).setExpiration(new Date(Calendar.getInstance().getTimeInMillis()+1000*60*60*10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
-    public Boolean validateToken(String token, User user){
-        final String email =extractEmail(token);
-       final String userType =extractUserType(token);
-        if(user.getAccountType()==UserType.DRIVER){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("DRIVER"));
-        } else if(user.getAccountType()==UserType.SHOPPER){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("SHOPPER"));
-        } else if(user.getAccountType()==UserType.ADMIN){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("ADMIN"));
-        }else if (user.getAccountType()==UserType.CUSTOMER){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("CUSTOMER"));
-        }
-        return false;
-    }
+//    public Boolean validateToken(String token, User user){
+//        final String email =extractEmail(token);
+//       final String userType =extractUserType(token);
+//        if(user.getAccountType()==UserType.DRIVER){
+//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("DRIVER"));
+//        } else if(user.getAccountType()==UserType.SHOPPER){
+//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("SHOPPER"));
+//        } else if(user.getAccountType()==UserType.ADMIN){
+//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("ADMIN"));
+//        }else if (user.getAccountType()==UserType.CUSTOMER){
+//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("CUSTOMER"));
+//        }
+//        return false;
+//    }
 
 }
