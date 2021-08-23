@@ -19,11 +19,10 @@
 <div align="center"><a href="https://www.overleaf.com/read/gmnfnhvhddnc" target="blank">📄 version 1</a></div>
 <div align="center"><a href="https://www.overleaf.com/read/pqrmhjwhmbzy" target="blank">📄 version 2</a></div>
  
- <h4 align="center"> Our Architectural Requirements document version 1:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄Architectural Requirements Document</a></div>
- 
-<h4 align="center"> Our Architectural Requirements document version 2:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a></div>
+ <h3 align="center"> You can view our latest Architectural Requirements document here:</h3>
+<div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a>📄Architectural Requirements Document</a></div>
+<h4 align="center"> or previous versions: </h4>
+<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank"> version 1 </div>
 
 <h4 align="center"> Our Coding Standards document:</h4>
 <div align="center"><a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></div>
@@ -42,6 +41,7 @@
 <br>
 <br>
 
+<hr>
 
 <h3 align="center" text-decoration="underline"> Our Team</h3>
 <br>
