@@ -20,20 +20,17 @@
 <div align="center"><a href="https://www.overleaf.com/read/pqrmhjwhmbzy" target="blank">📄 version 2</a></div>
  
  <h3 align="center"> You can view our latest Architectural Requirements document here:</h3>
-<div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a>📄Architectural Requirements Document</a></div>
+<div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a></div>
 <h4 align="center"> or previous versions: </h4>
-<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank"> version 1 </div>
+<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄 version 1 </div>
 
-<h4 align="center"> Our Coding Standards document:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></div>
+<h3 align="center"> You can view our latest Coding Standards document: <a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></h3>
  
-<h4 align="center"> Our Installation Guide:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄Our Installation Guide</a></div>
+<h3 align="center"> You can view our latest Installation Guide here: <a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄Our Installation Guide</a></h3>
  
-<h4 align="center"> Our User Manual:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄Our User Manual</a></div>
+<h3 align="center"> You can view our latest User Manual here: <a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄Our User Manual</a></h3>
  
-<h4 align="center"> Our GitHub Project Board:</h4>
+<h3 align="center"> You can view our GitHub Project Board here:</h3>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
 <br>
 
