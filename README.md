@@ -56,7 +56,7 @@
 
 <hr height="2">
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C4D03AQEVrM6EYgZ9OA/profile-displayphoto-shrink_800_800/0/1621694142349?e=1628121600&v=beta&t=AQ_Vnks-BnYQFf3Lf_XNTqb-bdu6M7BxwxO1tpoSaWg" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C4D03AQEVrM6EYgZ9OA/profile-displayphoto-shrink_200_200/0/1621694142349?e=1635379200&v=beta&t=S-gAXHIw9MM7rs9nWpAYxwQegc42HpWWY_6Ca0_-_iI" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Kelly Morrison </h4>
 <p align="center">My exposure varies greatly from desktop applications to web based technologies. I have a lot of experience in Java and enjoy working with front-end technologies and
