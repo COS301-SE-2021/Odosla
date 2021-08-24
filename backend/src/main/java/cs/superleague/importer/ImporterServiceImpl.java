@@ -56,9 +56,9 @@ public class ImporterServiceImpl implements ImporterService{
                 String file = request.getFile().substring(index+1);
                 String currentWord = "";
                 int counter = 0;
+                Item item = new Item();
                 for(k=0; k < file.length(); k++)
                 {
-                    Item item = new Item();
                     if(file.charAt(k) != ',' && file.charAt(k) != '\n' )
                     {
                         currentWord += file.charAt(k);
@@ -146,7 +146,12 @@ public class ImporterServiceImpl implements ImporterService{
                         currentWord = "";
 
                         if (itemRepo!=null)
-                        itemRepo.save(item);
+                        {
+                            System.out.println(item.getProductID());
+                            itemRepo.save(item);
+                            item = new Item();
+                        }
+
                     }
                 }
             }
