@@ -142,12 +142,11 @@ public class ImporterServiceImpl implements ImporterService{
                     else if (file.charAt(k) == '\n')
                     {
                         item.setStoreID(UUID.fromString(currentWord));
-                        counter=0;
+                        counter = 0;
                         currentWord = "";
 
-                        if (itemRepo!=null)
+                        if (itemRepo != null)
                         {
-                            System.out.println(item.getProductID());
                             itemRepo.save(item);
                             item = new Item();
                         }
@@ -178,13 +177,14 @@ public class ImporterServiceImpl implements ImporterService{
             {
                 int k = 0;
                 int index = request.getFile().indexOf('\n');
-                String file = request.getFile().substring(index+2);
+                String file = request.getFile().substring(index+1);
                 String currentWord = "";
                 int counter = 0;
+                Store store = new Store();
+                GeoPoint location= new GeoPoint();
+
                 for(k=0; k < file.length(); k++)
                 {
-                    Store store = new Store();
-                    GeoPoint location= new GeoPoint();
                     if(file.charAt(k) != ',' && file.charAt(k) != '\n' )
                     {
                         currentWord += file.charAt(k);
@@ -271,7 +271,12 @@ public class ImporterServiceImpl implements ImporterService{
                         currentWord = "";
                         store.setStoreLocation(location);
                         if (storeRepo!=null)
-                        storeRepo.save(store);
+                        {
+                            storeRepo.save(store);
+                            location= new GeoPoint();
+                            store= new Store();
+                        }
+
                     }
                 }
             }
