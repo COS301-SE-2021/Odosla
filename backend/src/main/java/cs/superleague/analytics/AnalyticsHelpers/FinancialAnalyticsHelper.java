@@ -33,7 +33,7 @@ public class FinancialAnalyticsHelper {
         try{
 
             String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_UserReport.pdf";
+            String file_name = home + "/Downloads/Odosla_FinancialReport.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
@@ -136,20 +136,19 @@ public class FinancialAnalyticsHelper {
 
             sb.append("Total Orders");
             sb.append(",");
-            sb.append(data.get("totalOrders"));
-            sb.append("\n");
             sb.append("Total Price");
             sb.append(",");
-            sb.append(data.get("totalPrice"));
-            sb.append("\n");
             sb.append("Average Number Of Orders Per Customer");
             sb.append(",");
-            sb.append(data.get("averageNumberOfOrderPerUser"));
-            sb.append("\n");
             sb.append("Average Price of Orders");
+            sb.append("\n");
+            sb.append(data.get("totalOrders"));
+            sb.append(",");
+            sb.append(data.get("totalPrice"));
+            sb.append(",");
+            sb.append(data.get("averageNumberOfOrderPerUser"));
             sb.append(",");
             sb.append(data.get("averagePriceOfOrders"));
-            sb.append("\n");
 
             pw.write(sb.toString()); // write to the csv file
             pw.close();  //stop writing
