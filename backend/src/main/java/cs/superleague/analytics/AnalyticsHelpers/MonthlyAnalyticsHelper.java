@@ -5,6 +5,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Driver;
 
 import java.io.FileNotFoundException;
@@ -12,13 +15,16 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Optional;
 
-public class UserAnalyticsHelper {
+public class MonthlyAnalyticsHelper {
 
     private final HashMap<String, Object> data;
+    private StoreRepo storeRepo;
 
-    public UserAnalyticsHelper(HashMap<String, Object> data){
+    public MonthlyAnalyticsHelper(HashMap<String, Object> data, StoreRepo storeRepo){
         this. data = data;
+        this.storeRepo = storeRepo;
     }
 
     public Document createPDF() throws Exception{
@@ -27,7 +33,7 @@ public class UserAnalyticsHelper {
         try{
 
             String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_UserReport.pdf";
+            String file_name = home + "/Downloads/Odosla_MonthlyReport.pdf";
             PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
@@ -37,7 +43,7 @@ public class UserAnalyticsHelper {
 
             document.add(new Paragraph(" "));
 
-            Paragraph Report = new Paragraph("User Statistics Report", FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD));
+            Paragraph Report = new Paragraph("Monthly Statistics Report", FontFactory.getFont(FontFactory.TIMES, 30, Font.BOLD));
 
             document.add(Report);
 
@@ -53,22 +59,61 @@ public class UserAnalyticsHelper {
 
             document.add(new Paragraph(" "));
 
+            PdfPTable table3 = new PdfPTable(3);
+
+            table3.getDefaultCell().setMinimumHeight(25f);
+            table3.setWidths(new int[]{2, 5, 2});
+
+            PdfPCell cl = new PdfPCell(new Phrase("Top Orders", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            table3.addCell(cl);
+
+            cl = new PdfPCell(new Phrase("Store", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            table3.addCell(cl);
+
+            cl = new PdfPCell(new Phrase("Price", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            table3.addCell(cl);
+            Order[] topOrders;
+            topOrders =  (Order[]) data.get("topTenOrders");
+
+            Optional<Store> storeOptional;
+            Store store;
+            if(topOrders != null)
+            for (int i = 0; i < topOrders.length; i++) {
+                table3.addCell(String.valueOf(i + 1));
+
+                if(topOrders[0] != null) {
+                    storeOptional = storeRepo.findById(topOrders[i].getStoreID());
+
+                    if(storeOptional == null || !storeOptional.isPresent()){
+                        throw new AnalyticsException(storeOptional.toString());
+                    }
+
+                    store = storeOptional.get();
+
+                    if(store != null) {
+                        table3.addCell(String.valueOf(store.getStoreBrand()));
+                        table3.addCell(String.valueOf(topOrders[i].getTotalCost()));
+                    }
+                }
+            }
+
             PdfPTable table = new PdfPTable(3);
 
             table.getDefaultCell().setMinimumHeight(25f);
             table.setWidths(new int[]{2, 5, 2});
 
-            PdfPCell cl = new PdfPCell(new Phrase("Top Drivers", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
-            table.addCell(cl);
+            PdfPCell cell = new PdfPCell(new Phrase("Top Drivers", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            table.addCell(cell);
 
-            cl = new PdfPCell(new Phrase("Email", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
-            table.addCell(cl);
+            cell = new PdfPCell(new Phrase("Email", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            table.addCell(cell);
 
-            cl = new PdfPCell(new Phrase("Rating", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
-            table.addCell(cl);
+            cell = new PdfPCell(new Phrase("Rating", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
+            table.addCell(cell);
             Driver[] topDrivers;
             topDrivers =  (Driver[]) data.get("top10Drivers");
 
+            if(topDrivers != null)
             for (int i = 0; i < topDrivers.length; i++) {
                 table.addCell(String.valueOf(i + 1));
 
@@ -103,6 +148,16 @@ public class UserAnalyticsHelper {
             table1.addCell(String.valueOf(data.get("averageRating_Drivers")));
             table1.addCell(new Paragraph("Top 10 Drivers", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
             table1.addCell(table);
+            table1.addCell(new Paragraph("Total Number Of Orders", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
+            table1.addCell(String.valueOf(data.get("totalOrders")));
+            table1.addCell(new Paragraph("Total Price", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
+            table1.addCell(String.valueOf(data.get("totalPrice")));
+            table1.addCell(new Paragraph("Average Number of Order Per User", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
+            table1.addCell(String.valueOf(data.get("averageNumberOfOrderPerUser")));
+            table1.addCell(new Paragraph("Average Order Price", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
+            table1.addCell(String.valueOf(data.get("averagePriceOfOrders")));
+            table1.addCell(new Paragraph("Top 10 Orders", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
+            table1.addCell(table3);
 
             document.add(table1);
 
@@ -118,12 +173,19 @@ public class UserAnalyticsHelper {
 
     public StringBuilder createCSVReport() {
         try {
-
             String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_UserReport.csv";
+            String file_name = home + "/Downloads/Odosla_MonthlyReport.csv";
             PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
+            sb.append("Total Orders");
+            sb.append(",");
+            sb.append("Total Price");
+            sb.append(",");
+            sb.append("Average Number Of Orders Per Customer");
+            sb.append(",");
+            sb.append("Average Price of Orders");
+            sb.append(",");
             sb.append("Total users");
             sb.append(",");
             sb.append("Total Number Of Admins");
@@ -141,6 +203,14 @@ public class UserAnalyticsHelper {
             sb.append("Average driver rating");
             sb.append(",");
             sb.append("\n");
+            sb.append(data.get("totalOrders"));
+            sb.append(",");
+            sb.append(data.get("totalPrice"));
+            sb.append(",");
+            sb.append(data.get("averageNumberOfOrderPerUser"));
+            sb.append(",");
+            sb.append(data.get("averagePriceOfOrders"));
+            sb.append(",");
             sb.append(data.get("totalNum_Users"));
             sb.append(",");
             sb.append(data.get("totalNum_Admins"));
@@ -169,5 +239,4 @@ public class UserAnalyticsHelper {
         } //lets us know if its successfully completed
         return null;
     }
-
 }

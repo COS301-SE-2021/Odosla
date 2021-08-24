@@ -85,25 +85,37 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         CreateUserReportResponse response;
         CreateUserAnalyticsData createUserAnalyticsData;
+        GetCurrentUserResponse getCurrentUserResponse;
+        String message = "Report successfully created";
 
         if (request == null) {
             throw new InvalidRequestException("CreateUserReportRequest is null- Cannot create report");
         }
 
-        validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getAdminID());
+        validAnalyticsRequestJWT(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getJWTToken());
 
-        isAdmin(request.getAdminID());
+        getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJWTToken()));
 
+        if(getCurrentUserResponse.getUser() == null){
+            message = "User Not Found - Could not create report";
+            return new CreateUserReportResponse(false, message, new Date());
+        }
+
+        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
+            message = "User is not an admin - Could not create report";
+            return new CreateUserReportResponse(false, message, new Date());
+        }
+
+        Admin admin = (Admin) getCurrentUserResponse.getUser();
         try {
             createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), request.getAdminID(), userService);
+                    request.getEndDate(), admin.getAdminID(), userService);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating user statistics report");
         }
 
         UserAnalyticsHelper userAnalyticsHelper = new UserAnalyticsHelper(createUserAnalyticsData.getUserStatisticsData());
 
-        String message;
         if(request.getReportType() == ReportType.PDF){
             message = "UserReport.pdf downloaded";
             userAnalyticsHelper.createPDF();
@@ -223,21 +235,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return response;
     }
 
-    private void validAnalyticsRequest(ReportType reportType, Calendar startDate, Calendar endDate, UUID userID) throws InvalidRequestException {
-        if (reportType == null) {
-            throw new InvalidRequestException("Exception: Report Type in request object is null");
-        }
-        if (startDate == null) {
-            throw new InvalidRequestException("Exception: Start Date in request object is null");
-        }
-        if (endDate == null) {
-            throw new InvalidRequestException("Exception: End Date in request object is null");
-        }
-        if (userID == null) {
-            throw new InvalidRequestException("Exception: User ID in request object is null");
-        }
-    }
-
     private void validAnalyticsRequestJWT(ReportType reportType, Calendar startDate, Calendar endDate, String userID) throws InvalidRequestException {
         if (reportType == null) {
             throw new InvalidRequestException("Exception: Report Type in request object is null");
@@ -251,18 +248,6 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         if (userID == null) {
             throw new InvalidRequestException("Exception: JWTToken in request object is null");
         }
-    }
-
-    private void isAdmin(UUID userID) throws NotAuthorizedException {
-
-        Optional<Admin> adminOptional;
-
-        adminOptional = adminRepo.findById(userID);
-
-        if(adminOptional == null || !adminOptional.isPresent()){
-            throw new NotAuthorizedException("ID given does not belong to admin - Could not generate report");
-        }
-
     }
 
 }
