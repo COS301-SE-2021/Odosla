@@ -85,7 +85,7 @@ public class ItemsCSVImporterIntegrationTest {
     @Test
     @Description("Tests whether the request object was created correctly")
     @DisplayName("ItemsCSVImporterRequest correctly constructed")
-    void IntegrationTest_GetItemsRequestConstruction() {
+    void IntegrationTest_ItemsCSVImporterRequestConstruction() {
 
         request = new ItemsCSVImporterRequest(importingItems);
         assertNotNull(request);
