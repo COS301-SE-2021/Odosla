@@ -35,10 +35,7 @@ public class ItemsCSVImporterUnitTest {
     void setUp() {
 
         importingItems="productid,barcode,brand,description,image_url,item_type,name,price,quantity,size,storeid\n";
-        importingItems+= "p234058925,60019578,All Gold,\"South Africa''s firm favourite! It has a thick, smooth texture that can easily be poured and enjoyed on a variety of dishes.\",item/tomatoSauce.png,Sauce,Tomato Sauce,31.99,1,700ml,0fb0a357-63b9-41d2-8631-d11c67f7a27f\n";
-
-        mockItem = new Item();
-        mockItem.setProductID("p234058925");
+        importingItems+= "p234058925,60019578,All Gold,South Africa's firm favourite! It has a thick smooth texture that can easily be poured and enjoyed on a variety of dishes.,item/tomatoSauce.png,Sauce,Tomato Sauce,31.99,1,700ml,0fb0a357-63b9-41d2-8631-d11c67f7a27f\n";
 
     }
 
@@ -50,7 +47,7 @@ public class ItemsCSVImporterUnitTest {
     @Description("Tests for when ItemsCSVImporter is submitted with a null request object- exception should be thrown")
     @DisplayName("When request object is not specified")
     void UnitTest_testingNullRequestObject(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> importerService.itemsCSVImporter(null));
+        Throwable thrown = Assertions.assertThrows(cs.superleague.importer.exceptions.InvalidRequestException.class, ()-> importerService.itemsCSVImporter(null));
         assertEquals("Request object is null", thrown.getMessage());
     }
 
@@ -59,7 +56,7 @@ public class ItemsCSVImporterUnitTest {
     @DisplayName("When request object parameter -file - is not specified")
     void UnitTest_testingNull_file_Parameter_RequestObject(){
         ItemsCSVImporterRequest request=new ItemsCSVImporterRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> importerService.itemsCSVImporter(request));
+        Throwable thrown = Assertions.assertThrows(cs.superleague.importer.exceptions.InvalidRequestException.class, ()-> importerService.itemsCSVImporter(request));
         assertEquals("No file uploaded to import", thrown.getMessage());
     }
 
