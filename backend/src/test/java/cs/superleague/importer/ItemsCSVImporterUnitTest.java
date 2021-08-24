@@ -31,6 +31,7 @@ public class ItemsCSVImporterUnitTest {
 
     String importingItems;
     Item mockItem;
+
     @BeforeEach
     void setUp() {
 
@@ -77,7 +78,7 @@ public class ItemsCSVImporterUnitTest {
     @Test
     @Description("Tests whether the request object was created correctly")
     @DisplayName("ItemsCSVImporterRequest correctly constructed")
-    void UnitTest_GetStoreRequestConstruction() {
+    void UnitTest_ItemsCSVImporterRequestConstruction() {
 
         ItemsCSVImporterRequest request=new ItemsCSVImporterRequest(importingItems);
 
