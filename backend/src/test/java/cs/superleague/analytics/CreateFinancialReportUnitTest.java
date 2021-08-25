@@ -62,8 +62,8 @@ public class CreateFinancialReportUnitTest {
     Driver driver;
     Driver driver2;
 
-    Calendar startDate = Calendar.getInstance();
-    Calendar endDate;
+    Date startDate = new Date();
+    Date endDate;
 
     Order order1, order2, order3;
     Store store1, store2;
@@ -125,7 +125,7 @@ public class CreateFinancialReportUnitTest {
         jwtTokenAdmin=jwtTokenUtil.generateJWTTokenAdmin(admin);
 
 
-        this.endDate = Calendar.getInstance();
+        this.endDate = new Date();
 
     }
 
@@ -142,7 +142,7 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When adminID parameter is not specified")
     void UnitTest_testingNullRequestOrderIDParameter(){
-        request = new CreateFinancialReportRequest(null, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
+        request = new CreateFinancialReportRequest(null, new Date(), new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: JWTToken in request object is null", thrown.getMessage());
     }
@@ -150,7 +150,7 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When ReportType parameter is not specified")
     void UnitTest_testingNullRequestReportTypeParameter(){
-        request = new CreateFinancialReportRequest("adminID", Calendar.getInstance(), Calendar.getInstance(), null);
+        request = new CreateFinancialReportRequest("adminID", new Date(), new Date(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
@@ -158,7 +158,7 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When StartDate parameter is not specified")
     void UnitTest_testingNullRequestStartDateParameter(){
-        request = new CreateFinancialReportRequest("adminID", null, Calendar.getInstance(), ReportType.CSV);
+        request = new CreateFinancialReportRequest("adminID", null, new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: Start Date in request object is null", thrown.getMessage());
     }
@@ -166,7 +166,7 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When endDate parameter is not specified")
     void UnitTest_testingNullRequestEndDateParameter(){
-        request = new CreateFinancialReportRequest("adminID", Calendar.getInstance(), null, ReportType.CSV);
+        request = new CreateFinancialReportRequest("adminID", new Date(), null, ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: End Date in request object is null", thrown.getMessage());
     }
@@ -174,7 +174,7 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When Invalid adminID parameter")
     void UnitTest_testingInvalidAdminParameter(){
-        request = new CreateFinancialReportRequest(jwtTokenCustomer, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
+        request = new CreateFinancialReportRequest(jwtTokenCustomer, new Date(), new Date(), ReportType.CSV);
 
         GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(customer, true, new Date(), "");
 

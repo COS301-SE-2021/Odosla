@@ -2,16 +2,16 @@ package cs.superleague.analytics.requests;
 
 import cs.superleague.analytics.dataclass.ReportType;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public class CreateFinancialReportRequest {
 
     private final String JWTToken;
-    private final Calendar startDate;
-    private final Calendar endDate;
+    private final Date startDate;
+    private final Date endDate;
     private final ReportType reportType;
 
-    public CreateFinancialReportRequest(String JWTToken, Calendar startDate, Calendar endDate, ReportType reportType) {
+    public CreateFinancialReportRequest(String JWTToken, Date startDate, Date endDate, ReportType reportType) {
         this.JWTToken = JWTToken;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -22,11 +22,11 @@ public class CreateFinancialReportRequest {
         return JWTToken;
     }
 
-    public Calendar getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public Calendar getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
