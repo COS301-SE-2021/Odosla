@@ -8,6 +8,7 @@ import 'package:flutter_employee_app/models/Store.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/functions.dart';
+import 'package:flutter_employee_app/utilities/settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -15,9 +16,6 @@ import 'package:provider/provider.dart';
 class ShoppingService {
 
   UserService _userService=GetIt.I.get();
-
-  final String endPoint = "f1de7630b01d.ngrok.io/";
-  //final String endPoint = "10.0.2.2:8080/";
 
   Future<List<Store>> getStores() async {
     final response = await http.post(
@@ -40,11 +38,9 @@ class ShoppingService {
     }
   }
 
-
-
   Future<Order?> getNextQueued(String storeID, BuildContext context) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"shopping/getNextQueued");
+    final loginURL = Uri.parse(endPoint+"shopping/getNextQueued");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -97,7 +93,7 @@ class ShoppingService {
 
   Future<List<Order>?> getAllOrdersInQueue(String storeID) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"shopping/getQueue");
+    final loginURL = Uri.parse(endPoint+"shopping/getQueue");
 
     Map<String,String> headers =new Map<String,String>();
 
