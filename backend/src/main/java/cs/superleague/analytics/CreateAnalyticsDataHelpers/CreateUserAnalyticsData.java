@@ -28,11 +28,11 @@ public class CreateUserAnalyticsData {
     private GetUsersResponse response;
     private UserType userType;
 
-    private final Calendar startDate;
-    private final Calendar endDate;
+    private final Date startDate;
+    private final Date endDate;
     private UUID adminID;
 
-    public CreateUserAnalyticsData(Calendar startDate, Calendar endDate, UUID adminID, UserService userService){
+    public CreateUserAnalyticsData(Date startDate, Date endDate, UUID adminID, UserService userService){
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();

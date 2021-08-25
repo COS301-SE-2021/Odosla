@@ -1013,6 +1013,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateUserReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
 
 
   /payment/getCustomersActiveOrders:
@@ -1146,6 +1153,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
 
   /analytics/createMonthlyReport:
     post:
@@ -1168,6 +1182,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
 
 components:
 
@@ -2397,6 +2418,14 @@ components:
           type: string
         timestamp:
           type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          format: byte
+          nullable: true
 
     payment_GetCustomersActiveOrdersRequest:
       description: This object is expected as input
@@ -2585,7 +2614,7 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWWTToken:
+        JWTToken:
           type: string
         startDate:
           type: string
@@ -2604,13 +2633,20 @@ components:
           type: string
         timestamp:
           type: string
-
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          format: byte
+          nullable: true
 
     analytics_CreateMonthlyReportRequest:
       description: This object is expected as input
       type: object
       properties:
-        JWWTToken:
+        JWTToken:
           type: string
         reportType:
           type: string
@@ -2625,3 +2661,11 @@ components:
           type: string
         timestamp:
           type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          format: byte
+          nullable: true
