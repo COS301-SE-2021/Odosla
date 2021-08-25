@@ -189,23 +189,23 @@ public class AssignDriverToDeliveryUnitTest {
         assertEquals("This delivery has already been taken by another driver.", thrown1.getMessage());
     }
 
-    @Test
-    @Description("Tests when there is no driver assigned to deliver and the driver passed in is assigned.")
-    @DisplayName("Driver successfully assigned")
-    void driverAssignedSuccessfullyToTheDelivery_UnitTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
-        delivery.setDriverId(null);
-        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
-        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
-        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
-        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
-        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
-        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request1);
-        assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
-        assertEquals(response.isAssigned(), true);
-        assertEquals(response.getDropOffLocation(), delivery.getDropOffLocation());
-        assertEquals(response.getPickUpLocation(), delivery.getPickUpLocation());
-    }
+//    @Test
+//    @Description("Tests when there is no driver assigned to deliver and the driver passed in is assigned.")
+//    @DisplayName("Driver successfully assigned")
+//    void driverAssignedSuccessfullyToTheDelivery_UnitTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
+//        delivery.setDriverId(null);
+//        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
+//        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
+//        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
+//        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
+//        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
+//        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+//        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request1);
+//        assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
+//        assertEquals(response.isAssigned(), true);
+//        assertEquals(response.getDropOffLocation(), delivery.getDropOffLocation());
+//        assertEquals(response.getPickUpLocation(), delivery.getPickUpLocation());
+//    }
 
     @Test
     @Description("Tests for when the driver is already assigned to the delivery")

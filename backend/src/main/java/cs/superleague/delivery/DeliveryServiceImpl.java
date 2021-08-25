@@ -378,6 +378,15 @@ public class DeliveryServiceImpl implements DeliveryService {
         delivery.setStatus(request.getStatus());
         deliveryRepo.save(delivery);
         if (request.getStatus() == DeliveryStatus.Delivered){
+            delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
+            delivery.setCompleted(true);
+            Driver driver= driverRepo.findById(delivery.getDriverId()).orElse(null);
+            if(driver!=null)
+            {
+                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+                driverRepo.save(driver);
+            }
+            deliveryRepo.save(delivery);
             Order order = orderRepo.findById(delivery.getOrderID()).orElse(null);
             SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.DELIVERED);
             paymentService.setStatus(setStatusRequest);

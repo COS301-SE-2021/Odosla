@@ -126,36 +126,37 @@ public class UserAnalyticsHelper {
 
             sb.append("Total users");
             sb.append(",");
-            sb.append(data.get("totalNum_Users"));
-            sb.append("\n");
             sb.append("Total Number Of Admins");
             sb.append(",");
-            sb.append(data.get("totalNum_Admins"));
-            sb.append("\n");
             sb.append("Total Number Of Customers");
             sb.append(",");
-            sb.append(data.get("totalNum_Customers"));
-            sb.append("\n");
             sb.append("Total Number Of Shoppers");
             sb.append(",");
-            sb.append(data.get("totalNum_Shoppers"));
-            sb.append("\n");
             sb.append("Total Number Of Drivers");
             sb.append(",");
-            sb.append(data.get("totalNum_Drivers"));
-            sb.append("\n");
             sb.append("Total Number Of Drivers On Shift");
             sb.append(",");
-            sb.append(data.get("totalNum_DriversOnShift"));
-            sb.append("\n");
             sb.append("Total Number Of Orders Completed");
             sb.append(",");
-            sb.append(data.get("totalNum_OrdersCompletedByShoppers"));
-            sb.append("\n");
             sb.append("Average driver rating");
             sb.append(",");
-            sb.append(data.get("averageRating_Drivers"));
             sb.append("\n");
+            sb.append(data.get("totalNum_Users"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Admins"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Customers"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Shoppers"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Drivers"));
+            sb.append(",");
+            sb.append(data.get("totalNum_DriversOnShift"));
+            sb.append(",");
+            sb.append(data.get("totalNum_OrdersCompletedByShoppers"));
+            sb.append(",");
+            sb.append(data.get("averageRating_Drivers"));
+            sb.append(",");
 
             pw.write(sb.toString()); // write to the csv file
             pw.close();  //stop writing

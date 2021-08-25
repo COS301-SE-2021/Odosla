@@ -7,20 +7,21 @@ import java.util.UUID;
 
 public class CreateUserReportRequest {
 
-    private final UUID adminID;
+    private final String JWTToken;
     private final Calendar startDate;
     private final Calendar endDate;
     private final ReportType reportType;
 
-    public CreateUserReportRequest(UUID adminID, Calendar startDate, Calendar endDate, ReportType reportType) {
-        this.adminID = adminID;
+
+    public CreateUserReportRequest(String JWTToken, Calendar startDate, Calendar endDate, ReportType reportType) {
+        this.JWTToken = JWTToken;
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportType = reportType;
     }
 
-    public UUID getAdminID() {
-        return adminID;
+    public String getJWTToken() {
+        return JWTToken;
     }
 
     public Calendar getStartDate() {
