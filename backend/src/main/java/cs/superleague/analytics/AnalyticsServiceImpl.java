@@ -1,5 +1,6 @@
 package cs.superleague.analytics;
 
+import com.itextpdf.text.Document;
 import cs.superleague.analytics.AnalyticsHelpers.FinancialAnalyticsHelper;
 import cs.superleague.analytics.AnalyticsHelpers.MonthlyAnalyticsHelper;
 import cs.superleague.analytics.AnalyticsHelpers.UserAnalyticsHelper;
@@ -98,12 +99,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         if(getCurrentUserResponse.getUser() == null){
             message = "User Not Found - Could not create report";
-            return new CreateUserReportResponse(false, message, new Date());
+            return new CreateUserReportResponse(false, message, new Date(), null, null);
         }
 
         if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
             message = "User is not an admin - Could not create report";
-            return new CreateUserReportResponse(false, message, new Date());
+            return new CreateUserReportResponse(false, message, new Date(), null, null);
         }
 
         Admin admin = (Admin) getCurrentUserResponse.getUser();
@@ -118,12 +119,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         if(request.getReportType() == ReportType.PDF){
             message = "UserReport.pdf downloaded";
-            userAnalyticsHelper.createPDF();
-            response =  new CreateUserReportResponse(true, message, new Date());
+            byte[] document = userAnalyticsHelper.createPDF();
+            response =  new CreateUserReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
             message = "UserReport.csv downloaded";
-            userAnalyticsHelper.createCSVReport();
-            response = new CreateUserReportResponse(true, message, new Date());
+            StringBuilder sb = userAnalyticsHelper.createCSVReport();
+            response = new CreateUserReportResponse(true, message, new Date(), null, sb);
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
@@ -146,16 +147,18 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         validAnalyticsRequestJWT(request.getReportType(), request.getStartDate(), request.getEndDate(), request.getJWTToken());
 
+        System.out.println(request.getStartDate());
+
         getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJWTToken()));
 
         if(getCurrentUserResponse.getUser() == null){
             message = "User Not Found - Could not create report";
-            return new CreateFinancialReportResponse(false, message, new Date());
+            return new CreateFinancialReportResponse(false, message, new Date(), null, null);
         }
 
         if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
             message = "User is not an admin - Could not create report";
-            return new CreateFinancialReportResponse(false, message, new Date());
+            return new CreateFinancialReportResponse(false, message, new Date(), null, null);
         }
 
         try{
@@ -169,12 +172,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         if(request.getReportType() == ReportType.PDF){
             message = "FinancialReport.pdf downloaded";
-            financialAnalyticsHelper.createPDF();
-            response =  new CreateFinancialReportResponse(true, message, new Date());
+            byte[] document = financialAnalyticsHelper.createPDF();
+            response =  new CreateFinancialReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
             message = "FinancialReport.csv downloaded";
-            financialAnalyticsHelper.createCSVReport();
-            response = new CreateFinancialReportResponse(true, message, new Date());
+            StringBuilder sb = financialAnalyticsHelper.createCSVReport();
+            response = new CreateFinancialReportResponse(true, message, new Date(), null, sb);
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
@@ -194,18 +197,18 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             throw new InvalidRequestException("CreateMonthlyReportRequest is null- Cannot create report");
         }
 
-        validAnalyticsRequestJWT(request.getReportType(), Calendar.getInstance(), Calendar.getInstance(), request.getJWTToken());
+        validAnalyticsRequestJWT(request.getReportType(), new Date(), new Date(), request.getJWTToken());
 
         getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJWTToken()));
 
         if(getCurrentUserResponse.getUser() == null){
             message = "User Not Found - Could not create report";
-            return new CreateMonthlyReportResponse(false, message, new Date());
-        }
+            return new CreateMonthlyReportResponse(false, message, new Date(), null, null);
+        }System.out.println("\nhello\n");
 
         if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
             message = "User is not an admin - Could not create report";
-            return new CreateMonthlyReportResponse(false, message, new Date());
+            return new CreateMonthlyReportResponse(false, message, new Date(), null, null);
         }
 
         admin = (Admin)getCurrentUserResponse.getUser();
@@ -222,12 +225,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         if(request.getReportType() == ReportType.PDF){
             message = "MonthlyReport.pdf downloaded";
-            monthlyAnalyticsHelper.createPDF();
-            response =  new CreateMonthlyReportResponse(true, message, new Date());
+            byte[] document = monthlyAnalyticsHelper.createPDF();
+            response =  new CreateMonthlyReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
             message = "MonthlyReport.csv downloaded";
-            monthlyAnalyticsHelper.createCSVReport();
-            response = new CreateMonthlyReportResponse(true, message, new Date());
+            StringBuilder sb = monthlyAnalyticsHelper.createCSVReport();
+            response = new CreateMonthlyReportResponse(true, message, new Date(), null, sb);
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
@@ -235,7 +238,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return response;
     }
 
-    private void validAnalyticsRequestJWT(ReportType reportType, Calendar startDate, Calendar endDate, String userID) throws InvalidRequestException {
+    private void validAnalyticsRequestJWT(ReportType reportType, Date startDate, Date endDate, String userID) throws InvalidRequestException {
         if (reportType == null) {
             throw new InvalidRequestException("Exception: Report Type in request object is null");
         }

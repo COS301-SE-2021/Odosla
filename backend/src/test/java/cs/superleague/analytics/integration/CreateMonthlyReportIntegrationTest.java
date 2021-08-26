@@ -142,7 +142,7 @@ public class CreateMonthlyReportIntegrationTest {
         orderRepo.save(order3);
 
         shopper = new Shopper();
-        shopper.setShopperID(adminID);
+        shopper.setShopperID(UUID.randomUUID());
         shopper.setAccountType(UserType.SHOPPER);
         shopper.setOrdersCompleted(5);
         shopper.setActivationDate(new Date());

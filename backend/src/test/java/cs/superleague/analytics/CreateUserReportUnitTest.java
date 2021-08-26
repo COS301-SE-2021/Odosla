@@ -109,7 +109,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When adminID parameter is not specified")
     void UnitTest_testingNullRequestOrderIDParameter(){
-        request = new CreateUserReportRequest(null, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
+        request = new CreateUserReportRequest(null, new Date(), new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: JWTToken in request object is null", thrown.getMessage());
     }
@@ -117,7 +117,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When ReportType parameter is not specified")
     void UnitTest_testingNullRequestReportTypeParameter(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, Calendar.getInstance(), Calendar.getInstance(), null);
+        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), new Date(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
@@ -125,7 +125,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When StartDate parameter is not specified")
     void UnitTest_testingNullRequestStartDateParameter(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, null, Calendar.getInstance(), ReportType.CSV);
+        request = new CreateUserReportRequest(jwtTokenAdmin, null, new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: Start Date in request object is null", thrown.getMessage());
     }
@@ -133,7 +133,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When endDate parameter is not specified")
     void UnitTest_testingNullRequestEndDateParameter(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, Calendar.getInstance(), null, ReportType.CSV);
+        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), null, ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: End Date in request object is null", thrown.getMessage());
     }
@@ -141,7 +141,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When Invalid adminID parameter")
     void UnitTest_testingInvalidAdminParameter(){
-        request = new CreateUserReportRequest(jwtTokenCustomer, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
+        request = new CreateUserReportRequest(jwtTokenCustomer, new Date(), new Date(), ReportType.CSV);
 
         GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(customer, true, new Date(), "");
 
@@ -159,7 +159,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When valid adminID parameter")
     void UnitTest_testingValidAdminParameterPDF(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, Calendar.getInstance(), Calendar.getInstance(), ReportType.PDF);
+        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), new Date(), ReportType.PDF);
         GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
         GetUsersResponse getUsersResponse = new GetUsersResponse(users, true, "Users successfully returned", new Date());
 
@@ -178,7 +178,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When valid adminID parameter")
     void UnitTest_testingValidAdminParameterCSV(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
+        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), new Date(), ReportType.CSV);
         GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
         GetUsersResponse getUsersResponse = new GetUsersResponse(users, true, "Users successfully returned", new Date());
 
