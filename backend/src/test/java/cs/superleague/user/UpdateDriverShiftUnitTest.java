@@ -67,7 +67,7 @@ public class UpdateDriverShiftUnitTest {
         driverJWT = jwtTokenUtil.generateJWTTokenDriver(driver);
         shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
 
-        request=new UpdateDriverShiftRequest(driverJWT,true);
+        request=new UpdateDriverShiftRequest(true);
     }
 
     @AfterEach
@@ -81,36 +81,11 @@ public class UpdateDriverShiftUnitTest {
     }
 
     @Test
-    @DisplayName("When JWTToken parameter is not specified")
-    void UnitTest_testingNullRequestDriverIDParameter(){
-        request.setJWTToken(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverShift(request));
-        assertEquals("JWTToken in UpdateDriverShiftRequest is null", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When onShift parameter is not specified")
     void UnitTest_testingNullRequestOnShiftParameter(){
         request.setOnShift(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverShift(request));
         assertEquals("onShift in UpdateDriverShiftRequest is null", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When driver with JWTToken return Invalid User")
-    void UnitTest_testingDriverDoesNotExist(){
-        Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
-
-        try{
-            UpdateDriverShiftRequest req = new UpdateDriverShiftRequest(shopperJWT, false);
-            UpdateDriverShiftResponse response = userService.updateDriverShift(req);
-            Assertions.assertFalse(response.isSuccess());
-            assertEquals("No driver exist with that JWTToken", response.getMessage());
-        }catch(UserException e){
-            e.printStackTrace();
-            Assertions.fail();
-        }
-
     }
 
     @Test

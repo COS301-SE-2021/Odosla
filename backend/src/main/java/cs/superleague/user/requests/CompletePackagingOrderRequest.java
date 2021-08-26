@@ -3,6 +3,7 @@ package cs.superleague.user.requests;
 import java.util.UUID;
 
 public class CompletePackagingOrderRequest {
+
     private UUID orderID;
     private boolean getNext;
 

@@ -3,6 +3,7 @@ package cs.superleague.user;
 import cs.superleague.delivery.DeliveryService;
 import cs.superleague.delivery.requests.CreateDeliveryRequest;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService{
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
     private final OrderRepo orderRepo;
-    private JwtUtil jwtTokenUtil=new JwtUtil();
+    private CurrentUser currentUser;
     private final ShoppingService shoppingService;
     private final StoreRepo storeRepo;
     private final DeliveryService deliveryService;
@@ -1029,8 +1030,7 @@ public class UserServiceImpl implements UserService{
 
 
         String jwtToken="";
-
-
+        JwtUtil jwtTokenUtil = new JwtUtil();
         switch (request.getUserType()){
             case SHOPPER:
                 assert shopperRepo!=null;
@@ -1232,18 +1232,8 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UpdateShopper Request is null - Could not update shopper");
         }
 
-        if(request.getJwtToken() == null){
-            throw new InvalidRequestException("ShopperId is null - could not update shopper");
-        }
-
-        shopperID = request.getJwtToken();
-        JwtUtil utils=new JwtUtil();
-        String userType=utils.extractUserType(shopperID);
-        String email= utils.extractEmail(shopperID);
-        if(!userType.equals("SHOPPER")){
-            throw new InvalidRequestException("User isn't a shopper");
-        }
-        shopperOptional = shopperRepo.findByEmail(email);
+        currentUser=new CurrentUser();
+        shopperOptional = shopperRepo.findByEmail(currentUser.getEmail());
         if(shopperOptional == null || !shopperOptional.isPresent()){
             throw new ShopperDoesNotExistException("User with given userID does not exist - could not update shopper");
         }
@@ -1270,8 +1260,9 @@ public class UserServiceImpl implements UserService{
                     message = "Email is already taken";
                     return new UpdateShopperDetailsResponse(message, false, new Date(),null);
                 }
+                JwtUtil jwtUtil = new JwtUtil();
                 shopper.setEmail(request.getEmail());
-                jwtToken=utils.generateJWTTokenShopper(shopper);
+                jwtToken=jwtUtil.generateJWTTokenShopper(shopper);
             }
         }
 
@@ -1483,11 +1474,12 @@ public class UserServiceImpl implements UserService{
                 throw new InvalidRequestException("JWTToken in GetCurrentUserRequest is null");
             }
 
-            final String jwtToken = request.getJWTToken();
-
-            String userType=jwtTokenUtil.extractUserType(jwtToken);
-            String email=jwtTokenUtil.extractEmail(jwtToken);
-            User user=null;
+            String jwtToken = request.getJWTToken();
+            jwtToken = jwtToken.replace("Bearer ","");
+            JwtUtil jwtUtil = new JwtUtil();
+            String userType = jwtUtil.extractUserType(jwtToken);
+            String email = jwtUtil.extractEmail(jwtToken);
+            User user = null;
             switch(userType){
                 case "CUSTOMER":
                     //assert customerRepo!=null;
@@ -1575,10 +1567,6 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
         }
 
-        if(request.getJWTToken() == null){
-            throw new InvalidRequestException("JWTToken is null - could not make grocery list");
-        }
-
         if(request.getProductIds() == null || request.getProductIds().isEmpty()){
             throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
@@ -1587,19 +1575,13 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        System.out.println(request.getJWTToken());
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        currentUser=new CurrentUser();
 
-        System.out.println(getCurrentUserRequest);
+        customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
 
-        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
-            message = "Invalid JWTToken for customer userType";
-            return new MakeGroceryListResponse(false, message, new Date());
+        if(customer == null){
+            throw new CustomerDoesNotExistException("Customer does not exist");
         }
-
-        customer = (Customer)getCurrentUserResponse.getUser();
-
         name = request.getName();
         for (GroceryList list: customer.getGroceryLists()) { // if name exists return false
             if(list.getName().equals(name)){
@@ -2119,18 +2101,14 @@ public class UserServiceImpl implements UserService{
         if (request == null){
             throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
         }
-        if (request.getJwtToken() == null){
-            throw new InvalidRequestException("ShopperID in UpdateShopperShiftRequest is null");
-        }
         if (request.getOnShift() == null){
             throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
         }
         if (request.getStoreID() == null){
             throw new InvalidRequestException("StoreID in UpdateShopperShiftRequest is null");
         }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
-        Shopper shopper1 = (Shopper) getCurrentUserResponse.getUser();
+        currentUser=new CurrentUser();
+        Shopper shopper1 = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);
         if (shopper1 == null){
             throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
         }
@@ -2206,10 +2184,7 @@ public class UserServiceImpl implements UserService{
         if(request==null){
             isException=true;
             errorMessage="UpdateDriverShiftRequest object is null";
-        }else if(request.getJWTToken()==null){
-            isException=true;
-            errorMessage="JWTToken in UpdateDriverShiftRequest is null";
-        } else if(request.getOnShift()==null){
+        }else if(request.getOnShift()==null){
             isException=true;
             errorMessage="onShift in UpdateDriverShiftRequest is null";
         }
@@ -2218,19 +2193,17 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        currentUser=new CurrentUser();
+        Driver driver;
+        try {
+            driver= driverRepo.findDriverByEmail(currentUser.getEmail());
+        }catch(NullPointerException e){
+            driver=null;
+        }
 
-        if(getCurrentUserResponse.getUser() == null){
+        if(driver == null){
             throw new DriverDoesNotExistException("Driver does not exist");
         }
-
-        if(getCurrentUserResponse.getUser().getAccountType() != UserType.DRIVER){
-            String message = "No driver exist with that JWTToken";
-            return new UpdateDriverShiftResponse(false, Calendar.getInstance().getTime(), message);
-        }
-
-        Driver driver = (Driver)getCurrentUserResponse.getUser();
 
         if(driver.getOnShift()==request.getOnShift()){
             String message="";
@@ -2708,16 +2681,13 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("GetGroceryList request is null - could not return groceryList");
         }
 
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        currentUser=new CurrentUser();
 
+        customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
 
-        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
-            message = "Invalid JWTToken for Customer Account type";
-            return new GetGroceryListsResponse(null, false, new Date(), message);
+        if(customer == null){
+            throw new CustomerDoesNotExistException("Customer does not exist");
         }
-
-        customer = (Customer) getCurrentUserResponse.getUser();
 
         message = "Grocery list successfully retrieved";
         return new GetGroceryListsResponse(customer.getGroceryLists(), true, new Date(), message);

@@ -1584,9 +1584,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWTToken:
-          type: string
-          description: generated token used to identify the caller of the endpoint
         productIds:
           type: array
           items:
@@ -1668,8 +1665,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         onShift:
           type: boolean
         storeID:
@@ -2129,8 +2124,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWTToken:
-          type: string
 
     user_GetGroceryListResponse:
       description: This object is expected as output
@@ -2358,8 +2351,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         onShift:
           type: boolean
 
@@ -2552,8 +2543,6 @@ components:
       description: This object is returned as output
       type: object
       properties:
-        jwtToken:
-          type: string
         name:
           type: string
         surname:

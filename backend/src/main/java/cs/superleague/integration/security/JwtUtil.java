@@ -34,7 +34,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
     private Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token){
@@ -92,19 +92,5 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
-//    public Boolean validateToken(String token, User user){
-//        final String email =extractEmail(token);
-//       final String userType =extractUserType(token);
-//        if(user.getAccountType()==UserType.DRIVER){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("DRIVER"));
-//        } else if(user.getAccountType()==UserType.SHOPPER){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("SHOPPER"));
-//        } else if(user.getAccountType()==UserType.ADMIN){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("ADMIN"));
-//        }else if (user.getAccountType()==UserType.CUSTOMER){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("CUSTOMER"));
-//        }
-//        return false;
-//    }
 
 }

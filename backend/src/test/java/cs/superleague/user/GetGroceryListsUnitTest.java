@@ -83,39 +83,5 @@ public class GetGroceryListsUnitTest {
         assertEquals("GetGroceryList request is null - could not return groceryList", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("Invalid User Type JWT")
-    void UnitTest_invalidUserTypeJWT(){
 
-        GetGroceryListsRequest request = new GetGroceryListsRequest(shopperJWT);
-        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
-
-        try{
-            GetGroceryListsResponse response = userService.getGroceryLists(request);
-            assertNull(response.getGroceryLists());
-            assertFalse(response.isSuccess());
-            assertEquals("Invalid JWTToken for Customer Account type", response.getMessage());
-        }catch (UserException e){
-            e.printStackTrace();
-        }
-
-    }
-
-    @Test
-    @DisplayName("Valid User Type JWT")
-    void UnitTest_ValidUserTypeJWT(){
-
-        GetGroceryListsRequest request = new GetGroceryListsRequest(customerJWT);
-
-        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        try{
-            GetGroceryListsResponse response = userService.getGroceryLists(request);
-            assertNotNull(response.getGroceryLists());
-            assertTrue(response.isSuccess());
-            assertEquals("Grocery list successfully retrieved", response.getMessage());
-        }catch (UserException e){
-            e.printStackTrace();
-        }
-
-    }
 }
