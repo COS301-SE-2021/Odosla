@@ -515,6 +515,8 @@ import java.util.List;50"
         String message = null;
         Order order;
 
+        CurrentUser currentUser = new CurrentUser();
+
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
         }

@@ -119,7 +119,7 @@ public class GetOrdersUnitTest {
     @Test
     @DisplayName("When request object parameter - JWTToken - is not specified")
     void UnitTest_testingNull_JWTToken_Parameter_RequestObject(){
-        GetOrdersRequest request=new GetOrdersRequest(null);
+        GetOrdersRequest request=new GetOrdersRequest();
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.getOrders(request));
         assertEquals("JWTToken is null in GetUsersRequest request - could not return orders", thrown.getMessage());
     }
@@ -128,7 +128,7 @@ public class GetOrdersUnitTest {
     @Description("Tests for when JWT does not return admin userType")
     @DisplayName("When request object parameter - JWT does not return admin userType")
     void UnitTest_testing_JWTToken_Parameter_RequestObject_InvalidUserType(){
-        GetOrdersRequest request = new GetOrdersRequest(shopperJWT);
+        GetOrdersRequest request = new GetOrdersRequest();
 
         try {
             GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(shopper,true, Calendar.getInstance().getTime(),"User successfully returned");
@@ -146,7 +146,7 @@ public class GetOrdersUnitTest {
     @Test
     @DisplayName("When request object parameter - JWTToken - valid user type, emptyOrders")
     void UnitTest_testing_JWTToken_Parameter_RequestObject_ValidUserTypeEmptyOrders(){
-        GetOrdersRequest request = new GetOrdersRequest(adminJWT);
+        GetOrdersRequest request = new GetOrdersRequest();
 
         try {
             GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin,true, Calendar.getInstance().getTime(),"User successfully returned");
@@ -165,7 +165,7 @@ public class GetOrdersUnitTest {
     @Test
     @DisplayName("When request object parameter - JWTToken - valid user type")
     void UnitTest_testing_JWTToken_Parameter_RequestObject_ValidUserType(){
-        GetOrdersRequest request = new GetOrdersRequest(adminJWT);
+        GetOrdersRequest request = new GetOrdersRequest();
 
         orders.add(order);
 
