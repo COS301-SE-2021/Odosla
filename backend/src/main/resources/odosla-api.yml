@@ -12,6 +12,7 @@ tags:
   - name: "Notification"
   - name: "Delivery"
   - name: "Analytics"
+  - name: "Importer"
 
 
 paths:
@@ -1168,6 +1169,51 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
+
+  /importer/itemsCSVImporter:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Importer"
+      description: Refer to summary
+      operationId: itemsCSVImporter
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/importer_ItemsCSVImporterRequest"
+      responses:
+        "200":
+          description: Returns response message upon successful importing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/importer_ItemsCSVImporterResponse"
+
+  /importer/storesCSVImporter:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Importer"
+      description: Refer to summary
+      operationId: storesCSVImporter
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/importer_StoresCSVImporterRequest"
+      responses:
+        "200":
+          description: Returns response message upon successful importing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/importer_StoresCSVImporterResponse"
+
 
 components:
 
@@ -2616,6 +2662,42 @@ components:
           type: string
 
     analytics_CreateMonthlyReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    importer_ItemsCSVImporterRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        file:
+          type: string
+
+    importer_ItemsCSVImporterResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    importer_StoresCSVImporterRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        file:
+          type: string
+
+    importer_StoresCSVImporterResponse:
       description: This object is expected as output
       type: object
       properties:
