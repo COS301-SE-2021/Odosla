@@ -1,5 +1,6 @@
 package cs.superleague.shopping;
 
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.requests.*;
@@ -231,11 +232,6 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
 
-            if(request.getJwtToken()==null)
-            {
-                throw new InvalidRequestException("JwtToken parameter in request can't be null - can't get next queued");
-            }
-
             Store store;
 
             try {
@@ -268,28 +264,20 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             if(orderRepo!=null)
             {
-                Order updateOrder= orderRepo.findById(correspondingOrder.getOrderID()).orElse(null);
+                Order updateOrder = orderRepo.findById(correspondingOrder.getOrderID()).orElse(null);
 
                 if(updateOrder!=null)
                 {
-                    JwtUtil jwtUtil = new JwtUtil();
-                    if(jwtUtil.extractUserType(request.getJwtToken()).equals("SHOPPER"))
-                    {
-                        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
 
-                        if(shopperRepo!=null)
-                        {
-                            Shopper shopper = shopperRepo.findByEmail(getCurrentUserResponse.getUser().getEmail()).orElse(null);
-                            assert shopper != null;
-                            updateOrder.setShopperID(shopper.getShopperID());
-                            updateOrder.setStatus(OrderStatus.PACKING);
-                            orderRepo.save(updateOrder);
-                        }
+                    CurrentUser currentUser = new CurrentUser();
 
-                    }
-                    else
+                    if(shopperRepo!=null)
                     {
-                        throw new InvalidRequestException("Invalid user");
+                        Shopper shopper = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);
+                        assert shopper != null;
+                        updateOrder.setShopperID(shopper.getShopperID());
+                        updateOrder.setStatus(OrderStatus.PACKING);
+                        orderRepo.save(updateOrder);
                     }
 
                 }
