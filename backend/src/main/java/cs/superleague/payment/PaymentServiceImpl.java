@@ -183,6 +183,10 @@ public class PaymentServiceImpl implements PaymentService {
                         invalidReq = true;
                         invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
                     }
+                    if (!shop.getStore().getOpen()){
+                        invalidReq = true;
+                        invalidMessage = ("Store is currently closed - could not create order");
+                    }
                 }
 
                 CurrentUser currentUser = new CurrentUser();
@@ -192,6 +196,7 @@ public class PaymentServiceImpl implements PaymentService {
                         Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
                         assert customer != null;
                         customerID = customer.getCustomerID();
+
                     }
 
                 }
