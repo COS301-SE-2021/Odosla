@@ -2399,8 +2399,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWTToken:
-          type: string
         startDate:
           type: string
         endDate:
@@ -2614,8 +2612,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWTToken:
-          type: string
         startDate:
           type: string
         endDate:
@@ -2646,8 +2642,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWTToken:
-          type: string
         reportType:
           type: string
 

@@ -8,21 +8,15 @@ import java.util.UUID;
 
 public class CreateUserReportRequest {
 
-    private final String JWTToken;
     private final Date startDate;
     private final Date endDate;
     private final ReportType reportType;
 
 
-    public CreateUserReportRequest(String JWTToken, Date startDate, Date endDate, ReportType reportType) {
-        this.JWTToken = JWTToken;
+    public CreateUserReportRequest(Date startDate, Date endDate, ReportType reportType) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportType = reportType;
-    }
-
-    public String getJWTToken() {
-        return JWTToken;
     }
 
     public Date getStartDate() {

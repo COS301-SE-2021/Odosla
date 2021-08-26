@@ -22,7 +22,7 @@ public class CreateFinancialAnalyticsData {
     private final Date startDate;
     private final Date endDate;
 
-    public CreateFinancialAnalyticsData(Date startDate, Date endDate, String JWTToken, PaymentService paymentService){
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate, PaymentService paymentService){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -33,7 +33,7 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest(JWTToken);
+        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
         try{
             getOrdersResponse = paymentService.getOrders(getOrdersRequest);
         }catch (Exception e){

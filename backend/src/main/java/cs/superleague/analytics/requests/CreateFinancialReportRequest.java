@@ -6,20 +6,14 @@ import java.util.Date;
 
 public class CreateFinancialReportRequest {
 
-    private final String JWTToken;
     private final Date startDate;
     private final Date endDate;
     private final ReportType reportType;
 
-    public CreateFinancialReportRequest(String JWTToken, Date startDate, Date endDate, ReportType reportType) {
-        this.JWTToken = JWTToken;
+    public CreateFinancialReportRequest(Date startDate, Date endDate, ReportType reportType) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportType = reportType;
-    }
-
-    public String getJWTToken() {
-        return JWTToken;
     }
 
     public Date getStartDate() {
