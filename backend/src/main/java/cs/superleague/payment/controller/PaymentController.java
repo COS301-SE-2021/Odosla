@@ -199,7 +199,7 @@ public class PaymentController implements PaymentApi {
         }
 
         try{
-            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(body.getJwtToken(), assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());
@@ -221,7 +221,7 @@ public class PaymentController implements PaymentApi {
         PaymentGetCustomersActiveOrdersResponse response = new PaymentGetCustomersActiveOrdersResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
-            GetCustomersActiveOrdersRequest request = new GetCustomersActiveOrdersRequest(body.getJwtToken());
+            GetCustomersActiveOrdersRequest request = new GetCustomersActiveOrdersRequest();
             GetCustomersActiveOrdersResponse getCustomersActiveOrdersResponse = ServiceSelector.getPaymentService().getCustomersActiveOrders(request);
             response.setHasActiveOrder(getCustomersActiveOrdersResponse.isHasActiveOrder());
             response.setMessage(getCustomersActiveOrdersResponse.getMessage());
