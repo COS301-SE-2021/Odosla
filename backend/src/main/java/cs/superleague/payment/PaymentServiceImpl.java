@@ -69,7 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final CustomerRepo customerRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
