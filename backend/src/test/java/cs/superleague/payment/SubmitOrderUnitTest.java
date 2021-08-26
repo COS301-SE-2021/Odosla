@@ -103,7 +103,7 @@ public class SubmitOrderUnitTest {
         customer.setCustomerID(expectedU1);
         customer.setEmail("hello@gmail.com");
         customer.setAccountType(UserType.CUSTOMER);
-        jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customer);
+        //jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customer);
     }
 
     @AfterEach
@@ -118,16 +118,6 @@ public class SubmitOrderUnitTest {
     void UnitTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(null));
         assertEquals("Invalid submit order request received - order unsuccessfully created.", thrown.getMessage());
-    }
-
-    @Test
-    @Description("Tests for whether an order is submited with a null parameter for userID in request object- exception should be thrown")
-    @DisplayName("When request object parameter -userID - is not specificed")
-    void UnitTest_testingNull_UserID_Parameter_RequestObject(){
-        List<Item> list=new ArrayList<>();
-        SubmitOrderRequest request=new SubmitOrderRequest(list,0.0, UUID.randomUUID(), OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.submitOrder(request));
-        assertEquals("JwtToken cannot be null in request object - order unsuccessfully created.", thrown.getMessage());
     }
 
     @Test
