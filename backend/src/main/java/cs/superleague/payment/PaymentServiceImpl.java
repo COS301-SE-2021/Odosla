@@ -196,6 +196,9 @@ public class PaymentServiceImpl implements PaymentService {
 
                 }
 
+            } else {
+                invalidReq = true;
+                invalidMessage = "Invalid submit order request received - order unsuccessfully created.";
             }
 
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
