@@ -3,6 +3,7 @@ package cs.superleague.payment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
@@ -134,13 +135,7 @@ public class PaymentServiceImpl implements PaymentService {
         GetStoreByUUIDResponse shop=null;
         if (request!=null) {
 
-            /* checking for invalid requests */
-            if(request.getJwtToken()==null){
-                invalidReq = true;
-                invalidMessage = ("JwtToken cannot be null in request object - order unsuccessfully created.");
-            }
-
-            else if(request.getListOfItems()==null){
+            if(request.getListOfItems()==null){
                 invalidReq = true;
                 invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
             }
@@ -190,23 +185,14 @@ public class PaymentServiceImpl implements PaymentService {
                     }
                 }
 
-                JwtUtil jwtUtil = new JwtUtil();
-                if(jwtUtil.extractUserType(request.getJwtToken()).equals("CUSTOMER"))
-                {
-                    GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+                CurrentUser currentUser = new CurrentUser();
 
                     if(customerRepo!=null)
                     {
-                        Customer customer = customerRepo.findByEmail(getCurrentUserResponse.getUser().getEmail()).orElse(null);
+                        Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
                         assert customer != null;
                         customerID = customer.getCustomerID();
                     }
-
-                }
-                else
-                {
-                    invalidReq = true;
-                    invalidMessage = ("Invalid User");
 
                 }
 
