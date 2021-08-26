@@ -3,6 +3,7 @@ package cs.superleague.payment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
@@ -68,7 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final CustomerRepo customerRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
@@ -134,13 +135,7 @@ public class PaymentServiceImpl implements PaymentService {
         GetStoreByUUIDResponse shop=null;
         if (request!=null) {
 
-            /* checking for invalid requests */
-            if(request.getJwtToken()==null){
-                invalidReq = true;
-                invalidMessage = ("JwtToken cannot be null in request object - order unsuccessfully created.");
-            }
-
-            else if(request.getListOfItems()==null){
+            if(request.getListOfItems()==null){
                 invalidReq = true;
                 invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
             }
@@ -188,28 +183,27 @@ public class PaymentServiceImpl implements PaymentService {
                         invalidReq = true;
                         invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
                     }
+                    if (!shop.getStore().getOpen()){
+                        invalidReq = true;
+                        invalidMessage = ("Store is currently closed - could not create order");
+                    }
                 }
 
-                JwtUtil jwtUtil = new JwtUtil();
-                if(jwtUtil.extractUserType(request.getJwtToken()).equals("CUSTOMER"))
-                {
-                    GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
+                CurrentUser currentUser = new CurrentUser();
 
                     if(customerRepo!=null)
                     {
-                        Customer customer = customerRepo.findByEmail(getCurrentUserResponse.getUser().getEmail()).orElse(null);
+                        Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
                         assert customer != null;
                         customerID = customer.getCustomerID();
+
                     }
 
                 }
-                else
-                {
-                    invalidReq = true;
-                    invalidMessage = ("Invalid User");
 
-                }
-
+            } else {
+                invalidReq = true;
+                invalidMessage = "Invalid submit order request received - order unsuccessfully created.";
             }
 
             if (invalidReq) throw new InvalidRequestException(invalidMessage);
@@ -313,7 +307,7 @@ public class PaymentServiceImpl implements PaymentService {
                     else {
                         throw new StoreClosedException("Store is currently closed - could not create order");
                     }
-            }
+
 
         }else{
             throw new InvalidRequestException("Invalid submit order request received - order unsuccessfully created.");
@@ -765,15 +759,11 @@ import java.util.List;50"
         if (request == null){
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
         }
-        if (request.getJwtToken() == null){
-            throw new InvalidRequestException("JWTToken of Get Customers Active Orders is null");
-        }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
-        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
-        if (getCurrentUserResponse.getUser() == null){
-            throw new UserDoesNotExistException("Invalid jwtToken, no user found");
-        }
-        Customer customer = (Customer) getCurrentUserResponse.getUser();
+
+        CurrentUser currentUser = new CurrentUser();
+
+        Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
+
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
         if (orders == null){
             throw new OrderDoesNotExist("No Orders found for this user in the database.");
@@ -833,26 +823,10 @@ import java.util.List;50"
             throw new InvalidRequestException("GetOrders request is null - could not return orders");
         }
 
-        if(request.getJWTToken() == null){
-            throw new InvalidRequestException("JWTToken is null in GetUsersRequest request - could not return orders");
-        }
+        CurrentUser currentUser = new CurrentUser();
 
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse;
-
-        try {
-            getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
-        }catch (Exception e){
-            throw new InvalidRequestException("Invalid JWTToken - could not get Orders");
-        }
-
-        if(getCurrentUserResponse.getUser() == null){
+        if(currentUser == null){
             message = "No Admin Found - could not get Orders";
-            return new GetOrdersResponse(null, false, message, new Date());
-        }
-
-        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
-            message = "JWTToken returns an invalid user type - could not get Orders";
             return new GetOrdersResponse(null, false, message, new Date());
         }
 
