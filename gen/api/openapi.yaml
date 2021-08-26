@@ -10,6 +10,8 @@ tags:
 - name: Payment
 - name: User
 - name: Notification
+- name: Delivery
+- name: Analytics
 paths:
   /shopping/populateTables:
     post:
@@ -701,6 +703,305 @@ paths:
       - user
       x-contentType: application/json
       x-accepts: application/json
+  /user/getGroceryLists:
+    post:
+      description: Refer to summary
+      operationId: getGroceryLists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_GetGroceryListRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_GetGroceryListResponse'
+          description: Returns the groceryList
+      summary: Endpoint for get grocery lists use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/addDeliveryDetail:
+    post:
+      description: Refer to summary
+      operationId: addDeliveryDetail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_AddDeliveryDetailRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_AddDeliveryDetailResponse'
+          description: Returns whether the detail was added and the ID of that detail
+      summary: Endpoint for add delivery detail
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/assignDriverToDelivery:
+    post:
+      description: Refer to summary
+      operationId: assignDriverToDelivery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_AssignDriverToDeliveryRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_AssignDriverToDeliveryResponse'
+          description: Returns whether the driver was assigned to the delivery
+      summary: Endpoint for assign driver to delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/createDelivery:
+    post:
+      description: Refer to summary
+      operationId: createDelivery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_CreateDeliveryRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_CreateDeliveryResponse'
+          description: Returns whether the delivery was created or not
+      summary: Endpoint for creating a delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/getDeliveryDetail:
+    post:
+      description: Refer to summary
+      operationId: getDeliveryDetail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_GetDeliveryDetailRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_GetDeliveryDetailResponse'
+          description: Returns the delivery detail
+      summary: Endpoint for getting the detail of a delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/getDeliveryStatus:
+    post:
+      description: Refer to summary
+      operationId: getDeliveryStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_GetDeliveryStatusRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_GetDeliveryStatusResponse'
+          description: Returns the delivery status
+      summary: Endpoint for getting the status of a delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/getNextOrderForDriver:
+    post:
+      description: Refer to summary
+      operationId: getNextOrderForDriver
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_GetNextOrderForDriverRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_GetNextOrderForDriverResponse'
+          description: Returns the next order for a driver
+      summary: Endpoint for getting the next order for a driver
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/removeDriverFromDelivery:
+    post:
+      description: Refer to summary
+      operationId: removeDriverFromDelivery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_RemoveDriverFromDeliveryRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_RemoveDriverFromDeliveryResponse'
+          description: Returns whether the driver was removed from the order
+      summary: Endpoint for removing a driver from a delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/trackDelivery:
+    post:
+      description: Refer to summary
+      operationId: trackDelivery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_TrackDeliveryRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_TrackDeliveryResponse'
+          description: Returns the location of the delivery
+      summary: Endpoint for tracking a delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/updateDeliveryStatus:
+    post:
+      description: Refer to summary
+      operationId: updateDeliveryStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_UpdateDeliveryStatusRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_UpdateDeliveryStatusResponse'
+          description: Returns whether the status of the delivery was updated
+      summary: Endpoint for updating the status of a delivery
+      tags:
+      - delivery
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/updateDriverShift:
+    post:
+      description: Refer to summary
+      operationId: updateDriverShift
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_UpdateDriverShiftRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_UpdateDriverShiftResponse'
+          description: Returns upon success
+      summary: Endpoint for updating driver shift
+      tags:
+      - User
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/updateShopperDetails:
+    post:
+      description: Refer to summary
+      operationId: updateShopperDetails
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_UpdateShopperDetailsRequest'
+        description: The input body require by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_UpdateShopperDetailsResponse'
+          description: Returns if updating details was successful
+      summary: Endpoint for updating shopper details
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /analytics/createUserReport:
+    post:
+      description: Refer to summary
+      operationId: createUserReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analytics_CreateUserReportRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analytics_CreateUserReportResponse'
+          description: Returns whether Report was downloaded
+      summary: Endpoint for creating user report
+      tags:
+      - Analytics
+      x-contentType: application/json
+      x-accepts: application/json
   /payment/getCustomersActiveOrders:
     post:
       description: Refer to summary
@@ -722,6 +1023,144 @@ paths:
       summary: Endpoint for the customers getting their active order
       tags:
       - payment
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/completeDelivery:
+    post:
+      description: Refer to summary
+      operationId: completeDelivery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_CompleteDeliveryRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_CompleteDeliveryResponse'
+          description: Returns delivery is completed
+      summary: Endpoint for complete delivery use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /delivery/getDeliveryDriverByOrderId:
+    post:
+      description: Refer to summary
+      operationId: getDeliveryDriverByOrderId
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/delivery_GetDeliveryDriverByOrderIdRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/delivery_GetDeliveryDriverByOrderIdResponse'
+          description: Returns delivery and driver
+      summary: Endpoint for get delivery driver by order id use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/getCustomerByUUID:
+    post:
+      description: Refer to summary
+      operationId: getCustomerByUUID
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_GetCustomerByUUIDRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_GetCustomerByUUIDResponse'
+          description: Returns customer
+      summary: Endpoint for get customer by UUID use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /user/driverSetRating:
+    post:
+      description: Refer to summary
+      operationId: driverSetRating
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_DriverSetRatingRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_DriverSetRatingResponse'
+          description: Returns response
+      summary: Endpoint for setting rating use case
+      tags:
+      - user
+      x-contentType: application/json
+      x-accepts: application/json
+  /analytics/createFinancialReport:
+    post:
+      description: Refer to summary
+      operationId: createFinancialReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analytics_CreateFinancialReportRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analytics_CreateFinancialReportResponse'
+          description: Returns whether Report was downloaded
+      summary: Endpoint for creating user report
+      tags:
+      - Analytics
+      x-contentType: application/json
+      x-accepts: application/json
+  /analytics/createMonthlyReport:
+    post:
+      description: Refer to summary
+      operationId: createMonthlyReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/analytics_CreateMonthlyReportRequest'
+        description: The input body required by this request
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/analytics_CreateMonthlyReportResponse'
+          description: Returns whether Report was downloaded
+      summary: Endpoint for creating monthly report
+      tags:
+      - Analytics
       x-contentType: application/json
       x-accepts: application/json
 components:
@@ -964,6 +1403,10 @@ components:
       example:
         isOpen: true
         closingTime: 5
+        storeLocation:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
         openingTime: 1
         imageUrl: imageUrl
         maxShoppers: 0
@@ -987,6 +1430,8 @@ components:
           type: integer
         imageUrl:
           type: string
+        storeLocation:
+          $ref: '#/components/schemas/GeoPointObject'
       type: object
     shopping_GetStoresRequest:
       description: This object is expected as input
@@ -998,6 +1443,10 @@ components:
         stores:
         - isOpen: true
           closingTime: 5
+          storeLocation:
+            address: address
+            latitude: 5.637376656633329
+            longitude: 2.3021358869347655
           openingTime: 1
           imageUrl: imageUrl
           maxShoppers: 0
@@ -1006,6 +1455,10 @@ components:
           storeBrand: storeBrand
         - isOpen: true
           closingTime: 5
+          storeLocation:
+            address: address
+            latitude: 5.637376656633329
+            longitude: 2.3021358869347655
           openingTime: 1
           imageUrl: imageUrl
           maxShoppers: 0
@@ -1133,7 +1586,7 @@ components:
     payment_SubmitOrderRequest:
       description: This object is expected as input
       properties:
-        userId:
+        jwtToken:
           description: generated token used to identify the caller of the endpoint
           type: string
         listOfItems:
@@ -1317,10 +1770,10 @@ components:
     user_MakeGroceryListRequest:
       description: This object is expected as input
       properties:
-        customerID:
+        JWTToken:
           description: generated token used to identify the caller of the endpoint
           type: string
-        barcodes:
+        productIds:
           items:
             type: string
           type: array
@@ -1365,6 +1818,32 @@ components:
       type: object
     GroceryListObject:
       description: Generic schema for a GroceryList
+      example:
+        name: name
+        items:
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        groceryListID: groceryListID
       properties:
         groceryListID:
           type: string
@@ -1406,6 +1885,8 @@ components:
           type: string
         onShift:
           type: boolean
+        storeID:
+          type: string
       type: object
     user_UpdateShopperShiftResponse:
       description: This object is returned as output
@@ -1423,6 +1904,25 @@ components:
       type: object
     DriverObject:
       description: Generic schema for a Driver
+      example:
+        resetCode: resetCode
+        accountType: accountType
+        deliveriesCompleted: 6.027456183070403
+        rating: 0.8008281904610115
+        onShift: true
+        resetExpiration: resetExpiration
+        currentAddress:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
+        password: password
+        phoneNumber: phoneNumber
+        driverID: driverID
+        surname: surname
+        name: name
+        activationCode: activationCode
+        activationDate: activationDate
+        email: email
       properties:
         name:
           type: string
@@ -1450,9 +1950,102 @@ components:
           type: number
         onShift:
           type: boolean
+        currentAddress:
+          $ref: '#/components/schemas/GeoPointObject'
+        deliveriesCompleted:
+          type: number
       type: object
     CustomerObject:
       description: Generic schema for a Customer
+      example:
+        address: address
+        wallet: '{}'
+        resetCode: resetCode
+        accountType: accountType
+        preference: '{}'
+        resetExpiration: resetExpiration
+        groceryLists:
+        - name: name
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          groceryListID: groceryListID
+        - name: name
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          groceryListID: groceryListID
+        password: password
+        phoneNumber: phoneNumber
+        surname: surname
+        name: name
+        customerID: customerID
+        shoppingCart:
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        - itemType: itemType
+          quantity: 6
+          productId: productId
+          size: size
+          price: 0.8008281904610115
+          imageUrl: imageUrl
+          name: name
+          description: description
+          storeId: storeId
+          barcode: barcode
+          brand: brand
+        activationCode: activationCode
+        activationDate: activationDate
+        email: email
       properties:
         name:
           type: string
@@ -1781,6 +2374,8 @@ components:
     shopping_GetNextQueuedRequest:
       description: This object is expected as input
       properties:
+        jwtToken:
+          type: string
         storeID:
           type: string
       type: object
@@ -1859,7 +2454,42 @@ components:
           requiresPharmacy: true
           createDate: createDate
           status: status
-        newCurrentOrder: '{}'
+        newCurrentOrder:
+          orderId: orderId
+          totalPrice: 0.8008281904610115
+          shopperId: shopperId
+          discount: 6.027456183070403
+          storeId: storeId
+          userId: userId
+          deliveryAddress: deliveryAddress
+          storeAddress: storeAddress
+          processDate: processDate
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          requiresPharmacy: true
+          createDate: createDate
+          status: status
         success: true
         message: message
       properties:
@@ -1874,7 +2504,7 @@ components:
             $ref: '#/components/schemas/OrderObject'
           type: array
         newCurrentOrder:
-          type: object
+          $ref: '#/components/schemas/OrderObject'
       type: object
     shopping_GetQueueRequest:
       description: This object is expected as input
@@ -2044,6 +2674,393 @@ components:
     shopping_PopulateTablesResponse:
       description: This object is expected as output
       type: object
+    user_GetGroceryListRequest:
+      description: This object is expected as input
+      properties:
+        JWTToken:
+          type: string
+      type: object
+    user_GetGroceryListResponse:
+      description: This object is expected as output
+      example:
+        groceryLists:
+        - name: name
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          groceryListID: groceryListID
+        - name: name
+          items:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          groceryListID: groceryListID
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        groceryLists:
+          items:
+            $ref: '#/components/schemas/GroceryListObject'
+          type: array
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+      type: object
+    delivery_AddDeliveryDetailRequest:
+      description: This object is expected as input
+      properties:
+        deliveryStatus:
+          type: string
+        detail:
+          type: string
+        deliveryID:
+          type: string
+        timestamp:
+          type: string
+      type: object
+    delivery_AddDeliveryDetailResponse:
+      description: This object is expected as output
+      example:
+        id: 0
+        message: message
+      properties:
+        message:
+          type: string
+        id:
+          type: integer
+      type: object
+    delivery_AssignDriverToDeliveryRequest:
+      description: This object is expected as input
+      properties:
+        deliveryID:
+          type: string
+      type: object
+    delivery_AssignDriverToDeliveryResponse:
+      description: This object is expected as output
+      example:
+        dropOffLocation:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
+        isAssigned: true
+        driverID: driverID
+        message: message
+        pickUpLocation:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
+      properties:
+        isAssigned:
+          type: boolean
+        message:
+          type: string
+        pickUpLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        dropOffLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        driverID:
+          type: string
+      type: object
+    delivery_CreateDeliveryRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+        customerID:
+          type: string
+        storeID:
+          type: string
+        timeOfDelivery:
+          type: string
+        placeOfDelivery:
+          $ref: '#/components/schemas/GeoPointObject'
+      type: object
+    delivery_CreateDeliveryResponse:
+      description: This object is expected as output
+      example:
+        deliveryID: deliveryID
+        message: message
+        isSuccess: true
+      properties:
+        isSuccess:
+          type: boolean
+        message:
+          type: string
+        deliveryID:
+          type: string
+      type: object
+    GeoPointObject:
+      description: This is a geoPoint object
+      example:
+        address: address
+        latitude: 5.637376656633329
+        longitude: 2.3021358869347655
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+      type: object
+    delivery_GetDeliveryDetailRequest:
+      description: This object is expected as input
+      properties:
+        deliveryID:
+          type: string
+      type: object
+    delivery_GetDeliveryDetailResponse:
+      description: This object is expected as output
+      example:
+        detail:
+        - deliveryID: deliveryID
+          id: 0
+          time: time
+          detail: detail
+          deliveryStatus: deliveryStatus
+        - deliveryID: deliveryID
+          id: 0
+          time: time
+          detail: detail
+          deliveryStatus: deliveryStatus
+        message: message
+      properties:
+        message:
+          type: string
+        detail:
+          items:
+            $ref: '#/components/schemas/DeliveryDetailObject'
+          type: array
+      type: object
+    DeliveryDetailObject:
+      description: The details of the delivery
+      example:
+        deliveryID: deliveryID
+        id: 0
+        time: time
+        detail: detail
+        deliveryStatus: deliveryStatus
+      properties:
+        id:
+          type: integer
+        deliveryID:
+          type: string
+        time:
+          type: string
+        deliveryStatus:
+          type: string
+        detail:
+          type: string
+      type: object
+    delivery_GetDeliveryStatusRequest:
+      description: This object is expected as input
+      properties:
+        deliveryID:
+          type: string
+      type: object
+    delivery_GetDeliveryStatusResponse:
+      description: This object is expected as output
+      example:
+        message: message
+        status: status
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      type: object
+    delivery_GetNextOrderForDriverRequest:
+      description: This object is expected as input
+      properties:
+        currentLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        rangeOfDelivery:
+          type: number
+      type: object
+    delivery_GetNextOrderForDriverResponse:
+      description: This object is expected as output
+      example:
+        delivery:
+          dropOffLocation:
+            address: address
+            latitude: 5.637376656633329
+            longitude: 2.3021358869347655
+          deliveryDetail:
+          - deliveryID: deliveryID
+            id: 0
+            time: time
+            detail: detail
+            deliveryStatus: deliveryStatus
+          - deliveryID: deliveryID
+            id: 0
+            time: time
+            detail: detail
+            deliveryStatus: deliveryStatus
+          deliveryID: deliveryID
+          cost: 0.8008281904610115
+          driverId: driverId
+          orderID: orderID
+          customerId: customerId
+          completed: true
+          storeId: storeId
+          pickUpLocation:
+            address: address
+            latitude: 5.637376656633329
+            longitude: 2.3021358869347655
+          status: status
+        message: message
+      properties:
+        message:
+          type: string
+        delivery:
+          $ref: '#/components/schemas/DeliveryObject'
+      type: object
+    delivery_RemoveDriverFromDeliveryRequest:
+      description: This object is expected as input
+      properties:
+        deliveryID:
+          type: string
+      type: object
+    delivery_RemoveDriverFromDeliveryResponse:
+      description: This object is expected as output
+      example:
+        message: message
+        isSuccess: true
+      properties:
+        isSuccess:
+          type: boolean
+        message:
+          type: string
+      type: object
+    delivery_TrackDeliveryRequest:
+      description: This object is expected as input
+      properties:
+        deliveryID:
+          type: string
+      type: object
+    delivery_TrackDeliveryResponse:
+      description: This object is expected as output
+      example:
+        message: message
+        currentLocation:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
+      properties:
+        currentLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        message:
+          type: string
+      type: object
+    delivery_UpdateDeliveryStatusRequest:
+      description: This object is expected as input
+      properties:
+        status:
+          type: string
+        deliveryID:
+          type: string
+        detail:
+          type: string
+      type: object
+    delivery_UpdateDeliveryStatusResponse:
+      description: This object is expected as output
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      type: object
+    user_UpdateDriverShiftRequest:
+      description: This object is expected as input
+      properties:
+        jwtToken:
+          type: string
+        onShift:
+          type: boolean
+      type: object
+    user_UpdateDriverShiftResponse:
+      description: This object is returned as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
+          type: string
+      type: object
+    analytics_CreateUserReportRequest:
+      description: This object is expected as input
+      properties:
+        JWTToken:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+      type: object
+    analytics_CreateUserReportResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+      type: object
     payment_GetCustomersActiveOrdersRequest:
       description: This object is expected as input
       properties:
@@ -2062,6 +3079,361 @@ components:
         hasActiveOrder:
           type: boolean
         message:
+          type: string
+      type: object
+    user_CompleteDeliveryRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+      type: object
+    user_CompleteDeliveryResponse:
+      description: This object is returned as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+      type: object
+    DeliveryObject:
+      description: This is a delivery object
+      example:
+        dropOffLocation:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
+        deliveryDetail:
+        - deliveryID: deliveryID
+          id: 0
+          time: time
+          detail: detail
+          deliveryStatus: deliveryStatus
+        - deliveryID: deliveryID
+          id: 0
+          time: time
+          detail: detail
+          deliveryStatus: deliveryStatus
+        deliveryID: deliveryID
+        cost: 0.8008281904610115
+        driverId: driverId
+        orderID: orderID
+        customerId: customerId
+        completed: true
+        storeId: storeId
+        pickUpLocation:
+          address: address
+          latitude: 5.637376656633329
+          longitude: 2.3021358869347655
+        status: status
+      properties:
+        deliveryID:
+          type: string
+        pickUpLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        dropOffLocation:
+          $ref: '#/components/schemas/GeoPointObject'
+        orderID:
+          type: string
+        customerId:
+          type: string
+        storeId:
+          type: string
+        driverId:
+          type: string
+        status:
+          type: string
+        cost:
+          type: number
+        completed:
+          type: boolean
+        deliveryDetail:
+          items:
+            $ref: '#/components/schemas/DeliveryDetailObject'
+          type: array
+      type: object
+    delivery_GetDeliveryDriverByOrderIdRequest:
+      description: This object is expected as input
+      properties:
+        orderID:
+          type: string
+      type: object
+    delivery_GetDeliveryDriverByOrderIdResponse:
+      description: This object is expected as output
+      example:
+        deliveryID: deliveryID
+        driver:
+          resetCode: resetCode
+          accountType: accountType
+          deliveriesCompleted: 6.027456183070403
+          rating: 0.8008281904610115
+          onShift: true
+          resetExpiration: resetExpiration
+          currentAddress:
+            address: address
+            latitude: 5.637376656633329
+            longitude: 2.3021358869347655
+          password: password
+          phoneNumber: phoneNumber
+          driverID: driverID
+          surname: surname
+          name: name
+          activationCode: activationCode
+          activationDate: activationDate
+          email: email
+        message: message
+      properties:
+        driver:
+          $ref: '#/components/schemas/DriverObject'
+        message:
+          type: string
+        deliveryID:
+          type: string
+      type: object
+    OrderItemsObject:
+      description: Generic schema for an order item
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        orderId:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        totalCost:
+          type: number
+      type: object
+    user_GetCustomerByUUIDRequest:
+      description: This object is expected as input
+      properties:
+        userID:
+          type: string
+      type: object
+    user_GetCustomerByUUIDResponse:
+      description: This object is output
+      example:
+        message: message
+        customer:
+          address: address
+          wallet: '{}'
+          resetCode: resetCode
+          accountType: accountType
+          preference: '{}'
+          resetExpiration: resetExpiration
+          groceryLists:
+          - name: name
+            items:
+            - itemType: itemType
+              quantity: 6
+              productId: productId
+              size: size
+              price: 0.8008281904610115
+              imageUrl: imageUrl
+              name: name
+              description: description
+              storeId: storeId
+              barcode: barcode
+              brand: brand
+            - itemType: itemType
+              quantity: 6
+              productId: productId
+              size: size
+              price: 0.8008281904610115
+              imageUrl: imageUrl
+              name: name
+              description: description
+              storeId: storeId
+              barcode: barcode
+              brand: brand
+            groceryListID: groceryListID
+          - name: name
+            items:
+            - itemType: itemType
+              quantity: 6
+              productId: productId
+              size: size
+              price: 0.8008281904610115
+              imageUrl: imageUrl
+              name: name
+              description: description
+              storeId: storeId
+              barcode: barcode
+              brand: brand
+            - itemType: itemType
+              quantity: 6
+              productId: productId
+              size: size
+              price: 0.8008281904610115
+              imageUrl: imageUrl
+              name: name
+              description: description
+              storeId: storeId
+              barcode: barcode
+              brand: brand
+            groceryListID: groceryListID
+          password: password
+          phoneNumber: phoneNumber
+          surname: surname
+          name: name
+          customerID: customerID
+          shoppingCart:
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          - itemType: itemType
+            quantity: 6
+            productId: productId
+            size: size
+            price: 0.8008281904610115
+            imageUrl: imageUrl
+            name: name
+            description: description
+            storeId: storeId
+            barcode: barcode
+            brand: brand
+          activationCode: activationCode
+          activationDate: activationDate
+          email: email
+        timestamp: timestamp
+      properties:
+        customer:
+          $ref: '#/components/schemas/CustomerObject'
+        timestamp:
+          type: string
+        message:
+          type: string
+      type: object
+    user_DriverSetRatingRequest:
+      description: This object is expected as input
+      properties:
+        driverID:
+          type: string
+        rating:
+          type: number
+      type: object
+    user_DriverSetRatingResponse:
+      description: This object is output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+      type: object
+    user_UpdateShopperDetailsRequest:
+      description: This object is returned as output
+      properties:
+        jwtToken:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        currentPassword:
+          type: string
+      type: object
+    user_UpdateShopperDetailsResponse:
+      description: This object is returned as output
+      example:
+        success: true
+        jwtToken: jwtToken
+        message: message
+        timestamp: timestamp
+      properties:
+        jwtToken:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        timestamp:
+          type: string
+      type: object
+    analytics_CreateFinancialReportRequest:
+      description: This object is expected as input
+      properties:
+        JWWTToken:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+      type: object
+    analytics_CreateFinancialReportResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+      type: object
+    analytics_CreateMonthlyReportRequest:
+      description: This object is expected as input
+      properties:
+        JWWTToken:
+          type: string
+        reportType:
+          type: string
+      type: object
+    analytics_CreateMonthlyReportResponse:
+      description: This object is expected as output
+      example:
+        success: true
+        message: message
+        timestamp: timestamp
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
           type: string
       type: object
 

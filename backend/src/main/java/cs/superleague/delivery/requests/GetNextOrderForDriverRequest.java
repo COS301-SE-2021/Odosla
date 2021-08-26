@@ -5,18 +5,15 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import java.util.UUID;
 
 public class GetNextOrderForDriverRequest {
-    private String jwtToken;
     private GeoPoint currentLocation;
     private double rangeOfDelivery;
 
-    public GetNextOrderForDriverRequest(String jwtToken, GeoPoint currentLocation, double rangeOfDeliverys) {
-        this.jwtToken = jwtToken;
+    public GetNextOrderForDriverRequest(GeoPoint currentLocation, double rangeOfDeliverys) {
         this.currentLocation = currentLocation;
         this.rangeOfDelivery = rangeOfDeliverys;
     }
 
-    public GetNextOrderForDriverRequest(String jwtToken, GeoPoint currentLocation) {
-        this.jwtToken = jwtToken;
+    public GetNextOrderForDriverRequest(GeoPoint currentLocation) {
         this.currentLocation = currentLocation;
         this.rangeOfDelivery = 10;
     }
@@ -37,11 +34,4 @@ public class GetNextOrderForDriverRequest {
         this.currentLocation = currentLocation;
     }
 
-    public String getJwtToken() {
-        return jwtToken;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
 }

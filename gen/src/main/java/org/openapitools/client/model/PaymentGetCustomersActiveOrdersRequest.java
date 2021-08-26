@@ -28,7 +28,7 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-15T19:18:09.879065200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class PaymentGetCustomersActiveOrdersRequest {
   public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
   @SerializedName(SERIALIZED_NAME_JWT_TOKEN)

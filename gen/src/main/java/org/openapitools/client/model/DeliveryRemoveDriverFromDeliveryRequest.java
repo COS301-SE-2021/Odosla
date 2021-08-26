@@ -28,38 +28,11 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DeliveryRemoveDriverFromDeliveryRequest {
-  public static final String SERIALIZED_NAME_DRIVER_I_D = "driverID";
-  @SerializedName(SERIALIZED_NAME_DRIVER_I_D)
-  private String driverID;
-
   public static final String SERIALIZED_NAME_DELIVERY_I_D = "deliveryID";
   @SerializedName(SERIALIZED_NAME_DELIVERY_I_D)
   private String deliveryID;
-
-
-  public DeliveryRemoveDriverFromDeliveryRequest driverID(String driverID) {
-    
-    this.driverID = driverID;
-    return this;
-  }
-
-   /**
-   * Get driverID
-   * @return driverID
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getDriverID() {
-    return driverID;
-  }
-
-
-  public void setDriverID(String driverID) {
-    this.driverID = driverID;
-  }
 
 
   public DeliveryRemoveDriverFromDeliveryRequest deliveryID(String deliveryID) {
@@ -94,13 +67,12 @@ public class DeliveryRemoveDriverFromDeliveryRequest {
       return false;
     }
     DeliveryRemoveDriverFromDeliveryRequest deliveryRemoveDriverFromDeliveryRequest = (DeliveryRemoveDriverFromDeliveryRequest) o;
-    return Objects.equals(this.driverID, deliveryRemoveDriverFromDeliveryRequest.driverID) &&
-        Objects.equals(this.deliveryID, deliveryRemoveDriverFromDeliveryRequest.deliveryID);
+    return Objects.equals(this.deliveryID, deliveryRemoveDriverFromDeliveryRequest.deliveryID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(driverID, deliveryID);
+    return Objects.hash(deliveryID);
   }
 
 
@@ -108,7 +80,6 @@ public class DeliveryRemoveDriverFromDeliveryRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryRemoveDriverFromDeliveryRequest {\n");
-    sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
     sb.append("}");
     return sb.toString();

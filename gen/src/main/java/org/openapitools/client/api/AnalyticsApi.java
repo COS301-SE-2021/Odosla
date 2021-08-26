@@ -27,6 +27,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import org.openapitools.client.model.AnalyticsCreateFinancialReportRequest;
+import org.openapitools.client.model.AnalyticsCreateFinancialReportResponse;
+import org.openapitools.client.model.AnalyticsCreateMonthlyReportRequest;
+import org.openapitools.client.model.AnalyticsCreateMonthlyReportResponse;
 import org.openapitools.client.model.AnalyticsCreateUserReportRequest;
 import org.openapitools.client.model.AnalyticsCreateUserReportResponse;
 
@@ -55,6 +59,228 @@ public class AnalyticsApi {
         this.localVarApiClient = apiClient;
     }
 
+    /**
+     * Build call for createFinancialReport
+     * @param analyticsCreateFinancialReportRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call createFinancialReportCall(AnalyticsCreateFinancialReportRequest analyticsCreateFinancialReportRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = analyticsCreateFinancialReportRequest;
+
+        // create path and map variables
+        String localVarPath = "/analytics/createFinancialReport";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call createFinancialReportValidateBeforeCall(AnalyticsCreateFinancialReportRequest analyticsCreateFinancialReportRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'analyticsCreateFinancialReportRequest' is set
+        if (analyticsCreateFinancialReportRequest == null) {
+            throw new ApiException("Missing the required parameter 'analyticsCreateFinancialReportRequest' when calling createFinancialReport(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = createFinancialReportCall(analyticsCreateFinancialReportRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for creating user report
+     * Refer to summary
+     * @param analyticsCreateFinancialReportRequest The input body required by this request (required)
+     * @return AnalyticsCreateFinancialReportResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public AnalyticsCreateFinancialReportResponse createFinancialReport(AnalyticsCreateFinancialReportRequest analyticsCreateFinancialReportRequest) throws ApiException {
+        ApiResponse<AnalyticsCreateFinancialReportResponse> localVarResp = createFinancialReportWithHttpInfo(analyticsCreateFinancialReportRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for creating user report
+     * Refer to summary
+     * @param analyticsCreateFinancialReportRequest The input body required by this request (required)
+     * @return ApiResponse&lt;AnalyticsCreateFinancialReportResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<AnalyticsCreateFinancialReportResponse> createFinancialReportWithHttpInfo(AnalyticsCreateFinancialReportRequest analyticsCreateFinancialReportRequest) throws ApiException {
+        okhttp3.Call localVarCall = createFinancialReportValidateBeforeCall(analyticsCreateFinancialReportRequest, null);
+        Type localVarReturnType = new TypeToken<AnalyticsCreateFinancialReportResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for creating user report (asynchronously)
+     * Refer to summary
+     * @param analyticsCreateFinancialReportRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call createFinancialReportAsync(AnalyticsCreateFinancialReportRequest analyticsCreateFinancialReportRequest, final ApiCallback<AnalyticsCreateFinancialReportResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = createFinancialReportValidateBeforeCall(analyticsCreateFinancialReportRequest, _callback);
+        Type localVarReturnType = new TypeToken<AnalyticsCreateFinancialReportResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for createMonthlyReport
+     * @param analyticsCreateMonthlyReportRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call createMonthlyReportCall(AnalyticsCreateMonthlyReportRequest analyticsCreateMonthlyReportRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = analyticsCreateMonthlyReportRequest;
+
+        // create path and map variables
+        String localVarPath = "/analytics/createMonthlyReport";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call createMonthlyReportValidateBeforeCall(AnalyticsCreateMonthlyReportRequest analyticsCreateMonthlyReportRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'analyticsCreateMonthlyReportRequest' is set
+        if (analyticsCreateMonthlyReportRequest == null) {
+            throw new ApiException("Missing the required parameter 'analyticsCreateMonthlyReportRequest' when calling createMonthlyReport(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = createMonthlyReportCall(analyticsCreateMonthlyReportRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for creating monthly report
+     * Refer to summary
+     * @param analyticsCreateMonthlyReportRequest The input body required by this request (required)
+     * @return AnalyticsCreateMonthlyReportResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public AnalyticsCreateMonthlyReportResponse createMonthlyReport(AnalyticsCreateMonthlyReportRequest analyticsCreateMonthlyReportRequest) throws ApiException {
+        ApiResponse<AnalyticsCreateMonthlyReportResponse> localVarResp = createMonthlyReportWithHttpInfo(analyticsCreateMonthlyReportRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for creating monthly report
+     * Refer to summary
+     * @param analyticsCreateMonthlyReportRequest The input body required by this request (required)
+     * @return ApiResponse&lt;AnalyticsCreateMonthlyReportResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<AnalyticsCreateMonthlyReportResponse> createMonthlyReportWithHttpInfo(AnalyticsCreateMonthlyReportRequest analyticsCreateMonthlyReportRequest) throws ApiException {
+        okhttp3.Call localVarCall = createMonthlyReportValidateBeforeCall(analyticsCreateMonthlyReportRequest, null);
+        Type localVarReturnType = new TypeToken<AnalyticsCreateMonthlyReportResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for creating monthly report (asynchronously)
+     * Refer to summary
+     * @param analyticsCreateMonthlyReportRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns whether Report was downloaded </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call createMonthlyReportAsync(AnalyticsCreateMonthlyReportRequest analyticsCreateMonthlyReportRequest, final ApiCallback<AnalyticsCreateMonthlyReportResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = createMonthlyReportValidateBeforeCall(analyticsCreateMonthlyReportRequest, _callback);
+        Type localVarReturnType = new TypeToken<AnalyticsCreateMonthlyReportResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
     /**
      * Build call for createUserReport
      * @param analyticsCreateUserReportRequest The input body required by this request (required)
