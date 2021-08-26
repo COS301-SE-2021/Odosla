@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final kHintTextStyle = TextStyle(
   color: Colors.white54,
@@ -94,3 +96,54 @@ const card2 = const Color(0xFF00CECE);
 const card3 = const Color(0xFFFB777A);
 const card4 = const Color(0xFFA5A5A5);
 
+class ColorConstants {
+  static const kwhiteColor = Colors.white;
+  static const kblackColor = Colors.black;
+  static const korangeColor = Color(0xfffe752f);
+  static const kgreyColor = Color(0xff909090);
+  static const gblackColor = Color(0xff242424);
+  static const cblackColor = Color(0xFF313131);
+  static const corangeColor = Color(0xffdd601e);
+}
+
+
+class Constants {
+  static List<Icon> iconList = [
+    Icon(
+      Icons.mail_outline,
+      color: ColorConstants.kwhiteColor,
+    ),
+    Icon(
+      FontAwesomeIcons.paypal,
+      color: ColorConstants.kwhiteColor,
+    ),
+    Icon(
+      CupertinoIcons.settings,
+      color: ColorConstants.kwhiteColor,
+    ),
+  ];
+
+  static List<String> titleList = [
+    "Salary",
+    "Paypal",
+    "Car Repair",
+  ];
+
+  static List<String> subtitleList = [
+    "Belong Interactive",
+    "Webtech",
+    "Car Engine repair",
+  ];
+
+  static List<int> amountList = [
+    2010,
+    12010,
+    232010,
+  ];
+
+  static List<String> strList = [
+    "1 \n Month",
+    "6 \n Month",
+    "1 \n Year",
+  ];
+}

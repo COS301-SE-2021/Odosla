@@ -29,6 +29,7 @@ public class JwtUtil {
         final Claims claims=extractAllClaims(token);
         return (String) claims.get("userType");
     }
+
     public <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
         final Claims claims=extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -92,19 +93,5 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
-//    public Boolean validateToken(String token, User user){
-//        final String email =extractEmail(token);
-//       final String userType =extractUserType(token);
-//        if(user.getAccountType()==UserType.DRIVER){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("DRIVER"));
-//        } else if(user.getAccountType()==UserType.SHOPPER){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("SHOPPER"));
-//        } else if(user.getAccountType()==UserType.ADMIN){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("ADMIN"));
-//        }else if (user.getAccountType()==UserType.CUSTOMER){
-//            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("CUSTOMER"));
-//        }
-//        return false;
-//    }
 
 }

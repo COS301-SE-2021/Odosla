@@ -1,6 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/admin/admin_main_screen.dart';
+import 'package:flutter_employee_app/pages/admin/home.dart';
 import 'package:flutter_employee_app/pages/driver/driver_main_screen.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_driver_account_screen.dart';
@@ -80,7 +81,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:AdminHomeScreen(1),
+            home:HomePageScreen(),
             routes: routes,
           );
         },
