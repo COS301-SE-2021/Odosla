@@ -28,38 +28,11 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DeliveryAssignDriverToDeliveryRequest {
-  public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
-  @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
-  private String jwtToken;
-
   public static final String SERIALIZED_NAME_DELIVERY_I_D = "deliveryID";
   @SerializedName(SERIALIZED_NAME_DELIVERY_I_D)
   private String deliveryID;
-
-
-  public DeliveryAssignDriverToDeliveryRequest jwtToken(String jwtToken) {
-    
-    this.jwtToken = jwtToken;
-    return this;
-  }
-
-   /**
-   * Get jwtToken
-   * @return jwtToken
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getJwtToken() {
-    return jwtToken;
-  }
-
-
-  public void setJwtToken(String jwtToken) {
-    this.jwtToken = jwtToken;
-  }
 
 
   public DeliveryAssignDriverToDeliveryRequest deliveryID(String deliveryID) {
@@ -94,13 +67,12 @@ public class DeliveryAssignDriverToDeliveryRequest {
       return false;
     }
     DeliveryAssignDriverToDeliveryRequest deliveryAssignDriverToDeliveryRequest = (DeliveryAssignDriverToDeliveryRequest) o;
-    return Objects.equals(this.jwtToken, deliveryAssignDriverToDeliveryRequest.jwtToken) &&
-        Objects.equals(this.deliveryID, deliveryAssignDriverToDeliveryRequest.deliveryID);
+    return Objects.equals(this.deliveryID, deliveryAssignDriverToDeliveryRequest.deliveryID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(jwtToken, deliveryID);
+    return Objects.hash(deliveryID);
   }
 
 
@@ -108,7 +80,6 @@ public class DeliveryAssignDriverToDeliveryRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryAssignDriverToDeliveryRequest {\n");
-    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
     sb.append("}");
     return sb.toString();

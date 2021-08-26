@@ -30,12 +30,8 @@ import org.openapitools.client.model.GeoPointObject;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DeliveryGetNextOrderForDriverRequest {
-  public static final String SERIALIZED_NAME_DRIVER_I_D = "driverID";
-  @SerializedName(SERIALIZED_NAME_DRIVER_I_D)
-  private String driverID;
-
   public static final String SERIALIZED_NAME_CURRENT_LOCATION = "currentLocation";
   @SerializedName(SERIALIZED_NAME_CURRENT_LOCATION)
   private GeoPointObject currentLocation;
@@ -43,29 +39,6 @@ public class DeliveryGetNextOrderForDriverRequest {
   public static final String SERIALIZED_NAME_RANGE_OF_DELIVERY = "rangeOfDelivery";
   @SerializedName(SERIALIZED_NAME_RANGE_OF_DELIVERY)
   private BigDecimal rangeOfDelivery;
-
-
-  public DeliveryGetNextOrderForDriverRequest driverID(String driverID) {
-    
-    this.driverID = driverID;
-    return this;
-  }
-
-   /**
-   * Get driverID
-   * @return driverID
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getDriverID() {
-    return driverID;
-  }
-
-
-  public void setDriverID(String driverID) {
-    this.driverID = driverID;
-  }
 
 
   public DeliveryGetNextOrderForDriverRequest currentLocation(GeoPointObject currentLocation) {
@@ -123,14 +96,13 @@ public class DeliveryGetNextOrderForDriverRequest {
       return false;
     }
     DeliveryGetNextOrderForDriverRequest deliveryGetNextOrderForDriverRequest = (DeliveryGetNextOrderForDriverRequest) o;
-    return Objects.equals(this.driverID, deliveryGetNextOrderForDriverRequest.driverID) &&
-        Objects.equals(this.currentLocation, deliveryGetNextOrderForDriverRequest.currentLocation) &&
+    return Objects.equals(this.currentLocation, deliveryGetNextOrderForDriverRequest.currentLocation) &&
         Objects.equals(this.rangeOfDelivery, deliveryGetNextOrderForDriverRequest.rangeOfDelivery);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(driverID, currentLocation, rangeOfDelivery);
+    return Objects.hash(currentLocation, rangeOfDelivery);
   }
 
 
@@ -138,7 +110,6 @@ public class DeliveryGetNextOrderForDriverRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryGetNextOrderForDriverRequest {\n");
-    sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
     sb.append("    currentLocation: ").append(toIndentedString(currentLocation)).append("\n");
     sb.append("    rangeOfDelivery: ").append(toIndentedString(rangeOfDelivery)).append("\n");
     sb.append("}");

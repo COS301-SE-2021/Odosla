@@ -28,15 +28,11 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DeliveryGetDeliveryDetailRequest {
   public static final String SERIALIZED_NAME_DELIVERY_I_D = "deliveryID";
   @SerializedName(SERIALIZED_NAME_DELIVERY_I_D)
   private String deliveryID;
-
-  public static final String SERIALIZED_NAME_ADMIN_I_D = "adminID";
-  @SerializedName(SERIALIZED_NAME_ADMIN_I_D)
-  private String adminID;
 
 
   public DeliveryGetDeliveryDetailRequest deliveryID(String deliveryID) {
@@ -62,29 +58,6 @@ public class DeliveryGetDeliveryDetailRequest {
   }
 
 
-  public DeliveryGetDeliveryDetailRequest adminID(String adminID) {
-    
-    this.adminID = adminID;
-    return this;
-  }
-
-   /**
-   * Get adminID
-   * @return adminID
-  **/
-  @javax.annotation.Nullable
-  @ApiModelProperty(value = "")
-
-  public String getAdminID() {
-    return adminID;
-  }
-
-
-  public void setAdminID(String adminID) {
-    this.adminID = adminID;
-  }
-
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -94,13 +67,12 @@ public class DeliveryGetDeliveryDetailRequest {
       return false;
     }
     DeliveryGetDeliveryDetailRequest deliveryGetDeliveryDetailRequest = (DeliveryGetDeliveryDetailRequest) o;
-    return Objects.equals(this.deliveryID, deliveryGetDeliveryDetailRequest.deliveryID) &&
-        Objects.equals(this.adminID, deliveryGetDeliveryDetailRequest.adminID);
+    return Objects.equals(this.deliveryID, deliveryGetDeliveryDetailRequest.deliveryID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(deliveryID, adminID);
+    return Objects.hash(deliveryID);
   }
 
 
@@ -109,7 +81,6 @@ public class DeliveryGetDeliveryDetailRequest {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryGetDeliveryDetailRequest {\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
-    sb.append("    adminID: ").append(toIndentedString(adminID)).append("\n");
     sb.append("}");
     return sb.toString();
   }
