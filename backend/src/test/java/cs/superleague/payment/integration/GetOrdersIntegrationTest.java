@@ -118,49 +118,9 @@ public class GetOrdersIntegrationTest {
     }
 
     @Test
-    @DisplayName("When request object parameter - JWTToken - is not specified")
-    void UnitTest_testingNull_JWTToken_Parameter_RequestObject(){
-        GetOrdersRequest request=new GetOrdersRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.getOrders(request));
-        assertEquals("JWTToken is null in GetUsersRequest request - could not return orders", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When request object parameter - JWTToken - is invalid")
-    void UnitTest_testing_InvalidJWTToken_Parameter_RequestObject(){
-        GetOrdersRequest request = new GetOrdersRequest("hello");
-
-        try {
-            Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.getOrders(request));
-            assertEquals("Invalid JWTToken - could not get Orders", thrown.getMessage());
-        }catch (Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
-    @Description("Tests for when JWT does not return admin userType")
-    @DisplayName("When request object parameter - JWT does not return admin userType")
-    void UnitTest_testing_JWTToken_Parameter_RequestObject_InvalidUserType(){
-        GetOrdersRequest request = new GetOrdersRequest(shopperJWT);
-
-        try {
-            GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(shopper,true, Calendar.getInstance().getTime(),"User successfully returned");
-            GetOrdersResponse response = paymentService.getOrders(request);
-            assertFalse(response.isSuccess());
-            assertNull(response.getOrders());
-            assertEquals("JWTToken returns an invalid user type - could not get Orders", response.getMessage());
-        }catch (Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     @DisplayName("When request object parameter - JWTToken - valid user type")
     void UnitTest_testing_JWTToken_Parameter_RequestObject_ValidUserType(){
-        GetOrdersRequest request = new GetOrdersRequest(adminJWT);
+        GetOrdersRequest request = new GetOrdersRequest();
 
         try {
             GetOrdersResponse response = paymentService.getOrders(request);
