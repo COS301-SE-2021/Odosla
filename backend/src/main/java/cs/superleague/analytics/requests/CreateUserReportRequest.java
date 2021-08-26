@@ -3,32 +3,27 @@ package cs.superleague.analytics.requests;
 import cs.superleague.analytics.dataclass.ReportType;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 public class CreateUserReportRequest {
 
-    private final String JWTToken;
-    private final Calendar startDate;
-    private final Calendar endDate;
+    private final Date startDate;
+    private final Date endDate;
     private final ReportType reportType;
 
 
-    public CreateUserReportRequest(String JWTToken, Calendar startDate, Calendar endDate, ReportType reportType) {
-        this.JWTToken = JWTToken;
+    public CreateUserReportRequest(Date startDate, Date endDate, ReportType reportType) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.reportType = reportType;
     }
 
-    public String getJWTToken() {
-        return JWTToken;
-    }
-
-    public Calendar getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public Calendar getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 

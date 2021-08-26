@@ -825,35 +825,10 @@ import java.util.List;50"
     public GetOrdersResponse getOrders(GetOrdersRequest request) throws PaymentException {
 
         String message = "Users successfully returned";
-        Admin admin = null;
         List<Order> orders = new ArrayList<>();
-        ServiceSelector serviceSelector;
 
         if(request == null){
             throw new InvalidRequestException("GetOrders request is null - could not return orders");
-        }
-
-        if(request.getJWTToken() == null){
-            throw new InvalidRequestException("JWTToken is null in GetUsersRequest request - could not return orders");
-        }
-
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse;
-
-        try {
-            getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
-        }catch (Exception e){
-            throw new InvalidRequestException("Invalid JWTToken - could not get Orders");
-        }
-
-        if(getCurrentUserResponse.getUser() == null){
-            message = "No Admin Found - could not get Orders";
-            return new GetOrdersResponse(null, false, message, new Date());
-        }
-
-        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
-            message = "JWTToken returns an invalid user type - could not get Orders";
-            return new GetOrdersResponse(null, false, message, new Date());
         }
 
         orders.addAll(orderRepo.findAll());

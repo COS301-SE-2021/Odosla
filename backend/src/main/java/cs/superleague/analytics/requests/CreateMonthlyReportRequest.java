@@ -6,16 +6,10 @@ import java.util.Calendar;
 
 public class CreateMonthlyReportRequest {
 
-    private final String JWTToken;
     private final ReportType reportType;
 
-    public CreateMonthlyReportRequest(String JWTToken,ReportType reportType) {
-        this.JWTToken = JWTToken;
+    public CreateMonthlyReportRequest(ReportType reportType) {
         this.reportType = reportType;
-    }
-
-    public String getJWTToken() {
-        return JWTToken;
     }
 
     public ReportType getReportType() {
