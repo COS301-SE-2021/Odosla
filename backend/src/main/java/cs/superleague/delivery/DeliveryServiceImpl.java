@@ -3,6 +3,8 @@ package cs.superleague.delivery;
 import cs.superleague.delivery.dataclass.Delivery;
 import cs.superleague.delivery.dataclass.DeliveryDetail;
 import cs.superleague.delivery.dataclass.DeliveryStatus;
+import cs.superleague.delivery.exceptions.DeliveryDoesNotExistException;
+import cs.superleague.delivery.exceptions.DeliveryException;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
@@ -393,6 +395,33 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         UpdateDeliveryStatusResponse response = new UpdateDeliveryStatusResponse("Successful status update.");
         return response;
+    }
+
+    @Override
+    public GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException{
+
+        Delivery delivery = null;
+        String message = "Delivery with given ID successfully returned.";
+
+        if(request == null){
+            throw new InvalidRequestException("GetDeliveryByUUID request is null - could not return delivery entity");
+        }
+
+        if(request.getDeliveryID() == null){
+            throw  new InvalidRequestException("DeliveryID is null in GetDeliveryByUUID request - could not return delivery entity");
+        }
+
+        try{
+            delivery = deliveryRepo.findById(request.getDeliveryID()).orElse(null);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+
+        if(delivery == null){
+            throw new DeliveryDoesNotExistException("Delivery with given ID does not exist in the repository - could not return delivery");
+        }
+
+        return new GetDeliveryByUUIDResponse(delivery, new Date(), message);
     }
 
     //Helpers
