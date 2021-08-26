@@ -731,13 +731,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not add Shopper");
             }
 
-
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
-            /* Get Shopper by UUID- get Shopper Object */
-            /* Shopper shopper */
-            //if(listOfShoppers!=null){
-                /* Get Shopper by UUID- get Shopper Object */
-                /* Shopper shopper */
+
             GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
             GetShopperByUUIDResponse shopperResponse;
             try {
@@ -786,11 +781,6 @@ public class ShoppingServiceImpl implements ShoppingService {
                 response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
 
             }
-
-//            }
-//            else{
-//                response=new AddShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
-//            }
 
         }
         else{
