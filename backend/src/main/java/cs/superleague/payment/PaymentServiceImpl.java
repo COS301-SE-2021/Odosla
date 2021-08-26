@@ -815,26 +815,10 @@ import java.util.List;50"
             throw new InvalidRequestException("GetOrders request is null - could not return orders");
         }
 
-        if(request.getJWTToken() == null){
-            throw new InvalidRequestException("JWTToken is null in GetUsersRequest request - could not return orders");
-        }
+        CurrentUser currentUser = new CurrentUser();
 
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse;
-
-        try {
-            getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
-        }catch (Exception e){
-            throw new InvalidRequestException("Invalid JWTToken - could not get Orders");
-        }
-
-        if(getCurrentUserResponse.getUser() == null){
+        if(currentUser == null){
             message = "No Admin Found - could not get Orders";
-            return new GetOrdersResponse(null, false, message, new Date());
-        }
-
-        if(getCurrentUserResponse.getUser().getAccountType() != UserType.ADMIN){
-            message = "JWTToken returns an invalid user type - could not get Orders";
             return new GetOrdersResponse(null, false, message, new Date());
         }
 
