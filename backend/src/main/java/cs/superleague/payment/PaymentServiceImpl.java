@@ -751,15 +751,11 @@ import java.util.List;50"
         if (request == null){
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
         }
-        if (request.getJwtToken() == null){
-            throw new InvalidRequestException("JWTToken of Get Customers Active Orders is null");
-        }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
-        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
-        if (getCurrentUserResponse.getUser() == null){
-            throw new UserDoesNotExistException("Invalid jwtToken, no user found");
-        }
-        Customer customer = (Customer) getCurrentUserResponse.getUser();
+
+        CurrentUser currentUser = new CurrentUser();
+
+        Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
+
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
         if (orders == null){
             throw new OrderDoesNotExist("No Orders found for this user in the database.");
