@@ -299,7 +299,7 @@ public class PaymentServiceImpl implements PaymentService {
                     else {
                         throw new StoreClosedException("Store is currently closed - could not create order");
                     }
-            }
+
 
         }else{
             throw new InvalidRequestException("Invalid submit order request received - order unsuccessfully created.");
