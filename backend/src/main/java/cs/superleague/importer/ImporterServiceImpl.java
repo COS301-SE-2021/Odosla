@@ -59,11 +59,11 @@ public class ImporterServiceImpl implements ImporterService{
                 Item item = new Item();
                 for(k=0; k < file.length(); k++)
                 {
-                    if(file.charAt(k) != ',' && file.charAt(k) != '\n' )
+                    if(file.charAt(k) != ';' && file.charAt(k) != '\n' )
                     {
                         currentWord += file.charAt(k);
                     }
-                    else if(file.charAt(k) == ',')
+                    else if(file.charAt(k) == ';')
                     {
                         switch (counter){
                             case 0:
@@ -185,11 +185,11 @@ public class ImporterServiceImpl implements ImporterService{
 
                 for(k=0; k < file.length(); k++)
                 {
-                    if(file.charAt(k) != ',' && file.charAt(k) != '\n' )
+                    if(file.charAt(k) != ';' && file.charAt(k) != '\n' )
                     {
                         currentWord += file.charAt(k);
                     }
-                    else if(file.charAt(k) == ',')
+                    else if(file.charAt(k) == ';')
                     {
                         switch (counter){
                             case 0:
