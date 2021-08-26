@@ -25,6 +25,8 @@ import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.CustomerRepo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,12 +34,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,6 +72,7 @@ public class SubmitOrderIntegrationTest {
     @Autowired
     JwtUtil jwtUtil;
 
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
 
     /* Requests */
     SubmitOrderRequest submitOrderRequest;
@@ -127,6 +131,21 @@ public class SubmitOrderIntegrationTest {
         store=new Store(storeID,"StoreBrand",stock,3,currentOrders,orderQueue,6,true);
         store.setStoreLocation(geoPoint2);
 
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         itemRepo.save(item1);
         itemRepo.save(item2);
         itemRepo.save(item3);
@@ -142,6 +161,7 @@ public class SubmitOrderIntegrationTest {
         orderRepo.deleteAll();
         catalogueRepo.deleteAll();
         itemRepo.deleteAll();
+        SecurityContextHolder.clearContext();
 
     }
 
@@ -160,23 +180,23 @@ public class SubmitOrderIntegrationTest {
     @Description("Tests for if the given order request on order creation has a null parameter - exception should be thrown")
     @DisplayName("When order parameter of request object null")
     void IntegrationTest_CreateOrderWithNullParamterRequest() throws InvalidRequestException {
-        submitOrderRequest = new SubmitOrderRequest(null,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest = new SubmitOrderRequest(itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,null,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(null,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,null,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,null,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,null,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,null,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,null, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID,null, 3.3, 3.5, "Homer Street");
         assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -187,7 +207,7 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("When order parameter gives id of a store that does not exist")
     void IntegrationTest_StoreDoesNotExist() throws InvalidRequestException {
         UUID storeID2=UUID.randomUUID();
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID2,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID2,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(StoreDoesNotExistException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -203,7 +223,7 @@ public class SubmitOrderIntegrationTest {
         //store.setOpen(false);
         //storeRepo.save(store);
         storeRepo.save(updateStore);
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         assertThrows(StoreClosedException.class, ()-> {
             SubmitOrderResponse submitOrderResponse = ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         });
@@ -217,10 +237,9 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("SubmitOrderRequest correct construction")
     void IntegrationTest_SubmitOrderRequestConstruction() {
 
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
 
         assertNotNull(submitOrderRequest);
-        assertEquals(jwtToken, submitOrderRequest.getJwtToken());
         assertEquals(itemList,submitOrderRequest.getListOfItems());
         assertEquals(3.0,submitOrderRequest.getDiscount());
         assertEquals(storeID,submitOrderRequest.getStoreID());
@@ -232,7 +251,7 @@ public class SubmitOrderIntegrationTest {
     @DisplayName("When Order is created correctly")
     void IntegrationTest_CreatOrderConstruction() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException {
         Order order=null;
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
 
         if(orderRepo.findById(submitOrderResponse.getOrder().getOrderID()).isPresent()){
