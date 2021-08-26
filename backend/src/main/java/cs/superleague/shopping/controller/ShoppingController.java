@@ -276,7 +276,7 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
-            GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()), body.getJwtToken());
+            GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
             GetNextQueuedResponse getNextQueuedResponse = ServiceSelector.getShoppingService().getNextQueued(getNextQueuedRequest);
             try {
 
