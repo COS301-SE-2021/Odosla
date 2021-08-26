@@ -103,7 +103,7 @@ public class ImporterServiceImpl implements ImporterService{
                                 break;
 
                             case 4:
-                                item.setImageUrl(String.valueOf(currentWord));
+                                item.setImageUrl(currentWord);
                                 counter++;
                                 currentWord = "";
                                 break;
@@ -252,13 +252,13 @@ public class ImporterServiceImpl implements ImporterService{
                                 break;
 
                             case 8:
-                                location.setLatitude(Double.valueOf(currentWord));
+                                location.setLatitude(Double.parseDouble(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
 
                             case 9:
-                                location.setLongitude(Double.valueOf(currentWord));
+                                location.setLongitude(Double.parseDouble(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
