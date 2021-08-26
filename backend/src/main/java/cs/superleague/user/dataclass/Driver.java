@@ -16,6 +16,9 @@ public class Driver extends User {
     @Id
     private UUID driverID;
 
+    @Column(name = "deliveryid")
+    private UUID deliveryID;
+
     @Column(name = "total_ratings")
     private double totalRatings=0;
 
@@ -69,6 +72,14 @@ public class Driver extends User {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public UUID getDeliveryID() {
+        return deliveryID;
+    }
+
+    public void setDeliveryID(UUID deliveryID) {
+        this.deliveryID = deliveryID;
     }
 
     public GeoPoint getCurrentAddress() {
