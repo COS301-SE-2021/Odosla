@@ -197,41 +197,17 @@ public class CreateMonthlyReportIntegrationTest {
     }
 
     @Test
-    @DisplayName("When adminID parameter is not specified")
-    void IntegrationTest_testingNullRequestOrderIDParameter(){
-        request = new CreateMonthlyReportRequest(null, ReportType.CSV);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createMonthlyReport(request));
-        assertEquals("Exception: JWTToken in request object is null", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When ReportType parameter is not specified")
     void IntegrationTest_testingNullRequestReportTypeParameter(){
-        request = new CreateMonthlyReportRequest("adminID", null);
+        request = new CreateMonthlyReportRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createMonthlyReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When Invalid JWTToken parameter")
-    void IntegrationTest_testingInvalidAdminParameter(){
-        request = new CreateMonthlyReportRequest(jwtTokenCustomer, ReportType.CSV);
-
-        try {
-            response =  analyticsService.createMonthlyReport(request);
-            assertEquals("User is not an admin - Could not create report", response.getMessage());
-            assertFalse(response.isSuccess());
-
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     @DisplayName("When validJWT parameter")
     void IntegrationTest_testingValidAdminJWTParameterCSV(){
-        request = new CreateMonthlyReportRequest(jwtTokenAdmin, ReportType.CSV);
+        request = new CreateMonthlyReportRequest(ReportType.CSV);
 
         try {
             response =  analyticsService.createMonthlyReport(request);
@@ -247,7 +223,7 @@ public class CreateMonthlyReportIntegrationTest {
     @Test
     @DisplayName("When validJWT parameter")
     void IntegrationTest_testingValidAdminJWTParameterPDF(){
-        request = new CreateMonthlyReportRequest(jwtTokenAdmin, ReportType.PDF);
+        request = new CreateMonthlyReportRequest(ReportType.PDF);
 
         try {
             response =  analyticsService.createMonthlyReport(request);

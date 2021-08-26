@@ -30,9 +30,8 @@ public class CreateUserAnalyticsData {
 
     private final Date startDate;
     private final Date endDate;
-    private UUID adminID;
 
-    public CreateUserAnalyticsData(Date startDate, Date endDate, UUID adminID, UserService userService){
+    public CreateUserAnalyticsData(Date startDate, Date endDate, UserService userService){
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();
@@ -47,12 +46,11 @@ public class CreateUserAnalyticsData {
         this.ratingSum = 0;
         this.topDrivers = new Driver[10];
 
-        this.adminID = adminID;
         this.startDate = startDate;
         this.endDate = endDate;
         this.userService = userService;
 
-        GetUsersRequest request = new GetUsersRequest(adminID.toString());
+        GetUsersRequest request = new GetUsersRequest();
         try{
             response = this.userService.getUsers(request);
         }catch (Exception e){

@@ -117,17 +117,9 @@ public class CreateUserReportIntegrationTest {
     }
 
     @Test
-    @DisplayName("When adminID parameter is not specified")
-    void IntegrationTest_testingNullRequestOrderIDParameter(){
-        request = new CreateUserReportRequest(null, new Date(), new Date(), ReportType.CSV);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
-        assertEquals("Exception: JWTToken in request object is null", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When ReportType parameter is not specified")
     void IntegrationTest_testingNullRequestReportTypeParameter(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), new Date(), null);
+        request = new CreateUserReportRequest(new Date(), new Date(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
@@ -135,7 +127,7 @@ public class CreateUserReportIntegrationTest {
     @Test
     @DisplayName("When StartDate parameter is not specified")
     void IntegrationTest_testingNullRequestStartDateParameter(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, null, new Date(), ReportType.CSV);
+        request = new CreateUserReportRequest(null, new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: Start Date in request object is null", thrown.getMessage());
     }
@@ -143,30 +135,15 @@ public class CreateUserReportIntegrationTest {
     @Test
     @DisplayName("When endDate parameter is not specified")
     void IntegrationTest_testingNullRequestEndDateParameter(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), null, ReportType.CSV);
+        request = new CreateUserReportRequest(new Date(), null, ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: End Date in request object is null", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When Invalid adminID parameter")
-    void IntegrationTest_testingInvalidAdminParameter(){
-        request = new CreateUserReportRequest(jwtTokenCustomer, new Date(), new Date(), ReportType.CSV);
-
-        try {
-            response =  analyticsService.createUserReport(request);
-            assertEquals("User is not an admin - Could not create report", response.getMessage());
-            assertFalse(response.isSuccess());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     @DisplayName("When valid adminID parameter")
     void IntegrationTest_testingValidAdminParameterPDF(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), new Date(), ReportType.PDF);
+        request = new CreateUserReportRequest(new Date(), new Date(), ReportType.PDF);
 
         try{
             response = analyticsService.createUserReport(request);
@@ -181,7 +158,7 @@ public class CreateUserReportIntegrationTest {
     @Test
     @DisplayName("When valid adminID parameter")
     void IntegrationTest_testingValidAdminParameterCSV(){
-        request = new CreateUserReportRequest(jwtTokenAdmin, new Date(), new Date(), ReportType.CSV);
+        request = new CreateUserReportRequest(new Date(), new Date(), ReportType.CSV);
 
         try{
             response = analyticsService.createUserReport(request);

@@ -140,8 +140,7 @@ public class AnalyticsController implements AnalyticsApi {
             Date startDate = sdf.parse(body.getStartDate());
             Date endDate = sdf.parse(body.getEndDate());
 
-            CreateUserReportRequest req = new CreateUserReportRequest(body.getJwTToken(),
-                    startDate, endDate, ReportType.valueOf(body.getReportType()));
+            CreateUserReportRequest req = new CreateUserReportRequest(startDate, endDate, ReportType.valueOf(body.getReportType()));
             CreateUserReportResponse createUserReportResponse = ServiceSelector.getAnalyticsService().createUserReport(req);
 
             try {
@@ -176,8 +175,7 @@ public class AnalyticsController implements AnalyticsApi {
             Date startDate = sdf.parse(body.getStartDate());
             Date endDate = sdf.parse(body.getEndDate());
 
-            CreateFinancialReportRequest req = new CreateFinancialReportRequest(body.getJwTToken(),
-                    startDate, endDate, ReportType.valueOf(body.getReportType()));
+            CreateFinancialReportRequest req = new CreateFinancialReportRequest(startDate, endDate, ReportType.valueOf(body.getReportType()));
             CreateFinancialReportResponse createFinancialReportResponse = ServiceSelector.getAnalyticsService().createFinancialReport(req);
 
             try {
@@ -209,8 +207,7 @@ public class AnalyticsController implements AnalyticsApi {
 
         try{
 
-            CreateMonthlyReportRequest req = new CreateMonthlyReportRequest(body.getJwTToken(),
-                    ReportType.valueOf(body.getReportType()));
+            CreateMonthlyReportRequest req = new CreateMonthlyReportRequest(ReportType.valueOf(body.getReportType()));
             CreateMonthlyReportResponse createMonthlyReportResponse = ServiceSelector.getAnalyticsService().createMonthlyReport(req);
 
             try {
