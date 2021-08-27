@@ -252,6 +252,54 @@ public class DeliveryController implements DeliveryApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<DeliveryGetDeliveryByUUIDResponse> getDeliveryByUUID(DeliveryGetDeliveryByUUIDRequest body) {
+
+        DeliveryGetDeliveryByUUIDResponse response = new DeliveryGetDeliveryByUUIDResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetDeliveryByUUIDRequest getDeliveryByUUIDRequest = new GetDeliveryByUUIDRequest(UUID.fromString(body.getDeliveryID()));
+            GetDeliveryByUUIDResponse getDeliveryByUUIDResponse = ServiceSelector.getDeliveryService().getDeliveryByUUID(getDeliveryByUUIDRequest);
+
+            DeliveryObject deliveryObject = new DeliveryObject();
+            deliveryObject.setDeliveryID(getDeliveryByUUIDResponse.getDelivery().getDeliveryID().toString());
+
+            GeoPointObject dropOffLocation=new GeoPointObject();
+            dropOffLocation.setAddress(getDeliveryByUUIDResponse.getDelivery().getDropOffLocation().getAddress());
+            dropOffLocation.setLatitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getDropOffLocation().getLatitude()));
+            dropOffLocation.setLongitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getDropOffLocation().getLongitude()));
+            GeoPointObject pickUpLocation = new GeoPointObject();
+            pickUpLocation.setAddress(getDeliveryByUUIDResponse.getDelivery().getPickUpLocation().getAddress());
+            pickUpLocation.setLatitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getPickUpLocation().getLatitude()));
+            pickUpLocation.setLongitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getPickUpLocation().getLongitude()));
+
+            deliveryObject.setDropOffLocation(dropOffLocation);
+            deliveryObject.setPickUpLocation(pickUpLocation);
+            deliveryObject.setOrderID(getDeliveryByUUIDResponse.getDelivery().getOrderID().toString());
+            deliveryObject.setCustomerId(getDeliveryByUUIDResponse.getDelivery().getCustomerId().toString());
+            deliveryObject.setStoreId(getDeliveryByUUIDResponse.getDelivery().getStoreId().toString());
+            if(getDeliveryByUUIDResponse.getDelivery().getDriverId() != null)
+            {
+                deliveryObject.setDriverId(getDeliveryByUUIDResponse.getDelivery().getDriverId().toString());
+            }
+
+            deliveryObject.setStatus(getDeliveryByUUIDResponse.getDelivery().getStatus().toString());
+            deliveryObject.setCost(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getCost()));
+            deliveryObject.setCompleted(getDeliveryByUUIDResponse.getDelivery().isCompleted());
+            deliveryObject.setDeliveryDetail(populateDeliveryDetails(getDeliveryByUUIDResponse.getDelivery().getDeliveryDetail()));
+
+            response.setDelivery(deliveryObject);
+            response.setMessage(getDeliveryByUUIDResponse.getMessage());
+            response.setTimestamp(getDeliveryByUUIDResponse.getTimestamp().toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setDelivery(null);
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     //Helper functions
 
     public List<DeliveryDetailObject> populateDeliveryDetails(List<DeliveryDetail> deliveryDetails){
