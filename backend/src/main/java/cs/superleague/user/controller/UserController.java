@@ -602,6 +602,10 @@ public class UserController implements UserApi {
         driverObject.setResetCode(driver.getResetCode());
         driverObject.setResetExpiration(driver.getResetExpiration());
         driverObject.setAccountType(String.valueOf(driver.getAccountType()));
+
+        if(driver.getDeliveryID() != null)
+            driverObject.setDeliveryID(driver.getDeliveryID().toString());
+
         if(driver.getDriverID()!=null)
         {
             driverObject.setDriverID(String.valueOf(driver.getDriverID()));
