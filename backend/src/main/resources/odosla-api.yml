@@ -1720,6 +1720,8 @@ components:
           $ref: "#/components/schemas/GeoPointObject"
         deliveriesCompleted:
           type: number
+        deliveryID:
+          type: string
 
     CustomerObject:
       description: "Generic schema for a Customer"
