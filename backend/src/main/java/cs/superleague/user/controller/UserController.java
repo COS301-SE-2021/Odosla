@@ -835,4 +835,82 @@ public class UserController implements UserApi {
 
         return new ResponseEntity<>(userUpdateShopperDetailsResponse, status);
     }
+
+    @Override
+    public ResponseEntity<UserUpdateDriverDetailsResponse> updateDriverDetails(UserUpdateDriverDetailsRequest body) {
+        UserUpdateDriverDetailsResponse userUpdateDriverDetailsResponse = new UserUpdateDriverDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateDriverDetailsRequest request = new UpdateDriverDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateDriverDetailsResponse response = ServiceSelector.getUserService().updateDriverDetails(request);
+            try{
+                userUpdateDriverDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateDriverDetailsResponse.setMessage(response.getMessage());
+                userUpdateDriverDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateDriverDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateDriverDetailsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateCustomerDetailsResponse> updateCustomerDetails(UserUpdateCustomerDetailsRequest body) {
+        UserUpdateCustomerDetailsResponse userUpdateCustomerDetailsResponse = new UserUpdateCustomerDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateCustomerDetailsRequest request = new UpdateCustomerDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),null,body.getCurrentPassword());
+
+            UpdateCustomerDetailsResponse response = ServiceSelector.getUserService().updateCustomerDetails(request);
+            try{
+                userUpdateCustomerDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateCustomerDetailsResponse.setMessage(response.getMessage());
+                userUpdateCustomerDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateCustomerDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateCustomerDetailsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateAdminDetailsResponse> updateAdminDetails(UserUpdateAdminDetailsRequest body) {
+        UserUpdateAdminDetailsResponse userUpdateAdminDetailsResponse = new UserUpdateAdminDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateAdminDetailsRequest request = new UpdateAdminDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateAdminDetailsResponse response = ServiceSelector.getUserService().updateAdminDetails(request);
+            try{
+                userUpdateAdminDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateAdminDetailsResponse.setMessage(response.getMessage());
+                userUpdateAdminDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateAdminDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateAdminDetailsResponse, status);
+    }
 }

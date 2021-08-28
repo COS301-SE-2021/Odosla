@@ -1222,9 +1222,9 @@ public class UserServiceImpl implements UserService{
     public UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException {
 
         String message;
-        String shopperID;
         Shopper shopper;
         boolean success;
+        String jwtToken = null;
         boolean emptyUpdate = true;
         Optional<Shopper> shopperOptional;
 
@@ -1232,10 +1232,10 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UpdateShopper Request is null - Could not update shopper");
         }
 
-        currentUser=new CurrentUser();
+        currentUser = new CurrentUser();
         shopperOptional = shopperRepo.findByEmail(currentUser.getEmail());
         if(shopperOptional == null || !shopperOptional.isPresent()){
-            throw new ShopperDoesNotExistException("User with given userID does not exist - could not update shopper");
+            throw new ShopperDoesNotExistException("User with the given email does not exist - could not update shopper");
         }
 
         shopper = shopperOptional.get();
@@ -1249,29 +1249,31 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             shopper.setSurname(request.getSurname());
         }
-        String jwtToken=null;
+
         if(request.getEmail() != null && !request.getEmail().equals(shopper.getEmail())){
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
                 return new UpdateShopperDetailsResponse(message, false, new Date(),null);
-            }else{
-                if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
-                    message = "Email is already taken";
-                    return new UpdateShopperDetailsResponse(message, false, new Date(),null);
-                }
-                JwtUtil jwtUtil = new JwtUtil();
-                shopper.setEmail(request.getEmail());
-                jwtToken=jwtUtil.generateJWTTokenShopper(shopper);
             }
-        }
 
+            if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
+                message = "Email is already taken";
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
+            }
+
+            JwtUtil jwtUtil = new JwtUtil();
+            shopper.setEmail(request.getEmail());
+            jwtToken=jwtUtil.generateJWTTokenShopper(shopper);
+        }
 
         if(request.getPassword() != null){
             emptyUpdate = false;
-            String currentPassword = request.getCurrentPassword();
-            String currentPasswordCheck=shopper.getPassword();
+
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = shopper.getPassword();
+
             if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
                 return new UpdateShopperDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
             }
@@ -1306,29 +1308,21 @@ public class UserServiceImpl implements UserService{
     @Override
     public UpdateAdminDetailsResponse updateAdminDetails(UpdateAdminDetailsRequest request) throws UserException{
         String message;
-        UUID adminID;
         Admin admin;
         boolean success;
         boolean emptyUpdate = true;
-        Optional<Admin> adminOptional;
+        String JWTToken = null;
 
         if(request == null){
             throw new InvalidRequestException("UpdateAdmin Request is null - Could not update admin");
         }
 
-        if(request.getAdminID() == null){
-            throw new InvalidRequestException("AdminId is null - could not update admin");
-        }
+        currentUser = new CurrentUser();
 
-        adminID = request.getAdminID();
-        adminOptional = adminRepo.findById(adminID);
-        if(adminOptional == null || !adminOptional.isPresent()){
+        admin = adminRepo.findAdminByEmail(currentUser.getEmail());
+        if(admin == null){
             throw new AdminDoesNotExistException("User with given userID does not exist - could not update admin");
         }
-
-        // authentication ??
-
-        admin = adminOptional.get();
 
         if(request.getName() != null && !Objects.equals(request.getName(), admin.getName())){
             emptyUpdate = false;
@@ -1344,25 +1338,36 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateAdminDetailsResponse(message, false, new Date());
+                return new UpdateAdminDetailsResponse(message, false, new Date(), null);
             }else{
                 if(adminRepo.findAdminByEmail(request.getEmail()) != null){
                     message = "Email is already taken";
-                    return new UpdateAdminDetailsResponse(message, false, new Date());
+                    return new UpdateAdminDetailsResponse(message, false, new Date(), null);
                 }
                 admin.setEmail(request.getEmail());
+
+                JwtUtil jwtUtil = new JwtUtil();
+                JWTToken = jwtUtil.generateJWTTokenAdmin(admin);
             }
         }
 
         if(request.getPassword() != null){
             emptyUpdate = false;
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = admin.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateAdminDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 admin.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateAdminDetailsResponse(message, false, new Date());
+                return new UpdateAdminDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1381,7 +1386,7 @@ public class UserServiceImpl implements UserService{
             message = "Admin successfully updated";
         }
 
-        return new UpdateAdminDetailsResponse(message, success, new Date());
+        return new UpdateAdminDetailsResponse(message, success, new Date(), JWTToken);
     }
 
     @Override
@@ -1392,24 +1397,18 @@ public class UserServiceImpl implements UserService{
         boolean success;
         boolean emptyUpdate = true;
         Optional<Driver> driverOptional;
+        String JWTToken = null;
 
         if (request == null) {
             throw new InvalidRequestException("UpdateDriver Request is null - Could not update driver");
         }
 
-        if (request.getDriverID() == null) {
-            throw new InvalidRequestException("DriverId is null - could not update driver");
+        CurrentUser currentUser = new CurrentUser();
+
+        driver = driverRepo.findDriverByEmail(currentUser.getEmail());
+        if (driver == null) {
+            throw new DriverDoesNotExistException("User with given email does not exist - could not update driver");
         }
-
-        driverID = request.getDriverID();
-        driverOptional = driverRepo.findById(driverID);
-        if (driverOptional == null || !driverOptional.isPresent()) {
-            throw new DriverDoesNotExistException("User with given userID does not exist - could not update driver");
-        }
-
-        // authentication ??
-
-        driver = driverOptional.get();
 
         if (request.getName() != null && !Objects.equals(request.getName(), driver.getName())) {
             emptyUpdate = false;
@@ -1425,25 +1424,35 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if (!emailRegex(request.getEmail())) {
                 message = "Email is not valid";
-                return new UpdateDriverDetailsResponse(message, false, new Date());
+                return new UpdateDriverDetailsResponse(message, false, new Date(), null);
             } else {
                 if (driverRepo.findDriverByEmail(request.getEmail()) != null) {
                     message = "Email is already taken";
-                    return new UpdateDriverDetailsResponse(message, false, new Date());
+                    return new UpdateDriverDetailsResponse(message, false, new Date(), null);
                 }
                 driver.setEmail(request.getEmail());
+                JwtUtil jwtUtil = new JwtUtil();
+                JWTToken = jwtUtil.generateJWTTokenDriver(driver);
             }
         }
 
         if (request.getPassword() != null) {
             emptyUpdate = false;
-            if (passwordRegex(request.getPassword())) {
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = driver.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateDriverDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
+            if(passwordRegex(request.getPassword())){
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 driver.setPassword(passwordHashed);
-            } else {
+            }else{
                 message = "Password is not valid";
-                return new UpdateDriverDetailsResponse(message, false, new Date());
+                return new UpdateDriverDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1462,7 +1471,7 @@ public class UserServiceImpl implements UserService{
             message = "Driver successfully updated";
         }
 
-        return new UpdateDriverDetailsResponse(message, success, new Date());
+        return new UpdateDriverDetailsResponse(message, success, new Date(), JWTToken);
     }
 
     @Override
@@ -1735,25 +1744,21 @@ public class UserServiceImpl implements UserService{
         Customer customer = null;
         boolean success;
         boolean emptyUpdate = true;
+        String JWTToken = null;
 
         if(request == null){
             throw new InvalidRequestException("UpdateCustomer Request is null - Could not update customer");
         }
 
-        if(request.getCustomerID() == null){
-            throw new InvalidRequestException("CustomerId is null - could not update customer");
-        }
+        CurrentUser currentUser = new CurrentUser();
 
-        customerID = request.getCustomerID();
         try {
-            customer = customerRepo.findById(customerID).orElse(null);
+            customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
         }catch(Exception e){}
 
         if(customer == null){
-            throw new CustomerDoesNotExistException("User with given userID does not exist - could not update customer");
+            throw new CustomerDoesNotExistException("User with given Email does not exist - could not update customer");
         }
-
-        // authentication ??
 
         if(request.getName() != null && !Objects.equals(request.getName(), customer.getName())){
             emptyUpdate = false;
@@ -1769,25 +1774,36 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateCustomerDetailsResponse(message, false, new Date());
+                return new UpdateCustomerDetailsResponse(message, false, new Date(), null);
             }else{
                 if(customerRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
-                    return new UpdateCustomerDetailsResponse(message, false, new Date());
+                    return new UpdateCustomerDetailsResponse(message, false, new Date(), null);
                 }
                 customer.setEmail(request.getEmail());
+                JwtUtil jwtUtil = new JwtUtil();
+                JWTToken = jwtUtil.generateJWTTokenCustomer(customer);
             }
         }
 
         if(request.getPassword() != null){
             emptyUpdate = false;
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = customer.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateCustomerDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
+
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 customer.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateCustomerDetailsResponse(message, false, new Date());
+                return new UpdateCustomerDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1811,7 +1827,7 @@ public class UserServiceImpl implements UserService{
             message = "Customer successfully updated";
         }
 
-        return new UpdateCustomerDetailsResponse(message, success, new Date());
+        return new UpdateCustomerDetailsResponse(message, success, new Date(), JWTToken);
     }
 
     /**
