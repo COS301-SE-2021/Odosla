@@ -4,6 +4,7 @@ import cs.superleague.payment.dataclass.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,5 +13,6 @@ import java.util.UUID;
 
    List<Order> findAll();
    List<Order> findAllByUserID(UUID userID);
+   List<Order> findAllByCreateDateAfter(Calendar calendar);
  }
 
