@@ -78,11 +78,11 @@ public class UpdateAdminDetailsUnitTest {
     }
 
     @Test
-    @DisplayName("When admin with given UserID does not exist")
+    @DisplayName("When admin with given Email does not exist")
     void UnitTest_testingInvalidUser(){
         when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> userService.updateAdminDetails(request));
-        assertEquals("User with given userID does not exist - could not update admin", thrown.getMessage());
+        assertEquals("User with given Email does not exist - could not update admin", thrown.getMessage());
     }
 
     @Test

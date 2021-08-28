@@ -2682,6 +2682,12 @@ components:
           type: string
         currentPassword:
           type: string
+        address:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
 
     user_updateCustomerDetailsResponse:
       description: This object is returned as output

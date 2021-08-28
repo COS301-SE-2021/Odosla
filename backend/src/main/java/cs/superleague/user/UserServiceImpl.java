@@ -1321,7 +1321,7 @@ public class UserServiceImpl implements UserService{
 
         admin = adminRepo.findAdminByEmail(currentUser.getEmail());
         if(admin == null){
-            throw new AdminDoesNotExistException("User with given userID does not exist - could not update admin");
+            throw new AdminDoesNotExistException("User with given Email does not exist - could not update admin");
         }
 
         if(request.getName() != null && !Objects.equals(request.getName(), admin.getName())){
@@ -1740,7 +1740,6 @@ public class UserServiceImpl implements UserService{
     public UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
 
         String message;
-        UUID customerID;
         Customer customer = null;
         boolean success;
         boolean emptyUpdate = true;

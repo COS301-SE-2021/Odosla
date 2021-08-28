@@ -868,7 +868,12 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            UpdateCustomerDetailsRequest request = new UpdateCustomerDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),null,body.getCurrentPassword());
+            GeoPoint geoPoint = null;
+            if(body.getLatitude() != null && body.getLongitude() != null) {
+                geoPoint = new GeoPoint(body.getLatitude().doubleValue(), body.getLongitude().doubleValue(), body.getAddress());
+            }
+            UpdateCustomerDetailsRequest request = new UpdateCustomerDetailsRequest(body.getName(), body.getSurname(),
+                    body.getEmail(), body.getPhoneNumber(), body.getPassword(), geoPoint, body.getCurrentPassword());
 
             UpdateCustomerDetailsResponse response = ServiceSelector.getUserService().updateCustomerDetails(request);
             try{
