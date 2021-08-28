@@ -10,8 +10,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface RecommendationRepo extends JpaRepository<Recommendation, String> {
+public interface RecommendationRepo extends JpaRepository<Recommendation, UUID> {
     //Recommendation findTopByOrdersOrderByRecommendationAddedDateDesc();
-    List<Recommendation> findRecommendationByProductID(String productID);
+    List<Recommendation> findRecommendationByProductyID(String productID);
     Recommendation findRecommendationByRecommendationID(UUID recommendationID);
 }

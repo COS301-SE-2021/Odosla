@@ -46,7 +46,7 @@ public class RecommendationServiceImpl implements RecommendationService{
             List<UUID> orderIDs = new ArrayList<>();
             List<Integer> frequencyOfOrders = new ArrayList<>();
             for (String productID : request.getItemIDs()){
-                List<Recommendation> recommendation = recommendationRepo.findRecommendationByProductID(productID);
+                List<Recommendation> recommendation = recommendationRepo.findRecommendationByProductyID(productID);
                 if (recommendation != null){
                     for (Recommendation orderID : recommendation){
                         if (!orderIDs.contains(orderID.getOrderID())){
@@ -103,16 +103,16 @@ public class RecommendationServiceImpl implements RecommendationService{
             Recommendation recommendation = null;
             if (recommendation != null){
                 lastUpdate = recommendation.getRecommendationAddedDate();
-//                orders = orderRepo.findAll();
-                orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
+                orders = orderRepo.findAll();
+                //orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
                 lastUpdate = Calendar.getInstance();
             }else{
                 orders = orderRepo.findAll();
                 lastUpdate = Calendar.getInstance();
             }
         }else {
-//            orders = orderRepo.findAll();
-            orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
+            orders = orderRepo.findAll();
+            //orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
             lastUpdate = Calendar.getInstance();
         }
         for (Order o : orders){

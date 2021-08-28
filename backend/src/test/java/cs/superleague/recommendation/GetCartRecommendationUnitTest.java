@@ -80,8 +80,8 @@ public class GetCartRecommendationUnitTest {
     @DisplayName("hi")
     void testsGetCartRecommendationRequestObject_UnitTest() throws InvalidRequestException, RecommendationRepoException {
         GetCartRecommendationRequest request = new GetCartRecommendationRequest(itemsInCart);
-        when(recommendationRepo.findRecommendationByProductID("p123")).thenReturn(list1OfRecommendations);
-        when(recommendationRepo.findRecommendationByProductID("p124")).thenReturn(list2OfRecommendations);
+        when(recommendationRepo.findRecommendationByProductyID("p123")).thenReturn(list1OfRecommendations);
+        when(recommendationRepo.findRecommendationByProductyID("p124")).thenReturn(list2OfRecommendations);
         when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         GetCartRecommendationResponse response = recommendationService.getCartRecommendation(request);
         System.out.println(response.getRecommendations().get(0).getProductID());
