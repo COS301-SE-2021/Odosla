@@ -99,11 +99,26 @@ public class UpdateOrderUnitTest {
         customer.setEmail("superleague@gmail.com");
         customer.setAccountType(UserType.CUSTOMER);
 
+        jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
     }
 
     @AfterEach
     void tearDown() {
+        SecurityContextHolder.clearContext();
     }
 
     @Test
