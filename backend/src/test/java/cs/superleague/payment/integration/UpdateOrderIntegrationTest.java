@@ -192,7 +192,7 @@ public class UpdateOrderIntegrationTest {
     @Test
     @DisplayName("When request object is not specified")
     void IntegrationTest_RequestObjectIsNull() {
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.updateOrder(updateOrderRequestNull));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.updateOrder(null));
         assertEquals(expectedMessage_NullRequest, thrown.getMessage());
     }
 

@@ -454,12 +454,19 @@ import java.util.List;50"
         double cost;
 
         if(request == null){
-            order = getOrder(null).getOrder();
+            throw new InvalidRequestException("Invalid order request received - cannot get order.");
         }else {
             if (request.getUserID() == null) {
                 throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
             }
-            order = getOrder(new GetOrderRequest(request.getOrderID())).getOrder();
+            else if(request.getOrderID()==null)
+            {
+                throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
+
+            }
+            GetOrderResponse getOrderResponse;
+            getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
+            order= getOrderResponse.getOrder();
         }
 
         if (!request.getUserID().equals(order.getUserID())) {
