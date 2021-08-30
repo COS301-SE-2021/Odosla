@@ -100,9 +100,8 @@ public class GetDeliveryDetailUnitTest {
     @Description("Tests that the request object is created successfully.")
     @DisplayName("Request object creation.")
     void checkRequestObjectCreation_UnitTest(){
-        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID, adminID);
+        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID);
         assertEquals(request.getDeliveryID(), deliveryID);
-        assertEquals(request.getAdminID(), adminID);
     }
 
     @Test
@@ -117,57 +116,9 @@ public class GetDeliveryDetailUnitTest {
     @Description("Tests for when the request object has null parameters.")
     @DisplayName("Null parameters")
     void nullParametersInRequestObject_UnitTest(){
-        GetDeliveryDetailRequest request1 = new GetDeliveryDetailRequest(null, adminID);
+        GetDeliveryDetailRequest request1 = new GetDeliveryDetailRequest(null);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request1));
         assertEquals("Null parameters.", thrown1.getMessage());
-        GetDeliveryDetailRequest request2 = new GetDeliveryDetailRequest(deliveryID, null);
-        Throwable thrown2 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request2));
-        assertEquals("Null parameters.", thrown2.getMessage());
-    }
-
-    @Test
-    @Description("Invalid admin ID passed in, user is not an admin")
-    @DisplayName("Invalid adminID")
-    void requestObjectHasAnInvalidAdminID_UnitTest(){
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
-        GetDeliveryDetailRequest request1 = new GetDeliveryDetailRequest(deliveryID, adminID);
-        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request1));
-        assertEquals("User is not an admin.", thrown1.getMessage());
-    }
-
-    @Test
-    @Description("Tests for when there is no details in the DetailRepo to fetch.")
-    @DisplayName("No details found")
-    void noDetailsFoundForDelivery_UnitTest(){
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
-        GetDeliveryDetailRequest request1 = new GetDeliveryDetailRequest(deliveryID, adminID);
-        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request1));
-        assertEquals("No details found for this delivery.", thrown1.getMessage());
-    }
-
-    @Test
-    @Description("Tests for when an empty list of details is returned from the database.")
-    @DisplayName("Empty list found")
-    void emptyListOfDetailsFound_UnitTest(){
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
-        when(deliveryDetailRepo.findAllByDeliveryID(Mockito.any())).thenReturn(deliveryDetails);
-        GetDeliveryDetailRequest request1 = new GetDeliveryDetailRequest(deliveryID, adminID);
-        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request1));
-        assertEquals("No details found for this delivery.", thrown1.getMessage());
-    }
-
-    @Test
-    @Description("Valid delivery details returned")
-    @DisplayName("DeliveryDetails returned")
-    void validDeliveryDetailsReturned_UnitTest() throws InvalidRequestException{
-        deliveryDetails.add(deliveryDetail1);
-        deliveryDetails.add(deliveryDetail2);
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
-        when(deliveryDetailRepo.findAllByDeliveryID(Mockito.any())).thenReturn(deliveryDetails);
-        GetDeliveryDetailRequest request1 = new GetDeliveryDetailRequest(deliveryID, adminID);
-        GetDeliveryDetailResponse response = deliveryService.getDeliveryDetail(request1);
-        assertEquals(response.getDetail(), deliveryDetails);
-        assertEquals(response.getMessage(), "Details successfully found.");
     }
 
 }

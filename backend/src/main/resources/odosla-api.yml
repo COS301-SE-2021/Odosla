@@ -2171,8 +2171,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         deliveryID:
           type: string
 
@@ -2234,8 +2232,6 @@ components:
       properties:
         deliveryID:
           type: string
-        adminID:
-          type: string
 
     delivery_GetDeliveryDetailResponse:
       description: This object is expected as output
@@ -2283,8 +2279,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         currentLocation:
           $ref: "#/components/schemas/GeoPointObject"
         rangeOfDelivery:
@@ -2303,8 +2297,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        driverID:
-          type: string
         deliveryID:
           type: string
 
@@ -2565,7 +2557,7 @@ components:
         currentPassword:
           type: string
 
-    user_updateShopperDetailsResponse:
+    user_UpdateShopperDetailsResponse:
       description: This object is returned as output
       type: object
       properties:
