@@ -29,17 +29,20 @@ import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.CustomerRepo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -66,6 +69,7 @@ public class RemoveQueuedOrderIntegrationTest {
     @Autowired
     CustomerRepo customerRepo;
 
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
     /* Requests */
     RemoveQueuedOrderRequest removeQueuedOrderRequest;
 
@@ -101,7 +105,6 @@ public class RemoveQueuedOrderIntegrationTest {
     List<Order> orderQueue=new ArrayList<>();
 
     Customer customer;
-    String jwtToken;
 
     @BeforeEach
     void setup() throws PaymentException, StoreClosedException, InvalidRequestException, StoreDoesNotExistException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException {
@@ -110,7 +113,21 @@ public class RemoveQueuedOrderIntegrationTest {
         customer.setEmail("hello@gmail.com");
         customer.setAccountType(UserType.CUSTOMER);
         customerRepo.save(customer);
-        jwtToken=jwtUtil.generateJWTTokenCustomer(customer);
+
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
         item1=new Item("name1","productID1","barcode1",storeID,10.0,2,"Description1","imageURL1");
         item2=new Item("name2","productID2","barcode2",storeID,30.0,1,"Description2","imageURL2");
@@ -136,7 +153,7 @@ public class RemoveQueuedOrderIntegrationTest {
         itemRepo.save(item5);
         catalogueRepo.save(stock);
         storeRepo.save(store);
-        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(jwt,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID1 = submitOrderResponse.getOrder().getOrderID();
         order1 = submitOrderResponse.getOrder();
@@ -144,7 +161,7 @@ public class RemoveQueuedOrderIntegrationTest {
         orderRepo.save(order1);
         store.getOrderQueue().add(order1);
         storeRepo.save(store);
-        submitOrderRequest=new SubmitOrderRequest(jwtToken,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(jwt,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID2 = submitOrderResponse.getOrder().getOrderID();
         order2 = submitOrderResponse.getOrder();
