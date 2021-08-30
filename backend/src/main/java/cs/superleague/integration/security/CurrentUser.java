@@ -11,19 +11,23 @@ public class CurrentUser {
     private String email;
 
     public CurrentUser(){
-
-        Map<String, Object> i = (Map<String, Object>) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        String type = (String) i.get("userType");
-        String e = (String) i.get("email");
-        this.email = e;
-        if (type.equals("SHOPPER")) {
-            userType = UserType.SHOPPER;
-        }else if (type.equals("DRIVER")){
-            userType = UserType.DRIVER;
-        }else if (type.equals("CUSTOMER")){
-            userType = UserType.CUSTOMER;
-        }else if (type.equals("ADMIN")){
-            userType = UserType.ADMIN;
+        try {
+            Map<String, Object> i = (Map<String, Object>) SecurityContextHolder.getContext().getAuthentication().getDetails();
+            String type = (String) i.get("userType");
+            String e = (String) i.get("email");
+            this.email = e;
+            if (type.equals("SHOPPER")) {
+                userType = UserType.SHOPPER;
+            } else if (type.equals("DRIVER")) {
+                userType = UserType.DRIVER;
+            } else if (type.equals("CUSTOMER")) {
+                userType = UserType.CUSTOMER;
+            } else if (type.equals("ADMIN")) {
+                userType = UserType.ADMIN;
+            }
+        } catch (NullPointerException e){
+            userType = null;
+            email = null;
         }
 
     }

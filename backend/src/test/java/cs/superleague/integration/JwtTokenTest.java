@@ -46,7 +46,5 @@ public class JwtTokenTest {
         Date hi=c.extractExpiration(token);
         System.out.println(hi);
         System.out.println(c.extractUserType(token));
-
-        //System.out.println( c.validateToken(token,customer));
     }
 }

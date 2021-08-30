@@ -4,24 +4,24 @@ import java.util.UUID;
 
 public class UpdateAdminDetailsRequest {
 
-    private UUID adminID;
     private String name;
     private String surname;
     private String email;
     private String phoneNumber;
     private String password;
+    private String currentPassword;
 
-    public UpdateAdminDetailsRequest(UUID adminID, String name, String surname, String email, String phoneNumber, String password) {
-        this.adminID = adminID;
+    public UpdateAdminDetailsRequest(String name, String surname, String email, String phoneNumber, String password, String currentPassword) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
+        this.currentPassword = currentPassword;
     }
 
-    public UUID getAdminID() {
-        return adminID;
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 
     public String getName() {
@@ -42,10 +42,6 @@ public class UpdateAdminDetailsRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setAdminID(UUID adminID) {
-        this.adminID = adminID;
     }
 
     public void setName(String name) {

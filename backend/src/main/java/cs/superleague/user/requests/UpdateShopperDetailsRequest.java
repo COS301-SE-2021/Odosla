@@ -2,7 +2,6 @@ package cs.superleague.user.requests;
 
 public class UpdateShopperDetailsRequest {
 
-    private String jwtToken;
     private String name;
     private String surname;
     private String email;
@@ -10,18 +9,13 @@ public class UpdateShopperDetailsRequest {
     private String password;
     private String currentPassword;
 
-    public UpdateShopperDetailsRequest(String jwtToken, String name, String surname, String email, String phoneNumber, String password,String currentPassword) {
-        this.jwtToken = jwtToken;
+    public UpdateShopperDetailsRequest( String name, String surname, String email, String phoneNumber, String password,String currentPassword) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.currentPassword = currentPassword;
-    }
-
-    public String getJwtToken() {
-        return jwtToken;
     }
 
     public String getName() {
@@ -42,10 +36,6 @@ public class UpdateShopperDetailsRequest {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
     }
 
     public void setName(String name) {
