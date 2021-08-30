@@ -21,6 +21,7 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.requests.GetCurrentUserRequest;
@@ -452,24 +453,31 @@ import java.util.List;50"
         Order order;
         double discount = 0;
         double cost;
+        Customer customer;
+        Optional<Customer> customerOptional;
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
-        }else {
-            if (request.getUserID() == null) {
-                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
-            }
-            else if(request.getOrderID()==null)
-            {
-                throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
-
-            }
-            GetOrderResponse getOrderResponse;
-            getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
-            order= getOrderResponse.getOrder();
         }
 
-        if (!request.getUserID().equals(order.getUserID())) {
+        if(request.getOrderID()==null)
+        {
+            throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
+        }
+
+        CurrentUser currentUser = new CurrentUser();
+        customerOptional = customerRepo.findByEmail(currentUser.getEmail());
+
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new InvalidRequestException("Incorrect email email given - customer does not exist");
+        }
+
+        customer = customerOptional.get();
+        GetOrderResponse getOrderResponse;
+        getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
+        order= getOrderResponse.getOrder();
+
+        if (!customer.getCustomerID().equals(order.getUserID())) {
             throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
         }
 
@@ -522,7 +530,7 @@ import java.util.List;50"
         String message = null;
         Order order;
 
-        CurrentUser currentUser = new CurrentUser();
+//        CurrentUser currentUser = new CurrentUser();
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");

@@ -129,9 +129,8 @@ public class PaymentController implements PaymentApi {
                 discount = body.getDiscount().doubleValue();
 
             UUID orderID = UUID.fromString(body.getOrderId());
-            UUID userID = UUID.fromString(body.getUserId());
 
-            UpdateOrderRequest request = new UpdateOrderRequest(orderID, userID, assignItems(body.getItems()), discount, orderType, order.getDeliveryAddress());
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignItems(body.getItems()), discount, orderType, order.getDeliveryAddress());
 
             UpdateOrderResponse updateOrderResponse = ServiceSelector.getPaymentService().updateOrder(request);
             try {

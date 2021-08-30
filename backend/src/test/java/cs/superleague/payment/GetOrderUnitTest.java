@@ -11,15 +11,18 @@ import cs.superleague.payment.requests.GetOrderRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 import org.mockito.InjectMocks;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class GetOrderUnitTest {
     @InjectMocks
     private PaymentServiceImpl paymentService;
