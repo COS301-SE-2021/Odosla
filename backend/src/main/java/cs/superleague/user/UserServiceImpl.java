@@ -2667,23 +2667,10 @@ public class UserServiceImpl implements UserService{
     public GetUsersResponse getUsers(GetUsersRequest request) throws Exception{
 
         String message = "Users successfully returned";
-        Admin admin = null;
         List<User> users = new ArrayList<>();
 
-        if(request == null){
+        if(request == null) {
             throw new InvalidRequestException("GetUser request is null - could not return users");
-        }
-
-        if(request.getAdminID() == null){
-            throw new InvalidRequestException("AdminID is null in GetUsersRequest request - could not return users");
-        }
-
-        try {
-            admin = adminRepo.findById(UUID.fromString(request.getAdminID())).orElse(null);
-        }catch(Exception e){}
-
-        if(admin == null){
-            throw new AdminDoesNotExistException("admin with given userID does not exist - could not return users");
         }
 
         users.addAll(shopperRepo.findAll());
