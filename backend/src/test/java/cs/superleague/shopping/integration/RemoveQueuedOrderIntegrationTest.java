@@ -153,7 +153,7 @@ public class RemoveQueuedOrderIntegrationTest {
         itemRepo.save(item5);
         catalogueRepo.save(stock);
         storeRepo.save(store);
-        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(jwt,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        SubmitOrderRequest submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         SubmitOrderResponse submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID1 = submitOrderResponse.getOrder().getOrderID();
         order1 = submitOrderResponse.getOrder();
@@ -161,7 +161,7 @@ public class RemoveQueuedOrderIntegrationTest {
         orderRepo.save(order1);
         store.getOrderQueue().add(order1);
         storeRepo.save(store);
-        submitOrderRequest=new SubmitOrderRequest(jwt,itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
+        submitOrderRequest=new SubmitOrderRequest(itemList,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
         submitOrderResponse= ServiceSelector.getPaymentService().submitOrder(submitOrderRequest);
         orderID2 = submitOrderResponse.getOrder().getOrderID();
         order2 = submitOrderResponse.getOrder();
@@ -173,10 +173,8 @@ public class RemoveQueuedOrderIntegrationTest {
 
     @AfterEach
     void tearDown() {
-        storeRepo.deleteAll();
-        orderRepo.deleteAll();
-        catalogueRepo.deleteAll();
-        itemRepo.deleteAll();
+
+        SecurityContextHolder.clearContext();
 
     }
 

@@ -63,6 +63,7 @@ public class SubmitOrderUnitTest {
     private PaymentServiceImpl paymentService;
 
     @InjectMocks
+    JwtUtil jwtUtil;
 
     Item I1;
     Item I2;
@@ -87,6 +88,8 @@ public class SubmitOrderUnitTest {
     Catalogue c;
     String jwtToken;
     Customer customer;
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
 
     @BeforeEach
     void setUp() {
@@ -112,7 +115,21 @@ public class SubmitOrderUnitTest {
         customer.setCustomerID(expectedU1);
         customer.setEmail("hello@gmail.com");
         customer.setAccountType(UserType.CUSTOMER);
-        //jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customer);
+
+        jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
     }
 
@@ -218,25 +235,6 @@ public class SubmitOrderUnitTest {
 
     }
 
-//    @Test
-//    @Description("This test is to check if the store with ID is returned but closed - throw Store Closed exception")
-//    @DisplayName("Exception for Store is closed")
-//    void UnitTest_StoreIsClosed() throws cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, PaymentException, StoreClosedException {
-//        SubmitOrderRequest request=new SubmitOrderRequest(expectedListOfItems,expectedDiscount,expectedS1,expectedType, 3.3, 3.5, "Homer Street");
-//        when(orderRepo.findById(Mockito.any())).thenReturn(null);
-//        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-//        GetStoreByUUIDRequest storeRequest=new GetStoreByUUIDRequest(expectedS1);
-//
-//        GetStoreByUUIDResponse storeResponse=new GetStoreByUUIDResponse(closedStore,Calendar.getInstance().getTime(), "Store successfully returned");
-//        when(shoppingService.getStoreByUUID(Mockito.any())).thenReturn(storeResponse);
-//        Throwable thrown = Assertions.assertThrows(StoreClosedException.class, ()-> paymentService.submitOrder(request));
-//        assertEquals("Store is currently closed - could not create order",thrown.getMessage());
-//
-//
-//    }
-
-
-
 
     /** Checking response object is created correctly */
     @Test
@@ -260,12 +258,12 @@ public class SubmitOrderUnitTest {
         assertEquals("Order successfully created.", response.getMessage());
         Order order=response.getOrder();
         if (order!=null) {
-                     assertEquals(o.getTotalCost(), order.getTotalCost());
-                     assertEquals(o.getDiscount(), order.getDiscount());
-                     assertEquals(o.getItems(), order.getItems());
-                     //assertEquals(o.getDeliveryAddress(), order.getDeliveryAddress());
-                     //assertEquals(o.getShopperID(), order.getShopperID());
-                     assertEquals(o.getType(), order.getType());
+             assertEquals(o.getTotalCost(), order.getTotalCost());
+             assertEquals(o.getDiscount(), order.getDiscount());
+             assertEquals(o.getItems(), order.getItems());
+             //assertEquals(o.getDeliveryAddress(), order.getDeliveryAddress());
+             //assertEquals(o.getShopperID(), order.getShopperID());
+             assertEquals(o.getType(), order.getType());
         }
     }
 }

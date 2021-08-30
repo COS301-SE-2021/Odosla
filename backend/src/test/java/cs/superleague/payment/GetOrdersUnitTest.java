@@ -61,10 +61,12 @@ public class GetOrdersUnitTest {
 
     Shopper shopper;
     Driver driver;
+    Customer customer;
     Admin admin;
     Order order;
 
     UUID adminUUID = UUID.randomUUID();
+    UUID customerUUID = UUID.randomUUID();
     UUID driverUUID = UUID.randomUUID();
     UUID shopperUUID=UUID.randomUUID();
 
