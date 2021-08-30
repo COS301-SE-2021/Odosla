@@ -12,6 +12,7 @@ tags:
   - name: "Notification"
   - name: "Delivery"
   - name: "Analytics"
+  - name: "Importer"
 
 
 paths:
@@ -1013,6 +1014,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateUserReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
 
 
   /payment/getCustomersActiveOrders:
@@ -1146,6 +1154,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
 
   /analytics/createMonthlyReport:
     post:
@@ -1168,6 +1183,58 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+
+  /importer/itemsCSVImporter:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Importer"
+      description: Refer to summary
+      operationId: itemsCSVImporter
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/importer_ItemsCSVImporterRequest"
+      responses:
+        "200":
+          description: Returns response message upon successful importing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/importer_ItemsCSVImporterResponse"
+
+  /importer/storesCSVImporter:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Importer"
+      description: Refer to summary
+      operationId: storesCSVImporter
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/importer_StoresCSVImporterRequest"
+      responses:
+        "200":
+          description: Returns response message upon successful importing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/importer_StoresCSVImporterResponse"
+
 
 components:
 
@@ -2032,8 +2099,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         storeID:
           type: string
 
@@ -2173,8 +2238,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         deliveryID:
           type: string
 
@@ -2236,8 +2299,6 @@ components:
       properties:
         deliveryID:
           type: string
-        adminID:
-          type: string
 
     delivery_GetDeliveryDetailResponse:
       description: This object is expected as output
@@ -2285,8 +2346,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
         currentLocation:
           $ref: "#/components/schemas/GeoPointObject"
         rangeOfDelivery:
@@ -2305,8 +2364,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        driverID:
-          type: string
         deliveryID:
           type: string
 
@@ -2378,8 +2435,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWTToken:
-          type: string
         startDate:
           type: string
         endDate:
@@ -2397,6 +2452,14 @@ components:
           type: string
         timestamp:
           type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          format: byte
+          nullable: true
 
     payment_GetCustomersActiveOrdersRequest:
       description: This object is expected as input
@@ -2567,7 +2630,7 @@ components:
         currentPassword:
           type: string
 
-    user_updateShopperDetailsResponse:
+    user_UpdateShopperDetailsResponse:
       description: This object is returned as output
       type: object
       properties:
@@ -2585,8 +2648,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        JWWTToken:
-          type: string
         startDate:
           type: string
         endDate:
@@ -2604,18 +2665,67 @@ components:
           type: string
         timestamp:
           type: string
-
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          format: byte
+          nullable: true
 
     analytics_CreateMonthlyReportRequest:
       description: This object is expected as input
       type: object
       properties:
-        JWWTToken:
-          type: string
         reportType:
           type: string
 
     analytics_CreateMonthlyReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          format: byte
+          nullable: true
+
+    importer_ItemsCSVImporterRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        file:
+          type: string
+
+    importer_ItemsCSVImporterResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    importer_StoresCSVImporterRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        file:
+          type: string
+
+    importer_StoresCSVImporterResponse:
       description: This object is expected as output
       type: object
       properties:

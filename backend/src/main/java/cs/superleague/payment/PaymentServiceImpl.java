@@ -817,19 +817,10 @@ import java.util.List;50"
     public GetOrdersResponse getOrders(GetOrdersRequest request) throws PaymentException {
 
         String message = "Users successfully returned";
-        Admin admin = null;
         List<Order> orders = new ArrayList<>();
-        ServiceSelector serviceSelector;
 
         if(request == null){
             throw new InvalidRequestException("GetOrders request is null - could not return orders");
-        }
-
-        CurrentUser currentUser = new CurrentUser();
-
-        if(currentUser == null){
-            message = "No Admin Found - could not get Orders";
-            return new GetOrdersResponse(null, false, message, new Date());
         }
 
         orders.addAll(orderRepo.findAll());

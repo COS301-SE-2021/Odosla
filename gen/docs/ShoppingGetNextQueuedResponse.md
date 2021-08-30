@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **success** | **Boolean** |  |  [optional]
 **date** | **String** |  |  [optional]
 **queueOfOrders** | [**List&lt;OrderObject&gt;**](OrderObject.md) |  |  [optional]
-**newCurrentOrder** | **Object** |  |  [optional]
+**newCurrentOrder** | [**OrderObject**](OrderObject.md) |  |  [optional]
 
 
 

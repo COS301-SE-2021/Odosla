@@ -7,7 +7,7 @@ This object is expected as input
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**userId** | **String** | generated token used to identify the caller of the endpoint |  [optional]
+**jwtToken** | **String** | generated token used to identify the caller of the endpoint |  [optional]
 **listOfItems** | [**List&lt;ItemObject&gt;**](ItemObject.md) |  |  [optional]
 **discount** | **BigDecimal** |  |  [optional]
 **storeId** | **String** |  |  [optional]

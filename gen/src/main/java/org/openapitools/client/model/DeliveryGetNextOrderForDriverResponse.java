@@ -23,20 +23,21 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import org.openapitools.client.model.DeliveryObject;
 
 /**
  * This object is expected as output
  */
 @ApiModel(description = "This object is expected as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DeliveryGetNextOrderForDriverResponse {
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   private String message;
 
-  public static final String SERIALIZED_NAME_DELIVERY_I_D = "deliveryID";
-  @SerializedName(SERIALIZED_NAME_DELIVERY_I_D)
-  private String deliveryID;
+  public static final String SERIALIZED_NAME_DELIVERY = "delivery";
+  @SerializedName(SERIALIZED_NAME_DELIVERY)
+  private DeliveryObject delivery;
 
 
   public DeliveryGetNextOrderForDriverResponse message(String message) {
@@ -62,26 +63,26 @@ public class DeliveryGetNextOrderForDriverResponse {
   }
 
 
-  public DeliveryGetNextOrderForDriverResponse deliveryID(String deliveryID) {
+  public DeliveryGetNextOrderForDriverResponse delivery(DeliveryObject delivery) {
     
-    this.deliveryID = deliveryID;
+    this.delivery = delivery;
     return this;
   }
 
    /**
-   * Get deliveryID
-   * @return deliveryID
+   * Get delivery
+   * @return delivery
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getDeliveryID() {
-    return deliveryID;
+  public DeliveryObject getDelivery() {
+    return delivery;
   }
 
 
-  public void setDeliveryID(String deliveryID) {
-    this.deliveryID = deliveryID;
+  public void setDelivery(DeliveryObject delivery) {
+    this.delivery = delivery;
   }
 
 
@@ -95,12 +96,12 @@ public class DeliveryGetNextOrderForDriverResponse {
     }
     DeliveryGetNextOrderForDriverResponse deliveryGetNextOrderForDriverResponse = (DeliveryGetNextOrderForDriverResponse) o;
     return Objects.equals(this.message, deliveryGetNextOrderForDriverResponse.message) &&
-        Objects.equals(this.deliveryID, deliveryGetNextOrderForDriverResponse.deliveryID);
+        Objects.equals(this.delivery, deliveryGetNextOrderForDriverResponse.delivery);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message, deliveryID);
+    return Objects.hash(message, delivery);
   }
 
 
@@ -109,7 +110,7 @@ public class DeliveryGetNextOrderForDriverResponse {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryGetNextOrderForDriverResponse {\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
-    sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
+    sb.append("    delivery: ").append(toIndentedString(delivery)).append("\n");
     sb.append("}");
     return sb.toString();
   }
