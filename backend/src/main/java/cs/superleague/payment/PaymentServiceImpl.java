@@ -3,6 +3,7 @@ package cs.superleague.payment;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
@@ -20,6 +21,7 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.requests.GetCurrentUserRequest;
@@ -68,7 +70,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final CustomerRepo customerRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
@@ -132,15 +134,10 @@ public class PaymentServiceImpl implements PaymentService {
         UUID customerID=null;
 
         GetStoreByUUIDResponse shop=null;
-        if (request!=null) {
+        if (request!=null)
+        {
 
-            /* checking for invalid requests */
-            if(request.getJwtToken()==null){
-                invalidReq = true;
-                invalidMessage = ("JwtToken cannot be null in request object - order unsuccessfully created.");
-            }
-
-            else if(request.getListOfItems()==null){
+            if(request.getListOfItems()==null){
                 invalidReq = true;
                 invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
             }
@@ -177,46 +174,42 @@ public class PaymentServiceImpl implements PaymentService {
                 invalidMessage = ("Address cannot be null in request object - order unsuccessfully created.");
 
             }
-            else
+
+            if(invalidReq)
             {
-                GetStoreByUUIDRequest getShopRequest=new GetStoreByUUIDRequest(request.getStoreID());
-                shop=shoppingService.getStoreByUUID(getShopRequest);
+                throw new InvalidRequestException(invalidMessage);
+            }
 
-                if(shop!=null)
-                {
-                    if (shop.getStore().getStoreLocation()==null){
-                        invalidReq = true;
-                        invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
-                    }
-                }
+            GetStoreByUUIDRequest getShopRequest = new GetStoreByUUIDRequest(request.getStoreID());
+            shop = shoppingService.getStoreByUUID(getShopRequest);
 
-                JwtUtil jwtUtil = new JwtUtil();
-                if(jwtUtil.extractUserType(request.getJwtToken()).equals("CUSTOMER"))
-                {
-                    GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
-
-                    if(customerRepo!=null)
-                    {
-                        Customer customer = customerRepo.findByEmail(getCurrentUserResponse.getUser().getEmail()).orElse(null);
-                        assert customer != null;
-                        customerID = customer.getCustomerID();
-                    }
-
-                }
-                else
-                {
+            if (shop != null) {
+                if (shop.getStore().getStoreLocation() == null) {
                     invalidReq = true;
-                    invalidMessage = ("Invalid User");
-
+                    invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
                 }
+                if (!shop.getStore().getOpen()) {
+                    invalidReq = true;
+                    invalidMessage = ("Store is currently closed - could not create order");
+                }
+            }
+
+            if(invalidReq)
+            {
+                throw new InvalidRequestException(invalidMessage);
+            }
+
+            CurrentUser currentUser = new CurrentUser();
+
+            if (customerRepo != null) {
+                Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
+                assert customer != null;
+                customerID = customer.getCustomerID();
 
             }
 
-            if (invalidReq) throw new InvalidRequestException(invalidMessage);
-
-
-            double discount=request.getDiscount();
-            UUID storeID=request.getStoreID();
+            double discount = request.getDiscount();
+            UUID storeID = request.getStoreID();
 
             /* Get total cost of order*/
             AtomicReference<Double> finalTotalCost = totalCost;
@@ -224,7 +217,7 @@ public class PaymentServiceImpl implements PaymentService {
                 int quantity = item.getQuantity();
                 double itemPrice = item.getPrice();
                 for (int j = 0; j < quantity; j++) {
-                    finalTotalCost.updateAndGet(v ->((double) (v + itemPrice)));
+                    finalTotalCost.updateAndGet(v -> ((double) (v + itemPrice)));
                 }
             });
 
@@ -241,81 +234,79 @@ public class PaymentServiceImpl implements PaymentService {
 
             BigDecimal bd = BigDecimal.valueOf(Double.parseDouble(totalCost.toString()));
             bd = bd.setScale(2, RoundingMode.HALF_UP);
-            double totalC=bd.doubleValue();
+            double totalC = bd.doubleValue();
 
-            GeoPoint customerLocation= new GeoPoint(request.getLatitude(),request.getLongitude(), request.getAddress());
+            GeoPoint customerLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
 
-            Order alreadyExists=null;
+            Order alreadyExists = null;
             while (true) {
                 try {
                     alreadyExists = orderRepo.findById(orderID).orElse(null);
+                } catch (Exception e) {
                 }
-                catch (Exception e){}
 
-                if(alreadyExists != null){
-                    orderID=UUID.randomUUID();
-                }
-                else{
+                if (alreadyExists != null) {
+                    orderID = UUID.randomUUID();
+                } else {
                     break;
                 }
             }
 
             assert shop != null;
-//            List<OrderItems> orderItems = new ArrayList<>();
-//            for(int k=0; k<request.getListOfItems().size(); k++)
-//            {
-//                OrderItems orderItems1 = new OrderItems();
-//                orderItems1.setOrderID(orderID);
-//                orderItems1.setBarcode(request.getListOfItems().get(k).getBarcode());
-//                orderItems1.setName(request.getListOfItems().get(k).getName());
-//                orderItems1.setDescription(request.getListOfItems().get(k).getDescription());
-//                orderItems1.setBrand(request.getListOfItems().get(k).getBrand());
-//                orderItems1.setItemType(request.getListOfItems().get(k).getItemType());
-//                orderItems1.setImageUrl(request.getListOfItems().get(k).getImageUrl());
-//                orderItems1.setPrice(request.getListOfItems().get(k).getPrice());
-//                orderItems1.setQuantity(request.getListOfItems().get(k).getQuantity());
-//                orderItems1.setProductID(request.getListOfItems().get(k).getProductID());
-//                orderItems1.setSize(request.getListOfItems().get(k).getSize());
-//                orderItems1.setTotalCost(request.getListOfItems().get(k).getQuantity()* request.getListOfItems().get(k).getPrice());
-//
-//                orderItems.add(orderItems1);
-//            }
-            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,request.getListOfItems(), request.getDiscount(), customerLocation , shop.getStore().getStoreLocation(), requiresPharmacy);
+            //            List<OrderItems> orderItems = new ArrayList<>();
+            //            for(int k=0; k<request.getListOfItems().size(); k++)
+            //            {
+            //                OrderItems orderItems1 = new OrderItems();
+            //                orderItems1.setOrderID(orderID);
+            //                orderItems1.setBarcode(request.getListOfItems().get(k).getBarcode());
+            //                orderItems1.setName(request.getListOfItems().get(k).getName());
+            //                orderItems1.setDescription(request.getListOfItems().get(k).getDescription());
+            //                orderItems1.setBrand(request.getListOfItems().get(k).getBrand());
+            //                orderItems1.setItemType(request.getListOfItems().get(k).getItemType());
+            //                orderItems1.setImageUrl(request.getListOfItems().get(k).getImageUrl());
+            //                orderItems1.setPrice(request.getListOfItems().get(k).getPrice());
+            //                orderItems1.setQuantity(request.getListOfItems().get(k).getQuantity());
+            //                orderItems1.setProductID(request.getListOfItems().get(k).getProductID());
+            //                orderItems1.setSize(request.getListOfItems().get(k).getSize());
+            //                orderItems1.setTotalCost(request.getListOfItems().get(k).getQuantity()* request.getListOfItems().get(k).getPrice());
+            //
+            //                orderItems.add(orderItems1);
+            //            }
+            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
             //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
 
             if (o != null) {
 
-                    if(shop.getStore().getOpen()==true) {
-                        if(orderRepo!=null)
+                if (shop.getStore().getOpen() == true) {
+                    if (orderRepo != null)
                         orderRepo.save(o);
-                        UUID finalOrderID = orderID;
-                        new Thread(()-> {
-                            CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderID);
-                            try {
-                                CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
-                            } catch (PaymentException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            AddToQueueRequest addToQueueRequest=new AddToQueueRequest(o);
-                            try {
-                                shoppingService.addToQueue(addToQueueRequest);
-                            } catch (cs.superleague.shopping.exceptions.InvalidRequestException e) {
-                                e.printStackTrace();
-                            }
-                        }).start();
+                    UUID finalOrderID = orderID;
+                    new Thread(() -> {
+                        CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderID);
+                        try {
+                            CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                        } catch (PaymentException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        AddToQueueRequest addToQueueRequest = new AddToQueueRequest(o);
+                        try {
+                            shoppingService.addToQueue(addToQueueRequest);
+                        } catch (cs.superleague.shopping.exceptions.InvalidRequestException e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
 
-                        System.out.println("Order has been created");
-                        response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
-                    }
-                    else {
-                        throw new StoreClosedException("Store is currently closed - could not create order");
-                    }
+                    System.out.println("Order has been created");
+                    response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                } else {
+                    throw new StoreClosedException("Store is currently closed - could not create order");
+                }
             }
-
-        }else{
+        }
+        else{
             throw new InvalidRequestException("Invalid submit order request received - order unsuccessfully created.");
         }
         return response;
@@ -458,17 +449,31 @@ import java.util.List;50"
         Order order;
         double discount = 0;
         double cost;
+        Customer customer;
+        Optional<Customer> customerOptional;
 
         if(request == null){
-            order = getOrder(null).getOrder();
-        }else {
-            if (request.getUserID() == null) {
-                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
-            }
-            order = getOrder(new GetOrderRequest(request.getOrderID())).getOrder();
+            throw new InvalidRequestException("Invalid order request received - cannot get order.");
         }
 
-        if (!request.getUserID().equals(order.getUserID())) {
+        if(request.getOrderID()==null)
+        {
+            throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
+        }
+
+        CurrentUser currentUser = new CurrentUser();
+        customerOptional = customerRepo.findByEmail(currentUser.getEmail());
+
+        if(customerOptional == null || !customerOptional.isPresent()){
+            throw new InvalidRequestException("Incorrect email email given - customer does not exist");
+        }
+
+        customer = customerOptional.get();
+        GetOrderResponse getOrderResponse;
+        getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
+        order= getOrderResponse.getOrder();
+
+        if (!customer.getCustomerID().equals(order.getUserID())) {
             throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
         }
 
@@ -520,6 +525,8 @@ import java.util.List;50"
     public GetOrderResponse getOrder(GetOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
         String message = null;
         Order order;
+
+//        CurrentUser currentUser = new CurrentUser();
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
@@ -765,15 +772,11 @@ import java.util.List;50"
         if (request == null){
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
         }
-        if (request.getJwtToken() == null){
-            throw new InvalidRequestException("JWTToken of Get Customers Active Orders is null");
-        }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
-        GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(getCurrentUserRequest);
-        if (getCurrentUserResponse.getUser() == null){
-            throw new UserDoesNotExistException("Invalid jwtToken, no user found");
-        }
-        Customer customer = (Customer) getCurrentUserResponse.getUser();
+
+        CurrentUser currentUser = new CurrentUser();
+
+        Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
+
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
         if (orders == null){
             throw new OrderDoesNotExist("No Orders found for this user in the database.");

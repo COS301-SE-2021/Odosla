@@ -108,9 +108,8 @@ public class RemoveDriverFromDeliveryUnitTest {
     @Description("Tests that the request object is created successfully.")
     @DisplayName("Request object creation.")
     void checkRequestObjectCreation_UnitTest(){
-        RemoveDriverFromDeliveryRequest request = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
+        RemoveDriverFromDeliveryRequest request = new RemoveDriverFromDeliveryRequest(deliveryID);
         assertEquals(request.getDeliveryID(), deliveryID);
-        assertEquals(request.getDriverID(), driverID);
     }
 
     @Test
@@ -125,13 +124,9 @@ public class RemoveDriverFromDeliveryUnitTest {
     @Description("Tests for when there are null parameters in the request object.")
     @DisplayName("Null parameters")
     void nullParametersInRequestObject_UnitTest(){
-        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(null, deliveryID);
+        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(null);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request1));
         assertEquals("Null parameters.", thrown1.getMessage());
-
-        RemoveDriverFromDeliveryRequest request2 = new RemoveDriverFromDeliveryRequest(driverID, null);
-        Throwable thrown2 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request2));
-        assertEquals("Null parameters.", thrown2.getMessage());
     }
 
     @Test
@@ -139,33 +134,11 @@ public class RemoveDriverFromDeliveryUnitTest {
     @DisplayName("Invalid DeliveryID")
     void invalidDeliveryIDPassedIn_UnitTest(){
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
-        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
+        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request1));
         assertEquals("Delivery not found in database.", thrown1.getMessage());
     }
 
-    @Test
-    @Description("Tests for when the delivery has a different driver assigned to it.")
-    @DisplayName("Different driver assigned")
-    void differentDriverAssignedToDelivery_UnitTest(){
-        delivery.setDriverId(UUID.randomUUID());
-        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
-        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
-        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request1));
-        assertEquals("Driver was not assigned to delivery.", thrown1.getMessage());
-    }
-
-    @Test
-    @Description("Tests for when the driver is successfully removed from the delivery.")
-    @DisplayName("Successful removal")
-    void successfulRemovalOfDriverFromDelivery_UnitTest() throws InvalidRequestException, PaymentException {
-        delivery.setDriverId(driverID);
-        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
-        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
-        RemoveDriverFromDeliveryResponse response = deliveryService.removeDriverFromDelivery(request1);
-        assertEquals(response.getMessage(), "Driver successfully removed from delivery.");
-        assertEquals(response.isSuccess(), true);
-    }
 
     @Test
     @Description("Tests for when there is no driver assigned to the delivery")
@@ -173,7 +146,7 @@ public class RemoveDriverFromDeliveryUnitTest {
     void noDriverAssignedToDelivery_UnitTest() throws InvalidRequestException{
         delivery.setDriverId(null);
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
-        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(driverID, deliveryID);
+        RemoveDriverFromDeliveryRequest request1 = new RemoveDriverFromDeliveryRequest(deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.removeDriverFromDelivery(request1));
         assertEquals("No driver is assigned to this delivery.", thrown1.getMessage());
     }

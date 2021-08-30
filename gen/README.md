@@ -2,7 +2,7 @@
 
 Library Service
 - API version: 0.0.1
-  - Build date: 2021-08-17T14:13:21.516052200+02:00[Africa/Harare]
+  - Build date: 2021-08-26T18:20:06.034903200+02:00[Africa/Harare]
 
 The library service
 
@@ -85,12 +85,12 @@ public class Example {
     defaultClient.setBasePath("http://localhost");
 
     AnalyticsApi apiInstance = new AnalyticsApi(defaultClient);
-    AnalyticsCreateUserReportRequest analyticsCreateUserReportRequest = new AnalyticsCreateUserReportRequest(); // AnalyticsCreateUserReportRequest | The input body required by this request
+    AnalyticsCreateFinancialReportRequest analyticsCreateFinancialReportRequest = new AnalyticsCreateFinancialReportRequest(); // AnalyticsCreateFinancialReportRequest | The input body required by this request
     try {
-      AnalyticsCreateUserReportResponse result = apiInstance.createUserReport(analyticsCreateUserReportRequest);
+      AnalyticsCreateFinancialReportResponse result = apiInstance.createFinancialReport(analyticsCreateFinancialReportRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling AnalyticsApi#createUserReport");
+      System.err.println("Exception when calling AnalyticsApi#createFinancialReport");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -107,6 +107,8 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AnalyticsApi* | [**createFinancialReport**](docs/AnalyticsApi.md#createFinancialReport) | **POST** /analytics/createFinancialReport | Endpoint for creating user report
+*AnalyticsApi* | [**createMonthlyReport**](docs/AnalyticsApi.md#createMonthlyReport) | **POST** /analytics/createMonthlyReport | Endpoint for creating monthly report
 *AnalyticsApi* | [**createUserReport**](docs/AnalyticsApi.md#createUserReport) | **POST** /analytics/createUserReport | Endpoint for creating user report
 *DeliveryApi* | [**addDeliveryDetail**](docs/DeliveryApi.md#addDeliveryDetail) | **POST** /delivery/addDeliveryDetail | Endpoint for add delivery detail
 *DeliveryApi* | [**assignDriverToDelivery**](docs/DeliveryApi.md#assignDriverToDelivery) | **POST** /delivery/assignDriverToDelivery | Endpoint for assign driver to delivery
@@ -119,6 +121,7 @@ Class | Method | HTTP request | Description
 *DeliveryApi* | [**updateDeliveryStatus**](docs/DeliveryApi.md#updateDeliveryStatus) | **POST** /delivery/updateDeliveryStatus | Endpoint for updating the status of a delivery
 *NotificationApi* | [**sendDirectEmailNotification**](docs/NotificationApi.md#sendDirectEmailNotification) | **POST** /notification/sendDirectEmailNotification | Endpoint for sending a direct email notification
 *NotificationApi* | [**sendEmailNotification**](docs/NotificationApi.md#sendEmailNotification) | **POST** /notification/sendEmailNotification | Endpoint for sending an email notification
+*PaymentApi* | [**getCustomerActiveOrders**](docs/PaymentApi.md#getCustomerActiveOrders) | **POST** /payment/getCustomersActiveOrders | Endpoint for the customers getting their active order
 *PaymentApi* | [**getItemsPayments**](docs/PaymentApi.md#getItemsPayments) | **POST** /payment/getItems | Endpoint for Get Items use case
 *PaymentApi* | [**getStatus**](docs/PaymentApi.md#getStatus) | **POST** /payment/getStatus | Endpoint for Get Status use case
 *PaymentApi* | [**submitOrder**](docs/PaymentApi.md#submitOrder) | **POST** /payment/submitOrder | Endpoint for the Submit Order use case
@@ -131,8 +134,12 @@ Class | Method | HTTP request | Description
 *ShoppingApi* | [**populateTables**](docs/ShoppingApi.md#populateTables) | **POST** /shopping/populateTables | Endpoint populating tables
 *ShoppingApi* | [**removeQueuedOrder**](docs/ShoppingApi.md#removeQueuedOrder) | **POST** /shopping/removeQueuedOrder | Endpoint for removing a queued order.
 *UserApi* | [**clearShoppingCart**](docs/UserApi.md#clearShoppingCart) | **POST** /user/clearShoppingCart | Endpoint for clearing a shopping cart
+*UserApi* | [**completeDelivery**](docs/UserApi.md#completeDelivery) | **POST** /user/completeDelivery | Endpoint for complete delivery use case
 *UserApi* | [**completePackagingOrder**](docs/UserApi.md#completePackagingOrder) | **POST** /user/completePackagingOrder | Endpoint for complete packaging order use case
+*UserApi* | [**driverSetRating**](docs/UserApi.md#driverSetRating) | **POST** /user/driverSetRating | Endpoint for setting rating use case
 *UserApi* | [**getCurrentUser**](docs/UserApi.md#getCurrentUser) | **POST** /user/getCurrentUser | Endpoint for to get Current user
+*UserApi* | [**getCustomerByUUID**](docs/UserApi.md#getCustomerByUUID) | **POST** /user/getCustomerByUUID | Endpoint for get customer by UUID use case
+*UserApi* | [**getDeliveryDriverByOrderId**](docs/UserApi.md#getDeliveryDriverByOrderId) | **POST** /delivery/getDeliveryDriverByOrderId | Endpoint for get delivery driver by order id use case
 *UserApi* | [**getGroceryLists**](docs/UserApi.md#getGroceryLists) | **POST** /user/getGroceryLists | Endpoint for get grocery lists use case
 *UserApi* | [**getNextQueued**](docs/UserApi.md#getNextQueued) | **POST** /shopping/getNextQueued | Endpoint for getting next queue
 *UserApi* | [**getShoppingCart**](docs/UserApi.md#getShoppingCart) | **POST** /user/getShoppingCart | Endpoint for getting a shopping cart
@@ -147,6 +154,7 @@ Class | Method | HTTP request | Description
 *UserApi* | [**setCart**](docs/UserApi.md#setCart) | **POST** /user/setCart | Endpoint for setting a shopping cart
 *UserApi* | [**setCurrentLocation**](docs/UserApi.md#setCurrentLocation) | **POST** /user/setCurrentLocation | Endpoint for setting Current Location Driver
 *UserApi* | [**updateDriverShift**](docs/UserApi.md#updateDriverShift) | **POST** /user/updateDriverShift | Endpoint for updating driver shift
+*UserApi* | [**updateShopperDetails**](docs/UserApi.md#updateShopperDetails) | **POST** /user/updateShopperDetails | Endpoint for updating shopper details
 *UserApi* | [**updateShopperShift**](docs/UserApi.md#updateShopperShift) | **POST** /user/updateShopperShift | Endpoint for updating shopper shift
 *UserApi* | [**verifyAccount**](docs/UserApi.md#verifyAccount) | **POST** /user/verifyAccount | Endpoint for verifying a user account
 
@@ -154,6 +162,10 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [AdminObject](docs/AdminObject.md)
+ - [AnalyticsCreateFinancialReportRequest](docs/AnalyticsCreateFinancialReportRequest.md)
+ - [AnalyticsCreateFinancialReportResponse](docs/AnalyticsCreateFinancialReportResponse.md)
+ - [AnalyticsCreateMonthlyReportRequest](docs/AnalyticsCreateMonthlyReportRequest.md)
+ - [AnalyticsCreateMonthlyReportResponse](docs/AnalyticsCreateMonthlyReportResponse.md)
  - [AnalyticsCreateUserReportRequest](docs/AnalyticsCreateUserReportRequest.md)
  - [AnalyticsCreateUserReportResponse](docs/AnalyticsCreateUserReportResponse.md)
  - [CustomerObject](docs/CustomerObject.md)
@@ -166,10 +178,13 @@ Class | Method | HTTP request | Description
  - [DeliveryDetailObject](docs/DeliveryDetailObject.md)
  - [DeliveryGetDeliveryDetailRequest](docs/DeliveryGetDeliveryDetailRequest.md)
  - [DeliveryGetDeliveryDetailResponse](docs/DeliveryGetDeliveryDetailResponse.md)
+ - [DeliveryGetDeliveryDriverByOrderIdRequest](docs/DeliveryGetDeliveryDriverByOrderIdRequest.md)
+ - [DeliveryGetDeliveryDriverByOrderIdResponse](docs/DeliveryGetDeliveryDriverByOrderIdResponse.md)
  - [DeliveryGetDeliveryStatusRequest](docs/DeliveryGetDeliveryStatusRequest.md)
  - [DeliveryGetDeliveryStatusResponse](docs/DeliveryGetDeliveryStatusResponse.md)
  - [DeliveryGetNextOrderForDriverRequest](docs/DeliveryGetNextOrderForDriverRequest.md)
  - [DeliveryGetNextOrderForDriverResponse](docs/DeliveryGetNextOrderForDriverResponse.md)
+ - [DeliveryObject](docs/DeliveryObject.md)
  - [DeliveryRemoveDriverFromDeliveryRequest](docs/DeliveryRemoveDriverFromDeliveryRequest.md)
  - [DeliveryRemoveDriverFromDeliveryResponse](docs/DeliveryRemoveDriverFromDeliveryResponse.md)
  - [DeliveryTrackDeliveryRequest](docs/DeliveryTrackDeliveryRequest.md)
@@ -184,7 +199,10 @@ Class | Method | HTTP request | Description
  - [NotificationSendDirectEmailNotificationResponse](docs/NotificationSendDirectEmailNotificationResponse.md)
  - [NotificationSendEmailNotificationRequest](docs/NotificationSendEmailNotificationRequest.md)
  - [NotificationSendEmailNotificationResponse](docs/NotificationSendEmailNotificationResponse.md)
+ - [OrderItemsObject](docs/OrderItemsObject.md)
  - [OrderObject](docs/OrderObject.md)
+ - [PaymentGetCustomersActiveOrdersRequest](docs/PaymentGetCustomersActiveOrdersRequest.md)
+ - [PaymentGetCustomersActiveOrdersResponse](docs/PaymentGetCustomersActiveOrdersResponse.md)
  - [PaymentGetItemsRequest](docs/PaymentGetItemsRequest.md)
  - [PaymentGetItemsResponse](docs/PaymentGetItemsResponse.md)
  - [PaymentGetStatusRequest](docs/PaymentGetStatusRequest.md)
@@ -212,10 +230,16 @@ Class | Method | HTTP request | Description
  - [UserAccountVerifyResponse](docs/UserAccountVerifyResponse.md)
  - [UserClearShoppingCartRequest](docs/UserClearShoppingCartRequest.md)
  - [UserClearShoppingCartResponse](docs/UserClearShoppingCartResponse.md)
+ - [UserCompleteDeliveryRequest](docs/UserCompleteDeliveryRequest.md)
+ - [UserCompleteDeliveryResponse](docs/UserCompleteDeliveryResponse.md)
  - [UserCompletePackagingOrderRequest](docs/UserCompletePackagingOrderRequest.md)
  - [UserCompletePackagingOrderResponse](docs/UserCompletePackagingOrderResponse.md)
+ - [UserDriverSetRatingRequest](docs/UserDriverSetRatingRequest.md)
+ - [UserDriverSetRatingResponse](docs/UserDriverSetRatingResponse.md)
  - [UserGetCurrentUserRequest](docs/UserGetCurrentUserRequest.md)
  - [UserGetCurrentUserResponse](docs/UserGetCurrentUserResponse.md)
+ - [UserGetCustomerByUUIDRequest](docs/UserGetCustomerByUUIDRequest.md)
+ - [UserGetCustomerByUUIDResponse](docs/UserGetCustomerByUUIDResponse.md)
  - [UserGetGroceryListRequest](docs/UserGetGroceryListRequest.md)
  - [UserGetGroceryListResponse](docs/UserGetGroceryListResponse.md)
  - [UserGetShoppingCartRequest](docs/UserGetShoppingCartRequest.md)
@@ -243,6 +267,8 @@ Class | Method | HTTP request | Description
  - [UserSetCurrentLocationResponse](docs/UserSetCurrentLocationResponse.md)
  - [UserUpdateDriverShiftRequest](docs/UserUpdateDriverShiftRequest.md)
  - [UserUpdateDriverShiftResponse](docs/UserUpdateDriverShiftResponse.md)
+ - [UserUpdateShopperDetailsRequest](docs/UserUpdateShopperDetailsRequest.md)
+ - [UserUpdateShopperDetailsResponse](docs/UserUpdateShopperDetailsResponse.md)
  - [UserUpdateShopperShiftRequest](docs/UserUpdateShopperShiftRequest.md)
  - [UserUpdateShopperShiftResponse](docs/UserUpdateShopperShiftResponse.md)
 

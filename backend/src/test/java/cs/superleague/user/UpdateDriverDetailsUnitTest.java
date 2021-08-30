@@ -1,6 +1,7 @@
 package cs.superleague.user;
 
 import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.DriverDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.DriverRepo;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -29,15 +31,26 @@ public class UpdateDriverDetailsUnitTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    BCryptPasswordEncoder passwordEncoder;
     UpdateDriverDetailsRequest request;
     UUID driverId=UUID.randomUUID();
     Driver driver;
+    Driver driverExisting;
     UpdateDriverDetailsResponse response;
 
     @BeforeEach
     void setUp() {
-        request=new UpdateDriverDetailsRequest(driverId,"name","surname","email@gmail.com","password","phoneNumber");
-        driver=new Driver();
+        passwordEncoder = new BCryptPasswordEncoder(15);
+
+        request=new UpdateDriverDetailsRequest("name","surname","email@gmail.com","password","phoneNumber", "currentPassword");
+        driver = new Driver();
+        driver.setEmail("email@yahoo.com");
+        driver.setDriverID(UUID.randomUUID());
+        driver.setPassword(passwordEncoder.encode(request.getCurrentPassword()));
+
+        driverExisting = new Driver();
+        driverExisting.setDriverID(UUID.randomUUID());
+        driverExisting.setEmail("validEmail@gmail.com");
     }
 
     @AfterEach
@@ -51,39 +64,31 @@ public class UpdateDriverDetailsUnitTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void UnitTest_testingNullRequestUserIDParameter(){
-        request.setDriverID(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverDetails(request));
-        assertEquals("DriverId is null - could not update driver", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("Request object created correctly")
     void UnitTest_requestObjectCorrectlyCreated(){
-        UpdateDriverDetailsRequest req=new UpdateDriverDetailsRequest(driverId,"n","s","e","pass","pN");
+        UpdateDriverDetailsRequest req=new UpdateDriverDetailsRequest("n","s","e","pass","pN", "currentPassword");
         assertNotNull(req);
-        assertEquals(driverId,req.getDriverID());
         assertEquals("n",req.getName());
         assertEquals("s",req.getSurname());
         assertEquals("e",req.getEmail());
         assertEquals("pass",req.getPassword());
         assertEquals("pN",req.getPhoneNumber());
+        assertEquals("currentPassword", req.getCurrentPassword());
     }
 
     @Test
-    @DisplayName("When driver with given UserID does not exist")
+    @DisplayName("When driver with given Email does not exist")
     void UnitTest_testingInvalidUser(){
-        when(driverRepo.findById(Mockito.any())).thenReturn(null);
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(DriverDoesNotExistException.class, ()-> userService.updateDriverDetails(request));
-        assertEquals("User with given userID does not exist - could not update driver", thrown.getMessage());
+        assertEquals("User with given email does not exist - could not update driver", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When an Invalid email is given")
     void UnitTest_testingInvalidEmail(){
         request.setEmail("invalid");
-        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
 
         try {
             response = userService.updateDriverDetails(request);
@@ -100,7 +105,8 @@ public class UpdateDriverDetailsUnitTest {
     @DisplayName("When an Invalid password is given")
     void UnitTest_testingInvalidPassword(){
 
-        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
+        when(driverRepo.findDriverByEmail(request.getEmail())).thenReturn((null));
 
         try {
             response = userService.updateDriverDetails(request);
@@ -116,9 +122,9 @@ public class UpdateDriverDetailsUnitTest {
     @Test
     @DisplayName("When null update values are given")
     void UnitTest_testingNullUpdates(){
-        request = new UpdateDriverDetailsRequest(driverId, null, null, null,
-                null, null);
-        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
+        request = new UpdateDriverDetailsRequest( null, null, null,
+                null, null, null);
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
 
         try {
             response = userService.updateDriverDetails(request);
@@ -135,8 +141,8 @@ public class UpdateDriverDetailsUnitTest {
     @DisplayName("When user tries to update to existingEmail")
     void UnitTest_testingExistingEmailUpdateAttempt(){
         driver.setEmail("validEmail@gmail.com");
-        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
-        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn(driver);
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
+        when(driverRepo.findDriverByEmail(request.getEmail())).thenReturn(driverExisting);
         try {
             response = userService.updateDriverDetails(request);
             assertEquals("Email is already taken", response.getMessage());
@@ -153,7 +159,8 @@ public class UpdateDriverDetailsUnitTest {
     void UnitTest_testingSuccessfulUpdate(){
 
         request.setPassword("validPassword@1");
-        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
+        when(driverRepo.findDriverByEmail(Mockito.any())).thenReturn((driver));
+        when(driverRepo.findDriverByEmail(request.getEmail())).thenReturn(null);
 
         try {
             response = userService.updateDriverDetails(request);

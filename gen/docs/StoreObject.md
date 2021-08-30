@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **openingTime** | **Integer** |  |  [optional]
 **closingTime** | **Integer** |  |  [optional]
 **imageUrl** | **String** |  |  [optional]
+**storeLocation** | [**GeoPointObject**](GeoPointObject.md) |  |  [optional]
 
 
 

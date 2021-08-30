@@ -12,14 +12,22 @@ import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.UpdateDriverShiftRequest;
 import cs.superleague.user.responses.UpdateDriverShiftResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,6 +60,8 @@ public class UpdateDriverShiftIntegrationTest {
     String shopperJWT;
     String driverJWT;
 
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
     @BeforeEach
     void setUp() {
 
@@ -71,12 +81,27 @@ public class UpdateDriverShiftIntegrationTest {
         driverJWT = jwtTokenUtil.generateJWTTokenDriver(driver);
         shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
 
-        request=new UpdateDriverShiftRequest(driverJWT,true);
+        String jwt = driverJWT.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        request=new UpdateDriverShiftRequest(true);
     }
 
     @AfterEach
     void tearDown(){
+
         driverRepo.deleteAll();
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -86,13 +111,6 @@ public class UpdateDriverShiftIntegrationTest {
         assertEquals("UpdateDriverShiftRequest object is null", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("When JWTToken parameter is not specified")
-    void IntegrationTest_testingNullRequestDriverIDParameter(){
-        request.setJWTToken(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverShift(request));
-        assertEquals("JWTToken in UpdateDriverShiftRequest is null", thrown.getMessage());
-    }
 
     @Test
     @DisplayName("When onShift parameter is not specified")
@@ -100,22 +118,6 @@ public class UpdateDriverShiftIntegrationTest {
         request.setOnShift(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverShift(request));
         assertEquals("onShift in UpdateDriverShiftRequest is null", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When driver with JWTToken return Invalid User")
-    void IntegrationTest_testingDriverDoesNotExist(){
-
-        try{
-            UpdateDriverShiftRequest req = new UpdateDriverShiftRequest(shopperJWT, false);
-            UpdateDriverShiftResponse response = userService.updateDriverShift(req);
-            assertFalse(response.isSuccess());
-            assertEquals("No driver exist with that JWTToken", response.getMessage());
-        }catch(UserException e){
-            e.printStackTrace();
-            fail();
-        }
-
     }
 
     @Test
