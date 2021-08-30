@@ -117,40 +117,12 @@ public class GetOrdersUnitTest {
     }
 
     @Test
-    @DisplayName("When request object parameter - JWTToken - is not specified")
-    void UnitTest_testingNull_JWTToken_Parameter_RequestObject(){
-        GetOrdersRequest request=new GetOrdersRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.getOrders(request));
-        assertEquals("JWTToken is null in GetUsersRequest request - could not return orders", thrown.getMessage());
-    }
-
-    @Test
-    @Description("Tests for when JWT does not return admin userType")
-    @DisplayName("When request object parameter - JWT does not return admin userType")
-    void UnitTest_testing_JWTToken_Parameter_RequestObject_InvalidUserType(){
-        GetOrdersRequest request = new GetOrdersRequest(shopperJWT);
-
-        try {
-            GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(shopper,true, Calendar.getInstance().getTime(),"User successfully returned");
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
-            GetOrdersResponse response = paymentService.getOrders(request);
-            assertFalse(response.isSuccess());
-            assertNull(response.getOrders());
-            assertEquals("JWTToken returns an invalid user type - could not get Orders", response.getMessage());
-        }catch (Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     @DisplayName("When request object parameter - JWTToken - valid user type, emptyOrders")
     void UnitTest_testing_JWTToken_Parameter_RequestObject_ValidUserTypeEmptyOrders(){
-        GetOrdersRequest request = new GetOrdersRequest(adminJWT);
+        GetOrdersRequest request = new GetOrdersRequest();
 
         try {
             GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin,true, Calendar.getInstance().getTime(),"User successfully returned");
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
             when(orderRepo.findAll()).thenReturn(orders);
             GetOrdersResponse response = paymentService.getOrders(request);
             assertTrue(response.isSuccess());
@@ -165,13 +137,12 @@ public class GetOrdersUnitTest {
     @Test
     @DisplayName("When request object parameter - JWTToken - valid user type")
     void UnitTest_testing_JWTToken_Parameter_RequestObject_ValidUserType(){
-        GetOrdersRequest request = new GetOrdersRequest(adminJWT);
+        GetOrdersRequest request = new GetOrdersRequest();
 
         orders.add(order);
 
         try {
             GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin,true, Calendar.getInstance().getTime(),"User successfully returned");
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
             when(orderRepo.findAll()).thenReturn(orders);
             GetOrdersResponse response = paymentService.getOrders(request);
             assertTrue(response.isSuccess());

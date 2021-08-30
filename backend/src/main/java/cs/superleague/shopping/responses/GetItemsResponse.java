@@ -9,10 +9,10 @@ import java.util.UUID;
 
 public class GetItemsResponse {
 
-    List<Item> items;
-    Date timestamp;
-    String message;
-    UUID storeID;
+    private List<Item> items;
+    private Date timestamp;
+    private String message;
+    private UUID storeID;
 
     public GetItemsResponse(UUID storeID, List<Item> items, Date timestamp, String message)
     {

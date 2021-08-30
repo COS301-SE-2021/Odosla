@@ -17,15 +17,19 @@ import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,11 +43,10 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Autowired
     DriverRepo driverRepo;
     @Autowired
-    JwtUtil jwtUtil;
-    @Autowired
     OrderRepo orderRepo;
     @Autowired
     CustomerRepo customerRepo;
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
 
     UUID driverID;
     UUID deliveryID;
@@ -78,35 +81,41 @@ public class AssignDriverToDeliveryIntegrationTest {
         orderRepo.save(order);
         driverRepo.save(driver);
         deliveryRepo.save(delivery);
-        jwtToken=jwtUtil.generateJWTTokenDriver(driver);
         customer=new Customer();
         customer.setCustomerID(UUID.randomUUID());
         customer.setEmail("hello@gmail.com");
         customer.setAccountType(UserType.CUSTOMER);
         customerRepo.save(customer);
+
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenDriver(driver);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        System.out.println(userType);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @AfterEach
     void tearDown(){
         deliveryRepo.deleteAll();
         driverRepo.deleteAll();
-    }
-
-    @Test
-    @Description("Test for when the driver does not exist in the database.")
-    @DisplayName("Invalid users jwtToken")
-    void invalidJWTTokenPassedInTheRequestObject_IntegrationTest(){
-        jwtToken=jwtUtil.generateJWTTokenCustomer(customer);
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
-        assertEquals("Invalid user.", thrown.getMessage());
+        SecurityContextHolder.clearContext();
     }
 
     @Test
     @Description("Tests for when the deliveryID does not exist in the database.")
     @DisplayName("Invalid deliveryID")
     void invalidDeliveryIDPassedInRequestObject_IntegrationTest(){
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, UUID.randomUUID());
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.randomUUID());
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
         assertEquals("Delivery does not exist in the database.", thrown.getMessage());
     }
@@ -117,7 +126,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     void deliveryAlreadyTakenByADifferentDriver_IntegrationTest(){
         delivery.setDriverId(UUID.randomUUID());
         deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request));
         assertEquals("This delivery has already been taken by another driver.", thrown.getMessage());
     }
@@ -126,7 +135,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Description("Tests for when the driver is successfully assigned to the delivery.")
     @DisplayName("Successful assigning")
     void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
         assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
         assertEquals(response.isAssigned(), true);
@@ -140,7 +149,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, cs.superleague.user.exceptions.InvalidRequestException, PaymentException {
         delivery.setDriverId(driverID);
         deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
         assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
         assertEquals(response.isAssigned(), true);
@@ -156,7 +165,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     void noOrderInDatabaseCorrespondingToDelivery_IntegrationTest(){
         delivery.setOrderID(UUID.randomUUID());
         deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
         assertEquals(thrown1.getMessage(), "Invalid order.");
     }
@@ -167,7 +176,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     void noPickUpLocationIsSpecified_IntegrationTest(){
         delivery.setPickUpLocation(null);
         deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
         assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
     }
@@ -178,7 +187,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     void noDropOffLocationIsSpecified_IntegrationTest(){
         delivery.setDropOffLocation(null);
         deliveryRepo.save(delivery);
-        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(jwtToken, deliveryID);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
         assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
     }

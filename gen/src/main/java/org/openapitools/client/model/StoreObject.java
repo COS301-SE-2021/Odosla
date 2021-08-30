@@ -23,12 +23,13 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
+import org.openapitools.client.model.GeoPointObject;
 
 /**
  * Generic schema for a store
  */
 @ApiModel(description = "Generic schema for a store")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class StoreObject {
   public static final String SERIALIZED_NAME_STORE_I_D = "storeID";
   @SerializedName(SERIALIZED_NAME_STORE_I_D)
@@ -61,6 +62,10 @@ public class StoreObject {
   public static final String SERIALIZED_NAME_IMAGE_URL = "imageUrl";
   @SerializedName(SERIALIZED_NAME_IMAGE_URL)
   private String imageUrl;
+
+  public static final String SERIALIZED_NAME_STORE_LOCATION = "storeLocation";
+  @SerializedName(SERIALIZED_NAME_STORE_LOCATION)
+  private GeoPointObject storeLocation;
 
 
   public StoreObject storeID(String storeID) {
@@ -247,6 +252,29 @@ public class StoreObject {
   }
 
 
+  public StoreObject storeLocation(GeoPointObject storeLocation) {
+    
+    this.storeLocation = storeLocation;
+    return this;
+  }
+
+   /**
+   * Get storeLocation
+   * @return storeLocation
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public GeoPointObject getStoreLocation() {
+    return storeLocation;
+  }
+
+
+  public void setStoreLocation(GeoPointObject storeLocation) {
+    this.storeLocation = storeLocation;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -263,12 +291,13 @@ public class StoreObject {
         Objects.equals(this.maxOrders, storeObject.maxOrders) &&
         Objects.equals(this.openingTime, storeObject.openingTime) &&
         Objects.equals(this.closingTime, storeObject.closingTime) &&
-        Objects.equals(this.imageUrl, storeObject.imageUrl);
+        Objects.equals(this.imageUrl, storeObject.imageUrl) &&
+        Objects.equals(this.storeLocation, storeObject.storeLocation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(storeID, storeBrand, isOpen, maxShoppers, maxOrders, openingTime, closingTime, imageUrl);
+    return Objects.hash(storeID, storeBrand, isOpen, maxShoppers, maxOrders, openingTime, closingTime, imageUrl, storeLocation);
   }
 
 
@@ -284,6 +313,7 @@ public class StoreObject {
     sb.append("    openingTime: ").append(toIndentedString(openingTime)).append("\n");
     sb.append("    closingTime: ").append(toIndentedString(closingTime)).append("\n");
     sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
+    sb.append("    storeLocation: ").append(toIndentedString(storeLocation)).append("\n");
     sb.append("}");
     return sb.toString();
   }

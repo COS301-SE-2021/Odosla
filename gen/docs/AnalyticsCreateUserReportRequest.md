@@ -7,7 +7,7 @@ This object is expected as input
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**adminID** | **String** |  |  [optional]
+**jwTToken** | **String** |  |  [optional]
 **startDate** | **String** |  |  [optional]
 **endDate** | **String** |  |  [optional]
 **reportType** | **String** |  |  [optional]

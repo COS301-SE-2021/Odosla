@@ -10,6 +10,7 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.dataclass.Driver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -27,9 +28,11 @@ public class FinancialAnalyticsHelper {
         this.storeRepo = storeRepo;
     }
 
-    public Document createPDF() throws Exception{
+    public byte[] createPDF() throws Exception{
 
         Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
 
             String home = System.getProperty("user.home");
@@ -124,7 +127,8 @@ public class FinancialAnalyticsHelper {
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
-        return document;
+        byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+        return pdfBytes;
     }
 
     public StringBuilder createCSVReport() {
