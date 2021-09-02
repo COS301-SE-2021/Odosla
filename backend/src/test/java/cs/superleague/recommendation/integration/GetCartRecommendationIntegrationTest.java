@@ -72,6 +72,6 @@ public class GetCartRecommendationIntegrationTest {
     void checksTheAddingOfOrdersToTheRecommendationRepo_IntegrationTest() throws InvalidRequestException, RecommendationRepoException {
         GetCartRecommendationRequest request = new GetCartRecommendationRequest(itemsInCart);
         GetCartRecommendationResponse response = recommendationService.getCartRecommendation(request);
-        System.out.println(response.getMessage());
+        System.out.println(response.getRecommendations().get(0).getProductID());
     }
 }
