@@ -100,38 +100,4 @@ public class RecommendationServiceImpl implements RecommendationService{
         return null;
     }
 
-    //Helper functions
-//    public void populateRecommendations(){
-//        List<Order> orders;
-//        if (lastUpdate == null){
-//            List<Recommendation> recommendation = recommendationRepo.findFirstByRecommendationAddedDateOrderByRecommendationAddedDateDesc();
-//            if (recommendation != null){
-//                lastUpdate = recommendation.get(0).getRecommendationAddedDate();
-//                //orders = orderRepo.findAll();
-//                orders = orderRepo.findAllByCreateDateAfter(lastUpdate.);
-//                lastUpdate = Calendar.getInstance();
-//            }else{
-//                orders = orderRepo.findAll();
-//                lastUpdate = Calendar.getInstance();
-//            }
-//        }else {
-//            //orders = orderRepo.findAll();
-//            orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
-//            lastUpdate = Calendar.getInstance();
-//        }
-//        for (Order o : orders){
-//            for (Item i : o.getItems()){
-//                Recommendation recommendation = new Recommendation();
-//                recommendation.setRecommendationAddedDate(Calendar.getInstance());
-//                recommendation.setOrderID(o.getOrderID());
-//                recommendation.setProductID(i.getProductID());
-//                UUID recommendationID = UUID.randomUUID();
-//                while(recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
-//                    recommendationID = UUID.randomUUID();
-//                }
-//                recommendation.setRecommendationID(recommendationID);
-//                recommendationRepo.save(recommendation);
-//            }
-//        }
-//    }
 }
