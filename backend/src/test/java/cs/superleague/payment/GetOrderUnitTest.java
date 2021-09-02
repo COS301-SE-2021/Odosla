@@ -11,15 +11,18 @@ import cs.superleague.payment.requests.GetOrderRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Description;
 import org.mockito.InjectMocks;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class GetOrderUnitTest {
     @InjectMocks
     private PaymentServiceImpl paymentService;
@@ -66,7 +69,6 @@ public class GetOrderUnitTest {
         o2 = new Order(o2UUID, expectedU1, expectedS1, expectedShopper1, Calendar.getInstance(), null, totalC, OrderType.DELIVERY, OrderStatus.AWAITING_PAYMENT, expectedListOfItems, expectedDiscount, deliveryAddress, storeAddress, false);
         listOfOrders.add(o);
         listOfOrders.add(o2);
-        MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
@@ -105,7 +107,6 @@ public class GetOrderUnitTest {
     @Description("Tests for when order requested is found - should return the object")
     @DisplayName("when the order is found the DB")
     void UnitTest_testingOrderExists() throws InvalidRequestException, OrderDoesNotExist{
-        when(orderRepo.findAll()).thenReturn(listOfOrders);
         when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(o));
         GetOrderRequest request = new GetOrderRequest(o1UUID);
         GetOrderResponse response = paymentService.getOrder(request);

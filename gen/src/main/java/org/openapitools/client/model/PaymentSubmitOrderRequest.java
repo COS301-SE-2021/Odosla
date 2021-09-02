@@ -32,11 +32,11 @@ import org.openapitools.client.model.ItemObject;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class PaymentSubmitOrderRequest {
-  public static final String SERIALIZED_NAME_USER_ID = "userId";
-  @SerializedName(SERIALIZED_NAME_USER_ID)
-  private String userId;
+  public static final String SERIALIZED_NAME_JWT_TOKEN = "jwtToken";
+  @SerializedName(SERIALIZED_NAME_JWT_TOKEN)
+  private String jwtToken;
 
   public static final String SERIALIZED_NAME_LIST_OF_ITEMS = "listOfItems";
   @SerializedName(SERIALIZED_NAME_LIST_OF_ITEMS)
@@ -67,26 +67,26 @@ public class PaymentSubmitOrderRequest {
   private String deliveryAddress;
 
 
-  public PaymentSubmitOrderRequest userId(String userId) {
+  public PaymentSubmitOrderRequest jwtToken(String jwtToken) {
     
-    this.userId = userId;
+    this.jwtToken = jwtToken;
     return this;
   }
 
    /**
    * generated token used to identify the caller of the endpoint
-   * @return userId
+   * @return jwtToken
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "generated token used to identify the caller of the endpoint")
 
-  public String getUserId() {
-    return userId;
+  public String getJwtToken() {
+    return jwtToken;
   }
 
 
-  public void setUserId(String userId) {
-    this.userId = userId;
+  public void setJwtToken(String jwtToken) {
+    this.jwtToken = jwtToken;
   }
 
 
@@ -268,7 +268,7 @@ public class PaymentSubmitOrderRequest {
       return false;
     }
     PaymentSubmitOrderRequest paymentSubmitOrderRequest = (PaymentSubmitOrderRequest) o;
-    return Objects.equals(this.userId, paymentSubmitOrderRequest.userId) &&
+    return Objects.equals(this.jwtToken, paymentSubmitOrderRequest.jwtToken) &&
         Objects.equals(this.listOfItems, paymentSubmitOrderRequest.listOfItems) &&
         Objects.equals(this.discount, paymentSubmitOrderRequest.discount) &&
         Objects.equals(this.storeId, paymentSubmitOrderRequest.storeId) &&
@@ -280,7 +280,7 @@ public class PaymentSubmitOrderRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId, listOfItems, discount, storeId, orderType, latitude, longitude, deliveryAddress);
+    return Objects.hash(jwtToken, listOfItems, discount, storeId, orderType, latitude, longitude, deliveryAddress);
   }
 
 
@@ -288,7 +288,7 @@ public class PaymentSubmitOrderRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class PaymentSubmitOrderRequest {\n");
-    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+    sb.append("    jwtToken: ").append(toIndentedString(jwtToken)).append("\n");
     sb.append("    listOfItems: ").append(toIndentedString(listOfItems)).append("\n");
     sb.append("    discount: ").append(toIndentedString(discount)).append("\n");
     sb.append("    storeId: ").append(toIndentedString(storeId)).append("\n");

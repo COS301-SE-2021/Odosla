@@ -24,12 +24,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
 import java.math.BigDecimal;
+import org.openapitools.client.model.GeoPointObject;
 
 /**
  * Generic schema for a Driver
  */
 @ApiModel(description = "Generic schema for a Driver")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DriverObject {
   public static final String SERIALIZED_NAME_NAME = "name";
   @SerializedName(SERIALIZED_NAME_NAME)
@@ -82,6 +83,14 @@ public class DriverObject {
   public static final String SERIALIZED_NAME_ON_SHIFT = "onShift";
   @SerializedName(SERIALIZED_NAME_ON_SHIFT)
   private Boolean onShift;
+
+  public static final String SERIALIZED_NAME_CURRENT_ADDRESS = "currentAddress";
+  @SerializedName(SERIALIZED_NAME_CURRENT_ADDRESS)
+  private GeoPointObject currentAddress;
+
+  public static final String SERIALIZED_NAME_DELIVERIES_COMPLETED = "deliveriesCompleted";
+  @SerializedName(SERIALIZED_NAME_DELIVERIES_COMPLETED)
+  private BigDecimal deliveriesCompleted;
 
 
   public DriverObject name(String name) {
@@ -383,6 +392,52 @@ public class DriverObject {
   }
 
 
+  public DriverObject currentAddress(GeoPointObject currentAddress) {
+    
+    this.currentAddress = currentAddress;
+    return this;
+  }
+
+   /**
+   * Get currentAddress
+   * @return currentAddress
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public GeoPointObject getCurrentAddress() {
+    return currentAddress;
+  }
+
+
+  public void setCurrentAddress(GeoPointObject currentAddress) {
+    this.currentAddress = currentAddress;
+  }
+
+
+  public DriverObject deliveriesCompleted(BigDecimal deliveriesCompleted) {
+    
+    this.deliveriesCompleted = deliveriesCompleted;
+    return this;
+  }
+
+   /**
+   * Get deliveriesCompleted
+   * @return deliveriesCompleted
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public BigDecimal getDeliveriesCompleted() {
+    return deliveriesCompleted;
+  }
+
+
+  public void setDeliveriesCompleted(BigDecimal deliveriesCompleted) {
+    this.deliveriesCompleted = deliveriesCompleted;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -404,12 +459,14 @@ public class DriverObject {
         Objects.equals(this.accountType, driverObject.accountType) &&
         Objects.equals(this.driverID, driverObject.driverID) &&
         Objects.equals(this.rating, driverObject.rating) &&
-        Objects.equals(this.onShift, driverObject.onShift);
+        Objects.equals(this.onShift, driverObject.onShift) &&
+        Objects.equals(this.currentAddress, driverObject.currentAddress) &&
+        Objects.equals(this.deliveriesCompleted, driverObject.deliveriesCompleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, driverID, rating, onShift);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, driverID, rating, onShift, currentAddress, deliveriesCompleted);
   }
 
 
@@ -430,6 +487,8 @@ public class DriverObject {
     sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
     sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
+    sb.append("    currentAddress: ").append(toIndentedString(currentAddress)).append("\n");
+    sb.append("    deliveriesCompleted: ").append(toIndentedString(deliveriesCompleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }

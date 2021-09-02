@@ -168,50 +168,19 @@ public class CreateMonthlyReportUnitTest {
     }
 
     @Test
-    @DisplayName("When adminID parameter is not specified")
-    void UnitTest_testingNullRequestOrderIDParameter(){
-        request = new CreateMonthlyReportRequest(null, ReportType.CSV);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createMonthlyReport(request));
-        assertEquals("Exception: JWTToken in request object is null", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When ReportType parameter is not specified")
     void UnitTest_testingNullRequestReportTypeParameter(){
-        request = new CreateMonthlyReportRequest("adminID", null);
+        request = new CreateMonthlyReportRequest(null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createMonthlyReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When Invalid JWTToken parameter")
-    void UnitTest_testingInvalidAdminParameter(){
-        request = new CreateMonthlyReportRequest(jwtTokenCustomer, ReportType.CSV);
-
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(customer, true, new Date(), "");
-
-        try {
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
-            response =  analyticsService.createMonthlyReport(request);
-            assertEquals("User is not an admin - Could not create report", response.getMessage());
-            assertFalse(response.isSuccess());
-
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     @DisplayName("When validJWT parameter")
     void UnitTest_testingValidAdminJWTParameterCSV(){
-        request = new CreateMonthlyReportRequest(jwtTokenAdmin, ReportType.CSV);
-
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
+        request = new CreateMonthlyReportRequest(ReportType.CSV);
 
         try {
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
-
             response =  analyticsService.createMonthlyReport(request);
             assertEquals("MonthlyReport.csv downloaded", response.getMessage());
             assertTrue(response.isSuccess());
@@ -225,12 +194,9 @@ public class CreateMonthlyReportUnitTest {
     @Test
     @DisplayName("When validJWT parameter")
     void UnitTest_testingValidAdminJWTParameterPDF(){
-        request = new CreateMonthlyReportRequest(jwtTokenAdmin, ReportType.PDF);
-
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
+        request = new CreateMonthlyReportRequest(ReportType.PDF);
 
         try {
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
             when(userService.getUsers(Mockito.any())).thenReturn(new GetUsersResponse(users, true, "", new Date()));
             when(paymentService.getOrders(Mockito.any())).thenReturn(new GetOrdersResponse(orders, true, "", new Date()));
             when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store1));

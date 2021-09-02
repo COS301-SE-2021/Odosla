@@ -42,8 +42,8 @@ public class StoresCSVImporterIntegrationTest {
     @BeforeEach
     void setUp() {
 
-        importingStores="storeid,closing_time,img_url,is_open,max_orders,max_shoppers,opening_time,store_brand,latitude,longitude,address\n";
-        importingStores+= "0fb0a357-63b9-41d2-8631-d11c67f7a27f,16,shop/pnp.png,true,5,2,7,Pick n Pay,-25.770344,28.2429369,Pick n Pay Brooklyn\n";
+        importingStores="storeid;closing_time;img_url;is_open;max_orders;max_shoppers;opening_time;store_brand;latitude;longitude;address\n";
+        importingStores+= "0fb0a357-63b9-41d2-8631-d11c67f7a27f;16;shop/pnp.png;true;5;2;7;Pick n Pay;-25.770344;28.2429369;Pick n Pay Brooklyn\n";
 
         store = new Store();
         store.setStoreID(UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f"));
@@ -79,7 +79,7 @@ public class StoresCSVImporterIntegrationTest {
     @Description("Tests for if a an item already does exist")
     @DisplayName("When file in parameter contains an item that already exists")
     void IntegrationTest_StoreAlreadyExists() throws InvalidRequestException {
-        importingStores += "0fb0a357-63b9-41d2-8631-d11c67f5627f,20,shop/woolworths.png,true,7,2,8,Woolworths,-25.790344,28.2429369,Woolies Brooklyn\n";
+        importingStores += "0fb0a357-63b9-41d2-8631-d11c67f5627f;20;shop/woolworths.png;true;7;2;8;Woolworths;-25.790344;28.2429369;Woolies Brooklyn\n";
         request = new StoreCSVImporterRequest(importingStores);
         assertThrows(InvalidRequestException.class, ()-> {
             StoreCSVImporterResponse response = ServiceSelector.getImporterService().storeCSVImporter(request);
