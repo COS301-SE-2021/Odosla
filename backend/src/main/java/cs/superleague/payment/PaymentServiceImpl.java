@@ -1,12 +1,11 @@
 package cs.superleague.payment;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfWriter;
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.CurrentUser;
-import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
+import cs.superleague.recommendation.dataclass.Recommendation;
+import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
@@ -17,31 +16,12 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
-import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.Customer;
-import cs.superleague.user.exceptions.CustomerDoesNotExistException;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
-import cs.superleague.shopping.requests.GetQueueRequest;
-import cs.superleague.shopping.requests.GetShoppersRequest;
-import cs.superleague.shopping.responses.AddToQueueResponse;
-import cs.superleague.shopping.responses.GetQueueResponse;
-import cs.superleague.shopping.responses.GetShoppersResponse;
-import cs.superleague.user.UserService;
-import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Admin;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.exceptions.AdminDoesNotExistException;
 import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.requests.GetUserByUUIDRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
-import cs.superleague.user.responses.GetUsersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -50,8 +30,6 @@ import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -68,9 +46,10 @@ public class PaymentServiceImpl implements PaymentService {
     private final AdminRepo adminRepo;
     private final UserService userService;
     private final CustomerRepo customerRepo;
+    private final RecommendationRepo recommendationRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo, RecommendationRepo recommendationRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
@@ -78,6 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.adminRepo = adminRepo;
         this.userService = userService;
         this.customerRepo= customerRepo;
+        this.recommendationRepo = recommendationRepo;
     }
 
 
@@ -279,8 +259,19 @@ public class PaymentServiceImpl implements PaymentService {
             if (o != null) {
 
                 if (shop.getStore().getOpen() == true) {
-                    if (orderRepo != null)
+                    if (orderRepo != null) {
                         orderRepo.save(o);
+                        if (recommendationRepo != null){
+                            for (Item item : request.getListOfItems()){
+                                UUID recommendationID = UUID.randomUUID();
+                                while (recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
+                                    recommendationID = UUID.randomUUID();
+                                }
+                                Recommendation recommendation = new Recommendation(recommendationID, item.getProductID(), orderID);
+                                recommendationRepo.save(recommendation);
+                            }
+                        }
+                    }
                     UUID finalOrderID = orderID;
                     new Thread(() -> {
                         CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderID);
@@ -384,6 +375,12 @@ public class PaymentServiceImpl implements PaymentService {
 
             // remove Order from DB.
             orderRepo.delete(order);
+            if (recommendationRepo != null){
+                List<Recommendation> recommendationsToDelete = recommendationRepo.findRecommendationByOrderID(req.getOrderID());
+                for (Recommendation recommendation : recommendationsToDelete){
+                    recommendationRepo.delete(recommendation);
+                }
+            }
             orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee

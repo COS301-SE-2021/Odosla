@@ -14,17 +14,13 @@ import cs.superleague.shopping.dataclass.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service("recommendationServiceImpl")
 public class RecommendationServiceImpl implements RecommendationService{
 
     private final RecommendationRepo recommendationRepo;
     private final OrderRepo orderRepo;
-    private Calendar lastUpdate;
 
     @Autowired
     public RecommendationServiceImpl(RecommendationRepo recommendationRepo, OrderRepo orderRepo) {
@@ -41,12 +37,14 @@ public class RecommendationServiceImpl implements RecommendationService{
         if (request.getItemIDs() == null){
             throw new InvalidRequestException("Null item list.");
         }
+        if (request.getItemIDs().size() == 0){
+            throw new InvalidRequestException("No items in item list.");
+        }
         if (recommendationRepo != null){
-            populateRecommendations();
             List<UUID> orderIDs = new ArrayList<>();
             List<Integer> frequencyOfOrders = new ArrayList<>();
             for (String productID : request.getItemIDs()){
-                List<Recommendation> recommendation = recommendationRepo.findRecommendationByProductyID(productID);
+                List<Recommendation> recommendation = recommendationRepo.findRecommendationByProductID(productID);
                 if (recommendation != null){
                     for (Recommendation orderID : recommendation){
                         if (!orderIDs.contains(orderID.getOrderID())){
@@ -83,6 +81,10 @@ public class RecommendationServiceImpl implements RecommendationService{
                     finalItemsRecommendation.add(item);
                 }
             }
+            if (finalItemsRecommendation.size() == 0){
+                GetCartRecommendationResponse response = new GetCartRecommendationResponse(null, false, "There are no orders that have all the requested items in them.");
+                return response;
+            }
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
         }else{
@@ -96,38 +98,37 @@ public class RecommendationServiceImpl implements RecommendationService{
     }
 
     //Helper functions
-    public void populateRecommendations(){
-        List<Order> orders;
-        if (lastUpdate == null){
-            //Recommendation recommendation = recommendationRepo.findTopByOrdersOrderByRecommendationAddedDateDesc();
-            Recommendation recommendation = null;
-            if (recommendation != null){
-                lastUpdate = recommendation.getRecommendationAddedDate();
-                orders = orderRepo.findAll();
-                //orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
-                lastUpdate = Calendar.getInstance();
-            }else{
-                orders = orderRepo.findAll();
-                lastUpdate = Calendar.getInstance();
-            }
-        }else {
-            orders = orderRepo.findAll();
-            //orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
-            lastUpdate = Calendar.getInstance();
-        }
-        for (Order o : orders){
-            for (Item i : o.getItems()){
-                Recommendation recommendation = new Recommendation();
-                recommendation.setRecommendationAddedDate(Calendar.getInstance());
-                recommendation.setOrderID(o.getOrderID());
-                recommendation.setProductID(i.getProductID());
-                UUID recommendationID = UUID.randomUUID();
-                while(recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
-                    recommendationID = UUID.randomUUID();
-                }
-                recommendation.setRecommendationID(recommendationID);
-                recommendationRepo.save(recommendation);
-            }
-        }
-    }
+//    public void populateRecommendations(){
+//        List<Order> orders;
+//        if (lastUpdate == null){
+//            List<Recommendation> recommendation = recommendationRepo.findFirstByRecommendationAddedDateOrderByRecommendationAddedDateDesc();
+//            if (recommendation != null){
+//                lastUpdate = recommendation.get(0).getRecommendationAddedDate();
+//                //orders = orderRepo.findAll();
+//                orders = orderRepo.findAllByCreateDateAfter(lastUpdate.);
+//                lastUpdate = Calendar.getInstance();
+//            }else{
+//                orders = orderRepo.findAll();
+//                lastUpdate = Calendar.getInstance();
+//            }
+//        }else {
+//            //orders = orderRepo.findAll();
+//            orders = orderRepo.findAllByCreateDateAfter(lastUpdate);
+//            lastUpdate = Calendar.getInstance();
+//        }
+//        for (Order o : orders){
+//            for (Item i : o.getItems()){
+//                Recommendation recommendation = new Recommendation();
+//                recommendation.setRecommendationAddedDate(Calendar.getInstance());
+//                recommendation.setOrderID(o.getOrderID());
+//                recommendation.setProductID(i.getProductID());
+//                UUID recommendationID = UUID.randomUUID();
+//                while(recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
+//                    recommendationID = UUID.randomUUID();
+//                }
+//                recommendation.setRecommendationID(recommendationID);
+//                recommendationRepo.save(recommendation);
+//            }
+//        }
+//    }
 }

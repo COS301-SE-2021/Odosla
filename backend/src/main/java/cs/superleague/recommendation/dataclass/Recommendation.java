@@ -2,6 +2,7 @@ package cs.superleague.recommendation.dataclass;
 
 import javax.persistence.*;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -9,26 +10,24 @@ import java.util.UUID;
 public class Recommendation {
     @Id
     private UUID recommendationID;
-    private String productyID;
+    private String productID;
     private UUID orderID;
-    private Calendar recommendationAddedDate;
 
-    public Recommendation(UUID recommendationID, String productID, UUID orderID, Calendar recommendationAddedDate) {
+    public Recommendation(UUID recommendationID, String productID, UUID orderID) {
         this.recommendationID = recommendationID;
-        this.productyID = productID;
+        this.productID = productID;
         this.orderID = orderID;
-        this.recommendationAddedDate = recommendationAddedDate;
     }
 
     public Recommendation() {
     }
 
     public String getProductID() {
-        return productyID;
+        return productID;
     }
 
     public void setProductID(String productID) {
-        this.productyID = productID;
+        this.productID = productID;
     }
 
     public UUID getRecommendationID() {
@@ -45,13 +44,5 @@ public class Recommendation {
 
     public void setOrderID(UUID orderID) {
         this.orderID = orderID;
-    }
-
-    public Calendar getRecommendationAddedDate() {
-        return recommendationAddedDate;
-    }
-
-    public void setRecommendationAddedDate(Calendar recommendationAddedDate) {
-        this.recommendationAddedDate = recommendationAddedDate;
     }
 }
