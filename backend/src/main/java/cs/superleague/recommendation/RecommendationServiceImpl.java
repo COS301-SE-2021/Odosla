@@ -79,6 +79,9 @@ public class RecommendationServiceImpl implements RecommendationService{
                         continue;
                     }
                     finalItemsRecommendation.add(item);
+                    if (finalItemsRecommendation.size() == 3){
+                        break;
+                    }
                 }
             }
             if (finalItemsRecommendation.size() == 0){

@@ -160,4 +160,31 @@ public class GetCartRecommendationUnitTest {
         assertEquals("The following items are recommended to go with the cart.", response.getMessage());
         assertEquals(true, response.isSuccess());
     }
+
+    @Test
+    @Description("Tests for when there are too many items to recommend so it cuts to the first 3.")
+    @DisplayName("Three item recommendation")
+    void testsForWhenThereAreTooManyItemsToRecommend_UnitTest() throws InvalidRequestException, RecommendationRepoException {
+        Item item3 = new Item();
+        item3.setProductID("p679");
+        Item item4 = new Item();
+        item4.setProductID("p830");
+        Item item5 = new Item();
+        item5.setProductID("p029");
+        List<Item> items = order.getItems();
+        items.add(item3);
+        items.add(item4);
+        items.add(item5);
+        order.setItems(items);
+        GetCartRecommendationRequest request = new GetCartRecommendationRequest(itemsInCart);
+        when(recommendationRepo.findRecommendationByProductID("p123")).thenReturn(list1OfRecommendations);
+        when(recommendationRepo.findRecommendationByProductID("p124")).thenReturn(list2OfRecommendations);
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
+        GetCartRecommendationResponse response = recommendationService.getCartRecommendation(request);
+        assertEquals("p999", response.getRecommendations().get(0).getProductID());
+        assertEquals("p679", response.getRecommendations().get(1).getProductID());
+        assertEquals("p830", response.getRecommendations().get(2).getProductID());
+        assertEquals("The following items are recommended to go with the cart.", response.getMessage());
+        assertEquals(true, response.isSuccess());
+    }
 }
