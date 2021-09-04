@@ -95,17 +95,10 @@ public class GetCartRecommendationIntegrationTest {
         itemRepo.save(item1);
         itemRepo.save(item2);
         itemRepo.save(item3);
-        GeoPoint geoPoint = new GeoPoint(1.0,1.0,"address");
-        Order order = new Order();
         List<Item> itemList = new ArrayList<>();
         itemList.add(item1);
         itemList.add(item2);
         itemList.add(item3);
-        order.setItems(itemList);
-        order.setOrderID(UUID.randomUUID());
-        order.setDeliveryAddress(geoPoint);
-        order.setStoreAddress(geoPoint);
-        orderRepo.save(order);
         itemsInCart = new ArrayList<>();
         itemsInCart.add("p123");
         itemsInCart.add("p124");
@@ -117,6 +110,13 @@ public class GetCartRecommendationIntegrationTest {
         storeRepo.save(store);
         SubmitOrderRequest request = new SubmitOrderRequest(itemList, 0.0, storeID, OrderType.DELIVERY, 0.0, 0.0, "address");
         ServiceSelector.getPaymentService().submitOrder(request);
+        Item item4 = new Item();
+        item4.setProductID("p568");
+        itemRepo.save(item4);
+        List<Item> itemList1 = new ArrayList<>();
+        itemList1.add(item4);
+        request = new SubmitOrderRequest(itemList1, 0.0, storeID, OrderType.DELIVERY, 0.0, 0.0, "address");
+        ServiceSelector.getPaymentService().submitOrder(request);
     }
 
     @AfterEach
@@ -126,6 +126,33 @@ public class GetCartRecommendationIntegrationTest {
         customerRepo.deleteAll();
         recommendationRepo.deleteAll();
         itemRepo.deleteAll();
+    }
+
+    @Test
+    @Description("Tests for when there is a null request object.")
+    @DisplayName("Null request")
+    void nullRequestObject_IntegrationTest(){
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> recommendationService.getCartRecommendation(null));
+        Assertions.assertEquals("Null request object.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the list of items passed in is null.")
+    @DisplayName("Null items list")
+    void testsForWhenTheListOfItemsIsNull_IntegrationTest(){
+        GetCartRecommendationRequest request = new GetCartRecommendationRequest(null);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> recommendationService.getCartRecommendation(request));
+        Assertions.assertEquals("Null item list.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when there are no items in the list.")
+    @DisplayName("No items in list")
+    void noItemsInListPassedIn_IntegrationTest(){
+        List<String> noItems = new ArrayList<>();
+        GetCartRecommendationRequest request = new GetCartRecommendationRequest(noItems);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> recommendationService.getCartRecommendation(request));
+        Assertions.assertEquals("No items in item list.", thrown.getMessage());
     }
 
     @Test
@@ -142,7 +169,21 @@ public class GetCartRecommendationIntegrationTest {
     }
 
     @Test
-    @Description("Tests for when ther is an order with one item that is not in the cart.")
+    @Description("Tests for when there is no common order for the items passed in.")
+    @DisplayName("No common orders")
+    void noCommonOrderAcrossItemsPassedIn_IntegrationTest() throws InvalidRequestException, RecommendationRepoException {
+        List<String> itemsWithNoOrderInCommon = new ArrayList<>();
+        itemsWithNoOrderInCommon.add("p568");
+        itemsWithNoOrderInCommon.add("p123");
+        GetCartRecommendationRequest request = new GetCartRecommendationRequest(itemsWithNoOrderInCommon);
+        GetCartRecommendationResponse response = recommendationService.getCartRecommendation(request);
+        Assert.assertEquals(null, response.getRecommendations());
+        Assert.assertEquals(false, response.isSuccess());
+        Assert.assertEquals("There are no orders that have all the requested items in them.", response.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when there is an order with one item that is not in the cart.")
     @DisplayName("One item recommendation")
     void checksTheAddingOfOrdersToTheRecommendationRepo_IntegrationTest() throws InvalidRequestException, RecommendationRepoException {
         GetCartRecommendationRequest request = new GetCartRecommendationRequest(itemsInCart);
