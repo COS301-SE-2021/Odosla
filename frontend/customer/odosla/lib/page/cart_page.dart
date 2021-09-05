@@ -93,9 +93,9 @@ class _CartPage extends State<CartPage> {
                                     height: 200,
                                     child: Column(
                                       children: [
-                                        TextButton(
+                                        (lists.map((e) => TextButton(
                                             onPressed: () => {},
-                                            child: Text("List 1"))
+                                            child: Text("List 1"))) as Widget)
                                       ],
                                     ),
                                   );
