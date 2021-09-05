@@ -256,7 +256,7 @@ class ApiService {
     return s;
   }
 
-  Future<Map<String, List<CartItem>>> getGroceryLists(String jwt) async {
+  Future<List<dynamic>> getGroceryLists(String jwt) async {
     debugPrint(jwt);
     final response =
         await http.post(Uri.parse(endpoint + '/user/getGroceryLists'),
@@ -272,11 +272,14 @@ class ApiService {
       debugPrint("code _ 200");
       Map<String, dynamic> map = jsonDecode(response.body);
       debugPrint(map['groceryLists'][0].toString());
-      return map['groceryLists']; //CartItem.fromJson(map)
+
+      return ((map['groceryLists'] as List).map((e) => e['name']).toList());
+
+      //return map['groceryLists']; //CartItem.fromJson(map)
     } else {
       debugPrint(jwt);
       debugPrint("___ err " + response.statusCode.toString());
-      return Map(); //artItem.fromJson(map)
+      return []; //artItem.fromJson(map)
 
     }
   }
