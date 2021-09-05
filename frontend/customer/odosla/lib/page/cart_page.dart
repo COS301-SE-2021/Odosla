@@ -86,6 +86,9 @@ class _CartPage extends State<CartPage> {
                                 }
 
                                 if (snapshot.hasData) {
+                                  List<String> lists =
+                                      snapshot.data as List<String>;
+
                                   return Container(
                                     height: 200,
                                     child: Column(
