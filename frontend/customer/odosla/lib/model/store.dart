@@ -30,6 +30,6 @@ class Store {
         openTime = json['openingTime'],
         closeTime = json['closingTime'],
         imgUrl = json['imageUrl'],
-        lat = json['storeLocation']['latitude'],
-        long = json['storeLocation']['longitude'];
+        lat = 2.2, //json['storeLocation']['latitude'],
+        long = 2.2; //json['storeLocation']['longitude'];
 }
