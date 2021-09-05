@@ -86,16 +86,17 @@ class _CartPage extends State<CartPage> {
                                 }
 
                                 if (snapshot.hasData) {
-                                  List<String> lists =
-                                      snapshot.data as List<String>;
+                                  List<dynamic> lists =
+                                      snapshot.data as List<dynamic>;
 
                                   return Container(
                                     height: 200,
                                     child: Column(
                                       children: [
                                         (lists.map((name) => TextButton(
-                                            onPressed: () => {},
-                                            child: Text(name))) as Widget)
+                                                onPressed: () => {},
+                                                child: Text(name as String)))
+                                            as Widget)
                                       ],
                                     ),
                                   );
