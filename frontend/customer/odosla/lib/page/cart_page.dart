@@ -73,23 +73,45 @@ class _CartPage extends State<CartPage> {
                     child: Text("Load list",
                         style: TextStyle(fontSize: 22, color: Colors.white)),
                     onPressed: () => {
-                      _userService
-                          .getJWTAsString()
-                          .then((value) => apiService.getGroceryLists(value!)),
                       ArsDialog(
-                              title: Text("Saved lists:"),
-                              content: Container(
-                                height: 200,
-                                child: Column(
-                                  children: [
-                                    TextButton(
-                                        onPressed: () => {},
-                                        child: Text("List 1"))
-                                  ],
-                                ),
-                              ))
-                          .show(context,
-                              transitionType: DialogTransitionType.Bubble)
+                          title: Text("Saved lists:"),
+                          content: FutureBuilder(
+                              future: _userService.getJWTAsString().then(
+                                  (value) =>
+                                      apiService.getGroceryLists(value!)),
+                              builder: (BuildContext context, snapshot) {
+                                if (snapshot.hasError) {
+                                  debugPrint("snapshot error: " +
+                                      snapshot.error.toString());
+                                }
+
+                                if (snapshot.hasData) {
+                                  return Container(
+                                    height: 200,
+                                    child: Column(
+                                      children: [
+                                        TextButton(
+                                            onPressed: () => {},
+                                            child: Text("List 1"))
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Container(
+                                    height: 200,
+                                    child: Column(
+                                      children: [
+                                        TextButton(
+                                            onPressed: () => {},
+                                            child: SizedBox(
+                                              height: 10,
+                                            )),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              })).show(context,
+                          transitionType: DialogTransitionType.Bubble)
                     },
                   ),
                 ),
