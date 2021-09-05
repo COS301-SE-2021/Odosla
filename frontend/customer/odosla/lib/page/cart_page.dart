@@ -92,12 +92,10 @@ class _CartPage extends State<CartPage> {
                                   return Container(
                                     height: 200,
                                     child: Column(
-                                      children: [
-                                        (lists.map((name) => TextButton(
-                                                onPressed: () => {},
-                                                child: Text(name as String)))
-                                            as Widget)
-                                      ],
+                                      children: (lists.map((name) => TextButton(
+                                              onPressed: () => {},
+                                              child: Text(name as String))))
+                                          .toList(),
                                     ),
                                   );
                                 } else {
