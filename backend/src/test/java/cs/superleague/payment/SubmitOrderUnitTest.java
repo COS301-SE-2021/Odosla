@@ -25,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -88,7 +89,9 @@ public class SubmitOrderUnitTest {
     Catalogue c;
     String jwtToken;
     Customer customer;
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
 
 
     @BeforeEach
