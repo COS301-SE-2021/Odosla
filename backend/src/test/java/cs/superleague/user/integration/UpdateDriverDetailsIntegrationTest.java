@@ -12,6 +12,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,9 +36,10 @@ public class UpdateDriverDetailsIntegrationTest {
     DriverRepo driverRepo;
 
     @Autowired
-    private UserServiceImpl userService;@Autowired
-    JwtUtil jwtTokenUtil;
+    private UserServiceImpl userService;
 
+    @Autowired
+    JwtUtil jwtTokenUtil;
 
     BCryptPasswordEncoder passwordEncoder;
     UpdateDriverDetailsRequest request;
@@ -49,7 +51,12 @@ public class UpdateDriverDetailsIntegrationTest {
     String jwtTokenDriver;
 
     Claims claims;
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     @BeforeEach
     void setUp() {
@@ -62,7 +69,7 @@ public class UpdateDriverDetailsIntegrationTest {
         driver.setPassword(passwordEncoder.encode(request.getCurrentPassword()));
         driverRepo.save(driver);
 
-        jwtTokenDriver = jwtTokenUtil.generateJWTTokenDriver(driver).replace("Bearer ","");
+        jwtTokenDriver = jwtTokenUtil.generateJWTTokenDriver(driver).replace(HEADER,"");
         claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtTokenDriver).getBody();
 
         List<String> authorities = (List) claims.get("authorities");

@@ -21,6 +21,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -63,7 +64,6 @@ public class UpdateCustomerDetailsIntegrationTest {
 
     GeoPoint deliveryAddress;
 
-
     List<Item> listOfItems = new ArrayList<>();
     List<GroceryList> groceryLists = new ArrayList<>();
     List<Item> shoppingCart = new ArrayList<>();
@@ -76,12 +76,17 @@ public class UpdateCustomerDetailsIntegrationTest {
     String jwtTokenCustomer;
 
     Claims claims;
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     @BeforeEach
     void setUp() {
-        passwordEncoder = new BCryptPasswordEncoder(15);
 
+        passwordEncoder = new BCryptPasswordEncoder(15);
         userID = UUID.randomUUID();
         groceryListID = UUID.randomUUID();
         expectedS1 = UUID.randomUUID();
@@ -105,7 +110,10 @@ public class UpdateCustomerDetailsIntegrationTest {
         existingCustomer = new Customer("Davido", "Styles", "ds@smallSpursy.com", "0721234567", "", new Date(), "", "", "", true,
                 UserType.CUSTOMER, UUID.randomUUID(), deliveryAddress, null, null, null, null);
 
-        jwtTokenCustomer = jwtTokenUtil.generateJWTTokenCustomer(customer).replace("Bearer ","");
+        jwtTokenCustomer = jwtTokenUtil.generateJWTTokenCustomer(customer);
+        System.out.println("FUCK "+HEADER);
+        jwtTokenCustomer = jwtTokenCustomer.replace("Bearer ","");
+                //.replace(HEADER,"");
         claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtTokenCustomer).getBody();
 
         List<String> authorities = (List) claims.get("authorities");
@@ -128,9 +136,7 @@ public class UpdateCustomerDetailsIntegrationTest {
     }
 
     @AfterEach
-    void tearDown(){
-
-    }
+    void tearDown(){}
 
 
     @Test

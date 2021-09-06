@@ -24,6 +24,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,7 +56,15 @@ public class GetNextQueuedIntegrationTest {
     @Autowired
     ShopperRepo shopperRepo;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
     UUID storeUUID1= UUID.randomUUID();
     Shopper shopper;
     Store s;
@@ -95,9 +104,8 @@ public class GetNextQueuedIntegrationTest {
         shopper.setEmail("zivanh7@gmail.com");
         shopper.setAccountType(UserType.SHOPPER);
 
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenShopper(shopper);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");

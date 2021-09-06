@@ -19,6 +19,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,7 +50,14 @@ public class GetDeliveryDetailIntegrationTest {
     @Autowired
     AdminRepo adminRepo;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     Admin admin;
     UUID adminID;
@@ -84,9 +92,8 @@ public class GetDeliveryDetailIntegrationTest {
         deliveryRepo.save(delivery);
         deliveryDetailRepo.save(deliveryDetail1);
         deliveryDetailRepo.save(deliveryDetail2);
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenAdmin(admin);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");

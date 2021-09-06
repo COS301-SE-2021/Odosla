@@ -28,8 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UpdateDeliveryStatusIntegrationTest {
     @Autowired
     private DeliveryServiceImpl deliveryService;
+
     @Autowired
     DeliveryRepo deliveryRepo;
+
     @Autowired
     OrderRepo orderRepo;
 
