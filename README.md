@@ -6,55 +6,45 @@
 <br>
 
 <div align="center">
-<kbd>
+
+ <hr>
  
-<h4 align="center">You can watch our demo 1 here: </h4>
+<h3 align="center">You can watch our latest demo here: <a href="https://drive.google.com/file/d/1hjA8lwxxnqWCcqhJVelS3THr9C8SG152/view">📺demo 3</a></h3>
+<h4 align="center">or previous demos: </h4>
+<div align="center"><a href="https://youtu.be/XCzTA11hocs">📺Demo 2</a></div>
 <div align="center"><a href="https://drive.google.com/file/d/1aXYEfV5T6ZS2eNX6-06WfX7_ZoTsxiF_/view">📺Demo 1</a></div>
  
-<h4 align="center">You can watch our demo 2 here: </h4>
-<div align="center"><a href="https://youtu.be/XCzTA11hocs">📺Demo 2</a></div>
+ <h3 align="center"> You can view the latest SRS here: <a href="https://www.overleaf.com/read/pxkfskchnjbv" target="blank">📄SRS Document</a></h3>
+ <h4 align="center">or previous versions: </h4>
+<div align="center"><a href="https://www.overleaf.com/read/gmnfnhvhddnc" target="blank">📄 version 1</a></div>
+<div align="center"><a href="https://www.overleaf.com/read/pqrmhjwhmbzy" target="blank">📄 version 2</a></div>
  
-<h4 align="center">You can watch our demo 3 here: </h4>
-<div align="center"><a href="https://drive.google.com/file/d/1hjA8lwxxnqWCcqhJVelS3THr9C8SG152/view">📺Demo 3</a></div>
- 
- <h4 align="center"> Our SRS document version 1:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/gmnfnhvhddnc" target="blank">📄SRS Document</a></div>
- 
-<h4 align="center"> Our SRS document version 2:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/pqrmhjwhmbzy" target="blank">📄SRS Document</a></div>
- 
-<h4 align="center"> Our SRS document version 3:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/pxkfskchnjbv" target="blank">📄SRS Document</a></div>
- 
- <h4 align="center"> Our Architectural Requirements document version 1:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄Architectural Requirements Document</a></div>
- 
-<h4 align="center"> Our Architectural Requirements document version 2:</h4>
+ <h3 align="center"> You can view our latest Architectural Requirements document here:</h3>
 <div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a></div>
+<h4 align="center"> or previous versions: </h4>
+<div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄 version 1 </a></div>
 
-<h4 align="center"> Our Coding Standards document:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></div>
+<h3 align="center"> You can view our latest Coding Standards document: <a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></h3>
  
-<h4 align="center"> Our Installation Guide:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄Our Installation Guide</a></div>
+<h3 align="center"> You can view our latest Installation Guide here: <a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄Our Installation Guide</a></h3>
  
-<h4 align="center"> Our User Manual:</h4>
-<div align="center"><a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄Our User Manual</a></div>
+<h3 align="center"> You can view our latest User Manual here: <a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄Our User Manual</a></h3>
  
-<h4 align="center"> Our GitHub Project Board:</h4>
+<h3 align="center"> You can view our GitHub Project Board here:</h3>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
 <br>
-</kbd>
+
 </div>
 <br>
 <br>
 
+<hr>
 
 <h3 align="center" text-decoration="underline"> Our Team</h3>
 <br>
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQGAUCOKb9PhDA/profile-displayphoto-shrink_800_800/0/1618571932130?e=1628121600&v=beta&t=sDbJVH6XRwmu504sdqUijfi2ZXcnscajWpLVfEFAjTo" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C4E03AQFZRZw7roKk_Q/profile-displayphoto-shrink_200_200/0/1626971252589?e=1635379200&v=beta&t=h_ZAn0b5Dj9J6WMIOueFeSAWTo3WP9wOXl2sPDbi7ks" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Adam Isenberg </h4>
 <p align="center">I am an aspiring software developer in the final year of my CS degree looking forward to making my mark in the industry. I am a full stack developer enjoying the best of both worlds, with a creative inclination in addition to a passion for problem solving and finding myself knee-deep in back-end algorithms. I have a wide range of experience using different technologies and frameworks from my studies as well as personal projects accumulated over the years.  </p>
@@ -63,7 +53,7 @@
 
 <hr height="2">
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C4D03AQEVrM6EYgZ9OA/profile-displayphoto-shrink_800_800/0/1621694142349?e=1628121600&v=beta&t=AQ_Vnks-BnYQFf3Lf_XNTqb-bdu6M7BxwxO1tpoSaWg" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C4D03AQEVrM6EYgZ9OA/profile-displayphoto-shrink_200_200/0/1621694142349?e=1635379200&v=beta&t=S-gAXHIw9MM7rs9nWpAYxwQegc42HpWWY_6Ca0_-_iI" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Kelly Morrison </h4>
 <p align="center">My exposure varies greatly from desktop applications to web based technologies. I have a lot of experience in Java and enjoy working with front-end technologies and
@@ -75,7 +65,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_800_800/0/1620256271448?e=1622854800&v=beta&t=mrwJyOZi2Mb_Y3VF--UrJSqKt_4_D80OrYJU5IG-7YY" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_200_200/0/1620256271448?e=1629802800&v=beta&t=ACj9KX67hqhHQKjXxI5t4rYYNyJ0wGUqkXry0uxXCxc" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Seamus Brennan </h4>
 <p align="center">I have been coding for many years and have gained a lot of experience in the process. I am always interested in learning new technologies to help solve problems in the most efficient way possible. I have experience in all the technologies listed and this makes me very confident that our final product will be able to meet the requirements and to exceed them.</p>
@@ -84,7 +74,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQHtIazyivbLig/profile-displayphoto-shrink_800_800/0/1621472357683?e=1628121600&v=beta&t=QWexFuIWEiZB9eWh2U-Ctfqtg1VtYXBJLfKNwDPFCDw" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5603AQHtIazyivbLig/profile-displayphoto-shrink_200_200/0/1621472357683?e=1635379200&v=beta&t=gKfVRmWTc_CPCA8TPGAZfrp9jfjvXEwNKzywE_d9uLY" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Zivan Haripershad </h4>
 <p align="center">I am a Multimedia student who is very dedicated to my studies and hardworking. My determination to deliver what is required and to the best of my abilities is
@@ -95,7 +85,7 @@ photoshop.</p>
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQHeYjm3Iamx7Q/profile-displayphoto-shrink_800_800/0/1574435254531?e=1628121600&v=beta&t=k-TJdzH-oczgiZfFGQdKrdcUXE8mx-T4_98IvCoaVPQ" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5603AQHeYjm3Iamx7Q/profile-displayphoto-shrink_200_200/0/1574435254531?e=1635379200&v=beta&t=GWYoUBL3jWG6OLsyCuc4Q7hPx4Yu0hhOmQSIjIqGv6A" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Ofentse Mogoatlhe </h4>
 <p align="center">I am a final year BSc IT student, aspiring to be a software engineer as it has always been interesting to me how something can go from being an idea, to becoming a fully-fledged product for the world to use. I have experience in various technologies, and I am always willing to learn ones that I have not yet come across
