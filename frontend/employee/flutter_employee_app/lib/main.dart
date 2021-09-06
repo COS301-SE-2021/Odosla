@@ -1,5 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/pages/admin/admin_main_screen.dart';
+import 'package:flutter_employee_app/pages/admin/home.dart';
 import 'package:flutter_employee_app/pages/driver/driver_main_screen.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_driver_account_screen.dart';
@@ -10,11 +12,9 @@ import 'package:flutter_employee_app/pages/login_registration/intro_screen_drive
 import 'package:flutter_employee_app/pages/login_registration/intro_screen_shopper.dart';
 import 'package:flutter_employee_app/pages/login_registration/login_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/register_screen.dart';
-import 'package:flutter_employee_app/pages/login_registration/splash_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/barcode_scanner_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
-import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 import 'package:flutter_employee_app/provider/UtilityProvider.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/provider/jwt_provider.dart';
@@ -22,7 +22,6 @@ import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
-import 'package:flutter_employee_app/services/PaymentService.dart';
 import 'package:flutter_employee_app/services/ShoppingService.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
@@ -53,8 +52,6 @@ void main() async {
   final userService = UserService();
   GetIt.I.registerSingleton(userService);
 
-  final paymentService = PaymentService();
-  GetIt.I.registerSingleton(paymentService);
 
   final shoppingService=ShoppingService();
   GetIt.I.registerSingleton(shoppingService);
@@ -84,7 +81,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:SplashScreen(),
+            home:HomePageScreen(),
             routes: routes,
           );
         },

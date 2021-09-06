@@ -13,6 +13,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -50,7 +51,12 @@ public class UpdateAdminDetailsIntegrationTest {
     String jwtTokenAdmin;
 
     Claims claims;
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     @BeforeEach
     void setUp() {
@@ -60,7 +66,7 @@ public class UpdateAdminDetailsIntegrationTest {
         admin = new Admin("", "", "validEmail@gmail.com", "0721234567", passwordEncoder.encode("validPassword@1"), "", UserType.ADMIN, adminId);
         admin.setAccountType(UserType.ADMIN);
 
-        jwtTokenAdmin = jwtTokenUtil.generateJWTTokenAdmin(admin).replace("Bearer ","");
+        jwtTokenAdmin = jwtTokenUtil.generateJWTTokenAdmin(admin).replace(HEADER,"");
         System.out.println(jwtTokenAdmin);
         claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtTokenAdmin).getBody();
 

@@ -18,6 +18,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,6 +56,9 @@ public class GetOrdersIntegrationTest {
     @Autowired
     private PaymentServiceImpl paymentService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     Shopper shopper;
     Driver driver;
@@ -71,7 +75,11 @@ public class GetOrdersIntegrationTest {
     String adminJWT;
     String driverJWT;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER= "stub";
 
     List<Order> orders;
     @BeforeEach
@@ -98,8 +106,6 @@ public class GetOrdersIntegrationTest {
         driver.setEmail("driver@gmaill.com");
 
 //        adminJWT = jwtTokenUtil.generateJWTTokenAdmin(admin);
-
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenAdmin(admin);
         jwt = jwt.replace("Bearer ","");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();

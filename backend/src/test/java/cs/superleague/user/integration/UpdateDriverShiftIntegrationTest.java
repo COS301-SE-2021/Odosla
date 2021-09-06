@@ -17,6 +17,7 @@ import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -60,7 +61,11 @@ public class UpdateDriverShiftIntegrationTest {
     String shopperJWT;
     String driverJWT;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER= "stub";
 
     @BeforeEach
     void setUp() {
@@ -81,7 +86,7 @@ public class UpdateDriverShiftIntegrationTest {
         driverJWT = jwtTokenUtil.generateJWTTokenDriver(driver);
         shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
 
-        String jwt = driverJWT.replace("Bearer ","");
+        String jwt = driverJWT.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");

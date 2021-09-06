@@ -16,6 +16,7 @@ import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -57,7 +58,12 @@ public class UpdateShopperShiftIntegrationTest {
     String shopperJWT;
     Store store;
     UUID storeID = UUID.randomUUID();
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     @BeforeEach
     void setUp() {
@@ -69,9 +75,8 @@ public class UpdateShopperShiftIntegrationTest {
         shopper.setOnShift(true);
         request=new UpdateShopperShiftRequest(true, storeID);
         storeRepo.save(store);
-        JwtUtil jwtTokenUtil=new JwtUtil();
         String jwt=jwtTokenUtil.generateJWTTokenShopper(shopper);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
