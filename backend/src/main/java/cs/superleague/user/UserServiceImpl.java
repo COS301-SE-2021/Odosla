@@ -51,10 +51,11 @@ public class UserServiceImpl implements UserService{
     private final ShoppingService shoppingService;
     private final StoreRepo storeRepo;
     private final DeliveryService deliveryService;
+    private final JwtUtil jwtUtil;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService, JwtUtil jwtUtil){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService{
         this.shoppingService = shoppingService;
         this.storeRepo = storeRepo;
         this.deliveryService= deliveryService;
+        this.jwtUtil = jwtUtil;
     }
 
     /**
@@ -1485,7 +1487,6 @@ public class UserServiceImpl implements UserService{
 
             String jwtToken = request.getJWTToken();
             jwtToken = jwtToken.replace("Bearer ","");
-            JwtUtil jwtUtil = new JwtUtil();
             String userType = jwtUtil.extractUserType(jwtToken);
             String email = jwtUtil.extractEmail(jwtToken);
             User user = null;
