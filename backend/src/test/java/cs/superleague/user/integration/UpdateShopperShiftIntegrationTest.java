@@ -11,14 +11,23 @@ import cs.superleague.user.exceptions.ShopperDoesNotExistException;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.UpdateShopperShiftRequest;
 import cs.superleague.user.responses.UpdateShopperShiftResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -50,6 +59,12 @@ public class UpdateShopperShiftIntegrationTest {
     Store store;
     UUID storeID = UUID.randomUUID();
 
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
     @BeforeEach
     void setUp() {
         store = new Store();
@@ -58,15 +73,28 @@ public class UpdateShopperShiftIntegrationTest {
         shopper.setShopperID(shopperID);
         shopper.setEmail("hello@gmail.com");
         shopper.setOnShift(true);
-        shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
-        request=new UpdateShopperShiftRequest(shopperJWT,true, storeID);
+        request=new UpdateShopperShiftRequest(true, storeID);
         storeRepo.save(store);
+        String jwt=jwtTokenUtil.generateJWTTokenShopper(shopper);
+        jwt = jwt.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @AfterEach
     void tearDown(){
         storeRepo.deleteAll();
         shopperRepo.deleteAll();
+        SecurityContextHolder.clearContext();
 
     }
 
@@ -75,14 +103,6 @@ public class UpdateShopperShiftIntegrationTest {
     void IntegrationTest_testingNullRequestObject(){
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(null));
         assertEquals("UpdateShopperShiftRequest object is null", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When jwtToken parameter is not specified")
-    void IntegrationTest_testingNullRequestJWTTokenParameter(){
-        request.setJwtToken(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(request));
-        assertEquals("ShopperID in UpdateShopperShiftRequest is null", thrown.getMessage());
     }
 
     @Test

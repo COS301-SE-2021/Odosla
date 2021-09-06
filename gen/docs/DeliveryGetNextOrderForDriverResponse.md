@@ -8,7 +8,7 @@ This object is expected as output
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **String** |  |  [optional]
-**deliveryID** | **String** |  |  [optional]
+**delivery** | [**DeliveryObject**](DeliveryObject.md) |  |  [optional]
 
 
 

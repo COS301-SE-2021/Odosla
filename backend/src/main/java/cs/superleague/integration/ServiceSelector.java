@@ -2,8 +2,10 @@ package cs.superleague.integration;
 
 import cs.superleague.delivery.DeliveryService;
 import cs.superleague.analytics.AnalyticsService;
+import cs.superleague.importer.ImporterService;
 import cs.superleague.notification.NotificationService;
 import cs.superleague.payment.PaymentService;
+import cs.superleague.recommendation.RecommendationService;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +36,20 @@ public class ServiceSelector {
     @Value("${env.ANALYTICS_SERVICE}")
     private String analyticsService = "";
 
+    @Value("${env.IMPORTER_SERVICE}")
+    private String importerService = "";
+
+    @Value("${recommendationService}")
+    private String recommendationService = "";
+
     private NotificationService notification;
     private PaymentService payment;
     private ShoppingService shopping;
     private UserService user;
     private DeliveryService delivery;
     private AnalyticsService analytics;
+    private ImporterService importer;
+    private RecommendationService recommendation;
 
     @Autowired
     public ServiceSelector() {
@@ -55,6 +65,8 @@ public class ServiceSelector {
         singleton.user=(UserService) context.getBean(userService);
         singleton.delivery=(DeliveryService) context.getBean(deliveryService);
         singleton.analytics = (AnalyticsService) context.getBean(analyticsService);
+        singleton.importer= (ImporterService) context.getBean(importerService);
+        singleton.recommendation = (RecommendationService) context.getBean(recommendationService);
     }
 
     public static PaymentService getPaymentService() {
@@ -79,5 +91,13 @@ public class ServiceSelector {
 
     public static AnalyticsService getAnalyticsService(){
         return singleton.analytics;
+    }
+
+    public static ImporterService getImporterService(){
+        return singleton.importer;
+    }
+
+    public static RecommendationService getRecommendationService(){
+        return singleton.recommendation;
     }
 }

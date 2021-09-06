@@ -337,7 +337,7 @@ class _OrderPage extends State<OrderPage> {
     if (Provider.of<DriverProvider>(context).allocated) {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
-        height: 100,
+        height: 140,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -389,7 +389,7 @@ class _OrderPage extends State<OrderPage> {
       );
     } else
       return Container(
-          height: 100,
+          height: 140,
           child: Text("A driver will be assigned shortly",
               style: TextStyle(fontSize: 16)));
   }

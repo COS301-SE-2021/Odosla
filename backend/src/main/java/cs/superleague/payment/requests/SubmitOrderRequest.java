@@ -10,7 +10,6 @@ import java.util.UUID;
 public class SubmitOrderRequest {
 
     /** attrbiutes */
-    private String jwtToken;
     private List<Item> listOfItems;
     private Double discount;
     private UUID storeID;
@@ -20,14 +19,12 @@ public class SubmitOrderRequest {
     private String address;
 
     /** constructor
-     * @param jwtToken- token from current user
      * @param listOfItems - list of items in the order of object type Item
      * @param discount - the amount of the discount
      * @param storeID - the store id of where the order will be placed
      * @param orderType - the type of order it is, whether it is a cs.superleague.delivery or collection
      */
-    public SubmitOrderRequest(String jwtToken, List<Item> listOfItems, Double discount, UUID storeID, OrderType orderType, Double longitude, Double latitude, String address) {
-        this.jwtToken = jwtToken;
+    public SubmitOrderRequest(List<Item> listOfItems, Double discount, UUID storeID, OrderType orderType, Double longitude, Double latitude, String address) {
         this.listOfItems = listOfItems;
         this.discount = discount;
         this.storeID = storeID;
@@ -38,13 +35,7 @@ public class SubmitOrderRequest {
     }
 
     /* getters */
-    public String getJwtToken() {
-        return jwtToken;
-    }
 
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
 
     public List<Item> getListOfItems() {
         return listOfItems;

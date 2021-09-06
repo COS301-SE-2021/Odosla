@@ -3,19 +3,42 @@ package cs.superleague.integration.security;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.dataclass.Shopper;
 import io.jsonwebtoken.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
 
+    @Value("${env.SECRET}")
     private String SECRET_KEY = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.HEADER}")
+    private String BEARER = "Bearer ";
+
+    @Value("${env.SHOPPER_AUTHORITY}")
+    private String SHOPPER_AUTHORITY = "ROLE_SHOPPER";
+
+    @Value("${env.DRIVER_AUTHORITY}")
+    private String DRIVER_AUTHORITY = "ROLE_DRIVER";
+
+    @Value("${env.ADMIN_AUTHORITY}")
+    private String ADMIN_AUTHORITY = "ROLE_ADMIN";
+
+    @Value("${env.CUSTOMER_AUTHORITY}")
+    private String CUSTOMER_AUTHORITY = "ROLE_CUSTOMER";
 
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);
     }
+
     public Date extractExpiration(String token){
         return extractClaim(token,Claims::getExpiration);
     }
@@ -29,7 +52,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
     private Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token){
@@ -37,45 +60,55 @@ public class JwtUtil {
     }
 
     public String generateJWTTokenShopper(Shopper shopper){
+
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),UserType.SHOPPER);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(SHOPPER_AUTHORITY);
+        claims.put("email",shopper.getEmail());
+        claims.put("userType","SHOPPER");
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),grantedAuthorities);
     }
 
     public String generateJWTTokenDriver(Driver driver){
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,driver.getDriverID(),driver.getEmail(),UserType.DRIVER);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(DRIVER_AUTHORITY);
+        claims.put("email",driver.getEmail());
+        claims.put("userType","DRIVER");
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,driver.getDriverID(),driver.getEmail(),grantedAuthorities);
     }
 
     public String generateJWTTokenAdmin(Admin admin){
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,admin.getAdminID(),admin.getEmail(),UserType.ADMIN);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(ADMIN_AUTHORITY);
+        claims.put("userType","ADMIN");
+        claims.put("email",admin.getEmail());
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,admin.getAdminID(),admin.getEmail(),grantedAuthorities);
     }
 
     public String generateJWTTokenCustomer(Customer customer){
         Map<String,Object> claims=new HashMap<>();
-        return createToken(claims,customer.getCustomerID(),customer.getEmail(),UserType.CUSTOMER);
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(CUSTOMER_AUTHORITY);
+        claims.put("userType","CUSTOMER");
+        claims.put("email",customer.getEmail());
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,customer.getCustomerID(),customer.getEmail(),grantedAuthorities);
     }
 
-    private String createToken(Map<String, Object> claims, UUID userID, String email, UserType userType) {
-
-        return Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString()).claim("userType",userType)
+    private String createToken(Map<String, Object> claims, UUID userID, String email, List<GrantedAuthority> grantedAuthorities) {
+        return BEARER+Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())
                 .setIssuedAt(new Date(Calendar.getInstance().getTimeInMillis())).setExpiration(new Date(Calendar.getInstance().getTimeInMillis()+1000*60*60*10))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 
-    public Boolean validateToken(String token, User user){
-        final String email =extractEmail(token);
-       final String userType =extractUserType(token);
-        if(user.getAccountType()==UserType.DRIVER){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("DRIVER"));
-        } else if(user.getAccountType()==UserType.SHOPPER){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("SHOPPER"));
-        } else if(user.getAccountType()==UserType.ADMIN){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("ADMIN"));
-        }else if (user.getAccountType()==UserType.CUSTOMER){
-            return(email.equals(user.getEmail()) && !isTokenExpired(token) && userType.equals("CUSTOMER"));
-        }
-        return false;
-    }
 
 }

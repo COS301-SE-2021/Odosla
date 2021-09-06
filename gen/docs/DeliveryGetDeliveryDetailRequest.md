@@ -8,7 +8,6 @@ This object is expected as input
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **deliveryID** | **String** |  |  [optional]
-**adminID** | **String** |  |  [optional]
 
 
 

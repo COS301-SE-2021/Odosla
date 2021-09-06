@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.user.dataclass.Driver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -21,9 +22,11 @@ public class UserAnalyticsHelper {
         this. data = data;
     }
 
-    public Document createPDF() throws Exception{
+    public byte[] createPDF() throws Exception{
 
         Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
 
             String home = System.getProperty("user.home");
@@ -113,7 +116,8 @@ public class UserAnalyticsHelper {
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
-        return document;
+        byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+        return pdfBytes;
     }
 
     public StringBuilder createCSVReport() {
@@ -126,36 +130,37 @@ public class UserAnalyticsHelper {
 
             sb.append("Total users");
             sb.append(",");
-            sb.append(data.get("totalNum_Users"));
-            sb.append("\n");
             sb.append("Total Number Of Admins");
             sb.append(",");
-            sb.append(data.get("totalNum_Admins"));
-            sb.append("\n");
             sb.append("Total Number Of Customers");
             sb.append(",");
-            sb.append(data.get("totalNum_Customers"));
-            sb.append("\n");
             sb.append("Total Number Of Shoppers");
             sb.append(",");
-            sb.append(data.get("totalNum_Shoppers"));
-            sb.append("\n");
             sb.append("Total Number Of Drivers");
             sb.append(",");
-            sb.append(data.get("totalNum_Drivers"));
-            sb.append("\n");
             sb.append("Total Number Of Drivers On Shift");
             sb.append(",");
-            sb.append(data.get("totalNum_DriversOnShift"));
-            sb.append("\n");
             sb.append("Total Number Of Orders Completed");
             sb.append(",");
-            sb.append(data.get("totalNum_OrdersCompletedByShoppers"));
-            sb.append("\n");
             sb.append("Average driver rating");
             sb.append(",");
-            sb.append(data.get("averageRating_Drivers"));
             sb.append("\n");
+            sb.append(data.get("totalNum_Users"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Admins"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Customers"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Shoppers"));
+            sb.append(",");
+            sb.append(data.get("totalNum_Drivers"));
+            sb.append(",");
+            sb.append(data.get("totalNum_DriversOnShift"));
+            sb.append(",");
+            sb.append(data.get("totalNum_OrdersCompletedByShoppers"));
+            sb.append(",");
+            sb.append(data.get("averageRating_Drivers"));
+            sb.append(",");
 
             pw.write(sb.toString()); // write to the csv file
             pw.close();  //stop writing

@@ -16,18 +16,22 @@ import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.responses.GetCurrentUserResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.context.annotation.Description;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -62,6 +66,13 @@ public class GetCustomerActiveOrdersIntegrationTest {
     Order order2;
     String invalidJWTToken;
 
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
+
     @BeforeEach
     void setUp() {
         Customer customer2 = new Customer();
@@ -80,17 +91,32 @@ public class GetCustomerActiveOrdersIntegrationTest {
         order2.setOrderID(UUID.randomUUID());
         order.setUserID(customerID);
         order2.setUserID(customerID);
-        request = new GetCustomersActiveOrdersRequest(jwtToken);
+        request = new GetCustomersActiveOrdersRequest();
         orderList = new ArrayList<>();
         orderRepo.save(order);
         orderRepo.save(order2);
         customerRepo.save(customer);
+
+        String jwt = jwtTokenUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @AfterEach
     void tearDown(){
         orderRepo.deleteAll();
         customerRepo.deleteAll();
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -101,14 +127,13 @@ public class GetCustomerActiveOrdersIntegrationTest {
         assertEquals("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful", thrown.getMessage());
     }
 
-    @Test
-    @Description("Tests for when an invalid jwtToken is passed in.")
-    @DisplayName("Invalid jwtToken")
-    void invalidJwtTokenPassedInRequestObject_IntegrationTest() {
-        request.setJwtToken(invalidJWTToken);
-        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> paymentService.getCustomersActiveOrders(request));
-        assertEquals(thrown.getMessage(), "Invalid jwtToken, no user found");
-    }
+//    @Test
+//    @Description("Tests for when an invalid jwtToken is passed in.")
+//    @DisplayName("Invalid jwtToken")
+//    void invalidJwtTokenPassedInRequestObject_IntegrationTest() {
+//        Throwable thrown = Assertions.assertThrows(UserDoesNotExistException.class, ()-> paymentService.getCustomersActiveOrders(request));
+//        assertEquals(thrown.getMessage(), "Invalid jwtToken, no user found");
+//    }
 
     @Test
     @Description("Tests for when the customer has no orders in the database")

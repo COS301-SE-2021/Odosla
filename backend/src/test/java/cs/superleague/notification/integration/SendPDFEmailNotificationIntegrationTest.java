@@ -13,10 +13,7 @@ import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.repos.ShopperRepo;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
@@ -47,7 +44,6 @@ public class SendPDFEmailNotificationIntegrationTest {
     @Autowired
     DriverRepo driverRepo;
 
-    Customer invalidEmailCustomer;
 
     Customer customer;
     UUID customerID;
@@ -74,6 +70,26 @@ public class SendPDFEmailNotificationIntegrationTest {
     @AfterEach
     void tearDown(){
         customerRepo.deleteAll();
+    }
+
+    @Test
+    @Description("Tests for when there is an invalid email associated with the customer.")
+    @DisplayName("Invalid email associated")
+    void noEmailAssociatedWithCustomer_IntegrationTest(){
+        customer.setEmail("u19060468tuks.co.za");
+        customerRepo.save(customer);
+        SendPDFEmailNotificationRequest request = new SendPDFEmailNotificationRequest(pdfInput, customerID, "Hi", "message", UserType.CUSTOMER);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendPDFEmailNotification(request));
+        assertEquals("Invalid recipient email address.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for when the userID is not found in the database")
+    @DisplayName("No user found")
+    void noUserFoundWithAssociatedID_IntegrationTest(){
+        SendPDFEmailNotificationRequest request = new SendPDFEmailNotificationRequest(pdfInput, customerID, "Hi", "message", UserType.SHOPPER);
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->notificationService.sendPDFEmailNotification(request));
+        assertEquals("User not found in database.", thrown.getMessage());
     }
 
     @Test

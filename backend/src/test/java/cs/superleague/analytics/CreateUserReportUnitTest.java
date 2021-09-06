@@ -2,13 +2,14 @@ package cs.superleague.analytics;
 
 import cs.superleague.analytics.dataclass.ReportType;
 import cs.superleague.analytics.exceptions.InvalidRequestException;
-import cs.superleague.analytics.exceptions.NotAuthorizedException;
 import cs.superleague.analytics.requests.CreateUserReportRequest;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.user.UserService;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.requests.GetUsersRequest;
+import cs.superleague.user.responses.GetCurrentUserResponse;
 import cs.superleague.user.responses.GetUsersResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +18,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -34,6 +38,9 @@ public class CreateUserReportUnitTest {
     @InjectMocks
     private AnalyticsServiceImpl analyticsService;
 
+    @InjectMocks
+    JwtUtil jwtTokenUtil;
+
     CreateUserReportResponse response;
     CreateUserReportRequest request;
     Admin admin;
@@ -43,6 +50,9 @@ public class CreateUserReportUnitTest {
     Driver driver2;
 
     UUID adminID = UUID.randomUUID();
+
+    String jwtTokenCustomer;
+    String jwtTokenAdmin;
 
     List<User> users = new ArrayList<>();
 
@@ -83,6 +93,9 @@ public class CreateUserReportUnitTest {
         users.add(driver);
         users.add(driver2);
 
+        jwtTokenCustomer = jwtTokenUtil.generateJWTTokenCustomer(customer);
+        jwtTokenAdmin = jwtTokenUtil.generateJWTTokenAdmin(admin);
+
     }
 
     @AfterEach
@@ -96,17 +109,9 @@ public class CreateUserReportUnitTest {
     }
 
     @Test
-    @DisplayName("When adminID parameter is not specified")
-    void UnitTest_testingNullRequestOrderIDParameter(){
-        request = new CreateUserReportRequest(null, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
-        assertEquals("Exception: User ID in request object is null", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When ReportType parameter is not specified")
     void UnitTest_testingNullRequestReportTypeParameter(){
-        request = new CreateUserReportRequest(adminID, Calendar.getInstance(), Calendar.getInstance(), null);
+        request = new CreateUserReportRequest(new Date(), new Date(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
@@ -114,7 +119,7 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When StartDate parameter is not specified")
     void UnitTest_testingNullRequestStartDateParameter(){
-        request = new CreateUserReportRequest(adminID, null, Calendar.getInstance(), ReportType.CSV);
+        request = new CreateUserReportRequest(null, new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: Start Date in request object is null", thrown.getMessage());
     }
@@ -122,55 +127,43 @@ public class CreateUserReportUnitTest {
     @Test
     @DisplayName("When endDate parameter is not specified")
     void UnitTest_testingNullRequestEndDateParameter(){
-        request = new CreateUserReportRequest(adminID, Calendar.getInstance(), null, ReportType.CSV);
+        request = new CreateUserReportRequest(new Date(), null, ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createUserReport(request));
         assertEquals("Exception: End Date in request object is null", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When Invalid adminID parameter")
-    void UnitTest_testingInvalidAdminParameter(){
-        request = new CreateUserReportRequest(UUID.randomUUID(), Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
-        when(adminRepo.findById(Mockito.any())).thenReturn(null);
-        Throwable thrown = Assertions.assertThrows(NotAuthorizedException.class, ()-> analyticsService.createUserReport(request));
-        assertEquals("ID given does not belong to admin - Could not generate report", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When valid adminID parameter")
     void UnitTest_testingValidAdminParameterPDF(){
-        request = new CreateUserReportRequest(adminID, Calendar.getInstance(), Calendar.getInstance(), ReportType.PDF);
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
-
+        request = new CreateUserReportRequest(new Date(), new Date(), ReportType.PDF);
+        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
         GetUsersResponse getUsersResponse = new GetUsersResponse(users, true, "Users successfully returned", new Date());
 
-        try{
-            when(userService.getUsers(new GetUsersRequest(Mockito.any()))).thenReturn(getUsersResponse);
-            response = analyticsService.createUserReport(request);
-            assertTrue(response.isSuccess());
+        try {
+            when(userService.getUsers(Mockito.any())).thenReturn(getUsersResponse);
+            response =  analyticsService.createUserReport(request);
             assertEquals("UserReport.pdf downloaded", response.getMessage());
-        }catch (Exception e){
+            assertTrue(response.isSuccess());
+        }catch(Exception e){
             e.printStackTrace();
-            Assertions.fail();
+            fail();
         }
     }
 
     @Test
     @DisplayName("When valid adminID parameter")
     void UnitTest_testingValidAdminParameterCSV(){
-        request = new CreateUserReportRequest(adminID, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
-
+        request = new CreateUserReportRequest(new Date(), new Date(), ReportType.CSV);
         GetUsersResponse getUsersResponse = new GetUsersResponse(users, true, "Users successfully returned", new Date());
 
-        try{
-            when(userService.getUsers(new GetUsersRequest(Mockito.any()))).thenReturn(getUsersResponse);
-            response = analyticsService.createUserReport(request);
-            assertTrue(response.isSuccess());
+        try {
+            when(userService.getUsers(new GetUsersRequest())).thenReturn(getUsersResponse);
+            response =  analyticsService.createUserReport(request);
             assertEquals("UserReport.csv downloaded", response.getMessage());
-        }catch (Exception e){
+            assertTrue(response.isSuccess());
+        }catch(Exception e){
             e.printStackTrace();
-            Assertions.fail();
+            fail();
         }
     }
 }

@@ -1,24 +1,33 @@
 package cs.superleague.user.integration;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.exceptions.AdminDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.requests.UpdateAdminDetailsRequest;
 import cs.superleague.user.responses.UpdateAdminDetailsResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Transactional
@@ -30,21 +39,56 @@ public class UpdateAdminDetailsIntegrationTest {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    JwtUtil jwtTokenUtil;
 
+    BCryptPasswordEncoder passwordEncoder;
     UpdateAdminDetailsRequest request;
-    UUID adminId=UUID.randomUUID();
+    UUID adminId = UUID.randomUUID();
     Admin admin;
     UpdateAdminDetailsResponse response;
 
+    String jwtTokenAdmin;
+
+    Claims claims;
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
     @BeforeEach
     void setUp() {
-        request=new UpdateAdminDetailsRequest(adminId,"name","surname","email@gmail.com","password","phoneNumber");
-        admin=new Admin();
+        passwordEncoder = new BCryptPasswordEncoder(15);
+
+        request = new UpdateAdminDetailsRequest("name","surname","email@gmail.com","phoneNumber","password", "validPassword@1");
+        admin = new Admin("", "", "validEmail@gmail.com", "0721234567", passwordEncoder.encode("validPassword@1"), "", UserType.ADMIN, adminId);
+        admin.setAccountType(UserType.ADMIN);
+
+        jwtTokenAdmin = jwtTokenUtil.generateJWTTokenAdmin(admin).replace(HEADER,"");
+        System.out.println(jwtTokenAdmin);
+        claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtTokenAdmin).getBody();
+
+        List<String> authorities = (List) claims.get("authorities");
+
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        adminRepo.save(admin);
     }
 
     @AfterEach
     void tearDown(){
-        adminRepo.deleteAll();
+
     }
 
     @Test
@@ -55,31 +99,26 @@ public class UpdateAdminDetailsIntegrationTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void IntegrationTest_testingNullRequestUserIDParameter(){
-        request.setAdminID(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateAdminDetails(request));
-        assertEquals("AdminId is null - could not update admin", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("Request object created correctly")
     void IntegrationTest_requestObjectCorrectlyCreated(){
-        UpdateAdminDetailsRequest req=new UpdateAdminDetailsRequest(adminId,"n","s","e","pass","pN");
+        UpdateAdminDetailsRequest req=new UpdateAdminDetailsRequest("n","s","e","pass","pN", "currentPassword");
         assertNotNull(req);
-        assertEquals(adminId,req.getAdminID());
         assertEquals("n",req.getName());
         assertEquals("s",req.getSurname());
         assertEquals("e",req.getEmail());
         assertEquals("pass",req.getPhoneNumber());
         assertEquals("pN",req.getPassword());
+        assertEquals("currentPassword", req.getCurrentPassword());
     }
 
     @Test
-    @DisplayName("When admin with given UserID does not exist")
+    @DisplayName("When admin with given Email does not exist")
     void IntegrationTest_testingInvalidUser(){
+        admin.setEmail("superleague301@gmail.com");
+        adminRepo.save(admin);
+
         Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> userService.updateAdminDetails(request));
-        assertEquals("User with given userID does not exist - could not update admin", thrown.getMessage());
+        assertEquals("User with given Email does not exist - could not update admin", thrown.getMessage());
     }
 
     @Test
@@ -105,6 +144,7 @@ public class UpdateAdminDetailsIntegrationTest {
     void IntegrationTest_testingInvalidPassword(){
 
         admin.setAdminID(adminId);
+        admin.setPassword(passwordEncoder.encode(request.getCurrentPassword()));
         adminRepo.save(admin);
 
         try {
@@ -121,8 +161,8 @@ public class UpdateAdminDetailsIntegrationTest {
     @Test
     @DisplayName("When null update values are given")
     void IntegrationTest_testingNullUpdates(){
-        request = new UpdateAdminDetailsRequest(adminId, null, null, null,
-                null, null);
+        request = new UpdateAdminDetailsRequest(null, null, null,
+                null, null, "currentPassword");
 
         admin.setAdminID(adminId);
         adminRepo.save(admin);
@@ -165,11 +205,7 @@ public class UpdateAdminDetailsIntegrationTest {
     @DisplayName("When nonnull update values are given")
     void IntegrationTest_testingSuccessfulUpdate(){
 
-        request.setPassword("validPassword@1");
-
-        admin.setEmail("validEmail@gmail.com");
-        admin.setAdminID(adminId);
-        adminRepo.save(admin);
+        request.setPassword("validPassword@3");
 
         try {
             response = userService.updateAdminDetails(request);

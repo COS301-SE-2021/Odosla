@@ -1,10 +1,12 @@
 package cs.superleague.user;
 
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.AdminDoesNotExistException;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.requests.UpdateAdminDetailsRequest;
+import cs.superleague.user.requests.UpdateShopperDetailsRequest;
 import cs.superleague.user.responses.UpdateAdminDetailsResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -30,15 +33,25 @@ public class UpdateAdminDetailsUnitTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    BCryptPasswordEncoder passwordEncoder;
     UpdateAdminDetailsRequest request;
     UUID adminId=UUID.randomUUID();
     Admin admin;
+    Admin adminExisting;
     UpdateAdminDetailsResponse response;
 
     @BeforeEach
     void setUp() {
-        request=new UpdateAdminDetailsRequest(adminId,"name","surname","email@gmail.com","password","phoneNumber");
-        admin=new Admin();
+        passwordEncoder = new BCryptPasswordEncoder(15);
+
+        request = new UpdateAdminDetailsRequest("name","surname","email@gmail.com","password","phoneNumber", "currentPassword");
+        admin = new Admin();
+        admin.setEmail("email@yahoo.com");
+        admin.setAdminID(UUID.randomUUID());
+        admin.setPassword(passwordEncoder.encode(request.getCurrentPassword()));
+
+        adminExisting = new Admin();
+        adminExisting.setEmail("validEmail@gmail.com");
     }
 
     @AfterEach
@@ -52,39 +65,31 @@ public class UpdateAdminDetailsUnitTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void UnitTest_testingNullRequestUserIDParameter(){
-        request.setAdminID(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateAdminDetails(request));
-        assertEquals("AdminId is null - could not update admin", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("Request object created correctly")
     void UnitTest_requestObjectCorrectlyCreated(){
-        UpdateAdminDetailsRequest req=new UpdateAdminDetailsRequest(adminId,"n","s","e","pass","pN");
+        UpdateAdminDetailsRequest req = new UpdateAdminDetailsRequest("n","s","e","pass","pN", "currentPassword");
         assertNotNull(req);
-        assertEquals(adminId,req.getAdminID());
         assertEquals("n",req.getName());
         assertEquals("s",req.getSurname());
         assertEquals("e",req.getEmail());
         assertEquals("pass",req.getPhoneNumber());
         assertEquals("pN",req.getPassword());
+        assertEquals("currentPassword", req.getCurrentPassword());
     }
 
     @Test
-    @DisplayName("When admin with given UserID does not exist")
+    @DisplayName("When admin with given Email does not exist")
     void UnitTest_testingInvalidUser(){
-        when(adminRepo.findById(Mockito.any())).thenReturn(null);
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> userService.updateAdminDetails(request));
-        assertEquals("User with given userID does not exist - could not update admin", thrown.getMessage());
+        assertEquals("User with given Email does not exist - could not update admin", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When an Invalid email is given")
     void UnitTest_testingInvalidEmail(){
         request.setEmail("invalid");
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn((admin));
 
         try {
             response = userService.updateAdminDetails(request);
@@ -101,7 +106,8 @@ public class UpdateAdminDetailsUnitTest {
     @DisplayName("When an Invalid password is given")
     void UnitTest_testingInvalidPassword(){
 
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn((admin));
+        when(adminRepo.findAdminByEmail(request.getEmail())).thenReturn((null));
 
         try {
             response = userService.updateAdminDetails(request);
@@ -117,9 +123,9 @@ public class UpdateAdminDetailsUnitTest {
     @Test
     @DisplayName("When null update values are given")
     void UnitTest_testingNullUpdates(){
-        request = new UpdateAdminDetailsRequest(adminId, null, null, null,
-                null, null);
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
+        request = new UpdateAdminDetailsRequest(null, null, null,
+                null, null, null);
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn((admin));
 
         try {
             response = userService.updateAdminDetails(request);
@@ -136,8 +142,8 @@ public class UpdateAdminDetailsUnitTest {
     @DisplayName("When user tries to update to existingEmail")
     void UnitTest_testingExistingEmailUpdateAttempt(){
         admin.setEmail("validEmail@gmail.com");
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
-        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn(admin);
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn((admin));
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn(adminExisting);
         try {
             response = userService.updateAdminDetails(request);
             assertEquals("Email is already taken", response.getMessage());
@@ -154,7 +160,8 @@ public class UpdateAdminDetailsUnitTest {
     void UnitTest_testingSuccessfulUpdate(){
 
         request.setPassword("validPassword@1");
-        when(adminRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(admin));
+        when(adminRepo.findAdminByEmail(Mockito.any())).thenReturn((admin));
+        when(adminRepo.findAdminByEmail(request.getEmail())).thenReturn((null));
 
         try {
             response = userService.updateAdminDetails(request);

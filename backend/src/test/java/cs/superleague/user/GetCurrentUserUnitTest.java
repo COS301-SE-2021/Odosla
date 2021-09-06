@@ -122,6 +122,7 @@ public class GetCurrentUserUnitTest {
     @Test
     @DisplayName("Testing when could not retrieve User correctly-Customer")
     void UnitTest_CustomerNotRetrieved() throws InvalidRequestException {
+
         validRequest=new GetCurrentUserRequest(jwtTokenCustomer);
         Mockito.when(customerRepo.findByEmail(Mockito.any())).thenReturn(null);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);

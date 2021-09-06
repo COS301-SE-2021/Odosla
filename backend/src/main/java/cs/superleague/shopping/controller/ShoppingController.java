@@ -276,7 +276,7 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
-            GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()), body.getJwtToken());
+            GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
             GetNextQueuedResponse getNextQueuedResponse = ServiceSelector.getShoppingService().getNextQueued(getNextQueuedRequest);
             try {
 
@@ -470,10 +470,10 @@ public class ShoppingController implements ShoppingApi{
         Store store7=new Store(storeUUID7, 8, 20, "Pep", 2, 7, true, "shop/pep.png");
         GeoPoint store1Location = new GeoPoint(-25.770344, 28.234631, "Pick n Pay Brooklyn");
         GeoPoint store2Location = new GeoPoint(-25.7588746 , 28.2429369, "Hillcrest Boulevard");
-        GeoPoint store3Location = new GeoPoint(-25.782541156164545, 28.261452959595255, "Grape street");
-        GeoPoint store4Location = new GeoPoint(-25.705154853561545, 28.296656215156128, "Avo Street");
-        GeoPoint store5Location = new GeoPoint(-25.725151681616511, 28.262516128952825, "Strawberry street");
-        GeoPoint store6Location = new GeoPoint(-25.735282861315611, 28.225254252452454, "Blueberry Street");
+        GeoPoint store3Location = new GeoPoint(-25.7825411, 28.26145295, "Grape street");
+        GeoPoint store4Location = new GeoPoint(-25.7051548, 28.29665621, "Avo Street");
+        GeoPoint store5Location = new GeoPoint(-25.72515168, 28.2625161, "Strawberry street");
+        GeoPoint store6Location = new GeoPoint(-25.73528286, 28.225254252452454, "Blueberry Street");
         GeoPoint store7Location = new GeoPoint(-25.715615161561516, 28.265748988985454, "Raspberry street");
 
         store1.setStoreLocation(store1Location);
