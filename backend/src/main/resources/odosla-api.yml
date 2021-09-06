@@ -13,7 +13,7 @@ tags:
   - name: "Delivery"
   - name: "Analytics"
   - name: "Importer"
-
+  - name: "Recommendation"
 
 paths:
 
@@ -1279,6 +1279,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/delivery_GetDeliveryByUUIDResponse"
+
+  /recommendation/getCartRecommendation:
+    post:
+      summary: Endpoint for getting recommendation for a cart
+      tags:
+        - "recommendation"
+      description: Refer to summary
+      operationId: getCartRecommendation
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/recommendation_getCartRecommendationRequest"
+      responses:
+        "200":
+          description: Returns the recommended items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/recommendation_getCartRecommendationResponse"
+
 
 components:
 
@@ -2879,4 +2902,26 @@ components:
         message:
           type: string
         timestamp:
+          type: string
+
+    recommendation_getCartRecommendationRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        itemIDs:
+          type: array
+          items:
+            type: string
+
+    recommendation_getCartRecommendationResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        isSuccess:
+          type: boolean
+        message:
           type: string
