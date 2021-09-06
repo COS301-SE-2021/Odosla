@@ -4,28 +4,24 @@ import java.util.UUID;
 
 public class UpdateDriverDetailsRequest {
 
-    private UUID driverID;
     private String name;
     private String surname;
     private String email;
     private String password;
     private String phoneNumber;
+    private String currentPassword;
 
-    public UpdateDriverDetailsRequest(UUID driverID, String name, String surname, String email, String password, String phoneNumber) {
-        this.driverID = driverID;
+    public UpdateDriverDetailsRequest(String name, String surname, String email, String password, String phoneNumber, String currentPassword) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.currentPassword = currentPassword;
     }
 
-    public UUID getDriverID() {
-        return driverID;
-    }
-
-    public void setDriverID(UUID driverID) {
-        this.driverID = driverID;
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 
     public String getName() {

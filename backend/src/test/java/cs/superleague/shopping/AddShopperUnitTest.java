@@ -117,19 +117,6 @@ public class AddShopperUnitTest {
         assertEquals("Store with ID does not exist in repository - could not add Shopper", thrown.getMessage());
     }
 
-//    @Test
-//    @Description("Test for when store is return with list of shoppers being null")
-//    @DisplayName("List of Shoppers in Store entity is null")
-//    void UnitTest_listOfShoppers_isNull() throws InvalidRequestException, UserException, StoreDoesNotExistException {
-//        store.setStoreID(storeUUID1);
-//        store.setShoppers(null);
-//        AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
-//        when(storeRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(store));
-//        AddShopperResponse response=shoppingService.addShopper(request);
-//        assertEquals(false,response.isSuccess());
-//        assertEquals("list of Shoppers is null",response.getMessage());
-//    }
-
     @Test
     @Description("Test for when Shopper with shopperID does not exist in shopper database ")
     @DisplayName("When Shopper with ID doesn't exist")

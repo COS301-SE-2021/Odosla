@@ -29,13 +29,12 @@ public class JwtUtil {
         final Claims claims=extractAllClaims(token);
         return (String) claims.get("userType");
     }
-
     public <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
         final Claims claims=extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
     private Claims extractAllClaims(String token){
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token){
@@ -88,7 +87,7 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, UUID userID, String email, List<GrantedAuthority> grantedAuthorities) {
-       return "Bearer " +Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())
+        return "Bearer " +Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())
                 .setIssuedAt(new Date(Calendar.getInstance().getTimeInMillis())).setExpiration(new Date(Calendar.getInstance().getTimeInMillis()+1000*60*60*10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }

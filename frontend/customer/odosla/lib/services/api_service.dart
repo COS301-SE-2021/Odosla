@@ -194,7 +194,7 @@ class ApiService {
                         response.rating);
                   },
                 ));
-        Provider.of<StatusProvider>(context).status = "PENDING";
+        //Provider.of<StatusProvider>(context).status = "PENDING";
       }
 
       return result;

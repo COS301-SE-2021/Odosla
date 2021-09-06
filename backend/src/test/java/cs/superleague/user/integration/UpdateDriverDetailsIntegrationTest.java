@@ -1,5 +1,6 @@
 package cs.superleague.user.integration;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.exceptions.DriverDoesNotExistException;
@@ -7,14 +8,22 @@ import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.UpdateDriverDetailsRequest;
 import cs.superleague.user.responses.UpdateDriverDetailsResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,22 +35,57 @@ public class UpdateDriverDetailsIntegrationTest {
     DriverRepo driverRepo;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserServiceImpl userService;@Autowired
+    JwtUtil jwtTokenUtil;
 
+
+    BCryptPasswordEncoder passwordEncoder;
     UpdateDriverDetailsRequest request;
     UUID driverId=UUID.randomUUID();
     Driver driver;
+    Driver driverExisting;
     UpdateDriverDetailsResponse response;
+
+    String jwtTokenDriver;
+
+    Claims claims;
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
 
     @BeforeEach
     void setUp() {
-        request=new UpdateDriverDetailsRequest(driverId,"name","surname","email@gmail.com","password","phoneNumber");
-        driver=new Driver();
+        passwordEncoder = new BCryptPasswordEncoder(15);
+
+        request = new UpdateDriverDetailsRequest("name","surname","superleague301@gmail.com","password","phoneNumber", "currentPassword");
+        driver = new Driver();
+        driver.setEmail("email@gmail.com");
+        driver.setDriverID(driverId);
+        driver.setPassword(passwordEncoder.encode(request.getCurrentPassword()));
+        driverRepo.save(driver);
+
+        jwtTokenDriver = jwtTokenUtil.generateJWTTokenDriver(driver).replace("Bearer ","");
+        claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtTokenDriver).getBody();
+
+        List<String> authorities = (List) claims.get("authorities");
+
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        driverExisting = new Driver();
+        driverExisting.setDriverID(UUID.randomUUID());
+        driverExisting.setEmail("validEmail@gmail.com");
+        driverRepo.save(driverExisting);
     }
 
     @AfterEach
     void tearDown(){
-        driverRepo.deleteAll();
     }
 
     @Test
@@ -52,42 +96,37 @@ public class UpdateDriverDetailsIntegrationTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void IntegrationTest_testingNullRequestUserIDParameter(){
-        request.setDriverID(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateDriverDetails(request));
-        assertEquals("DriverId is null - could not update driver", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("Request object created correctly")
     void IntegrationTest_requestObjectCorrectlyCreated(){
-        UpdateDriverDetailsRequest req=new UpdateDriverDetailsRequest(driverId,"n","s","e","pass","pN");
+        UpdateDriverDetailsRequest req=new UpdateDriverDetailsRequest("n","s","e","pass","pN", "currentPassword");
         assertNotNull(req);
-        assertEquals(driverId,req.getDriverID());
         assertEquals("n",req.getName());
         assertEquals("s",req.getSurname());
         assertEquals("e",req.getEmail());
         assertEquals("pass",req.getPassword());
         assertEquals("pN",req.getPhoneNumber());
+        assertEquals("currentPassword", req.getCurrentPassword());
     }
 
     @Test
-    @DisplayName("When driver with given UserID does not exist")
+    @DisplayName("When driver with given email does not exist")
     void IntegrationTest_testingInvalidUser(){
+        driver.setEmail("superleague301@gmail.com");
+        driverRepo.save(driver);
+
         Throwable thrown = Assertions.assertThrows(DriverDoesNotExistException.class, ()-> userService.updateDriverDetails(request));
-        assertEquals("User with given userID does not exist - could not update driver", thrown.getMessage());
+        assertEquals("User with given email does not exist - could not update driver", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When an Invalid email is given")
     void IntegrationTest_testingInvalidEmail(){
         request.setEmail("invalid");
-        driver.setDriverID(driverId);
-        driverRepo.save(driver);
 
         try {
             response = userService.updateDriverDetails(request);
+            System.out.println(request.getEmail());
+            System.out.println(driver.getEmail());
             assertEquals("Email is not valid", response.getMessage());
             assertFalse(response.isSuccess());
             assertNotNull(response.getTimestamp());
@@ -101,8 +140,6 @@ public class UpdateDriverDetailsIntegrationTest {
     @DisplayName("When an Invalid password is given")
     void IntegrationTest_testingInvalidPassword(){
 
-        driver.setDriverID(driverId);
-        driverRepo.save(driver);
 
         try {
             response = userService.updateDriverDetails(request);
@@ -118,11 +155,8 @@ public class UpdateDriverDetailsIntegrationTest {
     @Test
     @DisplayName("When null update values are given")
     void IntegrationTest_testingNullUpdates(){
-        request = new UpdateDriverDetailsRequest(driverId, null, null, null,
-                null, null);
-
-        driver.setDriverID(driverId);
-        driverRepo.save(driver);
+        request = new UpdateDriverDetailsRequest( null, null, null,
+                null, null, "currentPassword");
 
         try {
             response = userService.updateDriverDetails(request);
@@ -138,10 +172,6 @@ public class UpdateDriverDetailsIntegrationTest {
     @Test
     @DisplayName("When user tries to update to existingEmail")
     void IntegrationTest_testingExistingEmailUpdateAttempt(){
-
-        driver.setEmail("validEmail@gmail.com");
-        driver.setDriverID(driverId);
-        driverRepo.save(driver);
 
         Driver newDriver=new Driver();
         newDriver.setEmail(request.getEmail());
@@ -164,10 +194,6 @@ public class UpdateDriverDetailsIntegrationTest {
     void IntegrationTest_testingSuccessfulUpdate(){
 
         request.setPassword("validPassword@1");
-
-        driver.setEmail("validEmail@gmail.com");
-        driver.setDriverID(driverId);
-        driverRepo.save(driver);
 
         try {
             response = userService.updateDriverDetails(request);

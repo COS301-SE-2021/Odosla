@@ -19,14 +19,21 @@ import cs.superleague.user.repos.GroceryListRepo;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.MakeGroceryListRequest;
 import cs.superleague.user.responses.MakeGroceryListResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -85,6 +92,7 @@ public class MakeGroceryListIntegrationTest {
     List<Store> listOfStores = new ArrayList<>();
     List<Store> notExistStores = new ArrayList<>();
     List<GroceryList> groceryLists = new ArrayList<>();
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
     @BeforeEach
     void setUp() {
 
@@ -136,10 +144,26 @@ public class MakeGroceryListIntegrationTest {
 
         catalogueRepo.save(catalogue);
         storeRepo.save(store);
+
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @AfterEach
     void tearDown(){
+        SecurityContextHolder.clearContext();
     }
 
 
@@ -151,17 +175,9 @@ public class MakeGroceryListIntegrationTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void IntegrationTest_testingNullRequestUserIDParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfBarcodes, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
-        assertEquals("JWTToken is null - could not make grocery list", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When barcodes parameter is not specified")
     void IntegrationTest_testingNullRequestBarcodesParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, null, "Seamus' Party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, "Seamus' Party");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Barcodes list empty - could not make the grocery list", thrown.getMessage());
     }
@@ -169,25 +185,11 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When name parameter is not specified")
     void IntegrationTest_testingNullRequestNameParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, listOfBarcodes, null);
+        MakeGroceryListRequest request  = new MakeGroceryListRequest( listOfBarcodes, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("Invalid AccountType")
-    void IntegrationTest_testingInvalidAccountType(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, listOfBarcodes, "Seamus' party");
-
-        try{
-            MakeGroceryListResponse response = userService.makeGroceryList(request);
-            assertFalse(response.isSuccess());
-            assertEquals("Invalid JWTToken for customer userType", response.getMessage());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
 
 
     @Test
@@ -195,7 +197,7 @@ public class MakeGroceryListIntegrationTest {
     void IntegrationTest_testing_Barcodes_DoneExist(){
         List<String> list= new ArrayList<>();
         list.add("6543fskh");
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenCustomer, list, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest( list, "Seamus' bachelor party");
 
         try{
             MakeGroceryListResponse response = userService.makeGroceryList(request);
@@ -210,7 +212,7 @@ public class MakeGroceryListIntegrationTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void IntegrationTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenCustomer, listOfBarcodes, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(listOfBarcodes, "Seamus' bachelor party");
 
         try{
             MakeGroceryListResponse response = userService.makeGroceryList(request);

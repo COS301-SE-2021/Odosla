@@ -35,8 +35,8 @@ public class ItemsCSVImporterUnitTest {
     @BeforeEach
     void setUp() {
 
-        importingItems="productid,barcode,brand,description,image_url,item_type,name,price,quantity,size,storeid\n";
-        importingItems+= "p234058925,60019578,All Gold,South Africa's firm favourite! It has a thick smooth texture that can easily be poured and enjoyed on a variety of dishes.,item/tomatoSauce.png,Sauce,Tomato Sauce,31.99,1,700ml,0fb0a357-63b9-41d2-8631-d11c67f7a27f\n";
+        importingItems="productid;barcode;brand;description;image_url;item_type;name;price;quantity;size;storeid\n";
+        importingItems+= "p234058925;60019578;All Gold;South Africa's firm favourite! It has a thick smooth texture that can easily be poured and enjoyed on a variety of dishes.;item/tomatoSauce.png;Sauce;Tomato Sauce;31.99;1;700ml;0fb0a357-63b9-41d2-8631-d11c67f7a27f\n";
 
     }
 
