@@ -76,6 +76,9 @@ public class SubmitOrderIntegrationTest {
     @Value("${env.SECRET}")
     private String SECRET = "stub";
 
+    @Value("${env.HEADER}")
+    private String HEADER= "stub";
+
     /* Requests */
     SubmitOrderRequest submitOrderRequest;
 
@@ -133,9 +136,8 @@ public class SubmitOrderIntegrationTest {
         store=new Store(storeID,"StoreBrand",stock,3,currentOrders,orderQueue,6,true);
         store.setStoreLocation(geoPoint2);
 
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenCustomer(customer);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
