@@ -62,7 +62,10 @@ public class UpdateDriverShiftIntegrationTest {
     String driverJWT;
 
     @Value("${env.SECRET}")
-    private final String SECRET = "stub";
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER= "stub";
 
     @BeforeEach
     void setUp() {
@@ -83,7 +86,7 @@ public class UpdateDriverShiftIntegrationTest {
         driverJWT = jwtTokenUtil.generateJWTTokenDriver(driver);
         shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
 
-        String jwt = driverJWT.replace("Bearer ","");
+        String jwt = driverJWT.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
