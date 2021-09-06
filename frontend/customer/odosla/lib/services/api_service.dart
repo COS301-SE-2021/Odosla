@@ -21,12 +21,14 @@ import 'package:rating_dialog/rating_dialog.dart';
 import 'UserService.dart';
 
 class ApiService {
-  Future<List<CartItem>> getItems(String storeID) async {
+  Future<List<CartItem>> getItems(BuildContext context, String storeID) async {
     String sId = storeID;
 
     //localhost:8080/shopping/getItems
     final response = await http.post(Uri.parse(endpoint + '/shopping/getItems'),
         headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
           "Accept": "application/json",
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -63,10 +65,12 @@ class ApiService {
     return list;
   }
 
-  Future<List<Store>> getStores() async {
+  Future<List<Store>> getStores(BuildContext context) async {
     final response =
         await http.post(Uri.parse(endpoint + '/shopping/getStores'),
             headers: {
+              "Authorization":
+                  Provider.of<StatusProvider>(context, listen: false).jwt,
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
@@ -84,6 +88,8 @@ class ApiService {
     } else {
       List<Store> list = List.empty();
       debugPrint("___ err " + response.statusCode.toString());
+      debugPrint(
+          Provider.of<StatusProvider>(context, listen: false).jwt + " <- jwt");
       return list; //CartItem.fromJson(map)
     }
   }
@@ -110,6 +116,8 @@ class ApiService {
     final response =
         await http.post(Uri.parse(endpoint + '/payment/submitOrder'),
             headers: {
+              "Authorization":
+                  Provider.of<StatusProvider>(context, listen: false).jwt,
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
@@ -155,6 +163,8 @@ class ApiService {
     debugPrint("id: " + oid);
     final response = await http.post(Uri.parse(endpoint + '/payment/getStatus'),
         headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
           "Accept": "application/json",
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -167,7 +177,7 @@ class ApiService {
     if (response.statusCode == 200) {
       debugPrint("fetched status");
       Map<String, dynamic> map = jsonDecode(response.body);
-      String result = statusFromJson(map);
+      String result = statusFromJson(context, map);
       debugPrint(result);
       Provider.of<StatusProvider>(context, listen: false).status = result;
 
@@ -190,6 +200,7 @@ class ApiService {
                   onCancelled: () => print('cancelled'),
                   onSubmitted: (response) {
                     rateDriver(
+                        context,
                         Provider.of<DriverProvider>(context, listen: false).id,
                         response.rating);
                   },
@@ -210,6 +221,8 @@ class ApiService {
     final response = await http.post(
         Uri.parse(endpoint + '/delivery/getDeliveryDriverByOrderId'),
         headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
           "Accept": "application/json",
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -247,7 +260,7 @@ class ApiService {
     }
   }
 
-  String statusFromJson(Map<String, dynamic> j) {
+  String statusFromJson(BuildContext context, Map<String, dynamic> j) {
     String s;
 
     //Iterable i = json.decode(j['items']);
@@ -256,11 +269,14 @@ class ApiService {
     return s;
   }
 
-  Future<List<dynamic>> getGroceryLists(String jwt) async {
+  Future<List<dynamic>> getGroceryLists(
+      BuildContext context, String jwt) async {
     debugPrint(jwt);
     final response =
         await http.post(Uri.parse(endpoint + '/user/getGroceryLists'),
             headers: {
+              "Authorization":
+                  Provider.of<StatusProvider>(context, listen: false).jwt,
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
@@ -286,11 +302,13 @@ class ApiService {
 
   //user/driverSetRating
 
-  rateDriver(String driverID, int rating) async {
+  rateDriver(BuildContext context, String driverID, int rating) async {
     debugPrint("__" + driverID);
     final response =
         await http.post(Uri.parse(endpoint + '/user/driverSetRating'),
             headers: {
+              "Authorization":
+                  Provider.of<StatusProvider>(context, listen: false).jwt,
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
@@ -315,10 +333,12 @@ class ApiService {
   //   List<(json.decode(json.encode(input['groceryLists'])) as List)
   // }
 
-  void setGroceryLists(String jwt) async {
+  void setGroceryLists(BuildContext context, String jwt) async {
     final response =
         await http.post(Uri.parse(endpoint + '/user/makeGroceryList'),
             headers: {
+              "Authorization":
+                  Provider.of<StatusProvider>(context, listen: false).jwt,
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
@@ -345,6 +365,8 @@ class ApiService {
     final response =
         await http.post(Uri.parse(endpoint + '/delivery/trackDelivery'),
             headers: {
+              "Authorization":
+                  Provider.of<StatusProvider>(context, listen: false).jwt,
               "Accept": "application/json",
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
