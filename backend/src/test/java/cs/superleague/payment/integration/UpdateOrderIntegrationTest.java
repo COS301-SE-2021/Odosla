@@ -131,6 +131,10 @@ public class UpdateOrderIntegrationTest {
 
     @Value("${env.SECRET}")
     private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
     @BeforeEach
     void setUp(){
         // Assigning Item objects
@@ -198,9 +202,8 @@ public class UpdateOrderIntegrationTest {
         customer.setAccountType(UserType.CUSTOMER);
         customerRepo.save(customer);
 
-        jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenCustomer(customer);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
