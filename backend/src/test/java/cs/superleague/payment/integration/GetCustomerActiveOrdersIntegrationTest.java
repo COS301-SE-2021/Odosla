@@ -67,7 +67,11 @@ public class GetCustomerActiveOrdersIntegrationTest {
     String invalidJWTToken;
 
     @Value("${env.SECRET}")
-    private final String SECRET = "stub";
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
 
     @BeforeEach
     void setUp() {
@@ -93,9 +97,8 @@ public class GetCustomerActiveOrdersIntegrationTest {
         orderRepo.save(order2);
         customerRepo.save(customer);
 
-        JwtUtil jwtUtil = new JwtUtil();
-        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
-        jwt = jwt.replace("Bearer ","");
+        String jwt = jwtTokenUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
