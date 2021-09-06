@@ -1,5 +1,6 @@
 package cs.superleague.delivery;
 
+import cs.superleague.delivery.exceptions.DeliveryException;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
@@ -30,4 +31,6 @@ public interface DeliveryService {
     UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, PaymentException;
 
     GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException;
+
+    GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException;
 }
