@@ -26,8 +26,8 @@ public class StoreCSVImporterUnitTest {
     @BeforeEach
     void setUp() {
 
-        importingStores="storeid,closing_time,img_url,is_open,max_orders,max_shoppers,opening_time,store_brand,latitude,longitude,address\n";
-        importingStores+= "0fb0a357-63b9-41d2-8631-d11c67f7a27f,16,shop/pnp.png,true,5,2,7,Pick n Pay,-25.770344,28.2429369,Pick n Pay Brooklyn\n";
+        importingStores="storeid;closing_time;img_url;is_open;max_orders;max_shoppers;opening_time;store_brand;latitude;longitude;address\n";
+        importingStores+= "0fb0a357-63b9-41d2-8631-d11c67f7a27f;16;shop/pnp.png;true;5;2;7;Pick n Pay;-25.770344;28.2429369;Pick n Pay Brooklyn\n";
 
     }
 

@@ -91,54 +91,6 @@ public class GetUsersUnitTest {
     }
 
     @Test
-    @Description("Tests for when adminID in request object is null- exception should be thrown")
-    @DisplayName("When request object parameter - adminID - is not specified")
-    void UnitTest_testingNull_adminID_Parameter_RequestObject(){
-        GetUsersRequest request=new GetUsersRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getUsers(request));
-        assertEquals("AdminID is null in GetUsersRequest request - could not return users", thrown.getMessage());
-    }
-
-    @Test
-    @Description("Tests for when adminID does not exist- exception should be thrown")
-    @DisplayName("When request object parameter - adminID - is not specified")
-    void UnitTest_testing_adminID_Parameter_RequestObject_Does_Not_Exist(){
-        GetUsersRequest request=new GetUsersRequest(UUID.randomUUID().toString());
-        Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> userService.getUsers(request));
-        assertEquals("admin with given userID does not exist - could not return users", thrown.getMessage());
-    }
-
-    @Test
-    @Description("Test for when admin does exist")
-    @DisplayName("When admin with ID does exist")
-    void UnitTest_Admin_does_exist() throws Exception {
-
-        List<Admin> admins = new ArrayList<>();
-        admins.add(admin);
-
-        List<Customer> customers = new ArrayList<>();
-        customers.add(customer);
-
-        List<Shopper> shoppers = new ArrayList<>();
-        shoppers.add(shopper);
-
-        List<Driver> drivers = new ArrayList<>();
-        drivers.add(driver);
-
-        GetUsersRequest request= new GetUsersRequest(adminUUID.toString());
-        when(adminRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(admin));
-        when(adminRepo.findAll()).thenReturn(admins);
-        when(customerRepo.findAll()).thenReturn(customers);
-        when(shopperRepo.findAll()).thenReturn(shoppers);
-        when(driverRepo.findAll()).thenReturn(drivers);
-        GetUsersResponse response= userService.getUsers(request);
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("Users successfully returned", response.getMessage());
-        assertEquals(4, response.getUsers().size());
-    }
-
-    @Test
     @Description("Test for when admin does exist")
     @DisplayName("When admin with ID does exist")
     void UnitTest_Shopper_does_exist() throws Exception {
@@ -155,8 +107,7 @@ public class GetUsersUnitTest {
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driver);
 
-        GetUsersRequest request= new GetUsersRequest(adminUUID.toString());
-        when(adminRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(admin));
+        GetUsersRequest request= new GetUsersRequest();
         when(adminRepo.findAll()).thenReturn(admins);
         when(customerRepo.findAll()).thenReturn(customers);
         when(shopperRepo.findAll()).thenReturn(shoppers);

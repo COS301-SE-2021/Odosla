@@ -75,7 +75,7 @@ public class DeliveryController implements DeliveryApi {
         DeliveryAssignDriverToDeliveryResponse response = new DeliveryAssignDriverToDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(body.getJwtToken(), UUID.fromString(body.getDeliveryID()));
+            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = ServiceSelector.getDeliveryService().assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
@@ -120,7 +120,7 @@ public class DeliveryController implements DeliveryApi {
         DeliveryGetDeliveryDetailResponse response = new DeliveryGetDeliveryDetailResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()), UUID.fromString(body.getAdminID()));
+            GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()));
             GetDeliveryDetailResponse getDeliveryDetailResponse = ServiceSelector.getDeliveryService().getDeliveryDetail(request);
             response.setMessage(getDeliveryDetailResponse.getMessage());
             System.out.println(getDeliveryDetailResponse.getDetail());
@@ -158,9 +158,9 @@ public class DeliveryController implements DeliveryApi {
             GeoPoint driversCurrentLocation = new GeoPoint(body.getCurrentLocation().getLatitude().doubleValue(), body.getCurrentLocation().getLongitude().doubleValue(), body.getCurrentLocation().getAddress());
             GetNextOrderForDriverRequest request;
             if (body.getRangeOfDelivery().doubleValue() == 0) {
-                request = new GetNextOrderForDriverRequest(body.getJwtToken(), driversCurrentLocation);
+                request = new GetNextOrderForDriverRequest(driversCurrentLocation);
             }else {
-                request = new GetNextOrderForDriverRequest(body.getJwtToken(), driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
+                request = new GetNextOrderForDriverRequest(driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = ServiceSelector.getDeliveryService().getNextOrderForDriver(request);
 

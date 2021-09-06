@@ -10,6 +10,7 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.PaymentService;
 import cs.superleague.payment.dataclass.GeoPoint;
@@ -21,8 +22,10 @@ import cs.superleague.payment.requests.SetStatusRequest;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserService;
+import cs.superleague.user.dataclass.Admin;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.AdminRepo;
 import cs.superleague.user.repos.CustomerRepo;
 import cs.superleague.user.repos.DriverRepo;
@@ -79,69 +82,58 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null || request.getJwtToken() == null){
+        if (request.getDeliveryID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in the database."));
 
-        JwtUtil jwtUtil = new JwtUtil();
-        if(jwtUtil.extractUserType(request.getJwtToken()).equals("DRIVER"))
+        CurrentUser currentUser = new CurrentUser();
+        if(driverRepo!=null)
         {
-            GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
-
-            if(driverRepo!=null)
+            Driver driver = driverRepo.findDriverByEmail(currentUser.getEmail());
+            if(driver!=null)
             {
-                Driver driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
-                if(driver!=null)
-                {
-                    if (delivery.getDriverId() != null){
-                        if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
-                            if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
-                                AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
-                                return response;
-                            } else{
-                                throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
-                            }
-                        }
-                        throw new InvalidRequestException("This delivery has already been taken by another driver.");
-                    }
-
-                    Order updateOrder= orderRepo.findById(delivery.getOrderID()).orElse(null);
-                    if(updateOrder!=null){
+                if (delivery.getDriverId() != null){
+                    if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
                         if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
-                            updateOrder.setDriverID(driver.getDriverID());
-                            orderRepo.save(updateOrder);
-                            //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
-                            Order updateOrder2= orderRepo.findById(delivery.getOrderID()).orElse(null);
-                            SetStatusRequest setStatusRequest= new SetStatusRequest(updateOrder2, OrderStatus.ASSIGNED_DRIVER);
-                            paymentService.setStatus(setStatusRequest);
-
-                            delivery.setDriverId(driver.getDriverID());
-                            deliveryRepo.save(delivery);
-                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
+                            AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
                             return response;
                         } else{
                             throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
                         }
                     }
-                    else
-                    {
-                        throw new InvalidRequestException("Invalid order.");
+                    throw new InvalidRequestException("This delivery has already been taken by another driver.");
+                }
+
+                Order updateOrder= orderRepo.findById(delivery.getOrderID()).orElse(null);
+                if(updateOrder!=null){
+                    if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+                        updateOrder.setDriverID(driver.getDriverID());
+                        orderRepo.save(updateOrder);
+                        //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
+                        Order updateOrder2= orderRepo.findById(delivery.getOrderID()).orElse(null);
+                        SetStatusRequest setStatusRequest= new SetStatusRequest(updateOrder2, OrderStatus.ASSIGNED_DRIVER);
+                        paymentService.setStatus(setStatusRequest);
+
+                        delivery.setDriverId(driver.getDriverID());
+                        deliveryRepo.save(delivery);
+                        AssignDriverToDeliveryResponse response = new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
+                        return response;
+                    } else{
+                        throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
                     }
                 }
                 else
                 {
-                    throw new InvalidRequestException("Invalid user.");
+                    throw new InvalidRequestException("Invalid order.");
                 }
             }
-
+            else
+            {
+                throw new InvalidRequestException("Invalid user.");
+            }
         }
-        else
-        {
-            throw new InvalidRequestException("Invalid user.");
-        }
-
-        return null;
+    throw new InvalidRequestException("Driver Repository could not be found.");
     }
 
     @Override
@@ -222,10 +214,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null || request.getAdminID() == null){
+        if (request.getDeliveryID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
-        if (!adminRepo.findById(request.getAdminID()).isPresent()){
+        CurrentUser currentUser = new CurrentUser();
+        Admin admin = adminRepo.findAdminByEmail(currentUser.getEmail());
+        if (admin == null){
             throw new InvalidRequestException("User is not an admin.");
         }
         List<DeliveryDetail> details = deliveryDetailRepo.findAllByDeliveryID(request.getDeliveryID());
@@ -257,45 +251,38 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request==null){
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getJwtToken()==null || request.getCurrentLocation() == null){
+        if(request.getCurrentLocation() == null){
             throw new InvalidRequestException("Null parameters.");
         }
         double range = request.getRangeOfDelivery();
-
-        JwtUtil jwtUtil = new JwtUtil();
-        if(jwtUtil.extractUserType(request.getJwtToken()).equals("DRIVER"))
+        CurrentUser currentUser = new CurrentUser();
+        if(driverRepo!=null)
         {
-            GetCurrentUserResponse getCurrentUserResponse = userService.getCurrentUser(new GetCurrentUserRequest(request.getJwtToken()));
-
-            if(driverRepo!=null)
+            Driver driver= null;
+            try{
+                driver = driverRepo.findDriverByEmail(currentUser.getEmail());
+            }
+            catch(NullPointerException e)
             {
-                Driver driver= null;
-                try{
-                    driver = driverRepo.findDriverByEmail(getCurrentUserResponse.getUser().getEmail());
-                }
-                catch(NullPointerException e)
-                {
-                    driver=null;
-                }
+                driver=null;
+            }
 
-                if(driver!=null)
-                {
-                    driver.setCurrentAddress(request.getCurrentLocation());
-                    driverRepo.save(driver);
-                }
-                else
-                {
-                    throw new InvalidRequestException("Driver not found in database.");
-                }
+            if(driver!=null)
+            {
+                driver.setCurrentAddress(request.getCurrentLocation());
+                driverRepo.save(driver);
             }
             else
             {
                 throw new InvalidRequestException("Driver not found in database.");
             }
-
+        }
+        else
+        {
+            throw new InvalidRequestException("Driver not found in database.");
         }
 
-        List<Delivery> deliveries = deliveryRepo.findAll();
+        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
         if (deliveries == null){
             GetNextOrderForDriverResponse response = new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
             return response;
@@ -324,14 +311,19 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null || request.getDriverID() == null){
+        if (request.getDeliveryID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
         Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
         if (delivery.getDriverId() == null){
             throw new InvalidRequestException("No driver is assigned to this delivery.");
         }
-        if (delivery.getDriverId().compareTo(request.getDriverID()) != 0){
+        CurrentUser currentUser = new CurrentUser();
+        Driver driver = driverRepo.findDriverByEmail(currentUser.getEmail());
+        if (driver == null){
+            throw new InvalidRequestException("Invalid user.");
+        }
+        if (delivery.getDriverId().compareTo(driver.getDriverID()) != 0){
             throw new InvalidRequestException("Driver was not assigned to delivery.");
         }
         delivery.setDriverId(null);
@@ -464,7 +456,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                         {
                             for(int k=0; k<deliveries.size(); k++)
                             {
-                                if(deliveries.get(k).getOrderID().equals(request.getOrderID()))
+                                if(deliveries.get(k).getOrderID().compareTo(request.getOrderID()) == 0)
                                 {
                                     Driver driver = driverRepo.findById(deliveries.get(k).getDriverId()).orElse(null);
                                     if(driver!=null)

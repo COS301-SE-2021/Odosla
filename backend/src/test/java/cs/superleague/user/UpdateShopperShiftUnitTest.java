@@ -57,8 +57,7 @@ public class UpdateShopperShiftUnitTest {
         shopper.setEmail("hello@gmail.com");
         shopper.setShopperID(shopperID);
         shopper.setOnShift(true);
-        shopperJWT = jwtTokenUtil.generateJWTTokenShopper(shopper);
-        request=new UpdateShopperShiftRequest(shopperJWT,true, storeID);
+        request=new UpdateShopperShiftRequest(true, storeID);
     }
 
     @AfterEach
@@ -71,13 +70,6 @@ public class UpdateShopperShiftUnitTest {
         assertEquals("UpdateShopperShiftRequest object is null", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("When jwtToken parameter is not specified")
-    void UnitTest_testingNullRequestJwtTokenParameter(){
-        request.setJwtToken(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperShift(request));
-        assertEquals("ShopperID in UpdateShopperShiftRequest is null", thrown.getMessage());
-    }
 
     @Test
     @DisplayName("When onShift parameter is not specified")

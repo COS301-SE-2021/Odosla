@@ -62,8 +62,8 @@ public class CreateFinancialReportUnitTest {
     Driver driver;
     Driver driver2;
 
-    Calendar startDate = Calendar.getInstance();
-    Calendar endDate;
+    Date startDate = new Date();
+    Date endDate;
 
     Order order1, order2, order3;
     Store store1, store2;
@@ -125,7 +125,7 @@ public class CreateFinancialReportUnitTest {
         jwtTokenAdmin=jwtTokenUtil.generateJWTTokenAdmin(admin);
 
 
-        this.endDate = Calendar.getInstance();
+        this.endDate = new Date();
 
     }
 
@@ -140,17 +140,9 @@ public class CreateFinancialReportUnitTest {
     }
 
     @Test
-    @DisplayName("When adminID parameter is not specified")
-    void UnitTest_testingNullRequestOrderIDParameter(){
-        request = new CreateFinancialReportRequest(null, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
-        assertEquals("Exception: JWTToken in request object is null", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When ReportType parameter is not specified")
     void UnitTest_testingNullRequestReportTypeParameter(){
-        request = new CreateFinancialReportRequest("adminID", Calendar.getInstance(), Calendar.getInstance(), null);
+        request = new CreateFinancialReportRequest(new Date(), new Date(), null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }
@@ -158,7 +150,7 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When StartDate parameter is not specified")
     void UnitTest_testingNullRequestStartDateParameter(){
-        request = new CreateFinancialReportRequest("adminID", null, Calendar.getInstance(), ReportType.CSV);
+        request = new CreateFinancialReportRequest(null, new Date(), ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: Start Date in request object is null", thrown.getMessage());
     }
@@ -166,39 +158,17 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When endDate parameter is not specified")
     void UnitTest_testingNullRequestEndDateParameter(){
-        request = new CreateFinancialReportRequest("adminID", Calendar.getInstance(), null, ReportType.CSV);
+        request = new CreateFinancialReportRequest(new Date(), null, ReportType.CSV);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: End Date in request object is null", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("When Invalid adminID parameter")
-    void UnitTest_testingInvalidAdminParameter(){
-        request = new CreateFinancialReportRequest(jwtTokenCustomer, Calendar.getInstance(), Calendar.getInstance(), ReportType.CSV);
-
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(customer, true, new Date(), "");
-
-        try {
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
-            response =  analyticsService.createFinancialReport(request);
-            assertEquals("User is not an admin - Could not create report", response.getMessage());
-            assertFalse(response.isSuccess());
-
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
-
-    @Test
     @DisplayName("When validJWT parameter")
     void UnitTest_testingValidAdminJWTParameterCSV(){
-        request = new CreateFinancialReportRequest(jwtTokenAdmin, startDate, endDate, ReportType.CSV);
-
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
+        request = new CreateFinancialReportRequest(startDate, endDate, ReportType.CSV);
 
         try {
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
 
             response =  analyticsService.createFinancialReport(request);
             assertEquals("FinancialReport.csv downloaded", response.getMessage());
@@ -213,12 +183,9 @@ public class CreateFinancialReportUnitTest {
     @Test
     @DisplayName("When validJWT parameter")
     void UnitTest_testingValidAdminJWTParameterPDF(){
-        request = new CreateFinancialReportRequest(jwtTokenAdmin, startDate, this.endDate, ReportType.PDF);
-
-        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse(admin, true, new Date(), "");
+        request = new CreateFinancialReportRequest(startDate, this.endDate, ReportType.PDF);
 
         try {
-            when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
             when(paymentService.getOrders(Mockito.any())).thenReturn(new GetOrdersResponse(orders, true, "", new Date()));
             when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store1));
             response =  analyticsService.createFinancialReport(request);

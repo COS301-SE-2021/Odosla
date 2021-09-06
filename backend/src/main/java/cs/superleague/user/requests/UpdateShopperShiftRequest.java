@@ -3,22 +3,13 @@ package cs.superleague.user.requests;
 import java.util.UUID;
 
 public class UpdateShopperShiftRequest {
-    private String jwtToken;
+
     private Boolean onShift;
     private UUID storeID;
 
-    public UpdateShopperShiftRequest(String jwtToken, boolean onShift, UUID storeID) {
-        this.jwtToken = jwtToken;
+    public UpdateShopperShiftRequest(boolean onShift, UUID storeID) {
         this.onShift = onShift;
         this.storeID = storeID;
-    }
-
-    public String getJwtToken() {
-        return jwtToken;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
     }
 
     public Boolean getOnShift() {

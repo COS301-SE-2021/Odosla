@@ -38,8 +38,8 @@ public class ItemsCSVImporterIntegrationTest {
     @BeforeEach
     void setUp() {
 
-        importingItems = "productid,barcode,brand,description,image_url,item_type,name,price,quantity,size,storeid\n";
-        importingItems += "p234058925,60019578,All Gold,South Africa's firm favourite! It has a thick smooth texture that can easily be poured and enjoyed on a variety of dishes.,item/tomatoSauce.png,Sauce,Tomato Sauce,31.99,1,700ml,0fb0a357-63b9-41d2-8631-d11c67f7a27f\n";
+        importingItems="productid;barcode;brand;description;image_url;item_type;name;price;quantity;size;storeid\n";
+        importingItems+= "p234058925;60019578;All Gold;South Africa's firm favourite! It has a thick smooth texture that can easily be poured and enjoyed on a variety of dishes.;item/tomatoSauce.png;Sauce;Tomato Sauce;31.99;1;700ml;0fb0a357-63b9-41d2-8631-d11c67f7a27f\n";
 
         mockItem = new Item();
         mockItem.setProductID("p123984123");
@@ -75,7 +75,7 @@ public class ItemsCSVImporterIntegrationTest {
     @Description("Tests for if a an item already does exist")
     @DisplayName("When file in parameter contains an item that already exists")
     void IntegrationTest_ItemAlreadyExists() throws InvalidRequestException {
-        importingItems += "p123984123,6001068595808,Nestle,Thick milk chocolate with nougat and caramel centre.,item/barOne.png,Chocolate,Bar one,10.99,1,55g,0fb0a357-63b9-41d2-8631-d11c67f7a27f";
+        importingItems += "p123984123;6001068595808;Nestle;Thick milk chocolate with nougat and caramel centre.;item/barOne.png;Chocolate;Bar one;10.99;1;55g;0fb0a357-63b9-41d2-8631-d11c67f7a27f";
         request = new ItemsCSVImporterRequest(importingItems);
         assertThrows(InvalidRequestException.class, ()-> {
             ItemsCSVImporterResponse response = ServiceSelector.getImporterService().itemsCSVImporter(request);
