@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Customer.dart';
 import 'package:flutter_employee_app/models/Delivery.dart';
-import 'package:flutter_employee_app/models/Order.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
+import 'package:flutter_employee_app/utilities/settings.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -12,13 +12,11 @@ import 'package:provider/provider.dart';
 import 'UserService.dart';
 class DeliveryService{
 
-   final String endPoint = "f1de7630b01d.ngrok.io/";
-   //final String endPoint = "10.0.2.2:8080/";
    final UserService _userService=GetIt.I.get();
 
    Future<String> getNextOrderForDriver(BuildContext context) async {
 
-     final loginURL = Uri.parse("http://"+endPoint+"delivery/getNextOrderForDriver");
+     final loginURL = Uri.parse(endPoint+"delivery/getNextOrderForDriver");
 
      Map<String,String> headers =new Map<String,String>();
 
@@ -74,7 +72,7 @@ class DeliveryService{
 
    Future<bool> assignDriverToDelivery(String deliveryID, BuildContext context) async {
 
-     final loginURL = Uri.parse("http://"+endPoint+"delivery/assignDriverToDelivery");
+     final loginURL = Uri.parse(endPoint+"delivery/assignDriverToDelivery");
 
      Map<String,String> headers =new Map<String,String>();
 
@@ -122,7 +120,7 @@ class DeliveryService{
 
    // Future<bool> completeDelivery(String orderID, BuildContext context) async {
    //
-   //   final loginURL = Uri.parse("http://"+endPoint+"delivery/completeDelivery");
+   //   final loginURL = Uri.parse(endPoint+"delivery/completeDelivery");
    //
    //   Map<String,String> headers =new Map<String,String>();
    //
@@ -155,7 +153,7 @@ class DeliveryService{
 
    Future<bool> UpdateDeliveryStatus(String deliveryID, String status,BuildContext context) async {
 
-     final loginURL = Uri.parse("http://"+endPoint+"delivery/updateDeliveryStatus");
+     final loginURL = Uri.parse(endPoint+"delivery/updateDeliveryStatus");
 
      Map<String,String> headers =new Map<String,String>();
 
@@ -196,7 +194,7 @@ class DeliveryService{
 
    Future<bool> getCustomer(String customerID, BuildContext context) async {
 
-     final loginURL = Uri.parse("http://"+endPoint+"user/getCustomerByUUID");
+     final loginURL = Uri.parse(endPoint+"user/getCustomerByUUID");
 
      Map<String,String> headers =new Map<String,String>();
 

@@ -27,9 +27,14 @@ import java.util.stream.Collectors;
 
 public class JWTAuthFilter extends OncePerRequestFilter {
 
-    private final String HEADER = "Authorization";
-    private final String PREFIX = "Bearer ";
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Value("${env.REQUEST_HEADER}")
+    private String HEADER = "Authorization";
+
+    @Value("${env.HEADER}")
+    private String PREFIX = "Bearer ";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -55,6 +60,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     }
 
     private Claims validateToken(HttpServletRequest request) {
+        System.out.println("HEADERTIDDIES: " + HEADER);
+        System.out.println("PREFIXTIDDIES: " + PREFIX);
+        System.out.println("SECRETTIDDIES: " +SECRET);
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }

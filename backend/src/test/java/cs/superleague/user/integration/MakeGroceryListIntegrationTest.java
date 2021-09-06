@@ -23,6 +23,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -66,7 +67,7 @@ public class MakeGroceryListIntegrationTest {
     private UserServiceImpl userService;
 
     @Autowired
-    JwtUtil jwtTokenUtil;
+    JwtUtil jwtUtil;
 
     GroceryList groceryList;
     Customer customer;
@@ -92,7 +93,13 @@ public class MakeGroceryListIntegrationTest {
     List<Store> listOfStores = new ArrayList<>();
     List<Store> notExistStores = new ArrayList<>();
     List<GroceryList> groceryLists = new ArrayList<>();
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
     @BeforeEach
     void setUp() {
 
@@ -131,8 +138,8 @@ public class MakeGroceryListIntegrationTest {
         customer.setGroceryLists(groceryLists);
         customerRepo.save(customer);
 
-        jwtTokenCustomer = jwtTokenUtil.generateJWTTokenCustomer(customer);
-        jwtTokenShopper = jwtTokenUtil.generateJWTTokenShopper(shopper);
+        jwtTokenCustomer = jwtUtil.generateJWTTokenCustomer(customer);
+        jwtTokenShopper = jwtUtil.generateJWTTokenShopper(shopper);
 
         listOfBarcodes.add("123456");
 
@@ -145,9 +152,8 @@ public class MakeGroceryListIntegrationTest {
         catalogueRepo.save(catalogue);
         storeRepo.save(store);
 
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenCustomer(customer);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");

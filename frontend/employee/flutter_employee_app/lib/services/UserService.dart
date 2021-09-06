@@ -11,6 +11,7 @@ import 'package:flutter_employee_app/provider/jwt_provider.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
+import 'package:flutter_employee_app/utilities/settings.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -18,11 +19,9 @@ import 'package:provider/provider.dart';
 class UserService{
 
   final _storage = new FlutterSecureStorage();
-  final String endPoint = "f1de7630b01d.ngrok.io/";
-  //final String endPoint = "10.0.2.2:8080/";
 
   Future<bool> loginUser(String email, String password, String userType, BuildContext context) async{
-    final loginURL = Uri.parse("http://"+endPoint+"user/loginUser");
+    final url = Uri.parse(endPoint+"user/loginUser");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -44,7 +43,7 @@ class UserService{
     print(data);
 
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
     print(response.body);
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -86,7 +85,7 @@ class UserService{
 
   Future<String> registerDriver(String name,String surname, String email, String password, String phoneNumber) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/registerDriver");
+    final url = Uri.parse(endPoint+"user/registerDriver");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -106,7 +105,7 @@ class UserService{
       "phoneNumber": phoneNumber,
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data)).timeout(
+    final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
         Duration(seconds: 15),
         onTimeout:(){ return(http.Response('TimeOut',500));
         }
@@ -136,7 +135,7 @@ class UserService{
 
   Future<String> registerShopper(String name,String surname, String email, String password, String phoneNumber) async {
 
-    final loginURL = Uri.parse("https://"+endPoint+"user/registerShopper");
+    final url = Uri.parse(endPoint+"user/registerShopper");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -156,7 +155,7 @@ class UserService{
       "phoneNumber": phoneNumber,
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data)).timeout(
+    final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
         Duration(seconds: 17),
         onTimeout:(){ return(http.Response('TimeOut',500));
         }
@@ -186,7 +185,7 @@ class UserService{
 
   Future<String> verifyAccount(String email, String activationCode, String userType) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/verifyAccount");
+    final url = Uri.parse(endPoint+"user/verifyAccount");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -204,7 +203,7 @@ class UserService{
       "userType":userType
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     print(response.body);
     if (response.statusCode==200) {
@@ -227,7 +226,7 @@ class UserService{
 
   Future<User?> getCurrentUser(BuildContext context) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/getCurrentUser");
+    final url = Uri.parse(endPoint+"user/getCurrentUser");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -255,7 +254,7 @@ class UserService{
       "JWTToken":jwt
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -302,7 +301,7 @@ class UserService{
 
   Future<bool> setShopperShift(bool onShift,String storeID, BuildContext context) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/updateShopperShift");
+    final url = Uri.parse(endPoint+"user/updateShopperShift");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -333,7 +332,7 @@ class UserService{
       "storeID":storeID
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -349,7 +348,7 @@ class UserService{
 
   Future<bool> setDriverShift(bool onShift, BuildContext context) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/updateDriverShift");
+    final url = Uri.parse(endPoint+"user/updateDriverShift");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -377,7 +376,7 @@ class UserService{
       "onShift":onShift,
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -393,7 +392,7 @@ class UserService{
 
   Future<bool> completePackagingOrder(String orderID, BuildContext context) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/completePackagingOrder");
+    final url = Uri.parse(endPoint+"user/completePackagingOrder");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -410,7 +409,7 @@ class UserService{
       "getNext":false,
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -426,7 +425,7 @@ class UserService{
 
   Future<bool> updateDriverLocation(double latitude, double longitude, BuildContext context) async {
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/setCurrentLocation");
+    final url = Uri.parse(endPoint+"user/setCurrentLocation");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -445,7 +444,7 @@ class UserService{
       "address":"Driver current location"
     };
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -459,7 +458,7 @@ class UserService{
 
   Future<bool> updateShopperDetails(String name, String surname, String email, String phoneNumber, String currentPassword, String newPassword, BuildContext context) async{
 
-    final loginURL = Uri.parse("http://"+endPoint+"user/updateShopperDetails");
+    final url = Uri.parse(endPoint+"user/updateShopperDetails");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -515,7 +514,7 @@ class UserService{
     print(data);
 
 
-    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
     print(response.body);
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);

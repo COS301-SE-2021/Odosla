@@ -17,6 +17,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,12 +38,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class RemoveDriverFromDeliveryIntegrationTest {
     @Autowired
     private DeliveryServiceImpl deliveryService;
+
     @Autowired
     DeliveryRepo deliveryRepo;
+
     @Autowired
     DriverRepo driverRepo;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     Delivery delivery;
     UUID deliveryID;
@@ -74,9 +84,9 @@ public class RemoveDriverFromDeliveryIntegrationTest {
         driver.setEmail("u19060468@tuks.co.za");
         driver.setAccountType(UserType.DRIVER);
         driverRepo.save(driver);
-        JwtUtil jwtUtil = new JwtUtil();
+
         String jwt = jwtUtil.generateJWTTokenDriver(driver);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");

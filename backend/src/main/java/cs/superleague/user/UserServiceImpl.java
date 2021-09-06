@@ -51,10 +51,11 @@ public class UserServiceImpl implements UserService{
     private final ShoppingService shoppingService;
     private final StoreRepo storeRepo;
     private final DeliveryService deliveryService;
+    private final JwtUtil jwtUtil;
     //private final UserService userService;
 
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService, JwtUtil jwtUtil){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
@@ -64,6 +65,7 @@ public class UserServiceImpl implements UserService{
         this.shoppingService = shoppingService;
         this.storeRepo = storeRepo;
         this.deliveryService= deliveryService;
+        this.jwtUtil = jwtUtil;
     }
 
     /**
@@ -1030,27 +1032,26 @@ public class UserServiceImpl implements UserService{
 
 
         String jwtToken="";
-        JwtUtil jwtTokenUtil = new JwtUtil();
         switch (request.getUserType()){
             case SHOPPER:
                 assert shopperRepo!=null;
                 if(shopperUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenShopper(shopperUser);
+                    jwtToken=jwtUtil.generateJWTTokenShopper(shopperUser);
                 }
             case DRIVER:
                 assert driverRepo!=null;
                 if(driverUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenDriver(driverUser);
+                    jwtToken=jwtUtil.generateJWTTokenDriver(driverUser);
                 }
             case CUSTOMER:
                 assert customerRepo!=null;
                 if(customerUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customerUser);
+                    jwtToken=jwtUtil.generateJWTTokenCustomer(customerUser);
                 }
             case ADMIN:
                 assert adminRepo!=null;
                 if(adminUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenAdmin(adminUser);
+                    jwtToken=jwtUtil.generateJWTTokenAdmin(adminUser);
                 }
 
                 if(jwtToken==""){
@@ -1485,7 +1486,6 @@ public class UserServiceImpl implements UserService{
 
             String jwtToken = request.getJWTToken();
             jwtToken = jwtToken.replace("Bearer ","");
-            JwtUtil jwtUtil = new JwtUtil();
             String userType = jwtUtil.extractUserType(jwtToken);
             String email = jwtUtil.extractEmail(jwtToken);
             User user = null;

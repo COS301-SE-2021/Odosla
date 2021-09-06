@@ -10,13 +10,22 @@ import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.user.requests.GetCurrentUserRequest;
 import cs.superleague.user.responses.GetCurrentUserResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,7 +46,7 @@ public class GetCurrentUserIntegrationTest {
     AdminRepo adminRepo;
 
     @Autowired
-    private JwtUtil jwtTokenUtil;
+    private JwtUtil jwtUtil;
 
     @Autowired
     private UserServiceImpl userService;
@@ -66,6 +75,12 @@ public class GetCurrentUserIntegrationTest {
     String jwtTokenDriver;
     String jwtTokenShopper;
 
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
     @BeforeEach
     void setUp(){
         request=new GetCurrentUserRequest(null);
@@ -86,10 +101,21 @@ public class GetCurrentUserIntegrationTest {
         shopper.setEmail(shopperEmail);
         shopper.setAccountType(UserType.SHOPPER);
 
-        jwtTokenAdmin=jwtTokenUtil.generateJWTTokenAdmin(admin);
-        jwtTokenCustomer=jwtTokenUtil.generateJWTTokenCustomer(customer);
-        jwtTokenDriver=jwtTokenUtil.generateJWTTokenDriver(driver);
-        jwtTokenShopper=jwtTokenUtil.generateJWTTokenShopper(shopper);
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+
 
     }
 
@@ -126,7 +152,23 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when could not retrieve User correctly-Customer")
     void IntegrationTest_CustomerNotRetrieved() throws InvalidRequestException {
-        validRequest=new GetCurrentUserRequest(jwtTokenCustomer);
+
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        String generated=jwt;
+        jwt = jwt.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        validRequest=new GetCurrentUserRequest(generated);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
         assertNotNull(response);
@@ -139,6 +181,21 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when could not retrieve User correctly-Shopper")
     void IntegrationTest_ShopperNotRetrieved() throws InvalidRequestException {
+
+        jwtTokenShopper = jwtUtil.generateJWTTokenShopper(shopper);
+        String jwt = jwtTokenShopper.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         validRequest=new GetCurrentUserRequest(jwtTokenShopper);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
@@ -152,6 +209,21 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when could not retrieve User correctly-Driver")
     void IntegrationTest_DriverNotRetrieved() throws InvalidRequestException {
+
+        jwtTokenDriver = jwtUtil.generateJWTTokenDriver(driver);
+        String jwt = jwtTokenDriver.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         validRequest=new GetCurrentUserRequest(jwtTokenDriver);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
@@ -165,6 +237,21 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when could not retrieve User correctly-Admin")
     void IntegrationTest_AdminNotRetrieved() throws InvalidRequestException {
+
+        jwtTokenAdmin = jwtUtil.generateJWTTokenAdmin(admin);
+        String jwt = jwtTokenAdmin.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         validRequest=new GetCurrentUserRequest(jwtTokenAdmin);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 
@@ -178,6 +265,21 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when User is retrieved correctly-Shopper")
     void IntegrationTest_ShopperRetrieved() throws InvalidRequestException {
+
+        jwtTokenShopper = jwtUtil.generateJWTTokenShopper(shopper);
+        String jwt = jwtTokenShopper.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         validRequest=new GetCurrentUserRequest(jwtTokenShopper);
         shopperRepo.save(shopper);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
@@ -197,6 +299,21 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when User is retrieved correctly-Driver")
     void IntegrationTest_DriverRetrieved() throws InvalidRequestException {
+
+        jwtTokenDriver = jwtUtil.generateJWTTokenDriver(driver);
+        String jwt = jwtTokenDriver.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         validRequest=new GetCurrentUserRequest(jwtTokenDriver);
         driverRepo.save(driver);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
@@ -212,6 +329,21 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when User is retrieved correctly-Admin")
     void IntegrationTest_AdminRetrieved() throws InvalidRequestException {
+
+        jwtTokenAdmin = jwtUtil.generateJWTTokenAdmin(admin);
+        String jwt = jwtTokenAdmin.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         validRequest=new GetCurrentUserRequest(jwtTokenAdmin);
         adminRepo.save(admin);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
@@ -227,7 +359,23 @@ public class GetCurrentUserIntegrationTest {
     @Test
     @DisplayName("Testing when User is retrieved correctly-Customer")
     void IntegrationTest_CustomerRetrieved() throws InvalidRequestException {
-        validRequest=new GetCurrentUserRequest(jwtTokenCustomer);
+
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        String generated=jwt;
+        jwt = jwt.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        validRequest=new GetCurrentUserRequest(generated);
         customerRepo.save(customer);
         GetCurrentUserResponse response= userService.getCurrentUser(validRequest);
 

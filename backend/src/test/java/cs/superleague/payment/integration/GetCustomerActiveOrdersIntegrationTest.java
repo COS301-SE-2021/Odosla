@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.context.annotation.Description;
@@ -65,7 +66,12 @@ public class GetCustomerActiveOrdersIntegrationTest {
     Order order2;
     String invalidJWTToken;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
+
 
     @BeforeEach
     void setUp() {
@@ -91,9 +97,8 @@ public class GetCustomerActiveOrdersIntegrationTest {
         orderRepo.save(order2);
         customerRepo.save(customer);
 
-        JwtUtil jwtUtil = new JwtUtil();
-        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
-        jwt = jwt.replace("Bearer ","");
+        String jwt = jwtTokenUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
