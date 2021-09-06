@@ -1032,27 +1032,26 @@ public class UserServiceImpl implements UserService{
 
 
         String jwtToken="";
-        JwtUtil jwtTokenUtil = new JwtUtil();
         switch (request.getUserType()){
             case SHOPPER:
                 assert shopperRepo!=null;
                 if(shopperUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenShopper(shopperUser);
+                    jwtToken=jwtUtil.generateJWTTokenShopper(shopperUser);
                 }
             case DRIVER:
                 assert driverRepo!=null;
                 if(driverUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenDriver(driverUser);
+                    jwtToken=jwtUtil.generateJWTTokenDriver(driverUser);
                 }
             case CUSTOMER:
                 assert customerRepo!=null;
                 if(customerUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenCustomer(customerUser);
+                    jwtToken=jwtUtil.generateJWTTokenCustomer(customerUser);
                 }
             case ADMIN:
                 assert adminRepo!=null;
                 if(adminUser!=null) {
-                    jwtToken=jwtTokenUtil.generateJWTTokenAdmin(adminUser);
+                    jwtToken=jwtUtil.generateJWTTokenAdmin(adminUser);
                 }
 
                 if(jwtToken==""){
