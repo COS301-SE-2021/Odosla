@@ -89,7 +89,7 @@ public class GetGroceryListsIntegrationTest {
     @DisplayName("Invalid User Type JWT")
     void IntegrationTest_invalidUserTypeJWT(){
 
-        GetGroceryListsRequest request = new GetGroceryListsRequest(shopperJWT);
+        GetGroceryListsRequest request = new GetGroceryListsRequest();
 
         try{
             GetGroceryListsResponse response = userService.getGroceryLists(request);
@@ -106,7 +106,7 @@ public class GetGroceryListsIntegrationTest {
     @DisplayName("Valid User Type JWT")
     void IntegrationTest_ValidUserTypeJWT(){
 
-        GetGroceryListsRequest request = new GetGroceryListsRequest(customerJWT);
+        GetGroceryListsRequest request = new GetGroceryListsRequest();
 
         try{
             GetGroceryListsResponse response = userService.getGroceryLists(request);

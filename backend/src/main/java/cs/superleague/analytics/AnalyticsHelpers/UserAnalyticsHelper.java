@@ -7,6 +7,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.user.dataclass.Driver;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -21,9 +22,11 @@ public class UserAnalyticsHelper {
         this. data = data;
     }
 
-    public Document createPDF() throws Exception{
+    public byte[] createPDF() throws Exception{
 
         Document document = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
 
             String home = System.getProperty("user.home");
@@ -113,7 +116,8 @@ public class UserAnalyticsHelper {
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
-        return document;
+        byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+        return pdfBytes;
     }
 
     public StringBuilder createCSVReport() {

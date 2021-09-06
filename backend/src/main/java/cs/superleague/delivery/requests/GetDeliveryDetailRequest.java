@@ -4,19 +4,9 @@ import java.util.UUID;
 
 public class GetDeliveryDetailRequest {
     private UUID deliveryID;
-    private UUID adminID;
 
-    public GetDeliveryDetailRequest(UUID deliveryID, UUID adminID) {
+    public GetDeliveryDetailRequest(UUID deliveryID) {
         this.deliveryID = deliveryID;
-        this.adminID = adminID;
-    }
-
-    public UUID getAdminID() {
-        return adminID;
-    }
-
-    public void setAdminID(UUID adminID) {
-        this.adminID = adminID;
     }
 
     public UUID getDeliveryID() {

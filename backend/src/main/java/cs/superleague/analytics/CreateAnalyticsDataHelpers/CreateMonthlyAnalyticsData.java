@@ -41,7 +41,7 @@ public class CreateMonthlyAnalyticsData {
     private final Calendar startDate;
     private final Calendar endDate;
 
-    public CreateMonthlyAnalyticsData(String JWTToken, PaymentService paymentService, UserService userService, UUID adminID){
+    public CreateMonthlyAnalyticsData(PaymentService paymentService, UserService userService){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -64,11 +64,11 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest(JWTToken);
+        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
         try{
             getOrdersResponse = paymentService.getOrders(getOrdersRequest);
 
-            GetUsersRequest getUsersRequest = new GetUsersRequest(adminID.toString());
+            GetUsersRequest getUsersRequest = new GetUsersRequest();
             getUsersResponse = userService.getUsers(getUsersRequest);
         }catch (Exception e){
             e.printStackTrace();

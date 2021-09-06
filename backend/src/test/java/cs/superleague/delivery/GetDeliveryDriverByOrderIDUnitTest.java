@@ -53,8 +53,6 @@ public class GetDeliveryDriverByOrderIDUnitTest {
     CustomerRepo customerRepo;
     @Mock
     StoreRepo storeRepo;
-    @InjectMocks
-    JwtUtil jwtTokenUtil;
     @Mock
     UserServiceImpl userService;
     @Mock
@@ -166,21 +164,21 @@ public class GetDeliveryDriverByOrderIDUnitTest {
         assertEquals("Driver not found", response.getMessage());
     }
 
-//    @Test
-//    @Description("Tests for when driver is successfully found.")
-//    @DisplayName("Driver found")
-//    void DriverFoundInDeliveryOrder_UnitTest() throws cs.superleague.user.exceptions.InvalidRequestException, InvalidRequestException {
-//
-//        deliveries.add(delivery);
-//
-//        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
-//        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-//        when(deliveryRepo.findAllById(Mockito.any())).thenReturn(deliveries);
-//
-//        GetDeliveryDriverByOrderIDRequest request1 = new GetDeliveryDriverByOrderIDRequest(orderID);
-//        GetDeliveryDriverByOrderIDResponse response = deliveryService.getDeliveryDriverByOrderID(request1);
-//        assertEquals("Driver successfully retrieved", response.getMessage());
-//    }
+    @Test
+    @Description("Tests for when driver is successfully found.")
+    @DisplayName("Driver found")
+    void DriverFoundInDeliveryOrder_UnitTest() throws InvalidRequestException {
+
+        deliveries.add(delivery);
+
+        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
+        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
+        when(deliveryRepo.findAll()).thenReturn(deliveries);
+
+        GetDeliveryDriverByOrderIDRequest request1 = new GetDeliveryDriverByOrderIDRequest(orderID);
+        GetDeliveryDriverByOrderIDResponse response = deliveryService.getDeliveryDriverByOrderID(request1);
+        assertEquals("Driver successfully retrieved", response.getMessage());
+    }
 
 
 }

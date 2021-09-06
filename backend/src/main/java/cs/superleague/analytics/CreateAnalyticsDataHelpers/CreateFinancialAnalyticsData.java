@@ -19,10 +19,10 @@ public class CreateFinancialAnalyticsData {
 
     private GetOrdersResponse getOrdersResponse;
 
-    private final Calendar startDate;
-    private final Calendar endDate;
+    private final Date startDate;
+    private final Date endDate;
 
-    public CreateFinancialAnalyticsData(Calendar startDate, Calendar endDate, String JWTToken, PaymentService paymentService){
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate, PaymentService paymentService){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -33,7 +33,7 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest(JWTToken);
+        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
         try{
             getOrdersResponse = paymentService.getOrders(getOrdersRequest);
         }catch (Exception e){
@@ -68,8 +68,8 @@ public class CreateFinancialAnalyticsData {
 
         for (Order order : this.orders) {
 
-            if(startDate.getTimeInMillis() <= order.getCreateDate().getTimeInMillis()
-                && endDate.getTimeInMillis() >= order.getCreateDate().getTimeInMillis()) {
+            if(startDate.getTime() <= order.getCreateDate().getTimeInMillis()
+                && endDate.getTime() >= order.getCreateDate().getTimeInMillis()) {
 
                 if (!userIds.contains(order.getUserID())) {
                     userIds.add(order.getUserID());

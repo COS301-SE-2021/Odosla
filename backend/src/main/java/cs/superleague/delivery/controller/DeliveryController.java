@@ -75,7 +75,7 @@ public class DeliveryController implements DeliveryApi {
         DeliveryAssignDriverToDeliveryResponse response = new DeliveryAssignDriverToDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(body.getJwtToken(), UUID.fromString(body.getDeliveryID()));
+            AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = ServiceSelector.getDeliveryService().assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
@@ -120,7 +120,7 @@ public class DeliveryController implements DeliveryApi {
         DeliveryGetDeliveryDetailResponse response = new DeliveryGetDeliveryDetailResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()), UUID.fromString(body.getAdminID()));
+            GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()));
             GetDeliveryDetailResponse getDeliveryDetailResponse = ServiceSelector.getDeliveryService().getDeliveryDetail(request);
             response.setMessage(getDeliveryDetailResponse.getMessage());
             System.out.println(getDeliveryDetailResponse.getDetail());
@@ -158,9 +158,9 @@ public class DeliveryController implements DeliveryApi {
             GeoPoint driversCurrentLocation = new GeoPoint(body.getCurrentLocation().getLatitude().doubleValue(), body.getCurrentLocation().getLongitude().doubleValue(), body.getCurrentLocation().getAddress());
             GetNextOrderForDriverRequest request;
             if (body.getRangeOfDelivery().doubleValue() == 0) {
-                request = new GetNextOrderForDriverRequest(body.getJwtToken(), driversCurrentLocation);
+                request = new GetNextOrderForDriverRequest(driversCurrentLocation);
             }else {
-                request = new GetNextOrderForDriverRequest(body.getJwtToken(), driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
+                request = new GetNextOrderForDriverRequest(driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = ServiceSelector.getDeliveryService().getNextOrderForDriver(request);
 
@@ -248,6 +248,54 @@ public class DeliveryController implements DeliveryApi {
         }catch (Exception e){
             e.printStackTrace();
             response.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<DeliveryGetDeliveryByUUIDResponse> getDeliveryByUUID(DeliveryGetDeliveryByUUIDRequest body) {
+
+        DeliveryGetDeliveryByUUIDResponse response = new DeliveryGetDeliveryByUUIDResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetDeliveryByUUIDRequest getDeliveryByUUIDRequest = new GetDeliveryByUUIDRequest(UUID.fromString(body.getDeliveryID()));
+            GetDeliveryByUUIDResponse getDeliveryByUUIDResponse = ServiceSelector.getDeliveryService().getDeliveryByUUID(getDeliveryByUUIDRequest);
+
+            DeliveryObject deliveryObject = new DeliveryObject();
+            deliveryObject.setDeliveryID(getDeliveryByUUIDResponse.getDelivery().getDeliveryID().toString());
+
+            GeoPointObject dropOffLocation=new GeoPointObject();
+            dropOffLocation.setAddress(getDeliveryByUUIDResponse.getDelivery().getDropOffLocation().getAddress());
+            dropOffLocation.setLatitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getDropOffLocation().getLatitude()));
+            dropOffLocation.setLongitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getDropOffLocation().getLongitude()));
+            GeoPointObject pickUpLocation = new GeoPointObject();
+            pickUpLocation.setAddress(getDeliveryByUUIDResponse.getDelivery().getPickUpLocation().getAddress());
+            pickUpLocation.setLatitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getPickUpLocation().getLatitude()));
+            pickUpLocation.setLongitude(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getPickUpLocation().getLongitude()));
+
+            deliveryObject.setDropOffLocation(dropOffLocation);
+            deliveryObject.setPickUpLocation(pickUpLocation);
+            deliveryObject.setOrderID(getDeliveryByUUIDResponse.getDelivery().getOrderID().toString());
+            deliveryObject.setCustomerId(getDeliveryByUUIDResponse.getDelivery().getCustomerId().toString());
+            deliveryObject.setStoreId(getDeliveryByUUIDResponse.getDelivery().getStoreId().toString());
+            if(getDeliveryByUUIDResponse.getDelivery().getDriverId() != null)
+            {
+                deliveryObject.setDriverId(getDeliveryByUUIDResponse.getDelivery().getDriverId().toString());
+            }
+
+            deliveryObject.setStatus(getDeliveryByUUIDResponse.getDelivery().getStatus().toString());
+            deliveryObject.setCost(BigDecimal.valueOf(getDeliveryByUUIDResponse.getDelivery().getCost()));
+            deliveryObject.setCompleted(getDeliveryByUUIDResponse.getDelivery().isCompleted());
+            deliveryObject.setDeliveryDetail(populateDeliveryDetails(getDeliveryByUUIDResponse.getDelivery().getDeliveryDetail()));
+
+            response.setDelivery(deliveryObject);
+            response.setMessage(getDeliveryByUUIDResponse.getMessage());
+            response.setTimestamp(getDeliveryByUUIDResponse.getTimestamp().toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setDelivery(null);
         }
         return new ResponseEntity<>(response, httpStatus);
     }
