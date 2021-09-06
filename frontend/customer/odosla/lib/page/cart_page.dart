@@ -59,8 +59,8 @@ class _CartPage extends State<CartPage> {
                       child: Text("Save list",
                           style: TextStyle(fontSize: 22, color: Colors.white)),
                       onPressed: () => {
-                            _userService.getJWTAsString().then(
-                                (value) => apiService.setGroceryLists(value!))
+                            _userService.getJWTAsString().then((value) =>
+                                apiService.setGroceryLists(context, value!))
                           }),
                 ),
                 SizedBox(
@@ -77,8 +77,8 @@ class _CartPage extends State<CartPage> {
                           title: Text("Saved lists:"),
                           content: FutureBuilder(
                               future: _userService.getJWTAsString().then(
-                                  (value) =>
-                                      apiService.getGroceryLists(value!)),
+                                  (value) => apiService.getGroceryLists(
+                                      context, value!)),
                               builder: (BuildContext context, snapshot) {
                                 if (snapshot.hasError) {
                                   debugPrint("snapshot error: " +
