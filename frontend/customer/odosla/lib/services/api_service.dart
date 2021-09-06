@@ -395,6 +395,7 @@ class ApiService {
     Map<String, String> headers = new Map<String, String>();
 
     headers = {
+      "Authorization": Provider.of<StatusProvider>(context, listen: false).jwt,
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
