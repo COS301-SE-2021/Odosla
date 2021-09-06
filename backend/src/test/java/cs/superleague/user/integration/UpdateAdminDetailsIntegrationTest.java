@@ -53,7 +53,10 @@ public class UpdateAdminDetailsIntegrationTest {
     Claims claims;
 
     @Value("${env.SECRET}")
-    private final String SECRET = "stub";
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     @BeforeEach
     void setUp() {
@@ -63,7 +66,7 @@ public class UpdateAdminDetailsIntegrationTest {
         admin = new Admin("", "", "validEmail@gmail.com", "0721234567", passwordEncoder.encode("validPassword@1"), "", UserType.ADMIN, adminId);
         admin.setAccountType(UserType.ADMIN);
 
-        jwtTokenAdmin = jwtTokenUtil.generateJWTTokenAdmin(admin).replace("Bearer ","");
+        jwtTokenAdmin = jwtTokenUtil.generateJWTTokenAdmin(admin).replace(HEADER,"");
         System.out.println(jwtTokenAdmin);
         claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtTokenAdmin).getBody();
 
