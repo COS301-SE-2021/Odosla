@@ -56,6 +56,9 @@ public class GetOrdersIntegrationTest {
     @Autowired
     private PaymentServiceImpl paymentService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     Shopper shopper;
     Driver driver;
@@ -73,7 +76,10 @@ public class GetOrdersIntegrationTest {
     String driverJWT;
 
     @Value("${env.SECRET}")
-    private final String SECRET = "stub";
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER= "stub";
 
     List<Order> orders;
     @BeforeEach
@@ -100,8 +106,6 @@ public class GetOrdersIntegrationTest {
         driver.setEmail("driver@gmaill.com");
 
 //        adminJWT = jwtTokenUtil.generateJWTTokenAdmin(admin);
-
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenAdmin(admin);
         jwt = jwt.replace("Bearer ","");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
