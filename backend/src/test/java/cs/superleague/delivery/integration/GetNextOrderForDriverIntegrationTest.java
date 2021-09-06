@@ -34,15 +34,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @Transactional
 public class GetNextOrderForDriverIntegrationTest {
+
     @Autowired
     private DeliveryServiceImpl deliveryService;
+
     @Autowired
     DeliveryRepo deliveryRepo;
+
     @Autowired
     DriverRepo driverRepo;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
     @Value("${env.SECRET}")
     private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     Delivery delivery;
     UUID deliveryID;
@@ -72,9 +81,8 @@ public class GetNextOrderForDriverIntegrationTest {
         driver = new Driver("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.DRIVER, driverID);
         driverRepo.save(driver);
         deliveryRepo.save(delivery);
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenDriver(driver);
-        jwt = jwt.replace("Bearer ","");
+        jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
         List<String> authorities = (List) claims.get("authorities");
         String userType= (String) claims.get("userType");
