@@ -198,27 +198,27 @@ paths:
                 $ref: "#/components/schemas/payment_SubmitOrderResponse"
 
 
-  /notification/sendEmailNotification:
-    post:
-      summary: Endpoint for sending an email notification
-      tags:
-        - "notification"
-      description: Refer to summary
-      operationId: sendEmailNotification
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/notification_SendEmailNotificationRequest"
-      responses:
-        "200":
-          description: Returns whether the email was sent
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
+#  /notification/sendEmailNotification:
+#    post:
+#      summary: Endpoint for sending an email notification
+#      tags:
+#        - "notification"
+#      description: Refer to summary
+#      operationId: sendEmailNotification
+#      requestBody:
+#        description: The input body required by this request
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: "#/components/schemas/notification_SendEmailNotificationRequest"
+#      responses:
+#        "200":
+#          description: Returns whether the email was sent
+#          content:
+#            application/json:
+#              schema:
+#                $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
 
 
   /notification/sendDirectEmailNotification:
@@ -1599,28 +1599,28 @@ components:
         timestamp:
           type: string
 
-    notification_SendEmailNotificationRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        message:
-          type: string
-          description: This is the message that will be sent as a notification
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Hash map that needs to contain the Type (e.g delivery), Subject, UserType (e.g admin) and the UserID
-
-    notification_SendEmailNotificationResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        responseMessage:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        success:
-          type: boolean
+#    notification_SendEmailNotificationRequest:
+#      description: This object is expected as input
+#      type: object
+#      properties:
+#        message:
+#          type: string
+#          description: This is the message that will be sent as a notification
+#        properties:
+#          type: object
+#          additionalProperties:
+#            type: string
+#          description: Hash map that needs to contain the Type (e.g delivery), Subject, UserType (e.g admin) and the UserID
+#
+#    notification_SendEmailNotificationResponse:
+#      description: This object is expected as output
+#      type: object
+#      properties:
+#        responseMessage:
+#          type: string
+#          description: Will contain a descriptive error message if response code is not 200, else will be empty
+#        success:
+#          type: boolean
 
     notification_SendDirectEmailNotificationRequest:
       description: This object is expected as input
