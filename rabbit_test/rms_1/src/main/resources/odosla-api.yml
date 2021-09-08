@@ -31,6 +31,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/rb1_response"
 
+  /rb/msgObject:
+    post:
+      summary: example
+      tags:
+        - "Rabbit"
+      description: Refer to summary
+      operationId: obj
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/rb1obj_request"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rb1obj_response"
+
 
 components:
 
@@ -44,6 +66,22 @@ components:
           type: string
 
     rb1_response:
+      description: ?!
+      type: object
+      properties:
+        message:
+          type: string
+
+    rb1obj_request:
+      description: ?.
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+
+    rb1obj_response:
       description: ?!
       type: object
       properties:

@@ -10,7 +10,6 @@
       <module fileurl="file://$PROJECT_DIR$/payment/payment.iml" filepath="$PROJECT_DIR$/payment/payment.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/recommendation/recommendation.iml" filepath="$PROJECT_DIR$/microservices/recommendation/recommendation.iml" />
       <module fileurl="file://$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" filepath="$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" />
-      <module fileurl="file://$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" filepath="$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" />
       <module fileurl="file://$PROJECT_DIR$/shopping/shopping.iml" filepath="$PROJECT_DIR$/shopping/shopping.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/user/user.iml" filepath="$PROJECT_DIR$/microservices/user/user.iml" />
     </modules>

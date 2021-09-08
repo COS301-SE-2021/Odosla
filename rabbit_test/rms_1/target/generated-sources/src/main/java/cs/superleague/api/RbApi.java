@@ -7,6 +7,8 @@ package cs.superleague.api;
 
 import cs.superleague.models.Rb1Request;
 import cs.superleague.models.Rb1Response;
+import cs.superleague.models.Rb1objRequest;
+import cs.superleague.models.Rb1objResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,17 @@ public interface RbApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<Rb1Response> message(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody Rb1Request body
+);
+
+
+    @ApiOperation(value = "example", nickname = "obj", notes = "Refer to summary", response = Rb1objResponse.class, tags={ "Rabbit", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns success", response = Rb1objResponse.class) })
+    @RequestMapping(value = "/rb/msgObject",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<Rb1objResponse> obj(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody Rb1objRequest body
 );
 
 }

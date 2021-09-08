@@ -28,45 +28,196 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="added remaining microservices">
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/ServiceSelector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/TestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/dataclass/UserType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/security/CurrentUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/security/JWTAuthFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/security/JWTAuthProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/security/SpringSecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1Service.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1ServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources/odosla-api.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/controller.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/ServiceSelector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/TestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/dataclass/UserType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/security/CurrentUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/security/JWTAuthFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/security/JWTAuthProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/integration/security/SpringSecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/r1Service.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/r1ServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/resources/odosla-api.yml" afterDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="added skeleton for example brokers">
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/ObjMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__antlr_antlr_2_7_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__ch_qos_logback_logback_classic_1_2_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__ch_qos_logback_logback_core_1_2_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_classmate_1_5_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_annotations_2_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_core_2_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_jackson_core_jackson_databind_2_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jdk8_2_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_jackson_datatype_jackson_datatype_jsr310_2_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_fasterxml_jackson_module_jackson_module_parameter_names_2_11_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_ibm_icu_icu4j_61_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_icegreen_greenmail_1_5_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_itextpdf_itextpdf_5_5_13_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_jayway_jsonpath_json_path_2_4_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_mchange_mchange_commons_java_0_2_15.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_rabbitmq_amqp_client_5_10_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_sun_activation_jakarta_activation_1_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_sun_istack_istack_commons_runtime_3_0_11.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_sun_mail_jakarta_mail_1_6_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_sun_mail_javax_mail_1_5_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_twilio_sdk_twilio_8_10_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_vaadin_external_google_android_json_0_0_20131108_vaadin1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__com_zaxxer_HikariCP_3_4_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__commons_codec_commons_codec_1_15.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__commons_io_commons_io_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__cs_superleague_api_0_0_1_SNAPSHOT.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__cs_superleague_backend_0_0_1_SNAPSHOT.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_github_cdimascio_dotenv_java_2_2_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_jsonwebtoken_jjwt_0_9_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_jsonwebtoken_jjwt_api_0_11_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_jsonwebtoken_jjwt_impl_0_11_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_jsonwebtoken_jjwt_jackson_0_11_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_micrometer_micrometer_core_1_6_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_swagger_swagger_annotations_1_5_21.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__io_swagger_swagger_models_1_6_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__jakarta_activation_jakarta_activation_api_1_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__jakarta_annotation_jakarta_annotation_api_1_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__jakarta_persistence_jakarta_persistence_api_2_2_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__jakarta_transaction_jakarta_transaction_api_1_3_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__jakarta_validation_jakarta_validation_api_2_0_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__jakarta_xml_bind_jakarta_xml_bind_api_2_3_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__javax_activation_activation_1_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__javax_activation_javax_activation_api_1_2_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__javax_annotation_javax_annotation_api_1_3_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__javax_persistence_javax_persistence_api_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__javax_validation_validation_api_2_0_1_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__junit_junit_4_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__me_paulschwarz_spring_dotenv_2_3_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__mysql_mysql_connector_java_8_0_23.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__net_bytebuddy_byte_buddy_1_10_22.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__net_bytebuddy_byte_buddy_agent_1_10_22.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__net_minidev_accessors_smart_1_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__net_minidev_json_smart_2_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_abego_treelayout_org_abego_treelayout_core_1_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_antlr_ST4_4_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_antlr_antlr4_4_9_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_antlr_antlr4_runtime_4_9_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_antlr_antlr_runtime_3_5_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_13.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_14.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_13_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apache_logging_log4j_log4j_to_slf4j_2_13_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_core_9_0_44.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apache_tomcat_embed_tomcat_embed_websocket_9_0_44.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_aspectj_aspectjweaver_1_9_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_assertj_assertj_core_3_18_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_checkerframework_checker_qual_3_5_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_dom4j_dom4j_2_1_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_glassfish_jakarta_el_3_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_glassfish_javax_json_1_0_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_glassfish_jaxb_jaxb_runtime_2_3_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_glassfish_jaxb_txw2_2_3_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hamcrest_hamcrest_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hamcrest_hamcrest_core_2_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hdrhistogram_HdrHistogram_2_1_12.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hibernate_common_hibernate_commons_annotations_5_1_2_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hibernate_hibernate_core_5_4_29_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hibernate_orm_hibernate_core_6_0_0_Alpha7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_hibernate_validator_hibernate_validator_6_1_7_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_javassist_javassist_3_27_0_GA.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_jboss_jandex_2_2_3_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_jboss_logging_jboss_logging_3_4_1_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_jboss_spec_javax_transaction_jboss_transaction_api_1_2_spec_1_1_1_Final.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_5_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_engine_5_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_params_5_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_junit_platform_junit_platform_engine_1_7_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_latencyutils_LatencyUtils_2_0_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_mockito_mockito_core_3_6_28.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_mockito_mockito_junit_jupiter_3_6_28.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_objenesis_objenesis_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_ow2_asm_asm_5_0_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_postgresql_postgresql_42_2_19.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_quartz_scheduler_quartz_2_3_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_skyscreamer_jsonassert_1_5_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_slf4j_jul_to_slf4j_1_7_30.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_30.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_amqp_spring_amqp_2_3_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_amqp_spring_rabbit_2_3_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_actuator_autoconfigure_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_autoconfigure_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_configuration_processor_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_devtools_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_actuator_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_amqp_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_aop_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_data_jpa_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_jdbc_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_json_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_logging_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_mail_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_quartz_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_security_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_test_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_tomcat_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_validation_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_web_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_boot_spring_boot_test_autoconfigure_2_4_4.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_data_spring_data_commons_2_4_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_data_spring_data_jpa_2_4_6.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_retry_spring_retry_1_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_security_spring_security_config_5_4_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_security_spring_security_core_5_4_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_security_spring_security_web_5_4_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_aop_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_aspects_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_beans_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_context_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_context_support_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_core_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_expression_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_jcl_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_jdbc_5_3_8.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_messaging_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_orm_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_test_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_tx_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_web_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_springframework_spring_webmvc_5_3_5.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_xmlunit_xmlunit_core_2_7_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/libraries/Maven__org_yaml_snakeyaml_1_27.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/ObjMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rabbit/CatListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rabbit/RabbitMQConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/recommendation/recommendation.iml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/recommendation.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/security/SpringSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/integration/security/SpringSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1ServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources/odosla-api.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/Application.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/integration/security/SpringSecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/integration/security/SpringSecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/r1Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/r1Service.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/r1ServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/code/r1ServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/cs/superleague/api/RbApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/cs/superleague/api/RbApi.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/classes/odosla-api.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/generated-sources/src/main/java/cs/superleague/api/RbApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/generated-sources/src/main/java/cs/superleague/api/RbApi.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/rms_1-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/rms_1-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/rms_1-1.0-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/rms_1-1.0-SNAPSHOT.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +276,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -157,7 +308,7 @@
       <recent name="user.repos" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.Application (11)">
+  <component name="RunManager" selected="Spring Boot.Application (10)">
     <configuration name="SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
@@ -380,14 +531,14 @@
       <option name="customJreEnabled" value="false" />
       <option name="customTemplatesPath" value="" />
       <option name="enableDebugLogging" value="false" />
-      <option name="generateToPath" value="D:\Odosla 2\gen" />
+      <option name="generateToPath" value="C:\Code\CrowdBook_Gamma\Odosla\gen" />
       <option name="generationParameters">
         <list />
       </option>
       <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
       <option name="jdkPath" value="Default" />
       <option name="language" value="java" />
-      <option name="specificationPath" value="D:\Odosla 2\backend\src\main\resources\odosla-api.yml" />
+      <option name="specificationPath" value="C:\Code\CrowdBook_Gamma\Odosla\rabbit_test\rms_1\src\main\resources\odosla-api.yml" />
       <method v="2" />
     </configuration>
     <configuration name="odosla-api.yml" type="SwaggerCodegen">
@@ -585,7 +736,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631117891252</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="added skeleton for example brokers">
+      <created>1631121559454</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1631121559454</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -634,7 +792,8 @@
     <MESSAGE value="added analytics" />
     <MESSAGE value="added delivery" />
     <MESSAGE value="added remaining microservices" />
-    <option name="LAST_COMMIT_MESSAGE" value="added remaining microservices" />
+    <MESSAGE value="added skeleton for example brokers" />
+    <option name="LAST_COMMIT_MESSAGE" value="added skeleton for example brokers" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">

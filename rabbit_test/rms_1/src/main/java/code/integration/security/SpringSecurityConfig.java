@@ -71,7 +71,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
     );
 
     private final RequestMatcher NO_AUTHORITY = new OrRequestMatcher(
-            new AntPathRequestMatcher("/rb/message")
+            new AntPathRequestMatcher("/rb/message"),
+            new AntPathRequestMatcher("/rb/msgObject")
 
     );
 
