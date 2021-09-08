@@ -1,6 +1,6 @@
 package cs.superleague.integration.security;
 
-import cs.superleague.integration.dataclass.UserType;
+import cs.superleague.user.dataclass.UserType;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Map;
