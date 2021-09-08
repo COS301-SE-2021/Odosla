@@ -6,13 +6,13 @@ import cs.superleague.notification.exceptions.InvalidRequestException;
 
 public interface NotificationService {
 
-    CreateNotificationResponse createNotification(CreateNotificationRequest request) throws InvalidRequestException;
+    //CreateNotificationResponse createNotification(CreateNotificationRequest request) throws InvalidRequestException;
 
     RetrieveNotificationResponse retrieveNotification(RetrieveNotificationRequest request);
 
     SendDirectEmailNotificationResponse sendDirectEmailNotification(SendDirectEmailNotificationRequest request) throws InvalidRequestException;
 
-    SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException;
-
-    SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException;
+//    SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException;
+//
+//    SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException;
 }
