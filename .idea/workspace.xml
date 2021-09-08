@@ -28,51 +28,67 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="added user and shopping">
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/ServiceSelector.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/TestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/dataclass/UserType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/security/CurrentUser.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/security/JWTAuthFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/security/JWTAuthProvider.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/integration/security/SpringSecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/resources/application.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/analytics/src/main/resources/odosla-api.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/importer/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/notifications/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/user/src/main/resources/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/user/src/test/resources/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/.env" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/test/resources/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/user.iml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/user.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shopping/shopping.iml" beforeDir="false" afterPath="$PROJECT_DIR$/shopping/shopping.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/AnalyticsHelpers/FinancialAnalyticsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/AnalyticsHelpers/FinancialAnalyticsHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/AnalyticsHelpers/MonthlyAnalyticsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/AnalyticsHelpers/MonthlyAnalyticsHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/AnalyticsHelpers/UserAnalyticsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/AnalyticsHelpers/UserAnalyticsHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/AnalyticsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/AnalyticsService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/AnalyticsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/AnalyticsServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/CreateAnalyticsDataHelpers/CreateFinancialAnalyticsData.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/CreateAnalyticsDataHelpers/CreateFinancialAnalyticsData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/CreateAnalyticsDataHelpers/CreateMonthlyAnalyticsData.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/CreateAnalyticsDataHelpers/CreateMonthlyAnalyticsData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/CreateAnalyticsDataHelpers/CreateUserAnalyticsData.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/CreateAnalyticsDataHelpers/CreateUserAnalyticsData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/controller/AnalyticsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/controller/AnalyticsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/dataclass/ReportType.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/dataclass/ReportType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/exceptions/AnalyticsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/exceptions/AnalyticsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/exceptions/InvalidRequestException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/exceptions/InvalidRequestException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/exceptions/NotAuthorizedException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/exceptions/NotAuthorizedException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/requests/CreateFinancialReportRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/requests/CreateFinancialReportRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/requests/CreateMonthlyReportRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/requests/CreateMonthlyReportRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/requests/CreateUserReportRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/requests/CreateUserReportRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/responses/CreateFinancialReportResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/responses/CreateFinancialReportResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/responses/CreateMonthlyReportResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/responses/CreateMonthlyReportResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/systems/analytics/responses/CreateUserReportResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/analytics/src/main/java/cs.superleague/analytics/responses/CreateUserReportResponse.java" afterDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="added analytics">
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/Application.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/ServiceSelector.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/TestController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/dataclass/UserType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/security/CurrentUser.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/security/JWTAuthFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/security/JWTAuthProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/integration/security/SpringSecurityConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/resources/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/main/resources/odosla-api.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/CreateNotificationUnitTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/SendDirectEmailNotificationUnitTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/SendEmailNotificationUnitTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/SendPDFEmailNotificationUnitTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/integration/CreateNotificationIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/integration/SendDirectEmailNotificationIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/integration/SendEmailNotificationIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/java/cs/superleague/notification/integration/SendPDFEmailNotificationIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/resources/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/delivery/src/test/resources/application.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/test/resources/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/DeliveryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/DeliveryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/DeliveryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/DeliveryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/controller/DeliveryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/controller/DeliveryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/dataclass/Delivery.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/dataclass/Delivery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/dataclass/DeliveryDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/dataclass/DeliveryDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/dataclass/DeliveryStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/dataclass/DeliveryStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/exceptions/DeliveryDoesNotExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/exceptions/DeliveryDoesNotExistException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/exceptions/DeliveryException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/exceptions/DeliveryException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/exceptions/InvalidRequestException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/exceptions/InvalidRequestException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/repos/DeliveryDetailRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/repos/DeliveryDetailRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/repos/DeliveryRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/repos/DeliveryRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/AddDeliveryDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/AddDeliveryDetailRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/AssignDriverToDeliveryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/AssignDriverToDeliveryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/CreateDeliveryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/CreateDeliveryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetDeliveriesRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetDeliveriesRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetDeliveryByUUIDRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetDeliveryByUUIDRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetDeliveryCostRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetDeliveryCostRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetDeliveryDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetDeliveryDetailRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetDeliveryDriverByOrderIDRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetDeliveryDriverByOrderIDRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetDeliveryStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetDeliveryStatusRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/GetNextOrderForDriverRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/GetNextOrderForDriverRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/RemoveDriverFromDeliveryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/RemoveDriverFromDeliveryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/TrackDeliveryRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/TrackDeliveryRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/requests/UpdateDeliveryStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/requests/UpdateDeliveryStatusRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/AddDeliveryDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/AddDeliveryDetailResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/AssignDriverToDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/AssignDriverToDeliveryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/CreateDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/CreateDeliveryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetDeliveriesResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetDeliveriesResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetDeliveryByUUIDResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetDeliveryByUUIDResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetDeliveryCostResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetDeliveryCostResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetDeliveryDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetDeliveryDetailResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetDeliveryDriverByOrderIDResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetDeliveryDriverByOrderIDResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetDeliveryStatusResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetDeliveryStatusResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/GetNextOrderForDriverResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/GetNextOrderForDriverResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/RemoveDriverFromDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/RemoveDriverFromDeliveryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/TrackDeliveryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/TrackDeliveryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/systems/delivery/responses/UpdateDeliveryStatusResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/responses/UpdateDeliveryStatusResponse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +147,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
     <property name="io.flutter.reload.alreadyRun" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/microservices/analytics" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/microservices/delivery" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -145,15 +161,16 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\delivery" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\analytics" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\shopping" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\user\src\main\java\cs\superleague" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\user" />
-      <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\importer\src\main\resources" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\analytics\src\main\java\cs.superleague" />
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\delivery\src\main\java\cs\superleague" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices" />
+      <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\analytics\src\main\java\cs.superleague" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\shopping\src\main\java\cs\superleague" />
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\user\src\main\java\cs\superleague" />
     </key>
@@ -528,7 +545,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631116273063</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="added analytics">
+      <created>1631116611176</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1631116611176</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -574,7 +598,8 @@
     <MESSAGE value="Fixed padding for clear cart button" />
     <MESSAGE value="restructuring services" />
     <MESSAGE value="added user and shopping" />
-    <option name="LAST_COMMIT_MESSAGE" value="added user and shopping" />
+    <MESSAGE value="added analytics" />
+    <option name="LAST_COMMIT_MESSAGE" value="added analytics" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">

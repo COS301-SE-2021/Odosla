@@ -12,9 +12,16 @@
         <module name="notifications" />
         <module name="shopping" />
       </profile>
+      <profile name="Annotation profile for delivery" enabled="true">
+        <sourceOutputDir name="../../delivery/target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../delivery/target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="delivery" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="analytics" target="8" />
+      <module name="delivery" target="11" />
       <module name="importer" target="8" />
       <module name="notifications" target="8" />
       <module name="notifications (1)" target="8" />
