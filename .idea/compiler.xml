@@ -8,23 +8,22 @@
         <outputRelativeToContentRoot value="true" />
         <module name="analytics" />
         <module name="importer" />
+        <module name="delivery" />
+        <module name="recommendation" />
+        <module name="payment" />
         <module name="user" />
         <module name="notifications" />
         <module name="shopping" />
       </profile>
-      <profile name="Annotation profile for delivery" enabled="true">
-        <sourceOutputDir name="../../delivery/target/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../delivery/target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="delivery" />
-      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="analytics" target="8" />
-      <module name="delivery" target="11" />
+      <module name="delivery" target="8" />
       <module name="importer" target="8" />
       <module name="notifications" target="8" />
       <module name="notifications (1)" target="8" />
+      <module name="payment" target="8" />
+      <module name="recommendation" target="8" />
       <module name="shopping" target="8" />
       <module name="user" target="8" />
     </bytecodeTargetLevel>
@@ -32,9 +31,12 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="analytics" options="-parameters" />
+      <module name="delivery" options="-parameters" />
       <module name="importer" options="-parameters" />
       <module name="notifications" options="-parameters" />
       <module name="notifications (1)" options="-parameters" />
+      <module name="payment" options="-parameters" />
+      <module name="recommendation" options="-parameters" />
       <module name="shopping" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>
