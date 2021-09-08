@@ -9,6 +9,8 @@
         <module name="analytics" />
         <module name="importer" />
         <module name="delivery" />
+        <module name="rms_2" />
+        <module name="rms_1" />
         <module name="recommendation" />
         <module name="payment" />
         <module name="user" />
@@ -24,6 +26,8 @@
       <module name="notifications (1)" target="8" />
       <module name="payment" target="8" />
       <module name="recommendation" target="8" />
+      <module name="rms_1" target="8" />
+      <module name="rms_2" target="8" />
       <module name="shopping" target="8" />
       <module name="user" target="8" />
     </bytecodeTargetLevel>
@@ -37,6 +41,8 @@
       <module name="notifications (1)" options="-parameters" />
       <module name="payment" options="-parameters" />
       <module name="recommendation" options="-parameters" />
+      <module name="rms_1" options="-parameters" />
+      <module name="rms_2" options="-parameters" />
       <module name="shopping" options="-parameters" />
       <module name="user" options="-parameters" />
     </option>

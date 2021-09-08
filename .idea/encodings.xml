@@ -17,5 +17,9 @@
     <file url="file://$PROJECT_DIR$/microservices/shopping/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/microservices/user/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/microservices/user/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_2/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_2/src/main/resources" charset="UTF-8" />
   </component>
 </project>
