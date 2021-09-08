@@ -11,6 +11,7 @@ cs\superleague\models\ImporterItemsCSVImporterRequest.class
 cs\superleague\models\AnalyticsCreateFinancialReportResponse.class
 cs\superleague\models\DeliveryAddDeliveryDetailRequest.class
 cs\superleague\models\ImporterItemsCSVImporterResponse.class
+cs\superleague\integration\security\SpringSecurityConfig.class
 cs\superleague\models\UserCompleteDeliveryRequest.class
 cs\superleague\models\ShoppingGetNextQueuedRequest.class
 cs\superleague\models\UserUpdateAdminDetailsResponse.class
@@ -48,6 +49,8 @@ cs\superleague\api\ShoppingApi.class
 cs\superleague\models\PaymentGetItemsResponse.class
 cs\superleague\models\ShoppingGetQueueRequest.class
 cs\superleague\models\UserMakeGroceryListRequest.class
+cs\superleague\integration\dataclass\UserType.class
+cs\superleague\integration\TestController.class
 cs\superleague\models\DeliveryGetDeliveryByUUIDResponse.class
 cs\superleague\models\UserGetCurrentUserRequest.class
 cs\superleague\models\UserScanItemResponse.class
@@ -56,6 +59,7 @@ cs\superleague\models\PaymentGetCustomersActiveOrdersRequest.class
 cs\superleague\models\ImporterStoresCSVImporterRequest.class
 cs\superleague\models\OrderObject.class
 cs\superleague\notification\repos\NotificationRepo.class
+cs\superleague\integration\security\CurrentUser.class
 cs\superleague\models\NotificationSendDirectEmailNotificationRequest.class
 cs\superleague\models\NotificationSendDirectEmailNotificationResponse.class
 cs\superleague\models\UserUpdateShopperDetailsRequest.class
@@ -69,6 +73,7 @@ cs\superleague\models\AnalyticsCreateMonthlyReportResponse.class
 cs\superleague\models\UserCompletePackagingOrderResponse.class
 cs\superleague\models\UserRegisterAdminResponse.class
 cs\superleague\models\UserUpdateDriverDetailsResponse.class
+cs\superleague\integration\security\JWTAuthFilter.class
 cs\superleague\models\UserUpdateCustomerDetailsResponse.class
 cs\superleague\models\ShoppingRemoveQueuedOrderRequest.class
 cs\superleague\models\DeliveryGetNextOrderForDriverResponse.class
