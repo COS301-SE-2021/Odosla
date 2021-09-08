@@ -11,12 +11,13 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="importer" target="11" />
+      <module name="importer" target="8" />
       <module name="notifications" target="8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="importer" options="-parameters" />
       <module name="notifications" options="-parameters" />
     </option>
   </component>
