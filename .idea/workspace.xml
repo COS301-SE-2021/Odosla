@@ -28,455 +28,12 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="Added Flutter Customer App">
-      <change afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/dataclass/UserType.java" afterDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="front_end employee">
+      <change beforePath="$PROJECT_DIR$/.idea/Odosla.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Odosla.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/AnalyticsHelpers/FinancialAnalyticsHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/AnalyticsHelpers/MonthlyAnalyticsHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/AnalyticsHelpers/UserAnalyticsHelper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/AnalyticsService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/AnalyticsServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/CreateAnalyticsDataHelpers/CreateFinancialAnalyticsData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/CreateAnalyticsDataHelpers/CreateMonthlyAnalyticsData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/CreateAnalyticsDataHelpers/CreateUserAnalyticsData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/controller/AnalyticsController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/dataclass/ReportType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/exceptions/AnalyticsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/exceptions/NotAuthorizedException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/requests/CreateFinancialReportRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/requests/CreateMonthlyReportRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/requests/CreateUserReportRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/responses/CreateFinancialReportResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/responses/CreateMonthlyReportResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/analytics/responses/CreateUserReportResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/DeliveryService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/DeliveryServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/controller/DeliveryController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/dataclass/Delivery.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/dataclass/DeliveryDetail.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/dataclass/DeliveryStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/exceptions/DeliveryDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/exceptions/DeliveryException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/repos/DeliveryDetailRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/repos/DeliveryRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/AddDeliveryDetailRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/AssignDriverToDeliveryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/CreateDeliveryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetDeliveriesRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetDeliveryByUUIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetDeliveryCostRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetDeliveryDetailRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetDeliveryDriverByOrderIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetDeliveryStatusRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/GetNextOrderForDriverRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/RemoveDriverFromDeliveryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/TrackDeliveryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/requests/UpdateDeliveryStatusRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/AddDeliveryDetailResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/AssignDriverToDeliveryResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/CreateDeliveryResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetDeliveriesResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetDeliveryByUUIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetDeliveryCostResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetDeliveryDetailResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetDeliveryDriverByOrderIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetDeliveryStatusResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/GetNextOrderForDriverResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/RemoveDriverFromDeliveryResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/TrackDeliveryResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/delivery/responses/UpdateDeliveryStatusResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/ImporterService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/ImporterServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/controller/ImporterController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/exceptions/ImporterException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/requests/ItemsCSVImporterRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/requests/StoreCSVImporterRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/responses/ItemsCSVImporterResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/importer/responses/StoreCSVImporterResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/ServiceSelector.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/TestController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/security/CurrentUser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/security/JWTAuthFilter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/security/JWTAuthProvider.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/security/JwtUtil.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/integration/security/SpringSecurityConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/NotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/NotificationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/NotificationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/controller/NotificationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/requests/SendEmailNotificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/requests/SendEmailNotificationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/requests/SendPDFEmailNotificationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/notification/requests/SendPDFEmailNotificationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/controller/PaymentController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/GeoPoint.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/Invoice.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/Order.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/OrderItems.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/OrderStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/OrderType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/dataclass/Transaction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/exceptions/NotAuthorisedException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/exceptions/OrderDoesNotExist.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/exceptions/PaymentException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/exceptions/StatusCodeException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/mock/CancelOrdersMock.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/mock/submitOrderMock.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/repos/InvoiceRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/repos/OrderRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/repos/TransactionRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/AddItemRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/CancelOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/CreateTransactionRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GenerateInvoiceRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GetCustomersActiveOrdersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GetInvoiceRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GetItemsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GetOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GetOrdersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/GetStatusRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/ReverseTransactionRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SetStatusRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/UpdateOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/VerifyPaymentRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/AddItemResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/CancelOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/CreateTransactionResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GenerateInvoiceResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GetCustomersActiveOrdersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GetInvoiceResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GetItemsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GetOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GetOrdersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/GetStatusResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/ReverseTransactionResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SetStatusResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/UpdateOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/VerifyPaymentResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/RecommendationService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/RecommendationServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/controller/RecommendationController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/dataclass/Recommendation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/exceptions/RecommendationException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/exceptions/RecommendationRepoException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/repos/RecommendationRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/requests/GetCartRecommendationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/requests/GetOrderRecommendationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/responses/GetCartRecommendationResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/recommendation/responses/GetOrderRecommendationResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Catalogue.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Item.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Store.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/exceptions/ShoppingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/exceptions/StoreClosedException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/exceptions/StoreDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/repos/CatalogueRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/repos/ItemRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/repos/StoreRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/AddShopperRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/AddToQueueRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/ClearShoppersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetCatalogueRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetItemsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetNextQueuedRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetQueueRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetShoppersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetStoreByUUIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetStoreOpenRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/GetStoresRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/RemoveQueuedOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/RemoveShopperRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/UpdateCatalogueRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/UpdateShoppersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/requests/UpdateStoreRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/AddShopperResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/AddToQueueResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/ClearShoppersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetCatalogueResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetItemsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetNextQueuedResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetQueueResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetShoppersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetStoreByUUIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetStoreOpenResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/GetStoresResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/RemoveQueuedOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/RemoveShopperResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/UpdateCatalogueResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/UpdateShoppersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/responses/UpdateStoreResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/UserServiceImpl.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/controller/UserController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Address.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Admin.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Cart.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Category.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Customer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Driver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/GroceryList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Preference.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Shopper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/UserType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/dataclass/Wallet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/AdminDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/AlreadyExistsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/CustomerDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/DriverDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/InvalidCredentialsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/InvalidRequestException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/NotAuthorisedException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/ShopperDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/UserDoesNotExistException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/exceptions/UserException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/AdminRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/CustomerRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/DriverRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/GroceryListRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/ShopperRepo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/AccountVerifyRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/ClearShoppingCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/CollectOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/CompleteDeliveryRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/CompletePackagingOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/DeleteUserRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/DriverSetRatingRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/FinalisePasswordResetRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/FinalizePasswordResetRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetCurrentUserRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetCustomerByUUIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetCustomersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetGroceryListsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetShopperByUUIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetShoppingCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetUserByUUIDRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/GetUsersRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/LoginRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/MakeGroceryListRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterAdminRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterCustomerRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterDriverRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterShopperRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RegisterUserRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/RemoveFromCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/ResendActivationCodeRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/ResetPasswordRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/ScanItemRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/SetCartRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/SetCurrentLocationRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/UpdateAdminDetailsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/UpdateCustomerDetailsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/UpdateDriverDetailsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/UpdateDriverShiftRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/UpdateShopperDetailsRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/requests/UpdateShopperShiftRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/AccountVerifyResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/ClearShoppingCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/CollectOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/CompleteDeliveryResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/CompletePackagingOrderResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/DriverSetRatingResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/FinalisePasswordResetResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/FinalizePasswordResetResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetCurrentUserResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetCustomerByUUIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetGroceryListsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetShopperByUUIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetShoppingCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetUserByUUIDResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/GetUsersResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/LoginResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/LogoutResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/MakeGroceryListResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/RegisterAdminResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/RegisterCustomerResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/RegisterDriverResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/RegisterResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/RegisterShopperResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/RemoveFromCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/ResendActivationCodeResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/ResetPasswordResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/ScanItemResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/SetCartResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/SetCurrentLocationResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/UpdateAdminDetailsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/UpdateCustomerDetailsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/UpdateDriverDetailsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/UpdateDriverShiftResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/UpdateShopperDetailsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/responses/UpdateShopperShiftResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/resources/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/odosla-api.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/analytics/CreateFinancialReportUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/analytics/CreateMonthlyReportUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/analytics/CreateUserReportUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/analytics/integration/CreateFinancialReportIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/analytics/integration/CreateMonthlyReportIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/analytics/integration/CreateUserReportIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/AddDeliveryDetailUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/AssignDriverToDeliveryUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/CreateDeliveryUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/GetDeliveryByUUIDUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/GetDeliveryCostUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/GetDeliveryDetailUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/GetDeliveryDriverByOrderIDUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/GetDeliveryStatusUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/GetNextOrderForDriverUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/RemoveDriverFromDeliveryUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/TrackDeliveryUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/UpdateDeliveryStatusUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/AddDeliveryDetailIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/AssignDriverToDeliveryIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/CreateDeliveryIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/GetDeliveryByUUIDIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/GetDeliveryDetailIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/GetDeliveryDriverByOrderIDIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/GetDeliveryStatusIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/GetNextOrderForDriverIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/RemoveDriverFromDeliveryIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/TrackDeliveryIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/delivery/integration/UpdateDeliveryStatusIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/importer/ItemsCSVImporterUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/importer/StoreCSVImporterUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/importer/integration/ItemsCSVImporterIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/importer/integration/StoresCSVImporterIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/integration/JwtTokenTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/CreateNotificationUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/CreateNotificationUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/SendDirectEmailNotificationUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/SendDirectEmailNotificationUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/SendEmailNotificationUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/SendEmailNotificationUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/SendPDFEmailNotificationUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/SendPDFEmailNotificationUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/integration/CreateNotificationIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/integration/CreateNotificationIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/integration/SendEmailNotificationIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/integration/SendEmailNotificationIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/integration/SendPDFEmailNotificationIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/notification/integration/SendPDFEmailNotificationIntegrationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/CancelOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/CreateTransactionUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GenerateInvoiceUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GetCustomersActiveOrdersUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GetInvoiceUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GetItemsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GetOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GetOrdersUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/GetStatusUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SetStatusUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/UpdateOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/CancelOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/CreateTransactionIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GenerateInvoiceIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GetCustomerActiveOrdersIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GetInvoiceIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GetItemsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GetOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GetOrdersIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/GetStatusIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/SetStatusIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/SubmitOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/UpdateOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/integration/VerifyPaymentIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/verifyPaymentUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/recommendation/GetCartRecommendationUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/recommendation/integration/GetCartRecommendationIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/AddShopperUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/AddToQueueUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/ClearShoppersUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetCatalogueUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetItemsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetNextQueuedUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetQueueUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetShoppersUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetStoreByUUIDUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetStoreOpenUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/GetStoresUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/RemoveQueuedOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/RemoveShopperUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/UpdateCatalogueUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/UpdateShoppersUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/UpdateStoreUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/AddShopperIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/AddToQueueIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/ClearShoppersIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetCatalogueIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetItemsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetNextQueuedIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetQueueIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetShoppersIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetStoreOpenIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/GetStoresIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/RemoveQueuedOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/RemoveShopperIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/UpdateCatalogueIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/UpdateShoppersIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/shopping/integration/UpdateStoreIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/ClearShoppingCartUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/CollectOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/CompleteDeliveryUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/CompletePackingOrderUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/FinalisePasswordResetUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/GetCurrentUserUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/GetGroceryListsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/GetShopperByUUIDUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/GetShoppingCartUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/GetUsersUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/LoginUserUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/MakeGroceryListUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/RegisterAdminUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/RegisterCustomerUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/RegisterShopperUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/RegitserDriverUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/RemoveFromCartUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/ResendAcvtivationCodeUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/ResetPasswordUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/ScanItemUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/SetCartUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/SetCurrentLocationUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/UpdateAdminDetailsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/UpdateCustomerDetailsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/UpdateDriverDetailsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/UpdateDriverShiftUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/UpdateShopperDetailsUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/UpdateShopperShiftUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/VerifyAccountUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/ClearShoppingCartIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/CollectOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/CompleteDeliveryIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/CompletePackingOrderIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/FinalisePasswordResetIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/GetCurrentUserIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/GetGroceryListsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/GetShopperByUUIDIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/GetShoppingCartIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/GetUsersIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/LoginUserIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/MakeGroceryListIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/RegisterAdminIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/RegisterCustomerIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/RegisterDriverInetgrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/RegisterShopperIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/RemoveFromCartIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/ResendActivationCodeIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/ResetPasswordIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/ScanItemIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/SetCartIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/SetCurrentLocationIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/UpdateAdminDetailsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/UpdateCustomerDetailsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/UpdateDriverDetailsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/UpdateDriverShiftIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/UpdateShopperDetailsIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/UpdateShopperShiftIntegrationTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/test/java/cs/superleague/user/integration/VerifyAccountIntegrationTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/AdminRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/cs/superleague/user/repos/AdminRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/Delivery.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/cs/superleague/delivery/DeliveryStatus.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -486,8 +43,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Dart File" />
         <option value="Class" />
+        <option value="Dart File" />
       </list>
     </option>
   </component>
@@ -500,7 +57,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="develop_microservices" />
+        <entry key="$PROJECT_DIR$" value="feature_shopping_mockData" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -515,8 +72,17 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/backend/src/main/resources/application.properties" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/test/java/cs/superleague/payment/SubmitOrderUnitTest.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/responses/SubmitOrderResponse.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/requests/SubmitOrderRequest.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Store.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/payment/PaymentService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/backend/src/main/java/cs/superleague/shopping/dataclass/Catalogue.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="1tablLsMRjsE0jJ3aL8orrrg9Nz" />
   <component name="ProjectLevelVcsManager">
@@ -562,7 +128,7 @@
       <recent name="C:\Code\Capstone\backend\src\main\java\user\exceptions" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.Application">
+  <component name="RunManager" selected="Flutter.main.dart">
     <configuration name="SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" type="AndroidJUnit" factoryName="Android JUnit" temporary="true" nameIsGenerated="true">
       <module name="backend" />
       <extension name="coverage">
@@ -576,17 +142,6 @@
       <option name="METHOD_NAME" value="IntegrationTest_SubmitOrderRequestConstruction" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -679,11 +234,11 @@
     <list>
       <item itemvalue="Android JUnit.SubmitOrderIntegrationTest.IntegrationTest_SubmitOrderRequestConstruction" />
       <item itemvalue="Flutter.main.dart" />
+      <item itemvalue="Spring Boot.Application" />
+      <item itemvalue="Swagger Codegen.odosla-api.yml" />
       <item itemvalue="Flutter.main_employee.dart" />
       <item itemvalue="JUnit.GetNextOrderForDriverUnitTest" />
       <item itemvalue="JUnit.GetNextOrderForDriverIntegrationTest" />
-      <item itemvalue="Spring Boot.Application" />
-      <item itemvalue="Swagger Codegen.odosla-api.yml" />
     </list>
     <recent_temporary>
       <list>
@@ -715,7 +270,6 @@
       <workItem from="1629200432757" duration="1132000" />
       <workItem from="1629228551496" duration="1222000" />
       <workItem from="1629230734224" duration="450000" />
-      <workItem from="1631100976145" duration="4528000" />
     </task>
     <task id="LOCAL-00001" summary="Setup shopper structure and request objects">
       <created>1623142688992</created>
