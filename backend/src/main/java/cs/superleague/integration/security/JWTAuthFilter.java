@@ -1,7 +1,7 @@
 package cs.superleague.integration.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cs.superleague.user.dataclass.UserType;
+import cs.superleague.integration.dataclass.UserType;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
