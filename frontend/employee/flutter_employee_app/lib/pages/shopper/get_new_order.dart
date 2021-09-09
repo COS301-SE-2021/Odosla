@@ -25,7 +25,7 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
   bool isOrders=false;
 
   void initState(){
-    _shoppingService.getAllOrdersInQueue(widget.store.id).then((value) => {
+    _shoppingService.getAllOrdersInQueue(context,widget.store.id).then((value) => {
       if(value!=null){
         setState(() {
           orders = value;

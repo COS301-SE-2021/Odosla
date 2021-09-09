@@ -19,31 +19,24 @@ class DeliveryService{
      final loginURL = Uri.parse(endPoint+"delivery/getNextOrderForDriver");
 
      Map<String,String> headers =new Map<String,String>();
+     String jwt="";
+
+     await _userService.getJWTAsString(context).then((value) => {
+       jwt=value!
+     });
+
+     print(jwt);
 
      headers =
      {
        "Accept": "application/json",
        "content-type": "application/json",
        "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS"
+       "Access-Control-Allow-Methods": "POST, OPTIONS",
+       "Authorization":jwt,
      };
 
-     String jwt="";
-     await _userService.getJWTAsString().then((value) => {
-       jwt=value!
-     }
-
-     );
-     while (jwt==""){
-       await _userService.getJWTAsString().then((value) =>
-       jwt=value!,
-       );
-     }
-
-     print(jwt);
-
      final data = {
-       "jwtToken":jwt,
        "rangeOfDelivery":1000,
        "currentLocation":{
          "latitude":-25.748931,
@@ -76,31 +69,24 @@ class DeliveryService{
 
      Map<String,String> headers =new Map<String,String>();
 
+     String jwt="";
+     await _userService.getJWTAsString(context).then((value) => {
+       jwt=value!
+     });
+
+     print(jwt);
+
      headers =
      {
        "Accept": "application/json",
        "content-type": "application/json",
        "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS"
+       "Access-Control-Allow-Methods": "POST, OPTIONS",
+       "Authorization":jwt,
      };
-
-     String jwt="";
-     await _userService.getJWTAsString().then((value) => {
-       jwt=value!
-     }
-
-     );
-     while (jwt==""){
-       await _userService.getJWTAsString().then((value) =>
-       jwt=value!,
-       );
-     }
-
-     print(jwt);
 
      final data = {
        "deliveryID":deliveryID,
-       "jwtToken":jwt,
      };
 
      final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
@@ -157,14 +143,21 @@ class DeliveryService{
 
      Map<String,String> headers =new Map<String,String>();
 
+     String jwt="";
+     await _userService.getJWTAsString(context).then((value) => {
+       jwt=value!
+     });
+
+     print(jwt);
+
      headers =
      {
        "Accept": "application/json",
        "content-type": "application/json",
        "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS"
+       "Access-Control-Allow-Methods": "POST, OPTIONS",
+       "Authorization":jwt,
      };
-
      deliveryID=Provider
          .of<DeliveryProvider>(context, listen: false)
          .delivery.deliveryID;
@@ -198,12 +191,21 @@ class DeliveryService{
 
      Map<String,String> headers =new Map<String,String>();
 
+     String jwt="";
+
+     await _userService.getJWTAsString(context).then((value) => {
+       jwt=value!
+     });
+
+     print(jwt);
+
      headers =
      {
        "Accept": "application/json",
        "content-type": "application/json",
        "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS"
+       "Access-Control-Allow-Methods": "POST, OPTIONS",
+       "Authorization":jwt,
      };
 
      final data = {

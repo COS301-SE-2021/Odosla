@@ -12,6 +12,7 @@ import 'package:flutter_employee_app/pages/login_registration/intro_screen_drive
 import 'package:flutter_employee_app/pages/login_registration/intro_screen_shopper.dart';
 import 'package:flutter_employee_app/pages/login_registration/login_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/register_screen.dart';
+import 'package:flutter_employee_app/pages/login_registration/splash_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/barcode_scanner_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
@@ -48,17 +49,14 @@ var routes = <String, WidgetBuilder>{
 
 void main() async {
 
-
   final userService = UserService();
   GetIt.I.registerSingleton(userService);
-
 
   final shoppingService=ShoppingService();
   GetIt.I.registerSingleton(shoppingService);
 
   final deliveryService=DeliveryService();
   GetIt.I.registerSingleton(deliveryService);
-  //await Future.wait([notificationService.init(), contactsModel.initialise()]);
 
   runApp(OdoslaApp());
 }
@@ -71,6 +69,7 @@ class OdoslaApp extends StatelessWidget  {
   final deliveryProviderState=DeliveryProvider();
   final JWTProviderState=JWTProvider();
   final UtilityProviderState=UtilityProvider();
+
   @override
   Widget build(BuildContext context) => MultiProvider (
     providers: [ChangeNotifierProvider(create: (_)=> orderProviderState),ChangeNotifierProvider(create: (_)=> shopProviderState),ChangeNotifierProvider(create: (_)=>userProviderState),ChangeNotifierProvider(create: (_)=> deliveryProviderState),ChangeNotifierProvider(create: (_)=> JWTProviderState),ChangeNotifierProvider(create: (_)=> UtilityProviderState)],
@@ -81,7 +80,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:HomePageScreen(),
+            home:SplashScreen(),
             routes: routes,
           );
         },

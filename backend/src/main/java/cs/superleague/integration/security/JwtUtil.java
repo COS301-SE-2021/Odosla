@@ -18,22 +18,22 @@ import java.util.stream.Collectors;
 public class JwtUtil {
 
     @Value("${env.SECRET}")
-    private String SECRET_KEY = "stub";
+    private String SECRET_KEY = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
 
     @Value("${env.HEADER}")
-    private String BEARER ;
+    private String BEARER = "Bearer ";
 
     @Value("${env.SHOPPER_AUTHORITY}")
-    private String SHOPPER_AUTHORITY = "stub";
+    private String SHOPPER_AUTHORITY = "ROLE_SHOPPER";
 
     @Value("${env.DRIVER_AUTHORITY}")
-    private String DRIVER_AUTHORITY = "stub";
+    private String DRIVER_AUTHORITY = "ROLE_DRIVER";
 
     @Value("${env.ADMIN_AUTHORITY}")
-    private String ADMIN_AUTHORITY = "stub";
+    private String ADMIN_AUTHORITY = "ROLE_ADMIN";
 
     @Value("${env.CUSTOMER_AUTHORITY}")
-    private String CUSTOMER_AUTHORITY = "stub";
+    private String CUSTOMER_AUTHORITY = "ROLE_CUSTOMER";
 
     public String extractEmail(String token){
         return extractClaim(token, Claims::getSubject);

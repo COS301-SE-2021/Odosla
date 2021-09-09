@@ -1,9 +1,9 @@
 class User{
-  String name;
-  String surname;
-  String email;
-  String userType;
-  String phoneNumber;
+  String name="";
+  String surname="";
+  String email="";
+  String userType="";
+  String phoneNumber="";
 
   bool onShift=false;
   String ordersCompleted="0";
@@ -11,8 +11,27 @@ class User{
   String deliveriesCompleted="0";
   String rating="0.0";
 
-  User(this.name, this.surname, this.email, this.userType, this.phoneNumber);
+  User(String name, String surname, String email, String userType, String phoneNumber){
+
+    if(name!=null) {
+      this.name = name;
+    }
+    if(surname!=null){
+      this.surname=surname;
+    }
+    if(email!=null){
+      this.email=email;
+    }
+    if(userType!=null) {
+      this.userType = userType;
+    }
+    if(phoneNumber!=null) {
+      this.phoneNumber = phoneNumber;
+    }
+  }
+
   User.withParameters(this.name, this.surname, this.email, this.userType, this.phoneNumber,this.onShift,this.ordersCompleted);
+
   User.fromJson(Map<String, dynamic> json):
         name = json['name'],
         surname=json["surname"],

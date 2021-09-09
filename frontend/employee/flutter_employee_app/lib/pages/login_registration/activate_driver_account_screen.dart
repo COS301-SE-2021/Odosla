@@ -191,7 +191,7 @@ class _ActivateDriverAccountState extends State<ActivateDriverAccountScreen> {
                                               await _userService.loginUser(_email, _password, "DRIVER",context).then(
                                                       (success){
                                                     if(success){
-                                                      _userService.getJWTAsString().then((value) =>  {
+                                                      _userService.getJWTAsString(context).then((value) =>  {
                                                         showDialog(
                                                           context: context,
                                                           builder: (BuildContext context) =>

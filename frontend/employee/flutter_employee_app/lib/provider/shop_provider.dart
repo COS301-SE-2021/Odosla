@@ -10,5 +10,6 @@ class ShopProvider with ChangeNotifier{
   ShopProvider();
 
   Store get store=>_store;
+
   set store(Store s){_store=s;notifyListeners();}
 }

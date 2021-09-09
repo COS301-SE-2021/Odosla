@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/User.dart';
 import 'package:flutter_employee_app/pages/shopper/edit_profile_page.dart';
+import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:provider/provider.dart';
 
 class ShopperProfileScreen extends StatefulWidget {
   @override
@@ -23,21 +26,27 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
   String _numberOfOrderCompleted="0";
 
   void initState() {
-    _userService.getCurrentUser(context).then((value) =>
-    {
-      print(value),
-      setState(() {
-        _name = value!.name;
-        _surname = value.surname;
-        _email = value.email;
-        _numberOfOrderCompleted=value.getOrdersCompleted();
-        if(_numberOfOrderCompleted==null){
-          _numberOfOrderCompleted="0";
-        }
-      })
+    bool isUser = Provider.of<UserProvider>(context,listen: false).isUser();
+    if (isUser){
+      User user = Provider.of<UserProvider>(context,listen: false).user;
+      _name = user.name;
+      _surname=user.surname;
+      _email=user.email;
+      _numberOfOrderCompleted=user.ordersCompleted;
+    }else {
+      _userService.getCurrentUser(context).then((value) =>
+      {
+        setState(() {
+          _name = value!.name;
+          _surname = value.surname;
+          _email = value.email;
+          _numberOfOrderCompleted = value.getOrdersCompleted();
+          if (_numberOfOrderCompleted == null) {
+            _numberOfOrderCompleted = "0";
+          }
+        })
+      });
     }
-
-    );
   }
 
   @override

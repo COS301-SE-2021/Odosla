@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
 public class JWTAuthFilter extends OncePerRequestFilter {
 
     @Value("${env.REQUEST_HEADER}")
-    private String HEADER = "stub";
+    private String HEADER = "Authorization";
 
     @Value("${env.HEADER}")
-    private String PREFIX = "stub";
+    private String PREFIX = "Bearer ";
 
     @Value("${env.SECRET}")
-    private String SECRET = "stub";
+    private String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
 
     private final ObjectMapper mapper = new ObjectMapper();
 

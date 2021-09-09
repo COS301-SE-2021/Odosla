@@ -9,6 +9,7 @@ import 'package:flutter_employee_app/models/User.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/provider/jwt_provider.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
+import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_employee_app/utilities/settings.dart';
@@ -21,6 +22,7 @@ class UserService{
   final _storage = new FlutterSecureStorage();
 
   Future<bool> loginUser(String email, String password, String userType, BuildContext context) async{
+
     final url = Uri.parse(endPoint+"user/loginUser");
 
     Map<String,String> headers =new Map<String,String>();
@@ -33,32 +35,30 @@ class UserService{
       "Access-Control-Allow-Methods": "POST, OPTIONS"
     };
 
-
     final data = {
       "email": email,
       "password": password,
       "userType": userType,
     };
 
-    print(data);
-
-
     final response = await http.post(url, headers: headers, body: jsonEncode(data));
-    print(response.body);
+
     if (response.statusCode==200) {
+
       Map<String,dynamic> responseData = json.decode(response.body);
 
       if (responseData["success"] == true) {
         String token=responseData["Token"];
+        print(token);
         await Future.wait([
           _storage.write(key: "jwt", value: token),
         ]);
 
         Provider.of<JWTProvider>(context,listen: false).jwt=responseData["Token"];
-
         return true;
 
       } else if(responseData["message"]!=null && responseData["message"].contains("Please verify account")){
+
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Please verify account before logging in")));
         return false;
@@ -69,8 +69,17 @@ class UserService{
     return false;
   }
 
-  Future<String?> getJWTAsString() async {
-    return await _storage.read(key: "jwt");
+  Future<String?> getJWTAsString(BuildContext context) async {
+    String jwt = Provider.of<JWTProvider>(context,listen: false).jwt;
+    if(jwt == "" || jwt == null) {
+      String? jwt= await _storage.read(key: "jwt");
+      if(jwt!=null){
+        Provider.of<JWTProvider>(context,listen: false).jwt=jwt;
+      }
+      return jwt;
+    }else{
+      return jwt;
+    }
   }
 
   Future<String?> getRegistrationPassword() async {
@@ -202,9 +211,11 @@ class UserService{
       "activationCode":activationCode,
       "userType":userType
     };
-
-    final response = await http.post(url, headers: headers, body: jsonEncode(data));
-
+    final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
+        Duration(seconds: 17),
+        onTimeout:(){ return(http.Response('TimeOut',500));
+        }
+    );
     print(response.body);
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
@@ -230,53 +241,50 @@ class UserService{
 
     Map<String,String> headers =new Map<String,String>();
 
-    headers =
-    {
-      "Accept": "application/json",
-      "content-type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
-    };
-
     String jwt="";
 
-    await this.getJWTAsString().then((value) => {
+    await this.getJWTAsString(context).then((value) => {
       jwt=value!
     });
 
-    while (jwt==""){
-      await getJWTAsString().then((value) =>
-      jwt=value!,
-      );
-    }
     print(jwt);
     final data = {
       "JWTToken":jwt
     };
 
-    final response = await http.post(url, headers: headers, body: jsonEncode(data));
+    headers =
+    {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt,
+    };
 
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
+    print(response.statusCode);
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
       print(responseData);
+
       if (responseData["success"] == true) {
 
         String userType=responseData["user"]["accountType"];
 
         if(userType=="SHOPPER"){
+
           Shopper shopper = Shopper.fromJson(responseData["user"]);
           Provider.of<UserProvider>(context,listen: false).user=shopper;
-
           shopper.setOrdersCompleted(responseData["user"]["ordersCompleted"].toString());
           Provider.of<UserProvider>(context,listen: false).user.ordersCompleted=(responseData["user"]["ordersCompleted"]).toString();
           shopper.setOnShift(responseData["user"]["onShift"]);
+          Provider.of<ShopProvider>(context,listen: false).store.id=(responseData["user"]["storeID"]);
 
           if(shopper.onShift==null){
             shopper.onShift=false;
           }else{
             Provider.of<UserProvider>(context,listen: false).user.onShift=shopper.onShift;
           }
-
           return shopper;
 
         } else if (userType=="DRIVER"){
@@ -294,8 +302,13 @@ class UserService{
       }else if (responseData["message"].contains("JWT expired at")){
         MyNavigator.goToLogin(context);
       }
+    }
+    else if (response.statusCode==403){
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("You are unauthorized to use this app")));
+      return User("","","","","");
     }else{
-      return null;
+      return User("","","","","");
     }
   }
 
@@ -305,29 +318,24 @@ class UserService{
 
     Map<String,String> headers =new Map<String,String>();
 
+    String jwt="";
+
+    await this.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+    print(jwt);
+
     headers =
     {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt,
     };
-    String jwt="";
-    await this.getJWTAsString().then((value) => {
-      jwt=value!
-    }
 
-    );
-    while (jwt==""){
-      await getJWTAsString().then((value) =>
-      jwt=value!,
-      );
-    }
-
-    print(jwt);
-    print(storeID);
     final data = {
-      "jwtToken":jwt,
       "onShift":onShift,
       "storeID":storeID
     };
@@ -352,27 +360,25 @@ class UserService{
 
     Map<String,String> headers =new Map<String,String>();
 
+    String jwt="";
+
+    await this.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+    print(jwt);
+
     headers =
     {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt,
     };
-    String jwt="";
-    await this.getJWTAsString().then((value) => {
-      jwt=value!
-    }
 
-    );
-    while (jwt==""){
-      await getJWTAsString().then((value) =>
-      jwt=value!,
-      );
-    }
 
     final data = {
-      "jwtToken":jwt,
       "onShift":onShift,
     };
 
@@ -396,12 +402,21 @@ class UserService{
 
     Map<String,String> headers =new Map<String,String>();
 
+    String jwt="";
+
+    await this.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+    print(jwt);
+
     headers =
     {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt,
     };
     print(orderID);
     final data = {
@@ -428,13 +443,20 @@ class UserService{
     final url = Uri.parse(endPoint+"user/setCurrentLocation");
 
     Map<String,String> headers =new Map<String,String>();
+    String jwt="";
+    await this.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+    print(jwt);
 
     headers =
     {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt,
     };
     Delivery _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
     final data = {
@@ -472,7 +494,7 @@ class UserService{
 
     String jwt=Provider.of<JWTProvider>(context,listen: false).jwt;
     while (jwt==""){
-      await getJWTAsString().then((value) =>
+      await getJWTAsString(context).then((value) =>
       jwt=value!,
       );
     }

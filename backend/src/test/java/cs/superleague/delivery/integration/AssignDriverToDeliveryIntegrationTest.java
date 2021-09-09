@@ -21,6 +21,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,7 +47,11 @@ public class AssignDriverToDeliveryIntegrationTest {
     OrderRepo orderRepo;
     @Autowired
     CustomerRepo customerRepo;
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
 
     UUID driverID;
     UUID deliveryID;
@@ -87,7 +92,6 @@ public class AssignDriverToDeliveryIntegrationTest {
         customer.setAccountType(UserType.CUSTOMER);
         customerRepo.save(customer);
 
-        JwtUtil jwtUtil = new JwtUtil();
         String jwt = jwtUtil.generateJWTTokenDriver(driver);
         jwt = jwt.replace("Bearer ","");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();

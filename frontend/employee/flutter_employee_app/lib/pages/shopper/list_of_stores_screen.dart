@@ -39,7 +39,7 @@ class _StorePageState extends State<StorePage> {
     //final provider = Provider.of<StoreProvider>(context);
 
     return FutureBuilder(
-      future: _shoppingService.getStores(),
+      future: _shoppingService.getStores(context),
       builder: (BuildContext context, snapshot) {
 
         if (snapshot.hasData) {

@@ -17,17 +17,24 @@ class ShoppingService {
 
   UserService _userService=GetIt.I.get();
 
-  Future<List<Store>> getStores() async {
+  Future<List<Store>> getStores(BuildContext context) async {
+
+    String jwt="";
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+    print(jwt);
     final response = await http.post(
-        Uri.parse('http://'+endPoint+'shopping/getStores'),
+        Uri.parse(endPoint+'shopping/getStores'),
         headers: {
           "Accept": "application/json",
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":jwt,
         },
         body: jsonEncode({}));
-
+    print(response);
     if (response.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(response.body);
       List<Store> list = StoresFromJson(map);
@@ -44,29 +51,23 @@ class ShoppingService {
 
     Map<String,String> headers =new Map<String,String>();
 
+    String jwt="";
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+
     headers =
     {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt
     };
-
-    String jwt="";
-    await _userService.getJWTAsString().then((value) => {
-      jwt=value!
-    }
-
-    );
-    while (jwt==""){
-      await _userService.getJWTAsString().then((value) =>
-      jwt=value!,
-      );
-    }
 
     final data = {
       "storeID":storeID,
-      "jwtToken":jwt
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
@@ -91,18 +92,24 @@ class ShoppingService {
     return null;
   }
 
-  Future<List<Order>?> getAllOrdersInQueue(String storeID) async {
+  Future<List<Order>?> getAllOrdersInQueue(BuildContext context,String storeID) async {
 
     final loginURL = Uri.parse(endPoint+"shopping/getQueue");
 
     Map<String,String> headers =new Map<String,String>();
+
+    String jwt="";
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
 
     headers =
     {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt
     };
 
     print(storeID);

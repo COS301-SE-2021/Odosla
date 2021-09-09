@@ -190,7 +190,7 @@ class _ActivateShopperAccountState extends State<ActivateShopperAccountScreen> {
                                                   await _userService.loginUser(_email, _password, "SHOPPER",context).then(
                                                           (success){
                                                         if(success){
-                                                          _userService.getJWTAsString().then((value) =>  {
+                                                          _userService.getJWTAsString(context).then((value) =>  {
                                                             showDialog(
                                                               context: context,
                                                               builder: (BuildContext context) =>

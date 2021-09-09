@@ -1,2 +1,3 @@
 
-final String endPoint = "http://f1de7630b01d.ngrok.io/";
+//final String endPoint = "http://10.0.2.2:8080/";
+final String endPoint = "http://e733-197-90-38-141.ngrok.io/";

@@ -136,8 +136,14 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
   }
 
   bool _onShift=false;
-  initState(){
 
+  initState(){
+    bool isUser = Provider.of<UserProvider>(context,listen: false).isUser();
+    if (isUser){
+      User user = Provider.of<UserProvider>(context,listen: false).user;
+      _email=user.email;
+      _onShift=user.onShift;
+    }
     _userService.getCurrentUser(context).then((value) =>
     {
       setState(() {
