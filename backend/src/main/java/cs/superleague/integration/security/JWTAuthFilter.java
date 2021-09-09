@@ -60,6 +60,9 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     }
 
     private Claims validateToken(HttpServletRequest request) {
+        System.out.println("HEADERTIDDIES: " + HEADER);
+        System.out.println("PREFIXTIDDIES: " + PREFIX);
+        System.out.println("SECRETTIDDIES: " +SECRET);
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
