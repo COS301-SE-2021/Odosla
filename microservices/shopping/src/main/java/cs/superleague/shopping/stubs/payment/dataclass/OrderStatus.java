@@ -1,4 +1,4 @@
-package cs.superleague.shopping.stubs.payment;
+package cs.superleague.shopping.stubs.payment.dataclass;
 
 public enum OrderStatus {
     AWAITING_PAYMENT,

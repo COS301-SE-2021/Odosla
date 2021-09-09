@@ -1,10 +1,10 @@
 package cs.superleague.shopping.dataclass;
 
-import cs.superleague.shopping.stubs.payment.GeoPoint;
+import cs.superleague.shopping.stubs.payment.dataclass.GeoPoint;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import cs.superleague.shopping.stubs.payment.Order;
+import cs.superleague.shopping.stubs.payment.dataclass.Order;
 import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 
 import javax.persistence.*;

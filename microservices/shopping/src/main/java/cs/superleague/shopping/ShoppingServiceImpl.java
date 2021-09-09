@@ -3,28 +3,20 @@ package cs.superleague.shopping;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.shopping.exceptions.StoreClosedException;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.user.UserService;
-import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.exceptions.UserException;
-import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.requests.GetShopperByUUIDRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
-import cs.superleague.user.responses.GetShopperByUUIDResponse;
+import cs.superleague.shopping.stubs.user.dataclass.Shopper;
+import cs.superleague.shopping.stubs.user.exceptions.UserException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.shopping.stubs.payment.dataclass.Order;
+import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.shopping.stubs.user.requests.GetShopperByUUIDRequest;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,17 +26,14 @@ import java.util.List;
 @Service("shoppingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
 
-    private final StoreRepo storeRepo;
-    private final OrderRepo orderRepo;
-    private final ShopperRepo shopperRepo;
-    private final UserService userService;
+    private StoreRepo storeRepo;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShopperRepo shopperRepo, UserService userService) {
-        this.storeRepo = storeRepo;
-        this.orderRepo = orderRepo;
-        this.shopperRepo= shopperRepo;
-        this.userService = userService;
+    private RabbitTemplate rabbit;
+
+    @Autowired
+    public ShoppingServiceImpl() {
+
     }
     /**
      *
@@ -168,7 +157,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         Order updatedOrder = request.getOrder();
 
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
-        System.out.print("In queue");
         updatedOrder.setProcessDate(Calendar.getInstance());
         if(orderRepo!=null)
         orderRepo.save(updatedOrder);
@@ -188,7 +176,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(storeRepo!=null)
         storeRepo.save(store);
 
-        response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
+        response = new AddToQueueResponse(true, "Order successfully created", Calendar.getInstance().getTime());
 
         return response;
     }
@@ -223,7 +211,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * */
 
     @Override
-    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException {
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException{
         GetNextQueuedResponse response=null;
 
         if(request!=null){
@@ -668,7 +656,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     /**
      *
      * @param request used to bring in:
-     *                ShopperID - Id of shopper that should be addes to list of shoppers in Store
+     *                ShopperID - Id of shopper that should be added to list of shoppers in Store
      *                StoreID - StoreID of which store to add the shopper to
      * addShopper should:
      *                1. Check is request object is correct else throw InvalidRequestException
@@ -696,12 +684,11 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @return
      * @throws InvalidRequestException
      * @throws StoreDoesNotExistException
-     * @throws cs.superleague.user.exceptions.InvalidRequestException
-     * @throws UserDoesNotExistException
+     * @throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException
      */
 
     @Override
-    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException {
         AddShopperResponse response=null;
 
         if(request!=null){
@@ -719,7 +706,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 invalidMessage="Store ID in request object for add shopper is null";
             }
 
-            if (invalidReq) throw new InvalidRequestException(invalidMessage);
+            if (invalidReq) throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException(invalidMessage);
 
             Store storeEntity=null;
 
@@ -734,12 +721,16 @@ public class ShoppingServiceImpl implements ShoppingService {
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
 
             GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-            GetShopperByUUIDResponse shopperResponse;
-            try {
-                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
-            }catch(Exception e){
-                throw e;
-            }
+
+            rabbit.convertAndSend("UserEXCHANGE", "RK_GetShopperByUUID", shoppersRequest);
+
+
+//            GetShopperByUUIDResponse shopperResponse;
+//            try {
+//                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
+//            }catch(Exception e){
+//                throw e;
+//            }
 
             Boolean notPresent = true;
 
@@ -784,7 +775,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         }
         else{
-            throw new InvalidRequestException("Request object can't be null for addShopper");
+            throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException("Request object can't be null for addShopper");
         }
 
         return response;

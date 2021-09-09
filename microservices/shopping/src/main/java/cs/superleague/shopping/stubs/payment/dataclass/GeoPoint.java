@@ -1,4 +1,4 @@
-package cs.superleague.shopping.stubs.payment;
+package cs.superleague.shopping.stubs.payment.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

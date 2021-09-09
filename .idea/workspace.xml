@@ -28,18 +28,19 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="added new files to stubs folder">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="changed imports for these files">
+      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/exceptions/InvalidRequestException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/requests/GetShopperByUUIDRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/shopping/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/shopping/shopping.iml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/shopping.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/dataclass/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/dataclass/Store.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/requests/AddToQueueRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/requests/AddToQueueRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetNextQueuedResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetNextQueuedResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/shopping/target/classes/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/target/classes/odosla-api.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/shopping/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/GeoPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/GeoPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/OrderType.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/OrderType.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,11 +127,11 @@
       <recent name="C:\Code\CrowdBook_Gamma\Odosla\microservices\delivery\src\main\java\cs\superleague" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="cs.superleague.shopping.stubs.user.exceptions" />
       <recent name="cs.superleague.shopping.stubs.payment" />
       <recent name="cs.superleague.shopping.stubs.user" />
       <recent name="cs.superleague.shopping.stubs" />
       <recent name="" />
-      <recent name="user.repos" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Application">
@@ -529,7 +530,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631202368882</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="changed imports for these files">
+      <created>1631202888789</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1631202888789</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -582,7 +590,8 @@
     <MESSAGE value="Added RabbitMQ implementation example" />
     <MESSAGE value="removed other subsystem request and response objects from yml file" />
     <MESSAGE value="added new files to stubs folder" />
-    <option name="LAST_COMMIT_MESSAGE" value="added new files to stubs folder" />
+    <MESSAGE value="changed imports for these files" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed imports for these files" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">

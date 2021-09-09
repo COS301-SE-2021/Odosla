@@ -10,7 +10,7 @@ public class AddToQueueRequest {
 
     }
 
-    public cs.superleague.shopping.stubs.payment.Order getOrder() {
+    public cs.superleague.shopping.stubs.payment.dataclass.Order getOrder() {
         return order;
     }
 
