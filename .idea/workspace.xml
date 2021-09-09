@@ -28,16 +28,8 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="removed other subsystem request and response objects from yml file">
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/GeoPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/OrderStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/OrderType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/dataclass/Shopper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/dataclass/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/dataclass/UserType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/exceptions/UserDoesNotExistException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/exceptions/UserException.java" afterDir="false" />
+    <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="added new files to stubs folder">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/shopping.iml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/shopping.iml" afterDir="false" />
@@ -530,7 +522,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631195335053</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="added new files to stubs folder">
+      <created>1631202368882</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1631202368882</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -582,7 +581,8 @@
     <MESSAGE value="added skeleton for example brokers" />
     <MESSAGE value="Added RabbitMQ implementation example" />
     <MESSAGE value="removed other subsystem request and response objects from yml file" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed other subsystem request and response objects from yml file" />
+    <MESSAGE value="added new files to stubs folder" />
+    <option name="LAST_COMMIT_MESSAGE" value="added new files to stubs folder" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">

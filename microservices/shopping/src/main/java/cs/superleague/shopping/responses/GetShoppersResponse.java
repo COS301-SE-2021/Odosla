@@ -1,6 +1,6 @@
 package cs.superleague.shopping.responses;
 
-import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 
 import java.util.Date;
 import java.util.List;

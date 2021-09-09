@@ -4,8 +4,8 @@ import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.exceptions.UserException;
+import cs.superleague.shopping.stubs.user.exceptions.UserDoesNotExistException;
+import cs.superleague.shopping.stubs.user.exceptions.UserException;
 
 
 public interface ShoppingService {
@@ -14,11 +14,11 @@ public interface ShoppingService {
 
     AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException;
 
-    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException;
+    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException, StoreClosedException;
+    GetStoreOpenResponse getStoreOpen(GetStoreOpenRequest request) throws InvalidRequestException, StoreDoesNotExistException, StoreClosedException;
 
     GetItemsResponse getItems(GetItemsRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 

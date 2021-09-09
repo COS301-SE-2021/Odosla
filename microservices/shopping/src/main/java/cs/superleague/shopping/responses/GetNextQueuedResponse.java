@@ -1,7 +1,6 @@
 package cs.superleague.shopping.responses;
 
-import cs.superleague.models.OrderObject;
-import cs.superleague.payment.dataclass.Order;
+import cs.superleague.shopping.stubs.payment.Order;
 
 import java.util.Date;
 import java.util.List;
