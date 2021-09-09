@@ -1,6 +1,6 @@
 package cs.superleague.recommendation.responses;
 
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.recommendation.stubs.Item;
 
 import java.util.List;
 

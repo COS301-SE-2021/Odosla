@@ -1,20 +1,18 @@
 package cs.superleague.recommendation.controller;
 
 import cs.superleague.api.RecommendationApi;
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.ItemObject;
 import cs.superleague.models.RecommendationGetCartRecommendationRequest;
 import cs.superleague.models.RecommendationGetCartRecommendationResponse;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.recommendation.RecommendationService;
+import cs.superleague.recommendation.stubs.Order;
+import cs.superleague.recommendation.stubs.Item;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
 import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.repos.ItemRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +31,7 @@ public class RecommendationController implements RecommendationApi {
     @Autowired
     RecommendationRepo recommendationRepo;
     @Autowired
-    OrderRepo orderRepo;
-    @Autowired
-    ItemRepo itemRepo;
+    RecommendationService recommendationService;
 
     @Override
     public ResponseEntity<RecommendationGetCartRecommendationResponse> getCartRecommendation(RecommendationGetCartRecommendationRequest body) {
@@ -64,7 +60,7 @@ public class RecommendationController implements RecommendationApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
-            GetCartRecommendationResponse getCartRecommendationResponse = ServiceSelector.getRecommendationService().getCartRecommendation(request);
+            GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
                 response.setIsSuccess(getCartRecommendationResponse.isSuccess());

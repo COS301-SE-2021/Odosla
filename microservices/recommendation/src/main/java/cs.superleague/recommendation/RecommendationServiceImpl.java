@@ -1,7 +1,5 @@
 package cs.superleague.recommendation;
 
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
@@ -10,7 +8,8 @@ import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.recommendation.stubs.Order;
+import cs.superleague.recommendation.stubs.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +19,10 @@ import java.util.*;
 public class RecommendationServiceImpl implements RecommendationService{
 
     private final RecommendationRepo recommendationRepo;
-    private final OrderRepo orderRepo;
 
     @Autowired
-    public RecommendationServiceImpl(RecommendationRepo recommendationRepo, OrderRepo orderRepo) {
+    public RecommendationServiceImpl(RecommendationRepo recommendationRepo) {
         this.recommendationRepo = recommendationRepo;
-        this.orderRepo = orderRepo;
     }
 
 
@@ -63,7 +60,8 @@ public class RecommendationServiceImpl implements RecommendationService{
             List<Order> finalRecommendation = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
-                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
+//                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
+                    Order order = null;
                     if (order != null){
                         finalRecommendation.add(order);
                     }
