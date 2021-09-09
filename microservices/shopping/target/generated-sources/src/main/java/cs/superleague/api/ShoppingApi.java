@@ -63,7 +63,7 @@ public interface ShoppingApi {
 );
 
 
-    @ApiOperation(value = "Endpoint for getting next queue", nickname = "getNextQueued", notes = "Refer to summary", response = ShoppingGetNextQueuedResponse.class, tags={ "User", })
+    @ApiOperation(value = "Endpoint for getting next queue", nickname = "getNextQueued", notes = "Refer to summary", response = ShoppingGetNextQueuedResponse.class, tags={ "Shopping", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Returns upon success", response = ShoppingGetNextQueuedResponse.class) })
     @RequestMapping(value = "/shopping/getNextQueued",
