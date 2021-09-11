@@ -5,6 +5,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import cs.superleague.payment.stubs.shopping.dataclass.Item;
 
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "orderTable")
-public class Order {
+public class Order implements Serializable {
 
     @Id
     private UUID orderID;

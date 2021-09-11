@@ -1,15 +1,24 @@
 package cs.superleague.payment.rabbit;
 
+import cs.superleague.payment.PaymentService;
+import org.hibernate.annotations.LazyCollection;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class RabbitMQConfig {
+    private final PaymentService paymentService;
+
+    public RabbitMQConfig(@Lazy PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
 
     //
     // EXCHANGE
@@ -63,7 +72,7 @@ public class RabbitMQConfig {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
         simpleMessageListenerContainer.setQueues(SaveOrderQueue());                                               // <------- add all queues to listen to here
-        simpleMessageListenerContainer.setMessageListener(new SaveOrderListener());
+        simpleMessageListenerContainer.setMessageListener(new SaveOrderListener(paymentService));
         return simpleMessageListenerContainer;
     }
 

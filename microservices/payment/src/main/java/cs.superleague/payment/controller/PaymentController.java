@@ -12,6 +12,7 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.payment.stubs.shopping.dataclass.Item;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,9 @@ public class PaymentController implements PaymentApi {
 
     @Autowired
     OrderRepo orderRepo;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
 
 //    UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 //    UUID shopperID = UUID.randomUUID();
@@ -305,6 +309,10 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<PaymentGetOrderResponse> getOrder(PaymentGetOrderRequest body) {
+        Order order = new Order();
+        order.setOrderID(UUID.randomUUID());
+        SaveOrderRequest r = new SaveOrderRequest(order);
+        rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", r);
         PaymentGetOrderResponse response = new PaymentGetOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
