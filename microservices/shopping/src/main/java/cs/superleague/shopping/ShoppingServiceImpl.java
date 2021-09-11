@@ -1324,7 +1324,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         }
         else{
-            throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
+            throw new InvalidRequestException("Request object can't be null - can't save store");
         }
     }
 
@@ -1359,7 +1359,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         if(request!=null){
 
-
             List<Item> items;
             try {
                 items = itemRepo.findAll();
@@ -1379,6 +1378,63 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException("The GetAllItemsRequest parameter is null - Could not retrieve items");
         }
         return response;
+    }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private item
+     *
+     * SaveItemToRepo should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate request attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the ItemRepo is not null and if not, save the item
+     *               5. Return the response object.
+     *
+     * Request Object (SaveItemToRepoRequest):
+     * {
+     *                "item": request.getItem();
+     * }
+     *
+     * Response Object (SaveItemToRepoResponse):
+     * {
+     *                "success":true
+     *                "message":"Item was successfully saved"
+     *                "timestamp": "2021-01-05T11:50:55"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public SaveItemToRepoResponse saveItemToRepo(SaveItemToRepoRequest request) throws InvalidRequestException{
+        SaveItemToRepoResponse response=null;
+
+        if(request != null){
+
+            if(request.getItem() == null){
+                throw new InvalidRequestException("Item in parameter in request can't be null - can't save item");
+            }
+
+            Item item = request.getItem();
+
+            if(itemRepo!=null)
+            {
+                itemRepo.save(item);
+                return new SaveItemToRepoResponse(true, Calendar.getInstance().getTime(),"Item successfully saved.");
+
+            }
+            else
+            {
+                return new SaveItemToRepoResponse(false, Calendar.getInstance().getTime(),"Item can't be saved.");
+
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null - can't save item");
+        }
     }
 }
 

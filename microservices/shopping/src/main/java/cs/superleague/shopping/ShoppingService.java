@@ -45,4 +45,6 @@ public interface ShoppingService {
     SaveStoreToRepoResponse saveStoreToRepo(SaveStoreToRepoRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     GetAllItemsResponse getAllItems(GetAllItemsRequest request) throws InvalidRequestException;
+
+    SaveItemToRepoResponse saveItemToRepo(SaveItemToRepoRequest request) throws InvalidRequestException;
 }
