@@ -4,8 +4,10 @@ import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
 import cs.superleague.recommendation.repos.RecommendationRepo;
+import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
+import cs.superleague.recommendation.responses.AddRecommendationResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 import cs.superleague.recommendation.stubs.Order;
@@ -96,6 +98,26 @@ public class RecommendationServiceImpl implements RecommendationService{
     @Override
     public GetOrderRecommendationResponse getOrderRecommendation(GetOrderRecommendationRequest request) {
         return null;
+    }
+
+    @Override
+    public AddRecommendationResponse addRecommendation(AddRecommendationRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null || request.getProductID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        for (String productID : request.getProductID()){
+            UUID recommendationID = UUID.randomUUID();
+            while (recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
+                recommendationID = UUID.randomUUID();
+            }
+            Recommendation recommendation = new Recommendation(recommendationID, productID, request.getOrderID());
+            recommendationRepo.save(recommendation);
+        }
+        AddRecommendationResponse response = new AddRecommendationResponse("Recommendations Added Successfully");
+        return response;
     }
 
 }
