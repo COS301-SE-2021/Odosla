@@ -1,12 +1,11 @@
 package cs.superleague.user.dataclass;
 
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.user.stubs.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.List;
