@@ -1,10 +1,9 @@
 package cs.superleague.shopping.controller;
 
 import cs.superleague.api.ShoppingApi;
-import cs.superleague.integration.ServiceSelector;
+import cs.superleague.shopping.integration.ServiceSelector;
 import cs.superleague.models.*;
-import cs.superleague.payment.dataclass.*;
-import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.shopping.stubs.payment.dataclass.*;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -16,16 +15,13 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.user.dataclass.*;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.shopping.stubs.user.dataclass.*;
+import cs.superleague.shopping.stubs.user.exceptions.UserDoesNotExistException;
 import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserException;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.GroceryListRepo;
-import cs.superleague.user.repos.ShopperRepo;
+import cs.superleague.shopping.stubs.user.dataclass.Shopper;
+import cs.superleague.shopping.stubs.user.exceptions.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,22 +44,10 @@ public class ShoppingController implements ShoppingApi{
     StoreRepo storeRepo;
 
     @Autowired
-    OrderRepo orderRepo;
-
-    @Autowired
     CatalogueRepo catalogueRepo;
 
     @Autowired
     ItemRepo itemRepo;
-
-    @Autowired
-    ShopperRepo shopperRepo;
-
-    @Autowired
-    GroceryListRepo groceryListRepo;
-
-    @Autowired
-    CustomerRepo customerRepo;
 
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
@@ -125,39 +109,21 @@ public class ShoppingController implements ShoppingApi{
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
-        if (mockMode){
-            List<ItemObject> mockItems = new ArrayList<>();
-            ItemObject a = new ItemObject();
-            a.setName("mockA");
-            ItemObject b = new ItemObject();
-            b.setName("mockB");
-            mockItems.add(a);
-            mockItems.add(b);
-
-            response.setItems(mockItems);
-        } else {
-
+        try {
+            GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString(body.getStoreID())));
             try {
-                GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString(body.getStoreID())));
-                try {
 
-                    response.setItems(populateItems(getItemsResponse.getItems()));
+                response.setItems(populateItems(getItemsResponse.getItems()));
 
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            } catch (StoreDoesNotExistException e) {
-
-            } catch (InvalidRequestException e) {
-
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
-        }
+        } catch (StoreDoesNotExistException e) {
 
-//        storeRepo.deleteAll();
-//        catalogueRepo.deleteAll();
-//        itemRepo.deleteAll();
+        } catch (InvalidRequestException e) {
+
+        }
 
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -197,34 +163,21 @@ public class ShoppingController implements ShoppingApi{
         ShoppingGetShoppersResponse response = new ShoppingGetShoppersResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
-        if (mockMode){
-            List<ShopperObject> mockShoppers = new ArrayList<>();
-            ShopperObject a = new ShopperObject();
-            a.setName("mockA");
-            ShopperObject b = new ShopperObject();
-            b.setName("mockB");
-            mockShoppers.add(a);
-            mockShoppers.add(b);
 
-            response.setShoppers(mockShoppers);
-        } else {
+        try {
+            GetShoppersRequest req = new GetShoppersRequest(UUID.fromString(body.getStoreID()));
+            GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(req);
 
             try {
-                GetShoppersRequest req = new GetShoppersRequest(UUID.fromString(body.getStoreID()));
-                GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(req);
+                response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
 
-                try {
-                    response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
-
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            } catch (StoreDoesNotExistException e) {
-
-            } catch (InvalidRequestException e) {
-
+            } catch (Exception e){
+                e.printStackTrace();
             }
+
+        } catch (StoreDoesNotExistException e) {
+
+        } catch (InvalidRequestException e) {
 
         }
 
@@ -238,32 +191,18 @@ public class ShoppingController implements ShoppingApi{
         ShoppingGetStoresResponse response = new ShoppingGetStoresResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
-        if (mockMode){
-            List<StoreObject> mockStores = new ArrayList<>();
-            StoreObject a = new StoreObject();
-            a.setStoreBrand("mockA");
-            StoreObject b = new StoreObject();
-            b.setStoreBrand("mockB");
-            mockStores.add(a);
-            mockStores.add(b);
-
-            response.setStores(mockStores);
-        } else {
-
+        try {
+            GetStoresResponse getStoresResponse = ServiceSelector.getShoppingService().getStores(new GetStoresRequest());
             try {
-                GetStoresResponse getStoresResponse = ServiceSelector.getShoppingService().getStores(new GetStoresRequest());
-                try {
-                    response.setStores(populateStores(getStoresResponse.getStores()));
-                    response.setResponse(true);
-                    response.setMessage(getStoresResponse.getMessage());
+                response.setStores(populateStores(getStoresResponse.getStores()));
+                response.setResponse(true);
+                response.setMessage(getStoresResponse.getMessage());
 
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
-
-            } catch (InvalidRequestException e) {
-
+            } catch (Exception e){
+                e.printStackTrace();
             }
+
+        } catch (InvalidRequestException e) {
 
         }
 
@@ -488,8 +427,6 @@ public class ShoppingController implements ShoppingApi{
         store6.setStoreLocation(store6Location);
         store7.setStoreLocation(store7Location);
 
-
-
         storeRepo.save(store1);
         storeRepo.save(store2);
         storeRepo.save(store3);
@@ -497,67 +434,6 @@ public class ShoppingController implements ShoppingApi{
         storeRepo.save(store5);
         storeRepo.save(store6);
         storeRepo.save(store7);
-
-//        Customer customer = new Customer();
-//        customer.setName("Adam");
-//        customer.setSurname("Isenberg");
-//        customer.setCustomerID(UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586"));
-//        customer.setAccountType(UserType.CUSTOMER);
-//        customer.setEmail("adamisenberg@gmail.com");
-//        customer.setPassword("fhkjdfh534534!");
-//        customer.setPhoneNumber("0835233041");
-//
-//        customerRepo.save(customer);
-
-
-       // HttpStatus httpStatus = HttpStatus.OK;
-
-        //Shoppers
-//        Shopper shopper1, shopper2;
-//        shopper1=new Shopper();
-//        shopper2=new Shopper();
-//
-//        UUID shopper1ID= UUID.randomUUID();
-//        UUID shopper2ID= UUID.randomUUID();
-//
-//        shopper1.setShopperID(shopper1ID);
-//        shopper1.setName("Peter");
-//        shopper1.setSurname("Parker");
-//        shopper1.setEmail("PeterParker2021!@gmail.com");
-//        shopper1.setPassword("DontTellMaryJane2021!");
-//        shopper1.setOrdersCompleted(5);
-//        shopper1.setAccountType(UserType.SHOPPER);
-//        shopper1.setStoreID(storeUUID1);
-//
-//        shopper2.setShopperID(shopper2ID);
-//        shopper2.setName("Mary");
-//        shopper2.setSurname("Jane");
-//        shopper2.setEmail("MaryJane2021!@gmail.com");
-//        shopper2.setPassword("IKnowWhoPeterIs2021!");
-//        shopper2.setOrdersCompleted(4);
-//        shopper2.setAccountType(UserType.SHOPPER);
-//        shopper2.setStoreID(storeUUID2);
-//
-//        shopperRepo.save(shopper1); shopperRepo.save(shopper2);
-//        List<Shopper> mockShopperList = new ArrayList<>();
-//        mockShopperList.add(shopper1);
-//        store1.setShoppers(mockShopperList);
-//        storeRepo.save(store1);
-//        mockShopperList = new ArrayList<>();
-//        mockShopperList.add(shopper2);
-//        store2.setShoppers(mockShopperList);
-//        storeRepo.save(store2);
-//
-//
-//        //Grocery Lists
-//        GroceryList groceryList = new GroceryList(UUID.randomUUID(), "Shopping List", store2Cat);
-//        List<GroceryList> groceryLists = new ArrayList<>();
-//        groceryLists.add(groceryList);
-//        groceryListRepo.save(groceryList);
-//        //Customers
-//        GeoPoint customerLocation = new GeoPoint(-25.700937877819005, 28.223876953125004, "customer address");
-//        Customer customer = new Customer("Dan", "Smith", "ds@smallClub.com", "0721234567", "Hello$$123",null, "activate", "reset", null, true,UserType.CUSTOMER, UUID.randomUUID(), customerLocation, groceryLists, null, null, null);
-//        customerRepo.save(customer);
 
         return null;
     }
