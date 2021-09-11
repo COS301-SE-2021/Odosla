@@ -1,6 +1,6 @@
 package cs.superleague.shopping.requests;
 
-import cs.superleague.payment.dataclass.Order;
+import cs.superleague.shopping.stubs.payment.dataclass.Order;
 
 public class AddToQueueRequest {
     private Order order;

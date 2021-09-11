@@ -1,7 +1,6 @@
 package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
-import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.repos.ItemRepo;
@@ -20,7 +19,6 @@ import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.stubs.user.requests.GetShopperByUUIDRequest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -168,8 +166,6 @@ public class ShoppingServiceImpl implements ShoppingService {
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
         updatedOrder.setProcessDate(Calendar.getInstance());
 
-//        if(orderRepo!=null)
-//        orderRepo.save(updatedOrder);
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
@@ -262,7 +258,6 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
             }
 
-            //Order updateOrder = orderRepo.findById(correspondingOrder.getOrderID()).orElse(null);
             RestTemplate restTemplate = new RestTemplate();
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());

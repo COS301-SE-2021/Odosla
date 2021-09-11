@@ -2,7 +2,6 @@ package cs.superleague.shopping.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Item;
 
 import java.util.Date;
 import java.util.List;

@@ -1,7 +1,6 @@
 package cs.superleague.shopping.controller;
 
 import cs.superleague.api.ShoppingApi;
-import cs.superleague.shopping.integration.ServiceSelector;
 import cs.superleague.models.*;
 import cs.superleague.shopping.stubs.payment.dataclass.*;
 import cs.superleague.shopping.ShoppingServiceImpl;
@@ -72,7 +71,7 @@ public class ShoppingController implements ShoppingApi{
         try{
 
             AddShopperRequest req = new AddShopperRequest(UUID.fromString(body.getShopperID()), UUID.fromString(body.getStoreID()));
-            AddShopperResponse addShopperResponse = ServiceSelector.getShoppingService().addShopper(req);
+            AddShopperResponse addShopperResponse = shoppingService.addShopper(req);
 
             try {
                 response.setDate(addShopperResponse.getTimestamp().toString());
@@ -82,9 +81,7 @@ public class ShoppingController implements ShoppingApi{
                 e.printStackTrace();
             }
 
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (cs.superleague.user.exceptions.InvalidRequestException e) {
+        } catch (cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException e) {
             e.printStackTrace();
         } catch (UserDoesNotExistException e) {
             e.printStackTrace();
@@ -110,7 +107,7 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
-            GetItemsResponse getItemsResponse = ServiceSelector.getShoppingService().getItems(new GetItemsRequest(UUID.fromString(body.getStoreID())));
+            GetItemsResponse getItemsResponse = shoppingService.getItems(new GetItemsRequest(UUID.fromString(body.getStoreID())));
             try {
 
                 response.setItems(populateItems(getItemsResponse.getItems()));
@@ -137,7 +134,7 @@ public class ShoppingController implements ShoppingApi{
 
         try {
             RemoveQueuedOrderRequest req = new RemoveQueuedOrderRequest(UUID.fromString(body.getOrderID()),UUID.fromString(body.getStoreID()));
-            RemoveQueuedOrderResponse removeQueuedOrderResponse = ServiceSelector.getShoppingService().removeQueuedOrder(req);
+            RemoveQueuedOrderResponse removeQueuedOrderResponse = shoppingService.removeQueuedOrder(req);
 
             try {
                 response.setOrderID(removeQueuedOrderResponse.getOrderID().toString());
@@ -166,7 +163,7 @@ public class ShoppingController implements ShoppingApi{
 
         try {
             GetShoppersRequest req = new GetShoppersRequest(UUID.fromString(body.getStoreID()));
-            GetShoppersResponse getShoppersResponse = ServiceSelector.getShoppingService().getShoppers(req);
+            GetShoppersResponse getShoppersResponse = shoppingService.getShoppers(req);
 
             try {
                 response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
@@ -192,7 +189,7 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
-            GetStoresResponse getStoresResponse = ServiceSelector.getShoppingService().getStores(new GetStoresRequest());
+            GetStoresResponse getStoresResponse = shoppingService.getStores(new GetStoresRequest());
             try {
                 response.setStores(populateStores(getStoresResponse.getStores()));
                 response.setResponse(true);
@@ -216,7 +213,7 @@ public class ShoppingController implements ShoppingApi{
 
         try {
             GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
-            GetNextQueuedResponse getNextQueuedResponse = ServiceSelector.getShoppingService().getNextQueued(getNextQueuedRequest);
+            GetNextQueuedResponse getNextQueuedResponse = shoppingService.getNextQueued(getNextQueuedRequest);
             try {
 
                 response.setDate(getNextQueuedResponse.getTimeStamp().toString());
@@ -262,7 +259,7 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             GetQueueRequest request = new GetQueueRequest(UUID.fromString(body.getStoreID()));
-            GetQueueResponse getQueueResponse = ServiceSelector.getShoppingService().getQueue(request);
+            GetQueueResponse getQueueResponse = shoppingService.getQueue(request);
             try {
                 response.setResponse(getQueueResponse.getResponse());
                 response.setMessage(getQueueResponse.getMessage());
