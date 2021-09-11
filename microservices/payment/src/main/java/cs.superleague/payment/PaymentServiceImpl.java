@@ -4,10 +4,8 @@ import com.itextpdf.text.*;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
-import cs.superleague.recommendation.dataclass.Recommendation;
-import cs.superleague.recommendation.repos.RecommendationRepo;
-import cs.superleague.shopping.ShoppingService;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.payment.stubs.Recommendation;
+import cs.superleague.payment.stubs.Item;
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -17,11 +15,8 @@ import cs.superleague.payment.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
 import cs.superleague.shopping.requests.AddToQueueRequest;
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.Customer;
+import cs.superleague.payment.stubs.user.dataclass.Customer;
 import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -42,22 +37,12 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderRepo orderRepo;
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
-    private final ShoppingService shoppingService;
-    private final AdminRepo adminRepo;
-    private final UserService userService;
-    private final CustomerRepo customerRepo;
-    private final RecommendationRepo recommendationRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, ShoppingService shoppingService, AdminRepo adminRepo, UserService userService, CustomerRepo customerRepo, RecommendationRepo recommendationRepo) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
-        this.shoppingService = shoppingService;
-        this.adminRepo = adminRepo;
-        this.userService = userService;
-        this.customerRepo= customerRepo;
-        this.recommendationRepo = recommendationRepo;
     }
 
 

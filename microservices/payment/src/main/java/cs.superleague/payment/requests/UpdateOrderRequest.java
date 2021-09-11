@@ -2,7 +2,7 @@ package cs.superleague.payment.requests;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.payment.stubs.Item;
 
 import javax.persistence.CascadeType;
 import javax.persistence.EnumType;

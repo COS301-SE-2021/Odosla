@@ -2,7 +2,7 @@ package cs.superleague.payment.dataclass;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.payment.stubs.Item;
 
 
 import java.util.Calendar;
