@@ -31,14 +31,14 @@ import java.util.List;
 @Service("shoppingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
 
-    private StoreRepo storeRepo;
+    private final StoreRepo storeRepo;
 
     @Autowired
     private RabbitTemplate rabbit;
 
     @Autowired
-    public ShoppingServiceImpl() {
-
+    public ShoppingServiceImpl(StoreRepo storeRepo) {
+        this.storeRepo= storeRepo;
     }
     /**
      *
