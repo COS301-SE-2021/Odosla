@@ -309,10 +309,6 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<PaymentGetOrderResponse> getOrder(PaymentGetOrderRequest body) {
-        Order order = new Order();
-        order.setOrderID(UUID.randomUUID());
-        SaveOrderRequest r = new SaveOrderRequest(order);
-        rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", r);
         PaymentGetOrderResponse response = new PaymentGetOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
@@ -333,6 +329,39 @@ public class PaymentController implements PaymentApi {
         } catch (Exception e) {
             e.printStackTrace();
             response.setOrder(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setTimestamp(String.valueOf(Calendar.getInstance()));
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetOrdersResponse> getOrder(PaymentGetOrdersRequest body) {
+        PaymentGetOrdersResponse response = new PaymentGetOrdersResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
+            GetOrdersResponse getOrdersResponse = paymentService.getOrders(getOrdersRequest);
+            try {
+                List<OrderObject> orderObjects = new ArrayList<>();
+                for (Order order : getOrdersResponse.getOrders()){
+                    orderObjects.add(populateOrder(order));
+                }
+                response.setOrders(orderObjects);
+                response.setMessage(getOrdersResponse.getMessage());
+                response.setSuccess(getOrdersResponse.isSuccess());
+                response.setTimestamp(String.valueOf(getOrdersResponse.getTimestamp()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setOrders(null);
+                response.setMessage(e.getMessage());
+                response.setSuccess(false);
+                response.setTimestamp(String.valueOf(Calendar.getInstance()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setOrders(null);
             response.setMessage(e.getMessage());
             response.setSuccess(false);
             response.setTimestamp(String.valueOf(Calendar.getInstance()));

@@ -1,0 +1,556 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description: The library service
+
+tags:
+  - name: "Delivery"
+
+paths:
+  /delivery/addDeliveryDetail:
+    post:
+      summary: Endpoint for add delivery detail
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: addDeliveryDetail
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_AddDeliveryDetailRequest"
+      responses:
+        "200":
+          description: Returns whether the detail was added and the ID of that detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_AddDeliveryDetailResponse"
+
+  /delivery/assignDriverToDelivery:
+    post:
+      summary: Endpoint for assign driver to delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: assignDriverToDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_AssignDriverToDeliveryRequest"
+      responses:
+        "200":
+          description: Returns whether the driver was assigned to the delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_AssignDriverToDeliveryResponse"
+
+  /delivery/createDelivery:
+    post:
+      summary: Endpoint for creating a delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: createDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_CreateDeliveryRequest"
+      responses:
+        "200":
+          description: Returns whether the delivery was created or not
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_CreateDeliveryResponse"
+
+  /delivery/getDeliveryDetail:
+    post:
+      summary: Endpoint for getting the detail of a delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: getDeliveryDetail
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetDeliveryDetailRequest"
+      responses:
+        "200":
+          description: Returns the delivery detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetDeliveryDetailResponse"
+
+  /delivery/getDeliveryStatus:
+    post:
+      summary: Endpoint for getting the status of a delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: getDeliveryStatus
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetDeliveryStatusRequest"
+      responses:
+        "200":
+          description: Returns the delivery status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetDeliveryStatusResponse"
+
+  /delivery/getNextOrderForDriver:
+    post:
+      summary: Endpoint for getting the next order for a driver
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: getNextOrderForDriver
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetNextOrderForDriverRequest"
+      responses:
+        "200":
+          description: Returns the next order for a driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetNextOrderForDriverResponse"
+
+  /delivery/removeDriverFromDelivery:
+    post:
+      summary: Endpoint for removing a driver from a delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: removeDriverFromDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_RemoveDriverFromDeliveryRequest"
+      responses:
+        "200":
+          description: Returns whether the driver was removed from the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_RemoveDriverFromDeliveryResponse"
+
+  /delivery/trackDelivery:
+    post:
+      summary: Endpoint for tracking a delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: trackDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_TrackDeliveryRequest"
+      responses:
+        "200":
+          description: Returns the location of the delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_TrackDeliveryResponse"
+
+  /delivery/updateDeliveryStatus:
+    post:
+      summary: Endpoint for updating the status of a delivery
+      tags:
+        - "delivery"
+      description: Refer to summary
+      operationId: updateDeliveryStatus
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_UpdateDeliveryStatusRequest"
+      responses:
+        "200":
+          description: Returns whether the status of the delivery was updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_UpdateDeliveryStatusResponse"
+
+  /delivery/getDeliveryDriverByOrderId:
+    post:
+      summary: Endpoint for get delivery driver by order id use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getDeliveryDriverByOrderId
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdRequest"
+      responses:
+        "200":
+          description: Returns delivery and driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdResponse"
+
+  /delivery/getDeliveryByUUID:
+    post:
+      summary: Endpoint for retrieving delivery by UUID
+      tags:
+        - "Delivery"
+      description: Refer to summary
+      operationId: getDeliveryByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetDeliveryByUUIDRequest"
+      responses:
+        "200":
+          description: Returns the delivery the given ID belong to
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetDeliveryByUUIDResponse"
+
+components:
+
+  schemas:
+
+    DriverObject:
+      description: "Generic schema for a Driver"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        driverID:
+          type: string
+        rating:
+          type: number
+        onShift:
+          type: boolean
+        currentAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        deliveriesCompleted:
+          type: number
+        deliveryID:
+          type: string
+
+    delivery_AddDeliveryDetailRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryStatus:
+          type: string
+        detail:
+          type: string
+        deliveryID:
+          type: string
+        timestamp:
+          type: string
+
+    delivery_AddDeliveryDetailResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+        id:
+          type: integer
+
+    delivery_AssignDriverToDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_AssignDriverToDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        isAssigned:
+          type: boolean
+        message:
+          type: string
+        pickUpLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        dropOffLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        driverID:
+          type: string
+
+    delivery_CreateDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+        customerID:
+          type: string
+        storeID:
+          type: string
+        timeOfDelivery:
+          type: string
+        placeOfDelivery:
+          $ref: "#/components/schemas/GeoPointObject"
+
+    delivery_CreateDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        isSuccess:
+          type: boolean
+        message:
+          type: string
+        deliveryID:
+          type: string
+
+    GeoPointObject:
+      description: This is a geoPoint object
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
+    delivery_GetDeliveryDetailRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_GetDeliveryDetailResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+        detail:
+          type: object
+          items:
+            $ref: "#/components/schemas/DeliveryDetailObject"
+
+    DeliveryDetailObject:
+      description: The details of the delivery
+      type: object
+      properties:
+        id:
+          type: integer
+        deliveryID:
+          type: string
+        time:
+          type: string
+        deliveryStatus:
+          type: string
+        detail:
+          type: string
+
+    delivery_GetDeliveryStatusRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_GetDeliveryStatusResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+
+    delivery_GetNextOrderForDriverRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        currentLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        rangeOfDelivery:
+          type: number
+
+    delivery_GetNextOrderForDriverResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+        delivery:
+          $ref: "#/components/schemas/DeliveryObject"
+
+    delivery_RemoveDriverFromDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_RemoveDriverFromDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        isSuccess:
+          type: boolean
+        message:
+          type: string
+
+    delivery_TrackDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_TrackDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        currentLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        message:
+          type: string
+
+    delivery_UpdateDeliveryStatusRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        status:
+          type: string
+        deliveryID:
+          type: string
+        detail:
+          type: string
+
+    delivery_UpdateDeliveryStatusResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+
+    DeliveryObject:
+      description: This is a delivery object
+      type: object
+      properties:
+        deliveryID:
+          type: string
+        pickUpLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        dropOffLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        orderID:
+          type: string
+        customerId:
+          type: string
+        storeId:
+          type: string
+        driverId:
+          type: string
+        status:
+          type: string
+        cost:
+          type: number
+        completed:
+          type: boolean
+        deliveryDetail:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveryDetailObject"
+
+    delivery_GetDeliveryDriverByOrderIdRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    delivery_GetDeliveryDriverByOrderIdResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        driver:
+          $ref: "#/components/schemas/DriverObject"
+        message:
+          type: string
+        deliveryID:
+          type: string
+
+    delivery_GetDeliveryByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_GetDeliveryByUUIDResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        delivery:
+          $ref: "#/components/schemas/DeliveryObject"
+        message:
+          type: string
+        timestamp:
+          type: string

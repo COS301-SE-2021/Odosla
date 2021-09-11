@@ -141,6 +141,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetOrderResponse"
+
+  /payment/getOrders:
+    post:
+      summary: Endpoint for getting all the active orders
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetOrdersRequest"
+      responses:
+        "200":
+          description: Returns the active orders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetOrdersResponse"
 components:
 
   schemas:
@@ -359,6 +381,25 @@ components:
       properties:
         order:
           $ref: "#/components/schemas/OrderObject"
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    payment_GetOrdersRequest:
+      description: This object is expected as input
+      type: object
+
+    payment_GetOrdersResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
         success:
           type: boolean
         timestamp:
