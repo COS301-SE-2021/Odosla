@@ -7,21 +7,15 @@ import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.user.stubs.notifications.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.user.stubs.notifications.requests.SendEmailNotificationRequest;
-import cs.superleague.user.stubs.notifications.responses.SendEmailNotificationResponse;
 import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
-import cs.superleague.user.stubs.payment.dataclass.Order;
-import cs.superleague.user.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.user.stubs.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.user.stubs.shopping.dataclass.Item;
 import cs.superleague.user.stubs.shopping.dataclass.Store;
 import cs.superleague.user.stubs.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.user.stubs.shopping.requests.GetStoresRequest;
 import cs.superleague.user.stubs.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.user.stubs.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -2859,5 +2853,51 @@ public class UserServiceImpl implements UserService{
         else{
             throw new InvalidRequestException("DriverSetRating request is null - could not set rating");
         }
+    }
+
+    @Override
+    public GetCustomerByEmailResponse getCustomerByEmail(GetCustomerByEmailRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+
+        Customer customer=customerRepo.findByEmail(request.getEmail()).orElse(null);
+        if(customer==null){
+            throw new CustomerDoesNotExistException("Customer with email does not exist");
+        }else {
+            return new GetCustomerByEmailResponse(customer, true);
+        }
+    }
+
+    @Override
+    public GetShopperByEmailResponse getShopperByEmail(GetShopperByEmailRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Shopper shopper= shopperRepo.findByEmail(request.getEmail()).orElse(null);
+        if(shopper==null){
+            throw new ShopperDoesNotExistException("Shopper with email does not exist");
+        }else{
+            return new GetShopperByEmailResponse(shopper,true);
+        }
+    }
+
+    @Override
+    public GetDriverByEmailResponse getDriverByEmail(GetDriverByEmailRequest request) throws InvalidRequestException, DriverDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Driver driver=null;
+        try {
+            driver = driverRepo.findDriverByEmail(request.getEmail());
+        }catch (NullPointerException e){
+            driver=null;
+        }
+        if(driver==null){
+            throw new DriverDoesNotExistException("Driver with email does not exist");
+        }else{
+            return new GetDriverByEmailResponse(driver,true);
+        }
+
     }
 }

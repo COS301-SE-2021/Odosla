@@ -539,6 +539,71 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_DriverSetRatingResponse"
 
+  /user/getCustomerByEmail:
+    post:
+      summary: Endpoint for setting rating use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getCustomerByEmail
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetCustomerByEmailRequest"
+      responses:
+        "200":
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetCustomerByEmailResponse"
+
+  /user/getShopperByEmail:
+    post:
+      summary: Endpoint for setting rating use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getShopperByEmail
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetShopperByEmailRequest"
+      responses:
+        "200":
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetShopperByEmailResponse"
+
+  /user/getDriverByEmail:
+    post:
+      summary: Endpoint for setting rating use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getDriverByEmail
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetDriverByEmailRequest"
+      responses:
+        "200":
+          description: Returns response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetDriverByEmailResponse"
 
   /user/updateDriverDetails:
     post:
@@ -1371,3 +1436,51 @@ components:
           type: boolean
         timestamp:
           type: string
+
+    user_GetCustomerByEmailRequest:
+      description: This object is given as input
+      type: object
+      properties:
+        email:
+          type: string
+
+    user_GetShopperByEmailRequest:
+      description: This object is given as input
+      type: object
+      properties:
+        email:
+          type: string
+
+    user_GetDriverByEmailRequest:
+      description: This object is given as input
+      type: object
+      properties:
+        email:
+          type: string
+
+    user_GetCustomerByEmailResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        customer:
+          $ref: "#/components/schemas/CustomerObject"
+        success:
+          type: boolean
+
+    user_GetShopperByEmailResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        shopper:
+          $ref: "#/components/schemas/ShopperObject"
+        success:
+          type: boolean
+
+    user_GetDriverByEmailResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        driver:
+          $ref: "#/components/schemas/DriverObject"
+        success:
+          type: boolean

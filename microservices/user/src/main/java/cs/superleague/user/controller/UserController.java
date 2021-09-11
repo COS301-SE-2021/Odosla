@@ -500,6 +500,30 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<UserGetCustomerByEmailResponse> getCustomerByEmail(UserGetCustomerByEmailRequest body) {
+        UserGetCustomerByEmailResponse getCustomerByEmailResponse=new UserGetCustomerByEmailResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCustomerByEmailRequest request = new GetCustomerByEmailRequest(body.getEmail());
+
+            GetCustomerByEmailResponse response = userService.getCustomerByEmail(request);
+            try{
+                getCustomerByEmailResponse.setCustomer(populateCustomer(response.getCustomer()));
+                getCustomerByEmailResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(getCustomerByEmailResponse, status);
+    }
+
+    @Override
     public ResponseEntity<UserGetGroceryListResponse> getGroceryLists(UserGetGroceryListRequest body){
 
         UserGetGroceryListResponse userGetGroceryListResponse = new UserGetGroceryListResponse();
@@ -524,6 +548,30 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetShopperByEmailResponse> getShopperByEmail(UserGetShopperByEmailRequest body) {
+        UserGetShopperByEmailResponse getShopperByEmailResponse=new UserGetShopperByEmailResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetShopperByEmailRequest request = new GetShopperByEmailRequest(body.getEmail());
+
+            GetShopperByEmailResponse response = userService.getShopperByEmail(request);
+            try{
+                getShopperByEmailResponse.setShopper(populateShopper(response.getShopper()));
+                getShopperByEmailResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(getShopperByEmailResponse, status);
     }
 
     @Override
@@ -765,6 +813,30 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetCustomerByUUIDResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetDriverByEmailResponse> getDriverByEmail(UserGetDriverByEmailRequest body) {
+        UserGetDriverByEmailResponse getDriverByEmailResponse=new UserGetDriverByEmailResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetDriverByEmailRequest request = new GetDriverByEmailRequest(body.getEmail());
+
+            GetDriverByEmailResponse response = userService.getDriverByEmail(request);
+            try{
+                getDriverByEmailResponse.setDriver(populateDriver(response.getDriver()));
+                getDriverByEmailResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(getDriverByEmailResponse, status);
     }
 
     @Override
