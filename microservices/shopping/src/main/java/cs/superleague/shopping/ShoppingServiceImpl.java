@@ -766,11 +766,12 @@ public class ShoppingServiceImpl implements ShoppingService {
                     }
                 }
                 if(notPresent){
-                    Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                    Shopper updateShopper= shopperResponse.getShopper();
                     if(updateShopper!=null)
                     {
                         updateShopper.setStoreID(request.getStoreID());
-                        shopperRepo.save(updateShopper);
+                        SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(updateShopper);
+                        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
                     }
 
                     listOfShoppers.add(shopperResponse.getShopper());
@@ -781,11 +782,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             else
             {
-                Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                Shopper updateShopper= shopperResponse.getShopper();
                 if(updateShopper!=null)
                 {
                     updateShopper.setStoreID(request.getStoreID());
-                    shopperRepo.save(updateShopper);
+                    SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(updateShopper);
+                    rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
                 }
 
                 List<Shopper> newList= new ArrayList<>();
@@ -836,8 +838,8 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @return
      * @throws InvalidRequestException
      * @throws StoreDoesNotExistException
-     * @throws cs.superleague.user.exceptions.InvalidRequestException
-     * @throws UserDoesNotExistException
+     * @throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException
+     * @throws cs.superleague.shopping.stubs.user.exceptions.UserException
      */
     @Override
     public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
@@ -874,8 +876,16 @@ public class ShoppingServiceImpl implements ShoppingService {
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
 
             if(listOfShoppers!=null){
-                GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-                GetShopperByUUIDResponse shopperResponse=userService.getShopperByUUIDRequest(shoppersRequest);
+
+                RestTemplate restTemplate = new RestTemplate();
+                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("shopperId", request.getShopperID().toString());
+                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+
+                GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
                  Boolean inList=false;
                  for(Shopper shopper:listOfShoppers){
