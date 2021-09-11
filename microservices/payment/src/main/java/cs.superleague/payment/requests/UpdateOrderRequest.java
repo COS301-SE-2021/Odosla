@@ -2,12 +2,8 @@ package cs.superleague.payment.requests;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.stubs.Item;
+import cs.superleague.payment.stubs.shopping.dataclass.Item;
 
-import javax.persistence.CascadeType;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
 import java.util.List;
 import java.util.UUID;
 

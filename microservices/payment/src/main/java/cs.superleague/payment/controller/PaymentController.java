@@ -5,13 +5,13 @@ import cs.superleague.models.*;
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
-import cs.superleague.payment.stubs.Item;
-import cs.superleague.payment.stubs.Store;
+import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -303,6 +303,35 @@ public class PaymentController implements PaymentApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<PaymentGetOrderResponse> getOrder(PaymentGetOrderRequest body) {
+        PaymentGetOrderResponse response = new PaymentGetOrderResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            GetOrderRequest getOrderRequest = new GetOrderRequest(UUID.fromString(body.getOrderID()));
+            GetOrderResponse getOrderResponse = paymentService.getOrder(getOrderRequest);
+            try {
+                response.setOrder(populateOrder(getOrderResponse.getOrder()));
+                response.setMessage(getOrderResponse.getMessage());
+                response.setSuccess(getOrderResponse.isSuccess());
+                response.setTimestamp(String.valueOf(getOrderResponse.getTimestamp()));
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setOrder(null);
+                response.setMessage(e.getMessage());
+                response.setSuccess(false);
+                response.setTimestamp(String.valueOf(Calendar.getInstance()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setOrder(null);
+            response.setMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setTimestamp(String.valueOf(Calendar.getInstance()));
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     // helper
     List<Item> assignItems(List<ItemObject> itemObjectList){
 
@@ -366,5 +395,23 @@ public class PaymentController implements PaymentApi {
         locationObject.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         locationObject.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         return locationObject;
+    }
+
+    public OrderObject populateOrder(Order order){
+        OrderObject orderObject = new OrderObject();
+        orderObject.setOrderId(order.getOrderID().toString());
+        orderObject.setUserId(order.getUserID().toString());
+        orderObject.setStoreId(order.getStoreID().toString());
+        orderObject.setShopperId(order.getShopperID().toString());
+        orderObject.setCreateDate(order.getCreateDate().getTime().toString());
+        orderObject.setProcessDate(order.getProcessDate().getTime().toString());
+        orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+        orderObject.setStatus(order.getStatus().toString());
+        orderObject.setItems(populateItems(order.getItems()));
+        orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
+        orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
+        orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+        orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
+        return orderObject;
     }
 }

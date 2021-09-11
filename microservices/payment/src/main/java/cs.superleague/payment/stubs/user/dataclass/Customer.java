@@ -1,7 +1,7 @@
 package cs.superleague.payment.stubs.user.dataclass;
 
 import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.stubs.*;
+import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 

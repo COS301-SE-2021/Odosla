@@ -119,6 +119,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetCustomersActiveOrdersResponse"
+
+  /payment/getOrder:
+    post:
+      summary: Endpoint for getting of an order by UUID
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetOrderRequest"
+      responses:
+        "200":
+          description: Returns the order object of the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetOrderResponse"
 components:
 
   schemas:
@@ -322,4 +344,24 @@ components:
         longitude:
           type: number
         address:
+          type: string
+
+    payment_GetOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        order:
+          $ref: "#/components/schemas/OrderObject"
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
           type: string

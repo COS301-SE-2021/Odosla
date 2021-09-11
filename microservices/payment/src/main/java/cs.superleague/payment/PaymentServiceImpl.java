@@ -4,8 +4,8 @@ import com.itextpdf.text.*;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
-import cs.superleague.payment.stubs.Recommendation;
-import cs.superleague.payment.stubs.Item;
+import cs.superleague.payment.stubs.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
@@ -14,15 +14,19 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.exceptions.*;
-import cs.superleague.shopping.requests.AddToQueueRequest;
+import cs.superleague.payment.stubs.shopping.requests.AddToQueueRequest;
+import cs.superleague.payment.stubs.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.payment.stubs.user.dataclass.Customer;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
+import cs.superleague.recommendation.requests.AddRecommendationRequest;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import cs.superleague.shopping.exceptions.StoreClosedException;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.requests.GetStoreByUUIDRequest;
-import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -37,12 +41,14 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderRepo orderRepo;
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
+    private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
 
@@ -87,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws InvalidRequestException
      */
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -144,9 +150,16 @@ public class PaymentServiceImpl implements PaymentService {
             {
                 throw new InvalidRequestException(invalidMessage);
             }
+            RestTemplate restTemplate = new RestTemplate();
 
-            GetStoreByUUIDRequest getShopRequest = new GetStoreByUUIDRequest(request.getStoreID());
-            shop = shoppingService.getStoreByUUID(getShopRequest);
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("StoreID", request.getStoreID());
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate.postForEntity("http://localhost:8088/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            shop = getStoreByUUIDResponseResponseEntity.getBody();
 
             if (shop != null) {
                 if (shop.getStore().getStoreLocation() == null) {
@@ -165,13 +178,10 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             CurrentUser currentUser = new CurrentUser();
-
-            if (customerRepo != null) {
-                Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
-                assert customer != null;
-                customerID = customer.getCustomerID();
-
-            }
+            //WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
+            Customer customer = null;
+            assert customer != null;
+            customerID = customer.getCustomerID();
 
             double discount = request.getDiscount();
             UUID storeID = request.getStoreID();
@@ -246,16 +256,12 @@ public class PaymentServiceImpl implements PaymentService {
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
                         orderRepo.save(o);
-                        if (recommendationRepo != null){
-                            for (Item item : request.getListOfItems()){
-                                UUID recommendationID = UUID.randomUUID();
-                                while (recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
-                                    recommendationID = UUID.randomUUID();
-                                }
-                                Recommendation recommendation = new Recommendation(recommendationID, item.getProductID(), orderID);
-                                recommendationRepo.save(recommendation);
-                            }
+                        List<String> productIDs = new ArrayList<>();
+                        for (Item item : request.getListOfItems()){
+                            productIDs.add(item.getProductID());
                         }
+                        AddRecommendationRequest addRecommendationRequest = new AddRecommendationRequest(o.getOrderID(), productIDs);
+                        rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
                     UUID finalOrderID = orderID;
                     new Thread(() -> {
@@ -267,18 +273,15 @@ public class PaymentServiceImpl implements PaymentService {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                        // WRONG NEED TO FIX AddToQueue
                         AddToQueueRequest addToQueueRequest = new AddToQueueRequest(o);
-                        try {
-                            shoppingService.addToQueue(addToQueueRequest);
-                        } catch (cs.superleague.shopping.exceptions.InvalidRequestException e) {
-                            e.printStackTrace();
-                        }
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                     }).start();
 
                     System.out.println("Order has been created");
                     response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
                 } else {
-                    throw new StoreClosedException("Store is currently closed - could not create order");
+                    throw new InvalidRequestException("Store is currently closed - could not create order");
                 }
             }
         }
@@ -360,12 +363,15 @@ public class PaymentServiceImpl implements PaymentService {
 
             // remove Order from DB.
             orderRepo.delete(order);
-            if (recommendationRepo != null){
-                List<Recommendation> recommendationsToDelete = recommendationRepo.findRecommendationByOrderID(req.getOrderID());
-                for (Recommendation recommendation : recommendationsToDelete){
-                    recommendationRepo.delete(recommendation);
-                }
-            }
+            // WRONG NEED TO FIX
+            RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
+            rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
+//            if (recommendationRepo != null){
+//                List<Recommendation> recommendationsToDelete = recommendationRepo.findRecommendationByOrderID(req.getOrderID());
+//                for (Recommendation recommendation : recommendationsToDelete){
+//                    recommendationRepo.delete(recommendation);
+//                }
+//            }
             orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee
@@ -432,7 +438,7 @@ import java.util.List;50"
         double discount = 0;
         double cost;
         Customer customer;
-        Optional<Customer> customerOptional;
+        Optional<Customer> customerOptional = null;
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
@@ -444,7 +450,7 @@ import java.util.List;50"
         }
 
         CurrentUser currentUser = new CurrentUser();
-        customerOptional = customerRepo.findByEmail(currentUser.getEmail());
+        //customerOptional = customerRepo.findByEmail(currentUser.getEmail()); WRONG NEED TO FIX
 
         if(customerOptional == null || !customerOptional.isPresent()){
             throw new InvalidRequestException("Incorrect email email given - customer does not exist");
@@ -749,15 +755,15 @@ import java.util.List;50"
     }
 
     @Override
-    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException {
+    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist {
         GetCustomersActiveOrdersResponse response;
         if (request == null){
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
         }
 
         CurrentUser currentUser = new CurrentUser();
-
-        Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
+        Customer customer = null;
+        // WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
 
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
         if (orders == null){
@@ -773,6 +779,17 @@ import java.util.List;50"
         }
         response = new GetCustomersActiveOrdersResponse(null, false, "This customer has no active orders.");
         return response;
+    }
+
+    @Override
+    public void saveOrder(SaveOrderRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrder() == null){
+            throw new InvalidRequestException("Null parameters");
+        }
+        orderRepo.save(request.getOrder());
     }
 
     @Override

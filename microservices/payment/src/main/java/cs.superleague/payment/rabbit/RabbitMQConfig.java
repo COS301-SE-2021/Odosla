@@ -25,8 +25,8 @@ public class RabbitMQConfig {
     // QUEUE DEFINITIONS
     //
     @Bean
-    Queue PaymentQueue() {
-        return new Queue("Q_AddRecommendation", true);
+    Queue SaveOrderQueue() {
+        return new Queue("Q_SaveOrder", true);
     }
 
 
@@ -37,9 +37,9 @@ public class RabbitMQConfig {
     Binding binding(){
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
-                .bind(PaymentQueue())
+                .bind(SaveOrderQueue())
                 .to(PaymentExchange())
-                .with("RK_")
+                .with("RK_SaveOrder")
                 .noargs();
     }
 
@@ -62,8 +62,8 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(PaymentQueue());                                               // <------- add all queues to listen to here
-        simpleMessageListenerContainer.setMessageListener(new PaymentListener());
+        simpleMessageListenerContainer.setQueues(SaveOrderQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setMessageListener(new SaveOrderListener());
         return simpleMessageListenerContainer;
     }
 
