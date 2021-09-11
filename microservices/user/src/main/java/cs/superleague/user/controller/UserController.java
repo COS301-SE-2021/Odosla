@@ -1,22 +1,15 @@
 package cs.superleague.user.controller;
-
 import cs.superleague.api.UserApi;
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.models.*;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.shopping.ShoppingService;
-import cs.superleague.shopping.dataclass.Catalogue;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.repos.CatalogueRepo;
-import cs.superleague.shopping.repos.ItemRepo;
-import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
+import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.user.stubs.shopping.dataclass.Catalogue;
+import cs.superleague.user.stubs.shopping.dataclass.Item;
+import cs.superleague.user.stubs.shopping.dataclass.Store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,15 +34,6 @@ public class UserController implements UserApi {
     GroceryListRepo groceryListRepo;
 
     @Autowired
-    ItemRepo itemRepo;
-
-    @Autowired
-    StoreRepo storeRepo;
-
-    @Autowired
-    CatalogueRepo catalogueRepo;
-
-    @Autowired
     DriverRepo driverRepo;
 
     @Autowired
@@ -59,13 +43,7 @@ public class UserController implements UserApi {
     ShopperRepo shopperRepo;
 
     @Autowired
-    OrderRepo orderRepo;
-
-    @Autowired
     private UserServiceImpl userService;
-
-    @Autowired
-    private ShoppingService shoppingService;
 
     Customer setCartCustomer;
     GroceryList groceryList;
@@ -97,7 +75,7 @@ public class UserController implements UserApi {
 
             System.out.println(barcodes.get(0));
 
-            SetCartResponse response = ServiceSelector.getUserService().setCart(request);
+            SetCartResponse response = userService.setCart(request);
             try{
                 userSetCartResponse.setDate(response.getTimestamp().toString());
                 userSetCartResponse.setMessage(response.getMessage());
@@ -123,7 +101,7 @@ public class UserController implements UserApi {
         try{
             ClearShoppingCartRequest request = new ClearShoppingCartRequest(body.getCustomerID());
 
-            ClearShoppingCartResponse response = ServiceSelector.getUserService().clearShoppingCart(request);
+            ClearShoppingCartResponse response = userService.clearShoppingCart(request);
             try{
                 userClearShoppingCartResponse.setDate(response.getTimestamp().toString());
                 userClearShoppingCartResponse.setMessage(response.getMessage());
@@ -149,7 +127,7 @@ public class UserController implements UserApi {
         try{
             GetShoppingCartRequest request = new GetShoppingCartRequest(body.getCustomerID());
 
-            GetShoppingCartResponse response = ServiceSelector.getUserService().getShoppingCart(request);
+            GetShoppingCartResponse response = userService.getShoppingCart(request);
             try{
                 userGetShoppingCartResponse.setItems(populateItems(response.getShoppingCart()));
                 userGetShoppingCartResponse.setMessage(response.getMessage());
@@ -203,7 +181,7 @@ public class UserController implements UserApi {
         try{
             MakeGroceryListRequest request = new MakeGroceryListRequest(body.getProductIds(), body.getName());
 
-            MakeGroceryListResponse response = ServiceSelector.getUserService().makeGroceryList(request);
+            MakeGroceryListResponse response = userService.makeGroceryList(request);
             try{
                 makeGroceryListResponse.setDate(response.getTimestamp().toString());
                 makeGroceryListResponse.setMessage(response.getMessage());
@@ -229,7 +207,7 @@ public class UserController implements UserApi {
         try{
             ResetPasswordRequest request = new ResetPasswordRequest(body.getEmail(), body.getUserType());
 
-            ResetPasswordResponse response = ServiceSelector.getUserService().resetPassword(request);
+            ResetPasswordResponse response = userService.resetPassword(request);
             try{
                 userMakeGroceryListResponse.setResetCode(response.getResetCode());
                 userMakeGroceryListResponse.setMessage(response.getMessage());
@@ -269,7 +247,7 @@ public class UserController implements UserApi {
 
             LoginRequest request = new LoginRequest(body.getEmail(), body.getPassword(), userType);
 
-            LoginResponse loginResponse= ServiceSelector.getUserService().loginUser(request);
+            LoginResponse loginResponse= userService.loginUser(request);
 
             try {
                 response.setMessage(loginResponse.getMessage());
@@ -295,7 +273,7 @@ public class UserController implements UserApi {
         try{
 
             RegisterDriverRequest request=new RegisterDriverRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
-            RegisterDriverResponse driverResponse=ServiceSelector.getUserService().registerDriver(request);
+            RegisterDriverResponse driverResponse=userService.registerDriver(request);
 
             try{
                 response.setMessage(driverResponse.getMessage());
@@ -318,7 +296,7 @@ public class UserController implements UserApi {
         try{
 
             RegisterCustomerRequest request=new RegisterCustomerRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
-            RegisterCustomerResponse customerResponse=ServiceSelector.getUserService().registerCustomer(request);
+            RegisterCustomerResponse customerResponse=userService.registerCustomer(request);
 
             try{
                 response.setMessage(customerResponse.getMessage());
@@ -341,7 +319,7 @@ public class UserController implements UserApi {
         try{
 
             RegisterAdminRequest request=new RegisterAdminRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
-            RegisterAdminResponse adminResponse=ServiceSelector.getUserService().registerAdmin(request);
+            RegisterAdminResponse adminResponse=userService.registerAdmin(request);
 
             try{
                 response.setMessage(adminResponse.getMessage());
@@ -364,7 +342,7 @@ public class UserController implements UserApi {
         try{
 
             RegisterShopperRequest request=new RegisterShopperRequest(body.getName(), body.getSurname(), body.getEmail(), body.getPhoneNumber(), body.getPassword());
-            RegisterShopperResponse shopperResponse=ServiceSelector.getUserService().registerShopper(request);
+            RegisterShopperResponse shopperResponse=userService.registerShopper(request);
 
             try{
                 response.setMessage(shopperResponse.getMessage());
@@ -399,7 +377,7 @@ public class UserController implements UserApi {
             }
             AccountVerifyRequest request = new AccountVerifyRequest(body.getEmail(),body.getActivationCode(),userType);
 
-            AccountVerifyResponse userResponse = ServiceSelector.getUserService().verifyAccount(request);
+            AccountVerifyResponse userResponse = userService.verifyAccount(request);
             try{
                 response.setDate(userResponse.getTimestamp().toString());
                 response.setMessage(userResponse.getMessage());
@@ -426,7 +404,7 @@ public class UserController implements UserApi {
         try{
             SetCurrentLocationRequest request = new SetCurrentLocationRequest(body.getDriverID(), body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getAddress());
 
-            SetCurrentLocationResponse response = ServiceSelector.getUserService().setCurrentLocation(request);
+            SetCurrentLocationResponse response = userService.setCurrentLocation(request);
             try{
                 setCurrentLocationResponse.setDate(response.getTimestamp().toString());
                 setCurrentLocationResponse.setMessage(response.getMessage());
@@ -450,7 +428,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
         try {
             UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.isOnShift(), UUID.fromString(body.getStoreID()));
-            UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
+            UpdateShopperShiftResponse response1 = userService.updateShopperShift(request);
             try {
                 response.setMessage(response1.getMessage());
                 response.setSuccess(Boolean.valueOf(response1.isSuccess()));
@@ -480,7 +458,7 @@ public class UserController implements UserApi {
         try{
             GetCurrentUserRequest request = new GetCurrentUserRequest(body.getJwTToken());
 
-            GetCurrentUserResponse response = ServiceSelector.getUserService().getCurrentUser(request);
+            GetCurrentUserResponse response = userService.getCurrentUser(request);
             try{
                 userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
                 userGetCurrentUserResponse.setMessage(response.getMessage());
@@ -530,7 +508,7 @@ public class UserController implements UserApi {
         try{
             GetGroceryListsRequest request = new GetGroceryListsRequest();
 
-            GetGroceryListsResponse response = ServiceSelector.getUserService().getGroceryLists(request);
+            GetGroceryListsResponse response = userService.getGroceryLists(request);
             try{
                 userGetGroceryListResponse.setTimestamp(response.getTimestamp().toString());
                 userGetGroceryListResponse.setMessage(response.getMessage());
@@ -557,7 +535,7 @@ public class UserController implements UserApi {
         try{
             UpdateDriverShiftRequest request = new UpdateDriverShiftRequest(body.isOnShift());
 
-            UpdateDriverShiftResponse response = ServiceSelector.getUserService().updateDriverShift(request);
+            UpdateDriverShiftResponse response = userService.updateDriverShift(request);
             try{
                 userUpdateDriverShiftResponse.setTimestamp(response.getTimestamp().toString());
                 userUpdateDriverShiftResponse.setMessage(response.getMessage());
@@ -695,7 +673,7 @@ public class UserController implements UserApi {
         try{
             ScanItemRequest request = new ScanItemRequest(body.getBarcode(), UUID.fromString(body.getOrderID()));
 
-            ScanItemResponse response = ServiceSelector.getUserService().scanItem(request);
+            ScanItemResponse response = userService.scanItem(request);
             try{
                 userScanItemResponse.setDate(response.getTimestamp().toString());
                 userScanItemResponse.setMessage(response.getMessage());
@@ -721,7 +699,7 @@ public class UserController implements UserApi {
         try{
             CompletePackagingOrderRequest request = new CompletePackagingOrderRequest(UUID.fromString(body.getOrderID()), body.isGetNext());
 
-            CompletePackagingOrderResponse response = ServiceSelector.getUserService().completePackagingOrder(request);
+            CompletePackagingOrderResponse response = userService.completePackagingOrder(request);
             try{
                 userCompletePackagingOrderResponse.setDate(response.getTimestamp().toString());
                 userCompletePackagingOrderResponse.setMessage(response.getMessage());
@@ -747,7 +725,7 @@ public class UserController implements UserApi {
         try{
             CompleteDeliveryRequest request = new CompleteDeliveryRequest(UUID.fromString(body.getOrderID()));
 
-            CompleteDeliveryResponse response = ServiceSelector.getUserService().completeDelivery(request);
+            CompleteDeliveryResponse response = userService.completeDelivery(request);
             try{
                 userCompleteDeliveryResponse.setTimestamp(response.getTimestamp().toString());
                 userCompleteDeliveryResponse.setMessage(response.getMessage());
@@ -772,7 +750,7 @@ public class UserController implements UserApi {
         try{
             GetCustomerByUUIDRequest request = new GetCustomerByUUIDRequest(UUID.fromString(body.getUserID()));
 
-            GetCustomerByUUIDResponse response = ServiceSelector.getUserService().getCustomerByUUID(request);
+            GetCustomerByUUIDResponse response = userService.getCustomerByUUID(request);
             try{
                 userGetCustomerByUUIDResponse.setTimestamp(response.getTimestamp().toString());
                 userGetCustomerByUUIDResponse.setMessage(response.getMessage());
@@ -797,7 +775,7 @@ public class UserController implements UserApi {
         try{
             DriverSetRatingRequest request = new DriverSetRatingRequest(UUID.fromString(body.getDriverID()), body.getRating().doubleValue());
 
-            DriverSetRatingResponse response = ServiceSelector.getUserService().driverSetRating(request);
+            DriverSetRatingResponse response = userService.driverSetRating(request);
             try{
                 userDriverSetRatingResponse.setTimestamp(response.getTimestamp().toString());
                 userDriverSetRatingResponse.setMessage(response.getMessage());
@@ -822,7 +800,7 @@ public class UserController implements UserApi {
         try{
             UpdateShopperDetailsRequest request = new UpdateShopperDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
 
-            UpdateShopperDetailsResponse response = ServiceSelector.getUserService().updateShopperDetails(request);
+            UpdateShopperDetailsResponse response = userService.updateShopperDetails(request);
             try{
                 userUpdateShopperDetailsResponse.setTimestamp(response.getTimestamp().toString());
                 userUpdateShopperDetailsResponse.setMessage(response.getMessage());
@@ -848,7 +826,7 @@ public class UserController implements UserApi {
         try{
             UpdateDriverDetailsRequest request = new UpdateDriverDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
 
-            UpdateDriverDetailsResponse response = ServiceSelector.getUserService().updateDriverDetails(request);
+            UpdateDriverDetailsResponse response = userService.updateDriverDetails(request);
             try{
                 userUpdateDriverDetailsResponse.setTimestamp(response.getTimestamp().toString());
                 userUpdateDriverDetailsResponse.setMessage(response.getMessage());
@@ -879,7 +857,7 @@ public class UserController implements UserApi {
             UpdateCustomerDetailsRequest request = new UpdateCustomerDetailsRequest(body.getName(), body.getSurname(),
                     body.getEmail(), body.getPhoneNumber(), body.getPassword(), geoPoint, body.getCurrentPassword());
 
-            UpdateCustomerDetailsResponse response = ServiceSelector.getUserService().updateCustomerDetails(request);
+            UpdateCustomerDetailsResponse response = userService.updateCustomerDetails(request);
             try{
                 userUpdateCustomerDetailsResponse.setTimestamp(response.getTimestamp().toString());
                 userUpdateCustomerDetailsResponse.setMessage(response.getMessage());
@@ -905,7 +883,7 @@ public class UserController implements UserApi {
         try{
             UpdateAdminDetailsRequest request = new UpdateAdminDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
 
-            UpdateAdminDetailsResponse response = ServiceSelector.getUserService().updateAdminDetails(request);
+            UpdateAdminDetailsResponse response = userService.updateAdminDetails(request);
             try{
                 userUpdateAdminDetailsResponse.setTimestamp(response.getTimestamp().toString());
                 userUpdateAdminDetailsResponse.setMessage(response.getMessage());

@@ -600,6 +600,33 @@ components:
         isActive:
           type: boolean
 
+    ItemObject:
+      description: "Generic schema for an item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeId:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+
     user_SetCartRequest:
       description: This object is expected as input
       type: object
@@ -802,6 +829,18 @@ components:
           type: number
         deliveryID:
           type: string
+
+    GeoPointObject:
+      description: This is a geoPoint object
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
 
     CustomerObject:
       description: "Generic schema for a Customer"

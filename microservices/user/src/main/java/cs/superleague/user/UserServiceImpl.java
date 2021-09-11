@@ -1590,7 +1590,7 @@ public class UserServiceImpl implements UserService{
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
-        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8081/shopping/getStores", parts, GetStoresResponse.class);
+        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStores", parts, GetStoresResponse.class);
 
         GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
 
@@ -1889,7 +1889,7 @@ public class UserServiceImpl implements UserService{
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
         try {
-            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8081/shopping/getStores", parts, GetStoresResponse.class);
+            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStores", parts, GetStoresResponse.class);
             GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
             response=getStoresResponse;
         }catch (Exception e){
@@ -2150,7 +2150,7 @@ public class UserServiceImpl implements UserService{
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("storeId", request.getStoreID());
-            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8081/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
             if (store == null){
