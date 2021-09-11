@@ -1,6 +1,5 @@
 package cs.superleague.user.requests;
 
-import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.user.dataclass.UserType;
 
 import java.util.Date;

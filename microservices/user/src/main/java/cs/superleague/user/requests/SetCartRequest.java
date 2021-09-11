@@ -1,7 +1,5 @@
 package cs.superleague.user.requests;
 
-import cs.superleague.shopping.dataclass.Item;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

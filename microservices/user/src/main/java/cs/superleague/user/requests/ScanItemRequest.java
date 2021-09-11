@@ -1,7 +1,5 @@
 package cs.superleague.user.requests;
 
-import cs.superleague.payment.dataclass.Order;
-
 import java.util.UUID;
 
 public class ScanItemRequest {
