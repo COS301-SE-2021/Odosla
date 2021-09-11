@@ -43,4 +43,6 @@ public interface ShoppingService {
     GetQueueResponse getQueue(GetQueueRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     SaveStoreToRepoResponse saveStoreToRepo(SaveStoreToRepoRequest request) throws InvalidRequestException, StoreDoesNotExistException;
+
+    GetAllItemsResponse getAllItems(GetAllItemsRequest request) throws InvalidRequestException;
 }

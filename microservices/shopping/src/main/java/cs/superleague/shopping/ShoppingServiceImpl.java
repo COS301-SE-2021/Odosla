@@ -2,7 +2,9 @@ package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.exceptions.StoreClosedException;
+import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
@@ -32,13 +34,15 @@ import java.util.List;
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
+    private final ItemRepo itemRepo;
 
     @Autowired
     private RabbitTemplate rabbit;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo) {
         this.storeRepo= storeRepo;
+        this.itemRepo=itemRepo;
     }
     /**
      *
@@ -1322,6 +1326,59 @@ public class ShoppingServiceImpl implements ShoppingService {
         else{
             throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
         }
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *
+     *
+     * getAllItems should:
+     *               1. Check if the ItemRepo is not null, else throw an InvalidRequestException
+     *               2. Return all items in response object.
+     *
+     * Request Object (GetAllItemsRequest):
+     * {
+     *
+     * }
+     *
+     * Response Object (GetAllItemsResponse):
+     * {
+     *                "items":itemsRepo.findAll()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"All items have been retrieved"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public GetAllItemsResponse getAllItems(GetAllItemsRequest request) throws InvalidRequestException {
+        GetAllItemsResponse response=null;
+
+        if(request!=null){
+
+
+            List<Item> items;
+            try {
+                items = itemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetAllItemsResponse(null, Calendar.getInstance().getTime(), "All items can't be retrieved");
+            }
+            else {
+                response = new GetAllItemsResponse(items, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
     }
 }
 
