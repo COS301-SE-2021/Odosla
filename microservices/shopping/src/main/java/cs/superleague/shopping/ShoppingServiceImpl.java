@@ -1265,5 +1265,63 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
         }
     }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private store
+     *
+     * SaveStoreToRepo should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate request attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the StoreRepo is not null and if not, save the store
+     *               5. Return the response object.
+     *
+     * Request Object (SaveStoreToRepoRequest):
+     * {
+     *                "store": request.getStore();
+     * }
+     *
+     * Response Object (SaveStoreToRepoResponse):
+     * {
+     *                "success":true
+     *                "message":"Store was successfully saved"
+     *                "timestamp": "2021-01-05T11:50:55"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public SaveStoreToRepoResponse saveStoreToRepo(SaveStoreToRepoRequest request) throws InvalidRequestException{
+        SaveStoreToRepoResponse response=null;
+
+        if(request != null){
+
+            if(request.getStore() == null){
+                throw new InvalidRequestException("Store in parameter in request can't be null - can't save store");
+            }
+
+            Store store = request.getStore();
+
+            if(storeRepo!=null)
+            {
+                storeRepo.save(store);
+                return new SaveStoreToRepoResponse(true, Calendar.getInstance().getTime(),"Store successfully saved.");
+
+            }
+            else
+            {
+                return new SaveStoreToRepoResponse(false, Calendar.getInstance().getTime(),"Store can't be saved.");
+
+            }
+
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
+        }
+    }
 }
 

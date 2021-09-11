@@ -1,23 +1,22 @@
 package cs.superleague.shopping.requests;
 
-import java.util.UUID;
+import cs.superleague.shopping.dataclass.Store;
 
 public class SaveStoreToRepoRequest {
 
-    private UUID storeID;
+    private Store store;
 
-    public SaveStoreToRepoRequest(UUID storeID)
+    public SaveStoreToRepoRequest(Store store)
     {
-        this.storeID=storeID;
+        this.store=store;
     }
 
-    public UUID getStoreID() {
-        return storeID;
+    public Store getStore() {
+        return store;
     }
 
-    public void setStoreID(UUID storeID) {
-        this.storeID = storeID;
+    public void setStore(Store store) {
+        this.store = store;
     }
-
 
 }
