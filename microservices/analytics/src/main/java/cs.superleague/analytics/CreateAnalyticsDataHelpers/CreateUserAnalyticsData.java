@@ -1,12 +1,16 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.User;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.requests.GetUsersRequest;
-import cs.superleague.user.responses.GetUsersResponse;
+import cs.superleague.analytics.stub.dataclass.Driver;
+import cs.superleague.analytics.stub.dataclass.Shopper;
+import cs.superleague.analytics.stub.dataclass.User;
+import cs.superleague.analytics.stub.dataclass.UserType;
+import cs.superleague.analytics.stub.responses.GetUsersResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -23,15 +27,13 @@ public class CreateUserAnalyticsData {
     private int totalOrderCompleted;
     private double ratingSum;
     private Driver [] topDrivers;
-    private UserService userService;
-
-    private GetUsersResponse response;
-    private UserType userType;
 
     private final Date startDate;
     private final Date endDate;
 
-    public CreateUserAnalyticsData(Date startDate, Date endDate, UserService userService){
+    private ResponseEntity<GetUsersResponse> responseEntity;
+
+    public CreateUserAnalyticsData(Date startDate, Date endDate){
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();
@@ -48,11 +50,22 @@ public class CreateUserAnalyticsData {
 
         this.startDate = startDate;
         this.endDate = endDate;
-        this.userService = userService;
 
-        GetUsersRequest request = new GetUsersRequest();
+        System.out.println(this.startDate);
+
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://localhost:8089/user/getUsers";
+
         try{
-            response = this.userService.getUsers(request);
+
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+
+            responseEntity = restTemplate.postForEntity(uri, parts,
+                    GetUsersResponse.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -60,7 +73,7 @@ public class CreateUserAnalyticsData {
 
     public HashMap<String, Object> getUserStatisticsData(){
 
-        HashMap<String, Object> data = new HashMap<String, Object>();
+        HashMap<String, Object> data = new HashMap<>();
 
         if(generateUserStatisticsData()) {
             data.put("totalNum_Users", totalUsers);
@@ -81,41 +94,51 @@ public class CreateUserAnalyticsData {
 
     private boolean generateUserStatisticsData(){
 
+        if(responseEntity == null){
+            return false;
+        }
+
+        GetUsersResponse response = responseEntity.getBody();
+
         if(response != null) {
             users.addAll(response.getUsers());
         }else{
             return false;
         }
 
+        UserType userType;
         for (User user : this.users) {
             userType = user.getAccountType();
 
-            if(userType == UserType.CUSTOMER){
-                totalCustomers += 1;
-            }else if(userType == UserType.SHOPPER){
+            if (startDate.getTime() <= user.getActivationDate().getTime()
+                    && endDate.getTime() >= user.getActivationDate().getTime()) {
+                if (userType == UserType.CUSTOMER) {
+                    totalCustomers += 1;
+                } else if (userType == UserType.SHOPPER) {
 
-                if(user instanceof Shopper){
-                    totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
-                }
-
-                totalShoppers += 1;
-            }else if(userType == UserType.ADMIN){
-                totalAdmins += 1;
-            }else if(userType == UserType.DRIVER){
-
-                if(user instanceof Driver){
-                    if(((Driver) user).getOnShift()){
-                        driversOnShift += 1;
+                    if (user instanceof Shopper) {
+                        totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
                     }
 
-                    drivers.add((Driver) user);
-                    ratingSum += ((Driver) user).getRating();
+                    totalShoppers += 1;
+                } else if (userType == UserType.ADMIN) {
+                    totalAdmins += 1;
+                } else if (userType == UserType.DRIVER) {
+
+                    if (user instanceof Driver) {
+                        if (((Driver) user).getOnShift()) {
+                            driversOnShift += 1;
+                        }
+
+                        drivers.add((Driver) user);
+                        ratingSum += ((Driver) user).getRating();
+                    }
+                    totalDrivers += 1;
                 }
-                totalDrivers += 1;
+
+                totalUsers += 1;
+
             }
-
-            totalUsers += 1;
-
         }
 
         if(totalDrivers > 0) {

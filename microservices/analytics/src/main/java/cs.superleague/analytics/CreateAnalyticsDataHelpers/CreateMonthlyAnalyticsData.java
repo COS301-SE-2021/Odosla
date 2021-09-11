@@ -1,25 +1,24 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.payment.PaymentService;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.requests.GetOrdersRequest;
-import cs.superleague.payment.responses.GetOrdersResponse;
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.*;
-import cs.superleague.user.requests.GetUsersRequest;
-import cs.superleague.user.responses.GetUsersResponse;
+
+import cs.superleague.analytics.stub.dataclass.*;
+import cs.superleague.analytics.stub.responses.GetOrdersResponse;
+import cs.superleague.analytics.stub.responses.GetUsersResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
 public class CreateMonthlyAnalyticsData {
 
     private final List<Order> orders;
-    private List<User> users;
-    private List<Customer> customers;
-    private List<Driver> drivers;
-    private List<Shopper> shoppers;
-    private List<Admin> admins;
-    private List<UUID> userIds;
+    private final List<User> users;
+    private final List<Driver> drivers;
+    private final List<UUID> userIds;
     private int totalOrders;
     private double totalPrice;
     private double averageOrderNumPerUser;
@@ -35,13 +34,13 @@ public class CreateMonthlyAnalyticsData {
     private Driver [] topDrivers;
     private Order [] topOrders;
 
-    private GetOrdersResponse getOrdersResponse;
-    private GetUsersResponse getUsersResponse;
-
     private final Calendar startDate;
     private final Calendar endDate;
 
-    public CreateMonthlyAnalyticsData(PaymentService paymentService, UserService userService){
+    private ResponseEntity<GetUsersResponse> responseEntityUser;
+    private ResponseEntity<GetOrdersResponse> responseEntityOrder;
+
+    public CreateMonthlyAnalyticsData(){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -64,12 +63,23 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
-        try{
-            getOrdersResponse = paymentService.getOrders(getOrdersRequest);
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://localhost:8089/user/getUsers";
 
-            GetUsersRequest getUsersRequest = new GetUsersRequest();
-            getUsersResponse = userService.getUsers(getUsersRequest);
+        try{
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+
+            responseEntityUser = restTemplate.postForEntity(uri, parts,
+                    GetUsersResponse.class);
+
+            uri = "http://localhost:8089/payment/getOrders";
+            responseEntityOrder = restTemplate.postForEntity(uri, parts,
+                    GetOrdersResponse.class);
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -103,11 +113,23 @@ public class CreateMonthlyAnalyticsData {
 
     private boolean generateMonthlyStatisticsData(){
 
+        if(responseEntityOrder == null){
+            return false;
+        }
+
+        GetOrdersResponse getOrdersResponse = responseEntityOrder.getBody();
+
         if(getOrdersResponse != null){
             orders.addAll(getOrdersResponse.getOrders());
         }else{
             return false;
         }
+
+        if(responseEntityUser == null){
+            return false;
+        }
+
+        GetUsersResponse getUsersResponse = responseEntityUser.getBody();
 
         if(getUsersResponse != null) {
             users.addAll(getUsersResponse.getUsers());

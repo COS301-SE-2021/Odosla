@@ -15,35 +15,12 @@ import cs.superleague.analytics.requests.CreateUserReportRequest;
 import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
-import cs.superleague.payment.PaymentService;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.Admin;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Service("analyticsServiceImpl")
 public class AnalyticsServiceImpl implements AnalyticsService {
-
-    private final AdminRepo adminRepo;
-    private final StoreRepo storeRepo;
-    private final UserService userService;
-    private final PaymentService paymentService;
-
-    @Autowired
-    public AnalyticsServiceImpl(AdminRepo adminRepo, StoreRepo storeRepo, UserService userService, PaymentService paymentService) {
-        this.adminRepo = adminRepo;
-        this.userService = userService;
-        this.paymentService = paymentService;
-        this.storeRepo = storeRepo;
-    }
 
     /**
      * WHAT TO DO:
@@ -92,7 +69,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try {
             createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), userService);
+                    request.getEndDate());
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating user statistics report");
         }
@@ -128,12 +105,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate());
 
         try{
-            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(), request.getEndDate(), paymentService);
+            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(), request.getEndDate());
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating financial statistics report");
         }
 
-        FinancialAnalyticsHelper financialAnalyticsHelper = new FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(), storeRepo);
+        FinancialAnalyticsHelper financialAnalyticsHelper = new FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData());
 
         if(request.getReportType() == ReportType.PDF){
             message = "FinancialReport.pdf downloaded";
@@ -148,11 +125,10 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }
         return response;
     }
-
+//
     @Override
     public CreateMonthlyReportResponse createMonthlyReport(CreateMonthlyReportRequest request) throws Exception {
 
-        Admin admin;
         String message;
         CreateMonthlyReportResponse response;
         CreateMonthlyAnalyticsData createMonthlyAnalyticsData;
@@ -164,12 +140,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), new Date(), new Date());
 
         try{
-            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(paymentService, userService);
+            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData();
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating monthly statistics report");
         }
 
-        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData.getMonthlyStatisticsData(), storeRepo);
+        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData.getMonthlyStatisticsData());
 
         if(request.getReportType() == ReportType.PDF){
             message = "MonthlyReport.pdf downloaded";

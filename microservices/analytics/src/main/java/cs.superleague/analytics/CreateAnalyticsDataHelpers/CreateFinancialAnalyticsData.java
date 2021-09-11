@@ -1,9 +1,13 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.payment.PaymentService;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.requests.GetOrdersRequest;
-import cs.superleague.payment.responses.GetOrdersResponse;
+import cs.superleague.analytics.stub.dataclass.Order;
+import cs.superleague.analytics.stub.responses.GetOrdersResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -17,12 +21,12 @@ public class CreateFinancialAnalyticsData {
     private double averagePriceOfOrders;
     private Order [] topOrders;
 
-    private GetOrdersResponse getOrdersResponse;
-
     private final Date startDate;
     private final Date endDate;
 
-    public CreateFinancialAnalyticsData(Date startDate, Date endDate, PaymentService paymentService){
+    private ResponseEntity<GetOrdersResponse> responseEntity;
+
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -33,9 +37,18 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = "http://localhost:8089/payment/getOrders";
+
         try{
-            getOrdersResponse = paymentService.getOrders(getOrdersRequest);
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+
+            responseEntity = restTemplate.postForEntity(uri, parts,
+                    GetOrdersResponse.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -59,6 +72,13 @@ public class CreateFinancialAnalyticsData {
     }
 
     private boolean generateFinancialStatisticsData(){
+
+        if(responseEntity == null){
+            return false;
+        }
+
+        GetOrdersResponse getOrdersResponse = responseEntity.getBody();
+
 
         if(getOrdersResponse != null){
             orders.addAll(getOrdersResponse.getOrders());
