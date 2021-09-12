@@ -16,6 +16,7 @@ import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,10 +31,14 @@ public class ShoppingServiceImpl implements ShoppingService {
     @Autowired
     private RabbitTemplate rabbit;
 
+    private final RestTemplate restTemplate;
+
+
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate) {
         this.storeRepo= storeRepo;
         this.itemRepo=itemRepo;
+        this.restTemplate = restTemplate;
     }
     /**
      *
@@ -251,7 +256,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 //                }
 //            }
 //
-//            RestTemplate restTemplate = new RestTemplate();
 //            List<HttpMessageConverter<?>> converters = new ArrayList<>();
 //            converters.add(new MappingJackson2HttpMessageConverter());
 //            restTemplate.setMessageConverters(converters);
@@ -267,8 +271,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 //                CurrentUser currentUser = new CurrentUser();
 //
 //
-//                //Shopper shopper = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);
-//                restTemplate = new RestTemplate();
+//                //Shopper shopper = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);;
 //                converters = new ArrayList<>();
 //                converters.add(new MappingJackson2HttpMessageConverter());
 //                restTemplate.setMessageConverters(converters);
@@ -738,7 +741,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 //
 //            List<Shopper> listOfShoppers=storeEntity.getShoppers();
 //
-//            RestTemplate restTemplate = new RestTemplate();
 //            List<HttpMessageConverter<?>> converters = new ArrayList<>();
 //            converters.add(new MappingJackson2HttpMessageConverter());
 //            restTemplate.setMessageConverters(converters);
@@ -871,7 +873,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 //
 //            if(listOfShoppers!=null){
 //
-//                RestTemplate restTemplate = new RestTemplate();
 //                List<HttpMessageConverter<?>> converters = new ArrayList<>();
 //                converters.add(new MappingJackson2HttpMessageConverter());
 //                restTemplate.setMessageConverters(converters);
