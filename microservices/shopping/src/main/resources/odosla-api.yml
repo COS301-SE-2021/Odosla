@@ -232,6 +232,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetItemsByIDResponse"
 
+  /shopping/getStoreByUUID:
+    post:
+      summary: Endpoint for Get Store By UUID use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getStoreByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetStoreByUUIDRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetStoreByUUIDResponse"
+
 
 components:
 
@@ -587,3 +609,21 @@ components:
           type: string
         timestamp:
           type: string
+
+    shopping_GetStoreByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetStoreByUUIDResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+        store:
+          $ref: "#/components/schemas/StoreObject"

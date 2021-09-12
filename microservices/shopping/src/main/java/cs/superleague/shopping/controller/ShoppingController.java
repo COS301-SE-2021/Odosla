@@ -681,4 +681,53 @@ public class ShoppingController implements ShoppingApi{
 
         return new ResponseEntity<>(response, httpStatus);
     }
+
+    @Override
+    public ResponseEntity<ShoppingGetStoreByUUIDResponse> getStoreByUUID(ShoppingGetStoreByUUIDRequest body) {
+
+        //creating response object and default return status:
+        ShoppingGetStoreByUUIDResponse response = new ShoppingGetStoreByUUIDResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            GetStoreByUUIDResponse getStoreByUUIDResponse = shoppingService.getStoreByUUID(new GetStoreByUUIDRequest(UUID.fromString(body.getStoreID())));
+            try {
+
+                response.setStore(populateStore(getStoreByUUIDResponse.getStore()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException | StoreDoesNotExistException e) {
+
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    private StoreObject populateStore(Store responseStore) throws NullPointerException{
+
+        StoreObject responseBody = new StoreObject();
+
+        if(responseStore.getStoreID()!=null)
+        {
+            responseBody.setStoreID(responseStore.getStoreID().toString());
+        }
+
+        responseBody.setStoreBrand(responseStore.getStoreBrand());
+        responseBody.setOpeningTime(responseStore.getOpeningTime());
+        responseBody.setClosingTime(responseStore.getClosingTime());
+        responseBody.setMaxOrders(responseStore.getMaxOrders());
+        responseBody.setMaxShoppers(responseStore.getMaxShoppers());
+        responseBody.setIsOpen(responseStore.getOpen());
+        responseBody.setImageUrl(responseStore.getImgUrl());
+
+        if(responseStore.getStoreLocation()!=null)
+        {
+            responseBody.setStoreLocation(populateGeoPointObject(responseStore.getStoreLocation()));
+        }
+
+        return responseBody;
+    }
 }
