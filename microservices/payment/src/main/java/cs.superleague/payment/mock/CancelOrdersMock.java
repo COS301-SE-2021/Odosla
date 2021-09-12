@@ -1,7 +1,7 @@
 package cs.superleague.payment.mock;
 
 import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.Order;
 
 import java.util.ArrayList;
