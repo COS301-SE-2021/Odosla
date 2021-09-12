@@ -2943,6 +2943,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public GetAdminByEmailResponse getAdminByEmail(GetAdminByEmailRequest request) throws InvalidRequestException, AdminDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Admin admin=null;
+        try {
+            admin = adminRepo.findAdminByEmail(request.getEmail());
+        }catch (NullPointerException e){
+            admin=null;
+        }
+        if(admin==null){
+            throw new AdminDoesNotExistException("Driver with email does not exist");
+        }else{
+            return new GetAdminByEmailResponse(admin,true);
+        }
+    }
+
+    @Override
     public void saveDriver(SaveDriverRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
