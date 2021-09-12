@@ -54,8 +54,9 @@ public class UserServiceImpl implements UserService{
     private final JwtUtil jwtUtil;
     //private final UserService userService;
     private RabbitTemplate rabbit;
+    private final RestTemplate restTemplate;
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo,JwtUtil jwtUtil, RabbitTemplate rabbit){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, JwtUtil jwtUtil, RabbitTemplate rabbit, RestTemplate restTemplate){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService{
         this.groceryListRepo=groceryListRepo;
         this.jwtUtil = jwtUtil;
         this.rabbit=rabbit;
-
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -106,7 +107,6 @@ public class UserServiceImpl implements UserService{
 
             Order orderEntity=null;
             try {
-                RestTemplate restTemplate = new RestTemplate();
                 List<HttpMessageConverter<?>> converters = new ArrayList<>();
                 converters.add(new MappingJackson2HttpMessageConverter());
                 restTemplate.setMessageConverters(converters);
@@ -149,8 +149,6 @@ public class UserServiceImpl implements UserService{
 
             if(orderEntity.getType().equals(OrderType.DELIVERY))
             {
-                RestTemplate restTemplate = new RestTemplate();
-
                 List<HttpMessageConverter<?>> converters = new ArrayList<>();
                 converters.add(new MappingJackson2HttpMessageConverter());
                 restTemplate.setMessageConverters(converters);
@@ -221,7 +219,6 @@ public class UserServiceImpl implements UserService{
 
             try {
                 //orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
-                RestTemplate restTemplate = new RestTemplate();
                 List<HttpMessageConverter<?>> converters = new ArrayList<>();
                 converters.add(new MappingJackson2HttpMessageConverter());
                 restTemplate.setMessageConverters(converters);
@@ -1609,8 +1606,6 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        RestTemplate restTemplate = new RestTemplate();
-
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
@@ -1907,7 +1902,6 @@ public class UserServiceImpl implements UserService{
             message = "Item list empty - could not add to cart";
             return new SetCartResponse(message, false, new Date());
         }
-        RestTemplate restTemplate = new RestTemplate();
 
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
@@ -2007,7 +2001,6 @@ public class UserServiceImpl implements UserService{
 
         //Get Order By UUID
         //Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
-       RestTemplate restTemplate = new RestTemplate();
        List<HttpMessageConverter<?>> converters = new ArrayList<>();
        converters.add(new MappingJackson2HttpMessageConverter());
        restTemplate.setMessageConverters(converters);
@@ -2059,7 +2052,6 @@ public class UserServiceImpl implements UserService{
         }
 
         //Order order= orderRepo.findById(request.getOrderID()).orElse(null);
-        RestTemplate restTemplate = new RestTemplate();
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
@@ -2177,7 +2169,6 @@ public class UserServiceImpl implements UserService{
             response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
         }
         else{
-            RestTemplate restTemplate = new RestTemplate();
 
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
