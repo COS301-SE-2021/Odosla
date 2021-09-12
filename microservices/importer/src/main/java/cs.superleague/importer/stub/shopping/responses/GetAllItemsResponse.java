@@ -4,15 +4,15 @@ import cs.superleague.importer.stub.shopping.dataclass.Item;
 
 import java.util.List;
 
-public class GetAlItemsResponse {
+public class GetAllItemsResponse {
 
     private final List<Item> items;
 
-    public GetAlItemsResponse() {
+    public GetAllItemsResponse() {
         this.items = null;
     }
 
-    public GetAlItemsResponse(List<Item> items) {
+    public GetAllItemsResponse(List<Item> items) {
         this.items = items;
     }
 
