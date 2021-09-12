@@ -3,6 +3,7 @@ package cs.superleague.shopping.rabbit;
 import cs.superleague.shopping.ShoppingService;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.requests.SaveItemToRepoRequest;
 import cs.superleague.shopping.requests.SaveStoreToRepoRequest;
 import org.springframework.amqp.core.Message;
@@ -34,10 +35,15 @@ public class ShoppingListener implements MessageListener {
             }
             else if(o instanceof SaveStoreToRepoRequest)
             {
-                System.out.println("In the listener");
                 SaveStoreToRepoRequest request = (SaveStoreToRepoRequest) o;
                 SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(request.getStore());
                 shoppingService.saveStoreToRepo(saveStoreToRepoRequest);
+            }
+            else if(o instanceof AddToQueueRequest)
+            {
+                AddToQueueRequest request = (AddToQueueRequest) o;
+                AddToQueueRequest addToQueueRequest = new AddToQueueRequest(request.getOrder());
+                shoppingService.addToQueue(addToQueueRequest);
             }
 
         } catch (InvalidRequestException | IOException | ClassNotFoundException | StoreDoesNotExistException e) {

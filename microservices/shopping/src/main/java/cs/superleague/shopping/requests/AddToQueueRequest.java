@@ -2,7 +2,9 @@ package cs.superleague.shopping.requests;
 
 import cs.superleague.shopping.stubs.payment.dataclass.Order;
 
-public class AddToQueueRequest {
+import java.io.Serializable;
+
+public class AddToQueueRequest implements Serializable {
     private Order order;
 
     public AddToQueueRequest(Order order) {
@@ -10,7 +12,7 @@ public class AddToQueueRequest {
 
     }
 
-    public cs.superleague.shopping.stubs.payment.dataclass.Order getOrder() {
+    public Order getOrder() {
         return order;
     }
 
