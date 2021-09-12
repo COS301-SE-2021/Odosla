@@ -5,7 +5,7 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
-import cs.superleague.user.dataclass.Driver;
+import cs.superleague.analytics.stub.dataclass.Driver;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

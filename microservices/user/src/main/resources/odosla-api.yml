@@ -6,242 +6,9 @@ info:
   description: The library service
 
 tags:
-  - name: "Shopping"
-  - name: "Payment"
   - name: "User"
-  - name: "Notification"
-  - name: "Delivery"
-  - name: "Analytics"
-  - name: "Importer"
-  - name: "Recommendation"
 
 paths:
-
-  /shopping/populateTables:
-    post:
-      summary: Endpoint populating tables
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: populateTables
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_PopulateTablesRequest"
-      responses:
-        "200":
-          description: Returns success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_PopulateTablesResponse"
-
-  /shopping/getItems:
-    post:
-      summary: Endpoint for Get Items use case
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: getItems
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_GetItemsRequest"
-      responses:
-        "200":
-          description: Returns items upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_GetItemsResponse"
-
-
-  /shopping/addShopper:
-    post:
-      summary: Endpoint for adding shopper to shopper list
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: addShopper
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_AddShopperRequest"
-      responses:
-        "200":
-          description: Returns upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_AddShopperResponse"
-
-
-  /shopping/getShoppers:
-    post:
-      summary: Endpoint for Get Shoppers use case
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: getShoppers
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_GetShoppersRequest"
-      responses:
-        "200":
-          description: Returns upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_GetShoppersResponse"
-
-  /shopping/removeQueuedOrder:
-    post:
-      summary: Endpoint for removing a queued order.
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: removeQueuedOrder
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
-      responses:
-        "200":
-          description: Returns upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
-
-  /shopping/getStores:
-    post:
-      summary: Endpoint for Get Stores use case
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: getStores
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_GetStoresRequest"
-      responses:
-        "200":
-          description: Returns upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_GetStoresResponse"
-
-
-
-  /payment/updateOrder:
-    post:
-      summary: Endpoint for the Update Order use case
-      tags:
-        - "Payment"
-      description: Refer to summary
-      operationId: updateOrder
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/payment_UpdateOrderRequest"
-      responses:
-        "200":
-          description: Returns updated order upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/payment_UpdateOrderResponse"
-
-  /payment/submitOrder:
-    post:
-      summary: Endpoint for the Submit Order use case
-      tags:
-        - "Payment"
-      description: Refer to summary
-      operationId: submitOrder
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/payment_SubmitOrderRequest"
-      responses:
-        "200":
-          description: Returns submitted order upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/payment_SubmitOrderResponse"
-
-
-#  /notification/sendEmailNotification:
-#    post:
-#      summary: Endpoint for sending an email notification
-#      tags:
-#        - "notification"
-#      description: Refer to summary
-#      operationId: sendEmailNotification
-#      requestBody:
-#        description: The input body required by this request
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: "#/components/schemas/notification_SendEmailNotificationRequest"
-#      responses:
-#        "200":
-#          description: Returns whether the email was sent
-#          content:
-#            application/json:
-#              schema:
-#                $ref: "#/components/schemas/notification_SendEmailNotificationResponse"
-
-
-  /notification/sendDirectEmailNotification:
-    post:
-      summary: Endpoint for sending a direct email notification
-      tags:
-        - "notification"
-      description: Refer to summary
-      operationId: sendDirectEmailNotification
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/notification_SendDirectEmailNotificationRequest"
-      responses:
-        "200":
-          description: Returns whether the email was sent
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/notification_SendDirectEmailNotificationResponse"
 
   /user/setCart:
     post:
@@ -550,94 +317,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_UpdateShopperShiftResponse"
 
-  /shopping/getNextQueued:
-    post:
-      summary: Endpoint for getting next queue
-      tags:
-        - "User"
-      description: Refer to summary
-      operationId: getNextQueued
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_GetNextQueuedRequest"
-      responses:
-        "200":
-          description: Returns upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_GetNextQueuedResponse"
-
-  /shopping/getQueue:
-    post:
-      summary: Endpoint for getting the order queue of a shop
-      tags:
-        - "Shopping"
-      description: Refer to summary
-      operationId: getQueue
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/shopping_GetQueueRequest"
-      responses:
-        "200":
-          description: Returns upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/shopping_GetQueueResponse"
-
-
-  /payment/getStatus:
-    post:
-      summary: Endpoint for Get Status use case
-      tags:
-        - "Payment"
-      description: Refer to summary
-      operationId: getStatus
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/payment_GetStatusRequest"
-      responses:
-        "200":
-          description: Returns status upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/payment_GetStatusResponse"
-
-  /payment/getItems:
-    post:
-      summary: Endpoint for Get Items use case
-      tags:
-        - "Payment"
-      description: Refer to summary
-      operationId: getItemsPayments
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/payment_GetItemsRequest"
-      responses:
-        "200":
-          description: Returns status upon success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/payment_GetItemsResponse"
 
   /user/scanItem:
     post:
@@ -704,204 +383,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_GetGroceryListResponse"
-
-  /delivery/addDeliveryDetail:
-    post:
-      summary: Endpoint for add delivery detail
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: addDeliveryDetail
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_AddDeliveryDetailRequest"
-      responses:
-        "200":
-          description: Returns whether the detail was added and the ID of that detail
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_AddDeliveryDetailResponse"
-
-  /delivery/assignDriverToDelivery:
-    post:
-      summary: Endpoint for assign driver to delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: assignDriverToDelivery
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_AssignDriverToDeliveryRequest"
-      responses:
-        "200":
-          description: Returns whether the driver was assigned to the delivery
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_AssignDriverToDeliveryResponse"
-
-  /delivery/createDelivery:
-    post:
-      summary: Endpoint for creating a delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: createDelivery
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_CreateDeliveryRequest"
-      responses:
-        "200":
-          description: Returns whether the delivery was created or not
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_CreateDeliveryResponse"
-
-  /delivery/getDeliveryDetail:
-    post:
-      summary: Endpoint for getting the detail of a delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: getDeliveryDetail
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_GetDeliveryDetailRequest"
-      responses:
-        "200":
-          description: Returns the delivery detail
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_GetDeliveryDetailResponse"
-
-  /delivery/getDeliveryStatus:
-    post:
-      summary: Endpoint for getting the status of a delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: getDeliveryStatus
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_GetDeliveryStatusRequest"
-      responses:
-        "200":
-          description: Returns the delivery status
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_GetDeliveryStatusResponse"
-
-  /delivery/getNextOrderForDriver:
-    post:
-      summary: Endpoint for getting the next order for a driver
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: getNextOrderForDriver
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_GetNextOrderForDriverRequest"
-      responses:
-        "200":
-          description: Returns the next order for a driver
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_GetNextOrderForDriverResponse"
-
-  /delivery/removeDriverFromDelivery:
-    post:
-      summary: Endpoint for removing a driver from a delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: removeDriverFromDelivery
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_RemoveDriverFromDeliveryRequest"
-      responses:
-        "200":
-          description: Returns whether the driver was removed from the order
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_RemoveDriverFromDeliveryResponse"
-
-  /delivery/trackDelivery:
-    post:
-      summary: Endpoint for tracking a delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: trackDelivery
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_TrackDeliveryRequest"
-      responses:
-        "200":
-          description: Returns the location of the delivery
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_TrackDeliveryResponse"
-
-  /delivery/updateDeliveryStatus:
-    post:
-      summary: Endpoint for updating the status of a delivery
-      tags:
-        - "delivery"
-      description: Refer to summary
-      operationId: updateDeliveryStatus
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_UpdateDeliveryStatusRequest"
-      responses:
-        "200":
-          description: Returns whether the status of the delivery was updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_UpdateDeliveryStatusResponse"
 
   /user/updateDriverShift:
     post:
@@ -992,59 +473,6 @@ paths:
                 $ref: "#/components/schemas/user_UpdateAdminDetailsResponse"
 
 
-
-  /analytics/createUserReport:
-    post:
-      summary: Endpoint for creating user report
-      tags:
-        - "Analytics"
-      description: Refer to summary
-      operationId: createUserReport
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/analytics_CreateUserReportRequest"
-      responses:
-        "200":
-          description: Returns whether Report was downloaded
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/analytics_CreateUserReportResponse"
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-            text/plain:
-              schema:
-                type: string
-
-
-  /payment/getCustomersActiveOrders:
-    post:
-      summary: Endpoint for the customers getting their active order
-      tags:
-        - "payment"
-      description: Refer to summary
-      operationId: getCustomerActiveOrders
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/payment_GetCustomersActiveOrdersRequest"
-      responses:
-        "200":
-          description: Returns the orderID of the active order
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/payment_GetCustomersActiveOrdersResponse"
-
   /user/completeDelivery:
     post:
       summary: Endpoint for complete delivery use case
@@ -1066,28 +494,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_CompleteDeliveryResponse"
-
-  /delivery/getDeliveryDriverByOrderId:
-    post:
-      summary: Endpoint for get delivery driver by order id use case
-      tags:
-        - "user"
-      description: Refer to summary
-      operationId: getDeliveryDriverByOrderId
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdRequest"
-      responses:
-        "200":
-          description: Returns delivery and driver
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_GetDeliveryDriverByOrderIdResponse"
 
   /user/getCustomerByUUID:
     post:
@@ -1133,108 +539,71 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_DriverSetRatingResponse"
 
-  /analytics/createFinancialReport:
+  /user/getCustomerByEmail:
     post:
-      summary: Endpoint for creating user report
+      summary: Endpoint for setting rating use case
       tags:
-        - "Analytics"
+        - "user"
       description: Refer to summary
-      operationId: createFinancialReport
+      operationId: getCustomerByEmail
       requestBody:
         description: The input body required by this request
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/analytics_CreateFinancialReportRequest"
+              $ref: "#/components/schemas/user_GetCustomerByEmailRequest"
       responses:
         "200":
-          description: Returns whether Report was downloaded
+          description: Returns response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-            text/plain:
-              schema:
-                type: string
+                $ref: "#/components/schemas/user_GetCustomerByEmailResponse"
 
-  /analytics/createMonthlyReport:
+  /user/getShopperByEmail:
     post:
-      summary: Endpoint for creating monthly report
+      summary: Endpoint for setting rating use case
       tags:
-        - "Analytics"
+        - "user"
       description: Refer to summary
-      operationId: createMonthlyReport
+      operationId: getShopperByEmail
       requestBody:
         description: The input body required by this request
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/analytics_CreateMonthlyReportRequest"
+              $ref: "#/components/schemas/user_GetShopperByEmailRequest"
       responses:
         "200":
-          description: Returns whether Report was downloaded
+          description: Returns response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-            text/plain:
-              schema:
-                type: string
+                $ref: "#/components/schemas/user_GetShopperByEmailResponse"
 
-  /importer/itemsCSVImporter:
+  /user/getDriverByEmail:
     post:
-      summary: Endpoint for creating monthly report
+      summary: Endpoint for setting rating use case
       tags:
-        - "Importer"
+        - "user"
       description: Refer to summary
-      operationId: itemsCSVImporter
+      operationId: getDriverByEmail
       requestBody:
         description: The input body required by this request
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/importer_ItemsCSVImporterRequest"
+              $ref: "#/components/schemas/user_GetDriverByEmailRequest"
       responses:
         "200":
-          description: Returns response message upon successful importing
+          description: Returns response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/importer_ItemsCSVImporterResponse"
-
-  /importer/storesCSVImporter:
-    post:
-      summary: Endpoint for creating monthly report
-      tags:
-        - "Importer"
-      description: Refer to summary
-      operationId: storesCSVImporter
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/importer_StoresCSVImporterRequest"
-      responses:
-        "200":
-          description: Returns response message upon successful importing
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/importer_StoresCSVImporterResponse"
-
+                $ref: "#/components/schemas/user_GetDriverByEmailResponse"
 
   /user/updateDriverDetails:
     post:
@@ -1258,146 +627,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_UpdateDriverDetailsResponse"
 
-  /delivery/getDeliveryByUUID:
-    post:
-      summary: Endpoint for retrieving delivery by UUID
-      tags:
-        - "Delivery"
-      description: Refer to summary
-      operationId: getDeliveryByUUID
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/delivery_GetDeliveryByUUIDRequest"
-      responses:
-        "200":
-          description: Returns the delivery the given ID belong to
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/delivery_GetDeliveryByUUIDResponse"
-
-  /recommendation/getCartRecommendation:
-    post:
-      summary: Endpoint for getting recommendation for a cart
-      tags:
-        - "recommendation"
-      description: Refer to summary
-      operationId: getCartRecommendation
-      requestBody:
-        description: The input body required by this request
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/recommendation_getCartRecommendationRequest"
-      responses:
-        "200":
-          description: Returns the recommended items
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/recommendation_getCartRecommendationResponse"
-
-
 components:
 
   schemas:
-
-
-    ItemObject:
-      description: "Generic schema for an item"
-      type: object
-      properties:
-        productId:
-          type: string
-        name:
-          type: string
-        barcode:
-          type: string
-        storeId:
-          type: string
-        price:
-          type: number
-        quantity:
-          type: integer
-        description:
-          type: string
-        imageUrl:
-          type: string
-        brand:
-          type: string
-        size:
-          type: string
-        itemType:
-          type: string
-
-    shopping_GetItemsRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        jwtToken:
-          type: string
-          description: generated token used to identify the caller of the endpoint
-        storeID:
-          type: string
-
-    shopping_GetItemsResponse:
-      description: This object is returned as output
-      type: object
-      properties:
-        errorMessage:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-
-    shopping_AddShopperRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        shopperID:
-          type: string
-        storeID:
-          type: string
-
-    shopping_AddShopperResponse:
-      description: This object is output
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: generated token used to identify the caller of the endpoint
-        date:
-          type: string
-        message:
-          type: string
-
-    shopping_RemoveQueuedOrderRequest:
-      description: this object is expected as input
-      type: object
-      properties:
-        orderID:
-          type: string
-        storeID:
-          type: string
-
-    shopping_RemoveQueuedOrderResponse:
-      description: this object is output
-      type: object
-      properties:
-        isRemoved:
-          type: boolean
-        message:
-          type: string
-        orderID:
-          type: string
-
     ShopperObject:
       description: "Generic schema for a shopper"
       type: object
@@ -1433,217 +665,32 @@ components:
         isActive:
           type: boolean
 
-    shopping_GetShoppersRequest:
-      description: This object is expected as input
+    ItemObject:
+      description: "Generic schema for an item"
       type: object
       properties:
-        jwtToken:
+        productId:
           type: string
-          description: generated token used to identify the caller of the endpoint
-        storeID:
+        name:
           type: string
-
-    shopping_GetShoppersResponse:
-      description: This object is expected as input
-      type: object
-      properties:
-        errorMessage:
+        barcode:
           type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        shoppers:
-          type: array
-          items:
-            $ref: "#/components/schemas/ShopperObject"
-
-    StoreObject:
-      description: "Generic schema for a store"
-      type: object
-      properties:
-        storeID:
+        storeId:
           type: string
-        storeBrand:
-          type: string
-        isOpen:
-          type: boolean
-        maxShoppers:
+        price:
+          type: number
+        quantity:
           type: integer
-        maxOrders:
-          type: integer
-        openingTime:
-          type: integer
-        closingTime:
-          type: integer
+        description:
+          type: string
         imageUrl:
           type: string
-        storeLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-
-
-    shopping_GetStoresRequest:
-      description: This object is expected as input
-      type: object
-
-    shopping_GetStoresResponse:
-      description: This object is expected as input
-      type: object
-      properties:
-        response:
-          type: boolean
-        message:
+        brand:
           type: string
-        stores:
-          type: array
-          items:
-            $ref: "#/components/schemas/StoreObject"
-
-    OrderObject:
-      description: "Generic schema for an Order"
-      type: object
-      properties:
-        orderId:
+        size:
           type: string
-        userId:
+        itemType:
           type: string
-        storeId:
-          type: string
-        shopperId:
-          type: string
-        createDate:
-          type: string
-        processDate:
-          type: string
-        totalPrice:
-          type: number
-        status:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-        discount:
-          type: number
-        deliveryAddress:
-          type: string
-        storeAddress:
-          type: string
-        requiresPharmacy:
-          type: boolean
-
-    payment_UpdateOrderRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        orderId:
-          type: string
-          description: the id of the order to be generated
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-        discount:
-          type: number
-        orderType:
-          type: string
-        deliveryAddress:
-          type: string
-
-    payment_UpdateOrderResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        message:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        success:
-          type: boolean
-        timestamp:
-          type: string
-        order:
-          type: object
-
-    payment_SubmitOrderRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        jwtToken:
-          type: string
-          description: generated token used to identify the caller of the endpoint
-        listOfItems:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-        discount:
-          type: number
-        storeId:
-          type: string
-        orderType:
-          type: string
-        latitude:
-          type: number
-        longitude:
-          type: number
-        deliveryAddress:
-          type: string
-
-    payment_SubmitOrderResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        orderId:
-          type: string
-        message:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        success:
-          type: boolean
-        timestamp:
-          type: string
-
-#    notification_SendEmailNotificationRequest:
-#      description: This object is expected as input
-#      type: object
-#      properties:
-#        message:
-#          type: string
-#          description: This is the message that will be sent as a notification
-#        properties:
-#          type: object
-#          additionalProperties:
-#            type: string
-#          description: Hash map that needs to contain the Type (e.g delivery), Subject, UserType (e.g admin) and the UserID
-#
-#    notification_SendEmailNotificationResponse:
-#      description: This object is expected as output
-#      type: object
-#      properties:
-#        responseMessage:
-#          type: string
-#          description: Will contain a descriptive error message if response code is not 200, else will be empty
-#        success:
-#          type: boolean
-
-    notification_SendDirectEmailNotificationRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        message:
-          type: string
-          description: This is the message that will be sent as a notification
-        properties:
-          type: object
-          additionalProperties:
-            type: string
-          description: Hash map that needs to contain the Subject and the email
-
-    notification_SendDirectEmailNotificationResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        responseMessage:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        success:
-          type: boolean
 
     user_SetCartRequest:
       description: This object is expected as input
@@ -1847,6 +894,18 @@ components:
           type: number
         deliveryID:
           type: string
+
+    GeoPointObject:
+      description: This is a geoPoint object
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
 
     CustomerObject:
       description: "Generic schema for a Customer"
@@ -2155,101 +1214,6 @@ components:
         date:
           type: string
 
-    shopping_GetNextQueuedRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        storeID:
-          type: string
-
-    shopping_GetNextQueuedResponse:
-      description: This object is returned as output
-      type: object
-      properties:
-        message:
-          type: string
-        success:
-          type: boolean
-        date:
-          type: string
-        queueOfOrders:
-          type: array
-          items:
-            $ref: "#/components/schemas/OrderObject"
-        newCurrentOrder:
-          $ref: "#/components/schemas/OrderObject"
-
-    shopping_GetQueueRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        storeID:
-          type: string
-
-    shopping_GetQueueResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        response:
-          type: boolean
-        message:
-          type: string
-        queueOfOrders:
-          type: array
-          items:
-            $ref: "#/components/schemas/OrderObject"
-
-
-    payment_GetStatusRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        orderID:
-          type: string
-
-    payment_GetStatusResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        status:
-          type: string
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-
-    payment_GetItemsRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        orderID:
-          type: string
-
-    payment_GetItemsResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-
-    shopping_PopulateTablesRequest:
-      description: This object is expected as input
-      type: object
-
-    shopping_PopulateTablesResponse:
-      description: This object is expected as output
-      type: object
-
     user_GetGroceryListRequest:
       description: This object is expected as input
       type: object
@@ -2268,204 +1232,6 @@ components:
         message:
           type: string
         timestamp:
-          type: string
-
-    delivery_AddDeliveryDetailRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        deliveryStatus:
-          type: string
-        detail:
-          type: string
-        deliveryID:
-          type: string
-        timestamp:
-          type: string
-
-    delivery_AddDeliveryDetailResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        message:
-          type: string
-        id:
-          type: integer
-
-    delivery_AssignDriverToDeliveryRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        deliveryID:
-          type: string
-
-    delivery_AssignDriverToDeliveryResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        isAssigned:
-          type: boolean
-        message:
-          type: string
-        pickUpLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-        dropOffLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-        driverID:
-          type: string
-
-    delivery_CreateDeliveryRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        orderID:
-          type: string
-        customerID:
-          type: string
-        storeID:
-          type: string
-        timeOfDelivery:
-          type: string
-        placeOfDelivery:
-          $ref: "#/components/schemas/GeoPointObject"
-
-    delivery_CreateDeliveryResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        isSuccess:
-          type: boolean
-        message:
-          type: string
-        deliveryID:
-          type: string
-
-    GeoPointObject:
-      description: This is a geoPoint object
-      type: object
-      properties:
-        latitude:
-          type: number
-        longitude:
-          type: number
-        address:
-          type: string
-
-    delivery_GetDeliveryDetailRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        deliveryID:
-          type: string
-
-    delivery_GetDeliveryDetailResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        message:
-          type: string
-        detail:
-          type: object
-          items:
-            $ref: "#/components/schemas/DeliveryDetailObject"
-
-    DeliveryDetailObject:
-      description: The details of the delivery
-      type: object
-      properties:
-        id:
-          type: integer
-        deliveryID:
-          type: string
-        time:
-          type: string
-        deliveryStatus:
-          type: string
-        detail:
-          type: string
-
-    delivery_GetDeliveryStatusRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        deliveryID:
-          type: string
-
-    delivery_GetDeliveryStatusResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        status:
-          type: string
-        message:
-          type: string
-
-    delivery_GetNextOrderForDriverRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        currentLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-        rangeOfDelivery:
-          type: number
-
-    delivery_GetNextOrderForDriverResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        message:
-          type: string
-        delivery:
-          $ref: "#/components/schemas/DeliveryObject"
-
-    delivery_RemoveDriverFromDeliveryRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        deliveryID:
-          type: string
-
-    delivery_RemoveDriverFromDeliveryResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        isSuccess:
-          type: boolean
-        message:
-          type: string
-
-    delivery_TrackDeliveryRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        deliveryID:
-          type: string
-
-    delivery_TrackDeliveryResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        currentLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-        message:
-          type: string
-
-    delivery_UpdateDeliveryStatusRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        status:
-          type: string
-        deliveryID:
-          type: string
-        detail:
-          type: string
-
-    delivery_UpdateDeliveryStatusResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        message:
           type: string
 
 
@@ -2487,53 +1253,6 @@ components:
         message:
           type: string
 
-    analytics_CreateUserReportRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        startDate:
-          type: string
-        endDate:
-          type: string
-        reportType:
-          type: string
-
-    analytics_CreateUserReportResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-        pdf:
-          type: string
-          format: byte
-          nullable: true
-        csv:
-          type: string
-          format: byte
-          nullable: true
-
-    payment_GetCustomersActiveOrdersRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        jwtToken:
-          type: string
-
-    payment_GetCustomersActiveOrdersResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        orderID:
-          type: string
-        hasActiveOrder:
-          type: boolean
-        message:
-          type: string
 
     user_CompleteDeliveryRequest:
       description: This object is expected as input
@@ -2552,82 +1271,6 @@ components:
           type: boolean
         timestamp:
           type: string
-
-    DeliveryObject:
-      description: This is a delivery object
-      type: object
-      properties:
-        deliveryID:
-          type: string
-        pickUpLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-        dropOffLocation:
-          $ref: "#/components/schemas/GeoPointObject"
-        orderID:
-          type: string
-        customerId:
-          type: string
-        storeId:
-          type: string
-        driverId:
-          type: string
-        status:
-          type: string
-        cost:
-          type: number
-        completed:
-          type: boolean
-        deliveryDetail:
-          type: array
-          items:
-            $ref: "#/components/schemas/DeliveryDetailObject"
-
-    delivery_GetDeliveryDriverByOrderIdRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        orderID:
-          type: string
-
-    delivery_GetDeliveryDriverByOrderIdResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        driver:
-          $ref: "#/components/schemas/DriverObject"
-        message:
-          type: string
-        deliveryID:
-          type: string
-
-    OrderItemsObject:
-      description: "Generic schema for an order item"
-      type: object
-      properties:
-        productId:
-          type: string
-        name:
-          type: string
-        barcode:
-          type: string
-        orderId:
-          type: string
-        price:
-          type: number
-        quantity:
-          type: integer
-        description:
-          type: string
-        imageUrl:
-          type: string
-        brand:
-          type: string
-        size:
-          type: string
-        itemType:
-          type: string
-        totalCost:
-          type: number
 
     user_GetCustomerByUUIDRequest:
       description: This object is expected as input
@@ -2697,98 +1340,6 @@ components:
         timestamp:
           type: string
 
-
-    analytics_CreateFinancialReportRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        startDate:
-          type: string
-        endDate:
-          type: string
-        reportType:
-          type: string
-
-    analytics_CreateFinancialReportResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-        pdf:
-          type: string
-          format: byte
-          nullable: true
-        csv:
-          type: string
-          format: byte
-          nullable: true
-
-    analytics_CreateMonthlyReportRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        reportType:
-          type: string
-
-    analytics_CreateMonthlyReportResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-        pdf:
-          type: string
-          format: byte
-          nullable: true
-        csv:
-          type: string
-          format: byte
-          nullable: true
-
-    importer_ItemsCSVImporterRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        file:
-          type: string
-
-    importer_ItemsCSVImporterResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
-
-    importer_StoresCSVImporterRequest:
-      description: This object is expected as input
-      type: object
-      properties:
-        file:
-          type: string
-
-    importer_StoresCSVImporterResponse:
-      description: This object is expected as output
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        timestamp:
-          type: string
 
     user_UpdateDriverDetailsRequest:
       description: This object is returned as output
@@ -2886,42 +1437,50 @@ components:
         timestamp:
           type: string
 
-    delivery_GetDeliveryByUUIDRequest:
-      description: This object is expected as input
+    user_GetCustomerByEmailRequest:
+      description: This object is given as input
       type: object
       properties:
-        deliveryID:
+        email:
           type: string
 
-    delivery_GetDeliveryByUUIDResponse:
-      description: This object is expected as output
+    user_GetShopperByEmailRequest:
+      description: This object is given as input
       type: object
       properties:
-        delivery:
-          $ref: "#/components/schemas/DeliveryObject"
-        message:
-          type: string
-        timestamp:
+        email:
           type: string
 
-    recommendation_getCartRecommendationRequest:
-      description: This object is expected as input
+    user_GetDriverByEmailRequest:
+      description: This object is given as input
       type: object
       properties:
-        itemIDs:
-          type: array
-          items:
-            type: string
+        email:
+          type: string
 
-    recommendation_getCartRecommendationResponse:
+    user_GetCustomerByEmailResponse:
       description: This object is returned as output
       type: object
       properties:
-        recommendations:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
-        isSuccess:
+        customer:
+          $ref: "#/components/schemas/CustomerObject"
+        success:
           type: boolean
-        message:
-          type: string
+
+    user_GetShopperByEmailResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        shopper:
+          $ref: "#/components/schemas/ShopperObject"
+        success:
+          type: boolean
+
+    user_GetDriverByEmailResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        driver:
+          $ref: "#/components/schemas/DriverObject"
+        success:
+          type: boolean

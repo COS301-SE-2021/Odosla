@@ -5,27 +5,29 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.dataclass.Driver;
+import cs.superleague.analytics.stub.dataclass.Order;
+import cs.superleague.analytics.stub.dataclass.Store;
+import cs.superleague.analytics.stub.responses.GetStoresResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.*;
+import java.util.List;
 
 public class FinancialAnalyticsHelper {
 
     private final HashMap<String, Object> data;
-    private StoreRepo storeRepo;
 
-    public FinancialAnalyticsHelper(HashMap<String, Object> data, StoreRepo storeRepo){
+    public FinancialAnalyticsHelper(HashMap<String, Object> data){
         this. data = data;
-        this.storeRepo = storeRepo;
     }
 
     public byte[] createPDF() throws Exception{
@@ -78,24 +80,47 @@ public class FinancialAnalyticsHelper {
             Order[] topOrders;
             topOrders =  (Order[]) data.get("topTenOrders");
 
-            Optional<Store> storeOptional;
-            Store store;
-            if(topOrders != null)
-            for (int i = 0; i < topOrders.length; i++) {
-                table.addCell(String.valueOf(i + 1));
+            Store store = null;
+            List<Store> stores;
+            ResponseEntity<GetStoresResponse> responseEntity;
+            RestTemplate restTemplate = new RestTemplate();
+            String uri = "http://localhost:8089/shopping/getStores";
 
-                if(topOrders[0] != null) {
-                    storeOptional = storeRepo.findById(topOrders[i].getStoreID());
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
 
-                    if(storeOptional == null || !storeOptional.isPresent()){
-                        throw new AnalyticsException(storeOptional.toString());
-                    }
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
 
-                    store = storeOptional.get();
+            responseEntity = restTemplate.postForEntity(uri, parts,
+                    GetStoresResponse.class);
 
-                    if(store != null) {
-                        table.addCell(String.valueOf(store.getStoreBrand()));
-                        table.addCell(String.valueOf(topOrders[i].getTotalCost()));
+            if(responseEntity == null || !responseEntity.hasBody()
+                    || responseEntity.getBody() == null){
+                throw new AnalyticsException("Could not retrieve stores");
+            }
+
+            stores = responseEntity.getBody().getStores();
+
+
+            if(topOrders != null){
+                for (int i = 0; i < topOrders.length; i++) {
+                    table.addCell(String.valueOf(i + 1));
+
+                    if(topOrders[0] != null) {
+
+                        for (Store s: stores) {
+                            if(s.getStoreID() != null &&
+                                s.getStoreID().equals(topOrders[i].getStoreID())){
+                                store = s;
+                                break;
+                            }
+                        }
+
+                        if(store != null) {
+                            table.addCell(String.valueOf(store.getStoreBrand()));
+                            table.addCell(String.valueOf(topOrders[i].getTotalCost()));
+                        }
                     }
                 }
             }
@@ -127,8 +152,7 @@ public class FinancialAnalyticsHelper {
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
-        byte[] pdfBytes = byteArrayOutputStream.toByteArray();
-        return pdfBytes;
+        return byteArrayOutputStream.toByteArray();
     }
 
     public StringBuilder createCSVReport() {

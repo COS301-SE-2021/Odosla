@@ -1,6 +1,6 @@
 package cs.superleague.delivery.requests;
 
-import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.delivery.stub.dataclass.GeoPoint;
 
 import java.util.UUID;
 

@@ -2,3 +2,4 @@
 /backend/target/
 /gen/
 /microservices/recommendation/target/
+/microservices/delivery/target/

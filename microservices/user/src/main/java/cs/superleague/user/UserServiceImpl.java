@@ -1,35 +1,29 @@
 package cs.superleague.user;
-
-import cs.superleague.delivery.DeliveryService;
-import cs.superleague.delivery.requests.CreateDeliveryRequest;
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.notification.requests.SendEmailNotificationRequest;
-import cs.superleague.notification.responses.SendEmailNotificationResponse;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.shopping.ShoppingService;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.shopping.requests.GetStoresRequest;
-import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
+import cs.superleague.user.stubs.notifications.requests.SendDirectEmailNotificationRequest;
+import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.user.stubs.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.user.stubs.shopping.dataclass.Item;
+import cs.superleague.user.stubs.shopping.dataclass.Store;
+import cs.superleague.user.stubs.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.user.stubs.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.user.stubs.shopping.responses.GetStoresResponse;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,31 +35,29 @@ import static cs.superleague.user.dataclass.UserType.CUSTOMER;
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
 
+    /* TO DO:
+    Complete packaging
+    Scan Item*/
+
     private final ShopperRepo shopperRepo;
     private final DriverRepo driverRepo;
     private final AdminRepo adminRepo;
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
-    private final OrderRepo orderRepo;
     private CurrentUser currentUser;
-    private final ShoppingService shoppingService;
-    private final StoreRepo storeRepo;
-    private final DeliveryService deliveryService;
     private final JwtUtil jwtUtil;
     //private final UserService userService;
-
+    private RabbitTemplate rabbit;
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService, JwtUtil jwtUtil){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo,JwtUtil jwtUtil, RabbitTemplate rabbit){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
         this.customerRepo=customerRepo;
         this.groceryListRepo=groceryListRepo;
-        this.orderRepo= orderRepo;
-        this.shoppingService = shoppingService;
-        this.storeRepo = storeRepo;
-        this.deliveryService= deliveryService;
         this.jwtUtil = jwtUtil;
+        this.rabbit=rabbit;
+
     }
 
     /**
@@ -96,62 +88,62 @@ public class UserServiceImpl implements UserService{
      * @throws InvalidRequestException
      * @throws OrderDoesNotExist
      */
-    @Override
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
-        CompletePackagingOrderResponse response = null;
-        if(request != null){
-
-            if(request.getOrderID()==null){
-                throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
-            }
-
-            Order orderEntity=null;
-            try {
-                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
-            }
-            catch (Exception e){
-                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-            }
-
-            if(orderEntity==null)
-            {
-                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-            }
-
-            Shopper shopperEntity=null;
-            try {
-                shopperEntity = shopperRepo.findById(orderEntity.getShopperID()).orElse(null);
-            }
-            catch (Exception e){
-                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
-            }
-
-            if(shopperEntity==null)
-            {
-                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
-            }
-
-            shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
-
-            if(shopperRepo!=null)
-                shopperRepo.save(shopperEntity);
-
-            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
-
-            if(orderEntity.getType().equals(OrderType.DELIVERY))
-            {
-                CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
-                if(deliveryService!=null)
-                deliveryService.createDelivery(createDeliveryRequest);
-            }
-
-            response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
-        }
-        else{
-            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
-        }
-        return response;
-
+   @Override
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.stubs.delivery.exceptions.InvalidRequestException {
+//        CompletePackagingOrderResponse response = null;
+//        if(request != null){
+//            if(request.getOrderID()==null){
+//                throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
+//            }
+//
+//            Order orderEntity=null;
+//            try {
+//                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+//            }
+//            catch (Exception e){
+//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+//            }
+//
+//            if(orderEntity==null)
+//            {
+//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+//            }
+//
+//            Shopper shopperEntity=null;
+//            try {
+//                shopperEntity = shopperRepo.findById(orderEntity.getShopperID()).orElse(null);
+//            }
+//            catch (Exception e){
+//                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+//            }
+//
+//            if(shopperEntity==null)
+//            {
+//                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+//            }
+//
+//            shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
+//
+//            if(shopperRepo!=null)
+//                shopperRepo.save(shopperEntity);
+//
+//            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
+//
+//            if(orderEntity.getType().equals(OrderType.DELIVERY))
+//            {
+//                CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
+//                if(deliveryService!=null)
+//                deliveryService.createDelivery(createDeliveryRequest);
+//            }
+//
+//            response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
+//        }
+//        else{
+//            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
+//        }
+//        return response;
+//
+       return null;
     }
 
     /**
@@ -184,55 +176,56 @@ public class UserServiceImpl implements UserService{
      * @throws InvalidRequestException
      * @throws OrderDoesNotExist
      */
-    @Override
-    public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist {
-        ScanItemResponse response = null;
-        if(request != null){
-
-            if(request.getOrderID()==null){
-                throw new InvalidRequestException("Order ID is null in ScanItemRequest request - could not retrieve order entity");
-            }
-            if(request.getBarcode()==null){
-                throw new InvalidRequestException("Barcode is null in ScanItemRequest request - could not scan item");
-            }
-
-            Order orderEntity=null;
-
-            try {
-                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
-            }
-            catch (Exception e){
-                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-            }
-
-            if(orderEntity==null)
-            {
-                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-            }
-
-            List<Item> items = orderEntity.getItems();
-            boolean itemFound= false;
-
-            for (Item item : items) {
-                if (item.getBarcode().equals(request.getBarcode())) {
-                    itemFound = true;
-                    response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
-                }
-            }
-            if(itemFound)
-            {
-                return response;
-            }
-            else
-            {
-                throw new InvalidRequestException("Item barcode doesn't match any of the items in the order");
-            }
-        }
-        else{
-            throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
-        }
-
-    }
+   @Override
+   public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist {
+//        ScanItemResponse response = null;
+//        if(request != null){
+//
+//            if(request.getOrderID()==null){
+//                throw new InvalidRequestException("Order ID is null in ScanItemRequest request - could not retrieve order entity");
+//            }
+//            if(request.getBarcode()==null){
+//                throw new InvalidRequestException("Barcode is null in ScanItemRequest request - could not scan item");
+//            }
+//
+//            Order orderEntity=null;
+//
+//            try {
+//                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+//            }
+//            catch (Exception e){
+//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+//            }
+//
+//            if(orderEntity==null)
+//            {
+//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+//            }
+//
+//            List<Item> items = orderEntity.getItems();
+//            boolean itemFound= false;
+//
+//            for (Item item : items) {
+//                if (item.getBarcode().equals(request.getBarcode())) {
+//                    itemFound = true;
+//                    response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
+//                }
+//            }
+//            if(itemFound)
+//            {
+//                return response;
+//            }
+//            else
+//            {
+//                throw new InvalidRequestException("Item barcode doesn't match any of the items in the order");
+//            }
+//        }
+//        else{
+//            throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
+//        }
+//
+       return null;
+   }
 
     @Override
     public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException {
@@ -390,12 +383,7 @@ public class UserServiceImpl implements UserService{
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
                     SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    try {
-                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-                        e.printStackTrace();
-                        System.out.println("Email failed to send");
-                    }
+                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
                 }
                 else{
@@ -562,12 +550,7 @@ public class UserServiceImpl implements UserService{
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
                     SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    try {
-                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-                        e.printStackTrace();
-                        System.out.println("Email failed to send");
-                    }
+                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
                 else{
@@ -739,12 +722,7 @@ public class UserServiceImpl implements UserService{
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
                     SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    try {
-                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-                        e.printStackTrace();
-                        System.out.println("Email failed to send");
-                    }
+                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
                 else{
@@ -932,7 +910,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    private final String secret = "theOdoslaSuperLeagueProjectKeyForEncrptionMustBeCertainNumberOFBitsIReallyDontKnowHowToMakeThisStringLonger";
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
         LoginResponse response=null;
@@ -1599,11 +1576,19 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        try {
-            response = shoppingService.getStores(new GetStoresRequest());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        RestTemplate restTemplate = new RestTemplate();
+
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
+        converters.add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setMessageConverters(converters);
+
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+
+        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStores", parts, GetStoresResponse.class);
+
+        GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
+
+        response=getStoresResponse;
 
         if(response == null || !response.getResponse()){
             message = "Cannot find items - could not make the grocery list";
@@ -1889,9 +1874,18 @@ public class UserServiceImpl implements UserService{
             message = "Item list empty - could not add to cart";
             return new SetCartResponse(message, false, new Date());
         }
+        RestTemplate restTemplate = new RestTemplate();
+
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
+        converters.add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setMessageConverters(converters);
+
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
         try {
-            response = shoppingService.getStores(new GetStoresRequest());
+            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStores", parts, GetStoresResponse.class);
+            GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
+            response=getStoresResponse;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1919,12 +1913,8 @@ public class UserServiceImpl implements UserService{
             return new SetCartResponse(message, false, new Date());
         }
 
-//        customer.getShoppingCart().addAll(cart);
         customer.setShoppingCart(cart);
 
-//        Customer c = new Customer("name", "surname", "name@email.com", "1111111111",
-//                "tetetE$4", new Date(), "fsdfghg", "safdf",
-//                "adg", true, UserType.CUSTOMER, UUID.randomUUID(), null, customer.getGroceryLists(), null, null, null);
         customerRepo.save(customer);
 
         return new SetCartResponse(message, true, new Date());
@@ -1961,108 +1951,110 @@ public class UserServiceImpl implements UserService{
         return new ClearShoppingCartResponse(customer.getShoppingCart(), message, true, new Date());
     }
 
-    @Override
-
-    public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
-
-        CollectOrderResponse response;
-
-        Boolean isException=false;
-        String errorMessage="";
-
-        if(request==null){
-            isException=true;
-            errorMessage="CollectOrderRequest object is null";
-
-        }else if(request.getOrderID()==null){
-            isException=true;
-            errorMessage="OrderID in CollectOrderRequest object is null";
-        }
-
-        if(isException){
-            throw new InvalidRequestException(errorMessage);
-        }
-
-        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
-
-        if(currentOrder==null || !currentOrder.isPresent()){
-            throw new OrderDoesNotExist("Order does not exist in database");
-        }
-
-        Order order=currentOrder.get();
-        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-
-        /* Send notification to User saying order has been collected */
-
-        orderRepo.save(order);
-
-        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        currentOrder= orderRepo.findById(request.getOrderID());
-        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERY_COLLECTED){
-            response=new CollectOrderResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been collected in database");
-        }
-        else{
-            response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
-        }
-
-        return response;
+   @Override
+   public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
+//
+//        CollectOrderResponse response;
+//
+//        Boolean isException=false;
+//        String errorMessage="";
+//
+//        if(request==null){
+//            isException=true;
+//            errorMessage="CollectOrderRequest object is null";
+//
+//        }else if(request.getOrderID()==null){
+//            isException=true;
+//            errorMessage="OrderID in CollectOrderRequest object is null";
+//        }
+//
+//        if(isException){
+//            throw new InvalidRequestException(errorMessage);
+//        }
+//
+//        //Get Order By UUID
+//        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+//
+//        if(currentOrder==null || !currentOrder.isPresent()){
+//            throw new OrderDoesNotExist("Order does not exist in database");
+//        }
+//
+//        Order order=currentOrder.get();
+//        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
+//
+//        /* Send notification to User saying order has been collected */
+//
+//        orderRepo.save(order);
+//
+//        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+//        currentOrder= orderRepo.findById(request.getOrderID());
+//        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERY_COLLECTED){
+//            response=new CollectOrderResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been collected in database");
+//        }
+//        else{
+//            response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
+//        }
+//
+//        return response;
+       return null;
     }
 
     @Override
     public CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException {
-
-        CompleteDeliveryResponse response;
-
-        Boolean isException=false;
-        String errorMessage="";
-
-        if(request==null){
-            isException=true;
-            errorMessage="CompleteDeliveryRequest object is null";
-
-        }else if(request.getOrderID()==null){
-            isException=true;
-            errorMessage="OrderID in CompleteDeliveryRequest object is null";
-        }
-
-        if(isException){
-            throw new InvalidRequestException(errorMessage);
-        }
-
-        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
-
-        if(order==null){
-            throw new OrderDoesNotExist("Order does not exist in database");
-        }
-
-        order.setStatus(OrderStatus.DELIVERED);
-        orderRepo.save(order);
-
-        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
-        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
-            response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
-        }
-        else{
-            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
-            if(driver!=null)
-            {
-                int numDeliveries=0;
-                numDeliveries= driver.getDeliveriesCompleted()+1;
-                driver.setDeliveriesCompleted(numDeliveries);
-                driverRepo.save(driver);
-            }
-            else
-            {
-                throw new InvalidRequestException("Driver isn't set in order");
-            }
-
-            response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
-        }
-
-        return response;
-
-
+//
+//        CompleteDeliveryResponse response;
+//
+//        Boolean isException=false;
+//        String errorMessage="";
+//
+//        if(request==null){
+//            isException=true;
+//            errorMessage="CompleteDeliveryRequest object is null";
+//
+//        }else if(request.getOrderID()==null){
+//            isException=true;
+//            errorMessage="OrderID in CompleteDeliveryRequest object is null";
+//        }
+//
+//        if(isException){
+//            throw new InvalidRequestException(errorMessage);
+//        }
+//
+//        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
+//
+//        if(order==null){
+//            throw new OrderDoesNotExist("Order does not exist in database");
+//        }
+//
+//        order.setStatus(OrderStatus.DELIVERED);
+//        orderRepo.save(order);
+//
+//        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+//        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
+//        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
+//            response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
+//        }
+//        else{
+//            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
+//            if(driver!=null)
+//            {
+//                int numDeliveries=0;
+//                numDeliveries= driver.getDeliveriesCompleted()+1;
+//                driver.setDeliveriesCompleted(numDeliveries);
+//                driverRepo.save(driver);
+//            }
+//            else
+//            {
+//                throw new InvalidRequestException("Driver isn't set in order");
+//            }
+//
+//            response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
+//        }
+//
+//        return response;
+//
+//
+        return null;
     }
 
     public RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
@@ -2144,7 +2136,17 @@ public class UserServiceImpl implements UserService{
             response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
         }
         else{
-            Store store = storeRepo.findById(request.getStoreID()).orElse(null);
+            RestTemplate restTemplate = new RestTemplate();
+
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("storeId", request.getStoreID());
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
+            Store store = getStoreByUUIDResponse.getStore();
             if (store == null){
                 throw new StoreDoesNotExistException("Store is not saved in database.");
             }
@@ -2173,7 +2175,8 @@ public class UserServiceImpl implements UserService{
                     store.setShoppers(shoppersAtStore);
                 }
             }
-            storeRepo.save(store);
+            /* Save in store */
+
 
             /*Check updates have happened */
             shopper=shopperRepo.findById(shopper1.getShopperID());
@@ -2311,8 +2314,6 @@ public class UserServiceImpl implements UserService{
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
 
-            properties.put("UserID", customer.getCustomerID().toString());
-
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
 
@@ -2323,11 +2324,10 @@ public class UserServiceImpl implements UserService{
             customerRepo.save((Customer)user);
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
-
+            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -2357,10 +2357,10 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
+            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -2385,10 +2385,10 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
+            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -2411,11 +2411,10 @@ public class UserServiceImpl implements UserService{
             adminRepo.save((Admin)user);
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
-
+            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
+                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -2854,5 +2853,51 @@ public class UserServiceImpl implements UserService{
         else{
             throw new InvalidRequestException("DriverSetRating request is null - could not set rating");
         }
+    }
+
+    @Override
+    public GetCustomerByEmailResponse getCustomerByEmail(GetCustomerByEmailRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+
+        Customer customer=customerRepo.findByEmail(request.getEmail()).orElse(null);
+        if(customer==null){
+            throw new CustomerDoesNotExistException("Customer with email does not exist");
+        }else {
+            return new GetCustomerByEmailResponse(customer, true);
+        }
+    }
+
+    @Override
+    public GetShopperByEmailResponse getShopperByEmail(GetShopperByEmailRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Shopper shopper= shopperRepo.findByEmail(request.getEmail()).orElse(null);
+        if(shopper==null){
+            throw new ShopperDoesNotExistException("Shopper with email does not exist");
+        }else{
+            return new GetShopperByEmailResponse(shopper,true);
+        }
+    }
+
+    @Override
+    public GetDriverByEmailResponse getDriverByEmail(GetDriverByEmailRequest request) throws InvalidRequestException, DriverDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Driver driver=null;
+        try {
+            driver = driverRepo.findDriverByEmail(request.getEmail());
+        }catch (NullPointerException e){
+            driver=null;
+        }
+        if(driver==null){
+            throw new DriverDoesNotExistException("Driver with email does not exist");
+        }else{
+            return new GetDriverByEmailResponse(driver,true);
+        }
+
     }
 }
