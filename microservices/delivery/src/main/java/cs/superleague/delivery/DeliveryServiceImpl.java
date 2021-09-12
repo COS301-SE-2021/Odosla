@@ -32,13 +32,15 @@ public class DeliveryServiceImpl implements DeliveryService {
     private final DeliveryRepo deliveryRepo;
     private final DeliveryDetailRepo deliveryDetailRepo;
     private final RabbitTemplate rabbitTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo,
-                               RabbitTemplate rabbitTemplate) {
+                               RabbitTemplate rabbitTemplate, RestTemplate restTemplate) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.rabbitTemplate = rabbitTemplate;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -71,7 +73,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
@@ -169,7 +170,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
@@ -279,7 +279,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
@@ -332,7 +331,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
@@ -402,7 +400,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
@@ -448,7 +445,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
@@ -496,7 +492,6 @@ public class DeliveryServiceImpl implements DeliveryService {
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
 
-            RestTemplate restTemplate = new RestTemplate();
             restTemplate.setMessageConverters(converters);
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
@@ -605,7 +600,6 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
         }
 
-        RestTemplate restTemplate = new RestTemplate();
         String uri = "http://localhost:8086/payment/getOrder";
 
         MultiValueMap<String, Object> orderRequest = new LinkedMultiValueMap<String, Object>();
@@ -637,7 +631,6 @@ public class DeliveryServiceImpl implements DeliveryService {
             if(deliveries.get(k).getOrderID().compareTo(request.getOrderID()) == 0)
             {
                 uri = "http://localhost:8089/user/findDriverById";
-                restTemplate = new RestTemplate();
 
                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
                 parts.add("driverID", deliveries.get(k).getDriverId());
