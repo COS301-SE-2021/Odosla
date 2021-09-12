@@ -2,7 +2,9 @@ package cs.superleague.shopping.requests;
 
 import cs.superleague.shopping.dataclass.Item;
 
-public class SaveItemToRepoRequest {
+import java.io.Serializable;
+
+public class SaveItemToRepoRequest implements Serializable {
 
     private Item item;
 

@@ -25,15 +25,16 @@ public class ShoppingListener implements MessageListener {
 
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
-            if(in.readObject() instanceof SaveItemToRepoRequest)
+            Object o = in.readObject();
+            if(o instanceof SaveItemToRepoRequest)
             {
-                SaveItemToRepoRequest request = (SaveItemToRepoRequest) in.readObject();
+                SaveItemToRepoRequest request = (SaveItemToRepoRequest) o;
                 SaveItemToRepoRequest saveItemToRepoRequest = new SaveItemToRepoRequest(request.getItem());
                 shoppingService.saveItemToRepo(saveItemToRepoRequest);
             }
-            else if(in.readObject() instanceof SaveStoreToRepoRequest)
+            else if(o instanceof SaveStoreToRepoRequest)
             {
-                SaveStoreToRepoRequest request = (SaveStoreToRepoRequest) in.readObject();
+                SaveStoreToRepoRequest request = (SaveStoreToRepoRequest) o;
                 SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(request.getStore());
                 shoppingService.saveStoreToRepo(saveStoreToRepoRequest);
             }
