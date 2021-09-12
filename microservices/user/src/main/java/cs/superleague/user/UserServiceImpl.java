@@ -6,9 +6,15 @@ import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
+import cs.superleague.user.stubs.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.user.stubs.notifications.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.user.stubs.payment.dataclass.Order;
+import cs.superleague.user.stubs.payment.dataclass.OrderStatus;
+import cs.superleague.user.stubs.payment.dataclass.OrderType;
 import cs.superleague.user.stubs.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.user.stubs.payment.requests.SaveOrderRequest;
+import cs.superleague.user.stubs.payment.responses.GetOrderResponse;
 import cs.superleague.user.stubs.shopping.dataclass.Item;
 import cs.superleague.user.stubs.shopping.dataclass.Store;
 import cs.superleague.user.stubs.shopping.exceptions.StoreDoesNotExistException;
@@ -90,60 +96,83 @@ public class UserServiceImpl implements UserService{
      */
    @Override
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.stubs.delivery.exceptions.InvalidRequestException {
-//        CompletePackagingOrderResponse response = null;
-//        if(request != null){
-//            if(request.getOrderID()==null){
-//                throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
-//            }
-//
-//            Order orderEntity=null;
-//            try {
-//                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
-//            }
-//            catch (Exception e){
-//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-//            }
-//
-//            if(orderEntity==null)
-//            {
-//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-//            }
-//
-//            Shopper shopperEntity=null;
-//            try {
-//                shopperEntity = shopperRepo.findById(orderEntity.getShopperID()).orElse(null);
-//            }
-//            catch (Exception e){
-//                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
-//            }
-//
-//            if(shopperEntity==null)
-//            {
-//                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
-//            }
-//
-//            shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
-//
-//            if(shopperRepo!=null)
-//                shopperRepo.save(shopperEntity);
-//
-//            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
-//
-//            if(orderEntity.getType().equals(OrderType.DELIVERY))
-//            {
-//                CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
-//                if(deliveryService!=null)
-//                deliveryService.createDelivery(createDeliveryRequest);
-//            }
-//
-//            response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
-//        }
-//        else{
-//            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
-//        }
-//        return response;
-//
-       return null;
+        CompletePackagingOrderResponse response = null;
+        if(request != null){
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
+            }
+
+
+
+            Order orderEntity=null;
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("orderID", request.getOrderID());
+
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+                GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+                orderEntity = getOrderResponse.getOrder();
+            }
+            catch (Exception e){
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            if(orderEntity==null)
+            {
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            Shopper shopperEntity=null;
+            try {
+                shopperEntity = shopperRepo.findById(orderEntity.getShopperID()).orElse(null);
+            }
+            catch (Exception e){
+                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+            }
+
+            if(shopperEntity==null)
+            {
+                throw new InvalidRequestException("Shopper with ID does not exist in repository - could not get Shopper entity");
+            }
+
+            shopperEntity.setOrdersCompleted(shopperEntity.getOrdersCompleted()+1);
+
+            if(shopperRepo!=null)
+                shopperRepo.save(shopperEntity);
+
+            orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
+
+            if(orderEntity.getType().equals(OrderType.DELIVERY))
+            {
+                RestTemplate restTemplate = new RestTemplate();
+
+                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+
+                parts.add("orderID", orderEntity.getOrderID());
+                parts.add("customerID", orderEntity.getUserID());
+                parts.add("storeID", orderEntity.getStoreID());
+                parts.add("timeOfDelivery", null);
+                parts.add("placeOfDelivery", orderEntity.getDeliveryAddress());
+                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8083/delivery/createDelivery", parts, CreateDeliveryResponse.class);
+                CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
+            }
+
+            response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
+        }
+        else{
+            throw new InvalidRequestException("CompletePackagingOrderRequest is null - could not fetch order entity");
+        }
+        return response;
+
     }
 
     /**
@@ -178,53 +207,62 @@ public class UserServiceImpl implements UserService{
      */
    @Override
    public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist {
-//        ScanItemResponse response = null;
-//        if(request != null){
-//
-//            if(request.getOrderID()==null){
-//                throw new InvalidRequestException("Order ID is null in ScanItemRequest request - could not retrieve order entity");
-//            }
-//            if(request.getBarcode()==null){
-//                throw new InvalidRequestException("Barcode is null in ScanItemRequest request - could not scan item");
-//            }
-//
-//            Order orderEntity=null;
-//
-//            try {
-//                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
-//            }
-//            catch (Exception e){
-//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-//            }
-//
-//            if(orderEntity==null)
-//            {
-//                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
-//            }
-//
-//            List<Item> items = orderEntity.getItems();
-//            boolean itemFound= false;
-//
-//            for (Item item : items) {
-//                if (item.getBarcode().equals(request.getBarcode())) {
-//                    itemFound = true;
-//                    response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
-//                }
-//            }
-//            if(itemFound)
-//            {
-//                return response;
-//            }
-//            else
-//            {
-//                throw new InvalidRequestException("Item barcode doesn't match any of the items in the order");
-//            }
-//        }
-//        else{
-//            throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
-//        }
-//
-       return null;
+        ScanItemResponse response = null;
+        if(request != null){
+
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("Order ID is null in ScanItemRequest request - could not retrieve order entity");
+            }
+            if(request.getBarcode()==null){
+                throw new InvalidRequestException("Barcode is null in ScanItemRequest request - could not scan item");
+            }
+
+            Order orderEntity=null;
+
+            try {
+                //orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+                RestTemplate restTemplate = new RestTemplate();
+                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("orderID", request.getOrderID());
+
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+                GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+                orderEntity = getOrderResponse.getOrder();
+            }
+            catch (Exception e){
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            if(orderEntity==null)
+            {
+                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            }
+
+            List<Item> items = orderEntity.getItems();
+            boolean itemFound= false;
+
+            for (Item item : items) {
+                if (item.getBarcode().equals(request.getBarcode())) {
+                    itemFound = true;
+                    response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
+                }
+            }
+            if(itemFound)
+            {
+                return response;
+            }
+            else
+            {
+                throw new InvalidRequestException("Item barcode doesn't match any of the items in the order");
+            }
+        }
+        else{
+            throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
+        }
    }
 
     @Override
@@ -887,16 +925,11 @@ public class UserServiceImpl implements UserService{
                 }
                 if(isPresent){
                     /* send a notification with email */
-//                    HashMap<String, String> properties = new HashMap<>();
-//                    properties.put("Subject", "Registration for Odosla");
-//                    properties.put("Email", request.getEmail());
-//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-//                    try {
-//                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-//                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-//                        e.printStackTrace();
-//                        System.out.println("Email failed to send");
-//                    }
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
                 else{
@@ -1953,108 +1986,116 @@ public class UserServiceImpl implements UserService{
 
    @Override
    public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
-//
-//        CollectOrderResponse response;
-//
-//        Boolean isException=false;
-//        String errorMessage="";
-//
-//        if(request==null){
-//            isException=true;
-//            errorMessage="CollectOrderRequest object is null";
-//
-//        }else if(request.getOrderID()==null){
-//            isException=true;
-//            errorMessage="OrderID in CollectOrderRequest object is null";
-//        }
-//
-//        if(isException){
-//            throw new InvalidRequestException(errorMessage);
-//        }
-//
-//        //Get Order By UUID
-//        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
-//
-//        if(currentOrder==null || !currentOrder.isPresent()){
-//            throw new OrderDoesNotExist("Order does not exist in database");
-//        }
-//
-//        Order order=currentOrder.get();
-//        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-//
-//        /* Send notification to User saying order has been collected */
-//
-//        orderRepo.save(order);
-//
-//        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-//        currentOrder= orderRepo.findById(request.getOrderID());
-//        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERY_COLLECTED){
-//            response=new CollectOrderResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been collected in database");
-//        }
-//        else{
-//            response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
-//        }
-//
-//        return response;
-       return null;
+
+        CollectOrderResponse response;
+
+        Boolean isException=false;
+        String errorMessage="";
+
+        if(request==null){
+            isException=true;
+            errorMessage="CollectOrderRequest object is null";
+
+        }else if(request.getOrderID()==null){
+            isException=true;
+            errorMessage="OrderID in CollectOrderRequest object is null";
+        }
+
+        if(isException){
+            throw new InvalidRequestException(errorMessage);
+        }
+
+        //Get Order By UUID
+        //Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+       RestTemplate restTemplate = new RestTemplate();
+       List<HttpMessageConverter<?>> converters = new ArrayList<>();
+       converters.add(new MappingJackson2HttpMessageConverter());
+       restTemplate.setMessageConverters(converters);
+
+       MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+       parts.add("orderID", request.getOrderID());
+
+       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+       GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+       Order currentOrder = getOrderResponse.getOrder();
+
+        if(currentOrder==null){
+            throw new OrderDoesNotExist("Order does not exist in database");
+        }
+
+        Order order=currentOrder;
+        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
+
+        /* Send notification to User saying order has been collected */
+
+        //orderRepo.save(order);
+        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+
+        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+        response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
+        return response;
     }
 
     @Override
     public CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException {
-//
-//        CompleteDeliveryResponse response;
-//
-//        Boolean isException=false;
-//        String errorMessage="";
-//
-//        if(request==null){
-//            isException=true;
-//            errorMessage="CompleteDeliveryRequest object is null";
-//
-//        }else if(request.getOrderID()==null){
-//            isException=true;
-//            errorMessage="OrderID in CompleteDeliveryRequest object is null";
-//        }
-//
-//        if(isException){
-//            throw new InvalidRequestException(errorMessage);
-//        }
-//
-//        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
-//
-//        if(order==null){
-//            throw new OrderDoesNotExist("Order does not exist in database");
-//        }
-//
-//        order.setStatus(OrderStatus.DELIVERED);
-//        orderRepo.save(order);
-//
-//        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-//        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
-//        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
-//            response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
-//        }
-//        else{
-//            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
-//            if(driver!=null)
-//            {
-//                int numDeliveries=0;
-//                numDeliveries= driver.getDeliveriesCompleted()+1;
-//                driver.setDeliveriesCompleted(numDeliveries);
-//                driverRepo.save(driver);
-//            }
-//            else
-//            {
-//                throw new InvalidRequestException("Driver isn't set in order");
-//            }
-//
-//            response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
-//        }
-//
-//        return response;
-//
-//
-        return null;
+
+        CompleteDeliveryResponse response;
+
+        Boolean isException=false;
+        String errorMessage="";
+
+        if(request==null){
+            isException=true;
+            errorMessage="CompleteDeliveryRequest object is null";
+
+        }else if(request.getOrderID()==null){
+            isException=true;
+            errorMessage="OrderID in CompleteDeliveryRequest object is null";
+        }
+
+        if(isException){
+            throw new InvalidRequestException(errorMessage);
+        }
+
+        //Order order= orderRepo.findById(request.getOrderID()).orElse(null);
+        RestTemplate restTemplate = new RestTemplate();
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
+        converters.add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setMessageConverters(converters);
+
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        parts.add("orderID", request.getOrderID());
+
+        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+        GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+        Order order = getOrderResponse.getOrder();
+
+        if(order==null){
+            throw new OrderDoesNotExist("Order does not exist in database");
+        }
+
+        order.setStatus(OrderStatus.DELIVERED);
+        //orderRepo.save(order);
+        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+        /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
+        //Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
+
+        Driver driver = driverRepo.findById(order.getDriverID()).orElse(null);
+        if(driver!=null)
+        {
+            int numDeliveries=0;
+            numDeliveries= driver.getDeliveriesCompleted()+1;
+            driver.setDeliveriesCompleted(numDeliveries);
+            driverRepo.save(driver);
+        }
+        else
+        {
+           throw new InvalidRequestException("Driver isn't set in order");
+        }
+        response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
+        return response;
     }
 
     public RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
@@ -2899,5 +2940,27 @@ public class UserServiceImpl implements UserService{
             return new GetDriverByEmailResponse(driver,true);
         }
 
+    }
+
+    @Override
+    public void saveDriver(SaveDriverRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getDriver() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        driverRepo.save(request.getDriver());
+    }
+
+    @Override
+    public void saveShopper(SaveShopperRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getShopper() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        shopperRepo.save(request.getShopper());
     }
 }

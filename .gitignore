@@ -3,3 +3,6 @@
 /gen/
 /microservices/payment/target/
 /microservices/delivery/target/
+/microservices/user/target/
+/rabbit_test/rms_1/target/
+/microservices/recommendation/target/

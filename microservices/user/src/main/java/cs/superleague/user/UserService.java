@@ -51,4 +51,7 @@ public interface UserService {
     GetCustomerByEmailResponse getCustomerByEmail(GetCustomerByEmailRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     GetShopperByEmailResponse getShopperByEmail(GetShopperByEmailRequest request) throws InvalidRequestException, ShopperDoesNotExistException;
     GetDriverByEmailResponse getDriverByEmail(GetDriverByEmailRequest request) throws InvalidRequestException, DriverDoesNotExistException;
+
+    void saveDriver(SaveDriverRequest request) throws InvalidRequestException;
+    void saveShopper(SaveShopperRequest request) throws InvalidRequestException;
 }
