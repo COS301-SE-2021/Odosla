@@ -1,4 +1,4 @@
-package cs.superleague.importer.stub.dataclass;
+package cs.superleague.importer.stub.payment.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

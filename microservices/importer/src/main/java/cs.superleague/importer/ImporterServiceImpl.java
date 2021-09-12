@@ -1,16 +1,16 @@
 package cs.superleague.importer;
 
-import cs.superleague.importer.stub.dataclass.GeoPoint;
-import cs.superleague.importer.stub.dataclass.Item;
+import cs.superleague.importer.stub.payment.dataclass.GeoPoint;
+import cs.superleague.importer.stub.shopping.dataclass.Item;
 import cs.superleague.importer.exceptions.InvalidRequestException;
 import cs.superleague.importer.requests.ItemsCSVImporterRequest;
 import cs.superleague.importer.requests.StoreCSVImporterRequest;
 import cs.superleague.importer.responses.ItemsCSVImporterResponse;
 import cs.superleague.importer.responses.StoreCSVImporterResponse;
-import cs.superleague.importer.stub.dataclass.Store;
-import cs.superleague.importer.stub.requests.SaveItemToRepoRequest;
-import cs.superleague.importer.stub.requests.SaveStoreToRepoRequest;
-import cs.superleague.importer.stub.responses.GetAlItemsResponse;
+import cs.superleague.importer.stub.shopping.dataclass.Store;
+import cs.superleague.importer.stub.shopping.requests.SaveItemToRepoRequest;
+import cs.superleague.importer.stub.shopping.requests.SaveStoreToRepoRequest;
+import cs.superleague.importer.stub.shopping.responses.GetAlItemsResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

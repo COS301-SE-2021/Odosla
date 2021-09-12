@@ -1,4 +1,4 @@
-package cs.superleague.importer.stub.responses;
+package cs.superleague.importer.stub.shopping.responses;
 
 public class SaveStoreToRepoResponse {
 
