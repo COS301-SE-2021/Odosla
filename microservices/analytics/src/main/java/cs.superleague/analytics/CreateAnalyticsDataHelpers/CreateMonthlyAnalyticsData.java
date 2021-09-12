@@ -1,6 +1,7 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
 
+import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.analytics.stub.dataclass.*;
 import cs.superleague.analytics.stub.responses.GetOrdersResponse;
 import cs.superleague.analytics.stub.responses.GetUsersResponse;
@@ -76,7 +77,7 @@ public class CreateMonthlyAnalyticsData {
             responseEntityUser = restTemplate.postForEntity(uri, parts,
                     GetUsersResponse.class);
 
-            uri = "http://localhost:8089/payment/getOrders";
+            uri = "http://localhost:8086/payment/getOrders";
             responseEntityOrder = restTemplate.postForEntity(uri, parts,
                     GetOrdersResponse.class);
 
@@ -85,7 +86,7 @@ public class CreateMonthlyAnalyticsData {
         }
     }
 
-    public HashMap<String, Object> getMonthlyStatisticsData(){
+    public HashMap<String, Object> getMonthlyStatisticsData() throws InvalidRequestException {
 
         HashMap<String, Object> data = new HashMap<>();
 
@@ -104,14 +105,14 @@ public class CreateMonthlyAnalyticsData {
             data.put("averageNumberOfOrderPerUser", averageOrderNumPerUser);
             data.put("topTenOrders", topOrders);
             data.put("averagePriceOfOrders", averagePriceOfOrders);
-            data.put("startDate", this.startDate.getTime());
-            data.put("endDate", this.endDate.getTime());
+            data.put("startDate", this.startDate);
+            data.put("endDate", this.endDate);
         }
 
         return data;
     }
 
-    private boolean generateMonthlyStatisticsData(){
+    private boolean generateMonthlyStatisticsData() throws InvalidRequestException {
 
         if(responseEntityOrder == null){
             return false;
@@ -154,6 +155,10 @@ public class CreateMonthlyAnalyticsData {
         UserType userType;
         for (User user : this.users) {
             userType = user.getAccountType();
+
+            if(startDate == null || endDate == null){
+                throw new InvalidRequestException("Start Date and End Date cannot be null");
+            }
 
             if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
                     && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {

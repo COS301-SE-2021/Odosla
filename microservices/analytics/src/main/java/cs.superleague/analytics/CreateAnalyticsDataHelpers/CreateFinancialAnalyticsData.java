@@ -1,5 +1,6 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
+import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.analytics.stub.dataclass.Order;
 import cs.superleague.analytics.stub.responses.GetOrdersResponse;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class CreateFinancialAnalyticsData {
         this.endDate = endDate;
 
         RestTemplate restTemplate = new RestTemplate();
-        String uri = "http://localhost:8089/payment/getOrders";
+        String uri = "http://localhost:8086/payment/getOrders";
 
         try{
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
@@ -54,7 +55,7 @@ public class CreateFinancialAnalyticsData {
         }
     }
 
-    public HashMap<String, Object> getFinancialStatisticsData(){
+    public HashMap<String, Object> getFinancialStatisticsData() throws InvalidRequestException {
 
         HashMap<String, Object> data = new HashMap<>();
 
@@ -64,14 +65,14 @@ public class CreateFinancialAnalyticsData {
             data.put("averageNumberOfOrderPerUser", averageOrderNumPerUser);
             data.put("topTenOrders", topOrders);
             data.put("averagePriceOfOrders", averagePriceOfOrders);
-            data.put("startDate", this.startDate.getTime());
-            data.put("endDate", this.endDate.getTime());
+            data.put("startDate", this.startDate);
+            data.put("endDate", this.endDate);
         }
 
         return data;
     }
 
-    private boolean generateFinancialStatisticsData(){
+    private boolean generateFinancialStatisticsData() throws InvalidRequestException {
 
         if(responseEntity == null){
             return false;
@@ -87,6 +88,10 @@ public class CreateFinancialAnalyticsData {
         }
 
         for (Order order : this.orders) {
+
+            if(startDate == null || endDate == null){
+                throw new InvalidRequestException("Start Date and End Date cannot be null");
+            }
 
             if(startDate.getTime() <= order.getCreateDate().getTimeInMillis()
                 && endDate.getTime() >= order.getCreateDate().getTimeInMillis()) {

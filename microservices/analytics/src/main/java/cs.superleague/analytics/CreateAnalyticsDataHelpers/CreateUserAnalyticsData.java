@@ -1,5 +1,6 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
+import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.analytics.stub.dataclass.Driver;
 import cs.superleague.analytics.stub.dataclass.Shopper;
 import cs.superleague.analytics.stub.dataclass.User;
@@ -71,7 +72,7 @@ public class CreateUserAnalyticsData {
         }
     }
 
-    public HashMap<String, Object> getUserStatisticsData(){
+    public HashMap<String, Object> getUserStatisticsData() throws InvalidRequestException {
 
         HashMap<String, Object> data = new HashMap<>();
 
@@ -85,14 +86,14 @@ public class CreateUserAnalyticsData {
             data.put("totalNum_DriversOnShift", driversOnShift);
             data.put("averageRating_Drivers", ratingSum);
             data.put("top10Drivers", topDrivers);
-            data.put("startDate", this.startDate.getTime());
-            data.put("endDate", this.endDate.getTime());
+            data.put("startDate", this.startDate);
+            data.put("endDate", this.endDate);
         }
 
         return data;
     }
 
-    private boolean generateUserStatisticsData(){
+    private boolean generateUserStatisticsData() throws InvalidRequestException {
 
         if(responseEntity == null){
             return false;
@@ -109,6 +110,10 @@ public class CreateUserAnalyticsData {
         UserType userType;
         for (User user : this.users) {
             userType = user.getAccountType();
+
+            if(startDate == null || endDate == null){
+                throw new InvalidRequestException("Start Date and End Date cannot be null");
+            }
 
             if (startDate.getTime() <= user.getActivationDate().getTime()
                     && endDate.getTime() >= user.getActivationDate().getTime()) {
