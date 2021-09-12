@@ -1,28 +1,16 @@
 package cs.superleague.delivery.controller;
 
 import cs.superleague.api.DeliveryApi;
+import cs.superleague.delivery.DeliveryServiceImpl;
 import cs.superleague.delivery.dataclass.DeliveryDetail;
 import cs.superleague.delivery.dataclass.DeliveryStatus;
 import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
-import cs.superleague.integration.ServiceSelector;
+import cs.superleague.delivery.stub.dataclass.Driver;
+import cs.superleague.delivery.stub.dataclass.GeoPoint;
 import cs.superleague.models.*;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.dataclass.Admin;
-import cs.superleague.user.dataclass.Customer;
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.DriverRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,20 +26,17 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 public class DeliveryController implements DeliveryApi {
-    @Autowired
+
     DeliveryRepo deliveryRepo;
-    @Autowired
     DeliveryDetailRepo deliveryDetailRepo;
+    DeliveryServiceImpl deliveryService;
+
     @Autowired
-    AdminRepo adminRepo;
-    @Autowired
-    DriverRepo driverRepo;
-    @Autowired
-    CustomerRepo customerRepo;
-    @Autowired
-    StoreRepo storeRepo;
-    @Autowired
-    OrderRepo orderRepo;
+    public DeliveryController(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, DeliveryServiceImpl deliveryService) {
+        this.deliveryRepo = deliveryRepo;
+        this.deliveryDetailRepo = deliveryDetailRepo;
+        this.deliveryService = deliveryService;
+    }
 
     @Override
     public ResponseEntity<DeliveryAddDeliveryDetailResponse> addDeliveryDetail(DeliveryAddDeliveryDetailRequest body) {
@@ -59,7 +44,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             AddDeliveryDetailRequest request = new AddDeliveryDetailRequest(DeliveryStatus.valueOf(body.getDeliveryStatus()), body.getDetail(), UUID.fromString(body.getDeliveryID()), Calendar.getInstance());
-            AddDeliveryDetailResponse addDeliveryDetailResponse = ServiceSelector.getDeliveryService().addDeliveryDetail(request);
+            AddDeliveryDetailResponse addDeliveryDetailResponse = deliveryService.addDeliveryDetail(request);
             response.setMessage(addDeliveryDetailResponse.getMessage());
             response.setId(addDeliveryDetailResponse.getId());
 
@@ -76,7 +61,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDeliveryID()));
-            AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = ServiceSelector.getDeliveryService().assignDriverToDelivery(request);
+            AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = deliveryService.assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());
             response.setIsAssigned(assignDriverToDeliveryResponse.isAssigned());
             response.setPickUpLocation(populateGeoPointObject(assignDriverToDeliveryResponse.getPickUpLocation()));
@@ -98,10 +83,10 @@ public class DeliveryController implements DeliveryApi {
         DeliveryCreateDeliveryResponse response = new DeliveryCreateDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            System.out.printf(String.valueOf(body.getPlaceOfDelivery()));
+//            System.out.printf(String.valueOf(body.getPlaceOfDelivery()));
             GeoPoint placeOfDelivery = new GeoPoint(body.getPlaceOfDelivery().getLatitude().doubleValue(), body.getPlaceOfDelivery().getLongitude().doubleValue(), body.getPlaceOfDelivery().getAddress());
             CreateDeliveryRequest request = new CreateDeliveryRequest(UUID.fromString(body.getOrderID()), UUID.fromString(body.getCustomerID()), UUID.fromString(body.getStoreID()), Calendar.getInstance(), placeOfDelivery);
-            CreateDeliveryResponse createDeliveryResponse = ServiceSelector.getDeliveryService().createDelivery(request);
+            CreateDeliveryResponse createDeliveryResponse = deliveryService.createDelivery(request);
             response.setDeliveryID(String.valueOf(createDeliveryResponse.getDeliveryID()));
             response.setMessage(createDeliveryResponse.getMessage());
             response.setIsSuccess(createDeliveryResponse.isSuccess());
@@ -121,7 +106,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()));
-            GetDeliveryDetailResponse getDeliveryDetailResponse = ServiceSelector.getDeliveryService().getDeliveryDetail(request);
+            GetDeliveryDetailResponse getDeliveryDetailResponse = deliveryService.getDeliveryDetail(request);
             response.setMessage(getDeliveryDetailResponse.getMessage());
             System.out.println(getDeliveryDetailResponse.getDetail());
             response.setDetail(populateDeliveryDetails(getDeliveryDetailResponse.getDetail()));
@@ -138,7 +123,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             GetDeliveryStatusRequest request = new GetDeliveryStatusRequest(UUID.fromString(body.getDeliveryID()));
-            GetDeliveryStatusResponse getDeliveryStatusResponse = ServiceSelector.getDeliveryService().getDeliveryStatus(request);
+            GetDeliveryStatusResponse getDeliveryStatusResponse = deliveryService.getDeliveryStatus(request);
             response.setMessage(getDeliveryStatusResponse.getMessage());
             response.setStatus(String.valueOf(getDeliveryStatusResponse.getStatus()));
         }catch (Exception e){
@@ -162,7 +147,7 @@ public class DeliveryController implements DeliveryApi {
             }else {
                 request = new GetNextOrderForDriverRequest(driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
             }
-            GetNextOrderForDriverResponse getNextOrderForDriverResponse = ServiceSelector.getDeliveryService().getNextOrderForDriver(request);
+            GetNextOrderForDriverResponse getNextOrderForDriverResponse = deliveryService.getNextOrderForDriver(request);
 
             DeliveryObject deliveryObject = new DeliveryObject();
             deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());
@@ -208,7 +193,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             TrackDeliveryRequest request = new TrackDeliveryRequest(UUID.fromString(body.getDeliveryID()));
-            TrackDeliveryResponse trackDeliveryResponse = ServiceSelector.getDeliveryService().trackDelivery(request);
+            TrackDeliveryResponse trackDeliveryResponse = deliveryService.trackDelivery(request);
             GeoPointObject currentLocation = new GeoPointObject();
             currentLocation.setLatitude(BigDecimal.valueOf(trackDeliveryResponse.getCurrentLocation().getLatitude()));
             currentLocation.setLongitude(BigDecimal.valueOf(trackDeliveryResponse.getCurrentLocation().getLongitude()));
@@ -243,7 +228,7 @@ public class DeliveryController implements DeliveryApi {
                 status = DeliveryStatus.Delivered;
             }
             UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(status, UUID.fromString(body.getDeliveryID()), body.getDetail());
-            UpdateDeliveryStatusResponse updateDeliveryStatusResponse = ServiceSelector.getDeliveryService().updateDeliveryStatus(request);
+            UpdateDeliveryStatusResponse updateDeliveryStatusResponse = deliveryService.updateDeliveryStatus(request);
             response.setMessage(updateDeliveryStatusResponse.getMessage());
         }catch (Exception e){
             e.printStackTrace();
@@ -259,7 +244,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             GetDeliveryByUUIDRequest getDeliveryByUUIDRequest = new GetDeliveryByUUIDRequest(UUID.fromString(body.getDeliveryID()));
-            GetDeliveryByUUIDResponse getDeliveryByUUIDResponse = ServiceSelector.getDeliveryService().getDeliveryByUUID(getDeliveryByUUIDRequest);
+            GetDeliveryByUUIDResponse getDeliveryByUUIDResponse = deliveryService.getDeliveryByUUID(getDeliveryByUUIDRequest);
 
             DeliveryObject deliveryObject = new DeliveryObject();
             deliveryObject.setDeliveryID(getDeliveryByUUIDResponse.getDelivery().getDeliveryID().toString());
@@ -337,7 +322,7 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
             GetDeliveryDriverByOrderIDRequest request = new GetDeliveryDriverByOrderIDRequest(UUID.fromString(body.getOrderID()));
-            GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderIDResponse = ServiceSelector.getDeliveryService().getDeliveryDriverByOrderID(request);
+            GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderIDResponse = deliveryService.getDeliveryDriverByOrderID(request);
             response.setMessage(getDeliveryDriverByOrderIDResponse.getMessage());
             response.setDeliveryID(getDeliveryDriverByOrderIDResponse.getDeliveryID().toString());
 

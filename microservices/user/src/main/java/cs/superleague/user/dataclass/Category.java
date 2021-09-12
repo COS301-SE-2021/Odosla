@@ -1,7 +1,5 @@
 package cs.superleague.user.dataclass;
 
-import cs.superleague.shopping.dataclass.Item;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Tuple;

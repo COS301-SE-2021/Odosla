@@ -1,7 +1,6 @@
 package cs.superleague.payment.requests;
 
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.OrderType;
 
 import java.util.List;

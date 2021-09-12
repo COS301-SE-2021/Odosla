@@ -2,9 +2,7 @@ package cs.superleague.analytics.requests;
 
 import cs.superleague.analytics.dataclass.ReportType;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 public class CreateUserReportRequest {
 
