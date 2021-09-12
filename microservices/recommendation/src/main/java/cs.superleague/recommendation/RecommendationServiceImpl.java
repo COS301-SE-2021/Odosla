@@ -8,7 +8,6 @@ import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.recommendation.responses.AddRecommendationResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 import cs.superleague.recommendation.stubs.payment.dataclass.Order;
@@ -102,7 +101,7 @@ public class RecommendationServiceImpl implements RecommendationService{
     }
 
     @Override
-    public AddRecommendationResponse addRecommendation(AddRecommendationRequest request) throws InvalidRequestException {
+    public void addRecommendation(AddRecommendationRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -117,8 +116,6 @@ public class RecommendationServiceImpl implements RecommendationService{
             Recommendation recommendation = new Recommendation(recommendationID, productID, request.getOrderID());
             recommendationRepo.save(recommendation);
         }
-        AddRecommendationResponse response = new AddRecommendationResponse("Recommendations Added Successfully");
-        return response;
     }
 
     @Override
@@ -126,10 +123,13 @@ public class RecommendationServiceImpl implements RecommendationService{
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getOrderID() == null || request.getProductID() == null){
+        if (request.getOrderID() == null){
             throw new InvalidRequestException("Null parameters.");
         }
-
+        List<Recommendation> recommendations = recommendationRepo.findRecommendationByOrderID(request.getOrderID());
+        for (Recommendation recommendation : recommendations){
+            recommendationRepo.delete(recommendation);
+        }
     }
 
 }

@@ -1,22 +1,13 @@
 package cs.superleague.recommendation.requests;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class RemoveRecommendationRequest {
-    private String productID;
+public class RemoveRecommendationRequest implements Serializable {
     private UUID orderID;
 
-    public RemoveRecommendationRequest(String productID, UUID orderID) {
-        this.productID = productID;
+    public RemoveRecommendationRequest(UUID orderID) {
         this.orderID = orderID;
-    }
-
-    public String getProductID() {
-        return productID;
-    }
-
-    public void setProductID(String productID) {
-        this.productID = productID;
     }
 
     public UUID getOrderID() {

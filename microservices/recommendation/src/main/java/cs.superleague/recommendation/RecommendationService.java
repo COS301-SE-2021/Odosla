@@ -6,7 +6,6 @@ import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.recommendation.responses.AddRecommendationResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 
@@ -15,7 +14,7 @@ public interface RecommendationService {
 
     GetOrderRecommendationResponse getOrderRecommendation(GetOrderRecommendationRequest request);
 
-    AddRecommendationResponse addRecommendation(AddRecommendationRequest request) throws InvalidRequestException;
+    void addRecommendation(AddRecommendationRequest request) throws InvalidRequestException;
 
     void removeRecommendation(RemoveRecommendationRequest request) throws InvalidRequestException;
 }
