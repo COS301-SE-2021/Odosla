@@ -18,6 +18,7 @@ public class RabbitMQConfig {
     public RabbitMQConfig(@Lazy ShoppingService shoppingService) {
         this.shoppingService = shoppingService;
     }
+
     //
     // EXCHANGE
     //
@@ -45,12 +46,22 @@ public class RabbitMQConfig {
     // BINDING
     //
     @Bean
-    Binding binding(){
+    Binding bindingSaveStoreToRepo(){
 
         return BindingBuilder
                 .bind(SaveStoreToRepoQueue())
                 .to(ShoppingExchange())
                 .with("RK_SaveStoreToRepo")
+                .noargs();
+    }
+
+    @Bean
+    Binding bindingSaveItemToRepo(){
+
+        return BindingBuilder
+                .bind(SaveItemToRepoQueue())
+                .to(ShoppingExchange())
+                .with("RK_SaveItemToRepo")
                 .noargs();
     }
 
@@ -62,7 +73,6 @@ public class RabbitMQConfig {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("localhost");
         cachingConnectionFactory.setUsername("guest");
         cachingConnectionFactory.setPassword("guest");
-
         return cachingConnectionFactory;
     }
 
@@ -75,7 +85,7 @@ public class RabbitMQConfig {
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
         simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue());
         simpleMessageListenerContainer.setQueues(SaveItemToRepoQueue());// <------- add all queues to listen to here
-        simpleMessageListenerContainer.setMessageListener(new SaveStoreToRepoListener(shoppingService));
+        simpleMessageListenerContainer.setMessageListener(new ShoppingListener(shoppingService));
         return simpleMessageListenerContainer;
     }
 
