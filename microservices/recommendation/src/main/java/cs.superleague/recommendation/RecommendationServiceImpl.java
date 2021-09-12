@@ -7,11 +7,12 @@ import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
+import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.recommendation.responses.AddRecommendationResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
-import cs.superleague.recommendation.stubs.Order;
-import cs.superleague.recommendation.stubs.Item;
+import cs.superleague.recommendation.stubs.payment.dataclass.Order;
+import cs.superleague.recommendation.stubs.shopping.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,6 +119,17 @@ public class RecommendationServiceImpl implements RecommendationService{
         }
         AddRecommendationResponse response = new AddRecommendationResponse("Recommendations Added Successfully");
         return response;
+    }
+
+    @Override
+    public void removeRecommendation(RemoveRecommendationRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null || request.getProductID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+
     }
 
 }
