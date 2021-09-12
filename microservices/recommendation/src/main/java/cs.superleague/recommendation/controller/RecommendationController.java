@@ -31,8 +31,6 @@ public class RecommendationController implements RecommendationApi {
     RecommendationRepo recommendationRepo;
     @Autowired
     RecommendationService recommendationService;
-    @Autowired
-    RabbitTemplate rabbitTemplate;
 
     @Override
     public ResponseEntity<RecommendationGetCartRecommendationResponse> getCartRecommendation(RecommendationGetCartRecommendationRequest body) {
