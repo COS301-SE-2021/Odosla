@@ -1,6 +1,6 @@
-package cs.superleague.importer.stub.requests;
+package cs.superleague.importer.stub.shopping.requests;
 
-import cs.superleague.importer.stub.dataclass.Store;
+import cs.superleague.importer.stub.shopping.dataclass.Store;
 
 public class SaveStoreToRepoRequest {
 
