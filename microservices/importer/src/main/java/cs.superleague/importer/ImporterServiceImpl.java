@@ -1,28 +1,27 @@
 package cs.superleague.importer;
 
-import antlr.debug.NewLineEvent;
-import cs.superleague.delivery.repos.DeliveryDetailRepo;
-import cs.superleague.delivery.repos.DeliveryRepo;
+import cs.superleague.importer.stub.dataclass.GeoPoint;
+import cs.superleague.importer.stub.dataclass.Item;
 import cs.superleague.importer.exceptions.InvalidRequestException;
 import cs.superleague.importer.requests.ItemsCSVImporterRequest;
 import cs.superleague.importer.requests.StoreCSVImporterRequest;
 import cs.superleague.importer.responses.ItemsCSVImporterResponse;
 import cs.superleague.importer.responses.StoreCSVImporterResponse;
-import cs.superleague.payment.PaymentService;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.repos.ItemRepo;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.UserService;
-import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.repos.CustomerRepo;
-import cs.superleague.user.repos.DriverRepo;
+import cs.superleague.importer.stub.dataclass.Store;
+import cs.superleague.importer.stub.requests.SaveItemToRepoRequest;
+import cs.superleague.importer.stub.requests.SaveStoreToRepoRequest;
+import cs.superleague.importer.stub.responses.GetAlItemsResponse;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
@@ -30,16 +29,12 @@ import java.util.UUID;
 @Service("importerServiceImpl")
 public class ImporterServiceImpl implements ImporterService{
 
-
-    private final StoreRepo storeRepo;
-    private final ItemRepo itemRepo;
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public ImporterServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo) {
-        this.storeRepo= storeRepo;
-        this.itemRepo= itemRepo;
+    public ImporterServiceImpl(RabbitTemplate rabbitTemplate){
+        this.rabbitTemplate = rabbitTemplate;
     }
-
 
     @Override
     public ItemsCSVImporterResponse itemsCSVImporter(ItemsCSVImporterRequest request) throws InvalidRequestException {
@@ -67,17 +62,32 @@ public class ImporterServiceImpl implements ImporterService{
                     {
                         switch (counter){
                             case 0:
-                                if (itemRepo!=null)
+                                RestTemplate restTemplate = new RestTemplate();
+
+                                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                                converters.add(new MappingJackson2HttpMessageConverter());
+                                restTemplate.setMessageConverters(converters);
+
+                                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+
+                                ResponseEntity<GetAlItemsResponse> responseEntity = restTemplate.postForEntity(
+                                        "http://localhost:8088/shopping/getAllItems", parts, GetAlItemsResponse.class);
+
+                                if(responseEntity == null || !responseEntity.hasBody()){
+                                    throw new InvalidRequestException("Could not retrieve stores");
+                                }
+
+                                GetAlItemsResponse getAlItemsResponse = responseEntity.getBody();
+                                List<Item> itemList = getAlItemsResponse.getItems();
+
+                                for(int j=0; j< itemList.size(); j++)
                                 {
-                                    List<Item> itemList= itemRepo.findAll();
-                                    for(int j=0; j< itemList.size(); j++)
+                                    if(itemList.get(j).getProductID().equals(currentWord))
                                     {
-                                        if(itemList.get(j).getProductID().equals(currentWord))
-                                        {
-                                            throw new InvalidRequestException("Item already exists");
-                                        }
+                                        throw new InvalidRequestException("Item already exists");
                                     }
                                 }
+
 
                                 item.setProductID(currentWord);
                                 counter++;
@@ -145,12 +155,12 @@ public class ImporterServiceImpl implements ImporterService{
                         counter = 0;
                         currentWord = "";
 
-                        if (itemRepo != null)
-                        {
-                            itemRepo.save(item);
-                            item = new Item();
-                        }
+                        SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
 
+                        // saveitemtorepo
+
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveItemToRepo", saveItemToRepo);
+                        item = new Item();
                     }
                 }
             }
@@ -193,17 +203,21 @@ public class ImporterServiceImpl implements ImporterService{
                     {
                         switch (counter){
                             case 0:
-                                if (storeRepo!=null)
-                                {
-                                    List<Store> storeList= storeRepo.findAll();
-                                    for(int j=0; j< storeList.size(); j++)
-                                    {
-                                        if(storeList.get(j).getStoreID().equals(UUID.fromString(currentWord)))
-                                        {
-                                            throw new InvalidRequestException("Store already exists");
-                                        }
-                                    }
+                                RestTemplate restTemplate = new RestTemplate();
+
+                                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                                converters.add(new MappingJackson2HttpMessageConverter());
+                                restTemplate.setMessageConverters(converters);
+
+                                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+
+                                ResponseEntity<GetAlItemsResponse> responseEntity = restTemplate.postForEntity(
+                                        "http://localhost:8088/shopping/getStores", parts, GetAlItemsResponse.class);
+
+                                if(responseEntity == null || !responseEntity.hasBody()){
+                                    throw new InvalidRequestException("Could not retrieve stores");
                                 }
+
                                 store.setStoreID(UUID.fromString(currentWord));
                                 counter++;
                                 currentWord = "";
@@ -270,12 +284,13 @@ public class ImporterServiceImpl implements ImporterService{
                         counter=0;
                         currentWord = "";
                         store.setStoreLocation(location);
-                        if (storeRepo!=null)
-                        {
-                            storeRepo.save(store);
-                            location= new GeoPoint();
-                            store= new Store();
-                        }
+
+                        SaveStoreToRepoRequest saveStoreToRepo = new SaveStoreToRepoRequest(store);
+
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveStoreToRepo", saveStoreToRepo);
+
+                        location= new GeoPoint();
+                        store= new Store();
 
                     }
                 }

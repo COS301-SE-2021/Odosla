@@ -2,3 +2,4 @@
 /backend/target/
 /gen/
 /microservices/payment/target/
+/microservices/delivery/target/
