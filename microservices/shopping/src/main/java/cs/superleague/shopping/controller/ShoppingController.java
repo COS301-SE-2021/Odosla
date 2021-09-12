@@ -657,4 +657,28 @@ public class ShoppingController implements ShoppingApi{
 
         return new ResponseEntity<>(response, httpStatus);
     }
+
+    @Override
+    public ResponseEntity<ShoppingGetItemsByIDResponse> getItemsByID(ShoppingGetItemsByIDRequest body) {
+
+        //creating response object and default return status:
+        ShoppingGetItemsByIDResponse response = new ShoppingGetItemsByIDResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            GetItemsByIDResponse getItemsByIDResponse = shoppingService.getItemsByID(new GetItemsByIDRequest(body.getItemIDs()));
+            try {
+
+                response.setItems(populateItems(getItemsByIDResponse.getItems()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
 }

@@ -210,6 +210,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetAllItemsResponse"
 
+  /shopping/getItemsByID:
+    post:
+      summary: Endpoint for Get Items By ID use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getItemsByID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetItemsByIDRequest"
+      responses:
+        "200":
+          description: Returns items upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetItemsByIDResponse"
+
 
 components:
 
@@ -532,6 +554,28 @@ components:
       type: object
 
     shopping_GetAllItemsResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    shopping_GetItemsByIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        itemIDs:
+          type: array
+          items:
+            type: string
+
+    shopping_GetItemsByIDResponse:
       description: This object is returned as output
       type: object
       properties:
