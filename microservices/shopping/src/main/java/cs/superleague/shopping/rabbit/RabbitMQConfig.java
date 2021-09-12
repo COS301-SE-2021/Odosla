@@ -83,8 +83,7 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue());
-        simpleMessageListenerContainer.setQueues(SaveItemToRepoQueue());// <------- add all queues to listen to here
+        simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue(), SaveItemToRepoQueue());
         simpleMessageListenerContainer.setMessageListener(new ShoppingListener(shoppingService));
         return simpleMessageListenerContainer;
     }
