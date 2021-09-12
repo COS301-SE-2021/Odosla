@@ -34,6 +34,7 @@ public class ShoppingListener implements MessageListener {
             }
             else if(o instanceof SaveStoreToRepoRequest)
             {
+                System.out.println("In the listener");
                 SaveStoreToRepoRequest request = (SaveStoreToRepoRequest) o;
                 SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(request.getStore());
                 shoppingService.saveStoreToRepo(saveStoreToRepoRequest);

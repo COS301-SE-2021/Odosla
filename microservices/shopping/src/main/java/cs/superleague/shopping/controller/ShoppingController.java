@@ -21,6 +21,7 @@ import cs.superleague.shopping.responses.GetItemsResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 import cs.superleague.shopping.stubs.user.exceptions.UserException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,9 @@ public class ShoppingController implements ShoppingApi{
 
     @Autowired
     ItemRepo itemRepo;
+
+    @Autowired
+    private RabbitTemplate rabbit;
 
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
@@ -101,6 +105,12 @@ public class ShoppingController implements ShoppingApi{
     //getItems endpoint
     @Override
     public ResponseEntity<ShoppingGetItemsResponse> getItems(ShoppingGetItemsRequest body) {
+
+        Store store=new Store(UUID.randomUUID(), -1, 24, "Shoprite", 2, 5, true, "shop/shoprite.png");
+
+        SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(store);
+
+        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepoRequest);
 
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
