@@ -3,3 +3,4 @@
 /gen/
 /microservices/payment/target/
 /microservices/delivery/target/
+/microservices/notifications/target/
