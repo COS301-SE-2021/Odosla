@@ -112,6 +112,12 @@ public class ShoppingController implements ShoppingApi{
 
         rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepoRequest);
 
+        Item item=new Item("Marie Biscuits","p123985674","6001068523408", UUID.randomUUID(),10.99,1,"Thick milk chocolate with nougat and caramel centre.","item/barOne.png", "Nestle", "55g", "Chocolate");
+
+        SaveItemToRepoRequest saveItemToRepoRequest = new SaveItemToRepoRequest(item);
+
+        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepoRequest);
+
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -626,5 +632,29 @@ public class ShoppingController implements ShoppingApi{
         locationObject.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         locationObject.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         return locationObject;
+    }
+
+    @Override
+    public ResponseEntity<ShoppingGetAllItemsResponse> getAllItems(ShoppingGetAllItemsRequest body) {
+
+        //creating response object and default return status:
+        ShoppingGetAllItemsResponse response = new ShoppingGetAllItemsResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            GetAllItemsResponse getAllItemsResponse = shoppingService.getAllItems(new GetAllItemsRequest());
+            try {
+
+                response.setItems(populateItems(getAllItemsResponse.getItems()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
     }
 }
