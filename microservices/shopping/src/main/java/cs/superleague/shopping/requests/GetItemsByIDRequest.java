@@ -2,11 +2,11 @@ package cs.superleague.shopping.requests;
 
 import java.util.List;
 
-public class GetItemsByUUIDSRequest {
+public class GetItemsByIDRequest {
 
     private List<String> itemIDs;
 
-    public GetItemsByUUIDSRequest(List<String> itemIDs)
+    public GetItemsByIDRequest(List<String> itemIDs)
     {
         this.itemIDs = itemIDs;
     }

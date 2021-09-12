@@ -6,14 +6,14 @@ import cs.superleague.shopping.dataclass.Item;
 import java.util.Date;
 import java.util.List;
 
-public class GetItemsByUUIDSResponse {
+public class GetItemsByIDResponse {
 
     private List<Item> items;
     @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
 
-    public GetItemsByUUIDSResponse(List<Item> items, Date timestamp, String message)
+    public GetItemsByIDResponse(List<Item> items, Date timestamp, String message)
     {
         this.items = items;
         this.timestamp= timestamp;

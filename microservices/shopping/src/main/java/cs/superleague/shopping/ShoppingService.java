@@ -4,7 +4,6 @@ import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.shopping.stubs.user.exceptions.UserDoesNotExistException;
 import cs.superleague.shopping.stubs.user.exceptions.UserException;
 
 
@@ -47,4 +46,6 @@ public interface ShoppingService {
     GetAllItemsResponse getAllItems(GetAllItemsRequest request) throws InvalidRequestException;
 
     SaveItemToRepoResponse saveItemToRepo(SaveItemToRepoRequest request) throws InvalidRequestException;
+
+    GetItemsByIDResponse getItemsByID(GetItemsByIDRequest request) throws InvalidRequestException;
 }

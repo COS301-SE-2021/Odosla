@@ -1,6 +1,5 @@
 package cs.superleague.shopping;
 
-import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.repos.ItemRepo;
@@ -11,21 +10,15 @@ import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 import cs.superleague.shopping.stubs.user.exceptions.UserException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.stubs.payment.dataclass.Order;
 import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service("shoppingServiceImpl")
@@ -1434,6 +1427,76 @@ public class ShoppingServiceImpl implements ShoppingService {
         else{
             throw new InvalidRequestException("Request object can't be null - can't save item");
         }
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *
+     *
+     * getItemsByUUIDS should:
+     *               1. Check if the ItemRepo is not null, else throw an InvalidRequestException
+     *               2. Return all items in response object.
+     *
+     * Request Object (GetItemsByUUIDSRequest):
+     * {
+     *
+     * }
+     *
+     * Response Object (GetItemsByUUIDSResponse):
+     * {
+     *                "items":itemsRepo.findAll()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"All items have been retrieved"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public GetItemsByIDResponse getItemsByID(GetItemsByIDRequest request) throws InvalidRequestException {
+        GetItemsByIDResponse response=null;
+
+        if(request!=null){
+
+            if(request.getItemIDs() == null)
+            {
+                throw new InvalidRequestException("Null parameter in request object, can't get Items");
+            }
+            List<Item> items;
+            try {
+                items = itemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetItemsByIDResponse(null, Calendar.getInstance().getTime(), "Items can't be retrieved");
+            }
+            else {
+                List<String> reqItems = request.getItemIDs();
+                List<Item> itemsFound = new ArrayList<>();
+
+                for(int k = 0; k < reqItems.size(); k++)
+                {
+                    for(int j = 0; j < items.size(); j++)
+                    {
+                        if(reqItems.get(k).equals(items.get(j).getProductID()))
+                        {
+                            itemsFound.add(items.get(j));
+                        }
+                    }
+
+                }
+                response = new GetItemsByIDResponse(itemsFound, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
     }
 }
 
