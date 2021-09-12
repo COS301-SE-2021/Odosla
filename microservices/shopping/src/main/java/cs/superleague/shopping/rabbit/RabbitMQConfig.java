@@ -1,5 +1,6 @@
 package cs.superleague.shopping.rabbit;
 
+import cs.superleague.shopping.ShoppingService;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -7,16 +8,22 @@ import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 @Configuration
 public class RabbitMQConfig {
 
+    private final ShoppingService shoppingService;
+
+    public RabbitMQConfig(@Lazy ShoppingService shoppingService) {
+        this.shoppingService = shoppingService;
+    }
     //
     // EXCHANGE
     //
     @Bean
-    Exchange ShoppingEXHANGE(){
-        return ExchangeBuilder.directExchange("CatExchange")
+    Exchange ShoppingExchange(){
+        return ExchangeBuilder.directExchange("ShoppingEXCHANGE")
                 .durable(true)
                 .build();
     }
@@ -25,21 +32,25 @@ public class RabbitMQConfig {
     // QUEUE DEFINITIONS
     //
     @Bean
-    Queue CatQueue() {
-        return new Queue("CatQueue", true);
+    Queue SaveStoreToRepoQueue() {
+        return new Queue("Q_SaveStoreToRepo", true);
     }
 
+    @Bean
+    Queue SaveItemToRepoQueue() {
+        return new Queue("Q_SaveItemToRepo", true);
+    }
 
     //
     // BINDING
     //
     @Bean
     Binding binding(){
-        //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
+
         return BindingBuilder
-                .bind(CatQueue())
-                .to(CatExchange())
-                .with("KEY_CAT")
+                .bind(SaveStoreToRepoQueue())
+                .to(ShoppingExchange())
+                .with("RK_SaveStoreToRepo")
                 .noargs();
     }
 
@@ -62,8 +73,9 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(CatQueue());                                               // <------- add all queues to listen to here
-        simpleMessageListenerContainer.setMessageListener(new CatListener());
+        simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue());
+        simpleMessageListenerContainer.setQueues(SaveItemToRepoQueue());// <------- add all queues to listen to here
+        simpleMessageListenerContainer.setMessageListener(new SaveStoreToRepoListener(shoppingService));
         return simpleMessageListenerContainer;
     }
 
