@@ -865,6 +865,34 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<UserGetAdminByEmailResponse> getAdminByEmail(UserGetAdminByEmailRequest body) {
+        UserGetAdminByEmailResponse getAdminByEmailResponse = new UserGetAdminByEmailResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetAdminByEmailRequest request = new GetAdminByEmailRequest(body.getEmail());
+
+            GetAdminByEmailResponse response = userService.getAdminByEmail(request);
+            try{
+                getAdminByEmailResponse.setAdmin(populateAdmin(response.getAdmin()));
+                getAdminByEmailResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+                getAdminByEmailResponse.setAdmin(null);
+                getAdminByEmailResponse.setSuccess(false);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            getAdminByEmailResponse.setAdmin(null);
+            getAdminByEmailResponse.setSuccess(false);
+        }
+
+        return new ResponseEntity<>(getAdminByEmailResponse, status);
+    }
+
+    @Override
     public ResponseEntity<UserUpdateShopperDetailsResponse> updateShopperDetails(UserUpdateShopperDetailsRequest body) {
         UserUpdateShopperDetailsResponse userUpdateShopperDetailsResponse = new UserUpdateShopperDetailsResponse();
         HttpStatus status = HttpStatus.OK;
