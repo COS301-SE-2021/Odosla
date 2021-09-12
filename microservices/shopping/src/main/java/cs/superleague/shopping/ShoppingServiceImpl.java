@@ -1,25 +1,37 @@
 package cs.superleague.shopping;
 
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
+import cs.superleague.shopping.stubs.payment.requests.SaveOrderRequest;
+import cs.superleague.shopping.stubs.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 import cs.superleague.shopping.stubs.user.exceptions.UserException;
+import cs.superleague.shopping.stubs.user.requests.SaveShopperRequest;
+import cs.superleague.shopping.stubs.user.responses.GetShopperByEmailResponse;
+import cs.superleague.shopping.stubs.user.responses.GetShopperByUUIDResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
 import cs.superleague.shopping.stubs.payment.dataclass.Order;
 import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service("shoppingServiceImpl")
@@ -164,8 +176,8 @@ public class ShoppingServiceImpl implements ShoppingService {
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
         updatedOrder.setProcessDate(Calendar.getInstance());
 
-//        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
-//        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(updatedOrder);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
 
         Store store=null;
         try {
@@ -218,93 +230,91 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
     public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException{
-//        GetNextQueuedResponse response=null;
-//
-//        if(request!=null){
-//
-//            if(request.getStoreID()==null){
-//                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
-//            }
-//
-//            Store store;
-//
-//            try {
-//                store = storeRepo.findById(request.getStoreID()).orElse(null);
-//            }
-//            catch(Exception e){
-//                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
-//            }
-//
-//            if(store == null){
-//                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
-//            }
-//
-//            List<Order> orderQueue= store.getOrderQueue();
-//
-//            if(orderQueue==null || orderQueue.isEmpty()){
-//                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
-//                return response;
-//            }
-//
-//            Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
-//            Order correspondingOrder=orderQueue.get(0);
-//
-//            for (Order o: orderQueue) {
-//                if (oldestProcessedDate.after(o.getProcessDate().getTime())) {
-//                    oldestProcessedDate = o.getProcessDate().getTime();
-//                    correspondingOrder = o;
-//                }
-//            }
-//
-//            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-//            converters.add(new MappingJackson2HttpMessageConverter());
-//            restTemplate.setMessageConverters(converters);
-//            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-//            parts.add("orderId", correspondingOrder.getOrderID().toString());
-//            ResponseEntity<GetOrderByUUIDResponse> getOrderByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrderByUUID", parts, GetOrderByUUIDResponse.class);
-//
-//            GetOrderByUUIDResponse getOrderByUUIDResponse = getOrderByUUIDResponseEntity.getBody();
-//            Order updateOrder = getOrderByUUIDResponse.getOrder();
-//
-//            if(updateOrder!=null)
-//            {
-//                CurrentUser currentUser = new CurrentUser();
-//
-//
-//                //Shopper shopper = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);;
-//                converters = new ArrayList<>();
-//                converters.add(new MappingJackson2HttpMessageConverter());
-//                restTemplate.setMessageConverters(converters);
-//                parts = new LinkedMultiValueMap<String, Object>();
-//                parts.add("shopperEmail", currentUser.getEmail());
-//                ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByEmail", parts, GetShopperByEmailResponse.class);
-//
-//                GetShopperByEmailResponse getShopperByEmailResponse = getShopperByEmailResponseEntity.getBody();
-//                Shopper shopper = getShopperByEmailResponse.getShopper();
-//                assert shopper != null;
-//
-//                updateOrder.setShopperID(shopper.getShopperID());
-//                updateOrder.setStatus(OrderStatus.PACKING);
-//                //orderRepo.save(updateOrder);
-//                SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
-//                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
-//
-//            }
-//
-//            if(storeRepo!=null)
-//            {
-//                store.getOrderQueue().remove(correspondingOrder);
-//                storeRepo.save(store);
-//            }
-//
-//            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderQueue,correspondingOrder);
-//
-//        }
-//        else{
-//            throw new InvalidRequestException("Request object for GetNextQueuedRequest can't be null - can't get next queued");
-//        }
-//        return response;
-        return null;
+        GetNextQueuedResponse response=null;
+
+        if(request!=null){
+
+            if(request.getStoreID()==null){
+                throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
+            }
+
+            Store store;
+
+            try {
+                store = storeRepo.findById(request.getStoreID()).orElse(null);
+            }
+            catch(Exception e){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
+
+            if(store == null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
+            }
+
+            List<Order> orderQueue= store.getOrderQueue();
+
+            if(orderQueue==null || orderQueue.isEmpty()){
+                response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
+                return response;
+            }
+
+            Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
+            Order correspondingOrder=orderQueue.get(0);
+
+            for (Order o: orderQueue) {
+                if (oldestProcessedDate.after(o.getProcessDate().getTime())) {
+                    oldestProcessedDate = o.getProcessDate().getTime();
+                    correspondingOrder = o;
+                }
+            }
+
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("orderId", correspondingOrder.getOrderID().toString());
+            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+
+            GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
+            Order updateOrder = getOrderResponse.getOrder();
+
+            if(updateOrder!=null)
+            {
+                CurrentUser currentUser = new CurrentUser();
+
+                converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+                parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("shopperEmail", currentUser.getEmail());
+                ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByEmail", parts, GetShopperByEmailResponse.class);
+
+                GetShopperByEmailResponse getShopperByEmailResponse = getShopperByEmailResponseEntity.getBody();
+                Shopper shopper = getShopperByEmailResponse.getShopper();
+                assert shopper != null;
+
+                updateOrder.setShopperID(shopper.getShopperID());
+                updateOrder.setStatus(OrderStatus.PACKING);
+
+                SaveOrderRequest saveOrderRequest = new SaveOrderRequest(updateOrder);
+                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+
+            }
+
+            if(storeRepo!=null)
+            {
+                store.getOrderQueue().remove(correspondingOrder);
+                storeRepo.save(store);
+            }
+
+            response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),true,"Queue was successfully updated for store", orderQueue,correspondingOrder);
+
+        }
+        else{
+            throw new InvalidRequestException("Request object for GetNextQueuedRequest can't be null - can't get next queued");
+        }
+        return response;
+
     }
 
     /**
@@ -710,96 +720,96 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
     public AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException {
-//        AddShopperResponse response=null;
-//
-//        if(request!=null){
-//
-//            boolean invalidReq = false;
-//            String invalidMessage = "";
-//
-//            if(request.getShopperID()==null){
-//                invalidReq=true;
-//                invalidMessage="Shopper ID in request object for add shopper is null";
-//
-//            }
-//            else if(request.getStoreID()==null){
-//                invalidReq=true;
-//                invalidMessage="Store ID in request object for add shopper is null";
-//            }
-//
-//            if (invalidReq) throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException(invalidMessage);
-//
-//            Store storeEntity=null;
-//
-//            try {
-//                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-//            }catch (Exception e){}
-//
-//            if(storeEntity==null){
-//                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not add Shopper");
-//            }
-//
-//            List<Shopper> listOfShoppers=storeEntity.getShoppers();
-//
-//            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-//            converters.add(new MappingJackson2HttpMessageConverter());
-//            restTemplate.setMessageConverters(converters);
-//            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-//            parts.add("shopperId", request.getShopperID().toString());
-//            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
-//
-//            GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
-//
-//            Boolean notPresent = true;
-//
-//            if(listOfShoppers!=null) {
-//
-//                for (Shopper shopper : listOfShoppers) {
-//                    if (shopper.getShopperID().equals(request.getShopperID())) {
-//                        response = new AddShopperResponse(false, Calendar.getInstance().getTime(), "Shopper already is in listOfShoppers");
-//                        notPresent = false;
-//                    }
-//                }
-//                if(notPresent){
-//                    Shopper updateShopper= shopperResponse.getShopper();
-//                    if(updateShopper!=null)
-//                    {
-//                        updateShopper.setStoreID(request.getStoreID());
-//                        SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(updateShopper);
-//                        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
-//                    }
-//
-//                    listOfShoppers.add(shopperResponse.getShopper());
-//                    storeEntity.setShoppers(listOfShoppers);
-//                    storeRepo.save(storeEntity);
-//                    response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
-//                }
-//            }
-//            else
-//            {
-//                Shopper updateShopper= shopperResponse.getShopper();
-//                if(updateShopper!=null)
-//                {
-//                    updateShopper.setStoreID(request.getStoreID());
-//                    SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(updateShopper);
-//                    rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
-//                }
-//
-//                List<Shopper> newList= new ArrayList<>();
-//                newList.add(shopperResponse.getShopper());
-//                storeEntity.setShoppers(newList);
-//                storeRepo.save(storeEntity);
-//                response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
-//
-//            }
-//
-//        }
-//        else{
-//            throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException("Request object can't be null for addShopper");
-//        }
-//
-//        return response;
-        return null;
+        AddShopperResponse response=null;
+
+        if(request!=null){
+
+            boolean invalidReq = false;
+            String invalidMessage = "";
+
+            if(request.getShopperID()==null){
+                invalidReq=true;
+                invalidMessage="Shopper ID in request object for add shopper is null";
+
+            }
+            else if(request.getStoreID()==null){
+                invalidReq=true;
+                invalidMessage="Store ID in request object for add shopper is null";
+            }
+
+            if (invalidReq) throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException(invalidMessage);
+
+            Store storeEntity=null;
+
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }catch (Exception e){}
+
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not add Shopper");
+            }
+
+            List<Shopper> listOfShoppers=storeEntity.getShoppers();
+
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userId", request.getShopperID().toString());
+            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+
+            GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
+
+            Boolean notPresent = true;
+
+            if(listOfShoppers!=null) {
+
+                for (Shopper shopper : listOfShoppers) {
+                    if (shopper.getShopperID().equals(request.getShopperID())) {
+                        response = new AddShopperResponse(false, Calendar.getInstance().getTime(), "Shopper already is in listOfShoppers");
+                        notPresent = false;
+                    }
+                }
+                if(notPresent){
+                    Shopper updateShopper= shopperResponse.getShopper();
+                    if(updateShopper!=null)
+                    {
+                        updateShopper.setStoreID(request.getStoreID());
+                        SaveShopperRequest saveShopperRequest = new SaveShopperRequest(updateShopper);
+                        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopper", saveShopperRequest);
+                    }
+
+                    listOfShoppers.add(shopperResponse.getShopper());
+                    storeEntity.setShoppers(listOfShoppers);
+                    storeRepo.save(storeEntity);
+                    response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
+                }
+            }
+            else
+            {
+                Shopper updateShopper= shopperResponse.getShopper();
+                if(updateShopper!=null)
+                {
+                    updateShopper.setStoreID(request.getStoreID());
+                    SaveShopperRequest saveShopperRequest = new SaveShopperRequest(updateShopper);
+                    rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopper", saveShopperRequest);
+
+                }
+
+                List<Shopper> newList= new ArrayList<>();
+                newList.add(shopperResponse.getShopper());
+                storeEntity.setShoppers(newList);
+                storeRepo.save(storeEntity);
+                response=new AddShopperResponse(true,Calendar.getInstance().getTime(), "Shopper was successfully added");
+
+            }
+
+        }
+        else{
+            throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException("Request object can't be null for addShopper");
+        }
+
+        return response;
 
     }
 
@@ -839,77 +849,76 @@ public class ShoppingServiceImpl implements ShoppingService {
      */
     @Override
     public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
-//        RemoveShopperResponse response=null;
-//
-//        if(request!=null){
-//
-//            boolean invalidReq = false;
-//            String invalidMessage = "";
-//
-//            if(request.getShopperID()==null){
-//                invalidReq=true;
-//                invalidMessage="Shopper ID in request object for remove shopper is null";
-//
-//            }
-//            else if(request.getStoreID()==null){
-//                invalidReq=true;
-//                invalidMessage="Store ID in request object for remove shopper is null";
-//            }
-//
-//            if (invalidReq) throw new InvalidRequestException(invalidMessage);
-//
-//            Store storeEntity=null;
-//
-//            try {
-//                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
-//            }catch(Exception e){}
-//
-//            if(storeEntity==null){
-//                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not remove Shopper");
-//            }
-//
-//
-//            List<Shopper> listOfShoppers=storeEntity.getShoppers();
-//
-//            if(listOfShoppers!=null){
-//
-//                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-//                converters.add(new MappingJackson2HttpMessageConverter());
-//                restTemplate.setMessageConverters(converters);
-//                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-//                parts.add("shopperId", request.getShopperID().toString());
-//                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
-//
-//                GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
-//
-//                 Boolean inList=false;
-//                 for(Shopper shopper:listOfShoppers){
-//                     if(shopper.getShopperID().equals(request.getShopperID())){
-//                         listOfShoppers.remove(shopper);
-//                         inList=true;
-//                     }
-//                 }
-//                 if(inList==true) {
-//                     storeEntity.setShoppers(listOfShoppers);
-//                     storeRepo.save(storeEntity);
-//                     response = new RemoveShopperResponse(true, Calendar.getInstance().getTime(), "Shopper was successfully removed");
-//                 }
-//                 else{
-//                     response = new RemoveShopperResponse(false, Calendar.getInstance().getTime(), "Shopper isn't in list of shoppers in store entity");
-//                 }
-//
-//            }
-//            else{
-//                response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
-//            }
-//
-//        }
-//        else{
-//            throw new InvalidRequestException("Request object can't be null for removeShopper");
-//        }
-//
-//        return response;
-        return null;
+        RemoveShopperResponse response=null;
+
+        if(request!=null){
+
+            boolean invalidReq = false;
+            String invalidMessage = "";
+
+            if(request.getShopperID()==null){
+                invalidReq=true;
+                invalidMessage="Shopper ID in request object for remove shopper is null";
+
+            }
+            else if(request.getStoreID()==null){
+                invalidReq=true;
+                invalidMessage="Store ID in request object for remove shopper is null";
+            }
+
+            if (invalidReq) throw new InvalidRequestException(invalidMessage);
+
+            Store storeEntity=null;
+
+            try {
+                storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
+            }catch(Exception e){}
+
+            if(storeEntity==null){
+                throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not remove Shopper");
+            }
+
+
+            List<Shopper> listOfShoppers=storeEntity.getShoppers();
+
+            if(listOfShoppers!=null){
+
+                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("shopperId", request.getShopperID().toString());
+                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+
+                GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
+
+                 Boolean inList=false;
+                 for(Shopper shopper:listOfShoppers){
+                     if(shopper.getShopperID().equals(request.getShopperID())){
+                         listOfShoppers.remove(shopper);
+                         inList=true;
+                     }
+                 }
+                 if(inList==true) {
+                     storeEntity.setShoppers(listOfShoppers);
+                     storeRepo.save(storeEntity);
+                     response = new RemoveShopperResponse(true, Calendar.getInstance().getTime(), "Shopper was successfully removed");
+                 }
+                 else{
+                     response = new RemoveShopperResponse(false, Calendar.getInstance().getTime(), "Shopper isn't in list of shoppers in store entity");
+                 }
+
+            }
+            else{
+                response=new RemoveShopperResponse(false,Calendar.getInstance().getTime(), "list of Shoppers is null");
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null for removeShopper");
+        }
+
+        return response;
     }
 
     /**
