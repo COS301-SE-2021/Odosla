@@ -11,12 +11,13 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
 import cs.superleague.delivery.stub.dataclass.*;
-import cs.superleague.delivery.stub.requests.SaveDriverToRepoRequest;
+import cs.superleague.delivery.stub.requests.SaveDriverRequest;
 import cs.superleague.delivery.stub.requests.SaveOrderToRepoRequest;
 import cs.superleague.delivery.stub.responses.*;
 import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -350,9 +351,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         if(driver!=null)
         {
             driver.setCurrentAddress(request.getCurrentLocation());
-            SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
+            SaveDriverRequest saveDriverRequest = new SaveDriverRequest(driver);
 
-            rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverToRepoRequest);
+            rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverRequest);
         }
         else
         {
@@ -488,31 +489,36 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request.getStatus() == DeliveryStatus.Delivered){
             delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
             delivery.setCompleted(true);
-            String uri = "http://localhost:8089/user/findDriverById";
+            String uri = "http://localhost:8089/user/getDriverByUUID";
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
 
             restTemplate.setMessageConverters(converters);
 
+            System.out.println(delivery.getDriverId());
+
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("driverID", delivery.getDeliveryID());
+            parts.add("driverID", delivery.getDriverId());
 
 
             ResponseEntity<FindDriverByIdResponse> responseEntity = restTemplate.postForEntity(uri,
                     parts, FindDriverByIdResponse.class);
 
-            if(responseEntity == null || !responseEntity.hasBody()
-                    || responseEntity.getBody() == null){
-                throw new InvalidRequestException("Invalid user.");
-            }
+            Driver driver;
 
-            Driver driver = responseEntity.getBody().getDriver();
+            if(responseEntity == null || responseEntity.getStatusCode() != HttpStatus.OK
+            || !responseEntity.hasBody()
+                    || responseEntity.getBody() == null){
+                driver = null;
+            }else {
+                driver = responseEntity.getBody().getDriver();
+            }
 
             if(driver!=null)
             {
                 driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
-                SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-                rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverToRepoRequest);
+                SaveDriverRequest saveDriverRequest = new SaveDriverRequest(driver);
+                rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriver", saveDriverRequest);
             }
             deliveryRepo.save(delivery);
 
@@ -524,18 +530,21 @@ public class DeliveryServiceImpl implements DeliveryService {
             ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
                     orderRequest, GetOrderResponse.class);
 
+            Order order;
             if(responseEntityOrder == null || !responseEntityOrder.hasBody()
-                    || responseEntityOrder.getBody() == null){
-                throw new InvalidRequestException("Invalid orderID.");
+                    || responseEntityOrder.getBody() == null
+                    || responseEntityOrder.getStatusCode() != HttpStatus.OK){
+                order = null;
+            }else{
+                order = responseEntityOrder.getBody().getOrder();
             }
-
-            Order order = responseEntityOrder.getBody().getOrder();
 
             order.setStatus(OrderStatus.DELIVERED);
             SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
 
             rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_saveOrderToRepo", saveOrderToRepoRequest);
         }
+
         UpdateDeliveryStatusResponse response = new UpdateDeliveryStatusResponse("Successful status update.");
         return response;
     }

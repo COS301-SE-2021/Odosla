@@ -2,7 +2,9 @@ package cs.superleague.delivery.stub.requests;
 
 import cs.superleague.delivery.stub.dataclass.Order;
 
-public class SaveOrderToRepoRequest {
+import java.io.Serializable;
+
+public class SaveOrderToRepoRequest implements Serializable {
 
     private final Order order;
 

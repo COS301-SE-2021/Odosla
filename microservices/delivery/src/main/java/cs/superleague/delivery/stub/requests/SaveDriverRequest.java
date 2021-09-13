@@ -2,15 +2,17 @@ package cs.superleague.delivery.stub.requests;
 
 import cs.superleague.delivery.stub.dataclass.Driver;
 
-public class SaveDriverToRepoRequest {
+import java.io.Serializable;
+
+public class SaveDriverRequest implements Serializable {
 
     private final Driver driver;
 
-    public SaveDriverToRepoRequest() {
+    public SaveDriverRequest() {
         this.driver = null;
     }
 
-    public SaveDriverToRepoRequest(Driver driver) {
+    public SaveDriverRequest(Driver driver) {
         this.driver = driver;
     }
 
