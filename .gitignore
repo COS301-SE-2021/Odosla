@@ -7,3 +7,4 @@
 /microservices/user/target/
 /rabbit_test/rms_1/target/
 /microservices/recommendation/target/
+/microservices/notifications/target/

@@ -7,6 +7,8 @@ package cs.superleague.api;
 
 import cs.superleague.models.NotificationSendDirectEmailNotificationRequest;
 import cs.superleague.models.NotificationSendDirectEmailNotificationResponse;
+import cs.superleague.models.NotificationSendEmailNotificationRequest;
+import cs.superleague.models.NotificationSendEmailNotificationResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,17 @@ public interface NotificationApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotification(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody NotificationSendDirectEmailNotificationRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for sending an email notification", nickname = "sendEmailNotification", notes = "Refer to summary", response = NotificationSendEmailNotificationResponse.class, tags={ "notification", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns whether the email was sent", response = NotificationSendEmailNotificationResponse.class) })
+    @RequestMapping(value = "/notification/sendEmailNotification",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<NotificationSendEmailNotificationResponse> sendEmailNotification(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody NotificationSendEmailNotificationRequest body
 );
 
 }

@@ -15,12 +15,21 @@ import cs.superleague.analytics.requests.CreateUserReportRequest;
 import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 
 @Service("analyticsServiceImpl")
 public class AnalyticsServiceImpl implements AnalyticsService {
+
+    RestTemplate restTemplate;
+
+    @Autowired
+    public AnalyticsServiceImpl(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * WHAT TO DO:
@@ -69,7 +78,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try {
             createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
-                    request.getEndDate());
+                    request.getEndDate(), restTemplate);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating user statistics report");
         }
@@ -83,7 +92,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }else if(request.getReportType() == ReportType.CSV){
             message = "UserReport.csv downloaded";
             StringBuilder sb = userAnalyticsHelper.createCSVReport();
-            response = new CreateUserReportResponse(true, message, new Date(), null, sb);
+            response = new CreateUserReportResponse(true, message, new Date(), null, sb.toString());
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
@@ -105,7 +114,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate());
 
         try{
-            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(), request.getEndDate());
+            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(),
+                    request.getEndDate(), restTemplate);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating financial statistics report");
         }
@@ -119,7 +129,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         }else if(request.getReportType() == ReportType.CSV){
             message = "FinancialReport.csv downloaded";
             StringBuilder sb = financialAnalyticsHelper.createCSVReport();
-            response = new CreateFinancialReportResponse(true, message, new Date(), null, sb);
+            response = new CreateFinancialReportResponse(true, message, new Date(), null, sb.toString());
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
@@ -140,7 +150,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), new Date(), new Date());
 
         try{
-            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData();
+            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(restTemplate);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating monthly statistics report");
         }
@@ -153,7 +163,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             response =  new CreateMonthlyReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
             message = "MonthlyReport.csv downloaded";
-            StringBuilder sb = monthlyAnalyticsHelper.createCSVReport();
+            String sb = monthlyAnalyticsHelper.createCSVReport().toString();
             response = new CreateMonthlyReportResponse(true, message, new Date(), null, sb);
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
