@@ -32,35 +32,35 @@ public class RabbitMQConfig {
     // QUEUE DEFINITIONS
     //
     @Bean
-    Queue SaveDriverQueue() {
-        return new Queue("Q_SaveDriver", true);
+    Queue SaveDriverToRepoQueue() {
+        return new Queue("Q_SaveDriverToRepo", true);
     }
 
     @Bean
-    Queue SaveShopperQueue() {
-        return new Queue("Q_SaveShopper", true);
+    Queue SaveShopperToRepoQueue() {
+        return new Queue("Q_SaveShopperToRepo", true);
     }
 
     //
     // BINDING
     //
     @Bean
-    Binding SaveDriverbinding(){
+    Binding SaveDriverToRepoBinding(){
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
-                .bind(SaveDriverQueue())
+                .bind(SaveDriverToRepoQueue())
                 .to(UserExchange())
-                .with("RK_SaveDriver")
+                .with("RK_SaveDriverToRepo")
                 .noargs();
     }
 
     @Bean
-    Binding SaveShopperbinding(){
+    Binding SaveShopperToRepoBinding(){
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
-                .bind(SaveDriverQueue())
+                .bind(SaveDriverToRepoQueue())
                 .to(UserExchange())
-                .with("RK_SaveShopper")
+                .with("RK_SaveShopperToRepo")
                 .noargs();
     }
 
@@ -83,7 +83,7 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveDriverQueue(), SaveShopperQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue());                                               // <------- add all queues to listen to here
         simpleMessageListenerContainer.setMessageListener(new UserListener(userService));
         return simpleMessageListenerContainer;
     }
