@@ -4,7 +4,7 @@ import com.itextpdf.text.*;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
-import cs.superleague.payment.stubs.recommendation.dataclass.RemoveRecommendationRequest;
+import cs.superleague.payment.stubs.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.dataclass.Order;
@@ -18,7 +18,7 @@ import cs.superleague.payment.stubs.shopping.requests.AddToQueueRequest;
 import cs.superleague.payment.stubs.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.payment.stubs.user.dataclass.Customer;
 import cs.superleague.payment.stubs.user.responses.GetCustomerByEmailResponse;
-import cs.superleague.payment.stubs.recommendation.dataclass.AddRecommendationRequest;
+import cs.superleague.payment.stubs.recommendation.requests.AddRecommendationRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -156,9 +156,8 @@ public class PaymentServiceImpl implements PaymentService {
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
-
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("StoreID", request.getStoreID());
+            parts.add("storeID", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate.postForEntity("http://localhost:8088/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
 
@@ -179,17 +178,13 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             CurrentUser currentUser = new CurrentUser();
-            //WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
-            restTemplate = new RestTemplate();
 
+            restTemplate = new RestTemplate();
             converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
-
             parts = new LinkedMultiValueMap<String, Object>();
-
             parts.add("email", currentUser.getEmail());
-
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
@@ -274,7 +269,7 @@ public class PaymentServiceImpl implements PaymentService {
                         for (Item item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
                         }
-                        //WRONG NEEDS TO FIX
+                        //CHECK
                         AddRecommendationRequest addRecommendationRequest = new AddRecommendationRequest(o.getOrderID(), productIDs);
                         rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
@@ -288,7 +283,7 @@ public class PaymentServiceImpl implements PaymentService {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        // WRONG NEED TO FIX AddToQueue
+
                         AddToQueueRequest addToQueueRequest = new AddToQueueRequest(o);
                         rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                     }).start();
@@ -464,17 +459,13 @@ import java.util.List;50"
         }
 
         CurrentUser currentUser = new CurrentUser();
-        //customerOptional = customerRepo.findByEmail(currentUser.getEmail()); WRONG NEED TO FIX
-        RestTemplate restTemplate = new RestTemplate();
 
+        RestTemplate restTemplate = new RestTemplate();
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
-
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-
         parts.add("email", currentUser.getEmail());
-
         ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
@@ -790,15 +781,11 @@ import java.util.List;50"
         Customer customer = null;
         // WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
         RestTemplate restTemplate = new RestTemplate();
-
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
-
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-
         parts.add("email", currentUser.getEmail());
-
         ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();

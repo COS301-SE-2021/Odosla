@@ -1,4 +1,4 @@
-package cs.superleague.payment.stubs.recommendation.dataclass;
+package cs.superleague.payment.stubs.recommendation.requests;
 
 import java.io.Serializable;
 import java.util.UUID;
