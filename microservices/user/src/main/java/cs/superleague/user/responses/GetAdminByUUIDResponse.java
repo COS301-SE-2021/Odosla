@@ -1,15 +1,17 @@
 package cs.superleague.user.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.user.dataclass.Admin;
 
-import java.util.Calendar;
+import java.util.Date;
 
 public class GetAdminByUUIDResponse {
     private final Admin admin;
-    private final Calendar timestamp;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    private final Date timestamp;
     private final String message;
 
-    public GetAdminByUUIDResponse(Admin admin, Calendar timestamp, String message) {
+    public GetAdminByUUIDResponse(Admin admin, Date timestamp, String message) {
         this.admin = admin;
         this.timestamp = timestamp;
         this.message = message;
@@ -19,7 +21,7 @@ public class GetAdminByUUIDResponse {
         return admin;
     }
 
-    public Calendar getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 

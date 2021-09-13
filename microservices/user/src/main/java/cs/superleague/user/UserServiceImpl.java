@@ -2834,7 +2834,7 @@ public class UserServiceImpl implements UserService{
             if(driver==null) {
                 throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
             }
-            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance(),"Driver entity with corresponding user id was returned");
+            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance().getTime(),"Driver entity with corresponding user id was returned");
         }
         else{
             throw new InvalidRequestException("GetDriverByUUID request is null - could not return driver entity");
@@ -2860,7 +2860,7 @@ public class UserServiceImpl implements UserService{
             if(admin==null) {
                 throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
             }
-            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance(),"Admin entity with corresponding user id was returned");
+            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance().getTime(),"Admin entity with corresponding user id was returned");
         }
         else{
             throw new InvalidRequestException("GetAdminByUUID request is null - could not return admin entity");
