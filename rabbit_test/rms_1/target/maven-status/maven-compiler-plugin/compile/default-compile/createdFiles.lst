@@ -1,4 +1,5 @@
 code\integration\security\SpringSecurityConfig.class
+code\ObjMessage.class
 code\Application.class
 cs\superleague\api\RbApi.class
 code\controller.class
@@ -7,7 +8,6 @@ code\integration\security\JWTAuthFilter.class
 cs\superleague\models\Rb1Response.class
 code\integration\security\CurrentUser.class
 code\integration\dataclass\UserType.class
-code\Message.class
 code\r1ServiceImpl.class
 cs\superleague\models\Rb1objRequest.class
 cs\superleague\models\Rb1objResponse.class

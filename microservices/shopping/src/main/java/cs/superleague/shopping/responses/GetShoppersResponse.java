@@ -1,6 +1,7 @@
 package cs.superleague.shopping.responses;
 
-import cs.superleague.user.dataclass.Shopper;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ public class GetShoppersResponse {
 
     private final List<Shopper> listOfShoppers;
     private final boolean success;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timeStamp;
     private final String message;
 

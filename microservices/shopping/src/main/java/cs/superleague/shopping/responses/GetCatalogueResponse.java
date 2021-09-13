@@ -1,5 +1,6 @@
 package cs.superleague.shopping.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.shopping.dataclass.Catalogue;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ public class GetCatalogueResponse {
 
     Catalogue catalogue;
     String message;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     Date timestamp;
     UUID storeID;
 
