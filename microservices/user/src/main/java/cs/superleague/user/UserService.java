@@ -46,6 +46,9 @@ public interface UserService {
 
     GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
     GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws UserException;
+    GetDriverByUUIDResponse getDriverByUUID(GetDriverByUUIDRequest request) throws UserException;
+    GetAdminByUUIDResponse getAdminByUUID(GetAdminByUUIDRequest request) throws UserException;
+
     DriverSetRatingResponse driverSetRating(DriverSetRatingRequest request) throws InvalidRequestException, DriverDoesNotExistException;
 
     GetCustomerByEmailResponse getCustomerByEmail(GetCustomerByEmailRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
@@ -53,6 +56,6 @@ public interface UserService {
     GetDriverByEmailResponse getDriverByEmail(GetDriverByEmailRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     GetAdminByEmailResponse getAdminByEmail(GetAdminByEmailRequest request) throws InvalidRequestException, AdminDoesNotExistException;
 
-    void saveDriver(SaveDriverRequest request) throws InvalidRequestException;
-    void saveShopper(SaveShopperRequest request) throws InvalidRequestException;
+    void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException;
+    void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
 }

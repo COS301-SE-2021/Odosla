@@ -517,6 +517,72 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_GetCustomerByUUIDResponse"
 
+  /user/getDriverByUUID:
+    post:
+      summary: Endpoint for get driver by UUID use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getDriverByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetDriverByUUIDRequest"
+      responses:
+        "200":
+          description: Returns driver
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetDriverByUUIDResponse"
+
+  /user/getAdminByUUID:
+    post:
+      summary: Endpoint for get admin by UUID use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getAdminByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetAdminByUUIDRequest"
+      responses:
+        "200":
+          description: Returns admin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetAdminByUUIDResponse"
+
+  /user/getShopperByUUID:
+    post:
+      summary: Endpoint for get shopper by UUID use case
+      tags:
+        - "user"
+      description: Refer to summary
+      operationId: getShopperByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetShopperByUUIDRequest"
+      responses:
+        "200":
+          description: Returns shopper
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetShopperByUUIDResponse"
+
   /user/driverSetRating:
     post:
       summary: Endpoint for setting rating use case
@@ -1307,6 +1373,60 @@ components:
       properties:
         customer:
           $ref: "#/components/schemas/CustomerObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    user_GetDriverByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userID:
+          type: string
+
+    user_GetDriverByUUIDResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        driver:
+          $ref: "#/components/schemas/DriverObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    user_GetAdminByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userID:
+          type: string
+
+    user_GetAdminByUUIDResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        admin:
+          $ref: "#/components/schemas/AdminObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    user_GetShopperByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        userID:
+          type: string
+
+    user_GetShopperByUUIDResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        shopperEntity:
+          $ref: "#/components/schemas/ShopperObject"
         timestamp:
           type: string
         message:
