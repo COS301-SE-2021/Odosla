@@ -106,17 +106,21 @@ public class ShoppingController implements ShoppingApi{
     @Override
     public ResponseEntity<ShoppingGetItemsResponse> getItems(ShoppingGetItemsRequest body) {
 
-        Store store=new Store(UUID.randomUUID(), -1, 24, "Shoprite", 2, 5, true, "shop/shoprite.png");
+        Item item=new Item("Jelly Tots","p924585674","6001068453408", UUID.randomUUID(),7.99,1,"Delicious Sweet.","item/jellyTots.png", "Beacon", "55g", "Sweets");
+        List<Item> itemList = new ArrayList<>();
+        itemList.add(item);
 
-        SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(store);
+        Order order = new Order();
+        order.setOrderID(UUID.randomUUID());
+        order.setStoreID(UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f"));
+        order.setUserID(UUID.fromString("0163d933-561f-4253-9ea9-174c15a7fe99"));
+        order.setTotalCost(7.99);
+        order.setItems(itemList);
 
-        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepoRequest);
+        AddToQueueRequest addToQueueRequest = new AddToQueueRequest(order);
 
-        Item item=new Item("Marie Biscuits","p123985674","6001068523408", UUID.randomUUID(),10.99,1,"Thick milk chocolate with nougat and caramel centre.","item/barOne.png", "Nestle", "55g", "Chocolate");
+        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
 
-        SaveItemToRepoRequest saveItemToRepoRequest = new SaveItemToRepoRequest(item);
-
-        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepoRequest);
 
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
