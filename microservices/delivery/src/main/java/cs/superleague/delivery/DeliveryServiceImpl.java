@@ -639,14 +639,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         {
             if(deliveries.get(k).getOrderID().compareTo(request.getOrderID()) == 0)
             {
-                uri = "http://localhost:8089/user/findDriverById";
+                uri = "http://localhost:8089/user/getDriverByUUID";
 
                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
                 parts.add("driverID", deliveries.get(k).getDriverId());
 
 
-                ResponseEntity<FindDriverByIdResponse> responseEntity = restTemplate.postForEntity(uri,
-                        parts, FindDriverByIdResponse.class);
+                ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
+                        parts, GetDriverByUUIDResponse.class);
 
                 if(responseEntity == null || !responseEntity.hasBody()
                         || responseEntity.getBody() == null){
