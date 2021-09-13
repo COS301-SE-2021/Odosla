@@ -4,7 +4,7 @@ import com.itextpdf.text.*;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.TransactionRepo;
-import cs.superleague.payment.stubs.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.payment.stubs.recommendation.dataclass.RemoveRecommendationRequest;
 import cs.superleague.payment.stubs.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.dataclass.Order;
@@ -18,7 +18,7 @@ import cs.superleague.payment.stubs.shopping.requests.AddToQueueRequest;
 import cs.superleague.payment.stubs.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.payment.stubs.user.dataclass.Customer;
 import cs.superleague.payment.stubs.user.responses.GetCustomerByEmailResponse;
-import cs.superleague.payment.stubs.recommendation.requests.AddRecommendationRequest;
+import cs.superleague.payment.stubs.recommendation.dataclass.AddRecommendationRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -820,7 +820,7 @@ import java.util.List;50"
     }
 
     @Override
-    public void saveOrder(SaveOrderRequest request) throws InvalidRequestException {
+    public void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
