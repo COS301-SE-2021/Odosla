@@ -4,10 +4,10 @@ import cs.superleague.user.dataclass.Shopper;
 
 import java.io.Serializable;
 
-public class SaveShopperRequest implements Serializable {
+public class SaveShopperToRepoRequest implements Serializable {
     private Shopper shopper;
 
-    public SaveShopperRequest(Shopper shopper) {
+    public SaveShopperToRepoRequest(Shopper shopper) {
         this.shopper = shopper;
     }
 

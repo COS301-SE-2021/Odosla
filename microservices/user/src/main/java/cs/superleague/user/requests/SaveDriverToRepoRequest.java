@@ -4,10 +4,10 @@ import cs.superleague.user.dataclass.Driver;
 
 import java.io.Serializable;
 
-public class SaveDriverRequest implements Serializable {
+public class SaveDriverToRepoRequest implements Serializable {
     private Driver driver;
 
-    public SaveDriverRequest(Driver driver) {
+    public SaveDriverToRepoRequest(Driver driver) {
         this.driver = driver;
     }
 
