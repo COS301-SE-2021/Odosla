@@ -6,6 +6,7 @@ import cs.superleague.analytics.stub.dataclass.Shopper;
 import cs.superleague.analytics.stub.dataclass.User;
 import cs.superleague.analytics.stub.dataclass.UserType;
 import cs.superleague.analytics.stub.responses.GetUsersResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -34,7 +35,8 @@ public class CreateUserAnalyticsData {
 
     private ResponseEntity<GetUsersResponse> responseEntity;
 
-    public CreateUserAnalyticsData(Date startDate, Date endDate){
+    public CreateUserAnalyticsData(Date startDate, Date endDate,
+                               RestTemplate restTemplate){
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();
@@ -52,9 +54,6 @@ public class CreateUserAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        System.out.println(this.startDate);
-
-        RestTemplate restTemplate = new RestTemplate();
         String uri = "http://localhost:8089/user/getUsers";
 
         try{

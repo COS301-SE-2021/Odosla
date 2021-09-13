@@ -27,7 +27,7 @@ public class CreateFinancialAnalyticsData {
 
     private ResponseEntity<GetOrdersResponse> responseEntity;
 
-    public CreateFinancialAnalyticsData(Date startDate, Date endDate){
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate, RestTemplate restTemplate){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -38,7 +38,6 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        RestTemplate restTemplate = new RestTemplate();
         String uri = "http://localhost:8086/payment/getOrders";
 
         try{

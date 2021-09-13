@@ -45,5 +45,5 @@ public interface PaymentService {
 
     GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist;
 
-    void saveOrder(SaveOrderRequest request) throws InvalidRequestException;
+    void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException;
 }

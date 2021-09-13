@@ -3004,7 +3004,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveDriver(SaveDriverRequest request) throws InvalidRequestException {
+    public void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -3015,7 +3015,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveShopper(SaveShopperRequest request) throws InvalidRequestException {
+    public void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
