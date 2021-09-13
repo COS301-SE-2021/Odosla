@@ -1,7 +1,7 @@
 package cs.superleague.shopping.requests;
 
 import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 
 import java.util.List;
 

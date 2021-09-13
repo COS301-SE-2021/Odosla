@@ -1,5 +1,9 @@
 /.idea/
 /backend/target/
 /gen/
+/microservices/shopping/target/
 /microservices/payment/target/
 /microservices/delivery/target/
+/microservices/user/target/
+/rabbit_test/rms_1/target/
+/microservices/recommendation/target/

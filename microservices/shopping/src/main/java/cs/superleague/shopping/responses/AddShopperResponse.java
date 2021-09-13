@@ -1,10 +1,13 @@
 package cs.superleague.shopping.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class AddShopperResponse {
     /** attributes */
     private final boolean success;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 

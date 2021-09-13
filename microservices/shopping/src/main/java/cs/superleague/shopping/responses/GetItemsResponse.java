@@ -1,6 +1,6 @@
 package cs.superleague.shopping.responses;
 
-import cs.superleague.shopping.dataclass.Item;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.shopping.dataclass.Item;
 
 import java.util.Date;
@@ -10,6 +10,7 @@ import java.util.UUID;
 public class GetItemsResponse {
 
     private List<Item> items;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
     private UUID storeID;
