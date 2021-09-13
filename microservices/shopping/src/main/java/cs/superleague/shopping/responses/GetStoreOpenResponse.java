@@ -1,5 +1,7 @@
 package cs.superleague.shopping.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -7,6 +9,7 @@ public class GetStoreOpenResponse {
 
     Boolean isOpen = false;
     String message;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     Date timestamp;
     int openingTime;
     int closingTime;
