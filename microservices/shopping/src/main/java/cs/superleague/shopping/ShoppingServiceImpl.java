@@ -177,7 +177,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         updatedOrder.setProcessDate(Calendar.getInstance());
 
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
-        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+        //rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
         Store store=null;
         try {

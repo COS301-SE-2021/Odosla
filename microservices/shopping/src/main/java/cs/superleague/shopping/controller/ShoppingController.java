@@ -14,6 +14,7 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
+import cs.superleague.shopping.stubs.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.shopping.stubs.user.dataclass.*;
 import cs.superleague.shopping.stubs.user.exceptions.UserDoesNotExistException;
 import cs.superleague.shopping.requests.GetShoppersRequest;
@@ -117,9 +118,13 @@ public class ShoppingController implements ShoppingApi{
         order.setTotalCost(7.99);
         order.setItems(itemList);
 
-        AddToQueueRequest addToQueueRequest = new AddToQueueRequest(order);
+        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
-        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
+
+//        AddToQueueRequest addToQueueRequest = new AddToQueueRequest(order);
+//
+//        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
 
 
         //creating response object and default return status:
