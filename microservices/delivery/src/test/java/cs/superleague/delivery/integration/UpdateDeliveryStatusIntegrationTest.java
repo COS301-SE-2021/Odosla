@@ -10,19 +10,31 @@ import cs.superleague.delivery.responses.UpdateDeliveryStatusResponse;
 import cs.superleague.delivery.stub.dataclass.Driver;
 import cs.superleague.delivery.stub.dataclass.GeoPoint;
 import cs.superleague.delivery.stub.dataclass.Order;
-import cs.superleague.delivery.stub.requests.SaveDriverRequest;
+import cs.superleague.delivery.stub.dataclass.UserType;
+import cs.superleague.delivery.stub.requests.SaveDriverToRepoRequest;
 import cs.superleague.delivery.stub.requests.SaveOrderToRepoRequest;
+import cs.superleague.integration.security.JwtUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.junit.jupiter.api.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.Calendar;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -41,6 +53,15 @@ public class UpdateDeliveryStatusIntegrationTest {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Value("${env.SECRET}")
+    private String SECRET = "stub";
+
+    @Value("${env.HEADER}")
+    private String HEADER = "stub";
 
     UUID deliveryID;
     Delivery delivery;
@@ -75,17 +96,50 @@ public class UpdateDeliveryStatusIntegrationTest {
         delivery.setOrderID(orderID);
         deliveryRepo.save(delivery);
 
-        uri = "http://localhost:8089/user/findDriverById";
+        uri = "http://localhost:8089/user/getDriverByUUID";
 
         driver = new Driver();
-        driver.setDriverID(UUID.randomUUID());
+        driver.setDriverID(driverID);
+        driver.setEmail("u14254922@tuks.co.za");
+        driver.setAccountType(UserType.DRIVER);
+
+        String jwt = jwtUtil.generateJWTTokenDriver(driver);
+
+        Header header = new BasicHeader("Authorization", jwt);
+        List<Header> headers = new ArrayList<>();
+        headers.add(header);
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+        jwt = jwt.replace(HEADER, "");
+        Claims claims = Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType = (String) claims.get("userType");
+        String email = (String) claims.get("email");
+
+        UsernamePasswordAuthenticationToken auth = new
+                UsernamePasswordAuthenticationToken(claims.getSubject(),
+                null, authorities.stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList()));
+
+        HashMap<String, Object> info = new HashMap<>();
+        info.put("userType", userType);
+        info.put("email", email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+//        restTemplate = new RestTemplateBuilder()..build();
+
+//        restTemplate.setInterceptors(Collections.singletonList((request, body, execution)));
+
 
         order = new Order();
         order.setOrderID(UUID.randomUUID());
 
         // Store Driver
-        SaveDriverRequest saveDriverRequest = new SaveDriverRequest(driver);
-        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriver", saveDriverRequest);
+        SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
+        System.out.println(driver.getDriverID() + "- hello");
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveDriverToRepoRequest);
 
         // Save Order
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
@@ -94,7 +148,7 @@ public class UpdateDeliveryStatusIntegrationTest {
 
     @AfterEach
     void tearDown(){
-        deliveryRepo.deleteAll();
+        SecurityContextHolder.clearContext();
     }
 
     @Test

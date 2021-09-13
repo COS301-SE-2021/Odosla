@@ -10,7 +10,7 @@ import cs.superleague.delivery.requests.UpdateDeliveryStatusRequest;
 import cs.superleague.delivery.responses.UpdateDeliveryStatusResponse;
 import cs.superleague.delivery.stub.dataclass.Order;
 import cs.superleague.delivery.stub.dataclass.*;
-import cs.superleague.delivery.stub.responses.FindDriverByIdResponse;
+import cs.superleague.delivery.stub.responses.GetDriverByUUIDResponse;
 import cs.superleague.delivery.stub.responses.GetOrderResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,7 +100,7 @@ public class UpdateDeliveryStatusUnitTest {
         driver = new Driver("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.DRIVER, driverID);
         driverLocation = new GeoPoint(50.0, 50.0, "address");
 
-        uri = "http://localhost:8089/user/findDriverById";
+        uri = "http://localhost:8089/user/getDriverByUUID";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
@@ -167,21 +167,22 @@ public class UpdateDeliveryStatusUnitTest {
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
         UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
 
-        FindDriverByIdResponse findDriverByIdResponse = new FindDriverByIdResponse(driver);
+        GetDriverByUUIDResponse getDriverByUUIDResponse = new GetDriverByUUIDResponse(driver,
+                new Date(), "Driver successfully retrieved");
         GetOrderResponse getOrderResponse = new GetOrderResponse(new Order(), true, new Date(), "");
 
-        ResponseEntity<FindDriverByIdResponse> responseEntity = new ResponseEntity<>(findDriverByIdResponse,
+        ResponseEntity<GetDriverByUUIDResponse> responseEntity = new ResponseEntity<>(getDriverByUUIDResponse,
                 HttpStatus.OK);
         ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse,
                 HttpStatus.OK);
 
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.add("driverID", delivery.getDriverId());
+        Map<String, Object> parts = new HashMap<>();
+        parts.put("driverID", delivery.getDriverId());
 
         MultiValueMap<String, Object> orderRequest = new LinkedMultiValueMap<String, Object>();
         orderRequest.add("orderId", delivery.getOrderID());
 
-        Mockito.when(restTemplate.postForEntity(uri, parts, FindDriverByIdResponse.class))
+        Mockito.when(restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class))
                 .thenReturn(responseEntity);
 
         uri = "http://localhost:8086/payment/getOrder";

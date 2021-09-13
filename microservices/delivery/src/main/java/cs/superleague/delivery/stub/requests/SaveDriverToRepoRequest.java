@@ -4,15 +4,15 @@ import cs.superleague.delivery.stub.dataclass.Driver;
 
 import java.io.Serializable;
 
-public class SaveDriverRequest implements Serializable {
+public class SaveDriverToRepoRequest implements Serializable {
 
     private final Driver driver;
 
-    public SaveDriverRequest() {
+    public SaveDriverToRepoRequest() {
         this.driver = null;
     }
 
-    public SaveDriverRequest(Driver driver) {
+    public SaveDriverToRepoRequest(Driver driver) {
         this.driver = driver;
     }
 
