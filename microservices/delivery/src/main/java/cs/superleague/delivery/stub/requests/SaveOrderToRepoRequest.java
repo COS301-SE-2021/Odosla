@@ -1,6 +1,6 @@
 package cs.superleague.delivery.stub.requests;
 
-import cs.superleague.delivery.stub.dataclass.Order;
+import cs.superleague.delivery.stub.payment.dataclass.Order;
 
 public class SaveOrderToRepoRequest {
 

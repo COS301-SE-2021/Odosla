@@ -11,9 +11,14 @@ import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
 import cs.superleague.delivery.stub.dataclass.*;
+import cs.superleague.delivery.stub.payment.dataclass.GeoPoint;
+import cs.superleague.delivery.stub.payment.dataclass.Order;
+import cs.superleague.delivery.stub.payment.dataclass.OrderStatus;
 import cs.superleague.delivery.stub.requests.SaveDriverToRepoRequest;
 import cs.superleague.delivery.stub.requests.SaveOrderToRepoRequest;
 import cs.superleague.delivery.stub.responses.*;
+import cs.superleague.delivery.stub.shopping.dataclass.Store;
+import cs.superleague.delivery.stub.user.dataclass.*;
 import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +171,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Missing parameters.");
         }
 
-        String uri = "http://localhost:8089/user/findCustomerById";
+        String uri = "http://localhost:8089/user/getCustomerByUUID";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 

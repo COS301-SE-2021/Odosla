@@ -1,6 +1,6 @@
 package cs.superleague.delivery.stub.responses;
 
-import cs.superleague.delivery.stub.dataclass.Admin;
+import cs.superleague.delivery.stub.user.dataclass.Admin;
 
 public class FindAdminByEmailResponse {
 

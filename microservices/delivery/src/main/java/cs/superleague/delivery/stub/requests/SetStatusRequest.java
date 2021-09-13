@@ -1,7 +1,7 @@
 package cs.superleague.delivery.stub.requests;
 
-import cs.superleague.delivery.stub.dataclass.Order;
-import cs.superleague.delivery.stub.dataclass.OrderStatus;
+import cs.superleague.delivery.stub.payment.dataclass.Order;
+import cs.superleague.delivery.stub.payment.dataclass.OrderStatus;
 
 public class SetStatusRequest {
     /** attrbiutes */

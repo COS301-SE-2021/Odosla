@@ -1,5 +1,5 @@
 package cs.superleague.delivery.stub.responses;
-import cs.superleague.delivery.stub.dataclass.Store;
+import cs.superleague.delivery.stub.shopping.dataclass.Store;
 
 import java.util.Date;
 

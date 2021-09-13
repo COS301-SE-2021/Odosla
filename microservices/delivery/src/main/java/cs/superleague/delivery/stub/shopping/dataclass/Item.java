@@ -1,4 +1,4 @@
-package cs.superleague.delivery.stub.dataclass;
+package cs.superleague.delivery.stub.shopping.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,6 +1,6 @@
 package cs.superleague.delivery.stub.requests;
 
-import cs.superleague.delivery.stub.dataclass.Driver;
+import cs.superleague.delivery.stub.user.dataclass.Driver;
 
 public class SaveDriverToRepoRequest {
 

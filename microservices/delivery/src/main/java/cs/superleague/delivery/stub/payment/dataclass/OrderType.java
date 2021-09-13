@@ -1,4 +1,4 @@
-package cs.superleague.delivery.stub.dataclass;
+package cs.superleague.delivery.stub.payment.dataclass;
 
 public enum OrderType {
     DELIVERY,

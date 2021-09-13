@@ -1,5 +1,6 @@
-package cs.superleague.delivery.stub.dataclass;
+package cs.superleague.delivery.stub.payment.dataclass;
 
+import cs.superleague.delivery.stub.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
