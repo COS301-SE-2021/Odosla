@@ -152,7 +152,6 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
             RestTemplate restTemplate = new RestTemplate();
-
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
