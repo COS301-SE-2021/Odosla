@@ -7,8 +7,13 @@ import cs.superleague.notification.requests.*;
 import cs.superleague.notification.responses.*;
 import cs.superleague.notification.exceptions.InvalidRequestException;
 //import cs.superleague.user.dataclass.*;
-import cs.superleague.notification.stubs.user.dataclass.UserType;
+import cs.superleague.notification.stubs.user.dataclass.*;
+import cs.superleague.notification.stubs.user.responses.GetAdminByUUIDResponse;
+import cs.superleague.notification.stubs.user.responses.GetCustomerByUUIDResponse;
+import cs.superleague.notification.stubs.user.responses.GetDriverByUUIDResponse;
+import cs.superleague.notification.stubs.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mail.SimpleMailMessage;
@@ -117,20 +122,45 @@ public class NotificationServiceImpl implements NotificationService {
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("userID", request.getProperties().get("UserID"));
-
-            if (!adminRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
+            Admin admin = useCaseResponseEntity.getBody().getAdmin();
+            if (admin == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.CUSTOMER){
-            if (!customerRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", request.getProperties().get("UserID"));
+            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
+            Customer customer = useCaseResponseEntity.getBody().getCustomer();
+            if (customer == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.DRIVER){
-            if (!driverRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", request.getProperties().get("UserID"));
+            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
+            Driver driver = useCaseResponseEntity.getBody().getDriver();
+            if (driver == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.SHOPPER){
-            if (!shopperRepo.findById(UUID.fromString(request.getProperties().get("UserID"))).isPresent()){
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", request.getProperties().get("UserID"));
+            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            Shopper shopper = useCaseResponseEntity.getBody().getShopper();
+            if (shopper == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         }
@@ -184,34 +214,12 @@ public class NotificationServiceImpl implements NotificationService {
         if(request.getUserID() == null || request.getUserID().equals("")){
             throw new InvalidRequestException("Null userID.");
         }
-        String email = "";
         if (request.getUserType() == null){
             throw new InvalidRequestException("Invalid UserType.");
         }
-        if (request.getUserType() == UserType.ADMIN){
-            Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
-            if (admin == null){
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = admin.getEmail();
-        } else if (request.getUserType() == UserType.CUSTOMER){
-            Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
-            if (customer == null){
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = customer.getEmail();
-        }else if (request.getUserType() == UserType.DRIVER){
-            Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
-            if (driver == null){
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = driver.getEmail();
-        }else if (request.getUserType() == UserType.SHOPPER) {
-            Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
-            if (shopper == null) {
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = shopper.getEmail();
+        String email = getEmail(request.getUserType(), request.getUserID());
+        if (email == ""){
+            throw new InvalidRequestException("User not found in database.");
         }
         if (email == null){
             throw new InvalidRequestException("Null recipient email address.");
@@ -245,31 +253,9 @@ public class NotificationServiceImpl implements NotificationService {
         if (request.getPDF() == null || request.getUserID() == null || request.getMessage() == null || request.getSubject() == null || request.getUserType() == null){
             throw new InvalidRequestException("Null parameters.");
         }
-        String email="";
-        if (request.getUserType() == UserType.ADMIN){
-            Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
-            if (admin == null){
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = admin.getEmail();
-        } else if (request.getUserType() == UserType.CUSTOMER){
-            Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
-            if (customer == null){
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = customer.getEmail();
-        }else if (request.getUserType() == UserType.DRIVER){
-            Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
-            if (driver == null){
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = driver.getEmail();
-        }else if (request.getUserType() == UserType.SHOPPER) {
-            Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
-            if (shopper == null) {
-                throw new InvalidRequestException("User not found in database.");
-            }
-            email = shopper.getEmail();
+        String email = getEmail(request.getUserType(), request.getUserID());
+        if (email == ""){
+            throw new InvalidRequestException("User not found in database.");
         }
         if (email == null){
             throw new InvalidRequestException("Null recipient email address.");
@@ -338,5 +324,67 @@ public class NotificationServiceImpl implements NotificationService {
         } catch(Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public String getEmail(UserType userType, UUID userID){
+        String email = "";
+        if (userType == UserType.ADMIN){
+            //Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", userID);
+            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
+            Admin admin = useCaseResponseEntity.getBody().getAdmin();
+            if (admin == null){
+                return "";
+            }
+            email = admin.getEmail();
+        } else if (userType == UserType.CUSTOMER){
+            //Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", userID);
+            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
+            Customer customer = useCaseResponseEntity.getBody().getCustomer();
+            if (customer == null){
+                return "";
+            }
+            email = customer.getEmail();
+        }else if (userType == UserType.DRIVER){
+            //Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", userID);
+            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
+            Driver driver = useCaseResponseEntity.getBody().getDriver();
+            if (driver == null){
+                return "";
+            }
+            email = driver.getEmail();
+        }else if (userType == UserType.SHOPPER) {
+            //Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userID", userID);
+            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            Shopper shopper = useCaseResponseEntity.getBody().getShopper();
+            if (shopper == null) {
+                return "";
+            }
+            email = shopper.getEmail();
+        }
+        return email;
     }
 }
