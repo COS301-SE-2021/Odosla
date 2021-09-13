@@ -43,13 +43,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
     private final RabbitTemplate rabbitTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.rabbitTemplate = rabbitTemplate;
+        this.restTemplate = restTemplate;
     }
 
 
@@ -151,7 +153,7 @@ public class PaymentServiceImpl implements PaymentService {
             {
                 throw new InvalidRequestException(invalidMessage);
             }
-            RestTemplate restTemplate = new RestTemplate();
+
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
@@ -178,7 +180,6 @@ public class PaymentServiceImpl implements PaymentService {
 
             CurrentUser currentUser = new CurrentUser();
 
-            restTemplate = new RestTemplate();
             converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
@@ -268,7 +269,7 @@ public class PaymentServiceImpl implements PaymentService {
                         for (Item item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
                         }
-                        //CHECK
+
                         AddRecommendationRequest addRecommendationRequest = new AddRecommendationRequest(o.getOrderID(), productIDs);
                         rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
@@ -372,15 +373,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             // remove Order from DB.
             orderRepo.delete(order);
-            // WRONG NEED TO FIX
+
             RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
             rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
-//            if (recommendationRepo != null){
-//                List<Recommendation> recommendationsToDelete = recommendationRepo.findRecommendationByOrderID(req.getOrderID());
-//                for (Recommendation recommendation : recommendationsToDelete){
-//                    recommendationRepo.delete(recommendation);
-//                }
-//            }
+//
             orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee
@@ -459,7 +455,6 @@ import java.util.List;50"
 
         CurrentUser currentUser = new CurrentUser();
 
-        RestTemplate restTemplate = new RestTemplate();
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
@@ -778,8 +773,7 @@ import java.util.List;50"
 
         CurrentUser currentUser = new CurrentUser();
         Customer customer = null;
-        // WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
-        RestTemplate restTemplate = new RestTemplate();
+
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
         restTemplate.setMessageConverters(converters);
