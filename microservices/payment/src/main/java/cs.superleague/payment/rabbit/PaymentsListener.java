@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 @Component
-public class SaveOrderListener implements MessageListener {
+public class PaymentsListener implements MessageListener {
     private final PaymentService paymentService;
 
-    public SaveOrderListener(PaymentService paymentService) {
+    public PaymentsListener(PaymentService paymentService) {
         this.paymentService = paymentService;
     }
 
