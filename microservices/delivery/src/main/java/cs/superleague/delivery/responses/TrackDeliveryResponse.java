@@ -1,6 +1,6 @@
 package cs.superleague.delivery.responses;
 
-import cs.superleague.delivery.stub.payment.dataclass.GeoPoint;
+import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
 
 public class TrackDeliveryResponse {
     private GeoPoint currentLocation;

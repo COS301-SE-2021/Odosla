@@ -10,15 +10,19 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
-import cs.superleague.delivery.stub.dataclass.*;
-import cs.superleague.delivery.stub.payment.dataclass.GeoPoint;
-import cs.superleague.delivery.stub.payment.dataclass.Order;
-import cs.superleague.delivery.stub.payment.dataclass.OrderStatus;
-import cs.superleague.delivery.stub.requests.SaveDriverToRepoRequest;
-import cs.superleague.delivery.stub.requests.SaveOrderToRepoRequest;
-import cs.superleague.delivery.stub.responses.*;
-import cs.superleague.delivery.stub.shopping.dataclass.Store;
-import cs.superleague.delivery.stub.user.dataclass.*;
+import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.delivery.stubs.payment.dataclass.Order;
+import cs.superleague.delivery.stubs.payment.dataclass.OrderStatus;
+import cs.superleague.delivery.stubs.payment.responses.GetOrderResponse;
+import cs.superleague.delivery.stubs.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.delivery.stubs.user.requests.SaveDriverToRepoRequest;
+import cs.superleague.delivery.stubs.payment.requests.SaveOrderToRepoRequest;
+import cs.superleague.delivery.stubs.shopping.dataclass.Store;
+import cs.superleague.delivery.stubs.user.dataclass.*;
+import cs.superleague.delivery.stubs.user.responses.GetAdminByEmailResponse;
+import cs.superleague.delivery.stubs.user.responses.GetCustomerByUUIDResponse;
+import cs.superleague.delivery.stubs.user.responses.GetDriverByEmailResponse;
+import cs.superleague.delivery.stubs.user.responses.GetDriverByUUIDResponse;
 import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,18 +78,18 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findDriverByEmail";
+        String uri = "http://localhost:8089/user/getDriverByEmail";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.add("driverEmail", currentUser.getEmail());
+        parts.add("email", currentUser.getEmail());
 
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
         || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -128,7 +132,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
 
-                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_saveOrderToRepo", saveOrderToRepoRequest);
+                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
                 //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
 
@@ -147,7 +151,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
                 saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder2);
 
-                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_saveOrderToRepo", saveOrderToRepoRequest);
+                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
                 delivery.setDriverId(driver.getDriverID());
                 deliveryRepo.save(delivery);
@@ -178,10 +182,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.add("customerID", request.getCustomerID());
+        parts.add("userID", request.getCustomerID());
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetCustomerByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetCustomerByUUIDResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
         || responseEntity.getBody() == null){
@@ -201,14 +205,14 @@ public class DeliveryServiceImpl implements DeliveryService {
                 || responseEntityOrder.getBody() == null){
             throw new InvalidRequestException("Invalid orderID.");
         }
-        uri = "http://localhost:8086/shopping/getStore";
+        uri = "http://localhost:8088/shopping/getStoreByUUID";
 
         MultiValueMap<String, Object> storeRequest = new LinkedMultiValueMap<>();
         orderRequest.add("storeId", request.getStoreID());
 
 
-        ResponseEntity<GetStoreResponse> responseEntityStore = restTemplate.postForEntity(uri,
-                storeRequest, GetStoreResponse.class);
+        ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = restTemplate.postForEntity(uri,
+                storeRequest, GetStoreByUUIDResponse.class);
 
         if(responseEntityStore == null || !responseEntityStore.hasBody()
         || responseEntityStore.getBody() == null || responseEntityStore.getBody().getStore() == null){
@@ -280,18 +284,18 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findAdminByEmail";
+        String uri = "http://localhost:8089/user/getAdminByEmail";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.add("adminEmail", currentUser.getEmail());
+        parts.add("email", currentUser.getEmail());
 
 
-        ResponseEntity<FindAdminByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindAdminByEmailResponse.class);
+        ResponseEntity<GetAdminByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetAdminByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getAdmin() == null){
@@ -332,18 +336,18 @@ public class DeliveryServiceImpl implements DeliveryService {
         double range = request.getRangeOfDelivery();
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findDriverByEmail";
+        String uri = "http://localhost:8089/user/getDriverByEmail";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
-        parts.add("driverEmail", currentUser.getEmail());
+        parts.add("email", currentUser.getEmail());
 
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -357,7 +361,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             driver.setCurrentAddress(request.getCurrentLocation());
             SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
 
-            rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverToRepoRequest);
+            rabbitTemplate.convertAndSend("userEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
         }
         else
         {
@@ -401,7 +405,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findDriverByEmail";
+        String uri = "http://localhost:8089/user/getDriverByEmail";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
@@ -411,8 +415,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         parts.add("driverEmail", currentUser.getEmail());
 
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -446,18 +450,18 @@ public class DeliveryServiceImpl implements DeliveryService {
             return response;
         }
 
-        String uri = "http://localhost:8089/user/findDriverById";
+        String uri = "http://localhost:8089/user/getDriverByUUID";
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
         restTemplate.setMessageConverters(converters);
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-        parts.add("driverID", delivery.getDriverId());
+        parts.add("userID", delivery.getDriverId());
 
 
-        ResponseEntity<FindDriverByIdResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByIdResponse.class);
+        ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByUUIDResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null){
@@ -493,18 +497,18 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request.getStatus() == DeliveryStatus.Delivered){
             delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
             delivery.setCompleted(true);
-            String uri = "http://localhost:8089/user/findDriverById";
+            String uri = "http://localhost:8089/user/getDriverByUUID";
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
 
             restTemplate.setMessageConverters(converters);
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("driverID", delivery.getDeliveryID());
+            parts.add("userID", delivery.getDeliveryID());
 
 
-            ResponseEntity<FindDriverByIdResponse> responseEntity = restTemplate.postForEntity(uri,
-                    parts, FindDriverByIdResponse.class);
+            ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
+                    parts, GetDriverByUUIDResponse.class);
 
             if(responseEntity == null || !responseEntity.hasBody()
                     || responseEntity.getBody() == null){
@@ -517,7 +521,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             {
                 driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
                 SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-                rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverToRepoRequest);
+                rabbitTemplate.convertAndSend("userEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
             }
             deliveryRepo.save(delivery);
 
@@ -539,7 +543,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             order.setStatus(OrderStatus.DELIVERED);
             SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
 
-            rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_saveOrderToRepo", saveOrderToRepoRequest);
+            rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
         }
         UpdateDeliveryStatusResponse response = new UpdateDeliveryStatusResponse("Successful status update.");
         return response;

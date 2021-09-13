@@ -1,6 +1,6 @@
 package cs.superleague.delivery.requests;
 
-import cs.superleague.delivery.stub.payment.dataclass.GeoPoint;
+import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
 
 public class GetDeliveryCostRequest {
     private GeoPoint dropOffLocation;
