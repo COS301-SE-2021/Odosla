@@ -2,6 +2,7 @@ cs\superleague\api\Rb2Api.class
 code\integration\security\SpringSecurityConfig.class
 cs\superleague\models\Rb2Request.class
 code\Application.class
+code\utility\SerializationUtility.class
 code\controller.class
 code\integration\security\JWTAuthFilter.class
 code\integration\security\CurrentUser.class
@@ -9,5 +10,8 @@ code\integration\dataclass\UserType.class
 code\other\ObjMessage.class
 code\r1ServiceImpl.class
 cs\superleague\models\Rb2Response.class
+code\rabbit\CatListener.class
+code\rabbit\RabbitMQConfig.class
+code\utility\DeserializationUtility.class
 code\integration\TestController.class
 code\r1Service.class

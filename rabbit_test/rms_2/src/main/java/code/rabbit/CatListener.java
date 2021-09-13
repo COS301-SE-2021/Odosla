@@ -1,12 +1,14 @@
 package code.rabbit;
 
-import code.ObjMessage;
+import code.other.ObjMessage;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+
+import static code.utility.DeserializationUtility.deSerializeObjectFromString;
 
 public class CatListener implements MessageListener {
     @Override
@@ -16,6 +18,7 @@ public class CatListener implements MessageListener {
 
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
+
             obj = (ObjMessage) in.readObject();
 
             System.out.println("message received: " + obj.toString());

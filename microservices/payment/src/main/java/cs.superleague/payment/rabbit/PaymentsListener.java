@@ -24,9 +24,13 @@ public class PaymentsListener implements MessageListener {
         SaveOrderToRepoRequest request = null;
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
-            request = (SaveOrderToRepoRequest) in.readObject();
-            SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(request.getOrder());
-            paymentService.saveOrderToRepo(saveOrderToRepoRequest);
+            Object o = in.readObject();
+            if(o instanceof SaveOrderToRepoRequest)
+            {
+                request = (SaveOrderToRepoRequest) in.readObject();
+                SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(request.getOrder());
+                paymentService.saveOrderToRepo(saveOrderToRepoRequest);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

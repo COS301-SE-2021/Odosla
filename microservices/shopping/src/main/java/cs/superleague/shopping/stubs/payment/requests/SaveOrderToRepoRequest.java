@@ -5,6 +5,8 @@ import cs.superleague.shopping.stubs.payment.dataclass.Order;
 import java.io.Serializable;
 
 public class SaveOrderToRepoRequest implements Serializable {
+
+    private static final long serialVersionUID = 1234567L;
     private Order order;
 
     public SaveOrderToRepoRequest(Order order) {

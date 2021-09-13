@@ -1,5 +1,6 @@
 package code;
 
+import code.other.ObjMessage;
 import cs.superleague.api.RbApi;
 import cs.superleague.models.Rb1Request;
 import cs.superleague.models.Rb1Response;
@@ -39,9 +40,9 @@ public class controller implements RbApi {
         rr.setMessage(body.getName());
 
         ObjMessage m = new ObjMessage(body.getName(), body.getType());
+        rabbit.convertAndSend("CatExchange", "KEY_CAT", m);
 
         //publish message
-        rabbit.convertAndSend("CatExchange", "KEY_CAT", m);
 
         return new ResponseEntity<>(rr, HttpStatus.OK);
     }
