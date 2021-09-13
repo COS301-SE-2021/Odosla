@@ -1,8 +1,9 @@
 package cs.superleague.notification.requests;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class SendDirectEmailNotificationRequest {
+public class SendDirectEmailNotificationRequest implements Serializable {
     private final String message;
     private final String subject;
     private final String email;
