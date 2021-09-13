@@ -2816,6 +2816,58 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
+    @Override
+    public GetDriverByUUIDResponse getDriverByUUID(GetDriverByUUIDRequest request) throws UserException {
+        GetDriverByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetDriverByUUIDRequest request - could not return driver entity");
+            }
+
+            Driver driver=null;
+            try {
+                driver = driverRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+            }
+            if(driver==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+            }
+            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance(),"Driver entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetDriverByUUID request is null - could not return driver entity");
+        }
+        return response;
+    }
+
+    @Override
+    public GetAdminByUUIDResponse getAdminByUUID(GetAdminByUUIDRequest request) throws UserException {
+        GetAdminByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetAdminByUUIDRequest request - could not return admin entity");
+            }
+
+            Admin admin=null;
+            try {
+                admin = adminRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
+            }
+            if(admin==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
+            }
+            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance(),"Admin entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetAdminByUUID request is null - could not return admin entity");
+        }
+        return response;
+    }
+
     /**
      *
      * @param request is used to bring in:
@@ -2952,7 +3004,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveDriver(SaveDriverRequest request) throws InvalidRequestException {
+    public void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -2963,7 +3015,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveShopper(SaveShopperRequest request) throws InvalidRequestException {
+    public void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
