@@ -575,6 +575,24 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<UserGetShopperByUUIDResponse> getShopperByUUID(UserGetShopperByUUIDRequest body) {
+        UserGetShopperByUUIDResponse userGetShopperByUUIDResponse = new UserGetShopperByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            GetShopperByUUIDRequest request = new GetShopperByUUIDRequest(UUID.fromString(body.getUserID()));
+            GetShopperByUUIDResponse response = userService.getShopperByUUIDRequest(request);
+            userGetShopperByUUIDResponse.setShopperEntity(populateShopper(response.getShopper()));
+            userGetShopperByUUIDResponse.setMessage(response.getMessage());
+            userGetShopperByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+        } catch (Exception e){
+            userGetShopperByUUIDResponse.setShopperEntity(null);
+            userGetShopperByUUIDResponse.setMessage(e.getMessage());
+            userGetShopperByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+        }
+        return new ResponseEntity<>(userGetShopperByUUIDResponse, status);
+    }
+
+    @Override
     public ResponseEntity<UserUpdateDriverShiftResponse> updateDriverShift(UserUpdateDriverShiftRequest body){
 
         UserUpdateDriverShiftResponse userUpdateDriverShiftResponse = new UserUpdateDriverShiftResponse();
@@ -840,6 +858,25 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<UserGetDriverByUUIDResponse> getDriverByUUID(UserGetDriverByUUIDRequest body) {
+        UserGetDriverByUUIDResponse userGetDriverByUUIDResponse = new UserGetDriverByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            GetDriverByUUIDRequest request = new GetDriverByUUIDRequest(UUID.fromString(body.getUserID()));
+            GetDriverByUUIDResponse response = userService.getDriverByUUID(request);
+            userGetDriverByUUIDResponse.setDriver(populateDriver(response.getDriver()));
+            userGetDriverByUUIDResponse.setMessage(response.getMessage());
+            userGetDriverByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+        } catch (Exception e){
+            e.printStackTrace();
+            userGetDriverByUUIDResponse.setDriver(null);
+            userGetDriverByUUIDResponse.setMessage(e.getMessage());
+            userGetDriverByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+        }
+        return new ResponseEntity<>(userGetDriverByUUIDResponse, status);
+    }
+
+    @Override
     public ResponseEntity<UserDriverSetRatingResponse> driverSetRating(UserDriverSetRatingRequest body) {
         UserDriverSetRatingResponse userDriverSetRatingResponse = new UserDriverSetRatingResponse();
         HttpStatus status = HttpStatus.OK;
@@ -890,6 +927,24 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(getAdminByEmailResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetAdminByUUIDResponse> getAdminByUUID(UserGetAdminByUUIDRequest body) {
+        UserGetAdminByUUIDResponse userGetAdminByUUIDResponse = new UserGetAdminByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            GetAdminByUUIDRequest request = new GetAdminByUUIDRequest(UUID.fromString(body.getUserID()));
+            GetAdminByUUIDResponse response = userService.getAdminByUUID(request);
+            userGetAdminByUUIDResponse.setAdmin(populateAdmin(response.getAdmin()));
+            userGetAdminByUUIDResponse.setMessage(response.getMessage());
+            userGetAdminByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+        } catch (Exception e){
+            userGetAdminByUUIDResponse.setAdmin(null);
+            userGetAdminByUUIDResponse.setMessage(e.getMessage());
+            userGetAdminByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+        }
+        return new ResponseEntity<>(userGetAdminByUUIDResponse, status);
     }
 
     @Override
