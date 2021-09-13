@@ -1,4 +1,5 @@
 package cs.superleague.payment.responses;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.payment.dataclass.Order;
 
 import java.util.Date;
@@ -7,6 +8,7 @@ public class GetOrderResponse {
     /** attributes */
     private final Order order;
     private final boolean success;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
