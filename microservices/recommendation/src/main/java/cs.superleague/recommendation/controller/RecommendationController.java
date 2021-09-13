@@ -5,14 +5,10 @@ import cs.superleague.models.ItemObject;
 import cs.superleague.models.RecommendationGetCartRecommendationRequest;
 import cs.superleague.models.RecommendationGetCartRecommendationResponse;
 import cs.superleague.recommendation.RecommendationService;
-import cs.superleague.recommendation.requests.AddRecommendationRequest;
-import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.recommendation.stubs.shopping.Item;
+import cs.superleague.recommendation.stubs.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController

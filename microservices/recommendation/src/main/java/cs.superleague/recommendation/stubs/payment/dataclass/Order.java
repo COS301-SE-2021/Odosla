@@ -1,17 +1,18 @@
 package cs.superleague.recommendation.stubs.payment.dataclass;
 
-import cs.superleague.recommendation.stubs.shopping.Item;
+import cs.superleague.recommendation.stubs.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "orderTable")
-public class Order {
+public class Order implements Serializable {
 
     @Id
     private UUID orderID;
