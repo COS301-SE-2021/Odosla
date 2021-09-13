@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -50,7 +49,7 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setSuccess(createUserReportResponse.isSuccess());
                 response.setTimestamp(createUserReportResponse.getTimestamp().toString());
                 if(createUserReportResponse.getStringBuilder() != null)
-                response.setCsv(createUserReportResponse.getStringBuilder().toString().getBytes(StandardCharsets.UTF_8));
+                response.setCsv(createUserReportResponse.getStringBuilder());
                 response.setPdf(createUserReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -85,7 +84,7 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setSuccess(createFinancialReportResponse.isSuccess());
                 response.setTimestamp(createFinancialReportResponse.getTimestamp().toString());
                 if(createFinancialReportResponse.getStringBuilder() != null)
-                    response.setCsv(createFinancialReportResponse.getStringBuilder().toString().getBytes(StandardCharsets.UTF_8));
+                    response.setCsv(createFinancialReportResponse.getStringBuilder());
                 response.setPdf(createFinancialReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -117,7 +116,7 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setSuccess(createMonthlyReportResponse.isSuccess());
                 response.setTimestamp(createMonthlyReportResponse.getTimestamp().toString());
                 if(createMonthlyReportResponse.getStringBuilder()!= null)
-                response.setCsv(createMonthlyReportResponse.getStringBuilder().toString().getBytes(StandardCharsets.UTF_8));
+                response.setCsv(createMonthlyReportResponse.getStringBuilder());
                 response.setPdf(createMonthlyReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();
