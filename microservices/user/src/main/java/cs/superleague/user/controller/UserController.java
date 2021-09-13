@@ -840,6 +840,25 @@ public class UserController implements UserApi {
     }
 
     @Override
+    public ResponseEntity<UserGetDriverByUUIDResponse> getDriverByUUID(UserGetDriverByUUIDRequest body) {
+        UserGetDriverByUUIDResponse userGetDriverByUUIDResponse = new UserGetDriverByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+        try {
+            GetDriverByUUIDRequest request = new GetDriverByUUIDRequest(UUID.fromString(body.getUserID()));
+            GetDriverByUUIDResponse response = userService.getDriverByUUID(request);
+            userGetDriverByUUIDResponse.setDriver(populateDriver(response.getDriver()));
+            userGetDriverByUUIDResponse.setMessage(response.getMessage());
+            userGetDriverByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+        } catch (Exception e){
+            e.printStackTrace();
+            userGetDriverByUUIDResponse.setDriver(null);
+            userGetDriverByUUIDResponse.setMessage(e.getMessage());
+            userGetDriverByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+        }
+        return new ResponseEntity<>(userGetDriverByUUIDResponse, status);
+    }
+
+    @Override
     public ResponseEntity<UserDriverSetRatingResponse> driverSetRating(UserDriverSetRatingRequest body) {
         UserDriverSetRatingResponse userDriverSetRatingResponse = new UserDriverSetRatingResponse();
         HttpStatus status = HttpStatus.OK;
