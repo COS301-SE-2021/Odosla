@@ -47,6 +47,8 @@ public interface UserService {
     GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
     GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws UserException;
     GetDriverByUUIDResponse getDriverByUUID(GetDriverByUUIDRequest request) throws UserException;
+    GetAdminByUUIDResponse getAdminByUUID(GetAdminByUUIDRequest request) throws UserException;
+
     DriverSetRatingResponse driverSetRating(DriverSetRatingRequest request) throws InvalidRequestException, DriverDoesNotExistException;
 
     GetCustomerByEmailResponse getCustomerByEmail(GetCustomerByEmailRequest request) throws InvalidRequestException, CustomerDoesNotExistException;

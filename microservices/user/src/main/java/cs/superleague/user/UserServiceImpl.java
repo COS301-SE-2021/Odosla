@@ -2842,6 +2842,32 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
+    @Override
+    public GetAdminByUUIDResponse getAdminByUUID(GetAdminByUUIDRequest request) throws UserException {
+        GetAdminByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetAdminByUUIDRequest request - could not return admin entity");
+            }
+
+            Admin admin=null;
+            try {
+                admin = adminRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
+            }
+            if(admin==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
+            }
+            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance(),"Admin entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetAdminByUUID request is null - could not return admin entity");
+        }
+        return response;
+    }
+
     /**
      *
      * @param request is used to bring in:
