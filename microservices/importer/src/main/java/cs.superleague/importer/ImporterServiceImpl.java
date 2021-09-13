@@ -1,16 +1,17 @@
 package cs.superleague.importer;
 
-import cs.superleague.importer.stub.dataclass.GeoPoint;
-import cs.superleague.importer.stub.dataclass.Item;
+import cs.superleague.importer.stub.payment.dataclass.GeoPoint;
+import cs.superleague.importer.stub.shopping.dataclass.Item;
 import cs.superleague.importer.exceptions.InvalidRequestException;
 import cs.superleague.importer.requests.ItemsCSVImporterRequest;
 import cs.superleague.importer.requests.StoreCSVImporterRequest;
 import cs.superleague.importer.responses.ItemsCSVImporterResponse;
 import cs.superleague.importer.responses.StoreCSVImporterResponse;
-import cs.superleague.importer.stub.dataclass.Store;
-import cs.superleague.importer.stub.requests.SaveItemToRepoRequest;
-import cs.superleague.importer.stub.requests.SaveStoreToRepoRequest;
-import cs.superleague.importer.stub.responses.GetAlItemsResponse;
+import cs.superleague.importer.stub.shopping.dataclass.Store;
+import cs.superleague.importer.stub.shopping.requests.SaveItemToRepoRequest;
+import cs.superleague.importer.stub.shopping.requests.SaveStoreToRepoRequest;
+import cs.superleague.importer.stub.shopping.responses.GetAllItemsResponse;
+import cs.superleague.importer.stub.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,14 @@ import java.util.UUID;
 @Service("importerServiceImpl")
 public class ImporterServiceImpl implements ImporterService{
 
-    private RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public ImporterServiceImpl(RabbitTemplate rabbitTemplate){
+    public ImporterServiceImpl(RabbitTemplate rabbitTemplate, RestTemplate restTemplate){
+
         this.rabbitTemplate = rabbitTemplate;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -62,7 +66,6 @@ public class ImporterServiceImpl implements ImporterService{
                     {
                         switch (counter){
                             case 0:
-                                RestTemplate restTemplate = new RestTemplate();
 
                                 List<HttpMessageConverter<?>> converters = new ArrayList<>();
                                 converters.add(new MappingJackson2HttpMessageConverter());
@@ -70,15 +73,15 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
-                                ResponseEntity<GetAlItemsResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://localhost:8088/shopping/getAllItems", parts, GetAlItemsResponse.class);
+                                ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
+                                        "http://localhost:8088/shopping/getAllItems", parts, GetAllItemsResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()){
-                                    throw new InvalidRequestException("Could not retrieve stores");
+                                    throw new InvalidRequestException("Could not retrieve Items");
                                 }
 
-                                GetAlItemsResponse getAlItemsResponse = responseEntity.getBody();
-                                List<Item> itemList = getAlItemsResponse.getItems();
+                                GetAllItemsResponse getAllItemsResponse = responseEntity.getBody();
+                                List<Item> itemList = getAllItemsResponse.getItems();
 
                                 for(int j=0; j< itemList.size(); j++)
                                 {
@@ -157,8 +160,6 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
 
-                        // saveitemtorepo
-
                         rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveItemToRepo", saveItemToRepo);
                         item = new Item();
                     }
@@ -203,7 +204,6 @@ public class ImporterServiceImpl implements ImporterService{
                     {
                         switch (counter){
                             case 0:
-                                RestTemplate restTemplate = new RestTemplate();
 
                                 List<HttpMessageConverter<?>> converters = new ArrayList<>();
                                 converters.add(new MappingJackson2HttpMessageConverter());
@@ -211,11 +211,21 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
-                                ResponseEntity<GetAlItemsResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://localhost:8088/shopping/getStores", parts, GetAlItemsResponse.class);
+                                ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
+                                        "http://localhost:8088/shopping/getStores", parts, GetStoresResponse.class);
 
-                                if(responseEntity == null || !responseEntity.hasBody()){
+                                if(responseEntity == null || !responseEntity.hasBody()
+                                || responseEntity.getBody() == null){
                                     throw new InvalidRequestException("Could not retrieve stores");
+                                }
+
+                                List<Store> storeList = responseEntity.getBody().getStores();
+                                for(int j=0; j< storeList.size(); j++)
+                                {
+                                    if(storeList.get(j).getStoreID().equals(UUID.fromString(currentWord)))
+                                    {
+                                        throw new InvalidRequestException("Store already exists");
+                                    }
                                 }
 
                                 store.setStoreID(UUID.fromString(currentWord));
@@ -295,9 +305,7 @@ public class ImporterServiceImpl implements ImporterService{
                     }
                 }
             }
-
             return new StoreCSVImporterResponse(true, Calendar.getInstance().getTime(), "Stores have been successfully imported.");
-
         }
         else
         {

@@ -41,7 +41,7 @@ public class CreateMonthlyAnalyticsData {
     private ResponseEntity<GetUsersResponse> responseEntityUser;
     private ResponseEntity<GetOrdersResponse> responseEntityOrder;
 
-    public CreateMonthlyAnalyticsData(){
+    public CreateMonthlyAnalyticsData(RestTemplate restTemplate){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -64,7 +64,6 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        RestTemplate restTemplate = new RestTemplate();
         String uri = "http://localhost:8089/user/getUsers";
 
         try{

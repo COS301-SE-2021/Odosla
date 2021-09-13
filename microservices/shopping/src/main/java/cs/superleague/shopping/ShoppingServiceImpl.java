@@ -1,30 +1,33 @@
 package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
-import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.exceptions.StoreClosedException;
+import cs.superleague.shopping.repos.ItemRepo;
+import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.user.UserService;
-import cs.superleague.user.UserServiceImpl;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.exceptions.UserException;
-import cs.superleague.user.repos.ShopperRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.requests.GetShopperByUUIDRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
-import cs.superleague.user.responses.GetShopperByUUIDResponse;
+import cs.superleague.shopping.stubs.payment.requests.SaveOrderRequest;
+import cs.superleague.shopping.stubs.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.stubs.user.dataclass.Shopper;
+import cs.superleague.shopping.stubs.user.exceptions.UserException;
+import cs.superleague.shopping.stubs.user.requests.SaveShopperRequest;
+import cs.superleague.shopping.stubs.user.responses.GetShopperByEmailResponse;
+import cs.superleague.shopping.stubs.user.responses.GetShopperByUUIDResponse;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.shopping.stubs.payment.dataclass.Order;
+import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.repos.StoreRepo;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,16 +38,19 @@ import java.util.List;
 public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
-    private final OrderRepo orderRepo;
-    private final ShopperRepo shopperRepo;
-    private final UserService userService;
+    private final ItemRepo itemRepo;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, OrderRepo orderRepo, ShopperRepo shopperRepo, UserService userService) {
-        this.storeRepo = storeRepo;
-        this.orderRepo = orderRepo;
-        this.shopperRepo= shopperRepo;
-        this.userService = userService;
+    private RabbitTemplate rabbit;
+
+    private final RestTemplate restTemplate;
+
+
+    @Autowired
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate) {
+        this.storeRepo= storeRepo;
+        this.itemRepo=itemRepo;
+        this.restTemplate = restTemplate;
     }
     /**
      *
@@ -168,10 +174,10 @@ public class ShoppingServiceImpl implements ShoppingService {
         Order updatedOrder = request.getOrder();
 
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
-        System.out.print("In queue");
         updatedOrder.setProcessDate(Calendar.getInstance());
-        if(orderRepo!=null)
-        orderRepo.save(updatedOrder);
+
+        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(updatedOrder);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
 
         Store store=null;
         try {
@@ -188,7 +194,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(storeRepo!=null)
         storeRepo.save(store);
 
-        response = new AddToQueueResponse(true, "Order successfuly created", Calendar.getInstance().getTime());
+        response = new AddToQueueResponse(true, "Order successfully created", Calendar.getInstance().getTime());
 
         return response;
     }
@@ -223,7 +229,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * */
 
     @Override
-    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException, cs.superleague.user.exceptions.InvalidRequestException {
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException{
         GetNextQueuedResponse response=null;
 
         if(request!=null){
@@ -255,32 +261,44 @@ public class ShoppingServiceImpl implements ShoppingService {
             Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
             Order correspondingOrder=orderQueue.get(0);
 
-            for (Order o: orderQueue){
-                if(oldestProcessedDate.after(o.getProcessDate().getTime())){
-                    oldestProcessedDate=o.getProcessDate().getTime();
-                    correspondingOrder=o;
+            for (Order o: orderQueue) {
+                if (oldestProcessedDate.after(o.getProcessDate().getTime())) {
+                    oldestProcessedDate = o.getProcessDate().getTime();
+                    correspondingOrder = o;
                 }
             }
 
-            if(orderRepo!=null)
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("orderId", correspondingOrder.getOrderID().toString());
+            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+
+            GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
+            Order updateOrder = getOrderResponse.getOrder();
+
+            if(updateOrder!=null)
             {
-                Order updateOrder = orderRepo.findById(correspondingOrder.getOrderID()).orElse(null);
+                CurrentUser currentUser = new CurrentUser();
 
-                if(updateOrder!=null)
-                {
+                converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+                parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("shopperEmail", currentUser.getEmail());
+                ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByEmail", parts, GetShopperByEmailResponse.class);
 
-                    CurrentUser currentUser = new CurrentUser();
+                GetShopperByEmailResponse getShopperByEmailResponse = getShopperByEmailResponseEntity.getBody();
+                Shopper shopper = getShopperByEmailResponse.getShopper();
+                assert shopper != null;
 
-                    if(shopperRepo!=null)
-                    {
-                        Shopper shopper = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);
-                        assert shopper != null;
-                        updateOrder.setShopperID(shopper.getShopperID());
-                        updateOrder.setStatus(OrderStatus.PACKING);
-                        orderRepo.save(updateOrder);
-                    }
+                updateOrder.setShopperID(shopper.getShopperID());
+                updateOrder.setStatus(OrderStatus.PACKING);
 
-                }
+                SaveOrderRequest saveOrderRequest = new SaveOrderRequest(updateOrder);
+                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+
             }
 
             if(storeRepo!=null)
@@ -296,6 +314,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             throw new InvalidRequestException("Request object for GetNextQueuedRequest can't be null - can't get next queued");
         }
         return response;
+
     }
 
     /**
@@ -668,7 +687,7 @@ public class ShoppingServiceImpl implements ShoppingService {
     /**
      *
      * @param request used to bring in:
-     *                ShopperID - Id of shopper that should be addes to list of shoppers in Store
+     *                ShopperID - Id of shopper that should be added to list of shoppers in Store
      *                StoreID - StoreID of which store to add the shopper to
      * addShopper should:
      *                1. Check is request object is correct else throw InvalidRequestException
@@ -696,12 +715,11 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @return
      * @throws InvalidRequestException
      * @throws StoreDoesNotExistException
-     * @throws cs.superleague.user.exceptions.InvalidRequestException
-     * @throws UserDoesNotExistException
+     * @throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException
      */
 
     @Override
-    public AddShopperResponse addShopper(AddShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException {
         AddShopperResponse response=null;
 
         if(request!=null){
@@ -719,7 +737,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 invalidMessage="Store ID in request object for add shopper is null";
             }
 
-            if (invalidReq) throw new InvalidRequestException(invalidMessage);
+            if (invalidReq) throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException(invalidMessage);
 
             Store storeEntity=null;
 
@@ -733,13 +751,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
 
-            GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-            GetShopperByUUIDResponse shopperResponse;
-            try {
-                shopperResponse = userService.getShopperByUUIDRequest(shoppersRequest);
-            }catch(Exception e){
-                throw e;
-            }
+            List<HttpMessageConverter<?>> converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("userId", request.getShopperID().toString());
+            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+
+            GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
             Boolean notPresent = true;
 
@@ -752,11 +771,12 @@ public class ShoppingServiceImpl implements ShoppingService {
                     }
                 }
                 if(notPresent){
-                    Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                    Shopper updateShopper= shopperResponse.getShopper();
                     if(updateShopper!=null)
                     {
                         updateShopper.setStoreID(request.getStoreID());
-                        shopperRepo.save(updateShopper);
+                        SaveShopperRequest saveShopperRequest = new SaveShopperRequest(updateShopper);
+                        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopper", saveShopperRequest);
                     }
 
                     listOfShoppers.add(shopperResponse.getShopper());
@@ -767,11 +787,13 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
             else
             {
-                Shopper updateShopper= shopperRepo.findById(request.getShopperID()).orElse(null);
+                Shopper updateShopper= shopperResponse.getShopper();
                 if(updateShopper!=null)
                 {
                     updateShopper.setStoreID(request.getStoreID());
-                    shopperRepo.save(updateShopper);
+                    SaveShopperRequest saveShopperRequest = new SaveShopperRequest(updateShopper);
+                    rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopper", saveShopperRequest);
+
                 }
 
                 List<Shopper> newList= new ArrayList<>();
@@ -784,7 +806,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         }
         else{
-            throw new InvalidRequestException("Request object can't be null for addShopper");
+            throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException("Request object can't be null for addShopper");
         }
 
         return response;
@@ -822,8 +844,8 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @return
      * @throws InvalidRequestException
      * @throws StoreDoesNotExistException
-     * @throws cs.superleague.user.exceptions.InvalidRequestException
-     * @throws UserDoesNotExistException
+     * @throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException
+     * @throws cs.superleague.shopping.stubs.user.exceptions.UserException
      */
     @Override
     public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
@@ -860,8 +882,15 @@ public class ShoppingServiceImpl implements ShoppingService {
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
 
             if(listOfShoppers!=null){
-                GetShopperByUUIDRequest shoppersRequest=new GetShopperByUUIDRequest(request.getShopperID());
-                GetShopperByUUIDResponse shopperResponse=userService.getShopperByUUIDRequest(shoppersRequest);
+
+                List<HttpMessageConverter<?>> converters = new ArrayList<>();
+                converters.add(new MappingJackson2HttpMessageConverter());
+                restTemplate.setMessageConverters(converters);
+                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                parts.add("shopperId", request.getShopperID().toString());
+                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+
+                GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
                  Boolean inList=false;
                  for(Shopper shopper:listOfShoppers){
@@ -1240,6 +1269,244 @@ public class ShoppingServiceImpl implements ShoppingService {
         else{
             throw new InvalidRequestException("Request object for GetQueueRequest can't be null - can't get queue");
         }
+    }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private store
+     *
+     * SaveStoreToRepo should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate request attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the StoreRepo is not null and if not, save the store
+     *               5. Return the response object.
+     *
+     * Request Object (SaveStoreToRepoRequest):
+     * {
+     *                "store": request.getStore();
+     * }
+     *
+     * Response Object (SaveStoreToRepoResponse):
+     * {
+     *                "success":true
+     *                "message":"Store was successfully saved"
+     *                "timestamp": "2021-01-05T11:50:55"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public SaveStoreToRepoResponse saveStoreToRepo(SaveStoreToRepoRequest request) throws InvalidRequestException{
+        SaveStoreToRepoResponse response=null;
+
+        if(request != null){
+
+            if(request.getStore() == null){
+                throw new InvalidRequestException("Store in parameter in request can't be null - can't save store");
+            }
+
+            Store store = request.getStore();
+
+            if(storeRepo!=null)
+            {
+
+                storeRepo.save(store);
+                return new SaveStoreToRepoResponse(true, Calendar.getInstance().getTime(),"Store successfully saved.");
+
+            }
+            else
+            {
+                return new SaveStoreToRepoResponse(false, Calendar.getInstance().getTime(),"Store can't be saved.");
+
+            }
+
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null - can't save store");
+        }
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *
+     *
+     * getAllItems should:
+     *               1. Check if the ItemRepo is not null, else throw an InvalidRequestException
+     *               2. Return all items in response object.
+     *
+     * Request Object (GetAllItemsRequest):
+     * {
+     *
+     * }
+     *
+     * Response Object (GetAllItemsResponse):
+     * {
+     *                "items":itemsRepo.findAll()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"All items have been retrieved"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public GetAllItemsResponse getAllItems(GetAllItemsRequest request) throws InvalidRequestException {
+        GetAllItemsResponse response=null;
+
+        if(request!=null){
+
+            List<Item> items;
+            try {
+                items = itemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetAllItemsResponse(null, Calendar.getInstance().getTime(), "All items can't be retrieved");
+            }
+            else {
+                response = new GetAllItemsResponse(items, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
+    }
+
+    /**
+     *
+     * @param request object is used to bring in:
+     *                private item
+     *
+     * SaveItemToRepo should:
+     *               1. Check that the request object is not null, if so then throw an InvalidRequestException
+     *               2. Check if the appropriate request attributes from the request are not null, else throw an InvalidRequestException
+     *               3. Check that the ItemRepo is not null and if not, save the item
+     *               5. Return the response object.
+     *
+     * Request Object (SaveItemToRepoRequest):
+     * {
+     *                "item": request.getItem();
+     * }
+     *
+     * Response Object (SaveItemToRepoResponse):
+     * {
+     *                "success":true
+     *                "message":"Item was successfully saved"
+     *                "timestamp": "2021-01-05T11:50:55"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public SaveItemToRepoResponse saveItemToRepo(SaveItemToRepoRequest request) throws InvalidRequestException{
+        SaveItemToRepoResponse response=null;
+
+        if(request != null){
+
+            if(request.getItem() == null){
+                throw new InvalidRequestException("Item in parameter in request can't be null - can't save item");
+            }
+
+            Item item = request.getItem();
+
+            if(itemRepo!=null)
+            {
+                itemRepo.save(item);
+                return new SaveItemToRepoResponse(true, Calendar.getInstance().getTime(),"Item successfully saved.");
+
+            }
+            else
+            {
+                return new SaveItemToRepoResponse(false, Calendar.getInstance().getTime(),"Item can't be saved.");
+
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null - can't save item");
+        }
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *
+     *
+     * getItemsByUUIDS should:
+     *               1. Check if the ItemRepo is not null, else throw an InvalidRequestException
+     *               2. Return all items in response object.
+     *
+     * Request Object (GetItemsByUUIDSRequest):
+     * {
+     *
+     * }
+     *
+     * Response Object (GetItemsByUUIDSResponse):
+     * {
+     *                "items":itemsRepo.findAll()
+     *                "timestamp":"2021-01-05T11:50:55"
+     *                "message":"All items have been retrieved"
+     * }
+     *
+     * @return
+     * @throws InvalidRequestException
+     * */
+
+    @Override
+    public GetItemsByIDResponse getItemsByID(GetItemsByIDRequest request) throws InvalidRequestException {
+        GetItemsByIDResponse response=null;
+
+        if(request!=null){
+
+            if(request.getItemIDs() == null)
+            {
+                throw new InvalidRequestException("Null parameter in request object, can't get Items");
+            }
+            List<Item> items;
+            try {
+                items = itemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetItemsByIDResponse(null, Calendar.getInstance().getTime(), "Items can't be retrieved");
+            }
+            else {
+                List<String> reqItems = request.getItemIDs();
+                List<Item> itemsFound = new ArrayList<>();
+
+                for(int k = 0; k < reqItems.size(); k++)
+                {
+                    for(int j = 0; j < items.size(); j++)
+                    {
+                        if(reqItems.get(k).equals(items.get(j).getProductID()))
+                        {
+                            itemsFound.add(items.get(j));
+                        }
+                    }
+
+                }
+                response = new GetItemsByIDResponse(itemsFound, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
     }
 }
 

@@ -10,9 +10,10 @@ public class CreateUserReportResponse {
     private final String message;
     private final Date timestamp;
     private final byte[] document;
-    private final StringBuilder stringBuilder;
+    private final String stringBuilder;
 
-    public CreateUserReportResponse(boolean success, String message, Date timestamp, byte[] document, StringBuilder stringBuilder) {
+    public CreateUserReportResponse(boolean success, String message, Date timestamp, byte[] document,
+                                    String stringBuilder) {
         this.success = success;
         this.message = message;
         this.timestamp = timestamp;
@@ -36,7 +37,7 @@ public class CreateUserReportResponse {
         return document;
     }
 
-    public StringBuilder getStringBuilder() {
+    public String getStringBuilder() {
         return stringBuilder;
     }
 }
