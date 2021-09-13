@@ -1,14 +1,12 @@
-package code.rabbit;
+package code.rms2.rabbit;
 
-import code.other.ObjMessage;
+import code.rms2.requests.ObjMessage;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
-import static code.utility.DeserializationUtility.deSerializeObjectFromString;
 
 public class CatListener implements MessageListener {
     @Override

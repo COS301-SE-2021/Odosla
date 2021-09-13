@@ -1,6 +1,6 @@
-package code;
+package code.rms1;
 
-import code.other.ObjMessage;
+import code.rms2.requests.ObjMessage;
 import cs.superleague.api.RbApi;
 import cs.superleague.models.Rb1Request;
 import cs.superleague.models.Rb1Response;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @CrossOrigin
 @RestController

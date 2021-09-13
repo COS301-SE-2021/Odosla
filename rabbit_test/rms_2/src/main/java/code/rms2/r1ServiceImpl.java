@@ -1,4 +1,4 @@
-package code;
+package code.rms2;
 
 import org.springframework.stereotype.Service;
 

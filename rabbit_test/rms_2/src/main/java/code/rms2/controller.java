@@ -1,4 +1,4 @@
-package code;
+package code.rms2;
 
 import cs.superleague.api.Rb2Api;
 import cs.superleague.models.Rb2Request;

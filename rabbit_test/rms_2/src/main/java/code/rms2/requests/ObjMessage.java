@@ -1,4 +1,7 @@
-package code.other;
+package code.rms2.requests;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 

@@ -1,6 +1,6 @@
-package code;
+package code.rms1;
 
-import code.other.ObjMessage;
+import code.rms2.requests.ObjMessage;
 import org.springframework.stereotype.Service;
 
 @Service("r1service")

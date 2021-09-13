@@ -1,4 +1,4 @@
-package code;
+package code.rms2;
 
 public interface r1Service {
 

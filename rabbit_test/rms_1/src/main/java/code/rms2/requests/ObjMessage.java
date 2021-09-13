@@ -1,4 +1,4 @@
-package code.other;
+package code.rms2.requests;
 
 import java.io.Serializable;
 

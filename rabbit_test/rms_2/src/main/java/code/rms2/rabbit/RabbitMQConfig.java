@@ -1,5 +1,6 @@
-package code.rabbit;
+package code.rms2.rabbit;
 
+import code.rms2.rabbit.CatListener;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
