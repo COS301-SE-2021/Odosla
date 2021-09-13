@@ -1,6 +1,7 @@
 /.idea/
 /backend/target/
 /gen/
+/microservices/shopping/target/
 /microservices/payment/target/
 /microservices/delivery/target/
 /microservices/user/target/
