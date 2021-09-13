@@ -4,10 +4,10 @@ import cs.superleague.payment.dataclass.Order;
 
 import java.io.Serializable;
 
-public class SaveOrderRequest implements Serializable {
+public class SaveOrderToRepoRequest implements Serializable {
     private Order order;
 
-    public SaveOrderRequest(Order order) {
+    public SaveOrderToRepoRequest(Order order) {
         this.order = order;
     }
 
