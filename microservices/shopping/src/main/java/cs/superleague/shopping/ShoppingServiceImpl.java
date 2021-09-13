@@ -7,11 +7,11 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.shopping.stubs.payment.requests.SaveOrderRequest;
+import cs.superleague.shopping.stubs.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.shopping.stubs.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.stubs.user.dataclass.Shopper;
 import cs.superleague.shopping.stubs.user.exceptions.UserException;
-import cs.superleague.shopping.stubs.user.requests.SaveShopperRequest;
+import cs.superleague.shopping.stubs.user.requests.SaveShopperToRepoRequest;
 import cs.superleague.shopping.stubs.user.responses.GetShopperByEmailResponse;
 import cs.superleague.shopping.stubs.user.responses.GetShopperByUUIDResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -176,8 +176,8 @@ public class ShoppingServiceImpl implements ShoppingService {
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
         updatedOrder.setProcessDate(Calendar.getInstance());
 
-        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(updatedOrder);
-        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
         Store store=null;
         try {
@@ -272,7 +272,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("orderId", correspondingOrder.getOrderID().toString());
+            parts.add("orderID", correspondingOrder.getOrderID().toString());
             ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
 
             GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
@@ -286,9 +286,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 converters.add(new MappingJackson2HttpMessageConverter());
                 restTemplate.setMessageConverters(converters);
                 parts = new LinkedMultiValueMap<String, Object>();
-                parts.add("shopperEmail", currentUser.getEmail());
+                parts.add("email", currentUser.getEmail());
                 ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByEmail", parts, GetShopperByEmailResponse.class);
-
                 GetShopperByEmailResponse getShopperByEmailResponse = getShopperByEmailResponseEntity.getBody();
                 Shopper shopper = getShopperByEmailResponse.getShopper();
                 assert shopper != null;
@@ -296,8 +295,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
 
-                SaveOrderRequest saveOrderRequest = new SaveOrderRequest(updateOrder);
-                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+                SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
+                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
             }
 
@@ -359,9 +358,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 storeEntity = storeRepo.findById(request.getStoreID()).orElse(null);
             }catch (NullPointerException e){
                 //Catching nullPointerException from mockito unit test, when(storeRepo.findById(mockito.any())) return null - which will return null pointer exception
-
             }
-
 
             if(storeEntity==null) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get Store entity");
@@ -755,7 +752,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userId", request.getShopperID().toString());
+            parts.add("userID", request.getShopperID().toString());
             ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
             GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
@@ -775,8 +772,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                     if(updateShopper!=null)
                     {
                         updateShopper.setStoreID(request.getStoreID());
-                        SaveShopperRequest saveShopperRequest = new SaveShopperRequest(updateShopper);
-                        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopper", saveShopperRequest);
+                        SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(updateShopper);
+                        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
                     }
 
                     listOfShoppers.add(shopperResponse.getShopper());
@@ -791,8 +788,8 @@ public class ShoppingServiceImpl implements ShoppingService {
                 if(updateShopper!=null)
                 {
                     updateShopper.setStoreID(request.getStoreID());
-                    SaveShopperRequest saveShopperRequest = new SaveShopperRequest(updateShopper);
-                    rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopper", saveShopperRequest);
+                    SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(updateShopper);
+                    rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
 
                 }
 
@@ -887,7 +884,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 converters.add(new MappingJackson2HttpMessageConverter());
                 restTemplate.setMessageConverters(converters);
                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-                parts.add("shopperId", request.getShopperID().toString());
+                parts.add("userID", request.getShopperID().toString());
                 ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
                 GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
