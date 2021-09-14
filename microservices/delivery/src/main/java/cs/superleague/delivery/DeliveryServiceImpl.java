@@ -273,8 +273,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetAdminByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetAdminByEmailResponse.class);
 
-        System.out.println(responseEntity.getBody().getAdmin());
-
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getAdmin() == null){
             throw new InvalidRequestException("User is not an admin.");

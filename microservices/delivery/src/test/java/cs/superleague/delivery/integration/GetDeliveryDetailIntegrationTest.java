@@ -97,6 +97,8 @@ public class GetDeliveryDetailIntegrationTest {
 
         String jwt = jwtUtil.generateJWTTokenAdmin(admin);
 
+        System.out.println(jwt);
+
         Header header = new BasicHeader("Authorization", jwt);
         List<Header> headers = new ArrayList<>();
         headers.add(header);
