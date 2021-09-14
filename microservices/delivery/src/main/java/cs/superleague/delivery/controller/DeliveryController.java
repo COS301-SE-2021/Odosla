@@ -102,6 +102,13 @@ public class DeliveryController implements DeliveryApi {
         DeliveryCreateDeliveryResponse response = new DeliveryCreateDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
 //            System.out.printf(String.valueOf(body.getPlaceOfDelivery()));
             GeoPoint placeOfDelivery = new GeoPoint(body.getPlaceOfDelivery().getLatitude().doubleValue(), body.getPlaceOfDelivery().getLongitude().doubleValue(), body.getPlaceOfDelivery().getAddress());
             CreateDeliveryRequest request = new CreateDeliveryRequest(UUID.fromString(body.getOrderID()), UUID.fromString(body.getCustomerID()), UUID.fromString(body.getStoreID()), Calendar.getInstance(), placeOfDelivery);
@@ -168,6 +175,13 @@ public class DeliveryController implements DeliveryApi {
         DeliveryGetNextOrderForDriverResponse response = new DeliveryGetNextOrderForDriverResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GeoPoint driversCurrentLocation = new GeoPoint(body.getCurrentLocation().getLatitude().doubleValue(), body.getCurrentLocation().getLongitude().doubleValue(), body.getCurrentLocation().getAddress());
             GetNextOrderForDriverRequest request;
             if (body.getRangeOfDelivery().doubleValue() == 0) {
@@ -220,6 +234,13 @@ public class DeliveryController implements DeliveryApi {
         DeliveryTrackDeliveryResponse response = new DeliveryTrackDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             TrackDeliveryRequest request = new TrackDeliveryRequest(UUID.fromString(body.getDeliveryID()));
             TrackDeliveryResponse trackDeliveryResponse = deliveryService.trackDelivery(request);
             GeoPointObject currentLocation = new GeoPointObject();
@@ -241,6 +262,7 @@ public class DeliveryController implements DeliveryApi {
         DeliveryUpdateDeliveryStatusResponse response = new DeliveryUpdateDeliveryStatusResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
             DeliveryStatus status = null;
             if (body.getStatus().equals("WaitingForShoppers")){
                 status = DeliveryStatus.WaitingForShoppers;
@@ -255,6 +277,13 @@ public class DeliveryController implements DeliveryApi {
             }else if(body.getStatus().equals("Delivered")){
                 status = DeliveryStatus.Delivered;
             }
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(status, UUID.fromString(body.getDeliveryID()), body.getDetail());
             UpdateDeliveryStatusResponse updateDeliveryStatusResponse = deliveryService.updateDeliveryStatus(request);
             response.setMessage(updateDeliveryStatusResponse.getMessage());
@@ -349,6 +378,13 @@ public class DeliveryController implements DeliveryApi {
         DeliveryGetDeliveryDriverByOrderIdResponse response = new DeliveryGetDeliveryDriverByOrderIdResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetDeliveryDriverByOrderIDRequest request = new GetDeliveryDriverByOrderIDRequest(UUID.fromString(body.getOrderID()));
             GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderIDResponse = deliveryService.getDeliveryDriverByOrderID(request);
             response.setMessage(getDeliveryDriverByOrderIDResponse.getMessage());
