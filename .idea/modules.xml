@@ -7,8 +7,10 @@
       <module fileurl="file://$PROJECT_DIR$/microservices/delivery/delivery.iml" filepath="$PROJECT_DIR$/microservices/delivery/delivery.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/importer/importer.iml" filepath="$PROJECT_DIR$/microservices/importer/importer.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/notifications/notifications.iml" filepath="$PROJECT_DIR$/microservices/notifications/notifications.iml" />
+      <module fileurl="file://$PROJECT_DIR$/microservices/payment/payment.iml" filepath="$PROJECT_DIR$/microservices/payment/payment.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/recommendation/recommendation.iml" filepath="$PROJECT_DIR$/microservices/recommendation/recommendation.iml" />
       <module fileurl="file://$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" filepath="$PROJECT_DIR$/rabbit_test/rms_1/rms_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" filepath="$PROJECT_DIR$/rabbit_test/rms_2/rms_2.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/shopping/shopping.iml" filepath="$PROJECT_DIR$/microservices/shopping/shopping.iml" />
       <module fileurl="file://$PROJECT_DIR$/microservices/user/user.iml" filepath="$PROJECT_DIR$/microservices/user/user.iml" />
     </modules>

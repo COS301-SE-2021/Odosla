@@ -173,7 +173,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         String uri = "http://localhost:8089/user/getCustomerByUUID";
 
         Map<String, Object> parts = new HashMap<>();
-        parts.put("customerID", request.getCustomerID());
+        parts.put("userID", request.getCustomerID());
 
         ResponseEntity<GetCustomerByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetCustomerByUUIDResponse.class);
@@ -186,7 +186,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         uri = "http://localhost:8086/payment/getOrder";
 
         Map<String, Object> orderRequest = new HashMap<>();
-        orderRequest.put("orderId", request.getOrderID());
+        orderRequest.put("orderID", request.getOrderID());
 
 
         ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
@@ -196,10 +196,11 @@ public class DeliveryServiceImpl implements DeliveryService {
                 || responseEntityOrder.getBody() == null){
             throw new InvalidRequestException("Invalid orderID.");
         }
+
         uri = "http://localhost:8086/shopping/getStoreByUUID";
 
         Map<String, Object> storeRequest = new HashMap<>();
-        orderRequest.put("storeId", request.getStoreID());
+        orderRequest.put("storeID", request.getStoreID());
 
 
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = restTemplate.postForEntity(uri,
@@ -323,10 +324,10 @@ public class DeliveryServiceImpl implements DeliveryService {
         double range = request.getRangeOfDelivery();
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/getByEmail";
+        String uri = "http://localhost:8089/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<>();
-        parts.put("driverEmail", currentUser.getEmail());
+        parts.put("email", currentUser.getEmail());
 
 
         ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
@@ -388,7 +389,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         String uri = "http://localhost:8089/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("driverEmail", currentUser.getEmail());
+        parts.put("email", currentUser.getEmail());
 
 
         ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
@@ -429,7 +430,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         String uri = "http://localhost:8089/user/getDriverByUUID";
 
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("driverID", delivery.getDriverId());
+        parts.put("userID", delivery.getDriverId());
 
 
         ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
@@ -473,8 +474,6 @@ public class DeliveryServiceImpl implements DeliveryService {
 
             Map<String, Object> parts = new HashMap<>();
             parts.put("userID", delivery.getDriverId().toString());
-
-            System.out.println(delivery.getDriverId() + "- hello");
 
             ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
                     parts, GetDriverByUUIDResponse.class);
@@ -586,7 +585,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         String uri = "http://localhost:8086/payment/getOrder";
 
         Map<String, Object> orderRequest = new HashMap<String, Object>();
-        orderRequest.put("orderId", request.getOrderID());
+        orderRequest.put("orderID", request.getOrderID());
 
 
         ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
