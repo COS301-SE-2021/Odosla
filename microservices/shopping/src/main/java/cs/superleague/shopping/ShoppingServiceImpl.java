@@ -1,14 +1,19 @@
 package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.requests.SaveOrderToRepoRequest;
+import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.payment.requests.SaveOrderToRepoRequest;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserException;
 import cs.superleague.user.requests.SaveShopperToRepoRequest;
@@ -17,22 +22,10 @@ import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.exceptions.InvalidRequestException;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service("shoppingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
@@ -174,7 +167,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         Order updatedOrder = request.getOrder();
 
         updatedOrder.setStatus(OrderStatus.IN_QUEUE);
-        updatedOrder.setProcessDate(Calendar.getInstance());
+        updatedOrder.setProcessDate(new Date());
 
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
@@ -258,21 +251,18 @@ public class ShoppingServiceImpl implements ShoppingService {
                 return response;
             }
 
-            Date oldestProcessedDate=orderQueue.get(0).getProcessDate().getTime();
+            Date oldestProcessedDate=orderQueue.get(0).getProcessDate();
             Order correspondingOrder=orderQueue.get(0);
 
             for (Order o: orderQueue) {
-                if (oldestProcessedDate.after(o.getProcessDate().getTime())) {
-                    oldestProcessedDate = o.getProcessDate().getTime();
+                if (oldestProcessedDate.after(o.getProcessDate())) {
+                    oldestProcessedDate = o.getProcessDate();
                     correspondingOrder = o;
                 }
             }
 
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("orderID", correspondingOrder.getOrderID().toString());
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("orderID", correspondingOrder.getOrderID().toString());
             ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
 
             GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
@@ -282,11 +272,8 @@ public class ShoppingServiceImpl implements ShoppingService {
             {
                 CurrentUser currentUser = new CurrentUser();
 
-                converters = new ArrayList<>();
-                converters.add(new MappingJackson2HttpMessageConverter());
-                restTemplate.setMessageConverters(converters);
-                parts = new LinkedMultiValueMap<String, Object>();
-                parts.add("email", currentUser.getEmail());
+                parts = new HashMap<String, Object>();
+                parts.put("email", currentUser.getEmail());
                 ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByEmail", parts, GetShopperByEmailResponse.class);
                 GetShopperByEmailResponse getShopperByEmailResponse = getShopperByEmailResponseEntity.getBody();
                 Shopper shopper = getShopperByEmailResponse.getShopper();
@@ -748,11 +735,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Shopper> listOfShoppers=storeEntity.getShoppers();
 
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", request.getShopperID().toString());
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", request.getShopperID().toString());
             ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
             GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
@@ -880,11 +864,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             if(listOfShoppers!=null){
 
-                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                converters.add(new MappingJackson2HttpMessageConverter());
-                restTemplate.setMessageConverters(converters);
-                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-                parts.add("userID", request.getShopperID().toString());
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("userID", request.getShopperID().toString());
                 ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
                 GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();

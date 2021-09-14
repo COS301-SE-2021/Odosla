@@ -1,5 +1,7 @@
 package cs.superleague.user.dataclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,6 +18,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private String password;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
     private Date activationDate;
     private String activationCode;
     private String resetCode;

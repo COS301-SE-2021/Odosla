@@ -22,13 +22,20 @@ import cs.superleague.shopping.responses.GetItemsResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.UserException;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -36,20 +43,28 @@ import java.util.*;
 @RestController
 public class ShoppingController implements ShoppingApi{
 
-    @Autowired
     ShoppingServiceImpl shoppingService;
-
-    @Autowired
     StoreRepo storeRepo;
-
-    @Autowired
     CatalogueRepo catalogueRepo;
-
-    @Autowired
     ItemRepo itemRepo;
 
-    @Autowired
     private RabbitTemplate rabbit;
+    private RestTemplate restTemplate;
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    public ShoppingController(ShoppingServiceImpl shoppingService, StoreRepo storeRepo,
+                              CatalogueRepo catalogueRepo, ItemRepo itemRepo,
+                              RabbitTemplate rabbit, RestTemplate restTemplate,
+                              HttpServletRequest httpServletRequest){
+        this.shoppingService = shoppingService;
+        this.storeRepo = storeRepo;
+        this.catalogueRepo = catalogueRepo;
+        this.itemRepo = itemRepo;
+        this.rabbit = rabbit;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+    }
 
 
     UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
@@ -72,6 +87,12 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
             AddShopperRequest req = new AddShopperRequest(UUID.fromString(body.getShopperID()), UUID.fromString(body.getStoreID()));
             AddShopperResponse addShopperResponse = shoppingService.addShopper(req);
@@ -231,6 +252,13 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
             GetNextQueuedResponse getNextQueuedResponse = shoppingService.getNextQueued(getNextQueuedRequest);
             try {
@@ -245,11 +273,11 @@ public class ShoppingController implements ShoppingApi{
                 orderObject.setOrderId(order.getOrderID().toString());
                 orderObject.setItems(populateItems(order.getItems()));
                 //orderObject.setOrderItems(populateOrderItems(order.getOrderItems()));
-                orderObject.setCreateDate(order.getCreateDate().getTime().toString());
+                orderObject.setCreateDate(order.getCreateDate().toString());
                 orderObject.setStatus(order.getStatus().toString());
                 orderObject.setDeliveryAddress(order.getDeliveryAddress().getAddress());
                 orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
-                orderObject.setProcessDate(order.getProcessDate().getTime().toString());
+                orderObject.setProcessDate(order.getProcessDate().toString());
                 orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
                 orderObject.setUserId(order.getUserID().toString());
                 orderObject.setStoreId(order.getStoreID().toString());
@@ -578,8 +606,8 @@ public class ShoppingController implements ShoppingApi{
                 {
                     e.printStackTrace();
                 }
-                currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().getTime().toString());
-                currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().getTime().toString());
+                currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().toString());
+                currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
                 currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
                 currentOrder.setStatus(responseOrders.get(i).getStatus().name());
                 currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
