@@ -10,19 +10,19 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
-import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
-import cs.superleague.delivery.stubs.payment.dataclass.Order;
-import cs.superleague.delivery.stubs.payment.dataclass.OrderStatus;
-import cs.superleague.delivery.stubs.payment.requests.SaveOrderToRepoRequest;
-import cs.superleague.delivery.stubs.payment.responses.GetOrderResponse;
-import cs.superleague.delivery.stubs.shopping.dataclass.Store;
-import cs.superleague.delivery.stubs.shopping.responses.GetStoreByUUIDResponse;
-import cs.superleague.delivery.stubs.user.dataclass.Driver;
-import cs.superleague.delivery.stubs.user.requests.SaveDriverToRepoRequest;
-import cs.superleague.delivery.stubs.user.responses.GetAdminByEmailResponse;
-import cs.superleague.delivery.stubs.user.responses.GetCustomerByUUIDResponse;
-import cs.superleague.delivery.stubs.user.responses.GetDriverByEmailResponse;
-import cs.superleague.delivery.stubs.user.responses.GetDriverByUUIDResponse;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.requests.SaveOrderToRepoRequest;
+import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.requests.SaveDriverToRepoRequest;
+import cs.superleague.user.responses.GetAdminByEmailResponse;
+import cs.superleague.user.responses.GetCustomerByUUIDResponse;
+import cs.superleague.user.responses.GetDriverByEmailResponse;
+import cs.superleague.user.responses.GetDriverByUUIDResponse;
 import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,11 +78,13 @@ public class DeliveryServiceImpl implements DeliveryService {
         String uri = "http://localhost:8089/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<>();
-        parts.put("driverEmail", currentUser.getEmail());
-
+        parts.put("email", currentUser.getEmail());
 
         ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetDriverByEmailResponse.class);
+
+        System.out.println(currentUser.getEmail());
+        System.out.println(responseEntity.getBody().getDriver());
 
         if(responseEntity == null || !responseEntity.hasBody()
         || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -105,7 +107,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         uri = "http://localhost:8086/payment/getOrder";
 
         Map<String, Object> orderRequest = new HashMap<>();
-        orderRequest.put("orderId", delivery.getOrderID());
+        orderRequest.put("orderID", delivery.getOrderID());
 
 
         ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
@@ -129,7 +131,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
                 //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
 
-                orderRequest.put("orderId", delivery.getOrderID());
+                orderRequest.put("orderID", delivery.getOrderID());
 
                 responseEntityOrder = restTemplate.postForEntity(uri,
                         orderRequest, GetOrderResponse.class);

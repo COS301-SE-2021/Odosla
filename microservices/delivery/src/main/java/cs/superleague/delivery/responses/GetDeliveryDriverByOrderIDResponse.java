@@ -1,6 +1,6 @@
 package cs.superleague.delivery.responses;
 
-import cs.superleague.delivery.stubs.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Driver;
 
 import java.util.UUID;
 

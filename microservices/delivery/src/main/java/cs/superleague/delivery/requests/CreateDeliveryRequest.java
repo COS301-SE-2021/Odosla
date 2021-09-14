@@ -1,6 +1,6 @@
 package cs.superleague.delivery.requests;
 
-import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.GeoPoint;
 
 import java.util.Calendar;
 import java.util.UUID;

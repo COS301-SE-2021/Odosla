@@ -10,7 +10,7 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.AddDeliveryDetailRequest;
 import cs.superleague.delivery.responses.AddDeliveryDetailResponse;
-import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.GeoPoint;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

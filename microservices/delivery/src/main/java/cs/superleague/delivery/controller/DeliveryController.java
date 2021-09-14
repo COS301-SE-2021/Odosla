@@ -8,8 +8,8 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
-import cs.superleague.delivery.stubs.user.dataclass.Driver;
-import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.models.*;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -17,7 +17,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
@@ -73,6 +72,13 @@ public class DeliveryController implements DeliveryApi {
         DeliveryAssignDriverToDeliveryResponse response = new DeliveryAssignDriverToDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(UUID.fromString(body.getDeliveryID()));
             AssignDriverToDeliveryResponse assignDriverToDeliveryResponse = deliveryService.assignDriverToDelivery(request);
             response.setMessage(assignDriverToDeliveryResponse.getMessage());

@@ -3,7 +3,7 @@ package cs.superleague.delivery;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.requests.GetDeliveryCostRequest;
 import cs.superleague.delivery.responses.GetDeliveryCostResponse;
-import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.GeoPoint;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
