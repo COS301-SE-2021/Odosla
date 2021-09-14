@@ -17,7 +17,8 @@ import cs.superleague.payment.exceptions.*;
 import cs.superleague.payment.stubs.shopping.requests.AddToQueueRequest;
 import cs.superleague.payment.stubs.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.payment.stubs.user.dataclass.Customer;
-import cs.superleague.recommendation.requests.AddRecommendationRequest;
+import cs.superleague.payment.stubs.user.responses.GetCustomerByEmailResponse;
+import cs.superleague.payment.stubs.recommendation.requests.AddRecommendationRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +43,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final InvoiceRepo invoiceRepo;
     private final TransactionRepo transactionRepo;
     private final RabbitTemplate rabbitTemplate;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.rabbitTemplate = rabbitTemplate;
+        this.restTemplate = restTemplate;
     }
 
 
@@ -150,14 +153,12 @@ public class PaymentServiceImpl implements PaymentService {
             {
                 throw new InvalidRequestException(invalidMessage);
             }
-            RestTemplate restTemplate = new RestTemplate();
 
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
             converters.add(new MappingJackson2HttpMessageConverter());
             restTemplate.setMessageConverters(converters);
-
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("StoreID", request.getStoreID());
+            parts.add("storeID", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate.postForEntity("http://localhost:8088/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
 
@@ -178,8 +179,16 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             CurrentUser currentUser = new CurrentUser();
-            //WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
-            Customer customer = null;
+
+            converters = new ArrayList<>();
+            converters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(converters);
+            parts = new LinkedMultiValueMap<String, Object>();
+            parts.add("email", currentUser.getEmail());
+            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+
+            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+            Customer customer = getCustomerByEmailResponse.getCustomer();
             assert customer != null;
             customerID = customer.getCustomerID();
 
@@ -260,6 +269,7 @@ public class PaymentServiceImpl implements PaymentService {
                         for (Item item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
                         }
+
                         AddRecommendationRequest addRecommendationRequest = new AddRecommendationRequest(o.getOrderID(), productIDs);
                         rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
@@ -273,7 +283,7 @@ public class PaymentServiceImpl implements PaymentService {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        // WRONG NEED TO FIX AddToQueue
+
                         AddToQueueRequest addToQueueRequest = new AddToQueueRequest(o);
                         rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                     }).start();
@@ -363,15 +373,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             // remove Order from DB.
             orderRepo.delete(order);
-            // WRONG NEED TO FIX
+
             RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
             rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
-//            if (recommendationRepo != null){
-//                List<Recommendation> recommendationsToDelete = recommendationRepo.findRecommendationByOrderID(req.getOrderID());
-//                for (Recommendation recommendation : recommendationsToDelete){
-//                    recommendationRepo.delete(recommendation);
-//                }
-//            }
+//
             orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee
@@ -438,7 +443,6 @@ import java.util.List;50"
         double discount = 0;
         double cost;
         Customer customer;
-        Optional<Customer> customerOptional = null;
 
         if(request == null){
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
@@ -450,13 +454,19 @@ import java.util.List;50"
         }
 
         CurrentUser currentUser = new CurrentUser();
-        //customerOptional = customerRepo.findByEmail(currentUser.getEmail()); WRONG NEED TO FIX
 
-        if(customerOptional == null || !customerOptional.isPresent()){
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
+        converters.add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setMessageConverters(converters);
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        parts.add("email", currentUser.getEmail());
+        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+
+        GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+        customer = getCustomerByEmailResponse.getCustomer();
+        if(customer == null){
             throw new InvalidRequestException("Incorrect email email given - customer does not exist");
         }
-
-        customer = customerOptional.get();
         GetOrderResponse getOrderResponse;
         getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
         order= getOrderResponse.getOrder();
@@ -763,8 +773,16 @@ import java.util.List;50"
 
         CurrentUser currentUser = new CurrentUser();
         Customer customer = null;
-        // WRONG NEED TO FIX Customer customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
 
+        List<HttpMessageConverter<?>> converters = new ArrayList<>();
+        converters.add(new MappingJackson2HttpMessageConverter());
+        restTemplate.setMessageConverters(converters);
+        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        parts.add("email", currentUser.getEmail());
+        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+
+        GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+        customer = getCustomerByEmailResponse.getCustomer();
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
         if (orders == null){
             throw new OrderDoesNotExist("No Orders found for this user in the database.");
@@ -782,7 +800,7 @@ import java.util.List;50"
     }
 
     @Override
-    public void saveOrder(SaveOrderRequest request) throws InvalidRequestException {
+    public void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
