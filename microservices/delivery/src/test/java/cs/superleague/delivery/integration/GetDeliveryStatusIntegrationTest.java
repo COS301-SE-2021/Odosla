@@ -7,7 +7,7 @@ import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.GetDeliveryStatusRequest;
 import cs.superleague.delivery.responses.GetDeliveryStatusResponse;
-import cs.superleague.delivery.stub.dataclass.GeoPoint;
+import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

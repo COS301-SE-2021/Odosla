@@ -10,10 +10,19 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
-import cs.superleague.delivery.stub.dataclass.*;
-import cs.superleague.delivery.stub.requests.SaveDriverToRepoRequest;
-import cs.superleague.delivery.stub.requests.SaveOrderToRepoRequest;
-import cs.superleague.delivery.stub.responses.*;
+import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.delivery.stubs.payment.dataclass.Order;
+import cs.superleague.delivery.stubs.payment.dataclass.OrderStatus;
+import cs.superleague.delivery.stubs.payment.requests.SaveOrderToRepoRequest;
+import cs.superleague.delivery.stubs.payment.responses.GetOrderResponse;
+import cs.superleague.delivery.stubs.shopping.dataclass.Store;
+import cs.superleague.delivery.stubs.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.delivery.stubs.user.dataclass.Driver;
+import cs.superleague.delivery.stubs.user.requests.SaveDriverToRepoRequest;
+import cs.superleague.delivery.stubs.user.responses.GetAdminByEmailResponse;
+import cs.superleague.delivery.stubs.user.responses.GetCustomerByUUIDResponse;
+import cs.superleague.delivery.stubs.user.responses.GetDriverByEmailResponse;
+import cs.superleague.delivery.stubs.user.responses.GetDriverByUUIDResponse;
 import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,14 +75,14 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findDriverByEmail";
+        String uri = "http://localhost:8089/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("driverEmail", currentUser.getEmail());
 
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
         || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -159,13 +168,13 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Missing parameters.");
         }
 
-        String uri = "http://localhost:8089/user/findCustomerById";
+        String uri = "http://localhost:8089/user/getCustomerByUUID";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("customerID", request.getCustomerID());
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetCustomerByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetCustomerByUUIDResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
         || responseEntity.getBody() == null){
@@ -185,14 +194,14 @@ public class DeliveryServiceImpl implements DeliveryService {
                 || responseEntityOrder.getBody() == null){
             throw new InvalidRequestException("Invalid orderID.");
         }
-        uri = "http://localhost:8086/shopping/getStore";
+        uri = "http://localhost:8086/shopping/getStoreByUUID";
 
         Map<String, Object> storeRequest = new HashMap<>();
         orderRequest.put("storeId", request.getStoreID());
 
 
-        ResponseEntity<GetStoreResponse> responseEntityStore = restTemplate.postForEntity(uri,
-                storeRequest, GetStoreResponse.class);
+        ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = restTemplate.postForEntity(uri,
+                storeRequest, GetStoreByUUIDResponse.class);
 
         if(responseEntityStore == null || !responseEntityStore.hasBody()
         || responseEntityStore.getBody() == null || responseEntityStore.getBody().getStore() == null){
@@ -312,14 +321,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         double range = request.getRangeOfDelivery();
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findDriverByEmail";
+        String uri = "http://localhost:8089/user/getByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("driverEmail", currentUser.getEmail());
 
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -374,14 +383,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findDriverByEmail";
+        String uri = "http://localhost:8089/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("driverEmail", currentUser.getEmail());
 
 
-        ResponseEntity<FindDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindDriverByEmailResponse.class);
+        ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetDriverByEmailResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
@@ -415,7 +424,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             return response;
         }
 
-        String uri = "http://localhost:8089/user/findDriverById";
+        String uri = "http://localhost:8089/user/getDriverByUUID";
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("driverID", delivery.getDriverId());

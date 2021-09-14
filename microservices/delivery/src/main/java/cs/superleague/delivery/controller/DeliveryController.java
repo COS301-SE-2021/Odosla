@@ -11,12 +11,19 @@ import cs.superleague.delivery.responses.*;
 import cs.superleague.delivery.stubs.user.dataclass.Driver;
 import cs.superleague.delivery.stubs.payment.dataclass.GeoPoint;
 import cs.superleague.models.*;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,12 +37,18 @@ public class DeliveryController implements DeliveryApi {
     DeliveryRepo deliveryRepo;
     DeliveryDetailRepo deliveryDetailRepo;
     DeliveryServiceImpl deliveryService;
+    HttpServletRequest httpServletRequest;
+    RestTemplate restTemplate;
 
     @Autowired
-    public DeliveryController(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo, DeliveryServiceImpl deliveryService) {
+    public DeliveryController(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo,
+                              DeliveryServiceImpl deliveryService, HttpServletRequest httpServletRequest,
+                              RestTemplate restTemplate) {
         this.deliveryRepo = deliveryRepo;
         this.deliveryDetailRepo = deliveryDetailRepo;
         this.deliveryService = deliveryService;
+        this.httpServletRequest = httpServletRequest;
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -100,19 +113,24 @@ public class DeliveryController implements DeliveryApi {
     }
 
     @Override
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DeliveryGetDeliveryDetailResponse> getDeliveryDetail(DeliveryGetDeliveryDetailRequest body) {
 
         DeliveryGetDeliveryDetailResponse response = new DeliveryGetDeliveryDetailResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
-        System.out.println("hello");
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()));
             GetDeliveryDetailResponse getDeliveryDetailResponse = deliveryService.getDeliveryDetail(request);
             response.setMessage(getDeliveryDetailResponse.getMessage());
-            System.out.println(getDeliveryDetailResponse.getDetail());
+
             response.setDetail(populateDeliveryDetails(getDeliveryDetailResponse.getDetail()));
         }catch (Exception e){
             e.printStackTrace();

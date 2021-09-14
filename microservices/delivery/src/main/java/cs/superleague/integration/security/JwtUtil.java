@@ -1,8 +1,8 @@
 package cs.superleague.integration.security;
 
-import cs.superleague.delivery.stub.dataclass.Admin;
-import cs.superleague.delivery.stub.dataclass.Driver;
-import cs.superleague.delivery.stub.dataclass.Shopper;
+import cs.superleague.delivery.stubs.user.dataclass.Admin;
+import cs.superleague.delivery.stubs.user.dataclass.Driver;
+import cs.superleague.delivery.stubs.user.dataclass.Shopper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
