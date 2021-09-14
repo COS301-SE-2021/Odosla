@@ -264,14 +264,16 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/findAdminByEmail";
+        String uri = "http://localhost:8089/user/getAdminByEmail";
 
         Map<String, Object> parts = new HashMap<>();
-        parts.put("adminEmail", currentUser.getEmail());
+        parts.put("email", currentUser.getEmail());
 
 
-        ResponseEntity<FindAdminByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
-                parts, FindAdminByEmailResponse.class);
+        ResponseEntity<GetAdminByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
+                parts, GetAdminByEmailResponse.class);
+
+        System.out.println(responseEntity.getBody().getAdmin());
 
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getAdmin() == null){

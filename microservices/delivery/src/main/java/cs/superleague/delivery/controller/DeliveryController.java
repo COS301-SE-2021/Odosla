@@ -13,9 +13,9 @@ import cs.superleague.delivery.stub.dataclass.GeoPoint;
 import cs.superleague.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -100,10 +100,14 @@ public class DeliveryController implements DeliveryApi {
     }
 
     @Override
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DeliveryGetDeliveryDetailResponse> getDeliveryDetail(DeliveryGetDeliveryDetailRequest body) {
 
         DeliveryGetDeliveryDetailResponse response = new DeliveryGetDeliveryDetailResponse();
         HttpStatus httpStatus = HttpStatus.OK;
+
+        System.out.println("hello");
+
         try{
             GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.fromString(body.getDeliveryID()));
             GetDeliveryDetailResponse getDeliveryDetailResponse = deliveryService.getDeliveryDetail(request);
