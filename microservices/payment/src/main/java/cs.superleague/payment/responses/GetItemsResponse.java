@@ -1,5 +1,5 @@
 package cs.superleague.payment.responses;
-import cs.superleague.payment.stubs.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Item;
 
 import java.util.Date;
 import java.util.List;

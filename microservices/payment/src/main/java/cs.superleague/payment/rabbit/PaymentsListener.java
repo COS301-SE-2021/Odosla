@@ -8,6 +8,7 @@ import org.springframework.amqp.core.MessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
@@ -24,9 +25,13 @@ public class PaymentsListener implements MessageListener {
         SaveOrderToRepoRequest request = null;
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
-            request = (SaveOrderToRepoRequest) in.readObject();
-            SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(request.getOrder());
-            paymentService.saveOrderToRepo(saveOrderToRepoRequest);
+            Object o = in.readObject();
+            if(o instanceof SaveOrderToRepoRequest)
+            {
+                request = (SaveOrderToRepoRequest) o;
+                SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(request.getOrder());
+                paymentService.saveOrderToRepo(saveOrderToRepoRequest);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {

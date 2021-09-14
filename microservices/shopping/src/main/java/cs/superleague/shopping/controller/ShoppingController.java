@@ -2,7 +2,9 @@ package cs.superleague.shopping.controller;
 
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.models.*;
-import cs.superleague.shopping.stubs.payment.dataclass.*;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderItems;
 import cs.superleague.shopping.ShoppingServiceImpl;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
@@ -14,20 +16,17 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.shopping.stubs.user.dataclass.*;
-import cs.superleague.shopping.stubs.user.exceptions.UserDoesNotExistException;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.shopping.requests.GetShoppersRequest;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
-import cs.superleague.shopping.stubs.user.dataclass.Shopper;
-import cs.superleague.shopping.stubs.user.exceptions.UserException;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserException;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -85,7 +84,7 @@ public class ShoppingController implements ShoppingApi{
                 e.printStackTrace();
             }
 
-        } catch (cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException e) {
+        } catch (cs.superleague.user.exceptions.InvalidRequestException e) {
             e.printStackTrace();
         } catch (UserDoesNotExistException e) {
             e.printStackTrace();
@@ -106,17 +105,21 @@ public class ShoppingController implements ShoppingApi{
     @Override
     public ResponseEntity<ShoppingGetItemsResponse> getItems(ShoppingGetItemsRequest body) {
 
-        Store store=new Store(UUID.randomUUID(), -1, 24, "Shoprite", 2, 5, true, "shop/shoprite.png");
+//        Item item=new Item("Jelly Tots","p924585674","6001068453408", UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f"),7.99,1,"Delicious Sweet.","item/jellyTots.png", "Beacon", "55g", "Sweets");
+//        List<Item> itemList = new ArrayList<>();
+//        itemList.add(item);
+//
+//        Order order = new Order();
+//        order.setOrderID(UUID.randomUUID());
+//        order.setStoreID(UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f"));
+//        order.setUserID(UUID.fromString("0163d933-561f-4253-9ea9-174c15a7fe99"));
+//        order.setTotalCost(10.99);
+//        order.setItems(itemList);
+//
+//        AddToQueueRequest addToQueueRequest = new AddToQueueRequest(order);
+//
+//        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
 
-        SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(store);
-
-        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepoRequest);
-
-        Item item=new Item("Marie Biscuits","p123985674","6001068523408", UUID.randomUUID(),10.99,1,"Thick milk chocolate with nougat and caramel centre.","item/barOne.png", "Nestle", "55g", "Chocolate");
-
-        SaveItemToRepoRequest saveItemToRepoRequest = new SaveItemToRepoRequest(item);
-
-        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepoRequest);
 
         //creating response object and default return status:
         ShoppingGetItemsResponse response = new ShoppingGetItemsResponse();
