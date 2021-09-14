@@ -2,7 +2,9 @@ package cs.superleague.payment.stubs.shopping.requests;
 
 import cs.superleague.payment.dataclass.Order;
 
-public class AddToQueueRequest {
+import java.io.Serializable;
+
+public class AddToQueueRequest implements Serializable {
     private Order order;
 
     public AddToQueueRequest(Order order) {

@@ -3,11 +3,12 @@ package cs.superleague.payment.stubs.shopping.dataclass;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
 @Table
-public class Item {
+public class Item implements Serializable {
 
     @Id
     private String productID;

@@ -1,16 +1,17 @@
 package cs.superleague.recommendation;
 
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
 import cs.superleague.recommendation.repos.RecommendationRepo;
+import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
+import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
-import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.recommendation.stubs.payment.dataclass.Order;
+import cs.superleague.recommendation.stubs.shopping.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +21,10 @@ import java.util.*;
 public class RecommendationServiceImpl implements RecommendationService{
 
     private final RecommendationRepo recommendationRepo;
-    private final OrderRepo orderRepo;
 
     @Autowired
-    public RecommendationServiceImpl(RecommendationRepo recommendationRepo, OrderRepo orderRepo) {
+    public RecommendationServiceImpl(RecommendationRepo recommendationRepo) {
         this.recommendationRepo = recommendationRepo;
-        this.orderRepo = orderRepo;
     }
 
 
@@ -63,7 +62,8 @@ public class RecommendationServiceImpl implements RecommendationService{
             List<Order> finalRecommendation = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
-                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
+//                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
+                    Order order = null;
                     if (order != null){
                         finalRecommendation.add(order);
                     }
@@ -98,6 +98,38 @@ public class RecommendationServiceImpl implements RecommendationService{
     @Override
     public GetOrderRecommendationResponse getOrderRecommendation(GetOrderRecommendationRequest request) {
         return null;
+    }
+
+    @Override
+    public void addRecommendation(AddRecommendationRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null || request.getProductID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        for (String productID : request.getProductID()){
+            UUID recommendationID = UUID.randomUUID();
+            while (recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
+                recommendationID = UUID.randomUUID();
+            }
+            Recommendation recommendation = new Recommendation(recommendationID, productID, request.getOrderID());
+            recommendationRepo.save(recommendation);
+        }
+    }
+
+    @Override
+    public void removeRecommendation(RemoveRecommendationRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        List<Recommendation> recommendations = recommendationRepo.findRecommendationByOrderID(request.getOrderID());
+        for (Recommendation recommendation : recommendations){
+            recommendationRepo.delete(recommendation);
+        }
     }
 
 }

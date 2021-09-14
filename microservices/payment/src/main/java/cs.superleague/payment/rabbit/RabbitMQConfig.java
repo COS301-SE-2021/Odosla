@@ -1,13 +1,11 @@
 package cs.superleague.payment.rabbit;
 
 import cs.superleague.payment.PaymentService;
-import org.hibernate.annotations.LazyCollection;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -34,8 +32,8 @@ public class RabbitMQConfig {
     // QUEUE DEFINITIONS
     //
     @Bean
-    Queue SaveOrderQueue() {
-        return new Queue("Q_SaveOrder", true);
+    Queue SaveOrderToRepoQueue() {
+        return new Queue("Q_SaveOrderToRepo", true);
     }
 
 
@@ -46,9 +44,9 @@ public class RabbitMQConfig {
     Binding binding(){
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
-                .bind(SaveOrderQueue())
+                .bind(SaveOrderToRepoQueue())
                 .to(PaymentExchange())
-                .with("RK_SaveOrder")
+                .with("RK_SaveOrderToRepo")
                 .noargs();
     }
 
@@ -71,8 +69,8 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveOrderQueue());                                               // <------- add all queues to listen to here
-        simpleMessageListenerContainer.setMessageListener(new SaveOrderListener(paymentService));
+        simpleMessageListenerContainer.setQueues(SaveOrderToRepoQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setMessageListener(new PaymentsListener(paymentService));
         return simpleMessageListenerContainer;
     }
 
