@@ -1,15 +1,14 @@
 package cs.superleague.payment.dataclass;
 
+import cs.superleague.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import cs.superleague.shopping.dataclass.Item;
 
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "orderTable")

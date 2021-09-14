@@ -7,21 +7,21 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.shopping.stubs.payment.requests.SaveOrderToRepoRequest;
-import cs.superleague.shopping.stubs.payment.responses.GetOrderResponse;
-import cs.superleague.shopping.stubs.user.dataclass.Shopper;
-import cs.superleague.shopping.stubs.user.exceptions.UserException;
-import cs.superleague.shopping.stubs.user.requests.SaveShopperToRepoRequest;
-import cs.superleague.shopping.stubs.user.responses.GetShopperByEmailResponse;
-import cs.superleague.shopping.stubs.user.responses.GetShopperByUUIDResponse;
+import cs.superleague.payment.requests.SaveOrderToRepoRequest;
+import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserException;
+import cs.superleague.user.requests.SaveShopperToRepoRequest;
+import cs.superleague.user.responses.GetShopperByEmailResponse;
+import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import cs.superleague.shopping.stubs.payment.dataclass.Order;
-import cs.superleague.shopping.stubs.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
@@ -177,7 +177,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         updatedOrder.setProcessDate(Calendar.getInstance());
 
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
-        //rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
         Store store=null;
         try {
@@ -712,11 +712,11 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @return
      * @throws InvalidRequestException
      * @throws StoreDoesNotExistException
-     * @throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException
+     * @throws cs.superleague.user.exceptions.InvalidRequestException
      */
 
     @Override
-    public AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException {
         AddShopperResponse response=null;
 
         if(request!=null){
@@ -734,7 +734,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 invalidMessage="Store ID in request object for add shopper is null";
             }
 
-            if (invalidReq) throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException(invalidMessage);
+            if (invalidReq) throw new cs.superleague.user.exceptions.InvalidRequestException(invalidMessage);
 
             Store storeEntity=null;
 
@@ -803,7 +803,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         }
         else{
-            throw new cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException("Request object can't be null for addShopper");
+            throw new cs.superleague.user.exceptions.InvalidRequestException("Request object can't be null for addShopper");
         }
 
         return response;
@@ -841,8 +841,8 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @return
      * @throws InvalidRequestException
      * @throws StoreDoesNotExistException
-     * @throws cs.superleague.shopping.stubs.user.exceptions.InvalidRequestException
-     * @throws cs.superleague.shopping.stubs.user.exceptions.UserException
+     * @throws cs.superleague.user.exceptions.InvalidRequestException
+     * @throws UserException
      */
     @Override
     public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {

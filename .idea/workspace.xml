@@ -29,32 +29,53 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="rabbit tests">
+      <change afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/dataclass/OrderType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/PaymentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/PaymentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/Invoice.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/Invoice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/mock/CancelOrdersMock.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/mock/CancelOrdersMock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/rabbit/PaymentsListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/rabbit/PaymentsListener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/SaveOrderToRepoRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/SaveOrderToRepoRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/SetStatusRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/SetStatusRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/SubmitOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/SubmitOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/UpdateOrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/requests/UpdateOrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/responses/GetItemsResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/responses/GetItemsResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/shopping/dataclass/Catalogue.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/shopping/dataclass/Catalogue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/shopping/dataclass/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/shopping/dataclass/Item.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/shopping/dataclass/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/shopping/dataclass/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/shopping/requests/AddToQueueRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/shopping/requests/AddToQueueRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/shopping/responses/AddToQueueResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/shopping/responses/AddToQueueResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/shopping/responses/GetStoreByUUIDResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/shopping/responses/GetStoreByUUIDResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/user/dataclass/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/user/dataclass/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/user/dataclass/GroceryList.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/stubs/user/dataclass/GroceryList.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/controller/ShoppingController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/rms1/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/rms1/controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/other/ObjMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/requests/ObjMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/rms1/r1Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/r1ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/rms1/r1ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/other/ObjMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_1/src/main/java/code/rms2/requests/ObjMessage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/r1Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/r1Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/r1ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/r1ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rabbit/CatListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/rabbit/CatListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rabbit/RabbitMQConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/src/main/java/code/rms2/rabbit/RabbitMQConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/classes/code/Application.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/classes/code/controller.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/classes/code/r1Service.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/classes/code/r1ServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/classes/code/rabbit/CatListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/classes/code/rabbit/RabbitMQConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rabbit_test/rms_2/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/rabbit_test/rms_2/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/dataclass/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/dataclass/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/requests/AddToQueueRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/requests/AddToQueueRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/requests/UpdateShoppersRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/requests/UpdateShoppersRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetNextQueuedResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetNextQueuedResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetQueueResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetQueueResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetShoppersResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/responses/GetShoppersResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/GeoPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/dataclass/GeoPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/dataclass/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/OrderItems.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/dataclass/OrderItems.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/dataclass/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/dataclass/OrderType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/requests/SaveOrderToRepoRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/requests/SaveOrderToRepoRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/payment/responses/GetOrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/payment/responses/GetOrderResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/dataclass/Shopper.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/dataclass/Shopper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/dataclass/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/dataclass/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/dataclass/UserType.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/dataclass/UserType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/exceptions/InvalidRequestException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/exceptions/InvalidRequestException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/exceptions/UserDoesNotExistException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/exceptions/UserDoesNotExistException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/exceptions/UserException.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/exceptions/UserException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/requests/GetShopperByUUIDRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/requests/GetShopperByUUIDRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/requests/SaveShopperToRepoRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/requests/SaveShopperToRepoRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/responses/GetShopperByEmailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/responses/GetShopperByEmailResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/stubs/user/responses/GetShopperByUUIDResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/user/responses/GetShopperByUUIDResponse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +180,7 @@
       <recent name="cs.superleague.shopping.stubs.user" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Application">
+  <component name="RunManager" selected="Application.ShoppingApplication">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -367,15 +388,15 @@
     </configuration>
     <list>
       <item itemvalue="Application.Application" />
-      <item itemvalue="JUnit.GetNextOrderForDriverIntegrationTest" />
       <item itemvalue="Application.ShoppingApplication" />
       <item itemvalue="Application.SerializationUtility" />
       <item itemvalue="Application.DeserializationUtility" />
+      <item itemvalue="JUnit.GetNextOrderForDriverIntegrationTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Application" />
         <item itemvalue="Application.ShoppingApplication" />
+        <item itemvalue="Application.Application" />
         <item itemvalue="Application.DeserializationUtility" />
         <item itemvalue="Application.SerializationUtility" />
         <item itemvalue="JUnit.GetNextOrderForDriverIntegrationTest" />

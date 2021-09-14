@@ -1,13 +1,7 @@
 package cs.superleague.payment.requests;
 
-import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.stubs.shopping.dataclass.Item;
-
-import java.util.List;
-import java.util.UUID;
 
 public class SetStatusRequest {
     /** attrbiutes */
