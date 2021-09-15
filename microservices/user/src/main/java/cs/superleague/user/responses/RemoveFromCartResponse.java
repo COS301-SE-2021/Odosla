@@ -1,6 +1,6 @@
 package cs.superleague.user.responses;
 
-import cs.superleague.user.stubs.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Item;
 
 import java.util.Date;
 import java.util.List;

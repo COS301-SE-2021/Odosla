@@ -6,16 +6,23 @@ import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
-import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
-import cs.superleague.user.stubs.shopping.dataclass.Catalogue;
-import cs.superleague.user.stubs.shopping.dataclass.Item;
-import cs.superleague.user.stubs.shopping.dataclass.Store;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.shopping.dataclass.Catalogue;
+import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,23 +34,37 @@ import java.util.UUID;
 @RestController
 public class UserController implements UserApi {
 
-    @Autowired
-    CustomerRepo customerRepo;
+    private CustomerRepo customerRepo;
 
-    @Autowired
-    GroceryListRepo groceryListRepo;
+    private GroceryListRepo groceryListRepo;
 
-    @Autowired
-    DriverRepo driverRepo;
+    private DriverRepo driverRepo;
 
-    @Autowired
-    AdminRepo adminRepo;
+    private AdminRepo adminRepo;
 
-    @Autowired
-    ShopperRepo shopperRepo;
+    private ShopperRepo shopperRepo;
 
-    @Autowired
     private UserServiceImpl userService;
+
+    private RestTemplate restTemplate;
+
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    public UserController(CustomerRepo customerRepo, GroceryListRepo groceryListRepo,
+                          DriverRepo driverRepo, AdminRepo adminRepo, ShopperRepo shopperRepo,
+                          UserServiceImpl userService, RestTemplate restTemplate,
+                          HttpServletRequest httpServletRequest){
+        this.customerRepo = customerRepo;
+        this.groceryListRepo = groceryListRepo;
+        this.driverRepo = driverRepo;
+        this.adminRepo = adminRepo;
+        this.shopperRepo = shopperRepo;
+        this.userService = userService;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+
+    }
 
     Customer setCartCustomer;
     GroceryList groceryList;
@@ -71,6 +92,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             SetCartRequest request = new SetCartRequest(body.getCustomerID(), body.getBarcodes());
 
             System.out.println(barcodes.get(0));
@@ -179,6 +207,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             MakeGroceryListRequest request = new MakeGroceryListRequest(body.getProductIds(), body.getName());
 
             MakeGroceryListResponse response = userService.makeGroceryList(request);
@@ -737,6 +772,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             ScanItemRequest request = new ScanItemRequest(body.getBarcode(), UUID.fromString(body.getOrderID()));
 
             ScanItemResponse response = userService.scanItem(request);
@@ -763,6 +805,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             CompletePackagingOrderRequest request = new CompletePackagingOrderRequest(UUID.fromString(body.getOrderID()), body.isGetNext());
 
             CompletePackagingOrderResponse response = userService.completePackagingOrder(request);
@@ -789,6 +838,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             CompleteDeliveryRequest request = new CompleteDeliveryRequest(UUID.fromString(body.getOrderID()));
 
             CompleteDeliveryResponse response = userService.completeDelivery(request);
