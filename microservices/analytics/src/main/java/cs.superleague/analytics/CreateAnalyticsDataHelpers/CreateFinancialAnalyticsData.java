@@ -3,6 +3,7 @@ package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.responses.GetOrdersResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -13,6 +14,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 public class CreateFinancialAnalyticsData {
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
 
     private final List<Order> orders;
     private final List<UUID> userIds;
@@ -38,7 +43,7 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        String uri = "http://localhost:8086/payment/getOrders";
+        String uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
 
         try{
 

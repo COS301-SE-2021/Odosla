@@ -9,6 +9,7 @@ import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.User;
 import cs.superleague.user.dataclass.UserType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -19,6 +20,14 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 public class CreateMonthlyAnalyticsData {
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
 
     private final List<Order> orders;
     private final List<User> users;
@@ -68,7 +77,7 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        String uri = "http://localhost:8089/user/getUsers";
+        String uri = "http://"+userHost+":"+userPort+"/user/getUsers";
 
         try{
             List<HttpMessageConverter<?>> converters = new ArrayList<>();
@@ -80,7 +89,7 @@ public class CreateMonthlyAnalyticsData {
             responseEntityUser = restTemplate.postForEntity(uri, parts,
                     GetUsersResponse.class);
 
-            uri = "http://localhost:8086/payment/getOrders";
+            uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
             responseEntityOrder = restTemplate.postForEntity(uri, parts,
                     GetOrdersResponse.class);
 

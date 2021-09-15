@@ -6,6 +6,7 @@ import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.User;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.responses.GetUsersResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -16,6 +17,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 public class CreateUserAnalyticsData {
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
 
     private final List<User> users;
     private final List<Driver> drivers;
@@ -53,7 +58,7 @@ public class CreateUserAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        String uri = "http://localhost:8089/user/getUsers";
+        String uri = "http://"+userHost+":"+userPort+"/user/getUsers";
 
         try{
 

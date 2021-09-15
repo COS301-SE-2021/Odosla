@@ -8,6 +8,7 @@ import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoresResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -23,6 +24,10 @@ import java.util.*;
 import java.util.List;
 
 public class FinancialAnalyticsHelper {
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
 
     private final HashMap<String, Object> data;
 
@@ -84,7 +89,7 @@ public class FinancialAnalyticsHelper {
             List<Store> stores;
             ResponseEntity<GetStoresResponse> responseEntity;
             RestTemplate restTemplate = new RestTemplate();
-            String uri = "http://localhost:8089/shopping/getStores";
+            String uri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
 
             Map<String, Object> parts = new HashMap<>();
 
