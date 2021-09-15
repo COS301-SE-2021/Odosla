@@ -10,10 +10,17 @@ import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
-import cs.superleague.recommendation.stubs.payment.dataclass.Order;
-import cs.superleague.recommendation.stubs.shopping.Item;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -21,10 +28,12 @@ import java.util.*;
 public class RecommendationServiceImpl implements RecommendationService{
 
     private final RecommendationRepo recommendationRepo;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public RecommendationServiceImpl(RecommendationRepo recommendationRepo) {
+    public RecommendationServiceImpl(RecommendationRepo recommendationRepo, RestTemplate restTemplate) {
         this.recommendationRepo = recommendationRepo;
+        this.restTemplate = restTemplate;
     }
 
 
@@ -63,7 +72,11 @@ public class RecommendationServiceImpl implements RecommendationService{
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
 //                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
-                    Order order = null;
+
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+                    ResponseEntity<GetOrderResponse> responseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+                    Order order = responseEntity.getBody().getOrder();
                     if (order != null){
                         finalRecommendation.add(order);
                     }

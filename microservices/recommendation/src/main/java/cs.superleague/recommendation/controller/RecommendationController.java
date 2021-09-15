@@ -5,38 +5,56 @@ import cs.superleague.models.ItemObject;
 import cs.superleague.models.RecommendationGetCartRecommendationRequest;
 import cs.superleague.models.RecommendationGetCartRecommendationResponse;
 import cs.superleague.recommendation.RecommendationService;
-import cs.superleague.recommendation.requests.AddRecommendationRequest;
-import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.recommendation.stubs.shopping.Item;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
-import org.springframework.amqp.rabbit.connection.CorrelationData;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
 public class RecommendationController implements RecommendationApi {
-    @Autowired
+
     RecommendationRepo recommendationRepo;
-    @Autowired
     RecommendationService recommendationService;
+    RestTemplate restTemplate;
+    HttpServletRequest httpServletRequest;
+
+    @Autowired
+    public RecommendationController(RecommendationRepo recommendationRepo, RecommendationService recommendationService, RestTemplate restTemplate, HttpServletRequest httpServletRequest) {
+        this.recommendationRepo = recommendationRepo;
+        this.recommendationService = recommendationService;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+    }
 
     @Override
     public ResponseEntity<RecommendationGetCartRecommendationResponse> getCartRecommendation(RecommendationGetCartRecommendationRequest body) {
         RecommendationGetCartRecommendationResponse response = new RecommendationGetCartRecommendationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
             GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
