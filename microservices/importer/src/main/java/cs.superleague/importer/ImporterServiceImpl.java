@@ -153,7 +153,7 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
 
-                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveItemToRepo", saveItemToRepo);
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
                         item = new Item();
                     }
                 }
