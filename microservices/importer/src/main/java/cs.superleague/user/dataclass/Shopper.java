@@ -1,4 +1,4 @@
-package cs.superleague.importer.stub.user.dataclass;
+package cs.superleague.user.dataclass;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
