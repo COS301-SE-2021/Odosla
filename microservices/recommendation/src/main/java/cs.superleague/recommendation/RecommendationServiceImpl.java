@@ -10,9 +10,9 @@ import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
-import cs.superleague.recommendation.stubs.payment.dataclass.Order;
-import cs.superleague.recommendation.stubs.payment.responses.GetOrderResponse;
-import cs.superleague.recommendation.stubs.shopping.dataclass.Item;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -72,12 +72,9 @@ public class RecommendationServiceImpl implements RecommendationService{
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
 //                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
-                    List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                    converters.add(new MappingJackson2HttpMessageConverter());
-                    restTemplate.setMessageConverters(converters);
 
-                    MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-                    parts.add("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
                     ResponseEntity<GetOrderResponse> responseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
                     Order order = responseEntity.getBody().getOrder();
                     if (order != null){
