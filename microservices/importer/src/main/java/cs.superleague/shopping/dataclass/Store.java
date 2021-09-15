@@ -1,20 +1,21 @@
 package cs.superleague.shopping.dataclass;
 
-import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.payment.dataclass.Order;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table (name = "store")
 @DynamicUpdate
-public class Store {
+public class Store implements Serializable {
 
     @Id
     private UUID storeID;
