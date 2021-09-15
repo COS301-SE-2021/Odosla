@@ -1,8 +1,8 @@
-package cs.superleague.analytics.stub.responses;
+package cs.superleague.user.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import cs.superleague.analytics.stub.dataclass.User;
+import cs.superleague.user.dataclass.User;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -5,10 +5,10 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
-import cs.superleague.analytics.stub.dataclass.Driver;
-import cs.superleague.analytics.stub.dataclass.Order;
-import cs.superleague.analytics.stub.dataclass.Store;
-import cs.superleague.analytics.stub.responses.GetStoresResponse;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.responses.GetStoresResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -86,11 +86,7 @@ public class MonthlyAnalyticsHelper {
             RestTemplate restTemplate = new RestTemplate();
             String uri = "http://localhost:8089/shopping/getStores";
 
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+            Map<String, Object> parts = new HashMap<>();
 
             responseEntity = restTemplate.postForEntity(uri, parts,
                     GetStoresResponse.class);
