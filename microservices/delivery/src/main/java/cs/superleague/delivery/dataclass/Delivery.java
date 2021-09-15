@@ -1,6 +1,6 @@
 package cs.superleague.delivery.dataclass;
 
-import cs.superleague.delivery.stub.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
 import java.util.List;
