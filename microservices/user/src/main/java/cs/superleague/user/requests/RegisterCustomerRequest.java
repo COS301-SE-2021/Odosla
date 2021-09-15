@@ -1,10 +1,8 @@
 package cs.superleague.user.requests;
 
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.GeoPoint;
 
 import java.util.Date;
-import java.util.UUID;
 
 public class RegisterCustomerRequest {
 
