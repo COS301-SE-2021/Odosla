@@ -1,6 +1,4 @@
-package cs.superleague.notification.stubs.user.dataclass;
-
-import cs.superleague.notification.stubs.user.dataclass.UserType;
+package cs.superleague.user.dataclass;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

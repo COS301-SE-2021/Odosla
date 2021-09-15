@@ -1,7 +1,6 @@
-package cs.superleague.notification.stubs.user.dataclass;
+package cs.superleague.user.dataclass;
 
-import cs.superleague.notification.stubs.user.dataclass.UserType;
-import cs.superleague.notification.stubs.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
 import java.util.Date;

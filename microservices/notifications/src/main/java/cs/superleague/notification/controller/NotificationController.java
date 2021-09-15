@@ -9,6 +9,7 @@ import cs.superleague.models.NotificationSendDirectEmailNotificationResponse;
 import cs.superleague.models.NotificationSendEmailNotificationRequest;
 import cs.superleague.models.NotificationSendEmailNotificationResponse;
 import cs.superleague.notification.NotificationService;
+import cs.superleague.notification.NotificationServiceImpl;
 import cs.superleague.notification.repos.NotificationRepo;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 //import cs.superleague.notification.requests.SendEmailNotificationRequest;
@@ -21,27 +22,44 @@ import cs.superleague.notification.responses.SendDirectEmailNotificationResponse
 //import cs.superleague.user.repos.DriverRepo;
 //import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.notification.responses.SendEmailNotificationResponse;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin
 @RestController
 public class NotificationController implements NotificationApi {
 
-    @Autowired
     JavaMailSender javaMailSender;
-
-    @Autowired
     NotificationRepo notificationRepo;
+    NotificationService notificationService;
+    RestTemplate restTemplate;
+    HttpServletRequest httpServletRequest;
 
     @Autowired
-    NotificationService notificationService;
+    public NotificationController(JavaMailSender javaMailSender, NotificationRepo notificationRepo,
+                                  NotificationService notificationService, RestTemplate restTemplate,
+                                  HttpServletRequest httpServletRequest){
+        this.javaMailSender = javaMailSender;
+        this.notificationRepo = notificationRepo;
+        this.notificationService = notificationService;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+    }
 
 
     UUID adminID = UUID.fromString("b2cbc86b-ec77-456d-b293-62977d16188a");
@@ -54,6 +72,13 @@ public class NotificationController implements NotificationApi {
         NotificationSendEmailNotificationResponse response = new NotificationSendEmailNotificationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             SendEmailNotificationRequest request = new SendEmailNotificationRequest(body.getMessage(), body.getProperties());
             SendEmailNotificationResponse sendEmailNotificationResponse = notificationService.sendEmailNotification(request);
             try{

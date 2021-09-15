@@ -1,11 +1,13 @@
-package cs.superleague.notification.stubs.user.responses;
+package cs.superleague.user.responses;
 
-import cs.superleague.notification.stubs.user.dataclass.Shopper;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import cs.superleague.user.dataclass.Shopper;
 
 import java.util.Date;
 
 public class GetShopperByUUIDResponse {
     private final Shopper shopperEntity;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 

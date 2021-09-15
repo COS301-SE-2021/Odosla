@@ -1,11 +1,14 @@
-package cs.superleague.notification.stubs.user.responses;
+package cs.superleague.user.responses;
 
-import cs.superleague.notification.stubs.user.dataclass.Admin;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import cs.superleague.user.dataclass.Admin;
 
 import java.util.Calendar;
 
 public class GetAdminByUUIDResponse {
     private final Admin admin;
+
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Calendar timestamp;
     private final String message;
 
