@@ -4,10 +4,7 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.Order;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CancelOrdersMock {
 
@@ -60,7 +57,7 @@ public class CancelOrdersMock {
         order.setUserID(UUID.randomUUID());
         order.setStoreID(store1ID);
         order.setShopperID(shoper1PnP);
-        order.setCreateDate(Calendar.getInstance());
+        order.setCreateDate(new Date());
         order.setTotalCost((Double) totalCost);
 //        order.Type(OrderType.DELIVERY);
 //        order.setStatus(OrderStatus.AWAITING_PAYMENT);

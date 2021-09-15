@@ -1,4 +1,4 @@
-package cs.superleague.payment.stubs.user.dataclass;
+package cs.superleague.user.dataclass;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;

@@ -2,38 +2,34 @@ package cs.superleague.payment;
 
 import com.itextpdf.text.*;
 import cs.superleague.integration.security.CurrentUser;
-import cs.superleague.payment.repos.InvoiceRepo;
-import cs.superleague.payment.repos.TransactionRepo;
-import cs.superleague.payment.stubs.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.payment.dataclass.*;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.exceptions.NotAuthorisedException;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.OrderRepo;
+import cs.superleague.payment.repos.TransactionRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.exceptions.*;
+import cs.superleague.recommendation.requests.AddRecommendationRequest;
+import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
-import cs.superleague.payment.stubs.user.dataclass.Customer;
-import cs.superleague.payment.stubs.user.responses.GetCustomerByEmailResponse;
-import cs.superleague.payment.stubs.recommendation.requests.AddRecommendationRequest;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.responses.GetCustomerByEmailResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service("paymentServiceImpl")
@@ -154,11 +150,8 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
 
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("storeID", request.getStoreID());
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("storeID", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate.postForEntity("http://localhost:8088/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
 
@@ -180,11 +173,8 @@ public class PaymentServiceImpl implements PaymentService {
 
             CurrentUser currentUser = new CurrentUser();
 
-            converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-            parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("email", currentUser.getEmail());
+            parts = new HashMap<>();
+            parts.put("email", currentUser.getEmail());
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
@@ -256,7 +246,7 @@ public class PaymentServiceImpl implements PaymentService {
             //
             //                orderItems.add(orderItems1);
             //            }
-            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
+            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
             //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
 
@@ -455,11 +445,8 @@ import java.util.List;50"
 
         CurrentUser currentUser = new CurrentUser();
 
-        List<HttpMessageConverter<?>> converters = new ArrayList<>();
-        converters.add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setMessageConverters(converters);
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-        parts.add("email", currentUser.getEmail());
+        Map<String, Object> parts = new HashMap<String, Object>();
+        parts.put("email", currentUser.getEmail());
         ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
@@ -774,11 +761,8 @@ import java.util.List;50"
         CurrentUser currentUser = new CurrentUser();
         Customer customer = null;
 
-        List<HttpMessageConverter<?>> converters = new ArrayList<>();
-        converters.add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setMessageConverters(converters);
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-        parts.add("email", currentUser.getEmail());
+        Map<String, Object> parts = new HashMap<String, Object>();
+        parts.put("email", currentUser.getEmail());
         ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
