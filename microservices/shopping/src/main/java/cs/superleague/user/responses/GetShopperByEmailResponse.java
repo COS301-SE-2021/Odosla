@@ -6,6 +6,12 @@ public class GetShopperByEmailResponse {
 
     final Shopper shopper;
     private final boolean success;
+
+    public GetShopperByEmailResponse() {
+        this.shopper = null;
+        this.success = false;
+    }
+
     public GetShopperByEmailResponse(Shopper shopper, boolean success) {
         this.shopper = shopper;
         this.success = success;
