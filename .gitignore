@@ -9,3 +9,4 @@
 /microservices/recommendation/target/
 /microservices/notifications/target/
 /rabbit_test/rms_1/target/
+/microservices/importer/target/
