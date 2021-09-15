@@ -8,8 +8,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="analytics" />
         <module name="importer" />
+        <module name="delivery" />
+        <module name="rms_2" />
         <module name="rms_1" />
         <module name="recommendation" />
+        <module name="payment" />
         <module name="user" />
         <module name="notifications" />
         <module name="shopping" />
