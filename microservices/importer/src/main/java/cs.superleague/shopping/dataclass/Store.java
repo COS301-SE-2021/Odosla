@@ -1,8 +1,8 @@
-package cs.superleague.importer.stub.shopping.dataclass;
+package cs.superleague.shopping.dataclass;
 
-import cs.superleague.importer.stub.user.dataclass.Shopper;
-import cs.superleague.importer.stub.payment.dataclass.GeoPoint;
-import cs.superleague.importer.stub.payment.dataclass.Order;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
