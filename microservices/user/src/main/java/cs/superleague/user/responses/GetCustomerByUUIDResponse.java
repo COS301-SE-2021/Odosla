@@ -1,11 +1,13 @@
 package cs.superleague.user.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.user.dataclass.Customer;
 import java.util.Date;
 
 public class GetCustomerByUUIDResponse {
 
     private final Customer customer;
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 

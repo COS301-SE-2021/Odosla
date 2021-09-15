@@ -22,6 +22,7 @@ import cs.superleague.user.stubs.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.user.stubs.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -44,6 +45,18 @@ public class UserServiceImpl implements UserService{
     /* TO DO:
     Complete packaging
     Scan Item*/
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${deliveryPort}")
+    private String deliveryPort;
+    @Value("${deliveryHost}")
+    private String deliveryHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+    @Value("${shoppingHost}")
+    private String shoppingHost;
 
     private final ShopperRepo shopperRepo;
     private final DriverRepo driverRepo;
@@ -114,7 +127,7 @@ public class UserServiceImpl implements UserService{
                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
                 parts.add("orderID", request.getOrderID());
 
-                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
                 GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
                 orderEntity = getOrderResponse.getOrder();
             }
@@ -160,7 +173,7 @@ public class UserServiceImpl implements UserService{
                 parts.add("storeID", orderEntity.getStoreID());
                 parts.add("timeOfDelivery", null);
                 parts.add("placeOfDelivery", orderEntity.getDeliveryAddress());
-                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8083/delivery/createDelivery", parts, CreateDeliveryResponse.class);
+                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery", parts, CreateDeliveryResponse.class);
                 CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
             }
 
@@ -226,7 +239,7 @@ public class UserServiceImpl implements UserService{
                 MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
                 parts.add("orderID", request.getOrderID());
 
-                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
                 GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
                 orderEntity = getOrderResponse.getOrder();
             }
@@ -1612,7 +1625,7 @@ public class UserServiceImpl implements UserService{
 
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
-        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStores", parts, GetStoresResponse.class);
+        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
 
         GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
 
@@ -1910,7 +1923,7 @@ public class UserServiceImpl implements UserService{
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
 
         try {
-            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStores", parts, GetStoresResponse.class);
+            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
             GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
             response=getStoresResponse;
         }catch (Exception e){
@@ -2008,7 +2021,7 @@ public class UserServiceImpl implements UserService{
        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
        parts.add("orderID", request.getOrderID());
 
-       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
        GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
        Order currentOrder = getOrderResponse.getOrder();
 
@@ -2059,7 +2072,7 @@ public class UserServiceImpl implements UserService{
         MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
         parts.add("orderID", request.getOrderID());
 
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
         GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
         Order order = getOrderResponse.getOrder();
 
@@ -2176,7 +2189,7 @@ public class UserServiceImpl implements UserService{
 
             MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
             parts.add("storeId", request.getStoreID());
-            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
             if (store == null){
@@ -2834,7 +2847,7 @@ public class UserServiceImpl implements UserService{
             if(driver==null) {
                 throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
             }
-            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance(),"Driver entity with corresponding user id was returned");
+            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance().getTime(),"Driver entity with corresponding user id was returned");
         }
         else{
             throw new InvalidRequestException("GetDriverByUUID request is null - could not return driver entity");
@@ -2860,7 +2873,7 @@ public class UserServiceImpl implements UserService{
             if(admin==null) {
                 throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
             }
-            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance(),"Admin entity with corresponding user id was returned");
+            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance().getTime(),"Admin entity with corresponding user id was returned");
         }
         else{
             throw new InvalidRequestException("GetAdminByUUID request is null - could not return admin entity");
