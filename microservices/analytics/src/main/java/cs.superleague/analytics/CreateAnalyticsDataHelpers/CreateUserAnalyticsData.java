@@ -1,12 +1,11 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
 import cs.superleague.analytics.exceptions.InvalidRequestException;
-import cs.superleague.analytics.stub.dataclass.Driver;
-import cs.superleague.analytics.stub.dataclass.Shopper;
-import cs.superleague.analytics.stub.dataclass.User;
-import cs.superleague.analytics.stub.dataclass.UserType;
-import cs.superleague.analytics.stub.responses.GetUsersResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.User;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.responses.GetUsersResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -58,11 +57,7 @@ public class CreateUserAnalyticsData {
 
         try{
 
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+            Map<String, Object> parts = new HashMap<>();
 
             responseEntity = restTemplate.postForEntity(uri, parts,
                     GetUsersResponse.class);

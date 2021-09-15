@@ -7,11 +7,11 @@ import cs.superleague.notification.requests.*;
 import cs.superleague.notification.responses.*;
 import cs.superleague.notification.exceptions.InvalidRequestException;
 //import cs.superleague.user.dataclass.*;
-import cs.superleague.notification.stubs.user.dataclass.*;
-import cs.superleague.notification.stubs.user.responses.GetAdminByUUIDResponse;
-import cs.superleague.notification.stubs.user.responses.GetCustomerByUUIDResponse;
-import cs.superleague.notification.stubs.user.responses.GetDriverByUUIDResponse;
-import cs.superleague.notification.stubs.user.responses.GetShopperByUUIDResponse;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.responses.GetAdminByUUIDResponse;
+import cs.superleague.user.responses.GetCustomerByUUIDResponse;
+import cs.superleague.user.responses.GetDriverByUUIDResponse;
+import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -116,48 +116,36 @@ public class NotificationServiceImpl implements NotificationService {
             throw new InvalidRequestException("Invalid UserType.");
         }
         if (userType == UserType.ADMIN){
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", request.getProperties().get("UserID"));
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", request.getProperties().get("UserID"));
             ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
             Admin admin = useCaseResponseEntity.getBody().getAdmin();
             if (admin == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.CUSTOMER){
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", request.getProperties().get("UserID"));
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", request.getProperties().get("UserID"));
             ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
             if (customer == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.DRIVER){
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", request.getProperties().get("UserID"));
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", request.getProperties().get("UserID"));
             ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
             Driver driver = useCaseResponseEntity.getBody().getDriver();
             if (driver == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.SHOPPER){
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", request.getProperties().get("UserID"));
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", request.getProperties().get("UserID"));
             ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
             Shopper shopper = useCaseResponseEntity.getBody().getShopper();
             if (shopper == null){
@@ -330,12 +318,9 @@ public class NotificationServiceImpl implements NotificationService {
         String email = "";
         if (userType == UserType.ADMIN){
             //Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", userID);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", userID);
             ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
             Admin admin = useCaseResponseEntity.getBody().getAdmin();
             if (admin == null){
@@ -344,12 +329,9 @@ public class NotificationServiceImpl implements NotificationService {
             email = admin.getEmail();
         } else if (userType == UserType.CUSTOMER){
             //Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", userID);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", userID);
             ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
             if (customer == null){
@@ -358,12 +340,9 @@ public class NotificationServiceImpl implements NotificationService {
             email = customer.getEmail();
         }else if (userType == UserType.DRIVER){
             //Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", userID);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", userID);
             ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
             Driver driver = useCaseResponseEntity.getBody().getDriver();
             if (driver == null){
@@ -372,12 +351,8 @@ public class NotificationServiceImpl implements NotificationService {
             email = driver.getEmail();
         }else if (userType == UserType.SHOPPER) {
             //Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("userID", userID);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("userID", userID);
             ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
             Shopper shopper = useCaseResponseEntity.getBody().getShopper();
             if (shopper == null) {
