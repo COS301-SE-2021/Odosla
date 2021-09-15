@@ -1,4 +1,4 @@
-package cs.superleague.payment.stubs.user.dataclass;
+package cs.superleague.user.dataclass;
 
 public enum UserType {
     SHOPPER,

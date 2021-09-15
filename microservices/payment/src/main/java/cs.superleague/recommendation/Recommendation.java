@@ -1,4 +1,4 @@
-package cs.superleague.payment.stubs.recommendation;
+package cs.superleague.recommendation;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

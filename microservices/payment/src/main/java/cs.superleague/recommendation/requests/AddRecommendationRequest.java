@@ -1,4 +1,4 @@
-package cs.superleague.payment.stubs.recommendation.requests;
+package cs.superleague.recommendation.requests;
 
 import java.io.Serializable;
 import java.util.List;
