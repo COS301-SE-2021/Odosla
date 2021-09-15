@@ -3,14 +3,14 @@ package cs.superleague.user;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
-import cs.superleague.user.stubs.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.user.stubs.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 
 public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.stubs.delivery.exceptions.InvalidRequestException;
+    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException;
     ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
     RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;

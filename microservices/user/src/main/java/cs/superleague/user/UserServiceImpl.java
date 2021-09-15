@@ -6,20 +6,20 @@ import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
-import cs.superleague.user.stubs.delivery.responses.CreateDeliveryResponse;
-import cs.superleague.user.stubs.notifications.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
-import cs.superleague.user.stubs.payment.dataclass.Order;
-import cs.superleague.user.stubs.payment.dataclass.OrderStatus;
-import cs.superleague.user.stubs.payment.dataclass.OrderType;
-import cs.superleague.user.stubs.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.user.stubs.payment.requests.SaveOrderRequest;
-import cs.superleague.user.stubs.payment.responses.GetOrderResponse;
-import cs.superleague.user.stubs.shopping.dataclass.Item;
-import cs.superleague.user.stubs.shopping.dataclass.Store;
-import cs.superleague.user.stubs.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.user.stubs.shopping.responses.GetStoreByUUIDResponse;
-import cs.superleague.user.stubs.shopping.responses.GetStoresResponse;
+import cs.superleague.delivery.responses.CreateDeliveryResponse;
+import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.requests.SaveOrderRequest;
+import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService{
      * @throws OrderDoesNotExist
      */
    @Override
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.stubs.delivery.exceptions.InvalidRequestException {
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
         CompletePackagingOrderResponse response = null;
         if(request != null){
             if(request.getOrderID()==null){
@@ -120,12 +120,9 @@ public class UserServiceImpl implements UserService{
 
             Order orderEntity=null;
             try {
-                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                converters.add(new MappingJackson2HttpMessageConverter());
-                restTemplate.setMessageConverters(converters);
 
-                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-                parts.add("orderID", request.getOrderID());
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("orderID", request.getOrderID());
 
                 ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
                 GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
@@ -162,17 +159,14 @@ public class UserServiceImpl implements UserService{
 
             if(orderEntity.getType().equals(OrderType.DELIVERY))
             {
-                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                converters.add(new MappingJackson2HttpMessageConverter());
-                restTemplate.setMessageConverters(converters);
 
-                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                Map<String, Object> parts = new HashMap<String, Object>();
 
-                parts.add("orderID", orderEntity.getOrderID());
-                parts.add("customerID", orderEntity.getUserID());
-                parts.add("storeID", orderEntity.getStoreID());
-                parts.add("timeOfDelivery", null);
-                parts.add("placeOfDelivery", orderEntity.getDeliveryAddress());
+                parts.put("orderID", orderEntity.getOrderID());
+                parts.put("customerID", orderEntity.getUserID());
+                parts.put("storeID", orderEntity.getStoreID());
+                parts.put("timeOfDelivery", null);
+                parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
                 ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery", parts, CreateDeliveryResponse.class);
                 CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
             }
@@ -232,12 +226,9 @@ public class UserServiceImpl implements UserService{
 
             try {
                 //orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
-                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                converters.add(new MappingJackson2HttpMessageConverter());
-                restTemplate.setMessageConverters(converters);
 
-                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-                parts.add("orderID", request.getOrderID());
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("orderID", request.getOrderID());
 
                 ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
                 GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
@@ -1619,11 +1610,7 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        List<HttpMessageConverter<?>> converters = new ArrayList<>();
-        converters.add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setMessageConverters(converters);
-
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        Map<String, Object> parts = new HashMap<String, Object>();
 
         ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
 
@@ -1916,11 +1903,7 @@ public class UserServiceImpl implements UserService{
             return new SetCartResponse(message, false, new Date());
         }
 
-        List<HttpMessageConverter<?>> converters = new ArrayList<>();
-        converters.add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setMessageConverters(converters);
-
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+        Map<String, Object> parts = new HashMap<String, Object>();
 
         try {
             ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
@@ -2014,12 +1997,9 @@ public class UserServiceImpl implements UserService{
 
         //Get Order By UUID
         //Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
-       List<HttpMessageConverter<?>> converters = new ArrayList<>();
-       converters.add(new MappingJackson2HttpMessageConverter());
-       restTemplate.setMessageConverters(converters);
 
-       MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-       parts.add("orderID", request.getOrderID());
+       Map<String, Object> parts = new HashMap<String, Object>();
+       parts.put("orderID", request.getOrderID());
 
        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
        GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
@@ -2065,12 +2045,9 @@ public class UserServiceImpl implements UserService{
         }
 
         //Order order= orderRepo.findById(request.getOrderID()).orElse(null);
-        List<HttpMessageConverter<?>> converters = new ArrayList<>();
-        converters.add(new MappingJackson2HttpMessageConverter());
-        restTemplate.setMessageConverters(converters);
 
-        MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-        parts.add("orderID", request.getOrderID());
+        Map<String, Object> parts = new HashMap<String, Object>();
+        parts.put("orderID", request.getOrderID());
 
         ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
         GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
@@ -2183,12 +2160,8 @@ public class UserServiceImpl implements UserService{
         }
         else{
 
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
-            parts.add("storeId", request.getStoreID());
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("storeId", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
