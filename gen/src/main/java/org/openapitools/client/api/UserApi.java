@@ -27,16 +27,24 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
+import org.openapitools.client.model.DeliveryGetDeliveryDriverByOrderIdRequest;
+import org.openapitools.client.model.DeliveryGetDeliveryDriverByOrderIdResponse;
 import org.openapitools.client.model.ShoppingGetNextQueuedRequest;
 import org.openapitools.client.model.ShoppingGetNextQueuedResponse;
 import org.openapitools.client.model.UserAccountVerifyRequest;
 import org.openapitools.client.model.UserAccountVerifyResponse;
 import org.openapitools.client.model.UserClearShoppingCartRequest;
 import org.openapitools.client.model.UserClearShoppingCartResponse;
+import org.openapitools.client.model.UserCompleteDeliveryRequest;
+import org.openapitools.client.model.UserCompleteDeliveryResponse;
 import org.openapitools.client.model.UserCompletePackagingOrderRequest;
 import org.openapitools.client.model.UserCompletePackagingOrderResponse;
+import org.openapitools.client.model.UserDriverSetRatingRequest;
+import org.openapitools.client.model.UserDriverSetRatingResponse;
 import org.openapitools.client.model.UserGetCurrentUserRequest;
 import org.openapitools.client.model.UserGetCurrentUserResponse;
+import org.openapitools.client.model.UserGetCustomerByUUIDRequest;
+import org.openapitools.client.model.UserGetCustomerByUUIDResponse;
 import org.openapitools.client.model.UserGetGroceryListRequest;
 import org.openapitools.client.model.UserGetGroceryListResponse;
 import org.openapitools.client.model.UserGetShoppingCartRequest;
@@ -63,6 +71,8 @@ import org.openapitools.client.model.UserSetCurrentLocationRequest;
 import org.openapitools.client.model.UserSetCurrentLocationResponse;
 import org.openapitools.client.model.UserUpdateDriverShiftRequest;
 import org.openapitools.client.model.UserUpdateDriverShiftResponse;
+import org.openapitools.client.model.UserUpdateShopperDetailsRequest;
+import org.openapitools.client.model.UserUpdateShopperDetailsResponse;
 import org.openapitools.client.model.UserUpdateShopperShiftRequest;
 import org.openapitools.client.model.UserUpdateShopperShiftResponse;
 
@@ -203,6 +213,117 @@ public class UserApi {
         return localVarCall;
     }
     /**
+     * Build call for completeDelivery
+     * @param userCompleteDeliveryRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery is completed </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call completeDeliveryCall(UserCompleteDeliveryRequest userCompleteDeliveryRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userCompleteDeliveryRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/completeDelivery";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call completeDeliveryValidateBeforeCall(UserCompleteDeliveryRequest userCompleteDeliveryRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userCompleteDeliveryRequest' is set
+        if (userCompleteDeliveryRequest == null) {
+            throw new ApiException("Missing the required parameter 'userCompleteDeliveryRequest' when calling completeDelivery(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = completeDeliveryCall(userCompleteDeliveryRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for complete delivery use case
+     * Refer to summary
+     * @param userCompleteDeliveryRequest The input body required by this request (required)
+     * @return UserCompleteDeliveryResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery is completed </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserCompleteDeliveryResponse completeDelivery(UserCompleteDeliveryRequest userCompleteDeliveryRequest) throws ApiException {
+        ApiResponse<UserCompleteDeliveryResponse> localVarResp = completeDeliveryWithHttpInfo(userCompleteDeliveryRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for complete delivery use case
+     * Refer to summary
+     * @param userCompleteDeliveryRequest The input body required by this request (required)
+     * @return ApiResponse&lt;UserCompleteDeliveryResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery is completed </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserCompleteDeliveryResponse> completeDeliveryWithHttpInfo(UserCompleteDeliveryRequest userCompleteDeliveryRequest) throws ApiException {
+        okhttp3.Call localVarCall = completeDeliveryValidateBeforeCall(userCompleteDeliveryRequest, null);
+        Type localVarReturnType = new TypeToken<UserCompleteDeliveryResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for complete delivery use case (asynchronously)
+     * Refer to summary
+     * @param userCompleteDeliveryRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery is completed </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call completeDeliveryAsync(UserCompleteDeliveryRequest userCompleteDeliveryRequest, final ApiCallback<UserCompleteDeliveryResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = completeDeliveryValidateBeforeCall(userCompleteDeliveryRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserCompleteDeliveryResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
      * Build call for completePackagingOrder
      * @param userCompletePackagingOrderRequest The input body required by this request (required)
      * @param _callback Callback for upload/download progress
@@ -314,6 +435,117 @@ public class UserApi {
         return localVarCall;
     }
     /**
+     * Build call for driverSetRating
+     * @param userDriverSetRatingRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns response </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call driverSetRatingCall(UserDriverSetRatingRequest userDriverSetRatingRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userDriverSetRatingRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/driverSetRating";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call driverSetRatingValidateBeforeCall(UserDriverSetRatingRequest userDriverSetRatingRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userDriverSetRatingRequest' is set
+        if (userDriverSetRatingRequest == null) {
+            throw new ApiException("Missing the required parameter 'userDriverSetRatingRequest' when calling driverSetRating(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = driverSetRatingCall(userDriverSetRatingRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for setting rating use case
+     * Refer to summary
+     * @param userDriverSetRatingRequest The input body required by this request (required)
+     * @return UserDriverSetRatingResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns response </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserDriverSetRatingResponse driverSetRating(UserDriverSetRatingRequest userDriverSetRatingRequest) throws ApiException {
+        ApiResponse<UserDriverSetRatingResponse> localVarResp = driverSetRatingWithHttpInfo(userDriverSetRatingRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for setting rating use case
+     * Refer to summary
+     * @param userDriverSetRatingRequest The input body required by this request (required)
+     * @return ApiResponse&lt;UserDriverSetRatingResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns response </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserDriverSetRatingResponse> driverSetRatingWithHttpInfo(UserDriverSetRatingRequest userDriverSetRatingRequest) throws ApiException {
+        okhttp3.Call localVarCall = driverSetRatingValidateBeforeCall(userDriverSetRatingRequest, null);
+        Type localVarReturnType = new TypeToken<UserDriverSetRatingResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for setting rating use case (asynchronously)
+     * Refer to summary
+     * @param userDriverSetRatingRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns response </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call driverSetRatingAsync(UserDriverSetRatingRequest userDriverSetRatingRequest, final ApiCallback<UserDriverSetRatingResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = driverSetRatingValidateBeforeCall(userDriverSetRatingRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserDriverSetRatingResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
      * Build call for getCurrentUser
      * @param userGetCurrentUserRequest The input body required by this request (required)
      * @param _callback Callback for upload/download progress
@@ -421,6 +653,228 @@ public class UserApi {
 
         okhttp3.Call localVarCall = getCurrentUserValidateBeforeCall(userGetCurrentUserRequest, _callback);
         Type localVarReturnType = new TypeToken<UserGetCurrentUserResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for getCustomerByUUID
+     * @param userGetCustomerByUUIDRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns customer </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getCustomerByUUIDCall(UserGetCustomerByUUIDRequest userGetCustomerByUUIDRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userGetCustomerByUUIDRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/getCustomerByUUID";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getCustomerByUUIDValidateBeforeCall(UserGetCustomerByUUIDRequest userGetCustomerByUUIDRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userGetCustomerByUUIDRequest' is set
+        if (userGetCustomerByUUIDRequest == null) {
+            throw new ApiException("Missing the required parameter 'userGetCustomerByUUIDRequest' when calling getCustomerByUUID(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getCustomerByUUIDCall(userGetCustomerByUUIDRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for get customer by UUID use case
+     * Refer to summary
+     * @param userGetCustomerByUUIDRequest The input body required by this request (required)
+     * @return UserGetCustomerByUUIDResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns customer </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserGetCustomerByUUIDResponse getCustomerByUUID(UserGetCustomerByUUIDRequest userGetCustomerByUUIDRequest) throws ApiException {
+        ApiResponse<UserGetCustomerByUUIDResponse> localVarResp = getCustomerByUUIDWithHttpInfo(userGetCustomerByUUIDRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for get customer by UUID use case
+     * Refer to summary
+     * @param userGetCustomerByUUIDRequest The input body required by this request (required)
+     * @return ApiResponse&lt;UserGetCustomerByUUIDResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns customer </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserGetCustomerByUUIDResponse> getCustomerByUUIDWithHttpInfo(UserGetCustomerByUUIDRequest userGetCustomerByUUIDRequest) throws ApiException {
+        okhttp3.Call localVarCall = getCustomerByUUIDValidateBeforeCall(userGetCustomerByUUIDRequest, null);
+        Type localVarReturnType = new TypeToken<UserGetCustomerByUUIDResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for get customer by UUID use case (asynchronously)
+     * Refer to summary
+     * @param userGetCustomerByUUIDRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns customer </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getCustomerByUUIDAsync(UserGetCustomerByUUIDRequest userGetCustomerByUUIDRequest, final ApiCallback<UserGetCustomerByUUIDResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getCustomerByUUIDValidateBeforeCall(userGetCustomerByUUIDRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserGetCustomerByUUIDResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for getDeliveryDriverByOrderId
+     * @param deliveryGetDeliveryDriverByOrderIdRequest The input body required by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery and driver </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getDeliveryDriverByOrderIdCall(DeliveryGetDeliveryDriverByOrderIdRequest deliveryGetDeliveryDriverByOrderIdRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = deliveryGetDeliveryDriverByOrderIdRequest;
+
+        // create path and map variables
+        String localVarPath = "/delivery/getDeliveryDriverByOrderId";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getDeliveryDriverByOrderIdValidateBeforeCall(DeliveryGetDeliveryDriverByOrderIdRequest deliveryGetDeliveryDriverByOrderIdRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'deliveryGetDeliveryDriverByOrderIdRequest' is set
+        if (deliveryGetDeliveryDriverByOrderIdRequest == null) {
+            throw new ApiException("Missing the required parameter 'deliveryGetDeliveryDriverByOrderIdRequest' when calling getDeliveryDriverByOrderId(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = getDeliveryDriverByOrderIdCall(deliveryGetDeliveryDriverByOrderIdRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for get delivery driver by order id use case
+     * Refer to summary
+     * @param deliveryGetDeliveryDriverByOrderIdRequest The input body required by this request (required)
+     * @return DeliveryGetDeliveryDriverByOrderIdResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery and driver </td><td>  -  </td></tr>
+     </table>
+     */
+    public DeliveryGetDeliveryDriverByOrderIdResponse getDeliveryDriverByOrderId(DeliveryGetDeliveryDriverByOrderIdRequest deliveryGetDeliveryDriverByOrderIdRequest) throws ApiException {
+        ApiResponse<DeliveryGetDeliveryDriverByOrderIdResponse> localVarResp = getDeliveryDriverByOrderIdWithHttpInfo(deliveryGetDeliveryDriverByOrderIdRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for get delivery driver by order id use case
+     * Refer to summary
+     * @param deliveryGetDeliveryDriverByOrderIdRequest The input body required by this request (required)
+     * @return ApiResponse&lt;DeliveryGetDeliveryDriverByOrderIdResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery and driver </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<DeliveryGetDeliveryDriverByOrderIdResponse> getDeliveryDriverByOrderIdWithHttpInfo(DeliveryGetDeliveryDriverByOrderIdRequest deliveryGetDeliveryDriverByOrderIdRequest) throws ApiException {
+        okhttp3.Call localVarCall = getDeliveryDriverByOrderIdValidateBeforeCall(deliveryGetDeliveryDriverByOrderIdRequest, null);
+        Type localVarReturnType = new TypeToken<DeliveryGetDeliveryDriverByOrderIdResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for get delivery driver by order id use case (asynchronously)
+     * Refer to summary
+     * @param deliveryGetDeliveryDriverByOrderIdRequest The input body required by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns delivery and driver </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getDeliveryDriverByOrderIdAsync(DeliveryGetDeliveryDriverByOrderIdRequest deliveryGetDeliveryDriverByOrderIdRequest, final ApiCallback<DeliveryGetDeliveryDriverByOrderIdResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getDeliveryDriverByOrderIdValidateBeforeCall(deliveryGetDeliveryDriverByOrderIdRequest, _callback);
+        Type localVarReturnType = new TypeToken<DeliveryGetDeliveryDriverByOrderIdResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
@@ -1975,6 +2429,117 @@ public class UserApi {
 
         okhttp3.Call localVarCall = updateDriverShiftValidateBeforeCall(userUpdateDriverShiftRequest, _callback);
         Type localVarReturnType = new TypeToken<UserUpdateDriverShiftResponse>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for updateShopperDetails
+     * @param userUpdateShopperDetailsRequest The input body require by this request (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns if updating details was successful </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call updateShopperDetailsCall(UserUpdateShopperDetailsRequest userUpdateShopperDetailsRequest, final ApiCallback _callback) throws ApiException {
+        Object localVarPostBody = userUpdateShopperDetailsRequest;
+
+        // create path and map variables
+        String localVarPath = "/user/updateShopperDetails";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "application/json"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        String[] localVarAuthNames = new String[] {  };
+        return localVarApiClient.buildCall(localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call updateShopperDetailsValidateBeforeCall(UserUpdateShopperDetailsRequest userUpdateShopperDetailsRequest, final ApiCallback _callback) throws ApiException {
+        
+        // verify the required parameter 'userUpdateShopperDetailsRequest' is set
+        if (userUpdateShopperDetailsRequest == null) {
+            throw new ApiException("Missing the required parameter 'userUpdateShopperDetailsRequest' when calling updateShopperDetails(Async)");
+        }
+        
+
+        okhttp3.Call localVarCall = updateShopperDetailsCall(userUpdateShopperDetailsRequest, _callback);
+        return localVarCall;
+
+    }
+
+    /**
+     * Endpoint for updating shopper details
+     * Refer to summary
+     * @param userUpdateShopperDetailsRequest The input body require by this request (required)
+     * @return UserUpdateShopperDetailsResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns if updating details was successful </td><td>  -  </td></tr>
+     </table>
+     */
+    public UserUpdateShopperDetailsResponse updateShopperDetails(UserUpdateShopperDetailsRequest userUpdateShopperDetailsRequest) throws ApiException {
+        ApiResponse<UserUpdateShopperDetailsResponse> localVarResp = updateShopperDetailsWithHttpInfo(userUpdateShopperDetailsRequest);
+        return localVarResp.getData();
+    }
+
+    /**
+     * Endpoint for updating shopper details
+     * Refer to summary
+     * @param userUpdateShopperDetailsRequest The input body require by this request (required)
+     * @return ApiResponse&lt;UserUpdateShopperDetailsResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns if updating details was successful </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<UserUpdateShopperDetailsResponse> updateShopperDetailsWithHttpInfo(UserUpdateShopperDetailsRequest userUpdateShopperDetailsRequest) throws ApiException {
+        okhttp3.Call localVarCall = updateShopperDetailsValidateBeforeCall(userUpdateShopperDetailsRequest, null);
+        Type localVarReturnType = new TypeToken<UserUpdateShopperDetailsResponse>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     * Endpoint for updating shopper details (asynchronously)
+     * Refer to summary
+     * @param userUpdateShopperDetailsRequest The input body require by this request (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table summary="Response Details" border="1">
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Returns if updating details was successful </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call updateShopperDetailsAsync(UserUpdateShopperDetailsRequest userUpdateShopperDetailsRequest, final ApiCallback<UserUpdateShopperDetailsResponse> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = updateShopperDetailsValidateBeforeCall(userUpdateShopperDetailsRequest, _callback);
+        Type localVarReturnType = new TypeToken<UserUpdateShopperDetailsResponse>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }

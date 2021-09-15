@@ -139,17 +139,9 @@ public class MakeGroceryListUnitTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void UnitTest_testingNullRequestUserIDParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, listOfBarcodes, "Seamus' Party");
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
-        assertEquals("JWTToken is null - could not make grocery list", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("When barcodes parameter is not specified")
     void UnitTest_testingNullRequestBarcodesParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, null, "Seamus' Party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(null, "Seamus' Party");
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Barcodes list empty - could not make the grocery list", thrown.getMessage());
     }
@@ -157,32 +149,16 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When name parameter is not specified")
     void UnitTest_testingNullRequestNameParameter(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, listOfBarcodes, null);
+        MakeGroceryListRequest request  = new MakeGroceryListRequest( listOfBarcodes, null);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.makeGroceryList(request));
         assertEquals("Grocery List Name is Null - could not make the grocery list", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Invalid AccountType")
-    void UnitTest_testingInvalidAccountType(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenShopper, listOfBarcodes, "Seamus' party");
-        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
-
-        try{
-            MakeGroceryListResponse response = userService.makeGroceryList(request);
-            assertFalse(response.isSuccess());
-            assertEquals("Invalid JWTToken for customer userType", response.getMessage());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
     }
 
 
     @Test
     @DisplayName("When the barcodes do not exist")
     void UnitTest_testing_Barcodes_DoneExist(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenCustomer, listOfBarcodes, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(listOfBarcodes, "Seamus' bachelor party");
         when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 
         try{
@@ -199,9 +175,8 @@ public class MakeGroceryListUnitTest {
     @Test
     @DisplayName("When the groceryList Creation is successful")
     void UnitTest_testingSuccessfulGroceryListCreation(){
-        MakeGroceryListRequest request  = new MakeGroceryListRequest(jwtTokenCustomer, listOfBarcodes, "Seamus' bachelor party");
+        MakeGroceryListRequest request  = new MakeGroceryListRequest(listOfBarcodes, "Seamus' bachelor party");
         when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-
         try{
             when(shoppingService.getStores(Mockito.any())).thenReturn(new GetStoresResponse(true, "", listOfStores));
             MakeGroceryListResponse response = userService.makeGroceryList(request);

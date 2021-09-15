@@ -336,8 +336,8 @@ class _OrderPage extends State<OrderPage> {
   Widget buildEmployeeInfo(BuildContext context) {
     if (Provider.of<DriverProvider>(context).allocated) {
       return Container(
-        padding: EdgeInsets.symmetric(horizontal: 35),
-        height: 100,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 140,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -355,7 +355,7 @@ class _OrderPage extends State<OrderPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Trips completed: ",
+                Text("Deliveries completed: ",
                     style:
                         TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                 Text(Provider.of<DriverProvider>(context).trips.toString(),

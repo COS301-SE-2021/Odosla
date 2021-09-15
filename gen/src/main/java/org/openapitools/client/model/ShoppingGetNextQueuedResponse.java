@@ -31,7 +31,7 @@ import org.openapitools.client.model.OrderObject;
  * This object is returned as output
  */
 @ApiModel(description = "This object is returned as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class ShoppingGetNextQueuedResponse {
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
@@ -51,7 +51,7 @@ public class ShoppingGetNextQueuedResponse {
 
   public static final String SERIALIZED_NAME_NEW_CURRENT_ORDER = "newCurrentOrder";
   @SerializedName(SERIALIZED_NAME_NEW_CURRENT_ORDER)
-  private Object newCurrentOrder;
+  private OrderObject newCurrentOrder;
 
 
   public ShoppingGetNextQueuedResponse message(String message) {
@@ -154,7 +154,7 @@ public class ShoppingGetNextQueuedResponse {
   }
 
 
-  public ShoppingGetNextQueuedResponse newCurrentOrder(Object newCurrentOrder) {
+  public ShoppingGetNextQueuedResponse newCurrentOrder(OrderObject newCurrentOrder) {
     
     this.newCurrentOrder = newCurrentOrder;
     return this;
@@ -167,12 +167,12 @@ public class ShoppingGetNextQueuedResponse {
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public Object getNewCurrentOrder() {
+  public OrderObject getNewCurrentOrder() {
     return newCurrentOrder;
   }
 
 
-  public void setNewCurrentOrder(Object newCurrentOrder) {
+  public void setNewCurrentOrder(OrderObject newCurrentOrder) {
     this.newCurrentOrder = newCurrentOrder;
   }
 

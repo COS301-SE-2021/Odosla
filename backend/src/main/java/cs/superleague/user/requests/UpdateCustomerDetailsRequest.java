@@ -6,27 +6,26 @@ import java.util.UUID;
 
 public class UpdateCustomerDetailsRequest {
 
-    private final UUID customerID;
     private final String name;
     private final String surname;
     private final String email;
     private final String phoneNumber;
     private final String password;
-
     private final GeoPoint address;
+    private final String currentPassword;
 
-    public UpdateCustomerDetailsRequest(UUID customerID, String name, String surname, String email, String phoneNumber, String password, GeoPoint address) {
-        this.customerID = customerID;
+    public UpdateCustomerDetailsRequest(String name, String surname, String email, String phoneNumber, String password, GeoPoint address, String currentPassword) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.address = address;
+        this.currentPassword = currentPassword;
     }
 
-    public UUID getCustomerID() {
-        return customerID;
+    public String getCurrentPassword() {
+        return currentPassword;
     }
 
     public String getName() {

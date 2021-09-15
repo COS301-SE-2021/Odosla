@@ -1,2 +1,4 @@
 /.idea/
 /backend/
+/backend/target/
+/gen/

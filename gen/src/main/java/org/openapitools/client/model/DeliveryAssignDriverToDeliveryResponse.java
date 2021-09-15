@@ -29,7 +29,7 @@ import org.openapitools.client.model.GeoPointObject;
  * This object is expected as output
  */
 @ApiModel(description = "This object is expected as output")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class DeliveryAssignDriverToDeliveryResponse {
   public static final String SERIALIZED_NAME_IS_ASSIGNED = "isAssigned";
   @SerializedName(SERIALIZED_NAME_IS_ASSIGNED)
@@ -46,6 +46,10 @@ public class DeliveryAssignDriverToDeliveryResponse {
   public static final String SERIALIZED_NAME_DROP_OFF_LOCATION = "dropOffLocation";
   @SerializedName(SERIALIZED_NAME_DROP_OFF_LOCATION)
   private GeoPointObject dropOffLocation;
+
+  public static final String SERIALIZED_NAME_DRIVER_I_D = "driverID";
+  @SerializedName(SERIALIZED_NAME_DRIVER_I_D)
+  private String driverID;
 
 
   public DeliveryAssignDriverToDeliveryResponse isAssigned(Boolean isAssigned) {
@@ -140,6 +144,29 @@ public class DeliveryAssignDriverToDeliveryResponse {
   }
 
 
+  public DeliveryAssignDriverToDeliveryResponse driverID(String driverID) {
+    
+    this.driverID = driverID;
+    return this;
+  }
+
+   /**
+   * Get driverID
+   * @return driverID
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+
+  public String getDriverID() {
+    return driverID;
+  }
+
+
+  public void setDriverID(String driverID) {
+    this.driverID = driverID;
+  }
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -152,12 +179,13 @@ public class DeliveryAssignDriverToDeliveryResponse {
     return Objects.equals(this.isAssigned, deliveryAssignDriverToDeliveryResponse.isAssigned) &&
         Objects.equals(this.message, deliveryAssignDriverToDeliveryResponse.message) &&
         Objects.equals(this.pickUpLocation, deliveryAssignDriverToDeliveryResponse.pickUpLocation) &&
-        Objects.equals(this.dropOffLocation, deliveryAssignDriverToDeliveryResponse.dropOffLocation);
+        Objects.equals(this.dropOffLocation, deliveryAssignDriverToDeliveryResponse.dropOffLocation) &&
+        Objects.equals(this.driverID, deliveryAssignDriverToDeliveryResponse.driverID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(isAssigned, message, pickUpLocation, dropOffLocation);
+    return Objects.hash(isAssigned, message, pickUpLocation, dropOffLocation, driverID);
   }
 
 
@@ -169,6 +197,7 @@ public class DeliveryAssignDriverToDeliveryResponse {
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    pickUpLocation: ").append(toIndentedString(pickUpLocation)).append("\n");
     sb.append("    dropOffLocation: ").append(toIndentedString(dropOffLocation)).append("\n");
+    sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

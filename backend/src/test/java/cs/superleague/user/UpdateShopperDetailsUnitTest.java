@@ -1,5 +1,6 @@
 package cs.superleague.user;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.exceptions.ShopperDoesNotExistException;
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -29,14 +31,28 @@ public class UpdateShopperDetailsUnitTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+    @InjectMocks
+    private JwtUtil jwtUtil;
+
+    BCryptPasswordEncoder passwordEncoder;
     UpdateShopperDetailsRequest request;
     UUID shopperId= UUID.randomUUID();
     Shopper shopper;
+    Shopper shopperExistingEmail;
     UpdateShopperDetailsResponse response;
     @BeforeEach
     void setUp(){
-        request=new UpdateShopperDetailsRequest(shopperId,"name","surname","email@gmail.com","password","phoneNumber");
-        shopper=new Shopper();
+        passwordEncoder = new BCryptPasswordEncoder(15);
+
+        request = new UpdateShopperDetailsRequest("name","surname","email@gmail.com","phoneNumber","password", "confirmedPassword");
+        shopper = new Shopper();
+        shopper.setEmail("email@yahoo.com");
+        shopper.setShopperID(UUID.randomUUID());
+        shopper.setPassword(passwordEncoder.encode(request.getCurrentPassword()));
+
+        shopperExistingEmail = new Shopper();
+        shopperExistingEmail.setEmail("validEmail@gmail.com");
+
     }
 
     @AfterEach
@@ -50,41 +66,32 @@ public class UpdateShopperDetailsUnitTest {
     }
 
     @Test
-    @DisplayName("When userID parameter is not specified")
-    void UnitTest_testingNullRequestUserIDParameter(){
-        request.setShopperID(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.updateShopperDetails(request));
-        assertEquals("ShopperId is null - could not update shopper", thrown.getMessage());
-    }
-
-    @Test
     @DisplayName("Request object created correctly")
     void UnitTest_requestObjectCorrectlyCreated(){
         UUID storeID=UUID.randomUUID();
-        UpdateShopperDetailsRequest req=new UpdateShopperDetailsRequest(shopperId,"n","s","e","pass","pN",storeID);
+        UpdateShopperDetailsRequest req=new UpdateShopperDetailsRequest("n","s","e","pN","pass", "currentPassword");
         assertNotNull(req);
-        assertEquals(shopperId,req.getShopperID());
         assertEquals("n",req.getName());
         assertEquals("s",req.getSurname());
         assertEquals("e",req.getEmail());
         assertEquals("pass",req.getPassword());
         assertEquals("pN",req.getPhoneNumber());
-        assertEquals(storeID,req.getStoreID());
+        assertEquals("currentPassword", req.getCurrentPassword());
     }
 
     @Test
-    @DisplayName("When shopper with given UserID does not exist")
+    @DisplayName("When shopper with given Email does not exist")
     void UnitTest_testingInvalidUser(){
-        when(shopperRepo.findById(Mockito.any())).thenReturn(null);
+        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(null);
         Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> userService.updateShopperDetails(request));
-        assertEquals("User with given userID does not exist - could not update shopper", thrown.getMessage());
+        assertEquals("User with the given email does not exist - could not update shopper", thrown.getMessage());
     }
 
     @Test
     @DisplayName("When an Invalid email is given")
     void UnitTest_testingInvalidEmail(){
         request.setEmail("invalid");
-        when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
 
         try {
             response = userService.updateShopperDetails(request);
@@ -101,7 +108,8 @@ public class UpdateShopperDetailsUnitTest {
     @DisplayName("When an Invalid password is given")
     void UnitTest_testingInvalidPassword(){
 
-        when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(request.getEmail())).thenReturn(Optional.ofNullable(null));
 
         try {
             response = userService.updateShopperDetails(request);
@@ -117,9 +125,9 @@ public class UpdateShopperDetailsUnitTest {
     @Test
     @DisplayName("When null update values are given")
     void UnitTest_testingNullUpdates(){
-        request = new UpdateShopperDetailsRequest(shopperId, null, null, null,
+        request = new UpdateShopperDetailsRequest(null, null, null,
                 null, null, null);
-        when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
 
         try {
             response = userService.updateShopperDetails(request);
@@ -135,9 +143,9 @@ public class UpdateShopperDetailsUnitTest {
     @Test
     @DisplayName("When user tries to update to existingEmail")
     void UnitTest_testingExistingEmailUpdateAttempt(){
-        shopper.setEmail("validEmail@gmail.com");
-        when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        request.setEmail(shopperExistingEmail.getEmail());
         when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(request.getEmail())).thenReturn(Optional.ofNullable(shopperExistingEmail));
         try {
             response = userService.updateShopperDetails(request);
             assertEquals("Email is already taken", response.getMessage());
@@ -154,7 +162,8 @@ public class UpdateShopperDetailsUnitTest {
     void UnitTest_testingSuccessfulUpdate(){
 
         request.setPassword("validPassword@1");
-        when(shopperRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
+        when(shopperRepo.findByEmail(request.getEmail())).thenReturn(Optional.ofNullable(null));
 
         try {
             response = userService.updateShopperDetails(request);

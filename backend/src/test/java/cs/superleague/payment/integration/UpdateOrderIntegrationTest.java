@@ -1,5 +1,6 @@
 package cs.superleague.payment.integration;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
@@ -15,12 +16,21 @@ import cs.superleague.payment.responses.UpdateOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
+import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.repos.CustomerRepo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -42,6 +52,12 @@ public class UpdateOrderIntegrationTest {
     @Autowired
     ItemRepo itemRepo;
 
+    @Autowired
+    CustomerRepo customerRepo;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
     // Global variables
     double expectedDiscount, expectedtotalCost;
 
@@ -53,6 +69,8 @@ public class UpdateOrderIntegrationTest {
 
     // Orders
     Order O1, O2, O3, O4, O5, O6, O7, O8;
+
+    Customer customer;
 
     // List of orders
     List<Order> listOfOrders = new ArrayList<>();
@@ -110,6 +128,7 @@ public class UpdateOrderIntegrationTest {
      * Creation and instantiation of variables
      */
 
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
     @BeforeEach
     void setUp(){
         // Assigning Item objects
@@ -139,18 +158,18 @@ public class UpdateOrderIntegrationTest {
 
         // Assigning request objects
         updateOrderRequestNull = null;
-        updateOrderRequestOrderIdNull = new UpdateOrderRequest(null, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequestUserIdNull = new UpdateOrderRequest(expectedOrderId, null, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequestInvalidOrderId = new UpdateOrderRequest(UUID.randomUUID(), expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequestUnauthorisedUser = new UpdateOrderRequest(expectedOrderId, UUID.randomUUID(), expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequestValidOrderId = new UpdateOrderRequest(expectedOrderId, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_PURCHASED = new UpdateOrderRequest(expectedOrderId2, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_IN_QUEUE = new UpdateOrderRequest(expectedOrderId3, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_PACKING = new UpdateOrderRequest(expectedOrderId4, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_AWAITING_COLLECTION = new UpdateOrderRequest(expectedOrderId5, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_CUSTOMER_COLLECTED = new UpdateOrderRequest(expectedOrderId7, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_DELIVERY_COLLECTED = new UpdateOrderRequest(expectedOrderId6, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
-        updateOrderRequest_DELIVERED = new UpdateOrderRequest(expectedOrderId8, expectedUserId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequestOrderIdNull = new UpdateOrderRequest(null, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequestUserIdNull = new UpdateOrderRequest(expectedOrderId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequestInvalidOrderId = new UpdateOrderRequest(UUID.randomUUID(), expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequestUnauthorisedUser = new UpdateOrderRequest(expectedOrderId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequestValidOrderId = new UpdateOrderRequest(expectedOrderId, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_PURCHASED = new UpdateOrderRequest(expectedOrderId2, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_IN_QUEUE = new UpdateOrderRequest(expectedOrderId3, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_PACKING = new UpdateOrderRequest(expectedOrderId4, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_AWAITING_COLLECTION = new UpdateOrderRequest(expectedOrderId5, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_CUSTOMER_COLLECTED = new UpdateOrderRequest(expectedOrderId7, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_DELIVERY_COLLECTED = new UpdateOrderRequest(expectedOrderId6, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
+        updateOrderRequest_DELIVERED = new UpdateOrderRequest(expectedOrderId8, expectedListOfItems, expectedDiscount, expectedOrderType, expectedDeliveryAddress);
 
 
         // Assigning Exception/Return messages
@@ -171,28 +190,41 @@ public class UpdateOrderIntegrationTest {
         listOfOrders.add(O7);
         listOfOrders.add(O8);
 
+        customer = new Customer();
+        customer.setCustomerID(expectedUserId);
+        customer.setEmail("superleague@gmail.com");
+        customer.setAccountType(UserType.CUSTOMER);
+        customerRepo.save(customer);
+
+        jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
 
         orderRepo.saveAll(listOfOrders);
     }
 
     @AfterEach
     void tearDown(){
-
-        orderRepo.delete(O1);
-        orderRepo.delete(O2);
-        orderRepo.delete(O3);
-        orderRepo.delete(O4);
-        orderRepo.delete(O5);
-        orderRepo.delete(O6);
-        orderRepo.delete(O7);
-        orderRepo.delete(O8);
+        SecurityContextHolder.clearContext();
     }
 
     // Integration Tests
     @Test
     @DisplayName("When request object is not specified")
     void IntegrationTest_RequestObjectIsNull() {
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.updateOrder(updateOrderRequestNull));
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.updateOrder(null));
         assertEquals(expectedMessage_NullRequest, thrown.getMessage());
     }
 
@@ -201,20 +233,6 @@ public class UpdateOrderIntegrationTest {
     void IntegrationTest_OrderIDIsNull() {
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, () -> paymentService.updateOrder(updateOrderRequestOrderIdNull));
         assertEquals(expectedMessage_NullOrderId, thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When userID in the request object is not specified")
-    void IntegrationTest_UserIDIsNull(){
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> paymentService.updateOrder(updateOrderRequestUserIdNull));
-        assertEquals("UserID cannot be null in request object - order unsuccessfully updated.", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("When user is not authorised")
-    void IntegrationTest_UnauthorisedUser(){
-        Throwable thrown = Assertions.assertThrows(NotAuthorisedException.class, ()-> paymentService.updateOrder(updateOrderRequestUnauthorisedUser));
-        assertEquals(expectedMessage_UnauthorisedUser, thrown.getMessage());
     }
 
     @Test

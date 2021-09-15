@@ -16,9 +16,9 @@ class Order{
   Order(this.orderID, this.customerID, this.storeID, this.createdDate, this.totalCost, this.items, this.discount);
 
   Order.fromJson(Map<String, dynamic> json)
-      : orderID=json["orderID"],
-        customerID=json["userID"],
-        storeID=json["storeID"],
+      : orderID=json["orderId"],
+        customerID=json["userId"],
+        storeID=json["storeId"],
         createdDate=json["createDate"],
         totalCost=json["totalPrice"],
         discount=json["discount"].toString(),

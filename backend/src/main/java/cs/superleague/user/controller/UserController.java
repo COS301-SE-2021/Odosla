@@ -201,7 +201,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getJwTToken(), body.getProductIds(), body.getName());
+            MakeGroceryListRequest request = new MakeGroceryListRequest(body.getProductIds(), body.getName());
 
             MakeGroceryListResponse response = ServiceSelector.getUserService().makeGroceryList(request);
             try{
@@ -449,7 +449,7 @@ public class UserController implements UserApi {
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
         try {
-            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.getJwtToken(), body.isOnShift(), UUID.fromString(body.getStoreID()));
+            UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.isOnShift(), UUID.fromString(body.getStoreID()));
             UpdateShopperShiftResponse response1 = ServiceSelector.getUserService().updateShopperShift(request);
             try {
                 response.setMessage(response1.getMessage());
@@ -528,7 +528,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            GetGroceryListsRequest request = new GetGroceryListsRequest(body.getJwTToken());
+            GetGroceryListsRequest request = new GetGroceryListsRequest();
 
             GetGroceryListsResponse response = ServiceSelector.getUserService().getGroceryLists(request);
             try{
@@ -555,7 +555,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            UpdateDriverShiftRequest request = new UpdateDriverShiftRequest(body.getJwtToken(), body.isOnShift());
+            UpdateDriverShiftRequest request = new UpdateDriverShiftRequest(body.isOnShift());
 
             UpdateDriverShiftResponse response = ServiceSelector.getUserService().updateDriverShift(request);
             try{
@@ -608,6 +608,7 @@ public class UserController implements UserApi {
         }
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
+        driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
         return driverObject;
     }
     public CustomerObject populateCustomer(Customer customer){
@@ -757,5 +758,164 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userCompleteDeliveryResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetCustomerByUUIDResponse> getCustomerByUUID(UserGetCustomerByUUIDRequest body) {
+        UserGetCustomerByUUIDResponse userGetCustomerByUUIDResponse = new UserGetCustomerByUUIDResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCustomerByUUIDRequest request = new GetCustomerByUUIDRequest(UUID.fromString(body.getUserID()));
+
+            GetCustomerByUUIDResponse response = ServiceSelector.getUserService().getCustomerByUUID(request);
+            try{
+                userGetCustomerByUUIDResponse.setTimestamp(response.getTimestamp().toString());
+                userGetCustomerByUUIDResponse.setMessage(response.getMessage());
+                userGetCustomerByUUIDResponse.setCustomer(populateCustomer(response.getCustomer()));
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetCustomerByUUIDResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserDriverSetRatingResponse> driverSetRating(UserDriverSetRatingRequest body) {
+        UserDriverSetRatingResponse userDriverSetRatingResponse = new UserDriverSetRatingResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            DriverSetRatingRequest request = new DriverSetRatingRequest(UUID.fromString(body.getDriverID()), body.getRating().doubleValue());
+
+            DriverSetRatingResponse response = ServiceSelector.getUserService().driverSetRating(request);
+            try{
+                userDriverSetRatingResponse.setTimestamp(response.getTimestamp().toString());
+                userDriverSetRatingResponse.setMessage(response.getMessage());
+                userDriverSetRatingResponse.setSuccess(response.isSuccess());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userDriverSetRatingResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateShopperDetailsResponse> updateShopperDetails(UserUpdateShopperDetailsRequest body) {
+        UserUpdateShopperDetailsResponse userUpdateShopperDetailsResponse = new UserUpdateShopperDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateShopperDetailsRequest request = new UpdateShopperDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateShopperDetailsResponse response = ServiceSelector.getUserService().updateShopperDetails(request);
+            try{
+                userUpdateShopperDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateShopperDetailsResponse.setMessage(response.getMessage());
+                userUpdateShopperDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateShopperDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateShopperDetailsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateDriverDetailsResponse> updateDriverDetails(UserUpdateDriverDetailsRequest body) {
+        UserUpdateDriverDetailsResponse userUpdateDriverDetailsResponse = new UserUpdateDriverDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateDriverDetailsRequest request = new UpdateDriverDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateDriverDetailsResponse response = ServiceSelector.getUserService().updateDriverDetails(request);
+            try{
+                userUpdateDriverDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateDriverDetailsResponse.setMessage(response.getMessage());
+                userUpdateDriverDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateDriverDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateDriverDetailsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateCustomerDetailsResponse> updateCustomerDetails(UserUpdateCustomerDetailsRequest body) {
+        UserUpdateCustomerDetailsResponse userUpdateCustomerDetailsResponse = new UserUpdateCustomerDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GeoPoint geoPoint = null;
+            if(body.getLatitude() != null && body.getLongitude() != null) {
+                geoPoint = new GeoPoint(body.getLatitude().doubleValue(), body.getLongitude().doubleValue(), body.getAddress());
+            }
+            UpdateCustomerDetailsRequest request = new UpdateCustomerDetailsRequest(body.getName(), body.getSurname(),
+                    body.getEmail(), body.getPhoneNumber(), body.getPassword(), geoPoint, body.getCurrentPassword());
+
+            UpdateCustomerDetailsResponse response = ServiceSelector.getUserService().updateCustomerDetails(request);
+            try{
+                userUpdateCustomerDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateCustomerDetailsResponse.setMessage(response.getMessage());
+                userUpdateCustomerDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateCustomerDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateCustomerDetailsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserUpdateAdminDetailsResponse> updateAdminDetails(UserUpdateAdminDetailsRequest body) {
+        UserUpdateAdminDetailsResponse userUpdateAdminDetailsResponse = new UserUpdateAdminDetailsResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            UpdateAdminDetailsRequest request = new UpdateAdminDetailsRequest(body.getName(),body.getSurname(),body.getEmail(), body.getPhoneNumber(), body.getPassword(),body.getCurrentPassword());
+
+            UpdateAdminDetailsResponse response = ServiceSelector.getUserService().updateAdminDetails(request);
+            try{
+                userUpdateAdminDetailsResponse.setTimestamp(response.getTimestamp().toString());
+                userUpdateAdminDetailsResponse.setMessage(response.getMessage());
+                userUpdateAdminDetailsResponse.setSuccess(response.isSuccess());
+                userUpdateAdminDetailsResponse.setJwtToken(response.getJwtToken());
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userUpdateAdminDetailsResponse, status);
     }
 }

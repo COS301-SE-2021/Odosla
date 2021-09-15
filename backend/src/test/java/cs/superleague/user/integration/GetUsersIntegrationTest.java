@@ -99,28 +99,10 @@ public class GetUsersIntegrationTest {
     }
 
     @Test
-    @Description("Tests for when adminID in request object is null- exception should be thrown")
-    @DisplayName("When request object parameter - adminID - is not specified")
-    void IntegrationTest_testingNull_adminID_Parameter_RequestObject(){
-        GetUsersRequest request=new GetUsersRequest(null);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> userService.getUsers(request));
-        assertEquals("AdminID is null in GetUsersRequest request - could not return users", thrown.getMessage());
-    }
-
-    @Test
-    @Description("Tests for when adminID does not exist- exception should be thrown")
-    @DisplayName("When request object parameter - adminID - is not specified")
-    void IntegrationTest_testing_adminID_Parameter_RequestObject_Does_Not_Exist(){
-        GetUsersRequest request=new GetUsersRequest(UUID.randomUUID().toString());
-        Throwable thrown = Assertions.assertThrows(AdminDoesNotExistException.class, ()-> userService.getUsers(request));
-        assertEquals("admin with given userID does not exist - could not return users", thrown.getMessage());
-    }
-
-    @Test
     @Description("Test for when admin does exist")
     @DisplayName("When admin with ID does exist")
     void IntegrationTest_Admin_does_exist() throws Exception {
-        GetUsersRequest request= new GetUsersRequest(adminUUID.toString());
+        GetUsersRequest request= new GetUsersRequest();
         GetUsersResponse response= userService.getUsers(request);
         assertNotNull(response);
         assertTrue(response.isSuccess());

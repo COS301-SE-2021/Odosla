@@ -311,7 +311,7 @@ public class NotificationServiceImpl implements NotificationService {
             DataSource dataSource = new ByteArrayDataSource(pdf, "application/pdf");
             MimeBodyPart pdfBodyPart = new MimeBodyPart();
             pdfBodyPart.setDataHandler(new DataHandler(dataSource));
-            pdfBodyPart.setFileName("test.pdf");
+            pdfBodyPart.setFileName("Odosla.pdf");
 
             //construct the mime multi part
             MimeMultipart mimeMultipart = new MimeMultipart();
@@ -319,7 +319,7 @@ public class NotificationServiceImpl implements NotificationService {
             mimeMultipart.addBodyPart(pdfBodyPart);
 
             //create the sender/recipient addresses
-            InternetAddress iaSender = new InternetAddress("cos332Prac6u19060468@gmail.com");
+            InternetAddress iaSender = new InternetAddress("superleague301@gmail.com");
             InternetAddress iaRecipient = new InternetAddress(email);
 
             //construct the mime message

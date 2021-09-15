@@ -28,11 +28,11 @@ import java.io.IOException;
  * This object is expected as input
  */
 @ApiModel(description = "This object is expected as input")
-@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-17T14:13:21.516052200+02:00[Africa/Harare]")
+@javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", date = "2021-08-26T18:20:06.034903200+02:00[Africa/Harare]")
 public class AnalyticsCreateUserReportRequest {
-  public static final String SERIALIZED_NAME_ADMIN_I_D = "adminID";
-  @SerializedName(SERIALIZED_NAME_ADMIN_I_D)
-  private String adminID;
+  public static final String SERIALIZED_NAME_JW_T_TOKEN = "JWTToken";
+  @SerializedName(SERIALIZED_NAME_JW_T_TOKEN)
+  private String jwTToken;
 
   public static final String SERIALIZED_NAME_START_DATE = "startDate";
   @SerializedName(SERIALIZED_NAME_START_DATE)
@@ -47,26 +47,26 @@ public class AnalyticsCreateUserReportRequest {
   private String reportType;
 
 
-  public AnalyticsCreateUserReportRequest adminID(String adminID) {
+  public AnalyticsCreateUserReportRequest jwTToken(String jwTToken) {
     
-    this.adminID = adminID;
+    this.jwTToken = jwTToken;
     return this;
   }
 
    /**
-   * Get adminID
-   * @return adminID
+   * Get jwTToken
+   * @return jwTToken
   **/
   @javax.annotation.Nullable
   @ApiModelProperty(value = "")
 
-  public String getAdminID() {
-    return adminID;
+  public String getJwTToken() {
+    return jwTToken;
   }
 
 
-  public void setAdminID(String adminID) {
-    this.adminID = adminID;
+  public void setJwTToken(String jwTToken) {
+    this.jwTToken = jwTToken;
   }
 
 
@@ -148,7 +148,7 @@ public class AnalyticsCreateUserReportRequest {
       return false;
     }
     AnalyticsCreateUserReportRequest analyticsCreateUserReportRequest = (AnalyticsCreateUserReportRequest) o;
-    return Objects.equals(this.adminID, analyticsCreateUserReportRequest.adminID) &&
+    return Objects.equals(this.jwTToken, analyticsCreateUserReportRequest.jwTToken) &&
         Objects.equals(this.startDate, analyticsCreateUserReportRequest.startDate) &&
         Objects.equals(this.endDate, analyticsCreateUserReportRequest.endDate) &&
         Objects.equals(this.reportType, analyticsCreateUserReportRequest.reportType);
@@ -156,7 +156,7 @@ public class AnalyticsCreateUserReportRequest {
 
   @Override
   public int hashCode() {
-    return Objects.hash(adminID, startDate, endDate, reportType);
+    return Objects.hash(jwTToken, startDate, endDate, reportType);
   }
 
 
@@ -164,7 +164,7 @@ public class AnalyticsCreateUserReportRequest {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class AnalyticsCreateUserReportRequest {\n");
-    sb.append("    adminID: ").append(toIndentedString(adminID)).append("\n");
+    sb.append("    jwTToken: ").append(toIndentedString(jwTToken)).append("\n");
     sb.append("    startDate: ").append(toIndentedString(startDate)).append("\n");
     sb.append("    endDate: ").append(toIndentedString(endDate)).append("\n");
     sb.append("    reportType: ").append(toIndentedString(reportType)).append("\n");

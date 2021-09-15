@@ -3,6 +3,7 @@ package cs.superleague.user;
 import cs.superleague.delivery.DeliveryService;
 import cs.superleague.delivery.requests.CreateDeliveryRequest;
 import cs.superleague.integration.ServiceSelector;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.notification.requests.SendEmailNotificationRequest;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService{
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
     private final OrderRepo orderRepo;
-    private JwtUtil jwtTokenUtil=new JwtUtil();
+    private CurrentUser currentUser;
     private final ShoppingService shoppingService;
     private final StoreRepo storeRepo;
     private final DeliveryService deliveryService;
@@ -1029,8 +1030,7 @@ public class UserServiceImpl implements UserService{
 
 
         String jwtToken="";
-
-
+        JwtUtil jwtTokenUtil = new JwtUtil();
         switch (request.getUserType()){
             case SHOPPER:
                 assert shopperRepo!=null;
@@ -1222,9 +1222,9 @@ public class UserServiceImpl implements UserService{
     public UpdateShopperDetailsResponse updateShopperDetails(UpdateShopperDetailsRequest request) throws UserException {
 
         String message;
-        UUID shopperID;
         Shopper shopper;
         boolean success;
+        String jwtToken = null;
         boolean emptyUpdate = true;
         Optional<Shopper> shopperOptional;
 
@@ -1232,17 +1232,11 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("UpdateShopper Request is null - Could not update shopper");
         }
 
-        if(request.getShopperID() == null){
-            throw new InvalidRequestException("ShopperId is null - could not update shopper");
-        }
-
-        shopperID = request.getShopperID();
-        shopperOptional = shopperRepo.findById(shopperID);
+        currentUser = new CurrentUser();
+        shopperOptional = shopperRepo.findByEmail(currentUser.getEmail());
         if(shopperOptional == null || !shopperOptional.isPresent()){
-            throw new ShopperDoesNotExistException("User with given userID does not exist - could not update shopper");
+            throw new ShopperDoesNotExistException("User with the given email does not exist - could not update shopper");
         }
-
-        // authentication ??
 
         shopper = shopperOptional.get();
 
@@ -1260,25 +1254,36 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateShopperDetailsResponse(message, false, new Date());
-            }else{
-                if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
-                    message = "Email is already taken";
-                    return new UpdateShopperDetailsResponse(message, false, new Date());
-                }
-                shopper.setEmail(request.getEmail());
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
             }
+
+            if(shopperRepo.findByEmail(request.getEmail()).isPresent()){
+                message = "Email is already taken";
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
+            }
+
+            JwtUtil jwtUtil = new JwtUtil();
+            shopper.setEmail(request.getEmail());
+            jwtToken=jwtUtil.generateJWTTokenShopper(shopper);
         }
 
         if(request.getPassword() != null){
             emptyUpdate = false;
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = shopper.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateShopperDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 shopper.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateShopperDetailsResponse(message, false, new Date());
+                return new UpdateShopperDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1297,35 +1302,27 @@ public class UserServiceImpl implements UserService{
             message = "Shopper successfully updated";
         }
 
-        return new UpdateShopperDetailsResponse(message, success, new Date());
+        return new UpdateShopperDetailsResponse(message, success, new Date(),jwtToken);
     }
 
     @Override
     public UpdateAdminDetailsResponse updateAdminDetails(UpdateAdminDetailsRequest request) throws UserException{
         String message;
-        UUID adminID;
         Admin admin;
         boolean success;
         boolean emptyUpdate = true;
-        Optional<Admin> adminOptional;
+        String JWTToken = null;
 
         if(request == null){
             throw new InvalidRequestException("UpdateAdmin Request is null - Could not update admin");
         }
 
-        if(request.getAdminID() == null){
-            throw new InvalidRequestException("AdminId is null - could not update admin");
+        currentUser = new CurrentUser();
+
+        admin = adminRepo.findAdminByEmail(currentUser.getEmail());
+        if(admin == null){
+            throw new AdminDoesNotExistException("User with given Email does not exist - could not update admin");
         }
-
-        adminID = request.getAdminID();
-        adminOptional = adminRepo.findById(adminID);
-        if(adminOptional == null || !adminOptional.isPresent()){
-            throw new AdminDoesNotExistException("User with given userID does not exist - could not update admin");
-        }
-
-        // authentication ??
-
-        admin = adminOptional.get();
 
         if(request.getName() != null && !Objects.equals(request.getName(), admin.getName())){
             emptyUpdate = false;
@@ -1341,25 +1338,36 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateAdminDetailsResponse(message, false, new Date());
+                return new UpdateAdminDetailsResponse(message, false, new Date(), null);
             }else{
                 if(adminRepo.findAdminByEmail(request.getEmail()) != null){
                     message = "Email is already taken";
-                    return new UpdateAdminDetailsResponse(message, false, new Date());
+                    return new UpdateAdminDetailsResponse(message, false, new Date(), null);
                 }
                 admin.setEmail(request.getEmail());
+
+                JwtUtil jwtUtil = new JwtUtil();
+                JWTToken = jwtUtil.generateJWTTokenAdmin(admin);
             }
         }
 
         if(request.getPassword() != null){
             emptyUpdate = false;
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = admin.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateAdminDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 admin.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateAdminDetailsResponse(message, false, new Date());
+                return new UpdateAdminDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1378,7 +1386,7 @@ public class UserServiceImpl implements UserService{
             message = "Admin successfully updated";
         }
 
-        return new UpdateAdminDetailsResponse(message, success, new Date());
+        return new UpdateAdminDetailsResponse(message, success, new Date(), JWTToken);
     }
 
     @Override
@@ -1389,24 +1397,18 @@ public class UserServiceImpl implements UserService{
         boolean success;
         boolean emptyUpdate = true;
         Optional<Driver> driverOptional;
+        String JWTToken = null;
 
         if (request == null) {
             throw new InvalidRequestException("UpdateDriver Request is null - Could not update driver");
         }
 
-        if (request.getDriverID() == null) {
-            throw new InvalidRequestException("DriverId is null - could not update driver");
+        CurrentUser currentUser = new CurrentUser();
+
+        driver = driverRepo.findDriverByEmail(currentUser.getEmail());
+        if (driver == null) {
+            throw new DriverDoesNotExistException("User with given email does not exist - could not update driver");
         }
-
-        driverID = request.getDriverID();
-        driverOptional = driverRepo.findById(driverID);
-        if (driverOptional == null || !driverOptional.isPresent()) {
-            throw new DriverDoesNotExistException("User with given userID does not exist - could not update driver");
-        }
-
-        // authentication ??
-
-        driver = driverOptional.get();
 
         if (request.getName() != null && !Objects.equals(request.getName(), driver.getName())) {
             emptyUpdate = false;
@@ -1422,25 +1424,35 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if (!emailRegex(request.getEmail())) {
                 message = "Email is not valid";
-                return new UpdateDriverDetailsResponse(message, false, new Date());
+                return new UpdateDriverDetailsResponse(message, false, new Date(), null);
             } else {
                 if (driverRepo.findDriverByEmail(request.getEmail()) != null) {
                     message = "Email is already taken";
-                    return new UpdateDriverDetailsResponse(message, false, new Date());
+                    return new UpdateDriverDetailsResponse(message, false, new Date(), null);
                 }
                 driver.setEmail(request.getEmail());
+                JwtUtil jwtUtil = new JwtUtil();
+                JWTToken = jwtUtil.generateJWTTokenDriver(driver);
             }
         }
 
         if (request.getPassword() != null) {
             emptyUpdate = false;
-            if (passwordRegex(request.getPassword())) {
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = driver.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateDriverDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
+            if(passwordRegex(request.getPassword())){
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 driver.setPassword(passwordHashed);
-            } else {
+            }else{
                 message = "Password is not valid";
-                return new UpdateDriverDetailsResponse(message, false, new Date());
+                return new UpdateDriverDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1459,7 +1471,7 @@ public class UserServiceImpl implements UserService{
             message = "Driver successfully updated";
         }
 
-        return new UpdateDriverDetailsResponse(message, success, new Date());
+        return new UpdateDriverDetailsResponse(message, success, new Date(), JWTToken);
     }
 
     @Override
@@ -1471,11 +1483,12 @@ public class UserServiceImpl implements UserService{
                 throw new InvalidRequestException("JWTToken in GetCurrentUserRequest is null");
             }
 
-            final String jwtToken = request.getJWTToken();
-
-            String userType=jwtTokenUtil.extractUserType(jwtToken);
-            String email=jwtTokenUtil.extractEmail(jwtToken);
-            User user=null;
+            String jwtToken = request.getJWTToken();
+            jwtToken = jwtToken.replace("Bearer ","");
+            JwtUtil jwtUtil = new JwtUtil();
+            String userType = jwtUtil.extractUserType(jwtToken);
+            String email = jwtUtil.extractEmail(jwtToken);
+            User user = null;
             switch(userType){
                 case "CUSTOMER":
                     //assert customerRepo!=null;
@@ -1563,10 +1576,6 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("MakeGroceryList Request is null - could not make grocery list");
         }
 
-        if(request.getJWTToken() == null){
-            throw new InvalidRequestException("JWTToken is null - could not make grocery list");
-        }
-
         if(request.getProductIds() == null || request.getProductIds().isEmpty()){
             throw new InvalidRequestException("Barcodes list empty - could not make the grocery list");
         }
@@ -1575,19 +1584,13 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Grocery List Name is Null - could not make the grocery list");
         }
 
-        System.out.println(request.getJWTToken());
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        currentUser=new CurrentUser();
 
-        System.out.println(getCurrentUserRequest);
+        customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
 
-        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
-            message = "Invalid JWTToken for customer userType";
-            return new MakeGroceryListResponse(false, message, new Date());
+        if(customer == null){
+            throw new CustomerDoesNotExistException("Customer does not exist");
         }
-
-        customer = (Customer)getCurrentUserResponse.getUser();
-
         name = request.getName();
         for (GroceryList list: customer.getGroceryLists()) { // if name exists return false
             if(list.getName().equals(name)){
@@ -1737,29 +1740,24 @@ public class UserServiceImpl implements UserService{
     public UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
 
         String message;
-        UUID customerID;
         Customer customer = null;
         boolean success;
         boolean emptyUpdate = true;
+        String JWTToken = null;
 
         if(request == null){
             throw new InvalidRequestException("UpdateCustomer Request is null - Could not update customer");
         }
 
-        if(request.getCustomerID() == null){
-            throw new InvalidRequestException("CustomerId is null - could not update customer");
-        }
+        CurrentUser currentUser = new CurrentUser();
 
-        customerID = request.getCustomerID();
         try {
-            customer = customerRepo.findById(customerID).orElse(null);
+            customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
         }catch(Exception e){}
 
         if(customer == null){
-            throw new CustomerDoesNotExistException("User with given userID does not exist - could not update customer");
+            throw new CustomerDoesNotExistException("User with given Email does not exist - could not update customer");
         }
-
-        // authentication ??
 
         if(request.getName() != null && !Objects.equals(request.getName(), customer.getName())){
             emptyUpdate = false;
@@ -1775,25 +1773,36 @@ public class UserServiceImpl implements UserService{
             emptyUpdate = false;
             if(!emailRegex(request.getEmail())){
                 message = "Email is not valid";
-                return new UpdateCustomerDetailsResponse(message, false, new Date());
+                return new UpdateCustomerDetailsResponse(message, false, new Date(), null);
             }else{
                 if(customerRepo.findByEmail(request.getEmail()).isPresent()){
                     message = "Email is already taken";
-                    return new UpdateCustomerDetailsResponse(message, false, new Date());
+                    return new UpdateCustomerDetailsResponse(message, false, new Date(), null);
                 }
                 customer.setEmail(request.getEmail());
+                JwtUtil jwtUtil = new JwtUtil();
+                JWTToken = jwtUtil.generateJWTTokenCustomer(customer);
             }
         }
 
         if(request.getPassword() != null){
             emptyUpdate = false;
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+            String currentPassword = request.getCurrentPassword();
+            String currentPasswordCheck = customer.getPassword();
+
+            if(!passwordEncoder.matches(currentPassword,currentPasswordCheck)){
+                return new UpdateCustomerDetailsResponse("Incorrect password",false,Calendar.getInstance().getTime(),null);
+            }
+
             if(passwordRegex(request.getPassword())){
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
+                passwordEncoder = new BCryptPasswordEncoder(15);
                 String passwordHashed = passwordEncoder.encode(request.getPassword());
                 customer.setPassword(passwordHashed);
             }else{
                 message = "Password is not valid";
-                return new UpdateCustomerDetailsResponse(message, false, new Date());
+                return new UpdateCustomerDetailsResponse(message, false, new Date(),null);
             }
         }
 
@@ -1817,7 +1826,7 @@ public class UserServiceImpl implements UserService{
             message = "Customer successfully updated";
         }
 
-        return new UpdateCustomerDetailsResponse(message, success, new Date());
+        return new UpdateCustomerDetailsResponse(message, success, new Date(), JWTToken);
     }
 
     /**
@@ -2020,29 +2029,27 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
 
-        if(currentOrder==null || !currentOrder.isPresent()){
+        if(order==null){
             throw new OrderDoesNotExist("Order does not exist in database");
         }
 
-        Order order=currentOrder.get();
         order.setStatus(OrderStatus.DELIVERED);
-
-        /* Send notification to User saying order has been delivered and ask to rate driver*/
-
         orderRepo.save(order);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        currentOrder= orderRepo.findById(request.getOrderID());
-        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERED){
+        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
+        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
             response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
         }
         else{
-            Driver driver = driverRepo.findById(currentOrder.get().getDriverID()).orElse(null);
+            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
             if(driver!=null)
             {
-                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+                int numDeliveries=0;
+                numDeliveries= driver.getDeliveriesCompleted()+1;
+                driver.setDeliveriesCompleted(numDeliveries);
                 driverRepo.save(driver);
             }
             else
@@ -2109,18 +2116,14 @@ public class UserServiceImpl implements UserService{
         if (request == null){
             throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
         }
-        if (request.getJwtToken() == null){
-            throw new InvalidRequestException("ShopperID in UpdateShopperShiftRequest is null");
-        }
         if (request.getOnShift() == null){
             throw new InvalidRequestException("onShift in UpdateShopperShiftRequest is null");
         }
         if (request.getStoreID() == null){
             throw new InvalidRequestException("StoreID in UpdateShopperShiftRequest is null");
         }
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJwtToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
-        Shopper shopper1 = (Shopper) getCurrentUserResponse.getUser();
+        currentUser=new CurrentUser();
+        Shopper shopper1 = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);
         if (shopper1 == null){
             throw new ShopperDoesNotExistException("Shopper with shopperID does not exist in database");
         }
@@ -2196,10 +2199,7 @@ public class UserServiceImpl implements UserService{
         if(request==null){
             isException=true;
             errorMessage="UpdateDriverShiftRequest object is null";
-        }else if(request.getJWTToken()==null){
-            isException=true;
-            errorMessage="JWTToken in UpdateDriverShiftRequest is null";
-        } else if(request.getOnShift()==null){
+        }else if(request.getOnShift()==null){
             isException=true;
             errorMessage="onShift in UpdateDriverShiftRequest is null";
         }
@@ -2208,19 +2208,17 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        currentUser=new CurrentUser();
+        Driver driver;
+        try {
+            driver= driverRepo.findDriverByEmail(currentUser.getEmail());
+        }catch(NullPointerException e){
+            driver=null;
+        }
 
-        if(getCurrentUserResponse.getUser() == null){
+        if(driver == null){
             throw new DriverDoesNotExistException("Driver does not exist");
         }
-
-        if(getCurrentUserResponse.getUser().getAccountType() != UserType.DRIVER){
-            String message = "No driver exist with that JWTToken";
-            return new UpdateDriverShiftResponse(false, Calendar.getInstance().getTime(), message);
-        }
-
-        Driver driver = (Driver)getCurrentUserResponse.getUser();
 
         if(driver.getOnShift()==request.getOnShift()){
             String message="";
@@ -2657,23 +2655,10 @@ public class UserServiceImpl implements UserService{
     public GetUsersResponse getUsers(GetUsersRequest request) throws Exception{
 
         String message = "Users successfully returned";
-        Admin admin = null;
         List<User> users = new ArrayList<>();
 
-        if(request == null){
+        if(request == null) {
             throw new InvalidRequestException("GetUser request is null - could not return users");
-        }
-
-        if(request.getAdminID() == null){
-            throw new InvalidRequestException("AdminID is null in GetUsersRequest request - could not return users");
-        }
-
-        try {
-            admin = adminRepo.findById(UUID.fromString(request.getAdminID())).orElse(null);
-        }catch(Exception e){}
-
-        if(admin == null){
-            throw new AdminDoesNotExistException("admin with given userID does not exist - could not return users");
         }
 
         users.addAll(shopperRepo.findAll());
@@ -2698,16 +2683,13 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("GetGroceryList request is null - could not return groceryList");
         }
 
-        GetCurrentUserRequest getCurrentUserRequest = new GetCurrentUserRequest(request.getJWTToken());
-        GetCurrentUserResponse getCurrentUserResponse = getCurrentUser(getCurrentUserRequest);
+        currentUser=new CurrentUser();
 
+        customer = customerRepo.findByEmail(currentUser.getEmail()).orElse(null);
 
-        if(getCurrentUserResponse.getUser().getAccountType() != CUSTOMER){
-            message = "Invalid JWTToken for Customer Account type";
-            return new GetGroceryListsResponse(null, false, new Date(), message);
+        if(customer == null){
+            throw new CustomerDoesNotExistException("Customer does not exist");
         }
-
-        customer = (Customer) getCurrentUserResponse.getUser();
 
         message = "Grocery list successfully retrieved";
         return new GetGroceryListsResponse(customer.getGroceryLists(), true, new Date(), message);
@@ -2752,4 +2734,125 @@ public class UserServiceImpl implements UserService{
         return sb.toString();
     }
 
+    /**
+     *
+     * @param request is used to bring in:
+     *                userID - user ID to fetch the corresponding shopper from the database
+     *  GetCustomerUUID should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if customer exists in database, else throw CustomerDoesNotExist
+     *                5.Return response object
+     * Request object (GetCustomerUUIDRequest)
+     * {
+     *               "userID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a"
+     *
+     * }
+     *
+     * Response object (GetCustomerUUIDResponse)
+     * {
+     *                "customer": customer
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"Customer with corresponding user id was returned"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws CustomerDoesNotExistException
+     */
+    @Override
+    public GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+        GetCustomerByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetCustomerByUUIDRequest request - could not return customer entity");
+            }
+
+            Customer customer=null;
+            try {
+                customer = customerRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get customer entity");
+            }
+            if(customer==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get customer entity");
+            }
+            response=new GetCustomerByUUIDResponse(customer, Calendar.getInstance().getTime(),"Customer entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetCustomerByUUID request is null - could not return customer entity");
+        }
+        return response;
+    }
+
+    /**
+     *
+     * @param request is used to bring in:
+     *                driverID - driver ID to fetch the corresponding driver from the database
+     *                rating- rating given by the customer
+     *  driverSetRating should:
+     *                1.Check if request object is not null else throw InvalidRequestException
+     *                2.Check if request object's ID is null, else throw InvalidRequestException
+     *                3.Check if driver exists in database, else throw DriverDoesNotExist
+     *                4.Calculate the rating of the driver and set it
+     *                5.Return response object
+     * Request object (DriverSetRatingRequest)
+     * {
+     *               "driverID": "7fa06899-98e5-43a0-b4d0-9dbc8e29f74a",
+     *               "rating": 4
+     *
+     * }
+     *
+     * Response object (DriverSetRatingResponse)
+     * {
+     *                "success": true
+     *                "timeStamp":"2021-01-05T11:50:55"
+     *                "message":"DriverSetRating request is null - could not set rating"
+     * }
+     * @return
+     * @throws InvalidRequestException
+     * @throws DriverDoesNotExistException
+     */
+    @Override
+    public DriverSetRatingResponse driverSetRating(DriverSetRatingRequest request) throws InvalidRequestException, DriverDoesNotExistException
+    {
+        DriverSetRatingResponse response=null;
+        if(request != null){
+
+            if(request.getDriverID()==null){
+                throw new InvalidRequestException("Driver ID is null in request object - could not find driver");
+            }
+
+            if(request.getRating()==-1){
+                response = new DriverSetRatingResponse(false, Calendar.getInstance().getTime(), "No rating was set");
+            }
+            else
+            {
+                Driver driver=null;
+                try {
+                    driver = driverRepo.findById(request.getDriverID()).orElse(null);
+                }catch(Exception e){
+                    throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+                }
+                if(driver==null) {
+                    throw new DriverDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+                }
+
+                double totalRatings= request.getRating()+driver.getTotalRatings();
+                driver.setTotalRatings(totalRatings);
+                int numRatings= driver.getNumberOfRatings()+1;
+                driver.setNumberOfRatings(numRatings);
+                double newRating= totalRatings/numRatings;
+                driver.setRating(Math.round(newRating*100.0)/100.0);
+                driverRepo.save(driver);
+
+                response = new DriverSetRatingResponse(true, Calendar.getInstance().getTime(), "Rating complete");
+
+            }
+            return response;
+        }
+        else{
+            throw new InvalidRequestException("DriverSetRating request is null - could not set rating");
+        }
+    }
 }

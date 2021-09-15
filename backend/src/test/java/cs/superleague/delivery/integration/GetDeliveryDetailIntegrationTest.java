@@ -9,18 +9,28 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.GetDeliveryDetailRequest;
 import cs.superleague.delivery.responses.GetDeliveryDetailResponse;
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.repos.AdminRepo;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,6 +49,8 @@ public class GetDeliveryDetailIntegrationTest {
     @Autowired
     AdminRepo adminRepo;
 
+    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+
     Admin admin;
     UUID adminID;
     UUID deliveryID;
@@ -51,6 +63,7 @@ public class GetDeliveryDetailIntegrationTest {
     Calendar time;
     DeliveryDetail deliveryDetail1;
     DeliveryDetail deliveryDetail2;
+    Driver driver;
 
     @BeforeEach
     void setUp(){
@@ -71,6 +84,21 @@ public class GetDeliveryDetailIntegrationTest {
         deliveryRepo.save(delivery);
         deliveryDetailRepo.save(deliveryDetail1);
         deliveryDetailRepo.save(deliveryDetail2);
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenAdmin(admin);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        System.out.println(userType);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     @AfterEach
@@ -78,13 +106,31 @@ public class GetDeliveryDetailIntegrationTest {
         adminRepo.deleteAll();
         deliveryRepo.deleteAll();
         deliveryDetailRepo.deleteAll();
+        SecurityContextHolder.clearContext();
     }
 
     @Test
     @Description("Tests for when the user looking for the data is not an admin.")
     @DisplayName("Invalid adminID")
     void invalidAdminIDInRequestObject_IntegrationTest(){
-        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID, UUID.randomUUID());
+        admin.setAdminID(UUID.randomUUID());
+        admin.setEmail("hello@gmail.com");
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenAdmin(admin);
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        System.out.println(userType);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID);
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request));
         assertEquals("User is not an admin.", thrown.getMessage());
     }
@@ -93,7 +139,7 @@ public class GetDeliveryDetailIntegrationTest {
     @Description("Tests for when there are no details for the delivery or delivery does not exist.")
     @DisplayName("Invalid deliveryID")
     void invalidDeliveryIDPassedInRequestObject_IntegrationTest(){
-        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.randomUUID(), adminID);
+        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.randomUUID());
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request));
         assertEquals("No details found for this delivery.", thrown.getMessage());
     }
@@ -102,7 +148,7 @@ public class GetDeliveryDetailIntegrationTest {
     @Description("Tests for delivery details are found.")
     @DisplayName("Delivery details returned")
     void detailsReturnedSuccessfully_IntegrationTest() throws InvalidRequestException{
-        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID, adminID);
+        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID);
         GetDeliveryDetailResponse response = deliveryService.getDeliveryDetail(request);
         assertEquals(response.getMessage(), "Details successfully found.");
         assertEquals(response.getDetail().get(0).getDetail(), "detail1");

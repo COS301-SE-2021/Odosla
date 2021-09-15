@@ -1,7 +1,5 @@
 package cs.superleague.user.responses;
 
-import cs.superleague.user.dataclass.Customer;
-
 import java.util.Date;
 
 public class UpdateCustomerDetailsResponse {
@@ -9,6 +7,7 @@ public class UpdateCustomerDetailsResponse {
     private final String message;
     private final boolean success;
     private final Date timestamp;
+    private final String jwtToken;
 
     public String getMessage() {
         return message;
@@ -22,9 +21,14 @@ public class UpdateCustomerDetailsResponse {
         return timestamp;
     }
 
-    public UpdateCustomerDetailsResponse(String message, boolean success, Date timestamp) {
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public UpdateCustomerDetailsResponse(String message, boolean success, Date timestamp, String jwtToken) {
         this.message = message;
         this.success = success;
         this.timestamp = timestamp;
+        this.jwtToken = jwtToken;
     }
 }

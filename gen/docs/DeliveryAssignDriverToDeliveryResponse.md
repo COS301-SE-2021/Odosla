@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **message** | **String** |  |  [optional]
 **pickUpLocation** | [**GeoPointObject**](GeoPointObject.md) |  |  [optional]
 **dropOffLocation** | [**GeoPointObject**](GeoPointObject.md) |  |  [optional]
+**driverID** | **String** |  |  [optional]
 
 
 

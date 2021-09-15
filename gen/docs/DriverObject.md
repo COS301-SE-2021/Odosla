@@ -20,6 +20,8 @@ Name | Type | Description | Notes
 **driverID** | **String** |  |  [optional]
 **rating** | **BigDecimal** |  |  [optional]
 **onShift** | **Boolean** |  |  [optional]
+**currentAddress** | [**GeoPointObject**](GeoPointObject.md) |  |  [optional]
+**deliveriesCompleted** | **BigDecimal** |  |  [optional]
 
 
 

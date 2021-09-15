@@ -46,6 +46,8 @@ dependencies:
   location:
   flutter_polyline_points: ^1.0.0
   curved_navigation_bar:
+  rflutter_alert: ^2.0.4
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -55,7 +57,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http:
-
+  build_runner:
+  mockito: ^5.0.14
 
 
 # For information on the generic Dart part of this file, see the
@@ -82,7 +85,7 @@ flutter:
     - assets/shop/pep.png
     - assets/shop/pnp.png
     - assets/shop/shop_checkers.png
-    - assets/shop/superspar.png
+    - assets/shop/superSpar.png
     - assets/shop/woolworths.png
     - assets/item/barOne.png
     - assets/item/blueRibbon.png

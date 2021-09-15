@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   String _surname="";
   String _phoneNumber="";
   bool _showAdditionalWidgets=false;
-
+  bool _showPassword=false;
   final List<String> _pictures = <String>[
     "assets/shopper.png",
     "assets/driver.jpg",
@@ -222,6 +222,17 @@ class _RegisterScreenState extends State<RegisterScreen>{
               }),
             },
             decoration: InputDecoration(
+              suffixIcon:
+              IconButton(
+                  onPressed: (){
+                    setState(() {
+                      _showPassword=!_showPassword;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.grey,
+                  )),
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
