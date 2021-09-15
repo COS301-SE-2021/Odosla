@@ -1,7 +1,10 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/admin/admin_main_screen.dart';
+import 'package:flutter_employee_app/pages/admin/analytics_page.dart';
+import 'package:flutter_employee_app/pages/admin/check.dart';
 import 'package:flutter_employee_app/pages/admin/home.dart';
+import 'package:flutter_employee_app/pages/admin/importer_page.dart';
 import 'package:flutter_employee_app/pages/driver/driver_main_screen.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_driver_account_screen.dart';
@@ -22,7 +25,9 @@ import 'package:flutter_employee_app/provider/jwt_provider.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
+import 'package:flutter_employee_app/services/AnalyticsService.dart';
 import 'package:flutter_employee_app/services/DeliveryService.dart';
+import 'package:flutter_employee_app/services/ImporterService.dart';
 import 'package:flutter_employee_app/services/ShoppingService.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
@@ -43,6 +48,7 @@ var routes = <String, WidgetBuilder>{
   "/driverHomePage":(BuildContext context) =>DriverHomeScreen(1),
   "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(),
   "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(),
+  "/adminHomePage":(BuildContext context)=>AdminHomeScreen(1)
 };
 
 
@@ -57,6 +63,12 @@ void main() async {
 
   final deliveryService=DeliveryService();
   GetIt.I.registerSingleton(deliveryService);
+
+  final analyticsService=AnalyticsService();
+  GetIt.I.registerSingleton(analyticsService);
+
+  final importerService=ImporterService();
+  GetIt.I.registerSingleton(importerService);
 
   runApp(OdoslaApp());
 }
@@ -80,7 +92,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:SplashScreen(),
+            home:ImporterScreen(),
             routes: routes,
           );
         },

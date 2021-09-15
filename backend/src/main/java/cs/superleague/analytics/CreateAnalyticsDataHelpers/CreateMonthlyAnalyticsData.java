@@ -132,7 +132,9 @@ public class CreateMonthlyAnalyticsData {
         UserType userType;
         for (User user : this.users) {
             userType = user.getAccountType();
-
+            if(user.getActivationDate()==null){
+                continue;
+            }
             if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
                     && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {
                 if (userType == UserType.CUSTOMER) {

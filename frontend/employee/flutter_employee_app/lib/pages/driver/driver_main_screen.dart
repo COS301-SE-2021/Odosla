@@ -64,9 +64,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
       bottomSelectedIndex = index;
     });
-    // if(index==0){
-    //   Provider.of<UtilityProvider>(context, listen: false).redo=true;
-    // }
   }
 
   void bottomTapped(int index) {
@@ -74,7 +71,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
       bottomSelectedIndex = index;
       pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
-    // Provider.of<UtilityProvider>(context, listen: false).redo=true;
   }
 
   @override

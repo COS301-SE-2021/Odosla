@@ -67,7 +67,9 @@ public class CreateFinancialAnalyticsData {
         }
 
         for (Order order : this.orders) {
-
+            if(order.getCreateDate()==null){
+                continue;
+            }
             if(startDate.getTime() <= order.getCreateDate().getTimeInMillis()
                 && endDate.getTime() >= order.getCreateDate().getTimeInMillis()) {
 

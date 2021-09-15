@@ -183,7 +183,7 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setSuccess(createFinancialReportResponse.isSuccess());
                 response.setTimestamp(createFinancialReportResponse.getTimestamp().toString());
                 if(createFinancialReportResponse.getStringBuilder() != null)
-                    response.setCsv(createFinancialReportResponse.getStringBuilder().toString().getBytes(StandardCharsets.UTF_8));
+                    response.setCsv(createFinancialReportResponse.getStringBuilder().toString());
                 response.setPdf(createFinancialReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();

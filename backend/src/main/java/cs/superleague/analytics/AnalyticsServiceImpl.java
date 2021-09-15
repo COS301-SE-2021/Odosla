@@ -141,7 +141,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             response =  new CreateFinancialReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
             message = "FinancialReport.csv downloaded";
-            StringBuilder sb = financialAnalyticsHelper.createCSVReport();
+            String sb = financialAnalyticsHelper.createCSVReport();
             response = new CreateFinancialReportResponse(true, message, new Date(), null, sb);
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");

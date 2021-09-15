@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/flutter_employee_app/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/flutter_employee_app/build" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_employee_app/.dart_tool" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

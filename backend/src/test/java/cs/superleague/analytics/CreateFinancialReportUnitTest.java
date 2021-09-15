@@ -143,6 +143,7 @@ public class CreateFinancialReportUnitTest {
     @DisplayName("When ReportType parameter is not specified")
     void UnitTest_testingNullRequestReportTypeParameter(){
         request = new CreateFinancialReportRequest(new Date(), new Date(), null);
+        System.out.println(new Date());
         Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> analyticsService.createFinancialReport(request));
         assertEquals("Exception: Report Type in request object is null", thrown.getMessage());
     }

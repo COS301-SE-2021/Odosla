@@ -74,7 +74,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         },
         index: bottomSelectedIndex,
         items: <Widget>[
-          Icon(Icons.map,size:20),
+          Icon(Icons.analytics,size:20),
           Icon(Icons.work,size: 20),
           Icon(Icons.account_circle,size:20),
         ],

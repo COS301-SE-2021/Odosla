@@ -8,6 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 
+import 'check.dart';
+
 class AdminProfileScreen extends StatefulWidget {
   @override
   _AdminProfileScreenState createState() => _AdminProfileScreenState();
@@ -139,6 +141,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
+            floatingActionButton: MyHomePage(),
             body: Column(
               children: <Widget>[
                 SizedBox(height: kSpacingUnit.w * 3),
@@ -147,13 +150,6 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                   child: ListView(
                     children: <Widget>[
                       SizedBox(height: kSpacingUnit.w*2),
-                      GestureDetector(
-                        onTap: (){},
-                        child: ProfileListItem(
-                            LineAwesomeIcons.wallet,
-                            'Wallet'
-                        ),
-                      ),
                       // ProfileListItem(
                       //   LineAwesomeIcons.history,
                       //   'Purchase History',

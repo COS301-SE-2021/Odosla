@@ -141,6 +141,7 @@ public class ImporterServiceImpl implements ImporterService{
                     }
                     else if (file.charAt(k) == '\n')
                     {
+                        System.out.println(currentWord);
                         item.setStoreID(UUID.fromString(currentWord));
                         counter = 0;
                         currentWord = "";

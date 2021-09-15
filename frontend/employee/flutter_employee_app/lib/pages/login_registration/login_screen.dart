@@ -232,7 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
               await _userService.loginUser(_email, _password, _typeOfUser[selected],context).then(
                   (success){
                     if(success){
-                      selected==0?MyNavigator.goToShopperHomePage(context): MyNavigator.goToDriverHomePage(context);
+                      selected==0?MyNavigator.goToShopperHomePage(context): selected==1?MyNavigator.goToDriverHomePage(context):MyNavigator.goToAdminHomePgae(context);
                     }
                     setState(() {
                       _isInAsyncCall = false;

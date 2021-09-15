@@ -87,7 +87,7 @@ public class FinancialAnalyticsHelper {
                 if(topOrders[0] != null) {
                     storeOptional = storeRepo.findById(topOrders[i].getStoreID());
 
-                    if(storeOptional == null || !storeOptional.isPresent()){
+                    if(storeOptional == null){
                         throw new AnalyticsException(storeOptional.toString());
                     }
 
@@ -131,7 +131,7 @@ public class FinancialAnalyticsHelper {
         return pdfBytes;
     }
 
-    public StringBuilder createCSVReport() {
+    public String createCSVReport() {
         try {
             String home = System.getProperty("user.home");
             String file_name = home + "/Downloads/Odosla_FinancialReport.csv";
@@ -157,8 +157,8 @@ public class FinancialAnalyticsHelper {
             pw.write(sb.toString()); // write to the csv file
             pw.close();  //stop writing
             System.out.println("finished");
-
-            return sb;
+            System.out.println("BITIITITITIU"+sb.toString());
+            return sb.toString();
         } catch ( FileNotFoundException e) {
             e.printStackTrace();
             //throw new ReportException("Not able to create CSV file");
