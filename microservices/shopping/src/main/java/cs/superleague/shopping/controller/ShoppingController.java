@@ -555,6 +555,7 @@ public class ShoppingController implements ShoppingApi{
 
         List<StoreObject> responseBody = new ArrayList<>();
 
+        if(responseStores != null)
         for(int i = 0; i < responseStores.size(); i++){
 
             StoreObject currentStore = new StoreObject();
