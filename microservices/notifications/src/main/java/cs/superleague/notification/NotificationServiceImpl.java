@@ -13,6 +13,7 @@ import cs.superleague.user.responses.GetCustomerByUUIDResponse;
 import cs.superleague.user.responses.GetDriverByUUIDResponse;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -41,6 +42,10 @@ public class NotificationServiceImpl implements NotificationService {
     private final JavaMailSender javaMailSender;
     private final NotificationRepo notificationRepo;
     private final RestTemplate restTemplate;
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
 
     @Autowired
     public NotificationServiceImpl(JavaMailSender javaMailSender, NotificationRepo notificationRepo, RestTemplate restTemplate){
@@ -119,7 +124,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
+            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
             Admin admin = useCaseResponseEntity.getBody().getAdmin();
             if (admin == null){
                 throw new InvalidRequestException("User does not exist in database.");
@@ -128,7 +133,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
+            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
             if (customer == null){
                 throw new InvalidRequestException("User does not exist in database.");
@@ -137,7 +142,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
+            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
             Driver driver = useCaseResponseEntity.getBody().getDriver();
             if (driver == null){
                 throw new InvalidRequestException("User does not exist in database.");
@@ -146,7 +151,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
             Shopper shopper = useCaseResponseEntity.getBody().getShopper();
             if (shopper == null){
                 throw new InvalidRequestException("User does not exist in database.");
@@ -321,7 +326,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID);
-            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
+            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
             Admin admin = useCaseResponseEntity.getBody().getAdmin();
             if (admin == null){
                 return "";
@@ -332,7 +337,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID);
-            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
+            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
             if (customer == null){
                 return "";
@@ -343,7 +348,7 @@ public class NotificationServiceImpl implements NotificationService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID);
-            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
+            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
             Driver driver = useCaseResponseEntity.getBody().getDriver();
             if (driver == null){
                 return "";
@@ -353,7 +358,7 @@ public class NotificationServiceImpl implements NotificationService {
             //Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID);
-            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
             Shopper shopper = useCaseResponseEntity.getBody().getShopper();
             if (shopper == null) {
                 return "";

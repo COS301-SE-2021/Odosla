@@ -14,6 +14,7 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -26,6 +27,10 @@ import java.util.*;
 
 @Service("recommendationServiceImpl")
 public class RecommendationServiceImpl implements RecommendationService{
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
 
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
@@ -75,7 +80,7 @@ public class RecommendationServiceImpl implements RecommendationService{
 
                     Map<String, Object> parts = new HashMap<String, Object>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
-                    ResponseEntity<GetOrderResponse> responseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+                    ResponseEntity<GetOrderResponse> responseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
                     Order order = responseEntity.getBody().getOrder();
                     if (order != null){
                         finalRecommendation.add(order);

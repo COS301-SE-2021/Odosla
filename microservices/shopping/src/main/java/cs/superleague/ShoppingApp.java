@@ -6,12 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
-public class PaymentApplication implements CommandLineRunner {
+public class ShoppingApp implements CommandLineRunner {
 
 
     public static void main(String[] args)
     {
-        SpringApplication.run(PaymentApplication.class,args);
+        SpringApplication.run(ShoppingApp.class,args);
     }
     @Override
     public void run(String... args) throws Exception {

@@ -14,6 +14,7 @@ import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -26,7 +27,10 @@ import java.util.*;
 
 @Service("importerServiceImpl")
 public class ImporterServiceImpl implements ImporterService{
-
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
 
@@ -67,7 +71,7 @@ public class ImporterServiceImpl implements ImporterService{
                                 Map<String, Object> parts = new HashMap<String, Object>();
 
                                 ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://localhost:8088/shopping/getAllItems", parts, GetAllItemsResponse.class);
+                                        "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems", parts, GetAllItemsResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()){
                                     throw new InvalidRequestException("Could not retrieve Items");
@@ -201,7 +205,7 @@ public class ImporterServiceImpl implements ImporterService{
                                 Map<String, Object> parts = new HashMap<String, Object>();
 
                                 ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://localhost:8088/shopping/getStores", parts, GetStoresResponse.class);
+                                        "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()
                                 || responseEntity.getBody() == null){
