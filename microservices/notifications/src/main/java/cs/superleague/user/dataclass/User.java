@@ -1,6 +1,6 @@
-package cs.superleague.notification.stubs.user.dataclass;
+package cs.superleague.user.dataclass;
 
-import cs.superleague.notification.stubs.user.dataclass.UserType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -18,6 +18,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private String password;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
     private Date activationDate;
     private String activationCode;
     private String resetCode;

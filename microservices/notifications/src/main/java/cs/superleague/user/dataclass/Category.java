@@ -1,4 +1,4 @@
-package cs.superleague.notification.stubs.user.dataclass;
+package cs.superleague.user.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
