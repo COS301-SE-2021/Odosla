@@ -1,6 +1,6 @@
-package cs.superleague.analytics.stub.dataclass;
+package cs.superleague.user.dataclass;
 
-import cs.superleague.analytics.stub.dataclass.Category;
+import cs.superleague.user.dataclass.Category;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 

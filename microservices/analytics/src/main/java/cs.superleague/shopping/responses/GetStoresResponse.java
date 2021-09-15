@@ -1,6 +1,6 @@
-package cs.superleague.analytics.stub.responses;
+package cs.superleague.shopping.responses;
 
-import cs.superleague.analytics.stub.dataclass.Store;
+import cs.superleague.shopping.dataclass.Store;
 
 import java.util.List;
 
@@ -9,6 +9,13 @@ public class GetStoresResponse {
     List<Store> stores;
     private boolean response;
     private String message;
+
+    public GetStoresResponse()
+    {
+        this.response = false;
+        this.message = null;
+        this.stores = null;
+    }
 
     public GetStoresResponse(boolean response, String message, List<Store> stores)
     {

@@ -1,4 +1,6 @@
-package cs.superleague.analytics.stub.dataclass;
+package cs.superleague.user.dataclass;
+
+import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
 import java.util.Date;
