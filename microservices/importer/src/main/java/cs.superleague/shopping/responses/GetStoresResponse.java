@@ -1,6 +1,6 @@
-package cs.superleague.importer.stub.shopping.responses;
+package cs.superleague.shopping.responses;
 
-import cs.superleague.importer.stub.shopping.dataclass.Store;
+import cs.superleague.shopping.dataclass.Store;
 
 import java.util.List;
 
