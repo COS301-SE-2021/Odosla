@@ -1,8 +1,6 @@
 package cs.superleague.delivery.requests;
 
-import cs.superleague.delivery.stub.dataclass.GeoPoint;
-
-import java.util.UUID;
+import cs.superleague.payment.dataclass.GeoPoint;
 
 public class GetNextOrderForDriverRequest {
     private GeoPoint currentLocation;
