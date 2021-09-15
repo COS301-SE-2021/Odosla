@@ -1,9 +1,7 @@
 package cs.superleague.notification.requests;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import cs.superleague.notification.stubs.user.dataclass.UserType;
+import cs.superleague.user.dataclass.UserType;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 

@@ -1,17 +1,17 @@
 package cs.superleague.importer;
 
-import cs.superleague.importer.stub.payment.dataclass.GeoPoint;
-import cs.superleague.importer.stub.shopping.dataclass.Item;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.importer.exceptions.InvalidRequestException;
 import cs.superleague.importer.requests.ItemsCSVImporterRequest;
 import cs.superleague.importer.requests.StoreCSVImporterRequest;
 import cs.superleague.importer.responses.ItemsCSVImporterResponse;
 import cs.superleague.importer.responses.StoreCSVImporterResponse;
-import cs.superleague.importer.stub.shopping.dataclass.Store;
-import cs.superleague.importer.stub.shopping.requests.SaveItemToRepoRequest;
-import cs.superleague.importer.stub.shopping.requests.SaveStoreToRepoRequest;
-import cs.superleague.importer.stub.shopping.responses.GetAllItemsResponse;
-import cs.superleague.importer.stub.shopping.responses.GetStoresResponse;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.requests.SaveItemToRepoRequest;
+import cs.superleague.shopping.requests.SaveStoreToRepoRequest;
+import cs.superleague.shopping.responses.GetAllItemsResponse;
+import cs.superleague.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service("importerServiceImpl")
 public class ImporterServiceImpl implements ImporterService{
@@ -67,11 +64,7 @@ public class ImporterServiceImpl implements ImporterService{
                         switch (counter){
                             case 0:
 
-                                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                                converters.add(new MappingJackson2HttpMessageConverter());
-                                restTemplate.setMessageConverters(converters);
-
-                                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                                Map<String, Object> parts = new HashMap<String, Object>();
 
                                 ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
                                         "http://localhost:8088/shopping/getAllItems", parts, GetAllItemsResponse.class);
@@ -205,11 +198,7 @@ public class ImporterServiceImpl implements ImporterService{
                         switch (counter){
                             case 0:
 
-                                List<HttpMessageConverter<?>> converters = new ArrayList<>();
-                                converters.add(new MappingJackson2HttpMessageConverter());
-                                restTemplate.setMessageConverters(converters);
-
-                                MultiValueMap<String, Object> parts = new LinkedMultiValueMap<String, Object>();
+                                Map<String, Object> parts = new HashMap<String, Object>();
 
                                 ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
                                         "http://localhost:8088/shopping/getStores", parts, GetStoresResponse.class);

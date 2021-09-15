@@ -1,7 +1,7 @@
 package cs.superleague.shopping.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import cs.superleague.shopping.stubs.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.Order;
 
 import java.util.Date;
 import java.util.List;

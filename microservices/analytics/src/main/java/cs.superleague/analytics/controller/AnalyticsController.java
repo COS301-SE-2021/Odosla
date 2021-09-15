@@ -10,24 +10,40 @@ import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
 import cs.superleague.api.AnalyticsApi;
 import cs.superleague.models.*;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @CrossOrigin
 @RestController
 public class AnalyticsController implements AnalyticsApi {
 
     private final AnalyticsServiceImpl analyticsService;
+    private final HttpServletRequest httpServletRequest;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    public AnalyticsController(AnalyticsServiceImpl analyticsService){
+    public AnalyticsController(AnalyticsServiceImpl analyticsService, HttpServletRequest httpServletRequest,
+                               RestTemplate restTemplate){
+
         this.analyticsService = analyticsService;
+        this.httpServletRequest = httpServletRequest;
+        this.restTemplate = restTemplate;
+
     }
 
     @Override
@@ -36,6 +52,12 @@ public class AnalyticsController implements AnalyticsApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date startDate = sdf.parse(body.getStartDate());
@@ -72,6 +94,12 @@ public class AnalyticsController implements AnalyticsApi {
 
         try{
 
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date startDate = sdf.parse(body.getStartDate());
             Date endDate = sdf.parse(body.getEndDate());
@@ -107,6 +135,12 @@ public class AnalyticsController implements AnalyticsApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
             CreateMonthlyReportRequest req = new CreateMonthlyReportRequest(ReportType.valueOf(body.getReportType()));
             CreateMonthlyReportResponse createMonthlyReportResponse = analyticsService.createMonthlyReport(req);

@@ -2,9 +2,13 @@ package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
 
 import cs.superleague.analytics.exceptions.InvalidRequestException;
-import cs.superleague.analytics.stub.dataclass.*;
-import cs.superleague.analytics.stub.responses.GetOrdersResponse;
-import cs.superleague.analytics.stub.responses.GetUsersResponse;
+import cs.superleague.payment.responses.GetOrdersResponse;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.user.responses.GetUsersResponse;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.User;
+import cs.superleague.user.dataclass.UserType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -139,8 +143,8 @@ public class CreateMonthlyAnalyticsData {
 
         for (Order order : this.orders) {
 
-            if(startDate.getTimeInMillis() <= order.getCreateDate().getTimeInMillis()
-                && endDate.getTimeInMillis() >= order.getCreateDate().getTimeInMillis()) {
+            if(startDate.getTimeInMillis() <= order.getCreateDate().getTime()
+                && endDate.getTimeInMillis() >= order.getCreateDate().getTime()) {
 
                 if (!userIds.contains(order.getUserID())) {
                     userIds.add(order.getUserID());

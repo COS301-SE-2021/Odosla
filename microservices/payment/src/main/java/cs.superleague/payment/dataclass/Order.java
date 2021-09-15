@@ -2,11 +2,12 @@ package cs.superleague.payment.dataclass;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import cs.superleague.payment.stubs.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Item;
 
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.*;
@@ -21,8 +22,8 @@ public class Order implements Serializable {
     private UUID storeID;
     private UUID shopperID;
     private UUID driverID;
-    private Calendar createDate;
-    private Calendar processDate;
+    private Date createDate;
+    private Date processDate;
     private Double totalCost;
     private Double discount;
     private boolean requiresPharmacy;
@@ -48,7 +49,7 @@ public class Order implements Serializable {
 
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
@@ -65,7 +66,7 @@ public class Order implements Serializable {
         this.requiresPharmacy = requiresPharmacy;
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Calendar createDate, Calendar processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
@@ -113,17 +114,17 @@ public class Order implements Serializable {
         this.shopperID = shopperID;
     }
 
-    public Calendar getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Calendar createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
-    public Calendar getProcessDate() {return processDate; }
+    public Date getProcessDate() {return processDate; }
 
-    public void setProcessDate(Calendar processDate){this.processDate = processDate; }
+    public void setProcessDate(Date processDate){this.processDate = processDate; }
 
     public Double getTotalCost() {
         return totalCost;

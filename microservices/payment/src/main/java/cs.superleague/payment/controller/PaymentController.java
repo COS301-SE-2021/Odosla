@@ -6,19 +6,24 @@ import cs.superleague.payment.PaymentServiceImpl;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.exceptions.InvalidRequestException;
-import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
-import cs.superleague.payment.stubs.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Item;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,14 +35,26 @@ import java.util.UUID;
 @RestController
 public class PaymentController implements PaymentApi {
 
-    @Autowired
     PaymentServiceImpl paymentService;
 
-    @Autowired
     OrderRepo orderRepo;
 
-    @Autowired
     RabbitTemplate rabbitTemplate;
+
+    RestTemplate restTemplate;
+
+    HttpServletRequest httpServletRequest;
+
+    @Autowired
+    public PaymentController(PaymentServiceImpl paymentService, OrderRepo orderRepo,
+                              RabbitTemplate rabbitTemplate, RestTemplate restTemplate,
+                             HttpServletRequest httpServletRequest){
+        this.paymentService = paymentService;
+        this.orderRepo = orderRepo;
+        this.rabbitTemplate = rabbitTemplate;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+    }
 
 //    UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
 //    UUID shopperID = UUID.randomUUID();
@@ -112,6 +129,13 @@ public class PaymentController implements PaymentApi {
         HttpStatus httpStatus = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             OrderType orderType = null;
             if(body.getOrderType().equals("Collection")){
                 orderType = OrderType.COLLECTION;
@@ -193,6 +217,13 @@ public class PaymentController implements PaymentApi {
         }
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             try {
@@ -440,8 +471,8 @@ public class PaymentController implements PaymentApi {
         orderObject.setUserId(order.getUserID().toString());
         orderObject.setStoreId(order.getStoreID().toString());
         orderObject.setShopperId(order.getShopperID().toString());
-        orderObject.setCreateDate(order.getCreateDate().getTime().toString());
-        orderObject.setProcessDate(order.getProcessDate().getTime().toString());
+        orderObject.setCreateDate(order.getCreateDate().toString());
+        orderObject.setProcessDate(order.getProcessDate().toString());
         orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
         orderObject.setStatus(order.getStatus().toString());
         orderObject.setItems(populateItems(order.getItems()));

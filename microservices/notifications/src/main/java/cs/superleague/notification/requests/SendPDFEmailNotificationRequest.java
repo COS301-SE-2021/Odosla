@@ -1,6 +1,6 @@
 package cs.superleague.notification.requests;
 
-import cs.superleague.notification.stubs.user.dataclass.UserType;
+import cs.superleague.user.dataclass.UserType;
 
 import java.util.UUID;
 

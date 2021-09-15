@@ -1,8 +1,8 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
 import cs.superleague.analytics.exceptions.InvalidRequestException;
-import cs.superleague.analytics.stub.dataclass.Order;
-import cs.superleague.analytics.stub.responses.GetOrdersResponse;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrdersResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -41,11 +41,8 @@ public class CreateFinancialAnalyticsData {
         String uri = "http://localhost:8086/payment/getOrders";
 
         try{
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
 
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+            Map<String, Object> parts = new HashMap<>();
 
             responseEntity = restTemplate.postForEntity(uri, parts,
                     GetOrdersResponse.class);
@@ -92,8 +89,8 @@ public class CreateFinancialAnalyticsData {
                 throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
-            if(startDate.getTime() <= order.getCreateDate().getTimeInMillis()
-                && endDate.getTime() >= order.getCreateDate().getTimeInMillis()) {
+            if(startDate.getTime() <= order.getCreateDate().getTime()
+                && endDate.getTime() >= order.getCreateDate().getTime()) {
 
                 if (!userIds.contains(order.getUserID())) {
                     userIds.add(order.getUserID());

@@ -2,11 +2,8 @@ package cs.superleague.importer.integration;
 
 import cs.superleague.importer.ImporterServiceImpl;
 import cs.superleague.importer.exceptions.InvalidRequestException;
-import cs.superleague.importer.requests.ItemsCSVImporterRequest;
 import cs.superleague.importer.requests.StoreCSVImporterRequest;
-import cs.superleague.importer.responses.ItemsCSVImporterResponse;
-import cs.superleague.importer.responses.StoreCSVImporterResponse;
-import cs.superleague.importer.stub.shopping.dataclass.Store;
+import cs.superleague.shopping.dataclass.Store;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

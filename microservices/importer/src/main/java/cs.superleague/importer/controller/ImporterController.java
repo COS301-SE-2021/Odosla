@@ -11,20 +11,38 @@ import cs.superleague.models.ImporterItemsCSVImporterRequest;
 import cs.superleague.models.ImporterItemsCSVImporterResponse;
 import cs.superleague.models.ImporterStoresCSVImporterRequest;
 import cs.superleague.models.ImporterStoresCSVImporterResponse;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @CrossOrigin
 @RestController
 public class ImporterController implements ImporterApi {
 
-    @Autowired
-    ImporterServiceImpl importerService;
+    private final ImporterServiceImpl importerService;
+    private final RestTemplate restTemplate;
+    private final HttpServletRequest httpServletRequest;
 
+    @Autowired
+    public ImporterController(ImporterServiceImpl importerService, RestTemplate restTemplate,
+                              HttpServletRequest httpServletRequest){
+        this.importerService = importerService;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+    }
 
 
     @Override
@@ -32,6 +50,12 @@ public class ImporterController implements ImporterApi {
         //creating response object and default return status:
         ImporterItemsCSVImporterResponse response = new ImporterItemsCSVImporterResponse();
         HttpStatus httpStatus = HttpStatus.OK;
+
+        Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+        List<Header> headers = new ArrayList<>();
+        headers.add(header);
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
         try {
             ItemsCSVImporterRequest req = new ItemsCSVImporterRequest(body.getFile());
