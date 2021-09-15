@@ -16,7 +16,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a Driver")
 @Validated
-public class DriverObject  implements OneOfuserGetCurrentUserResponseUser {
+public class DriverObject   {
   @JsonProperty("name")
   private String name = null;
 
