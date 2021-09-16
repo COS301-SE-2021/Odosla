@@ -6,17 +6,17 @@ import java.io.Serializable;
 
 public class SaveItemToRepoRequest implements Serializable {
 
-    private final Item item;
+    private Item item;
 
-    public SaveItemToRepoRequest(){
-        item = null;
-    }
-
-    public SaveItemToRepoRequest(Item item) {
+    public SaveItemToRepoRequest(Item item){
         this.item = item;
     }
 
     public Item getItem() {
         return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 }
