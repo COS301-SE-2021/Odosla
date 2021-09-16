@@ -182,10 +182,10 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
 
-//            CurrentUser currentUser = new CurrentUser();
+            CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", "adam.Isenberg4920@gmail.com");
+            parts.put("email", currentUser.getEmail());
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
                     "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
