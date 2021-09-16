@@ -1,6 +1,7 @@
 package cs.superleague.user;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -57,6 +58,10 @@ public class UserServiceImpl implements UserService{
     private String shoppingPort;
     @Value("${shoppingHost}")
     private String shoppingHost;
+    @Value("${notificationHost}")
+    private String notificationHost;
+    @Value("${notificationPort}")
+    private String notificationPort;
 
     private final ShopperRepo shopperRepo;
     private final DriverRepo driverRepo;
@@ -418,11 +423,21 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    /*
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
                     SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
                     rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+                    */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+
                     return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
                 }
                 else{
