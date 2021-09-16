@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -169,6 +170,7 @@ public class PaymentServiceImpl implements PaymentService {
                     invalidReq = true;
                     invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
                 }
+
                 if (!shop.getStore().getOpen()) {
                     invalidReq = true;
                     invalidMessage = ("Store is currently closed - could not create order");
@@ -180,15 +182,21 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
 
-            CurrentUser currentUser = new CurrentUser();
+//            CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail());
-            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+            parts.put("email", "adam.isenberg49@gmail.com");
+            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                    "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
+
+            System.out.println(getCustomerByEmailResponse.getCustomer());
+//            System.out.println(getCustomerByEmailResponse.get);
+
             assert customer != null;
+
             customerID = customer.getCustomerID();
 
             double discount = request.getDiscount();
@@ -226,6 +234,7 @@ public class PaymentServiceImpl implements PaymentService {
                 try {
                     alreadyExists = orderRepo.findById(orderID).orElse(null);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 if (alreadyExists != null) {
@@ -260,6 +269,22 @@ public class PaymentServiceImpl implements PaymentService {
             //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
 
             if (o != null) {
+
+
+                Item i = o.getItems().get(0);
+
+                for (Field field : i.getClass().getDeclaredFields()) {
+                    field.setAccessible(true); // You might want to set modifier to public first.
+                    Object value = null;
+                    try {
+                        value = field.get(i);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    if (value != null) {
+                        System.out.println(field.getName() + "=" + value);
+                    }
+                }
 
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
