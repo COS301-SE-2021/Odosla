@@ -722,8 +722,11 @@ public class UserController implements UserApi {
         {
             customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
         }
-
-        customerObject.setAddress(populateGeoPoint(customer.getAddress()));
+        GeoPointObject geoPointObject = null;
+        if (customer.getAddress() != null){
+            geoPointObject = populateGeoPoint(customer.getAddress());
+        }
+        customerObject.setAddress(geoPointObject);
         List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
         customerObject.setGroceryLists(groceryListObjectList);
         List<ItemObject> itemObjects = populateItems(customer.getShoppingCart());
