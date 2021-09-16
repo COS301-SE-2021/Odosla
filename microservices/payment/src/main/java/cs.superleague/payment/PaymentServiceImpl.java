@@ -467,10 +467,10 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
-//        CurrentUser currentUser = new CurrentUser();
+        CurrentUser currentUser = new CurrentUser();
 
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("email", "adam.Isenberg4920@gmail.com");
+        parts.put("email", currentUser.getEmail());
         ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
                 "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts,
                 GetCustomerByEmailResponse.class);
