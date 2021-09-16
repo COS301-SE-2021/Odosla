@@ -185,7 +185,7 @@ public class PaymentServiceImpl implements PaymentService {
 //            CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", "adam.isenberg49@gmail.com");
+            parts.put("email", "adam.Isenberg4920@gmail.com");
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
                     "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
