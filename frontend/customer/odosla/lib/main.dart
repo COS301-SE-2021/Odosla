@@ -4,6 +4,7 @@ import 'package:odosla/page/login/splash_screen.dart';
 import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/provider/driver_provider.dart';
 import 'package:odosla/provider/status_provider.dart';
+import 'package:odosla/provider/store_provider.dart';
 import 'package:odosla/provider/wallet_provider.dart';
 import 'package:odosla/services/UserService.dart';
 import 'package:odosla/services/api_service.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
   final statusProvState = StatusProvider();
   final walletProvState = WalletProvider();
   final driverProvState = DriverProvider();
+  final storeProvState = StoreProvider();
   ApiService api = ApiService();
 
   @override
@@ -34,6 +36,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => statusProvState),
             ChangeNotifierProvider(create: (_) => walletProvState),
             ChangeNotifierProvider(create: (_) => driverProvState),
+            ChangeNotifierProvider(create: (_) => storeProvState),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

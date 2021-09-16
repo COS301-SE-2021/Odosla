@@ -65,6 +65,19 @@ class ApiService {
     return list;
   }
 
+  List<CartItem> recommendarCartItemsFromJson(Map<String, dynamic> j) {
+    List<CartItem> list;
+
+    //Iterable i = json.decode(j['items']);
+    debugPrint("x-1");
+    list = (json.decode(json.encode(j['recommendations'])) as List)
+        .map((i) => CartItem.fromJson(i))
+        .toList();
+    debugPrint("x-2");
+
+    return list;
+  }
+
   Future<List<Store>> getStores(BuildContext context) async {
     final response =
         await http.post(Uri.parse(endpoint + '/shopping/getStores'),
@@ -415,6 +428,40 @@ class ApiService {
         User u = User.fromJson(responseData["user"]);
         return u;
       }
+    }
+  }
+
+  Future<List<CartItem>> getCartRecommendations(
+      List<String> arrayOfItemIDs, BuildContext context) async {
+    List<dynamic> itemsList = arrayOfItemIDs;
+    UserService userService = GetIt.I.get();
+
+    final response = await http.post(
+        Uri.parse(endpoint + '/recommendation/getCartRecommendation'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt
+        },
+        body: jsonEncode({"itemIDs": itemsList}));
+    print(response.body);
+    print("JWT");
+    print(Provider.of<StatusProvider>(context, listen: false).jwt);
+    if (response.statusCode == 200) {
+      debugPrint("gotRecommendations");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      List<CartItem> list = recommendarCartItemsFromJson(map);
+      print("THIS IS THE LIST");
+      print(list);
+      return list;
+      debugPrint(map.toString());
+    } else {
+      List<CartItem> list = List.empty();
+      debugPrint("__ err " + response.statusCode.toString());
+      return list;
     }
   }
 }
