@@ -192,9 +192,6 @@ public class PaymentServiceImpl implements PaymentService {
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
 
-            System.out.println(getCustomerByEmailResponse.getCustomer());
-//            System.out.println(getCustomerByEmailResponse.get);
-
             assert customer != null;
 
             customerID = customer.getCustomerID();
@@ -269,22 +266,6 @@ public class PaymentServiceImpl implements PaymentService {
             //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
 
             if (o != null) {
-
-
-                Item i = o.getItems().get(0);
-
-                for (Field field : i.getClass().getDeclaredFields()) {
-                    field.setAccessible(true); // You might want to set modifier to public first.
-                    Object value = null;
-                    try {
-                        value = field.get(i);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    if (value != null) {
-                        System.out.println(field.getName() + "=" + value);
-                    }
-                }
 
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
@@ -376,13 +357,22 @@ public class PaymentServiceImpl implements PaymentService {
          */
 
         if(req != null){
-            if (req.getUserID() == null) {
-                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
-            }
 
             order = getOrder(new GetOrderRequest(req.getOrderID())).getOrder();
 
-            if (!req.getUserID().equals(order.getUserID())) {
+            CurrentUser currentUser = new CurrentUser();
+
+
+            Map<String, Object> parts = new HashMap<>();
+            parts.put("email", currentUser.getEmail());
+            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                    "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+
+            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+            Customer customer = getCustomerByEmailResponse.getCustomer();
+
+            if (customer == null || customer.getCustomerID() == null ||
+                    !customer.getCustomerID().equals(order.getUserID())) {
                 throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
             }
 
@@ -477,17 +467,20 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
-        CurrentUser currentUser = new CurrentUser();
+//        CurrentUser currentUser = new CurrentUser();
 
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("email", currentUser.getEmail());
-        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+        parts.put("email", "adam.Isenberg4920@gmail.com");
+        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts,
+                GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
         customer = getCustomerByEmailResponse.getCustomer();
         if(customer == null){
             throw new InvalidRequestException("Incorrect email email given - customer does not exist");
         }
+
         GetOrderResponse getOrderResponse;
         getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
         order= getOrderResponse.getOrder();
@@ -497,9 +490,9 @@ import java.util.List;50"
         }
 
         OrderStatus status = order.getStatus();
-
         // once the order has been paid for and sent to the  shoppers
         // if the order has not yet been delivered, collected and process by the shoppers
+
         if (status != OrderStatus.AWAITING_COLLECTION &&
                 status!= OrderStatus.ASSIGNED_DRIVER &&
                 status != OrderStatus.CUSTOMER_COLLECTED &&
@@ -507,7 +500,9 @@ import java.util.List;50"
                 status != OrderStatus.DELIVERED &&
                 status != OrderStatus.PACKING) { // statuses which do not allow for the updating of an order
 
+            System.out.println("hello");
             if (request.getOrderType() != null) {
+                System.out.println(request.getOrderType());
                 order.setType(request.getOrderType());
             }
 
@@ -516,6 +511,7 @@ import java.util.List;50"
             }
 
             if (request.getListOfItems() != null) {
+                System.out.println("hello");
                 order.setItems(request.getListOfItems());
                 cost = getCost(order.getItems());
                 order.setTotalCost(cost - discount);
@@ -533,6 +529,10 @@ import java.util.List;50"
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
+        }
+
+        for(Item item: order.getItems()){
+            System.out.println(item.getPrice());
         }
 
         orderRepo.save(order);
