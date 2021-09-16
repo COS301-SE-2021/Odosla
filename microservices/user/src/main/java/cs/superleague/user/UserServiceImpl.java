@@ -58,9 +58,9 @@ public class UserServiceImpl implements UserService{
     private String shoppingPort;
     @Value("${shoppingHost}")
     private String shoppingHost;
-    @Value("${notificationHost}")
+    @Value("${notificationsHost}")
     private String notificationHost;
-    @Value("${notificationPort}")
+    @Value("${notificationsPort}")
     private String notificationPort;
 
     private final ShopperRepo shopperRepo;
