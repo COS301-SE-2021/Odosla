@@ -1,8 +1,13 @@
 package cs.superleague.notifications.responses;
 
 public class SendDirectEmailNotificationResponse {
-    private final String responseMessage;
-    private final boolean isSuccess;
+    private String responseMessage;
+    private boolean isSuccess;
+
+    public SendDirectEmailNotificationResponse() {
+        this.responseMessage = null;
+        this.isSuccess = false;
+    }
 
     public SendDirectEmailNotificationResponse(boolean isSuccess, String responseMessage) {
         this.isSuccess = isSuccess;

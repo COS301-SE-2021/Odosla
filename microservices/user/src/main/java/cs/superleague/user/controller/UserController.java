@@ -1,6 +1,7 @@
 package cs.superleague.user.controller;
 import cs.superleague.api.UserApi;
 import cs.superleague.models.*;
+import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
@@ -25,10 +26,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -661,7 +659,11 @@ public class UserController implements UserApi {
         adminObject.setEmail(admin.getEmail());
         adminObject.setPhoneNumber(admin.getPhoneNumber());
         adminObject.setPassword(admin.getPassword());
-        adminObject.setActivationDate(String.valueOf(admin.getActivationDate()));
+        String activationDate = null;
+        if (admin.getActivationDate() != null){
+            activationDate = String.valueOf(admin.getActivationDate());
+        }
+        adminObject.setActivationDate(activationDate);
         adminObject.setActivationCode(admin.getActivationCode());
         adminObject.setResetCode(admin.getResetCode());
         adminObject.setResetExpiration(admin.getResetExpiration());
@@ -676,7 +678,11 @@ public class UserController implements UserApi {
         driverObject.setEmail(driver.getEmail());
         driverObject.setPhoneNumber(driver.getPhoneNumber());
         driverObject.setPassword(driver.getPassword());
-        driverObject.setActivationDate(String.valueOf(driver.getActivationDate()));
+        String activationDate = null;
+        if (driver.getActivationDate() != null){
+            activationDate = String.valueOf(driver.getActivationDate());
+        }
+        driverObject.setActivationDate(activationDate);
         driverObject.setActivationCode(driver.getActivationCode());
         driverObject.setResetCode(driver.getResetCode());
         driverObject.setResetExpiration(driver.getResetExpiration());
@@ -701,7 +707,11 @@ public class UserController implements UserApi {
         customerObject.setEmail(customer.getEmail());
         customerObject.setPhoneNumber(customer.getPhoneNumber());
         customerObject.setPassword(customer.getPassword());
-        customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
+        String activationDate = null;
+        if (customer.getActivationDate() != null){
+            activationDate = String.valueOf(customer.getActivationDate());
+        }
+        customerObject.setActivationDate(activationDate);
         customerObject.setActivationCode(customer.getActivationCode());
         customerObject.setResetCode(customer.getResetCode());
         customerObject.setResetExpiration(customer.getResetExpiration());
@@ -710,8 +720,11 @@ public class UserController implements UserApi {
         {
             customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
         }
-
-        customerObject.setAddress(String.valueOf(customer.getAddress()));
+        GeoPointObject geoPointObject = null;
+        if (customer.getAddress() != null){
+            geoPointObject = populateGeoPoint(customer.getAddress());
+        }
+        customerObject.setAddress(geoPointObject);
         List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
         customerObject.setGroceryLists(groceryListObjectList);
         List<ItemObject> itemObjects = populateItems(customer.getShoppingCart());
@@ -729,7 +742,11 @@ public class UserController implements UserApi {
             shopperObject.setEmail(shopper.getEmail());
             shopperObject.setPhoneNumber(shopper.getPhoneNumber());
             shopperObject.setPassword(shopper.getPassword());
-            shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
+            String activationDate = null;
+            if (shopper.getActivationDate() != null){
+                activationDate = String.valueOf(shopper.getActivationDate());
+            }
+            shopperObject.setActivationDate(activationDate);
             shopperObject.setActivationCode(shopper.getActivationCode());
             shopperObject.setResetCode(shopper.getResetCode());
             shopperObject.setResetExpiration(shopper.getResetExpiration());
@@ -1110,5 +1127,12 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userUpdateAdminDetailsResponse, status);
+    }
+    public GeoPointObject populateGeoPoint(GeoPoint geoPoint){
+        GeoPointObject geoPointObject = new GeoPointObject();
+        geoPointObject.setAddress(geoPoint.getAddress());
+        geoPointObject.setLatitude(BigDecimal.valueOf(geoPoint.getLatitude()));
+        geoPointObject.setLongitude(BigDecimal.valueOf(geoPoint.getLongitude()));
+        return geoPointObject;
     }
 }
