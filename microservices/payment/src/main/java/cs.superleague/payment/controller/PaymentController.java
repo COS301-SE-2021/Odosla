@@ -224,7 +224,10 @@ public class PaymentController implements PaymentApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
+                    assignItems(body.getListOfItems()), body.getDiscount().doubleValue(),
+                    UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
+                    body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());
