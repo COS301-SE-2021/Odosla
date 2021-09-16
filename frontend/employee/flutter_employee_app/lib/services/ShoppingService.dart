@@ -25,7 +25,7 @@ class ShoppingService {
     });
     print(jwt);
     final response = await http.post(
-        Uri.parse(endPoint+'shopping/getStores'),
+        Uri.parse(shoppingEndPoint+'shopping/getStores'),
         headers: {
           "Accept": "application/json",
           "content-type": "application/json",
@@ -47,7 +47,7 @@ class ShoppingService {
 
   Future<Order?> getNextQueued(String storeID, BuildContext context) async {
 
-    final loginURL = Uri.parse(endPoint+"shopping/getNextQueued");
+    final loginURL = Uri.parse(shoppingEndPoint+"shopping/getNextQueued");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -94,7 +94,7 @@ class ShoppingService {
 
   Future<List<Order>?> getAllOrdersInQueue(BuildContext context,String storeID) async {
 
-    final loginURL = Uri.parse(endPoint+"shopping/getQueue");
+    final loginURL = Uri.parse(shoppingEndPoint+"shopping/getQueue");
 
     Map<String,String> headers =new Map<String,String>();
 

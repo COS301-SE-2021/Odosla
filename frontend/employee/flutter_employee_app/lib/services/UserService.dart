@@ -23,7 +23,7 @@ class UserService{
 
   Future<bool> loginUser(String email, String password, String userType, BuildContext context) async{
 
-    final url = Uri.parse(endPoint+"user/loginUser");
+    final url = Uri.parse(userEndPoint+"user/loginUser");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -94,7 +94,7 @@ class UserService{
 
   Future<String> registerDriver(String name,String surname, String email, String password, String phoneNumber) async {
 
-    final url = Uri.parse(endPoint+"user/registerDriver");
+    final url = Uri.parse(userEndPoint+"user/registerDriver");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -144,7 +144,7 @@ class UserService{
 
   Future<String> registerShopper(String name,String surname, String email, String password, String phoneNumber) async {
 
-    final url = Uri.parse(endPoint+"user/registerShopper");
+    final url = Uri.parse(userEndPoint+"user/registerShopper");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -194,7 +194,7 @@ class UserService{
 
   Future<String> verifyAccount(String email, String activationCode, String userType) async {
 
-    final url = Uri.parse(endPoint+"user/verifyAccount");
+    final url = Uri.parse(userEndPoint+"user/verifyAccount");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -237,7 +237,7 @@ class UserService{
 
   Future<User?> getCurrentUser(BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"user/getCurrentUser");
+    final url = Uri.parse(userEndPoint+"user/getCurrentUser");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -314,7 +314,7 @@ class UserService{
 
   Future<bool> setShopperShift(bool onShift,String storeID, BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"user/updateShopperShift");
+    final url = Uri.parse(userEndPoint+"user/updateShopperShift");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -356,7 +356,7 @@ class UserService{
 
   Future<bool> setDriverShift(bool onShift, BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"user/updateDriverShift");
+    final url = Uri.parse(userEndPoint+"user/updateDriverShift");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -398,7 +398,7 @@ class UserService{
 
   Future<bool> completePackagingOrder(String orderID, BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"user/completePackagingOrder");
+    final url = Uri.parse(userEndPoint+"user/completePackagingOrder");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -440,7 +440,7 @@ class UserService{
 
   Future<bool> updateDriverLocation(double latitude, double longitude, BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"user/setCurrentLocation");
+    final url = Uri.parse(userEndPoint+"user/setCurrentLocation");
 
     Map<String,String> headers =new Map<String,String>();
     String jwt="";
@@ -480,7 +480,7 @@ class UserService{
 
   Future<bool> updateShopperDetails(String name, String surname, String email, String phoneNumber, String currentPassword, String newPassword, BuildContext context) async{
 
-    final url = Uri.parse(endPoint+"user/updateShopperDetails");
+    final url = Uri.parse(userEndPoint+"user/updateShopperDetails");
 
     Map<String,String> headers =new Map<String,String>();
 

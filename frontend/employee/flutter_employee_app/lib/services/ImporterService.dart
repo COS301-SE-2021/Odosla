@@ -11,7 +11,7 @@ class ImporterService {
   UserService _userService = GetIt.I.get();
 
   Future<bool?> importItems(BuildContext context, String csv) async {
-    final loginURL = Uri.parse(endPoint + "importer/itemsCSVImporter");
+    final loginURL = Uri.parse(importerEndPoint + "importer/itemsCSVImporter");
 
     Map<String, String> headers = new Map<String, String>();
     String jwt = "";
@@ -63,7 +63,7 @@ class ImporterService {
   }
 
   Future<bool?> importStores(BuildContext context, String csv) async {
-    final loginURL = Uri.parse(endPoint + "importer/storesCSVImporter");
+    final loginURL = Uri.parse(importerEndPoint + "importer/storesCSVImporter");
 
     Map<String, String> headers = new Map<String, String>();
     String jwt = "";

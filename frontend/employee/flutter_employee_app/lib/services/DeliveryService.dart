@@ -16,7 +16,7 @@ class DeliveryService{
 
    Future<String> getNextOrderForDriver(BuildContext context) async {
 
-     final loginURL = Uri.parse(endPoint+"delivery/getNextOrderForDriver");
+     final loginURL = Uri.parse(deliveryEndPoint+"delivery/getNextOrderForDriver");
 
      Map<String,String> headers =new Map<String,String>();
      String jwt="";
@@ -65,7 +65,7 @@ class DeliveryService{
 
    Future<bool> assignDriverToDelivery(String deliveryID, BuildContext context) async {
 
-     final loginURL = Uri.parse(endPoint+"delivery/assignDriverToDelivery");
+     final loginURL = Uri.parse(deliveryEndPoint+"delivery/assignDriverToDelivery");
 
      Map<String,String> headers =new Map<String,String>();
 
@@ -104,42 +104,9 @@ class DeliveryService{
      return false;
    }
 
-   // Future<bool> completeDelivery(String orderID, BuildContext context) async {
-   //
-   //   final loginURL = Uri.parse(endPoint+"delivery/completeDelivery");
-   //
-   //   Map<String,String> headers =new Map<String,String>();
-   //
-   //   headers =
-   //   {
-   //     "Accept": "application/json",
-   //     "content-type": "application/json",
-   //     "Access-Control-Allow-Origin": "*",
-   //     "Access-Control-Allow-Methods": "POST, OPTIONS"
-   //   };
-   //
-   //   String orderID=Provider.of<DeliveryProvider>(context, listen: false).delivery.orderID;
-   //
-   //
-   //   final data = {
-   //     "orderID":orderID
-   //   };
-   //
-   //   final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
-   //   print(response.body);
-   //
-   //   if (response.statusCode==200) {
-   //     Map<String,dynamic> responseData = json.decode(response.body);
-   //     if (responseData["message"] == "Order successfully been delivered and status has been changed") {
-   //       return true;
-   //     }
-   //   }
-   //   return false;
-   // }
-
    Future<bool> UpdateDeliveryStatus(String deliveryID, String status,BuildContext context) async {
 
-     final loginURL = Uri.parse(endPoint+"delivery/updateDeliveryStatus");
+     final loginURL = Uri.parse(deliveryEndPoint+"delivery/updateDeliveryStatus");
 
      Map<String,String> headers =new Map<String,String>();
 
@@ -187,7 +154,7 @@ class DeliveryService{
 
    Future<bool> getCustomer(String customerID, BuildContext context) async {
 
-     final loginURL = Uri.parse(endPoint+"user/getCustomerByUUID");
+     final loginURL = Uri.parse(userEndPoint+"user/getCustomerByUUID");
 
      Map<String,String> headers =new Map<String,String>();
 

@@ -15,18 +15,18 @@ class AnalyticsService{
 
   Future<String?> createFinancialCSVReport(BuildContext context, String startDate, String endDate) async {
 
-    final url = Uri.parse(endPoint+"analytics/createFinancialReport");
+    final url = Uri.parse(analyticsEndPoint+"analytics/createFinancialReport");
 
     Map<String,String> headers =new Map<String,String>();
 
     String jwt="";
-    // await _userService.getJWTAsString(context).then((value) => {
-    //   jwt=value!
-    // });
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
 
     print(startDate);
     print(endDate);
-    jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
+    //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
     headers =
     {
       "Accept": "application/json",
@@ -66,19 +66,19 @@ class AnalyticsService{
 
   Future<List<int>?> createFinancialPDFReport(BuildContext context, String startDate, String endDate) async {
 
-    final url = Uri.parse(endPoint+"analytics/createFinancialReport");
+    final url = Uri.parse(analyticsEndPoint+"analytics/createFinancialReport");
 
     Map<String,String> headers =new Map<String,String>();
 
     String jwt="";
-    // await _userService.getJWTAsString(context).then((value) => {
-    //   jwt=value!
-    // });
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
 
     print(startDate);
     print(endDate);
 
-    jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
+    //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
     headers =
     {
       "Accept": "application/json",
@@ -119,15 +119,15 @@ class AnalyticsService{
 
   Future<String?> createMonthlyCSVReport(BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"analytics/createMonthlyReport");
+    final url = Uri.parse(analyticsEndPoint+"analytics/createMonthlyReport");
 
     Map<String,String> headers =new Map<String,String>();
 
     String jwt="";
-    // await _userService.getJWTAsString(context).then((value) => {
-    //   jwt=value!
-    // });
-    //
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
 
     jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
     //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNTc5MzQxLCJpYXQiOjE2MzE1NDMzNDEsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.j1nnDAcMNVoWAVuJ983LctwLEIBZI45MupGF-Gh4PsE";
@@ -168,15 +168,15 @@ class AnalyticsService{
 
   Future<List<int>?> createMonthlyPDFReport(BuildContext context) async {
 
-    final url = Uri.parse(endPoint+"analytics/createMonthlyReport");
+    final url = Uri.parse(analyticsEndPoint+"analytics/createMonthlyReport");
 
     Map<String,String> headers =new Map<String,String>();
 
     String jwt="";
-    // await _userService.getJWTAsString(context).then((value) => {
-    //   jwt=value!
-    // });
-    jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+    //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
     //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNTc5MzQxLCJpYXQiOjE2MzE1NDMzNDEsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.j1nnDAcMNVoWAVuJ983LctwLEIBZI45MupGF-Gh4PsE";
     headers =
     {
@@ -214,7 +214,7 @@ class AnalyticsService{
 
   Future<String?> createUserCSVReport(BuildContext context, String startDate, String endDate) async {
 
-    final url = Uri.parse(endPoint+"analytics/createUserReport");
+    final url = Uri.parse(analyticsEndPoint+"analytics/createUserReport");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -225,7 +225,7 @@ class AnalyticsService{
 
     print(startDate);
     print(endDate);
-    jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
+    //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
    // jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNTc5MzQxLCJpYXQiOjE2MzE1NDMzNDEsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.j1nnDAcMNVoWAVuJ983LctwLEIBZI45MupGF-Gh4PsE";
     headers =
     {
@@ -266,7 +266,7 @@ class AnalyticsService{
 
   Future<List<int>?> createUserPDFReport(BuildContext context, String startDate, String endDate) async {
 
-    final url = Uri.parse(endPoint+"analytics/createUserReport");
+    final url = Uri.parse(analyticsEndPoint+"analytics/createUserReport");
 
     Map<String,String> headers =new Map<String,String>();
 
@@ -277,7 +277,7 @@ class AnalyticsService{
 
     print(startDate);
     print(endDate);
-    jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
+    //jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNzU5Mzg0LCJpYXQiOjE2MzE3MjMzODQsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.njtkTrQJYDNxeavWV7uTLsxNN3ARCRE_8g5JK2FvQrI";
    // jwt="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrZWxseW1vcnJpc29uNzQ1OEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6IkFETUlOIiwiZXhwIjoxNjMxNTc5MzQxLCJpYXQiOjE2MzE1NDMzNDEsImVtYWlsIjoia2VsbHltb3JyaXNvbjc0NThAZ21haWwuY29tIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9BRE1JTiJdLCJqdGkiOiIzZTYyNTQ3Ny1mMWY1LTRiMzAtOTA0ZC1iMjEyZGU5ODEwOGIifQ.j1nnDAcMNVoWAVuJ983LctwLEIBZI45MupGF-Gh4PsE";
     headers =
     {
