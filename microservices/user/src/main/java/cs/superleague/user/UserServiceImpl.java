@@ -600,11 +600,18 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
-                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
                 else{
@@ -772,11 +779,18 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
-                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
                 else{
@@ -941,11 +955,18 @@ public class UserServiceImpl implements UserService{
                 }
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
-                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
                 else{
@@ -2031,7 +2052,7 @@ public class UserServiceImpl implements UserService{
 
         //orderRepo.save(order);
         SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
-        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
         response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
@@ -2075,7 +2096,7 @@ public class UserServiceImpl implements UserService{
         order.setStatus(OrderStatus.DELIVERED);
         //orderRepo.save(order);
         SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
-        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderRequest);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
         //Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
 
@@ -2357,13 +2378,17 @@ public class UserServiceImpl implements UserService{
             customerRepo.save((Customer)user);
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
-            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
-            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            try {
-                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+//             {
+//                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
 
         }
         else if(userType.equals("SHOPPER")){
@@ -2390,13 +2415,17 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
-            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            try {
-                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+//            try {
+//                //rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
         }
         else if(userType.equals("DRIVER")){
             Driver driver = driverRepo.findDriverByEmail(email);
@@ -2418,13 +2447,18 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
-            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            try {
-                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            try {
+//                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+
         }else if(userType.equals("ADMIN")){
             Admin admin = adminRepo.findAdminByEmail(email);
 
@@ -2444,13 +2478,18 @@ public class UserServiceImpl implements UserService{
             adminRepo.save((Admin)user);
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
-            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
-            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            try {
-                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            try {
+//                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+
         }
 
         return new ResetPasswordResponse(resetCode, "Account type given does not exist - Could not reset password", false);
