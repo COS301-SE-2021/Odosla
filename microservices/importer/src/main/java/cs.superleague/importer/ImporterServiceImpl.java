@@ -16,11 +16,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -157,7 +153,7 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
 
-                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveItemToRepo", saveItemToRepo);
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
                         item = new Item();
                     }
                 }
@@ -269,13 +265,14 @@ public class ImporterServiceImpl implements ImporterService{
                                 break;
 
                             case 8:
-                                location.setLatitude(Double.parseDouble(currentWord));
+
+                                location.setLatitude(Double.parseDouble(currentWord.replaceAll(",", ".")));
                                 counter++;
                                 currentWord = "";
                                 break;
 
                             case 9:
-                                location.setLongitude(Double.parseDouble(currentWord));
+                                location.setLongitude(Double.parseDouble(currentWord.replaceAll(",", ".")));
                                 counter++;
                                 currentWord = "";
                                 break;
@@ -290,7 +287,7 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveStoreToRepoRequest saveStoreToRepo = new SaveStoreToRepoRequest(store);
 
-                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveStoreToRepo", saveStoreToRepo);
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepo);
 
                         location= new GeoPoint();
                         store= new Store();

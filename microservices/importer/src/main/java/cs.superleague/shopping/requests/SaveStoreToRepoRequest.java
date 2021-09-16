@@ -2,19 +2,23 @@ package cs.superleague.shopping.requests;
 
 import cs.superleague.shopping.dataclass.Store;
 
-public class SaveStoreToRepoRequest {
+import java.io.Serializable;
 
-    private final Store store;
+public class SaveStoreToRepoRequest implements Serializable {
 
-    public SaveStoreToRepoRequest(){
-        store = null;
-    }
+    private Store store;
 
-    public SaveStoreToRepoRequest(Store store) {
-        this.store = store;
+    public SaveStoreToRepoRequest(Store store)
+    {
+        this.store=store;
     }
 
     public Store getStore() {
         return store;
     }
+
+    public void setStore(Store store) {
+        this.store = store;
+    }
+
 }

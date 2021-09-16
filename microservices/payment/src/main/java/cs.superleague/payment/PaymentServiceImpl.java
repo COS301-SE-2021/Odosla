@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -169,6 +170,7 @@ public class PaymentServiceImpl implements PaymentService {
                     invalidReq = true;
                     invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
                 }
+
                 if (!shop.getStore().getOpen()) {
                     invalidReq = true;
                     invalidMessage = ("Store is currently closed - could not create order");
@@ -184,11 +186,14 @@ public class PaymentServiceImpl implements PaymentService {
 
             parts = new HashMap<>();
             parts.put("email", currentUser.getEmail());
-            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                    "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
 
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
+
             assert customer != null;
+
             customerID = customer.getCustomerID();
 
             double discount = request.getDiscount();
@@ -226,6 +231,7 @@ public class PaymentServiceImpl implements PaymentService {
                 try {
                     alreadyExists = orderRepo.findById(orderID).orElse(null);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 if (alreadyExists != null) {
@@ -351,13 +357,22 @@ public class PaymentServiceImpl implements PaymentService {
          */
 
         if(req != null){
-            if (req.getUserID() == null) {
-                throw new InvalidRequestException("UserID cannot be null in request object - order unsuccessfully updated.");
-            }
 
             order = getOrder(new GetOrderRequest(req.getOrderID())).getOrder();
 
-            if (!req.getUserID().equals(order.getUserID())) {
+            CurrentUser currentUser = new CurrentUser();
+
+
+            Map<String, Object> parts = new HashMap<>();
+            parts.put("email", currentUser.getEmail());
+            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                    "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+
+            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+            Customer customer = getCustomerByEmailResponse.getCustomer();
+
+            if (customer == null || customer.getCustomerID() == null ||
+                    !customer.getCustomerID().equals(order.getUserID())) {
                 throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
             }
 
@@ -456,13 +471,16 @@ import java.util.List;50"
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("email", currentUser.getEmail());
-        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts,
+                GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
         customer = getCustomerByEmailResponse.getCustomer();
         if(customer == null){
             throw new InvalidRequestException("Incorrect email email given - customer does not exist");
         }
+
         GetOrderResponse getOrderResponse;
         getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
         order= getOrderResponse.getOrder();
@@ -472,9 +490,9 @@ import java.util.List;50"
         }
 
         OrderStatus status = order.getStatus();
-
         // once the order has been paid for and sent to the  shoppers
         // if the order has not yet been delivered, collected and process by the shoppers
+
         if (status != OrderStatus.AWAITING_COLLECTION &&
                 status!= OrderStatus.ASSIGNED_DRIVER &&
                 status != OrderStatus.CUSTOMER_COLLECTED &&
@@ -482,7 +500,9 @@ import java.util.List;50"
                 status != OrderStatus.DELIVERED &&
                 status != OrderStatus.PACKING) { // statuses which do not allow for the updating of an order
 
+            System.out.println("hello");
             if (request.getOrderType() != null) {
+                System.out.println(request.getOrderType());
                 order.setType(request.getOrderType());
             }
 
@@ -491,6 +511,7 @@ import java.util.List;50"
             }
 
             if (request.getListOfItems() != null) {
+                System.out.println("hello");
                 order.setItems(request.getListOfItems());
                 cost = getCost(order.getItems());
                 order.setTotalCost(cost - discount);
@@ -508,6 +529,10 @@ import java.util.List;50"
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
+        }
+
+        for(Item item: order.getItems()){
+            System.out.println(item.getPrice());
         }
 
         orderRepo.save(order);
