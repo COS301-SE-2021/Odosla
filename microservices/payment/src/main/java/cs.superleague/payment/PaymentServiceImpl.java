@@ -252,28 +252,34 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             assert shop != null;
-            //            List<OrderItems> orderItems = new ArrayList<>();
-            //            for(int k=0; k<request.getListOfItems().size(); k++)
-            //            {
-            //                OrderItems orderItems1 = new OrderItems();
-            //                orderItems1.setOrderID(orderID);
-            //                orderItems1.setBarcode(request.getListOfItems().get(k).getBarcode());
-            //                orderItems1.setName(request.getListOfItems().get(k).getName());
-            //                orderItems1.setDescription(request.getListOfItems().get(k).getDescription());
-            //                orderItems1.setBrand(request.getListOfItems().get(k).getBrand());
-            //                orderItems1.setItemType(request.getListOfItems().get(k).getItemType());
-            //                orderItems1.setImageUrl(request.getListOfItems().get(k).getImageUrl());
-            //                orderItems1.setPrice(request.getListOfItems().get(k).getPrice());
-            //                orderItems1.setQuantity(request.getListOfItems().get(k).getQuantity());
-            //                orderItems1.setProductID(request.getListOfItems().get(k).getProductID());
-            //                orderItems1.setSize(request.getListOfItems().get(k).getSize());
-            //                orderItems1.setTotalCost(request.getListOfItems().get(k).getQuantity()* request.getListOfItems().get(k).getPrice());
-            //
-            //                orderItems.add(orderItems1);
-            //            }
-            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
-            //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
+            //Setting total cost of each item
+            List<CartItem> cartItems = request.getListOfItems();
+            for(int k = 0; k < cartItems.size(); k++)
+            {
+                cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getPrice());
+                cartItems.get(k).setStoreID(request.getStoreID());
+                cartItems.get(k).setOrderID(orderID);
+
+            }
+
+            //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
+
+            Order o = new Order();
+            o.setOrderID(orderID);
+            o.setUserID(customerID);
+            o.setStoreID(request.getStoreID());
+            o.setShopperID(shopperID);
+            o.setCreateDate(new Date());
+            o.setProcessDate(null);
+            o.setTotalCost(totalC);
+            o.setType(orderType);
+            o.setStatus(OrderStatus.AWAITING_PAYMENT);
+            o.setCartItem(cartItems);
+            o.setDiscount(o.getDiscount());
+            o.setDeliveryAddress(customerLocation);
+            o.setStoreAddress(shop.getStore().getStoreLocation());
+            o.setRequiresPharmacy(requiresPharmacy);
 
             if (o != null) {
 
@@ -281,7 +287,7 @@ public class PaymentServiceImpl implements PaymentService {
                     if (orderRepo != null) {
                         orderRepo.save(o);
                         List<String> productIDs = new ArrayList<>();
-                        for (Item item : request.getListOfItems()){
+                        for (CartItem item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
                         }
 
