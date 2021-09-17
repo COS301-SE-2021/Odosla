@@ -190,6 +190,11 @@ public class ImporterServiceImpl implements ImporterService{
                 String currentWord = "";
                 int counter = 0;
                 Store store = new Store();
+                String storeBrand = "";
+                double latitude = 0;
+                double longitude = 0;
+                String storeAddress = "";
+                String f = file;
                 GeoPoint location= new GeoPoint();
 
                 for(k=0; k < file.length(); k++)
@@ -203,7 +208,43 @@ public class ImporterServiceImpl implements ImporterService{
                         switch (counter){
                             case 0:
 
-                                Map<String, Object> parts = new HashMap<String, Object>();
+                                int position = 6;
+
+
+                                int pos = f.indexOf(";");
+                                while(--position > 0 && pos != -1){
+                                    pos = f.indexOf(";", pos + 1);
+                                }
+
+                                // extract store brand from CSV file
+                                storeBrand = f.substring(pos).substring(1);
+                                storeBrand = storeBrand.split(";")[0];
+
+                                pos = f.indexOf(";", pos + 1);
+
+                                // extract latitude value from CSV file
+                                latitude = Double.parseDouble(f.substring(pos).substring(1).split(";")[0]
+                                        .replaceAll(",", "."));
+
+                                pos = f.indexOf(";", pos + 1);
+
+                                // extract longitude value from CSV file
+                                longitude = Double.parseDouble(f.substring(pos).substring(1).split(";")[0]
+                                        .replaceAll(",", "."));
+
+                                pos = f.indexOf(";", pos + 1);
+
+                                // extract address value from CSV file
+                                storeAddress = f.substring(pos).substring(1);
+                                pos = storeAddress.indexOf("\n");
+
+
+                                if(pos != -1) {
+                                    f = storeAddress.substring(pos);
+                                    storeAddress = storeAddress.split("\n")[0];
+                                }
+
+                                Map<String, Object> parts = new HashMap<>();
 
                                 String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
                                 URI uri = new URI(stringUri);
@@ -213,73 +254,70 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 if(responseEntity == null || !responseEntity.hasBody()
                                 || responseEntity.getBody() == null){
-                                    throw new InvalidRequestException("Could not retrieve stores");
+                                    return new StoreCSVImporterResponse(false, new Date(), "Could not retrieve stores");
                                 }
 
                                 List<Store> storeList = responseEntity.getBody().getStores();
-                                for(int j=0; j< storeList.size(); j++)
-                                {
-                                    if(storeList.get(j).getStoreID().equals(UUID.fromString(currentWord)))
-                                    {
-                                        throw new InvalidRequestException("Store already exists");
+
+                                for (Store s: storeList) {
+                                    if (s.getStoreBrand().equals(storeBrand) &&
+                                            s.getStoreLocation().getAddress().equals(storeAddress) &&
+                                            s.getStoreLocation().getLatitude() == latitude &&
+                                            s.getStoreLocation().getLongitude() == longitude) {
+                                        return new StoreCSVImporterResponse(false, new Date(), "Store already exists");
                                     }
                                 }
 
-                                store.setStoreID(UUID.fromString(currentWord));
-                                counter++;
-                                currentWord = "";
-                                break;
-
-                            case 1:
+                                store.setStoreID(UUID.randomUUID());
                                 store.setClosingTime(Integer.parseInt(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 2:
+                            case 1:
                                 store.setImgUrl(currentWord);
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 3:
+                            case 2:
                                 store.setOpen(Boolean.valueOf(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 4:
+                            case 3:
                                 store.setMaxOrders(Integer.parseInt(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 5:
+                            case 4:
                                 store.setMaxShoppers(Integer.parseInt(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 6:
+                            case 5:
                                 store.setOpeningTime(Integer.parseInt(currentWord));
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 7:
+                            case 6:
                                 store.setStoreBrand(currentWord);
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 8:
+                            case 7:
 
                                 location.setLatitude(Double.parseDouble(currentWord.replaceAll(",", ".")));
                                 counter++;
                                 currentWord = "";
                                 break;
 
-                            case 9:
+                            case 8:
                                 location.setLongitude(Double.parseDouble(currentWord.replaceAll(",", ".")));
                                 counter++;
                                 currentWord = "";
