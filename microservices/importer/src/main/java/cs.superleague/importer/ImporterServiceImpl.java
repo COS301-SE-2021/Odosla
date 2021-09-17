@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Service("importerServiceImpl")
@@ -38,7 +40,7 @@ public class ImporterServiceImpl implements ImporterService{
     }
 
     @Override
-    public ItemsCSVImporterResponse itemsCSVImporter(ItemsCSVImporterRequest request) throws InvalidRequestException {
+    public ItemsCSVImporterResponse itemsCSVImporter(ItemsCSVImporterRequest request) throws InvalidRequestException, URISyntaxException {
         if (request != null)
         {
             if(request.getFile() == null)
@@ -66,8 +68,11 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 Map<String, Object> parts = new HashMap<String, Object>();
 
+                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems";
+                                URI uri = new URI(stringUri);
+
                                 ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems", parts, GetAllItemsResponse.class);
+                                        uri, parts, GetAllItemsResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()){
                                     throw new InvalidRequestException("Could not retrieve Items");
@@ -170,7 +175,7 @@ public class ImporterServiceImpl implements ImporterService{
     }
 
     @Override
-    public StoreCSVImporterResponse storeCSVImporter(StoreCSVImporterRequest request) throws InvalidRequestException {
+    public StoreCSVImporterResponse storeCSVImporter(StoreCSVImporterRequest request) throws InvalidRequestException, URISyntaxException {
         if (request != null)
         {
             if(request.getFile() == null)
@@ -200,8 +205,11 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 Map<String, Object> parts = new HashMap<String, Object>();
 
+                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+                                URI uri = new URI(stringUri);
+
                                 ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
+                                        uri, parts, GetStoresResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()
                                 || responseEntity.getBody() == null){
