@@ -3,20 +3,19 @@ package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.responses.GetOrdersResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
+//@Configuration
+//@ConfigurationProperties
 public class CreateFinancialAnalyticsData {
-    @Value("${paymentHost}")
+//    @Value("${paymentHost}")
     private String paymentHost;
-    @Value("${paymentPort}")
+//    @Value("${paymentPort}")
     private String paymentPort;
 
     private final List<Order> orders;
@@ -32,7 +31,8 @@ public class CreateFinancialAnalyticsData {
 
     private ResponseEntity<GetOrdersResponse> responseEntity;
 
-    public CreateFinancialAnalyticsData(Date startDate, Date endDate, RestTemplate restTemplate){
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate, RestTemplate restTemplate,
+        String paymentPort, String paymentHost) throws URISyntaxException {
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -43,7 +43,11 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        String uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
+        this.paymentHost = paymentHost;
+        this.paymentHost = paymentHost;
+
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
+        URI uri = new URI(stringUri);
 
         try{
 
