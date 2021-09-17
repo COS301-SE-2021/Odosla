@@ -25,15 +25,18 @@ import java.util.*;
 import java.util.List;
 
 public class MonthlyAnalyticsHelper {
-    @Value("${shoppingHost}")
+
     private String shoppingHost;
-    @Value("${shoppingPort}")
     private String shoppingPort;
 
     private final HashMap<String, Object> data;
 
-    public MonthlyAnalyticsHelper(HashMap<String, Object> data){
+    public MonthlyAnalyticsHelper(HashMap<String, Object> data, String shoppingHost,
+                                  String shoppingPort){
+
         this. data = data;
+        this.shoppingHost = shoppingHost;
+        this.shoppingPort = shoppingPort;
     }
 
     public byte[] createPDF() throws Exception{
@@ -42,9 +45,6 @@ public class MonthlyAnalyticsHelper {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_MonthlyReport.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -199,9 +199,6 @@ public class MonthlyAnalyticsHelper {
 
     public StringBuilder createCSVReport() {
         try {
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_MonthlyReport.csv";
-            PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
             sb.append("Total Orders");
@@ -254,15 +251,12 @@ public class MonthlyAnalyticsHelper {
             sb.append(data.get("averageRating_Drivers"));
             sb.append(",");
 
-            pw.write(sb.toString()); // write to the csv file
-            pw.close();  //stop writing
             System.out.println("finished");
 
             return sb;
-        } catch ( FileNotFoundException e) {
+        } catch ( Exception e) {
             e.printStackTrace();
-            //throw new ReportException("Not able to create CSV file");
-        } //lets us know if its successfully completed
+        }
         return null;
     }
 }

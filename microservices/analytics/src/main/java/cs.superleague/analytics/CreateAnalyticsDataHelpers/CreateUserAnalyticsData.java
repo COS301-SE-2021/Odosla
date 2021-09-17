@@ -14,12 +14,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CreateUserAnalyticsData {
-    @Value("${userHost}")
+
     private String userHost;
-    @Value("${userPort}")
     private String userPort;
 
     private final List<User> users;
@@ -40,7 +41,8 @@ public class CreateUserAnalyticsData {
     private ResponseEntity<GetUsersResponse> responseEntity;
 
     public CreateUserAnalyticsData(Date startDate, Date endDate,
-                               RestTemplate restTemplate){
+                               RestTemplate restTemplate, String userHost,
+                                   String userPort) throws URISyntaxException {
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();
@@ -58,7 +60,11 @@ public class CreateUserAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getUsers";
+        this.userHost = userHost;
+        this.userPort = userPort;
+
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getUsers";
+        URI uri = new URI(stringUri);
 
         try{
 
@@ -114,6 +120,7 @@ public class CreateUserAnalyticsData {
                 throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
+            if(user.getActivationDate() != null)
             if (startDate.getTime() <= user.getActivationDate().getTime()
                     && endDate.getTime() >= user.getActivationDate().getTime()) {
                 if (userType == UserType.CUSTOMER) {

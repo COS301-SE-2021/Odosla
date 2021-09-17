@@ -715,6 +715,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_GetAdminByEmailResponse"
 
+  /user/getUsers:
+    post:
+      summary: Endpoint for getting users
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getUsers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetUsersRequest"
+      responses:
+        "200":
+          description: Returns the recommended items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetUsersResponse"
+
 components:
 
   schemas:
@@ -1647,3 +1669,26 @@ components:
           $ref: "#/components/schemas/AdminObject"
         success:
           type: boolean
+
+    user_GetUsersRequest:
+      description: This object is expected as input
+      type: object
+
+    user_GetUsersResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        users:
+          type: array
+          items:
+            allOf:
+              - $ref: "#/components/schemas/AdminObject"
+              - $ref: "#/components/schemas/CustomerObject"
+              - $ref: "#/components/schemas/DriverObject"
+              - $ref: "#/components/schemas/ShopperObject"

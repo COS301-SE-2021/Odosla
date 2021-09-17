@@ -20,13 +20,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 public class CreateMonthlyAnalyticsData {
-    @Value("${paymentHost}")
     private String paymentHost;
-    @Value("${paymentPort}")
     private String paymentPort;
-    @Value("${userHost}")
     private String userHost;
-    @Value("${userPort}")
     private String userPort;
 
     private final List<Order> orders;
@@ -54,7 +50,8 @@ public class CreateMonthlyAnalyticsData {
     private ResponseEntity<GetUsersResponse> responseEntityUser;
     private ResponseEntity<GetOrdersResponse> responseEntityOrder;
 
-    public CreateMonthlyAnalyticsData(RestTemplate restTemplate){
+    public CreateMonthlyAnalyticsData(RestTemplate restTemplate, String paymentHost, String paymentPort,
+                                      String userHost, String userPort){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -80,11 +77,7 @@ public class CreateMonthlyAnalyticsData {
         String uri = "http://"+userHost+":"+userPort+"/user/getUsers";
 
         try{
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+            Map<String, Object> parts = new HashMap<>();
 
             responseEntityUser = restTemplate.postForEntity(uri, parts,
                     GetUsersResponse.class);
@@ -172,6 +165,7 @@ public class CreateMonthlyAnalyticsData {
                 throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
+            if(user.getActivationDate() != null)
             if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
                     && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {
                 if (userType == UserType.CUSTOMER) {
