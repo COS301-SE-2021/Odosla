@@ -120,14 +120,16 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             throw new AnalyticsException("Problem with creating financial statistics report");
         }
 
-        FinancialAnalyticsHelper financialAnalyticsHelper = new FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData());
+        FinancialAnalyticsHelper financialAnalyticsHelper = new
+                FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(),
+                restTemplate);
 
         if(request.getReportType() == ReportType.PDF){
-            message = "FinancialReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = financialAnalyticsHelper.createPDF();
             response =  new CreateFinancialReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "FinancialReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             StringBuilder sb = financialAnalyticsHelper.createCSVReport();
             response = new CreateFinancialReportResponse(true, message, new Date(), null, sb.toString());
         }else{

@@ -11,6 +11,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CreateFinancialAnalyticsData {
@@ -32,7 +34,7 @@ public class CreateFinancialAnalyticsData {
 
     private ResponseEntity<GetOrdersResponse> responseEntity;
 
-    public CreateFinancialAnalyticsData(Date startDate, Date endDate, RestTemplate restTemplate){
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate, RestTemplate restTemplate) throws URISyntaxException {
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -43,7 +45,8 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        String uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
+        URI uri = new URI(stringUri);
 
         try{
 
