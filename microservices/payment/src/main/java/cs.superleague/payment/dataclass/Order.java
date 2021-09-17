@@ -40,7 +40,7 @@ public class Order implements Serializable {
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @ManyToMany
+    @ManyToMany (cascade={CascadeType.ALL})
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items;
