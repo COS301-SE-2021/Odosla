@@ -3,6 +3,7 @@ package cs.superleague.payment.controller;
 import cs.superleague.api.PaymentApi;
 import cs.superleague.models.*;
 import cs.superleague.payment.PaymentServiceImpl;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderType;
@@ -233,7 +234,7 @@ public class PaymentController implements PaymentApi {
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
-                    assignItems(body.getListOfItems()), body.getDiscount().doubleValue(),
+                    assignCartItems(body.getListOfItems()), body.getDiscount().doubleValue(),
                     UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
@@ -496,5 +497,36 @@ public class PaymentController implements PaymentApi {
         orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
         orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
         return orderObject;
+    }
+
+    List<CartItem> assignCartItems(List<CartItemObject> cartObjectList){
+
+        double price = 0.00;
+
+        List<CartItem> cartItems = new ArrayList<>();
+
+        if(cartObjectList == null){
+            return null;
+        }
+
+        for (CartItemObject i: cartObjectList) {
+            CartItem item = new CartItem();
+            item.setProductID(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreID(UUID.fromString(i.getStoreId()));
+            if(i.getPrice() != null)
+                price = i.getPrice().doubleValue();
+            item.setPrice(price);
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+            cartItems.add(item);
+
+        }
+        return cartItems;
     }
 }
