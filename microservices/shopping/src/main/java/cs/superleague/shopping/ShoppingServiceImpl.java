@@ -286,10 +286,10 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             if(updateOrder!=null)
             {
-//                CurrentUser currentUser = new CurrentUser();
+                CurrentUser currentUser = new CurrentUser();
 
                 parts = new HashMap<>();
-                parts.put("email", "ofentse.mogoatlhe@gmail.com");
+                parts.put("email", currentUser.getEmail());
 
                 stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByEmail";
                 uri = new URI(stringUri);
