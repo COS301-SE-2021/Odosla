@@ -86,7 +86,7 @@ public class Order implements Serializable {
         this.requiresPharmacy = requiresPharmacy;
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint storeAddress) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
