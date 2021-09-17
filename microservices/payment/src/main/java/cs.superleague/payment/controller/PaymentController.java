@@ -481,8 +481,12 @@ public class PaymentController implements PaymentApi {
         orderObject.setOrderId(order.getOrderID().toString());
         orderObject.setUserId(order.getUserID().toString());
         orderObject.setStoreId(order.getStoreID().toString());
+
+        if(order.getShopperID() != null)
         orderObject.setShopperId(order.getShopperID().toString());
         orderObject.setCreateDate(order.getCreateDate().toString());
+
+        if(order.getProcessDate() != null)
         orderObject.setProcessDate(order.getProcessDate().toString());
         orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
         orderObject.setStatus(order.getStatus().toString());
