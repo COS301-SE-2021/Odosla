@@ -44,9 +44,8 @@ public class Order implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items;
 
-    @ManyToMany (cascade={CascadeType.ALL})
-    @JoinTable
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany
+    @JoinColumn(name="order_id")
     private List<CartItem> cartItems;
 
     public Order(){

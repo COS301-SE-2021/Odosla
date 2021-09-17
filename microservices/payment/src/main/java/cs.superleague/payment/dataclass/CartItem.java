@@ -2,9 +2,7 @@ package cs.superleague.payment.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -12,8 +10,16 @@ import java.util.UUID;
 public class CartItem implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int cartItemNo;
+
     @JsonProperty("productId")
     private String productID;
+
+    @ManyToOne
+    @JoinColumn(name="order_id", insertable = false, updatable = false)
+    private Order order;
+
     private String name;
     private String barcode;
 
@@ -22,6 +28,7 @@ public class CartItem implements Serializable {
 
     @JsonProperty("orderId")
     private UUID orderID;
+
     private double price;
     private int quantity;
     private double totalCost;
