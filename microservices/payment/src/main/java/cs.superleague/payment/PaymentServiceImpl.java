@@ -30,6 +30,8 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -102,7 +104,7 @@ public class PaymentServiceImpl implements PaymentService {
      * @throws InvalidRequestException
      */
     @Override
-    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException {
+    public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException {
 
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -160,9 +162,13 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
 
+            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+            URI uri = new URI(stringUri);
+
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("storeID", request.getStoreID());
-            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate
+                    .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
 
             if (shop != null) {
@@ -186,8 +192,12 @@ public class PaymentServiceImpl implements PaymentService {
 
             parts = new HashMap<>();
             parts.put("email", currentUser.getEmail());
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+            uri = new URI(stringUri);
+
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
-                    "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+                    uri, parts, GetCustomerByEmailResponse.class);
 
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
@@ -341,7 +351,7 @@ public class PaymentServiceImpl implements PaymentService {
      */
 
     @Override
-    public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
+    public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException {
         CancelOrderResponse response;
         Order order;
         double cancellationFee;
@@ -362,11 +372,14 @@ public class PaymentServiceImpl implements PaymentService {
 
             CurrentUser currentUser = new CurrentUser();
 
+            String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+            URI uri = new URI(stringURI);
 
             Map<String, Object> parts = new HashMap<>();
             parts.put("email", currentUser.getEmail());
+
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
-                    "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+                    uri, parts, GetCustomerByEmailResponse.class);
 
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
@@ -451,7 +464,7 @@ import java.util.List;50"
      */
 
     @Override
-    public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException {
+    public UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException {
         String message;
         Order order;
         double discount = 0;
@@ -469,10 +482,13 @@ import java.util.List;50"
 
         CurrentUser currentUser = new CurrentUser();
 
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+        URI uri = new URI(stringUri);
+
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("email", currentUser.getEmail());
         ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
-                "http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts,
+                uri, parts,
                 GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
@@ -561,7 +577,7 @@ import java.util.List;50"
         }
 
         message = "Order retrieval successful.";
-        return new GetOrderResponse(order, true, Calendar.getInstance().getTime(), message);
+        return new GetOrderResponse(order, true, new Date(), message);
     }
 
     @Override
@@ -786,7 +802,7 @@ import java.util.List;50"
     }
 
     @Override
-    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist {
+    public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException {
         GetCustomersActiveOrdersResponse response;
         if (request == null){
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
@@ -795,9 +811,14 @@ import java.util.List;50"
         CurrentUser currentUser = new CurrentUser();
         Customer customer = null;
 
+        String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+        URI uri = new URI(stringURI);
+
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("email", currentUser.getEmail());
-        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByEmail", parts, GetCustomerByEmailResponse.class);
+        ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                uri, parts,
+                GetCustomerByEmailResponse.class);
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
         customer = getCustomerByEmailResponse.getCustomer();
