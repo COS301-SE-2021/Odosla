@@ -1128,6 +1128,55 @@ public class UserController implements UserApi {
 
         return new ResponseEntity<>(userUpdateAdminDetailsResponse, status);
     }
+
+    @Override
+    public ResponseEntity<UserGetUsersResponse> getUsers(UserGetUsersRequest body) {
+
+        UserGetUsersResponse userGetUsersResponse = new UserGetUsersResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetUsersRequest request = new GetUsersRequest();
+
+            GetUsersResponse response = userService.getUsers(request);
+            try{
+                userGetUsersResponse.setTimestamp(response.getTimestamp().toString());
+                userGetUsersResponse.setMessage(response.getMessage());
+                userGetUsersResponse.setSuccess(response.isSuccess());
+
+                List<Object> users = new ArrayList<>();
+                if(response.getUsers() != null && !response.getUsers().isEmpty()){
+                    for (User user: response.getUsers()) {
+                        if(user.getAccountType().toString().equals("ADMIN")){
+                            users.add(populateAdmin((Admin) user));
+                        }else if(user.getAccountType().toString().equals("CUSTOMER")){
+                            users.add(populateCustomer((Customer) user));
+                        }else if(user.getAccountType().toString().equals("DRIVER")){
+                            users.add(populateDriver((Driver) user));
+
+
+                            System.out.println(((Driver) user).getDriverID());
+                        }else if(user.getAccountType().toString().equals("SHOPPER")){
+                            users.add(populateShopper((Shopper) user));
+                        }
+
+                        System.out.println(user.getActivationDate());
+                    }
+                }
+
+                userGetUsersResponse.setUsers(users);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetUsersResponse, status);
+    }
+
     public GeoPointObject populateGeoPoint(GeoPoint geoPoint){
         GeoPointObject geoPointObject = new GeoPointObject();
         geoPointObject.setAddress(geoPoint.getAddress());
