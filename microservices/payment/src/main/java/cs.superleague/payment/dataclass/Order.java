@@ -217,11 +217,11 @@ public class Order implements Serializable {
         this.driverID = driverID;
     }
 
-    public List<CartItem> getCartItem() {
+    public List<CartItem> getCartItems() {
         return cartItems;
     }
 
-    public void setCartItem(List<CartItem> cartItems) {
+    public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
     }
 }

@@ -233,8 +233,10 @@ public class PaymentController implements PaymentApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
+            List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
+
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
-                    assignCartItems(body.getListOfItems()), body.getDiscount().doubleValue(),
+                    assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
                     UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
@@ -484,17 +486,25 @@ public class PaymentController implements PaymentApi {
         orderObject.setStoreId(order.getStoreID().toString());
 
         if(order.getShopperID() != null)
-        orderObject.setShopperId(order.getShopperID().toString());
-        orderObject.setCreateDate(order.getCreateDate().toString());
+            orderObject.setShopperId(order.getShopperID().toString());
+        if(order.getCreateDate()!=null)
+            orderObject.setCreateDate(order.getCreateDate().toString());
 
         if(order.getProcessDate() != null)
-        orderObject.setProcessDate(order.getProcessDate().toString());
+            orderObject.setProcessDate(order.getProcessDate().toString());
         orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
-        orderObject.setStatus(order.getStatus().toString());
-        orderObject.setItems(populateItems(order.getItems()));
-        orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
-        orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
-        orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+        if(order.getStatus()!=null)
+            orderObject.setStatus(order.getStatus().toString());
+
+//        orderObject.setItems(populateItems(order.getItems()));
+        if(order.getCartItems()!=null)
+            orderObject.setCartItems(populateCartItems(order.getCartItems()));
+        if(order.getDiscount()!=null)
+            orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
+        if(order.getDeliveryAddress()!=null)
+            orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
+        if(order.getStoreAddress()!=null)
+            orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
         orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
         return orderObject;
     }
@@ -528,5 +538,58 @@ public class PaymentController implements PaymentApi {
 
         }
         return cartItems;
+    }
+
+    List<CartItemObject> convertCartItems(List<ItemObject> itemObjectList){
+
+        List<CartItemObject> cartItems = new ArrayList<>();
+
+        if(itemObjectList == null){
+            return null;
+        }
+
+        for (ItemObject i: itemObjectList) {
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreId());
+            item.setPrice(i.getPrice());
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+            cartItems.add(item);
+
+        }
+        return cartItems;
+    }
+
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+
+        List<CartItemObject> responseBody = new ArrayList<>();
+
+        for (CartItem i: responseItems){
+
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreID().toString());
+            item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
+
+        }
+
+        return responseBody;
     }
 }
