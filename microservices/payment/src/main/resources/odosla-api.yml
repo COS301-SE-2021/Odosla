@@ -226,6 +226,10 @@ components:
           $ref: "#/components/schemas/GeoPointObject"
         requiresPharmacy:
           type: boolean
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
 
     payment_UpdateOrderRequest:
       description: This object is expected as input
@@ -266,7 +270,7 @@ components:
         listOfItems:
           type: array
           items:
-            $ref: "#/components/schemas/CartItemObject"
+            $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
         storeId:
