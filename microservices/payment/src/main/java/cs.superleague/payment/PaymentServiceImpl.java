@@ -275,8 +275,8 @@ public class PaymentServiceImpl implements PaymentService {
             o.setTotalCost(totalC);
             o.setType(orderType);
             o.setStatus(OrderStatus.AWAITING_PAYMENT);
-            o.setCartItem(cartItems);
-            o.setDiscount(o.getDiscount());
+            o.setCartItems(cartItems);
+            o.setDiscount(request.getDiscount());
             o.setDeliveryAddress(customerLocation);
             o.setStoreAddress(shop.getStore().getStoreLocation());
             o.setRequiresPharmacy(requiresPharmacy);
