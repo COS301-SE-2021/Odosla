@@ -10,6 +10,8 @@ class CartProvider with ChangeNotifier {
   String _activeOrderID = "";
   Map<String, double> _activeStoreLocation = {"lat": 0, "long": 0};
 
+  var _ids= <String>[];
+
   ApiService api = ApiService();
 
   Map<String, double> get activeStoreLocation => _activeStoreLocation;
@@ -75,6 +77,7 @@ class CartProvider with ChangeNotifier {
             item.size,
             item.type),
       );
+      _ids.add(item.id);
     }
 
     calcTotal();
@@ -83,6 +86,7 @@ class CartProvider with ChangeNotifier {
 
   void clearItems() {
     _items.clear();
+    _ids=List.empty();
     calcTotal();
     notifyListeners();
   }
@@ -91,6 +95,7 @@ class CartProvider with ChangeNotifier {
     if (items.containsKey(item.id)) {
       if (item.quantity == 1) {
         items.remove(item.id);
+        _ids.remove(item.id);
       } else
         items.update(
           item.id,
@@ -132,4 +137,9 @@ class CartProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+
+  List<String> get ids => _ids;
+
+
 }

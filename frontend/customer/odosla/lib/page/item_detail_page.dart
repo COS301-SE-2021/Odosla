@@ -127,11 +127,12 @@ class _ItemDetailPage extends State<ItemDetailPage> {
                           debugPrint("!!"),
                           Provider.of<CartProvider>(context, listen: false)
                               .addItem(widget.item, _count),
-                          debugPrint("COUNT: " + _count.toString()),
+
                           Provider.of<CartProvider>(context, listen: false)
                               .store = storeID,
                           Provider.of<CartProvider>(context, listen: false)
                               .activeStoreLocation = location,
+                          debugPrint("COUNT: " + _count.toString()),
                           Navigator.pop(context),
                         }
                       else
