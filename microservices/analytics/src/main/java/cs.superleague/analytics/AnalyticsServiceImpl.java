@@ -16,6 +16,7 @@ import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +24,16 @@ import java.util.Date;
 
 @Service("analyticsServiceImpl")
 public class AnalyticsServiceImpl implements AnalyticsService {
+
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
 
     RestTemplate restTemplate;
 
@@ -115,14 +126,14 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try{
             createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), restTemplate);
+                    request.getEndDate(), restTemplate, paymentPort, paymentHost);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating financial statistics report");
         }
 
         FinancialAnalyticsHelper financialAnalyticsHelper = new
                 FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(),
-                restTemplate);
+                restTemplate, shoppingHost, shoppingPort);
 
         if(request.getReportType() == ReportType.PDF){
             message = "FinancialReport PDF successfully generated";
