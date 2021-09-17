@@ -35,6 +35,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     @Value("${shoppingPort}")
     private String shoppingPort;
 
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
+
     RestTemplate restTemplate;
 
     @Autowired
@@ -89,7 +94,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try {
             createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), restTemplate);
+                    request.getEndDate(), restTemplate, userHost, userPort);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating user statistics report");
         }

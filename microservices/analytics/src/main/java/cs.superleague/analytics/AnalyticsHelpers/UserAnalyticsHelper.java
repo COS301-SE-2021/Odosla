@@ -29,9 +29,6 @@ public class UserAnalyticsHelper {
         PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
 
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_UserReport.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -122,10 +119,6 @@ public class UserAnalyticsHelper {
 
     public StringBuilder createCSVReport() {
         try {
-
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_UserReport.csv";
-            PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
             sb.append("Total users");
@@ -162,15 +155,13 @@ public class UserAnalyticsHelper {
             sb.append(data.get("averageRating_Drivers"));
             sb.append(",");
 
-            pw.write(sb.toString()); // write to the csv file
-            pw.close();  //stop writing
             System.out.println("finished");
 
             return sb;
-        } catch ( FileNotFoundException e) {
+        } catch ( Exception e) {
             e.printStackTrace();
-            //throw new ReportException("Not able to create CSV file");
-        } //lets us know if its successfully completed
+        }
+
         return null;
     }
 
