@@ -102,11 +102,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         UserAnalyticsHelper userAnalyticsHelper = new UserAnalyticsHelper(createUserAnalyticsData.getUserStatisticsData());
 
         if(request.getReportType() == ReportType.PDF){
-            message = "UserReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = userAnalyticsHelper.createPDF();
             response =  new CreateUserReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "UserReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             StringBuilder sb = userAnalyticsHelper.createCSVReport();
             response = new CreateUserReportResponse(true, message, new Date(), null, sb.toString());
         }else{
@@ -168,19 +168,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), new Date(), new Date());
 
         try{
-            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(restTemplate);
+            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(restTemplate, paymentHost, paymentPort,
+                    userHost, userPort);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating monthly statistics report");
         }
 
-        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData.getMonthlyStatisticsData());
+        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData
+                .getMonthlyStatisticsData(), shoppingHost, shoppingPort);
 
         if(request.getReportType() == ReportType.PDF){
-            message = "MonthlyReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = monthlyAnalyticsHelper.createPDF();
             response =  new CreateMonthlyReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "MonthlyReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             String sb = monthlyAnalyticsHelper.createCSVReport().toString();
             response = new CreateMonthlyReportResponse(true, message, new Date(), null, sb);
         }else{
