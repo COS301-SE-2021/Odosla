@@ -6,7 +6,6 @@ import cs.superleague.shopping.dataclass.Item;
 
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +44,11 @@ public class Order implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items;
 
+    @ManyToMany (cascade={CascadeType.ALL})
+    @JoinTable
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private List<CartItem> cartItems;
+
     public Order(){
 
     }
@@ -77,6 +81,21 @@ public class Order implements Serializable {
         this.type = type;
         this.status = status;
         this.items = items;
+        this.discount = discount;
+        this.storeAddress = storeAddress;
+        this.requiresPharmacy = requiresPharmacy;
+    }
+
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.storeID = storeID;
+        this.shopperID = shopperID;
+        this.createDate = createDate;
+        this.processDate = processDate;
+        this.totalCost = totalCost;
+        this.type = type;
+        this.status = status;
         this.discount = discount;
         this.storeAddress = storeAddress;
         this.requiresPharmacy = requiresPharmacy;
@@ -196,5 +215,13 @@ public class Order implements Serializable {
 
     public void setDriverID(UUID driverID) {
         this.driverID = driverID;
+    }
+
+    public List<CartItem> getCartItem() {
+        return cartItems;
+    }
+
+    public void setCartItem(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }
