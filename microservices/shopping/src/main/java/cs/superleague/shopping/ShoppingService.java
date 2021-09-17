@@ -6,6 +6,8 @@ import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
 import cs.superleague.user.exceptions.UserException;
 
+import java.net.URISyntaxException;
+
 
 public interface ShoppingService {
 
@@ -13,7 +15,7 @@ public interface ShoppingService {
 
     AddToQueueResponse addToQueue(AddToQueueRequest request) throws InvalidRequestException;
 
-    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException;
+    GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException, URISyntaxException;
 
     GetStoreByUUIDResponse getStoreByUUID(GetStoreByUUIDRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 

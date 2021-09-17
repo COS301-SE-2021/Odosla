@@ -281,6 +281,8 @@ public class ShoppingController implements ShoppingApi{
                 orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
                 orderObject.setUserId(order.getUserID().toString());
                 orderObject.setStoreId(order.getStoreID().toString());
+
+                if(order.getShopperID() != null)
                 orderObject.setShopperId(order.getShopperID().toString());
                 orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
 
