@@ -254,7 +254,7 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 if(responseEntity == null || !responseEntity.hasBody()
                                 || responseEntity.getBody() == null){
-                                    throw new InvalidRequestException("Could not retrieve stores");
+                                    return new StoreCSVImporterResponse(false, new Date(), "Could not retrieve stores");
                                 }
 
                                 List<Store> storeList = responseEntity.getBody().getStores();
@@ -264,7 +264,7 @@ public class ImporterServiceImpl implements ImporterService{
                                             s.getStoreLocation().getAddress().equals(storeAddress) &&
                                             s.getStoreLocation().getLatitude() == latitude &&
                                             s.getStoreLocation().getLongitude() == longitude) {
-                                        throw new InvalidRequestException("Store already exists");
+                                        return new StoreCSVImporterResponse(false, new Date(), "Store already exists");
                                     }
                                 }
 
