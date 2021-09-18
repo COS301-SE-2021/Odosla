@@ -45,6 +45,9 @@ public class MonthlyAnalyticsHelper {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
+            String home = System.getProperty("user.home");
+            String file_name = home + "/Downloads/Odosla_UserReport.pdf";
+            PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
