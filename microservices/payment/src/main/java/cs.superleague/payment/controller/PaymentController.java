@@ -157,7 +157,9 @@ public class PaymentController implements PaymentApi {
                 deliveryAddress = null;
             }
 
-            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignItems(body.getItems()),
+            List<CartItemObject> cartItemObjectList = convertCartItems(body.getItems());
+
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignCartItems(cartItemObjectList),
                     discount, orderType, deliveryAddress);
 
             UpdateOrderResponse updateOrderResponse = paymentService.updateOrder(request);
@@ -339,7 +341,7 @@ public class PaymentController implements PaymentApi {
             GetItemsResponse getItemsResponse = paymentService.getItems(getItemsRequest);
             try {
                 response.setMessage(getItemsResponse.getMessage());
-                response.setItems(populateItems(getItemsResponse.getItems()));
+                response.setCartItems(populateCartItems(getItemsResponse.getCartItems()));
                 response.setSuccess(getItemsResponse.isSuccess());
                 response.setTimestamp(getItemsResponse.getTimestamp().toString());
             }catch(Exception e){
