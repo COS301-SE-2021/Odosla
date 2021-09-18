@@ -1,5 +1,7 @@
 package cs.superleague.shopping.dataclass;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -10,9 +12,12 @@ import java.util.UUID;
 public class Item {
 
     @Id
+    @JsonProperty("productId")
     private String productID;
     private String name;
     private String barcode;
+
+    @JsonProperty("storeId")
     private UUID storeID;
     private double price;
     private int quantity;
