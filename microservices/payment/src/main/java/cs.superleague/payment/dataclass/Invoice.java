@@ -23,14 +23,14 @@ public class Invoice {
     @ManyToMany
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Item> item;
+    private List<CartItem> item;
     //private DeliveryDetail deliveryDetail;
 
     public Invoice(){
 
     }
 
-    public Invoice(UUID invoiceID, UUID customerID, Calendar date, String details, Double totalCost, List<Item> item) {
+    public Invoice(UUID invoiceID, UUID customerID, Calendar date, String details, Double totalCost, List<CartItem> item) {
         this.invoiceID = invoiceID;
         this.customerID = customerID;
         this.date = date;
@@ -71,11 +71,11 @@ public class Invoice {
         this.totalCost = totalCost;
     }
 
-    public List<Item> getItem() {
+    public List<CartItem> getItem() {
         return item;
     }
 
-    public void setItem(List<Item> item) {
+    public void setItem(List<CartItem> item) {
         this.item = item;
     }
 

@@ -226,6 +226,10 @@ components:
           $ref: "#/components/schemas/GeoPointObject"
         requiresPharmacy:
           type: boolean
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
 
     payment_UpdateOrderRequest:
       description: This object is expected as input
@@ -325,10 +329,10 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        items:
+        cartItems:
           type: array
           items:
-            $ref: "#/components/schemas/ItemObject"
+            $ref: "#/components/schemas/CartItemObject"
         success:
           type: boolean
         message:
@@ -403,3 +407,34 @@ components:
           type: string
         message:
           type: string
+
+    CartItemObject:
+      description: "Generic schema for a cart item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeId:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        orderId:
+          type: string
+        totalCost:
+          type: number
