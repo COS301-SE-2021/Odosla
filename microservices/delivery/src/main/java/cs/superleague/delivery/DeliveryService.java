@@ -5,13 +5,15 @@ import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
 
+import java.net.URISyntaxException;
+
 public interface DeliveryService {
 
     AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request) throws InvalidRequestException;
 
-    AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException;
+    AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, URISyntaxException;
 
-    CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException;
+    CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException, URISyntaxException;
 
     GetDeliveriesResponse getDeliveries(GetDeliveriesRequest request) throws InvalidRequestException;
 
@@ -29,7 +31,7 @@ public interface DeliveryService {
 
     UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException;
 
-    GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException;
+    GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException, URISyntaxException;
 
     GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException;
 }
