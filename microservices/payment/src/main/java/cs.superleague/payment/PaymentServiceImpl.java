@@ -7,6 +7,7 @@ import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.CartItemRepo;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.repos.TransactionRepo;
@@ -52,14 +53,16 @@ public class PaymentServiceImpl implements PaymentService {
     private final TransactionRepo transactionRepo;
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
+    private final CartItemRepo cartItemRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate, CartItemRepo cartItemRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
+        this.cartItemRepo = cartItemRepo;
     }
 
 
@@ -257,12 +260,14 @@ public class PaymentServiceImpl implements PaymentService {
             List<CartItem> cartItems = request.getListOfItems();
             for(int k = 0; k < cartItems.size(); k++)
             {
-                cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getPrice());
+                cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
                 cartItems.get(k).setStoreID(request.getStoreID());
                 cartItems.get(k).setOrderID(orderID);
 
             }
 
+            if(cartItemRepo!=null)
+            cartItemRepo.saveAll(cartItems);
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
             Order o = new Order();
