@@ -1,16 +1,12 @@
-import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/functions.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -21,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final UserService _userService = GetIt.I.get();
 
-  String _jwtToken="";
   bool _rememberMe = false;
   bool _isValidEmail = false;
   String _email = "";
@@ -230,9 +225,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 _isInAsyncCall = true;
               });
               await _userService.loginUser(_email, _password, _typeOfUser[selected],context).then(
-                  (success){
+                  (success) async {
                     if(success){
-                      selected==0?MyNavigator.goToShopperHomePage(context): selected==1?MyNavigator.goToDriverHomePage(context):MyNavigator.goToAdminHomePgae(context);
+                      await _userService.getCurrentUser(context);
+                      selected==0?MyNavigator.goToShopperHomePage(context): selected==1?MyNavigator.goToDriverHomePage(context):MyNavigator.goToAdminHomePage(context);
                     }
                     setState(() {
                       _isInAsyncCall = false;

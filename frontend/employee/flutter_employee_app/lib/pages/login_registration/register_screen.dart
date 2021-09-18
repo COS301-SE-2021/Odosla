@@ -41,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
   String _phoneNumber="";
   bool _showAdditionalWidgets=false;
   bool _showPassword=false;
+
   final List<String> _pictures = <String>[
     "assets/shopper.png",
     "assets/driver.jpg",
@@ -62,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Name (Optional)',
+          'First Name',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
@@ -103,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Surname (Optional)',
+          'Surname',
           style: kLabelStyle,
         ),
         SizedBox(height: 10.0),
@@ -415,7 +416,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
           onPressed: () {
             selected==0?MyNavigator.goToShopperActivateAccount(context):MyNavigator.goToDriverActivateAccount(context);
           },
-          textColor: Theme.of(context).primaryColor,
           child: const Text('Activate account'),
         ),
         new FlatButton(
@@ -694,7 +694,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
   }
 
   Widget _nameSurnamePhoneNumberWidget(){
-    if(_showAdditionalWidgets) {
       return Column(
           children: <Widget>[
             SizedBox(
@@ -715,10 +714,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
             ),
           ]
       );
-    }
-   else{
-     return Column();
-    }
+
   }
 
 
@@ -780,20 +776,20 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       ),
                       _buildEmailTF(),
                       SizedBox(
-                        height: 10.0,
+                        height: 12.0,
                       ),
                       _buildPasswordTF(),
                       SizedBox(
-                        height: 10.0,
+                        height: 12.0,
                       ),
 
                       _buildReTypePasswordTF(),
                       SizedBox(
-                        height: 10.0,
+                        height: 12.0,
                       ),
                       //_buildPhoneNumberTF(),
                       _nameSurnamePhoneNumberWidget(),
-                      _showAdditionalWidgetsOption(),
+                      //_showAdditionalWidgetsOption(),
                       _buildRegisterBtn(),
                       _buildSignInWithText(),
                       _buildLoginBtn(),
