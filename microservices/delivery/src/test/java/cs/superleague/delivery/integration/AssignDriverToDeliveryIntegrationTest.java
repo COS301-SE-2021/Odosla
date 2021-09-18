@@ -33,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -121,7 +122,7 @@ public class AssignDriverToDeliveryIntegrationTest {
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
         rabbitTemplate.setChannelTransacted(true);
 
-        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveDriverToRepoRequest);
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
         rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
     }
 
@@ -151,64 +152,64 @@ public class AssignDriverToDeliveryIntegrationTest {
         assertEquals("This delivery has already been taken by another driver.", thrown.getMessage());
     }
 
-//    @Test
-//    @Description("Tests for when the driver is successfully assigned to the delivery.")
-//    @DisplayName("Successful assigning")
-//    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException{
-//        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
-//        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
-//        assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
-//        assertEquals(response.isAssigned(), true);
-//        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
-//        assertEquals(delivery1.get().getDriverId(), driverID);
-//    }
-//
-//    @Test
-//    @Description("Tests for when the driver is already assigned to that delivery.")
-//    @DisplayName("Same driver is assigned already")
-//    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException{
-//        delivery.setDriverId(driverID);
-//        deliveryRepo.save(delivery);
-//        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
-//        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
-//        assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
-//        assertEquals(response.isAssigned(), true);
-//        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
-//        assertEquals(delivery1.get().getDriverId(), driverID);
-//        assertEquals(response.getDropOffLocation(), delivery1.get().getDropOffLocation());
-//        assertEquals(response.getPickUpLocation(), delivery1.get().getPickUpLocation());
-//    }
-//
-//    @Test
-//    @Description("Tests for when there is no corresponding order")
-//    @DisplayName("No order")
-//    void noOrderInDatabaseCorrespondingToDelivery_IntegrationTest(){
-//        delivery.setOrderID(UUID.randomUUID());
-//        deliveryRepo.save(delivery);
-//        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
-//        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
-//        assertEquals(thrown1.getMessage(), "Invalid order.");
-//    }
-//
-//    @Test
-//    @Description("Tests for when no pick up location is specified.")
-//    @DisplayName("No pick up location")
-//    void noPickUpLocationIsSpecified_IntegrationTest(){
-//        delivery.setPickUpLocation(null);
-//        deliveryRepo.save(delivery);
-//        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
-//        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
-//        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
-//    }
-//
-//    @Test
-//    @Description("Tests for when no drop off location is specified.")
-//    @DisplayName("No drop off location")
-//    void noDropOffLocationIsSpecified_IntegrationTest(){
-//        delivery.setDropOffLocation(null);
-//        deliveryRepo.save(delivery);
-//        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
-//        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
-//        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
-//    }
+    @Test
+    @Description("Tests for when the driver is successfully assigned to the delivery.")
+    @DisplayName("Successful assigning")
+    void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, URISyntaxException {
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
+        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
+        assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");
+        assertEquals(response.isAssigned(), true);
+        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+        assertEquals(delivery1.get().getDriverId(), driverID);
+    }
+
+    @Test
+    @Description("Tests for when the driver is already assigned to that delivery.")
+    @DisplayName("Same driver is assigned already")
+    void sameDriverIsAlreadyAssigned_IntegrationTest() throws InvalidRequestException, URISyntaxException {
+        delivery.setDriverId(driverID);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
+        AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
+        assertEquals(response.getMessage(), "Driver was already assigned to delivery.");
+        assertEquals(response.isAssigned(), true);
+        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+        assertEquals(delivery1.get().getDriverId(), driverID);
+        assertEquals(response.getDropOffLocation(), delivery1.get().getDropOffLocation());
+        assertEquals(response.getPickUpLocation(), delivery1.get().getPickUpLocation());
+    }
+
+    @Test
+    @Description("Tests for when there is no corresponding order")
+    @DisplayName("No order")
+    void noOrderInDatabaseCorrespondingToDelivery_IntegrationTest(){
+        delivery.setOrderID(UUID.randomUUID());
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "Invalid order.");
+    }
+
+    @Test
+    @Description("Tests for when no pick up location is specified.")
+    @DisplayName("No pick up location")
+    void noPickUpLocationIsSpecified_IntegrationTest(){
+        delivery.setPickUpLocation(null);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
+    }
+
+    @Test
+    @Description("Tests for when no drop off location is specified.")
+    @DisplayName("No drop off location")
+    void noDropOffLocationIsSpecified_IntegrationTest(){
+        delivery.setDropOffLocation(null);
+        deliveryRepo.save(delivery);
+        AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
+        Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.assignDriverToDelivery(request1));
+        assertEquals(thrown1.getMessage(), "No pick up or drop off location specified with delivery.");
+    }
 }

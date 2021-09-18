@@ -12,9 +12,12 @@ import cs.superleague.delivery.requests.AddDeliveryDetailRequest;
 import cs.superleague.delivery.responses.AddDeliveryDetailResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
 import org.junit.jupiter.api.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.Calendar;
@@ -34,6 +37,21 @@ public class AddDeliveryDetailIntegrationTest {
 
     @Autowired
     DeliveryDetailRepo deliveryDetailRepo;
+
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
+    private RestTemplate restTemplate;
+    private RabbitTemplate rabbitTemplate;
 
     DeliveryStatus status;
     UUID deliveryID;
