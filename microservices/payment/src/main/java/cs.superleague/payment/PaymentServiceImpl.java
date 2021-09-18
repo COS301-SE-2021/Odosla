@@ -539,8 +539,8 @@ import java.util.List;50"
 
             if (request.getListOfItems() != null) {
                 System.out.println("hello");
-                order.setItems(request.getListOfItems());
-                cost = getCost(order.getItems());
+                order.setCartItems(request.getListOfItems());
+                cost = getCost(order.getCartItems());
                 order.setTotalCost(cost - discount);
             } // else refer them to cancel order
 
@@ -556,10 +556,6 @@ import java.util.List;50"
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
-        }
-
-        for(Item item: order.getItems()){
-            System.out.println(item.getPrice());
         }
 
         orderRepo.save(order);
@@ -762,10 +758,10 @@ import java.util.List;50"
         order = transaction.getOrder();
         Calendar timestamp = Calendar.getInstance();
 
-        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getItems());
+        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getCartItems());
         invoiceRepo.save(invoice);
 
-        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getItems(), invoice.getTotalCost());
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getCartItems(), invoice.getTotalCost());
 
         // send email
         // notificationService.sendEmail(PDF);
@@ -888,7 +884,7 @@ import java.util.List;50"
             return new GetItemsResponse(null, false, new Date(), message);
         }
 
-        return new GetItemsResponse(order.getItems(), true, new Date(), message);
+        return new GetItemsResponse(order.getCartItems(), true, new Date(), message);
     }
 
     @Override
@@ -912,17 +908,17 @@ import java.util.List;50"
     }
 
     // Helper
-    private double getCost(List<Item> items){
+    private double getCost(List<CartItem> items){
         double cost = 0;
 
-        for (Item item : items) {
+        for (CartItem item : items) {
             cost += item.getPrice() * item.getQuantity();
         }
 
         return cost;
     }
 
-    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<Item> ITEM, double TOTAL_PRICE) {
+    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<CartItem> ITEM, double TOTAL_PRICE) {
         String home = System.getProperty("user.home");
         String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
         Document pdf = new Document();
@@ -934,7 +930,7 @@ import java.util.List;50"
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
             pdf.add(new Paragraph("This is an invoice from Odosla", header));
 
-            for (Item item: ITEM) {
+            for (CartItem item: ITEM) {
                 pdf.add(new Paragraph("Item: " + item.getName(), body));
                 pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
                 pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
