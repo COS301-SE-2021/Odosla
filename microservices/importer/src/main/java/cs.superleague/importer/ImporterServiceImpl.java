@@ -1,6 +1,7 @@
 package cs.superleague.importer;
 
 import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.importer.exceptions.InvalidRequestException;
 import cs.superleague.importer.requests.ItemsCSVImporterRequest;
@@ -8,9 +9,11 @@ import cs.superleague.importer.requests.StoreCSVImporterRequest;
 import cs.superleague.importer.responses.ItemsCSVImporterResponse;
 import cs.superleague.importer.responses.StoreCSVImporterResponse;
 import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.requests.SaveCatalogueToRepoRequest;
 import cs.superleague.shopping.requests.SaveItemToRepoRequest;
 import cs.superleague.shopping.requests.SaveStoreToRepoRequest;
 import cs.superleague.shopping.responses.GetAllItemsResponse;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,7 @@ public class ImporterServiceImpl implements ImporterService{
     public ItemsCSVImporterResponse itemsCSVImporter(ItemsCSVImporterRequest request) throws InvalidRequestException, URISyntaxException {
         if (request != null)
         {
+            List<Item> items = new ArrayList<>();
             if(request.getFile() == null)
             {
                 throw new InvalidRequestException("No file uploaded to import");
@@ -158,11 +162,36 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
 
+                        items.add(item);
+
                         rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
                         item = new Item();
                     }
                 }
             }
+
+            Catalogue catalogue = new Catalogue(items.get(0).getStoreID(), items);
+            SaveCatalogueToRepoRequest saveCatalogueToRepoRequest = new SaveCatalogueToRepoRequest(catalogue);
+            rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveCatalogueToRepo", saveCatalogueToRepoRequest);
+
+            Map<String, Object> parts = new HashMap<>();
+            parts.put("storeID", items.get(0).getStoreID());
+            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetStoreByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                    uri, parts, GetStoreByUUIDResponse.class);
+
+            if(responseEntity.getBody() != null) {
+                Store store = responseEntity.getBody().getStore();
+                store.setStock(catalogue);
+                SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(store);
+                rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepoRequest);
+            }
+            else
+            {
+                throw new InvalidRequestException("Could not get store");
+            }
+
 
             return new ItemsCSVImporterResponse(true, Calendar.getInstance().getTime(), "Items have been successfully imported.");
 
