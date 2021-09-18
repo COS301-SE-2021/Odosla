@@ -2,6 +2,7 @@ package cs.superleague.shopping.controller;
 
 import cs.superleague.api.ShoppingApi;
 import cs.superleague.models.*;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderItems;
@@ -271,7 +272,7 @@ public class ShoppingController implements ShoppingApi{
 
                 orderObject.setStoreAddress(order.getStoreAddress().getAddress());
                 orderObject.setOrderId(order.getOrderID().toString());
-                orderObject.setItems(populateItems(order.getItems()));
+                orderObject.setCartItems(populateCartItems(order.getCartItems()));
                 //orderObject.setOrderItems(populateOrderItems(order.getOrderItems()));
                 orderObject.setCreateDate(order.getCreateDate().toString());
                 orderObject.setStatus(order.getStatus().toString());
@@ -613,7 +614,7 @@ public class ShoppingController implements ShoppingApi{
                 currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
                 currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
                 currentOrder.setStatus(responseOrders.get(i).getStatus().name());
-                currentOrder.setItems(populateItems(responseOrders.get(i).getItems()));
+                currentOrder.setCartItems(populateCartItems(responseOrders.get(i).getCartItems()));
                 currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
                 currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
                 currentOrder.setStoreAddress(responseOrders.get(i).getStoreAddress().getAddress());
@@ -760,6 +761,32 @@ public class ShoppingController implements ShoppingApi{
         if(responseStore.getStoreLocation()!=null)
         {
             responseBody.setStoreLocation(populateGeoPointObject(responseStore.getStoreLocation()));
+        }
+
+        return responseBody;
+    }
+
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+
+        List<CartItemObject> responseBody = new ArrayList<>();
+
+        for (CartItem i: responseItems){
+
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreID().toString());
+            item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
+
         }
 
         return responseBody;

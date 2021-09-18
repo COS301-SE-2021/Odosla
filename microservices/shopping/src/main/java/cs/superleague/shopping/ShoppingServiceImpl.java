@@ -1533,7 +1533,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             } else if (order.getTotalCost() == null){
                 invalidMessage = "Invalid request: missing order cost";
                 invalidReq = true;
-            } else if (order.getItems() == null || order.getItems().isEmpty()){
+            } else if (order.getCartItems() == null || order.getCartItems().isEmpty()){
                 invalidMessage = "Invalid request: item list is empty or null";
                 invalidReq = true;
             }
