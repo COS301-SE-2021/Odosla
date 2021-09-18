@@ -388,23 +388,30 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
 
   Widget _notCurrentOrder(){
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(height:10),
         Container(
-          height: 300.0,
+          height: MediaQuery
+              .of(context)
+              .size
+              .width * 0.8,
           child: Row(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 80.0),
                 child: Container(
-                  height: 210,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.8,
                   width: MediaQuery
                       .of(context)
                       .size
-                      .width * 0.50,
+                      .width * 0.60,
                   child: Image(
                     fit: BoxFit.fill,
-                    image: AssetImage("assets/grocery.jpg"),
+                    image: AssetImage("assets/gifs/groceryGif.gif"),
                   ),
                 ),
               ),
@@ -412,11 +419,18 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
             ],
           ),
         ),
-        Text(_onShift?"Currently not packing an order\n Start packing order \n by clicking below":"Start a shift to get \n new orders",
+        Text(_onShift?"NOT PACKING AN ORDER":"CURRENTLY NOT ON SHIFT",
           style: TextStyle(
-              color: Colors.deepOrangeAccent,
-              fontWeight: FontWeight.w600,
-            fontSize: 20,
+              fontWeight: FontWeight.w800,
+              fontSize: 20,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        Text(_onShift?"Start packing order \n by clicking below":"Start shift to get new orders",
+          style: TextStyle(
+            // color: Colors.deepOrangeAccent,
+            fontWeight: FontWeight.w400,
+            fontSize: 16,
           ),
           textAlign: TextAlign.center,
         )
@@ -458,15 +472,15 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
       body: Container(
         child: Column(
           children: [
-            SizedBox(height: 35),
+            SizedBox(height: MediaQuery.of(context).size.height*0.07),
             Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*1.7,vertical: kSpacingUnit.w*1),
                 clipBehavior: Clip.antiAlias,
-                color:Colors.deepOrangeAccent,
-                shadowColor: Colors.deepOrangeAccent,
+                color:Theme.of(context).backgroundColor,
+                shadowColor: Colors.grey,
                 elevation: 5.0,
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
@@ -475,20 +489,12 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                         Expanded(
                             child:Column(
                               children: <Widget>[
-                                // Text(
-                                //     "STATUS",
-                                //     style: kTitleTextStyle.copyWith(
-                                //       fontWeight: FontWeight.w500,
-                                //       fontSize: kSpacingUnit.w*2,
-                                //     )
-                                // ),
                                 SizedBox(height:kSpacingUnit.w*1.1),
                                 Text(
                                   _onShift?"• Currently on shift":"• Currently not on shift",
                                   style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: kSpacingUnit.w*1.7,
-                                    color: Colors.white,
+                                    fontSize: kSpacingUnit.w*1.5,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -497,8 +503,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                                   _isCurrentOrder?"• Currently packing order":"• Currently not packing \n order",
                                   style: kTitleTextStyle.copyWith(
                                     fontWeight: FontWeight.w500,
-                                    fontSize: kSpacingUnit.w*1.7,
-                                    color: Colors.white,
+                                    fontSize: kSpacingUnit.w*1.5,
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
@@ -524,7 +529,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                                 child: Text(
                                   "END SHIFT",
                                 ),
-                                  color: Theme.of(context).backgroundColor,
+                                  color: Colors.deepOrangeAccent,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
@@ -541,8 +546,11 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                                 },
                                   child: Text(
                                     "START SHIFT",
+                                    style: TextStyle(color: Colors.deepOrangeAccent),
                                   ),
                                   color: Theme.of(context).backgroundColor,
+                                  splashColor: Colors.grey,
+                                  elevation: 5.0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.0),
                                   ),
@@ -554,11 +562,18 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                         Expanded(
                             child:Column(
                               children: <Widget>[
+                                Text(
+                                  "SHOPPER",
+                                  style: kTitleTextStyle.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: kSpacingUnit.w*2,
+                                  ),
+                                ),
                                 CircleAvatar(
-                                  radius: kSpacingUnit.w * 3,
+                                  radius: kSpacingUnit.w * 3.6,
                                   backgroundImage: AssetImage('assets/profile.jpg'),
                                 ),
-                                SizedBox(height:kSpacingUnit.w*2),
+                                SizedBox(height:kSpacingUnit.w*1),
                                 Text(
                                   _email,
                                   style: kTitleTextStyle.copyWith(
@@ -567,14 +582,9 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                                   ),
 
                                 ),
-                            SizedBox(height:kSpacingUnit.w*1),
-                            Text(
-                              "SHOPPER",
-                              style: kTitleTextStyle.copyWith(
-                                fontWeight: FontWeight.w500,
-                                fontSize: kSpacingUnit.w*1,
-                              ),
-                            )
+
+
+
 
 
                               ],
@@ -585,9 +595,14 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
                     )
                 )
             ),
+
             Expanded(
               child: ListView(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: Text("Current Order: ",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20),),
+                  ),
                   _isCurrentOrder?_currentOrder(_order):_notCurrentOrder(),
                   _onShift? _other():Container(),
                 ],

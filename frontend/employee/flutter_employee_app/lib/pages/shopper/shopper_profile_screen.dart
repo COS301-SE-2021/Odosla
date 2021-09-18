@@ -155,7 +155,6 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
           return Scaffold(
             body: Column(
               children: <Widget>[
-
                 SizedBox(height: kSpacingUnit.w * 5),
                 header,
                 Expanded(
@@ -172,9 +171,10 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                           ],
                         ),
                         child: Card(
-                            margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*0.2,vertical: kSpacingUnit.w*0.1),
+                            margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*0.2,vertical: kSpacingUnit.w*0.06),
                             clipBehavior: Clip.antiAlias,
-                            color: Colors.deepOrangeAccent,
+                            color: Theme.of(context).backgroundColor,
+                            shadowColor: Colors.grey,
                             elevation: 5.0,
                             child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
