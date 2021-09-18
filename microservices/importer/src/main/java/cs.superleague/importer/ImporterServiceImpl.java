@@ -47,6 +47,7 @@ public class ImporterServiceImpl implements ImporterService{
         if (request != null)
         {
             List<Item> items = new ArrayList<>();
+            UUID storeID = null;
             if(request.getFile() == null)
             {
                 throw new InvalidRequestException("No file uploaded to import");
@@ -156,6 +157,8 @@ public class ImporterServiceImpl implements ImporterService{
                     }
                     else if (file.charAt(k) == '\n')
                     {
+                        storeID= UUID.fromString(currentWord);
+                        System.out.println(currentWord);
                         item.setStoreID(UUID.fromString(currentWord));
                         counter = 0;
                         currentWord = "";
@@ -170,12 +173,12 @@ public class ImporterServiceImpl implements ImporterService{
                 }
             }
 
-            Catalogue catalogue = new Catalogue(items.get(0).getStoreID(), items);
+            Catalogue catalogue = new Catalogue(storeID, items);
             SaveCatalogueToRepoRequest saveCatalogueToRepoRequest = new SaveCatalogueToRepoRequest(catalogue);
             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveCatalogueToRepo", saveCatalogueToRepoRequest);
 
             Map<String, Object> parts = new HashMap<>();
-            parts.put("storeID", items.get(0).getStoreID());
+            parts.put("storeID", storeID);
             String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetStoreByUUIDResponse> responseEntity = restTemplate.postForEntity(
