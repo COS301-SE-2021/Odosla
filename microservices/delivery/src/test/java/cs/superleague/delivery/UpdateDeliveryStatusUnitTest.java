@@ -23,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,6 +57,18 @@ public class UpdateDeliveryStatusUnitTest {
 
     @Mock
     RabbitTemplate rabbitTemplate;
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
 
     UUID deliveryID;
     UUID orderID;
@@ -76,7 +91,6 @@ public class UpdateDeliveryStatusUnitTest {
     GeoPoint driverLocation;
 
 
-    String uri;
     String exchange;
     String routingKey;
 
@@ -104,7 +118,7 @@ public class UpdateDeliveryStatusUnitTest {
         driver = new Driver("John", "Doe", "u19060468@tuks.co.za", "0743149813", "Hello123", "123", UserType.DRIVER, driverID);
         driverLocation = new GeoPoint(50.0, 50.0, "address");
 
-        uri = "http://localhost:8089/user/getDriverByUUID";
+
         List<HttpMessageConverter<?>> converters = new ArrayList<>();
         converters.add(new MappingJackson2HttpMessageConverter());
 
@@ -164,48 +178,46 @@ public class UpdateDeliveryStatusUnitTest {
         assertEquals("Delivery does not exist in database.", thrown1.getMessage());
     }
 
-//    @Test
-//    @Description("Tests for when the request delivery status is 'DELIVERED', Successful update")
-//    @DisplayName("Successful update")
-//    void successfulUpdate_UnitTest(){
-//        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
-//        UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
-//
-//        GetDriverByUUIDResponse getDriverByUUIDResponse = new GetDriverByUUIDResponse(driver,
-//                new Date(), "Driver successfully retrieved");
-//        GetOrderResponse getOrderResponse = new GetOrderResponse(new Order(), true, new Date(), "");
-//
-//        ResponseEntity<GetDriverByUUIDResponse> responseEntity = new ResponseEntity<>(getDriverByUUIDResponse,
-//                HttpStatus.OK);
-//        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse,
-//                HttpStatus.OK);
-//
-//        Map<String, Object> parts = new HashMap<>();
-//        parts.put("driverID", delivery.getDriverId());
-//
-//        MultiValueMap<String, Object> orderRequest = new LinkedMultiValueMap<String, Object>();
-//        orderRequest.add("orderId", delivery.getOrderID());
-//
-//        Mockito.when(restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class))
-//                .thenReturn(responseEntity);
-//
-//        uri = "http://localhost:8086/payment/getOrder";
-//        Mockito.when(restTemplate.postForEntity(uri, orderRequest, GetOrderResponse.class))
-//                .thenReturn(responseEntityOrder);
-//
-//        try {
-//            UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);
-//            assertEquals(response.getMessage(), "Successful status update.");
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            fail();
-//        }
-//    }
+    @Test
+    @Description("Tests for when the request delivery status is 'DELIVERED', Successful update")
+    @DisplayName("Successful update")
+    void successfulUpdate_UnitTest() throws InvalidRequestException, URISyntaxException {
+        when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
+        UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
+
+        GetDriverByUUIDResponse getDriverByUUIDResponse = new GetDriverByUUIDResponse(driver,
+                new Date(), "Driver successfully retrieved");
+        GetOrderResponse getOrderResponse = new GetOrderResponse(new Order(), true, new Date(), "");
+
+        ResponseEntity<GetDriverByUUIDResponse> responseEntity = new ResponseEntity<>(getDriverByUUIDResponse,
+                HttpStatus.OK);
+
+
+        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse,
+                HttpStatus.OK);
+
+        Map<String, Object> parts = new HashMap<>();
+        parts.put("userID", delivery.getDriverId().toString());
+
+        Map<String, Object> orderRequest = new HashMap<>();
+        orderRequest.put("orderId", delivery.getOrderID().toString());
+        String uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+        URI uri = new URI(uriString);
+        Mockito.when(restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class))
+                .thenReturn(responseEntity);
+
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        uri = new URI(uriString);
+        Mockito.when(restTemplate.postForEntity(uri, orderRequest, GetOrderResponse.class))
+                .thenReturn(responseEntityOrder);
+        UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);
+        assertEquals(response.getMessage(), "Successful status update.");
+    }
 
     @Test
     @Description("Tests that the response object returns for valid delivery update")
     @DisplayName("Valid update")
-    void deliveryStatusSuccessfullyUpdated_UnitTest() throws InvalidRequestException {
+    void deliveryStatusSuccessfullyUpdated_UnitTest() throws InvalidRequestException, URISyntaxException {
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
         UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(status, deliveryID, "detail");
         UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);

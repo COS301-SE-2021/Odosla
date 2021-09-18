@@ -389,7 +389,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException{
+    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException, URISyntaxException {
         if (request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -430,7 +430,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException {
+    public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException, URISyntaxException {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -443,8 +443,8 @@ public class DeliveryServiceImpl implements DeliveryService {
             return response;
         }
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
-
+        String uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+        URI uri = new URI(uriString);
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("userID", delivery.getDriverId());
 
@@ -453,7 +453,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 parts, GetDriverByUUIDResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody()
-                || responseEntity.getBody() == null){
+                || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
             throw new InvalidRequestException("Invalid user.");
         }
 
@@ -469,7 +469,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException{
+    public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, URISyntaxException {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -486,8 +486,8 @@ public class DeliveryServiceImpl implements DeliveryService {
             delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
             delivery.setCompleted(true);
 
-            String uri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
-
+            String uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+            URI uri = new URI(uriString);
             Map<String, Object> parts = new HashMap<>();
             parts.put("userID", delivery.getDriverId().toString());
 
@@ -512,10 +512,10 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             deliveryRepo.save(delivery);
 
-            uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-
+            uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+            uri = new URI(uriString);
             Map<String, Object> orderRequest = new HashMap<String, Object>();
-            orderRequest.put("orderId", delivery.getOrderID());
+            orderRequest.put("orderId", delivery.getOrderID().toString());
 
             ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
                     orderRequest, GetOrderResponse.class);
