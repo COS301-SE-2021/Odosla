@@ -14,19 +14,21 @@ import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.shopping.responses.GetStoresResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Service("importerServiceImpl")
 public class ImporterServiceImpl implements ImporterService{
-
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
 
@@ -38,7 +40,7 @@ public class ImporterServiceImpl implements ImporterService{
     }
 
     @Override
-    public ItemsCSVImporterResponse itemsCSVImporter(ItemsCSVImporterRequest request) throws InvalidRequestException {
+    public ItemsCSVImporterResponse itemsCSVImporter(ItemsCSVImporterRequest request) throws InvalidRequestException, URISyntaxException {
         if (request != null)
         {
             if(request.getFile() == null)
@@ -66,8 +68,11 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 Map<String, Object> parts = new HashMap<String, Object>();
 
+                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems";
+                                URI uri = new URI(stringUri);
+
                                 ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://localhost:8088/shopping/getAllItems", parts, GetAllItemsResponse.class);
+                                        uri, parts, GetAllItemsResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()){
                                     throw new InvalidRequestException("Could not retrieve Items");
@@ -153,7 +158,7 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
 
-                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveItemToRepo", saveItemToRepo);
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
                         item = new Item();
                     }
                 }
@@ -170,7 +175,7 @@ public class ImporterServiceImpl implements ImporterService{
     }
 
     @Override
-    public StoreCSVImporterResponse storeCSVImporter(StoreCSVImporterRequest request) throws InvalidRequestException {
+    public StoreCSVImporterResponse storeCSVImporter(StoreCSVImporterRequest request) throws InvalidRequestException, URISyntaxException {
         if (request != null)
         {
             if(request.getFile() == null)
@@ -200,8 +205,11 @@ public class ImporterServiceImpl implements ImporterService{
 
                                 Map<String, Object> parts = new HashMap<String, Object>();
 
+                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+                                URI uri = new URI(stringUri);
+
                                 ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
-                                        "http://localhost:8088/shopping/getStores", parts, GetStoresResponse.class);
+                                        uri, parts, GetStoresResponse.class);
 
                                 if(responseEntity == null || !responseEntity.hasBody()
                                 || responseEntity.getBody() == null){
@@ -265,13 +273,14 @@ public class ImporterServiceImpl implements ImporterService{
                                 break;
 
                             case 8:
-                                location.setLatitude(Double.parseDouble(currentWord));
+
+                                location.setLatitude(Double.parseDouble(currentWord.replaceAll(",", ".")));
                                 counter++;
                                 currentWord = "";
                                 break;
 
                             case 9:
-                                location.setLongitude(Double.parseDouble(currentWord));
+                                location.setLongitude(Double.parseDouble(currentWord.replaceAll(",", ".")));
                                 counter++;
                                 currentWord = "";
                                 break;
@@ -286,7 +295,7 @@ public class ImporterServiceImpl implements ImporterService{
 
                         SaveStoreToRepoRequest saveStoreToRepo = new SaveStoreToRepoRequest(store);
 
-                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_saveStoreToRepo", saveStoreToRepo);
+                        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveStoreToRepo", saveStoreToRepo);
 
                         location= new GeoPoint();
                         store= new Store();

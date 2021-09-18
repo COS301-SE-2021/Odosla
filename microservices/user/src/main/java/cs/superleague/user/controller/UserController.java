@@ -1,49 +1,68 @@
 package cs.superleague.user.controller;
 import cs.superleague.api.UserApi;
 import cs.superleague.models.*;
+import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
-import cs.superleague.user.stubs.payment.dataclass.GeoPoint;
-import cs.superleague.user.stubs.shopping.dataclass.Catalogue;
-import cs.superleague.user.stubs.shopping.dataclass.Item;
-import cs.superleague.user.stubs.shopping.dataclass.Store;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.shopping.dataclass.Catalogue;
+import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin
 @RestController
 public class UserController implements UserApi {
 
-    @Autowired
-    CustomerRepo customerRepo;
+    private CustomerRepo customerRepo;
 
-    @Autowired
-    GroceryListRepo groceryListRepo;
+    private GroceryListRepo groceryListRepo;
 
-    @Autowired
-    DriverRepo driverRepo;
+    private DriverRepo driverRepo;
 
-    @Autowired
-    AdminRepo adminRepo;
+    private AdminRepo adminRepo;
 
-    @Autowired
-    ShopperRepo shopperRepo;
+    private ShopperRepo shopperRepo;
 
-    @Autowired
     private UserServiceImpl userService;
+
+    private RestTemplate restTemplate;
+
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    public UserController(CustomerRepo customerRepo, GroceryListRepo groceryListRepo,
+                          DriverRepo driverRepo, AdminRepo adminRepo, ShopperRepo shopperRepo,
+                          UserServiceImpl userService, RestTemplate restTemplate,
+                          HttpServletRequest httpServletRequest){
+        this.customerRepo = customerRepo;
+        this.groceryListRepo = groceryListRepo;
+        this.driverRepo = driverRepo;
+        this.adminRepo = adminRepo;
+        this.shopperRepo = shopperRepo;
+        this.userService = userService;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+
+    }
 
     Customer setCartCustomer;
     GroceryList groceryList;
@@ -71,6 +90,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             SetCartRequest request = new SetCartRequest(body.getCustomerID(), body.getBarcodes());
 
             System.out.println(barcodes.get(0));
@@ -179,6 +205,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             MakeGroceryListRequest request = new MakeGroceryListRequest(body.getProductIds(), body.getName());
 
             MakeGroceryListResponse response = userService.makeGroceryList(request);
@@ -626,7 +659,11 @@ public class UserController implements UserApi {
         adminObject.setEmail(admin.getEmail());
         adminObject.setPhoneNumber(admin.getPhoneNumber());
         adminObject.setPassword(admin.getPassword());
-        adminObject.setActivationDate(String.valueOf(admin.getActivationDate()));
+        String activationDate = null;
+        if (admin.getActivationDate() != null){
+            activationDate = String.valueOf(admin.getActivationDate());
+        }
+        adminObject.setActivationDate(activationDate);
         adminObject.setActivationCode(admin.getActivationCode());
         adminObject.setResetCode(admin.getResetCode());
         adminObject.setResetExpiration(admin.getResetExpiration());
@@ -641,7 +678,11 @@ public class UserController implements UserApi {
         driverObject.setEmail(driver.getEmail());
         driverObject.setPhoneNumber(driver.getPhoneNumber());
         driverObject.setPassword(driver.getPassword());
-        driverObject.setActivationDate(String.valueOf(driver.getActivationDate()));
+        String activationDate = null;
+        if (driver.getActivationDate() != null){
+            activationDate = String.valueOf(driver.getActivationDate());
+        }
+        driverObject.setActivationDate(activationDate);
         driverObject.setActivationCode(driver.getActivationCode());
         driverObject.setResetCode(driver.getResetCode());
         driverObject.setResetExpiration(driver.getResetExpiration());
@@ -666,7 +707,11 @@ public class UserController implements UserApi {
         customerObject.setEmail(customer.getEmail());
         customerObject.setPhoneNumber(customer.getPhoneNumber());
         customerObject.setPassword(customer.getPassword());
-        customerObject.setActivationDate(String.valueOf(customer.getActivationDate()));
+        String activationDate = null;
+        if (customer.getActivationDate() != null){
+            activationDate = String.valueOf(customer.getActivationDate());
+        }
+        customerObject.setActivationDate(activationDate);
         customerObject.setActivationCode(customer.getActivationCode());
         customerObject.setResetCode(customer.getResetCode());
         customerObject.setResetExpiration(customer.getResetExpiration());
@@ -675,8 +720,11 @@ public class UserController implements UserApi {
         {
             customerObject.setCustomerID(String.valueOf(customer.getCustomerID()));
         }
-
-        customerObject.setAddress(String.valueOf(customer.getAddress()));
+        GeoPointObject geoPointObject = null;
+        if (customer.getAddress() != null){
+            geoPointObject = populateGeoPoint(customer.getAddress());
+        }
+        customerObject.setAddress(geoPointObject);
         List<GroceryListObject> groceryListObjectList = populateGroceryList(customer.getGroceryLists());
         customerObject.setGroceryLists(groceryListObjectList);
         List<ItemObject> itemObjects = populateItems(customer.getShoppingCart());
@@ -694,7 +742,11 @@ public class UserController implements UserApi {
             shopperObject.setEmail(shopper.getEmail());
             shopperObject.setPhoneNumber(shopper.getPhoneNumber());
             shopperObject.setPassword(shopper.getPassword());
-            shopperObject.setActivationDate(String.valueOf(shopper.getActivationDate()));
+            String activationDate = null;
+            if (shopper.getActivationDate() != null){
+                activationDate = String.valueOf(shopper.getActivationDate());
+            }
+            shopperObject.setActivationDate(activationDate);
             shopperObject.setActivationCode(shopper.getActivationCode());
             shopperObject.setResetCode(shopper.getResetCode());
             shopperObject.setResetExpiration(shopper.getResetExpiration());
@@ -737,6 +789,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             ScanItemRequest request = new ScanItemRequest(body.getBarcode(), UUID.fromString(body.getOrderID()));
 
             ScanItemResponse response = userService.scanItem(request);
@@ -763,6 +822,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             CompletePackagingOrderRequest request = new CompletePackagingOrderRequest(UUID.fromString(body.getOrderID()), body.isGetNext());
 
             CompletePackagingOrderResponse response = userService.completePackagingOrder(request);
@@ -789,6 +855,13 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             CompleteDeliveryRequest request = new CompleteDeliveryRequest(UUID.fromString(body.getOrderID()));
 
             CompleteDeliveryResponse response = userService.completeDelivery(request);
@@ -1054,5 +1127,61 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userUpdateAdminDetailsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetUsersResponse> getUsers(UserGetUsersRequest body) {
+
+        UserGetUsersResponse userGetUsersResponse = new UserGetUsersResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetUsersRequest request = new GetUsersRequest();
+
+            GetUsersResponse response = userService.getUsers(request);
+            try{
+                userGetUsersResponse.setTimestamp(response.getTimestamp().toString());
+                userGetUsersResponse.setMessage(response.getMessage());
+                userGetUsersResponse.setSuccess(response.isSuccess());
+
+                List<Object> users = new ArrayList<>();
+                if(response.getUsers() != null && !response.getUsers().isEmpty()){
+                    for (User user: response.getUsers()) {
+                        if(user.getAccountType().toString().equals("ADMIN")){
+                            users.add(populateAdmin((Admin) user));
+                        }else if(user.getAccountType().toString().equals("CUSTOMER")){
+                            users.add(populateCustomer((Customer) user));
+                        }else if(user.getAccountType().toString().equals("DRIVER")){
+                            users.add(populateDriver((Driver) user));
+
+
+                            System.out.println(((Driver) user).getDriverID());
+                        }else if(user.getAccountType().toString().equals("SHOPPER")){
+                            users.add(populateShopper((Shopper) user));
+                        }
+
+                        System.out.println(user.getActivationDate());
+                    }
+                }
+
+                userGetUsersResponse.setUsers(users);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetUsersResponse, status);
+    }
+
+    public GeoPointObject populateGeoPoint(GeoPoint geoPoint){
+        GeoPointObject geoPointObject = new GeoPointObject();
+        geoPointObject.setAddress(geoPoint.getAddress());
+        geoPointObject.setLatitude(BigDecimal.valueOf(geoPoint.getLatitude()));
+        geoPointObject.setLongitude(BigDecimal.valueOf(geoPoint.getLongitude()));
+        return geoPointObject;
     }
 }

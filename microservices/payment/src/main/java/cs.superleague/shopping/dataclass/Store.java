@@ -1,5 +1,6 @@
 package cs.superleague.shopping.dataclass;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.user.dataclass.Shopper;
@@ -22,6 +23,9 @@ public class Store implements Serializable {
     private String storeBrand;
     private int maxShoppers = 2;
     private int maxOrders;
+
+
+    @JsonProperty("isOpen")
     private Boolean isOpen;
     private int openingTime;
     private int closingTime;

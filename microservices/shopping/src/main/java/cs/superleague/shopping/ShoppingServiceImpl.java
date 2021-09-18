@@ -21,14 +21,25 @@ import cs.superleague.user.responses.GetShopperByEmailResponse;
 import cs.superleague.user.responses.GetShopperByUUIDResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Service("shoppingServiceImpl")
 public class ShoppingServiceImpl implements ShoppingService {
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
 
     private final StoreRepo storeRepo;
     private final ItemRepo itemRepo;
@@ -222,7 +233,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * */
 
     @Override
-    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException{
+    public GetNextQueuedResponse getNextQueued(GetNextQueuedRequest request) throws InvalidRequestException, StoreDoesNotExistException, URISyntaxException {
         GetNextQueuedResponse response=null;
 
         if(request!=null){
@@ -263,7 +274,12 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("orderID", correspondingOrder.getOrderID().toString());
-            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate.postForEntity("http://localhost:8086/payment/getOrder", parts, GetOrderResponse.class);
+
+            String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+            URI uri = new URI(stringUri);
+
+            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate
+                    .postForEntity(uri, parts, GetOrderResponse.class);
 
             GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
             Order updateOrder = getOrderResponse.getOrder();
@@ -272,12 +288,19 @@ public class ShoppingServiceImpl implements ShoppingService {
             {
                 CurrentUser currentUser = new CurrentUser();
 
-                parts = new HashMap<String, Object>();
+                parts = new HashMap<>();
                 parts.put("email", currentUser.getEmail());
-                ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByEmail", parts, GetShopperByEmailResponse.class);
+
+                stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByEmail";
+                uri = new URI(stringUri);
+
+                ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity =
+                        restTemplate.postForEntity(uri, parts, GetShopperByEmailResponse.class);
+
                 GetShopperByEmailResponse getShopperByEmailResponse = getShopperByEmailResponseEntity.getBody();
                 Shopper shopper = getShopperByEmailResponse.getShopper();
                 assert shopper != null;
+
 
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
@@ -737,7 +760,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", request.getShopperID().toString());
-            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
             GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
@@ -866,7 +889,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("userID", request.getShopperID().toString());
-                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://localhost:8089/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
                 GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 

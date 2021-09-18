@@ -148,8 +148,16 @@ public class PaymentController implements PaymentApi {
                 discount = body.getDiscount().doubleValue();
 
             UUID orderID = UUID.fromString(body.getOrderId());
-            GeoPoint deliveryAddress = new GeoPoint(body.getDeliveryAddress().getLatitude().doubleValue(), body.getDeliveryAddress().getLongitude().doubleValue(), body.getDeliveryAddress().getAddress());
-            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignItems(body.getItems()), discount, orderType, deliveryAddress);
+            GeoPoint deliveryAddress = new GeoPoint();
+
+            if(body.getDeliveryAddress() != null) {
+                deliveryAddress = new GeoPoint(body.getDeliveryAddress().getLatitude().doubleValue(), body.getDeliveryAddress().getLongitude().doubleValue(), body.getDeliveryAddress().getAddress());
+            }else{
+                deliveryAddress = null;
+            }
+
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignItems(body.getItems()),
+                    discount, orderType, deliveryAddress);
 
             UpdateOrderResponse updateOrderResponse = paymentService.updateOrder(request);
             try {
@@ -224,7 +232,10 @@ public class PaymentController implements PaymentApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(assignItems(body.getListOfItems()), body.getDiscount().doubleValue(), UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(), body.getLatitude().doubleValue(), body.getDeliveryAddress());
+            SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
+                    assignItems(body.getListOfItems()), body.getDiscount().doubleValue(),
+                    UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
+                    body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             try {
                 response.setMessage(submitOrderResponse.getMessage());
@@ -470,8 +481,12 @@ public class PaymentController implements PaymentApi {
         orderObject.setOrderId(order.getOrderID().toString());
         orderObject.setUserId(order.getUserID().toString());
         orderObject.setStoreId(order.getStoreID().toString());
+
+        if(order.getShopperID() != null)
         orderObject.setShopperId(order.getShopperID().toString());
         orderObject.setCreateDate(order.getCreateDate().toString());
+
+        if(order.getProcessDate() != null)
         orderObject.setProcessDate(order.getProcessDate().toString());
         orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
         orderObject.setStatus(order.getStatus().toString());

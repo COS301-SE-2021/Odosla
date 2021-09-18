@@ -26,6 +26,7 @@ import cs.superleague.user.responses.GetDriverByUUIDResponse;
 import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,18 @@ import java.util.*;
 
 @Service("deliveryServiceImpl")
 public class DeliveryServiceImpl implements DeliveryService {
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
     private final DeliveryRepo deliveryRepo;
     private final DeliveryDetailRepo deliveryDetailRepo;
     private final RabbitTemplate rabbitTemplate;
@@ -75,7 +88,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/getDriverByEmail";
+        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
@@ -104,7 +117,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("This delivery has already been taken by another driver.");
         }
 
-        uri = "http://localhost:8086/payment/getOrder";
+        uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
 
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
@@ -170,7 +183,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Missing parameters.");
         }
 
-        String uri = "http://localhost:8089/user/getCustomerByUUID";
+        String uri = "http://"+userHost+":"+userPort+"/user/getCustomerByUUID";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("userID", request.getCustomerID());
@@ -183,7 +196,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Invalid customerID.");
         }
 
-        uri = "http://localhost:8086/payment/getOrder";
+        uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
 
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", request.getOrderID());
@@ -197,7 +210,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Invalid orderID.");
         }
 
-        uri = "http://localhost:8086/shopping/getStoreByUUID";
+        uri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
 
         Map<String, Object> storeRequest = new HashMap<>();
         orderRequest.put("storeID", request.getStoreID());
@@ -276,7 +289,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/getAdminByEmail";
+        String uri = "http://"+userHost+":"+userPort+"/user/getAdminByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
@@ -324,7 +337,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         double range = request.getRangeOfDelivery();
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/getDriverByEmail";
+        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
@@ -386,7 +399,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://localhost:8089/user/getDriverByEmail";
+        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("email", currentUser.getEmail());
@@ -427,7 +440,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             return response;
         }
 
-        String uri = "http://localhost:8089/user/getDriverByUUID";
+        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("userID", delivery.getDriverId());
@@ -470,7 +483,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
             delivery.setCompleted(true);
 
-            String uri = "http://localhost:8089/user/getDriverByUUID";
+            String uri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
 
             Map<String, Object> parts = new HashMap<>();
             parts.put("userID", delivery.getDriverId().toString());
@@ -496,7 +509,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             deliveryRepo.save(delivery);
 
-            uri = "http://localhost:8086/payment/getOrder";
+            uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
 
             Map<String, Object> orderRequest = new HashMap<String, Object>();
             orderRequest.put("orderId", delivery.getOrderID());
@@ -582,7 +595,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
         }
 
-        String uri = "http://localhost:8086/payment/getOrder";
+        String uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
 
         Map<String, Object> orderRequest = new HashMap<String, Object>();
         orderRequest.put("orderID", request.getOrderID());
@@ -610,7 +623,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         for (Delivery delivery : deliveries) {
             if (delivery.getOrderID().compareTo(request.getOrderID()) == 0) {
-                uri = "http://localhost:8089/user/findDriverById";
+                uri = "http://"+userHost+":"+userPort+"/user/findDriverById";
 
                 Map<String, Object> parts = new HashMap<>();
                 parts.put("driverID", delivery.getDriverId());

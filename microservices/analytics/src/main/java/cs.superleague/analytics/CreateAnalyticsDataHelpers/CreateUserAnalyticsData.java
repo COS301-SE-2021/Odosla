@@ -6,6 +6,7 @@ import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.User;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.user.responses.GetUsersResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -13,9 +14,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CreateUserAnalyticsData {
+
+    private String userHost;
+    private String userPort;
 
     private final List<User> users;
     private final List<Driver> drivers;
@@ -35,7 +41,8 @@ public class CreateUserAnalyticsData {
     private ResponseEntity<GetUsersResponse> responseEntity;
 
     public CreateUserAnalyticsData(Date startDate, Date endDate,
-                               RestTemplate restTemplate){
+                               RestTemplate restTemplate, String userHost,
+                                   String userPort) throws URISyntaxException {
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();
@@ -53,7 +60,11 @@ public class CreateUserAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        String uri = "http://localhost:8089/user/getUsers";
+        this.userHost = userHost;
+        this.userPort = userPort;
+
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getUsers";
+        URI uri = new URI(stringUri);
 
         try{
 
@@ -109,6 +120,7 @@ public class CreateUserAnalyticsData {
                 throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
+            if(user.getActivationDate() != null)
             if (startDate.getTime() <= user.getActivationDate().getTime()
                     && endDate.getTime() >= user.getActivationDate().getTime()) {
                 if (userType == UserType.CUSTOMER) {

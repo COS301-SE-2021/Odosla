@@ -9,6 +9,7 @@ import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.User;
 import cs.superleague.user.dataclass.UserType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -19,6 +20,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 
 public class CreateMonthlyAnalyticsData {
+    private String paymentHost;
+    private String paymentPort;
+    private String userHost;
+    private String userPort;
 
     private final List<Order> orders;
     private final List<User> users;
@@ -45,7 +50,8 @@ public class CreateMonthlyAnalyticsData {
     private ResponseEntity<GetUsersResponse> responseEntityUser;
     private ResponseEntity<GetOrdersResponse> responseEntityOrder;
 
-    public CreateMonthlyAnalyticsData(RestTemplate restTemplate){
+    public CreateMonthlyAnalyticsData(RestTemplate restTemplate, String paymentHost, String paymentPort,
+                                      String userHost, String userPort){
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -68,19 +74,15 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        String uri = "http://localhost:8089/user/getUsers";
+        String uri = "http://"+userHost+":"+userPort+"/user/getUsers";
 
         try{
-            List<HttpMessageConverter<?>> converters = new ArrayList<>();
-            converters.add(new MappingJackson2HttpMessageConverter());
-            restTemplate.setMessageConverters(converters);
-
-            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+            Map<String, Object> parts = new HashMap<>();
 
             responseEntityUser = restTemplate.postForEntity(uri, parts,
                     GetUsersResponse.class);
 
-            uri = "http://localhost:8086/payment/getOrders";
+            uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
             responseEntityOrder = restTemplate.postForEntity(uri, parts,
                     GetOrdersResponse.class);
 
@@ -163,6 +165,7 @@ public class CreateMonthlyAnalyticsData {
                 throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
+            if(user.getActivationDate() != null)
             if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
                     && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {
                 if (userType == UserType.CUSTOMER) {

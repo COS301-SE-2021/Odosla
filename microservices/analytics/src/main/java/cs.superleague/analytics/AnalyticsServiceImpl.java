@@ -16,6 +16,7 @@ import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +24,21 @@ import java.util.Date;
 
 @Service("analyticsServiceImpl")
 public class AnalyticsServiceImpl implements AnalyticsService {
+
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
 
     RestTemplate restTemplate;
 
@@ -78,7 +94,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try {
             createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), restTemplate);
+                    request.getEndDate(), restTemplate, userHost, userPort);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating user statistics report");
         }
@@ -86,11 +102,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         UserAnalyticsHelper userAnalyticsHelper = new UserAnalyticsHelper(createUserAnalyticsData.getUserStatisticsData());
 
         if(request.getReportType() == ReportType.PDF){
-            message = "UserReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = userAnalyticsHelper.createPDF();
             response =  new CreateUserReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "UserReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             StringBuilder sb = userAnalyticsHelper.createCSVReport();
             response = new CreateUserReportResponse(true, message, new Date(), null, sb.toString());
         }else{
@@ -115,19 +131,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try{
             createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), restTemplate);
+                    request.getEndDate(), restTemplate, paymentPort, paymentHost);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating financial statistics report");
         }
 
-        FinancialAnalyticsHelper financialAnalyticsHelper = new FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData());
+        FinancialAnalyticsHelper financialAnalyticsHelper = new
+                FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(),
+                restTemplate, shoppingHost, shoppingPort);
 
         if(request.getReportType() == ReportType.PDF){
-            message = "FinancialReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = financialAnalyticsHelper.createPDF();
             response =  new CreateFinancialReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "FinancialReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             StringBuilder sb = financialAnalyticsHelper.createCSVReport();
             response = new CreateFinancialReportResponse(true, message, new Date(), null, sb.toString());
         }else{
@@ -150,19 +168,21 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), new Date(), new Date());
 
         try{
-            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(restTemplate);
+            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(restTemplate, paymentHost, paymentPort,
+                    userHost, userPort);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating monthly statistics report");
         }
 
-        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData.getMonthlyStatisticsData());
+        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData
+                .getMonthlyStatisticsData(), shoppingHost, shoppingPort);
 
         if(request.getReportType() == ReportType.PDF){
-            message = "MonthlyReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = monthlyAnalyticsHelper.createPDF();
             response =  new CreateMonthlyReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "MonthlyReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             String sb = monthlyAnalyticsHelper.createCSVReport().toString();
             response = new CreateMonthlyReportResponse(true, message, new Date(), null, sb);
         }else{

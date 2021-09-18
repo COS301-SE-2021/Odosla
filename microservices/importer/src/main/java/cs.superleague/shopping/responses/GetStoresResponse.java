@@ -10,6 +10,13 @@ public class GetStoresResponse {
     private boolean response;
     private String message;
 
+    public GetStoresResponse()
+    {
+        this.response = false;
+        this.message = null;
+        this.stores = null;
+    }
+
     public GetStoresResponse(boolean response, String message, List<Store> stores)
     {
         this.response = response;

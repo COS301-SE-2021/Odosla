@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Generic schema for a Customer")
 @Validated
-public class CustomerObject  implements OneOfuserGetCurrentUserResponseUser {
+public class CustomerObject   {
   @JsonProperty("name")
   private String name = null;
 

@@ -1,6 +1,7 @@
 package cs.superleague.payment.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import cs.superleague.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -17,15 +18,25 @@ import java.util.UUID;
 public class Order implements Serializable {
 
     @Id
+    @JsonProperty("orderId")
     private UUID orderID;
+
+    @JsonProperty("userId")
     private UUID userID;
+
+    @JsonProperty("storeId")
     private UUID storeID;
+
+    @JsonProperty("shopperId")
     private UUID shopperID;
+
     private UUID driverID;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
     private Date createDate;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
     private Date processDate;
+
+    @JsonProperty("totalPrice")
     private Double totalCost;
     private Double discount;
     private boolean requiresPharmacy;
@@ -42,7 +53,7 @@ public class Order implements Serializable {
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @ManyToMany
+    @ManyToMany (cascade={CascadeType.ALL})
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items;

@@ -281,6 +281,8 @@ public class ShoppingController implements ShoppingApi{
                 orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
                 orderObject.setUserId(order.getUserID().toString());
                 orderObject.setStoreId(order.getStoreID().toString());
+
+                if(order.getShopperID() != null)
                 orderObject.setShopperId(order.getShopperID().toString());
                 orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
 
@@ -555,6 +557,7 @@ public class ShoppingController implements ShoppingApi{
 
         List<StoreObject> responseBody = new ArrayList<>();
 
+        if(responseStores != null)
         for(int i = 0; i < responseStores.size(); i++){
 
             StoreObject currentStore = new StoreObject();

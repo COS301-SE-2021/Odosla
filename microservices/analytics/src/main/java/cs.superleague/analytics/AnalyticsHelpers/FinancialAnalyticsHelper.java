@@ -8,26 +8,31 @@ import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoresResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.util.*;
+import java.net.URI;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FinancialAnalyticsHelper {
 
-    private final HashMap<String, Object> data;
+    private String shoppingHost;
+    private String shoppingPort;
 
-    public FinancialAnalyticsHelper(HashMap<String, Object> data){
+    private final HashMap<String, Object> data;
+    private final RestTemplate restTemplate;
+
+    public FinancialAnalyticsHelper(HashMap<String, Object> data, RestTemplate restTemplate,
+                                    String shoppingHost, String shoppingPort){
         this. data = data;
+        this.restTemplate = restTemplate;
+        this.shoppingHost = shoppingHost;
+        this.shoppingPort = shoppingPort;
     }
 
     public byte[] createPDF() throws Exception{
@@ -36,10 +41,6 @@ public class FinancialAnalyticsHelper {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
-
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_FinancialReport.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -83,8 +84,9 @@ public class FinancialAnalyticsHelper {
             Store store = null;
             List<Store> stores;
             ResponseEntity<GetStoresResponse> responseEntity;
-            RestTemplate restTemplate = new RestTemplate();
-            String uri = "http://localhost:8089/shopping/getStores";
+
+            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+            URI uri = new URI(stringUri);
 
             Map<String, Object> parts = new HashMap<>();
 
@@ -153,9 +155,6 @@ public class FinancialAnalyticsHelper {
 
     public StringBuilder createCSVReport() {
         try {
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_FinancialReport.csv";
-            PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
             sb.append("Total Orders");
@@ -174,12 +173,10 @@ public class FinancialAnalyticsHelper {
             sb.append(",");
             sb.append(data.get("averagePriceOfOrders"));
 
-            pw.write(sb.toString()); // write to the csv file
-            pw.close();  //stop writing
             System.out.println("finished");
 
             return sb;
-        } catch ( FileNotFoundException e) {
+        } catch ( Exception e) {
             e.printStackTrace();
             //throw new ReportException("Not able to create CSV file");
         } //lets us know if its successfully completed

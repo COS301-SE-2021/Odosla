@@ -6,15 +6,17 @@ import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 
+import java.net.URISyntaxException;
+
 public interface PaymentService {
 
     // ORDER
 
-    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException;
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException;
 
-    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException;
+    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException;
 
-    UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException;
+    UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException, URISyntaxException;
 
     GetOrderResponse getOrder(GetOrderRequest req) throws PaymentException;
 
@@ -43,7 +45,7 @@ public interface PaymentService {
 
     //CUSTOMER REQUESTS
 
-    GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist;
+    GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException;
 
     void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException;
 }

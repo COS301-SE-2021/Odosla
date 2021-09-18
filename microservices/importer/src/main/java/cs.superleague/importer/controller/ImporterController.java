@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ImporterController implements ImporterApi {
                 e.printStackTrace();
             }
 
-        } catch (InvalidRequestException e) {
+        } catch (InvalidRequestException | URISyntaxException e) {
             e.printStackTrace();
         }
 
@@ -94,7 +95,7 @@ public class ImporterController implements ImporterApi {
                 e.printStackTrace();
             }
 
-        } catch (InvalidRequestException e) {
+        } catch (InvalidRequestException | URISyntaxException e) {
             e.printStackTrace();
         }
 
