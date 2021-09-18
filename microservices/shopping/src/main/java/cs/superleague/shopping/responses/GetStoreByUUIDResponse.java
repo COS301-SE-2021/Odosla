@@ -12,6 +12,12 @@ public class GetStoreByUUIDResponse {
     private final Date timestamp;
     private final String message;
 
+    public GetStoreByUUIDResponse()
+    {
+        this.store = null;
+        this.message = null;
+        this.timestamp = null;
+    }
 
     public GetStoreByUUIDResponse(Store store, Date timestamp, String message) {
         this.store = store;
