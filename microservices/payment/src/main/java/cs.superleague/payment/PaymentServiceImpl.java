@@ -1,6 +1,7 @@
 package cs.superleague.payment;
 
 import com.itextpdf.text.*;
+import cs.superleague.integration.dataclass.UserType;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.exceptions.InvalidRequestException;
@@ -16,8 +17,10 @@ import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.responses.GetCustomerByEmailResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -363,7 +366,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException {
-        CancelOrderResponse response;
+        CancelOrderResponse response = null;
         Order order;
         double cancellationFee;
         String message;
@@ -383,49 +386,76 @@ public class PaymentServiceImpl implements PaymentService {
 
             CurrentUser currentUser = new CurrentUser();
 
-            String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
-            URI uri = new URI(stringURI);
-
-            Map<String, Object> parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail());
-
-            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
-                    uri, parts, GetCustomerByEmailResponse.class);
-
-            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
-            Customer customer = getCustomerByEmailResponse.getCustomer();
-
-            if (customer == null || customer.getCustomerID() == null ||
-                    !customer.getCustomerID().equals(order.getUserID())) {
-                throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
-            }
-
             List<Order> orders = orderRepo.findAll();
 
             if(order.getStatus() == OrderStatus.DELIVERED ||
-                order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
+                    order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
                     order.getStatus() == OrderStatus.DELIVERY_COLLECTED){
                 message = "Cannot cancel an order that has been delivered/collected.";
                 return new CancelOrderResponse(false,Calendar.getInstance().getTime(), message,orders);
             }
 
-            // remove Order from DB.
-            orderRepo.delete(order);
+            if (currentUser.getUserType() == UserType.CUSTOMER) {
+                if (order.getStatus().equals(OrderStatus.IN_QUEUE)){
+                    String stringURI = "http://"+shoppingHost+":"+shoppingPort+"/shopping/removeQueuedOrder";
+                    URI uri = new URI(stringURI);
 
-            RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
-            rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
+                    Map<String, Object> parts = new HashMap<>();
+                    parts.put("orderID", order.getOrderID());
+                    parts.put("storeID", order.getStoreID());
+
+                    ResponseEntity<RemoveQueuedOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                            uri, parts, RemoveQueuedOrderResponse.class);
+                }
+
+                RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
+                rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
+                if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
+                    cancellationFee = 1000;
+                    message = "Order successfully cancelled. Customer has been charged " + cancellationFee;
+                }else {
+                    message = "Order has been successfully cancelled";
+                }
+                order.setStatus(OrderStatus.CANCELLED);
+                orderRepo.save(order);
+
+                response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
+            }else if (currentUser.getUserType() == UserType.SHOPPER){
+                cancellationFee = 1000;
+                message = "Order successfully cancelled. Shopper has been charged " + cancellationFee;
+                response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
+                order.setStatus(OrderStatus.IN_QUEUE);
+                orderRepo.save(order);
+                AddToFrontOfQueueRequest addToFrontOfQueueRequest = new AddToFrontOfQueueRequest(order);
+                rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToFrontOfQueue", addToFrontOfQueueRequest);
+            }
+//            String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+//            URI uri = new URI(stringURI);
 //
-            orders = orderRepo.findAll();
+//            Map<String, Object> parts = new HashMap<>();
+//            parts.put("email", currentUser.getEmail());
+//
+//            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+//                    uri, parts, GetCustomerByEmailResponse.class);
+
+//            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+//            Customer customer = getCustomerByEmailResponse.getCustomer();
+
+//            if (customer == null || customer.getCustomerID() == null ||
+//                    !customer.getCustomerID().equals(order.getUserID())) {
+//                throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
+//            }
+
+
+
+            // remove Order from DB.
+//            orderRepo.delete(order);
+
+
+            //orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee
-            if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
-                cancellationFee = 1000;
-                message = "Order successfully cancelled. Customer has been charged " + cancellationFee;
-            }else {
-                message = "Order has been successfully cancelled";
-            }
 
-            response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
         }
         else{
             throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
