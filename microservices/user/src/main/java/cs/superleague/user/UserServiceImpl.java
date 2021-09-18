@@ -2197,7 +2197,7 @@ public class UserServiceImpl implements UserService{
         else{
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeId", request.getStoreID());
+            parts.put("storeID", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
