@@ -8,14 +8,14 @@ import java.util.List;
 
 public class GetAllCartItemsResponse {
 
-    private List<CartItem> items;
+    private List<CartItem> cartItems;
     @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
 
-    public GetAllCartItemsResponse(List<CartItem> items, Date timestamp, String message)
+    public GetAllCartItemsResponse(List<CartItem> cartItems, Date timestamp, String message)
     {
-        this.items = items;
+        this.cartItems = cartItems;
         this.timestamp= timestamp;
         this.message= message;
     }
@@ -28,12 +28,12 @@ public class GetAllCartItemsResponse {
         return timestamp;
     }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 
-    public List<CartItem> getItems() {
-        return items;
+    public List<CartItem> getCartItems() {
+        return cartItems;
     }
 
     public void setMessage(String message) {

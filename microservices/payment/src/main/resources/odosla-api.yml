@@ -163,6 +163,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetOrdersResponse"
+
+  /payment/getAllCartItems:
+    post:
+      summary: Endpoint for getting all the cart items
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getAllCartItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetAllCartItemsRequest"
+      responses:
+        "200":
+          description: Returns the items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetAllCartItemsResponse"
 components:
 
   schemas:
@@ -438,3 +460,20 @@ components:
           type: string
         totalCost:
           type: number
+
+    payment_GetAllCartItemsRequest:
+      description: This object is expected as input
+      type: object
+
+    payment_GetAllCartItemsResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        message:
+          type: string
+        timestamp:
+          type: string

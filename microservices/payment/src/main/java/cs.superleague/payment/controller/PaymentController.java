@@ -7,6 +7,7 @@ import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
@@ -594,5 +595,27 @@ public class PaymentController implements PaymentApi {
         }
 
         return responseBody;
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetAllCartItemsResponse> getAllCartItems(PaymentGetAllCartItemsRequest body) {
+        PaymentGetAllCartItemsResponse response = new PaymentGetAllCartItemsResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            GetAllCartItemsResponse getAllCartItemsResponse = paymentService.getAllCartItems(new GetAllCartItemsRequest());
+            try {
+
+                response.setCartItems(populateCartItems(getAllCartItemsResponse.getCartItems()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
     }
 }
