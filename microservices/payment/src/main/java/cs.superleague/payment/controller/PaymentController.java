@@ -481,22 +481,22 @@ public class PaymentController implements PaymentApi {
 
     public OrderObject populateOrder(Order order){
         OrderObject orderObject = new OrderObject();
-        orderObject.setOrderId(order.getOrderID().toString());
-        orderObject.setUserId(order.getUserID().toString());
-        orderObject.setStoreId(order.getStoreID().toString());
-
+        if(order.getOrderID() != null)
+            orderObject.setOrderId(order.getOrderID().toString());
+        if(order.getUserID() != null)
+            orderObject.setUserId(order.getUserID().toString());
+        if(order.getStoreID() != null)
+            orderObject.setStoreId(order.getStoreID().toString());
         if(order.getShopperID() != null)
             orderObject.setShopperId(order.getShopperID().toString());
         if(order.getCreateDate()!=null)
             orderObject.setCreateDate(order.getCreateDate().toString());
-
         if(order.getProcessDate() != null)
             orderObject.setProcessDate(order.getProcessDate().toString());
-        orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+        if(order.getTotalCost() != null)
+            orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
         if(order.getStatus()!=null)
             orderObject.setStatus(order.getStatus().toString());
-
-//        orderObject.setItems(populateItems(order.getItems()));
         if(order.getCartItems()!=null)
             orderObject.setCartItems(populateCartItems(order.getCartItems()));
         if(order.getDiscount()!=null)
