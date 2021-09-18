@@ -2,7 +2,9 @@ package cs.superleague.shopping.requests;
 
 import cs.superleague.shopping.dataclass.Catalogue;
 
-public class SaveCatalogueToRepoRequest {
+import java.io.Serializable;
+
+public class SaveCatalogueToRepoRequest implements Serializable {
 
     private Catalogue catalogue;
 
