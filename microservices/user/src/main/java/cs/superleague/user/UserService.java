@@ -42,7 +42,10 @@ public interface UserService {
     UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, StoreDoesNotExistException;
 
     /* Analytics user data*/
-    GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
+    GetAdminsResponse getAdmins(GetAdminsRequest request) throws Exception;
+    GetCustomersResponse getCustomers(GetCustomersRequest request) throws Exception;
+    GetDriversResponse getDrivers(GetDriversRequest request) throws Exception;
+    GetShoppersResponse getShoppers(GetShoppersRequest request) throws Exception;
 
     GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
     GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws UserException;
