@@ -1,12 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/admin/admin_main_screen.dart';
-import 'package:flutter_employee_app/pages/admin/analytics_page.dart';
-import 'package:flutter_employee_app/pages/admin/check.dart';
-import 'package:flutter_employee_app/pages/admin/home.dart';
-import 'package:flutter_employee_app/pages/admin/importer_page.dart';
 import 'package:flutter_employee_app/pages/driver/driver_main_screen.dart';
-import 'package:flutter_employee_app/pages/driver/driver_map.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_driver_account_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_shopper_account_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/forgot_password_screen.dart';
@@ -48,7 +43,7 @@ var routes = <String, WidgetBuilder>{
   "/driverHomePage":(BuildContext context) =>DriverHomeScreen(1),
   "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(),
   "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(),
-  "/adminHomePage":(BuildContext context)=>AdminHomeScreen(1)
+  "/adminHomePage":(BuildContext context)=>AdminHomeScreen(1),
 };
 
 
@@ -92,7 +87,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:ImporterScreen(),
+            home:SplashScreen(),
             routes: routes,
           );
         },

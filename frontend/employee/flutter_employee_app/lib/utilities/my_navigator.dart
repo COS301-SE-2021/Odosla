@@ -56,7 +56,7 @@ class MyNavigator {
     Navigator.pushNamed(context, "/storeInfoScreen");
   }
 
-  static void goToAdminHomePgae(BuildContext context){
+  static void goToAdminHomePage(BuildContext context){
     Navigator.pushNamed(context, "/adminHomePage");
   }
 
