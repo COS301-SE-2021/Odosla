@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/User.dart';
+import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
@@ -7,8 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+import 'package:provider/provider.dart';
 
-import 'check.dart';
 
 class AdminProfileScreen extends StatefulWidget {
   @override
@@ -18,23 +20,27 @@ class AdminProfileScreen extends StatefulWidget {
 class _AdminProfileScreenState extends State<AdminProfileScreen> {
 
   final UserService _userService = GetIt.I.get();
-  String _name="name";
-  String _surname="surname";
-  String _email="email@gmail.com";
-  String _numberOfDeliveriesCompleted="0";
-  String _rating="0";
+  String _name="";
+  String _surname="";
+  String _email="";
 
-  void initState() {
-    _userService.getCurrentUser(context).then((value) =>
-    {
-      setState(() {
-        _name = value!.name;
-        _surname = value.surname;
-        _email = value.email;
-        _rating=value.rating;
-        _numberOfDeliveriesCompleted=value.deliveriesCompleted;
-      })
-    });
+  initState() {
+    bool isUser = Provider.of<UserProvider>(context,listen: false).isUser();
+    if (isUser){
+      User user = Provider.of<UserProvider>(context,listen: false).user;
+      _name = user.name;
+      _surname=user.surname;
+      _email=user.email;
+    }else {
+      _userService.getCurrentUser(context).then((value) =>
+      {
+        setState(() {
+          _name = value!.name;
+          _surname = value.surname;
+          _email = value.email;
+        })
+      });
+    }
   }
 
   @override
@@ -130,7 +136,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(width: kSpacingUnit.w * 3),
+        SizedBox(width: kSpacingUnit.w * 4),
         profileInfo,
         themeSwitcher,
         SizedBox(width: kSpacingUnit.w * 3),
@@ -141,19 +147,14 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
       child: Builder(
         builder: (context) {
           return Scaffold(
-            floatingActionButton: MyHomePage(),
             body: Column(
               children: <Widget>[
-                SizedBox(height: kSpacingUnit.w * 3),
+                SizedBox(height: kSpacingUnit.w * 7),
                 header,
                 Expanded(
                   child: ListView(
                     children: <Widget>[
                       SizedBox(height: kSpacingUnit.w*2),
-                      // ProfileListItem(
-                      //   LineAwesomeIcons.history,
-                      //   'Purchase History',
-                      // ),
                       GestureDetector(
                         onTap: (){},
                         child: ProfileListItem(

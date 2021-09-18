@@ -1,13 +1,14 @@
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/pages/admin/analytics_page.dart';
 
 import 'admin_profile_screen.dart';
-import 'admin_work_screen.dart';
+import 'importer_page.dart';
 
 class AdminHomeScreen extends StatefulWidget {
+
   int index=1;
-
-
   AdminHomeScreen(this.index);
 
   @override
@@ -30,8 +31,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         pageChanged(index);
       },
       children: <Widget>[
-        AdminProfileScreen(),
-        AdminWorkScreen(),
+        ImporterScreen(),
+        AnalyticsScreen(),
         AdminProfileScreen(),
       ],
     );
@@ -49,6 +50,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   void pageChanged(int index) {
     setState(() {
+
       bottomSelectedIndex = index;
     });
   }
@@ -66,7 +68,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       body: buildPageView(),
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.deepOrangeAccent,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: bottomSelectedIndex==2?Theme.of(context).primaryColor:Color(0xFFC78760),
         buttonBackgroundColor: Colors.deepOrangeAccent,
         height: 50,
         onTap: (index) {
@@ -74,8 +76,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         },
         index: bottomSelectedIndex,
         items: <Widget>[
-          Icon(Icons.analytics,size:20),
-          Icon(Icons.work,size: 20),
+          Icon(Icons.add,size:20),
+          Icon(Icons.analytics,size: 20),
           Icon(Icons.account_circle,size:20),
         ],
         animationDuration: Duration(

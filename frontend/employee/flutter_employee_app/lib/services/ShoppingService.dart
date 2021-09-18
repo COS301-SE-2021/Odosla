@@ -71,21 +71,12 @@ class ShoppingService {
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
-    print(response.body);
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
       if (responseData["success"] == true) {
         Order order= Order.fromJson(responseData["newCurrentOrder"]);
-
-        print("Total cost from response:   ");
-        print(responseData["newCurrentOrder"]["totalPrice"]);
-        print("Total cost from response after order from json:   ");
-        print(order.totalCost);
-
         Provider.of<OrderProvider>(context,listen: false).order=order;
-        print("Total cost from provider:   ");
-        print(Provider.of<OrderProvider>(context,listen: false).order.totalCost);
         return order;
       }
     }
@@ -99,6 +90,7 @@ class ShoppingService {
     Map<String,String> headers =new Map<String,String>();
 
     String jwt="";
+
     await _userService.getJWTAsString(context).then((value) => {
       jwt=value!
     });
@@ -131,4 +123,5 @@ class ShoppingService {
     }
     return null;
   }
+
 }

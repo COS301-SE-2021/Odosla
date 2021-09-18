@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/utilities/Odosla.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 
-
-
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
