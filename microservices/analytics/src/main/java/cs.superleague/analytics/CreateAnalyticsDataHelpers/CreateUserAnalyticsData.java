@@ -1,11 +1,8 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
 import cs.superleague.analytics.exceptions.InvalidRequestException;
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.User;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.responses.GetUsersResponse;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.responses.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -14,6 +11,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -38,7 +36,10 @@ public class CreateUserAnalyticsData {
     private final Date startDate;
     private final Date endDate;
 
-    private ResponseEntity<GetUsersResponse> responseEntity;
+    private ResponseEntity<GetAdminsResponse> adminResponseEntity;
+    private ResponseEntity<GetCustomersResponse> customerResponseEntity;
+    private ResponseEntity<GetDriversResponse> driverResponseEntity;
+    private ResponseEntity<GetShoppersResponse> shopperResponseEntity;
 
     public CreateUserAnalyticsData(Date startDate, Date endDate,
                                RestTemplate restTemplate, String userHost,
@@ -63,15 +64,33 @@ public class CreateUserAnalyticsData {
         this.userHost = userHost;
         this.userPort = userPort;
 
-        String stringUri = "http://"+userHost+":"+userPort+"/user/getUsers";
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getAdmins";
         URI uri = new URI(stringUri);
 
         try{
 
             Map<String, Object> parts = new HashMap<>();
 
-            responseEntity = restTemplate.postForEntity(uri, parts,
-                    GetUsersResponse.class);
+            adminResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetAdminsResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomers";
+            uri = new URI(stringUri);
+
+            customerResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetCustomersResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getDrivers";
+            uri = new URI(stringUri);
+
+            driverResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetDriversResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getShoppers";
+            uri = new URI(stringUri);
+
+            shopperResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetShoppersResponse.class);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -100,17 +119,32 @@ public class CreateUserAnalyticsData {
 
     private boolean generateUserStatisticsData() throws InvalidRequestException {
 
-        if(responseEntity == null){
+        if(adminResponseEntity == null || customerResponseEntity == null
+        || driverResponseEntity == null || shopperResponseEntity == null){
             return false;
         }
 
-        GetUsersResponse response = responseEntity.getBody();
+        GetAdminsResponse adminsResponse = adminResponseEntity.getBody();
+        GetCustomersResponse customersResponse = customerResponseEntity.getBody();
+        GetDriversResponse driversResponse = driverResponseEntity.getBody();
+        GetShoppersResponse shoppersResponse = shopperResponseEntity.getBody();
 
-        if(response != null) {
-            users.addAll(response.getUsers());
-        }else{
+        if(adminsResponse == null || customersResponse == null || driversResponse == null
+        || shoppersResponse == null){
             return false;
         }
+
+        if(adminsResponse.getUsers() != null)
+        users.addAll(adminsResponse.getUsers());
+
+        if(customersResponse.getUsers() != null)
+        users.addAll(customersResponse.getUsers());
+
+        if(driversResponse.getUsers() != null)
+        users.addAll(driversResponse.getUsers());
+
+        if(shoppersResponse.getUsers() != null)
+        users.addAll(shoppersResponse.getUsers());
 
         UserType userType;
         for (User user : this.users) {
@@ -129,6 +163,7 @@ public class CreateUserAnalyticsData {
 
                     if (user instanceof Shopper) {
                         totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
+                        System.out.println("Shopper:" + totalOrderCompleted);
                     }
 
                     totalShoppers += 1;
