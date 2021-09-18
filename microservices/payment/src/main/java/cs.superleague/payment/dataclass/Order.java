@@ -23,10 +23,10 @@ public class Order implements Serializable {
     private UUID shopperID;
     private UUID driverID;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS")
     private Date createDate;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS")
     private Date processDate;
     private Double totalCost;
     private Double discount;
