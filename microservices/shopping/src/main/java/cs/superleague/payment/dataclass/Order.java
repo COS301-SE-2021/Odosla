@@ -1,5 +1,6 @@
 package cs.superleague.payment.dataclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import cs.superleague.shopping.dataclass.Item;
@@ -21,7 +22,11 @@ public class Order implements Serializable {
     private UUID storeID;
     private UUID shopperID;
     private UUID driverID;
+
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private Date createDate;
+
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private Date processDate;
     private Double totalCost;
     private Double discount;
