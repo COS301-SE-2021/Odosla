@@ -39,11 +39,6 @@ public class Order implements Serializable {
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @ManyToMany (cascade={CascadeType.ALL})
-    @JoinTable
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Item> items;
-
     @OneToMany
     @JoinColumn(name="order_id")
     private List<CartItem> cartItems;
@@ -52,7 +47,7 @@ public class Order implements Serializable {
 
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
@@ -62,14 +57,13 @@ public class Order implements Serializable {
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
-        this.items = items;
         this.discount = discount;
         this.deliveryAddress = deliveryAddress;
         this.storeAddress = storeAddress;
         this.requiresPharmacy = requiresPharmacy;
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
@@ -79,7 +73,6 @@ public class Order implements Serializable {
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
-        this.items = items;
         this.discount = discount;
         this.storeAddress = storeAddress;
         this.requiresPharmacy = requiresPharmacy;
@@ -166,14 +159,6 @@ public class Order implements Serializable {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
-    }
-
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
     }
 
     public Double getDiscount() {
