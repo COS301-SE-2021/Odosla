@@ -66,7 +66,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
             new AntPathRequestMatcher("analytics/createUserReport"),
             new AntPathRequestMatcher("analytics/createFinancialReport"),
             new AntPathRequestMatcher("analytics/createMonthlyReport"),
-            new AntPathRequestMatcher("shopping/updateShoppers")
+            new AntPathRequestMatcher("shopping/updateShoppers"),
+            new AntPathRequestMatcher("importer/storesCSVImporter"),
+            new AntPathRequestMatcher("importer/itemsCSVImporter")
 
     );
 

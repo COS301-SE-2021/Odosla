@@ -236,12 +236,13 @@ public class PaymentController implements PaymentApi {
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
             List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
-
+            System.out.println("BEFORE THE CALL");
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
                     UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
+            System.out.println("AFTER THE CALL");
             try {
                 response.setMessage(submitOrderResponse.getMessage());
                 response.setOrderId(submitOrderResponse.getOrder().getOrderID().toString());

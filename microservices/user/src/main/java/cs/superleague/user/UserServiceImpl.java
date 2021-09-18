@@ -2197,7 +2197,7 @@ public class UserServiceImpl implements UserService{
         else{
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeId", request.getStoreID());
+            parts.put("storeID", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
@@ -2723,26 +2723,83 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public GetUsersResponse getUsers(GetUsersRequest request) throws Exception{
+    public GetAdminsResponse getAdmins(GetAdminsRequest request) throws Exception{
 
-        String message = "Users successfully returned";
-        List<User> users = new ArrayList<>();
+        String message = "Admins successfully returned";
+        List<Admin> users = new ArrayList<>();
 
         if(request == null) {
-            throw new InvalidRequestException("GetUser request is null - could not return users");
+            throw new InvalidRequestException("GetAdmins request is null - could not return admins");
         }
 
-        users.addAll(shopperRepo.findAll());
-        users.addAll(driverRepo.findAll());
-        users.addAll(customerRepo.findAll());
         users.addAll(adminRepo.findAll());
 
         if(users.isEmpty()){
-            message = "Could not retrieve users";
-            return new GetUsersResponse(users, false, message, new Date());
+            message = "Could not retrieve Admins";
+            return new GetAdminsResponse(users, false, message, new Date());
         }
 
-        return new GetUsersResponse(users, true, message, new Date());
+        return new GetAdminsResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetCustomersResponse getCustomers(GetCustomersRequest request) throws Exception{
+
+        String message = "Customers successfully returned";
+        List<Customer> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetCustomers request is null - could not return customers");
+        }
+
+        users.addAll(customerRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve customers";
+            return new GetCustomersResponse(users, false, message, new Date());
+        }
+
+        return new GetCustomersResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetDriversResponse getDrivers(GetDriversRequest request) throws Exception{
+
+        String message = "Drivers successfully returned";
+        List<Driver> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetDrivers request is null - could not return drivers");
+        }
+
+        users.addAll(driverRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve drivers";
+            return new GetDriversResponse(users, false, message, new Date());
+        }
+
+        return new GetDriversResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetShoppersResponse getShoppers(GetShoppersRequest request) throws Exception{
+
+        String message = "Shoppers successfully returned";
+        List<Shopper> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetShoppers request is null - could not return shoppers");
+        }
+
+        users.addAll(shopperRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve shoppers";
+            return new GetShoppersResponse(users, false, message, new Date());
+        }
+
+        return new GetShoppersResponse(users, true, message, new Date());
     }
 
     @Override

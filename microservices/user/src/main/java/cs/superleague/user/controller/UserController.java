@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1130,41 +1131,28 @@ public class UserController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserGetUsersResponse> getUsers(UserGetUsersRequest body) {
+    public ResponseEntity<UserGetAdminsResponse> getAdmins(UserGetAdminsRequest body) {
 
-        UserGetUsersResponse userGetUsersResponse = new UserGetUsersResponse();
+        UserGetAdminsResponse userGetAdminsResponse = new UserGetAdminsResponse();
         HttpStatus status = HttpStatus.OK;
 
         try{
-            GetUsersRequest request = new GetUsersRequest();
+            GetAdminsRequest request = new GetAdminsRequest();
 
-            GetUsersResponse response = userService.getUsers(request);
+            GetAdminsResponse response = userService.getAdmins(request);
             try{
-                userGetUsersResponse.setTimestamp(response.getTimestamp().toString());
-                userGetUsersResponse.setMessage(response.getMessage());
-                userGetUsersResponse.setSuccess(response.isSuccess());
+                userGetAdminsResponse.setTimestamp(response.getTimestamp().toString());
+                userGetAdminsResponse.setMessage(response.getMessage());
+                userGetAdminsResponse.setSuccess(response.isSuccess());
 
-                List<Object> users = new ArrayList<>();
-                if(response.getUsers() != null && !response.getUsers().isEmpty()){
-                    for (User user: response.getUsers()) {
-                        if(user.getAccountType().toString().equals("ADMIN")){
-                            users.add(populateAdmin((Admin) user));
-                        }else if(user.getAccountType().toString().equals("CUSTOMER")){
-                            users.add(populateCustomer((Customer) user));
-                        }else if(user.getAccountType().toString().equals("DRIVER")){
-                            users.add(populateDriver((Driver) user));
-
-
-                            System.out.println(((Driver) user).getDriverID());
-                        }else if(user.getAccountType().toString().equals("SHOPPER")){
-                            users.add(populateShopper((Shopper) user));
-                        }
-
-                        System.out.println(user.getActivationDate());
+                List<AdminObject> users = new ArrayList<>();
+                if(response.getAdmins() != null && !response.getAdmins().isEmpty()){
+                    for (User user: response.getAdmins()) {
+                        users.add(populateAdmin((Admin) user));
                     }
                 }
 
-                userGetUsersResponse.setUsers(users);
+                userGetAdminsResponse.setUsers(users);
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -1174,7 +1162,112 @@ public class UserController implements UserApi {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<>(userGetUsersResponse, status);
+        return new ResponseEntity<>(userGetAdminsResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetCustomersResponse> getCustomers(UserGetCustomersRequest body) {
+
+        UserGetCustomersResponse userGetCustomersResponse = new UserGetCustomersResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetCustomersRequest request = new GetCustomersRequest();
+
+            GetCustomersResponse response = userService.getCustomers(request);
+            try{
+                userGetCustomersResponse.setTimestamp(response.getTimestamp().toString());
+                userGetCustomersResponse.setMessage(response.getMessage());
+                userGetCustomersResponse.setSuccess(response.isSuccess());
+
+                List<CustomerObject> users = new ArrayList<>();
+                if(response.getCustomers() != null && !response.getCustomers().isEmpty()){
+                    for (User user: response.getCustomers()) {
+                        users.add(populateCustomer((Customer) user));
+                    }
+                }
+
+                userGetCustomersResponse.setUsers(users);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetCustomersResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetDriversResponse> getDrivers(UserGetDriversRequest body) {
+
+        UserGetDriversResponse userGetDriversResponse = new UserGetDriversResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetDriversRequest request = new GetDriversRequest();
+
+            GetDriversResponse response = userService.getDrivers(request);
+            try{
+                userGetDriversResponse.setTimestamp(response.getTimestamp().toString());
+                userGetDriversResponse.setMessage(response.getMessage());
+                userGetDriversResponse.setSuccess(response.isSuccess());
+
+                List<DriverObject> users = new ArrayList<>();
+                if(response.getDrivers() != null && !response.getDrivers().isEmpty()){
+                    for (User user: response.getDrivers()) {
+                        users.add(populateDriver((Driver) user));
+                    }
+                }
+
+                userGetDriversResponse.setUsers(users);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetDriversResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetShoppersResponse> getShoppers(UserGetShoppersRequest body) {
+
+        UserGetShoppersResponse userGetShoppersResponse = new UserGetShoppersResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetShoppersRequest request = new GetShoppersRequest();
+
+            GetShoppersResponse response = userService.getShoppers(request);
+            try{
+                userGetShoppersResponse.setTimestamp(response.getTimestamp().toString());
+                userGetShoppersResponse.setMessage(response.getMessage());
+                userGetShoppersResponse.setSuccess(response.isSuccess());
+
+                List<ShopperObject> users = new ArrayList<>();
+                if(response.getShoppers() != null && !response.getShoppers().isEmpty()){
+                    for (User user: response.getShoppers()) {
+                        users.add(populateShopper((Shopper) user));
+                    }
+                }
+
+                userGetShoppersResponse.setUsers(users);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(userGetShoppersResponse, status);
     }
 
     public GeoPointObject populateGeoPoint(GeoPoint geoPoint){
