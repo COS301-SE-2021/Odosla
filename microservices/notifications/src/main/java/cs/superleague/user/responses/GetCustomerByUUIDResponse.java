@@ -12,6 +12,12 @@ public class GetCustomerByUUIDResponse {
     private final Date timestamp;
     private final String message;
 
+    public GetCustomerByUUIDResponse() {
+        this.customer = null;
+        this.timestamp = null;
+        this.message = null;
+    }
+
     public GetCustomerByUUIDResponse(Customer customer, Date timestamp, String message) {
         this.customer = customer;
         this.timestamp = timestamp;
