@@ -54,6 +54,15 @@ public class RabbitMQConfig {
         return new Queue("Q_AddToQueue", true);
     }
 
+    @Bean
+    Queue AddToFrontOfQueue(){
+        return new Queue("Q_AddToFrontOfQueue", true);
+    }
+
+    @Bean
+    Queue SaveCatalogueToRepoQueue(){
+        return new Queue("Q_SaveCatalogueToRepoQueue", true);
+    }
     //
     // BINDING
     //
@@ -87,6 +96,25 @@ public class RabbitMQConfig {
                 .noargs();
     }
 
+    @Bean
+    Binding bindingAddToFrontOfQueue(){
+        return BindingBuilder
+                .bind(AddToQueueQueue())
+                .to(ShoppingExchange())
+                .with("RK_AddToFrontOfQueue")
+                .noargs();
+    }
+
+    @Bean
+    Binding bindingSaveCatalogueToRepo(){
+
+        return BindingBuilder
+                .bind(SaveCatalogueToRepoQueue())
+                .to(ShoppingExchange())
+                .with("RK_SaveCatalogueToRepo")
+                .noargs();
+    }
+
     //
     // FACTORY
     //
@@ -105,7 +133,7 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue(), SaveItemToRepoQueue(), AddToQueueQueue());
+        simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue(), SaveItemToRepoQueue(), AddToQueueQueue(), AddToFrontOfQueue(), SaveCatalogueToRepoQueue());
         simpleMessageListenerContainer.setMessageListener(new ShoppingListener(shoppingService));
         return simpleMessageListenerContainer;
     }

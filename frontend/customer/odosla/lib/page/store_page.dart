@@ -75,7 +75,7 @@ class _StorePageState extends State<StorePage> {
     //final provider = Provider.of<StoreProvider>(context);
 
     return FutureBuilder(
-      future: apiService.getStores(),
+      future: apiService.getStores(context),
       builder: (BuildContext context, snapshot) {
         //let's check if we got a response or not
         debugPrint(snapshot.data.toString() + "__");

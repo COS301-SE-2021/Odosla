@@ -1,50 +1,62 @@
-package cs.superleague.shopping.dataclass;
+package cs.superleague.payment.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table
-public class Item {
+public class CartItem implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int cartItemNo;
+
     @JsonProperty("productId")
     private String productID;
+
+    @ManyToOne
+    @JoinColumn(name="order_id", insertable = false, updatable = false)
+    private Order order;
+
     private String name;
     private String barcode;
 
     @JsonProperty("storeId")
     private UUID storeID;
+
+    @JsonProperty("orderId")
+    private UUID orderID;
+
     private double price;
     private int quantity;
+    private double totalCost;
     private String description;
     private String imageUrl;
     private String brand;
     private String size;
     private String itemType;
 
-    public Item(){ }
 
-    public Item(String name, String productID, String barcode, UUID storeID, double price, int quantity, String description, String imageUrl) {
+    public CartItem(){ }
+
+    public CartItem(String name, String productID, String barcode, UUID orderID, double price, int quantity, String description, String imageUrl) {
         this.name = name;
         this.productID = productID;
         this.barcode = barcode;
-        this.storeID = storeID;
+        this.orderID = orderID;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
         this.imageUrl = imageUrl;
     }
 
-    public Item(String name, String productID, String barcode, UUID storeID, double price, int quantity, String description, String imageUrl, String brand, String size, String itemType) {
+    public CartItem(String name, String productID, String barcode, UUID orderID, double price, int quantity, String description, String imageUrl, String brand, String size, String itemType, Double totalCost, UUID storeID) {
         this.name = name;
         this.productID = productID;
         this.barcode = barcode;
-        this.storeID = storeID;
+        this.orderID = orderID;
         this.price = price;
         this.quantity = quantity;
         this.description = description;
@@ -52,6 +64,8 @@ public class Item {
         this.brand=brand;
         this.itemType=itemType;
         this.size=size;
+        this.totalCost= totalCost;
+        this.storeID = storeID;
     }
 
     public String getName() {
@@ -76,14 +90,6 @@ public class Item {
 
     public void setBarcode(String barcode) {
         this.barcode = barcode;
-    }
-
-    public UUID getStoreID() {
-        return storeID;
-    }
-
-    public void setStoreID(UUID storeID) {
-        this.storeID = storeID;
     }
 
     public double getPrice() {
@@ -141,4 +147,30 @@ public class Item {
     public void setItemType(String itemType) {
         this.itemType = itemType;
     }
+
+    public UUID getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(UUID orderID) {
+        this.orderID = orderID;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
+    }
+
+    public UUID getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(UUID storeID) {
+        this.storeID = storeID;
+    }
+
+
 }

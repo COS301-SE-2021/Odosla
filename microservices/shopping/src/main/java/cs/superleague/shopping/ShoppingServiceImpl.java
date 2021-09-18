@@ -5,11 +5,13 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
@@ -43,6 +45,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
     private final ItemRepo itemRepo;
+    private final CatalogueRepo catalogueRepo;
 
     @Autowired
     private RabbitTemplate rabbit;
@@ -51,10 +54,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate, CatalogueRepo catalogueRepo) {
         this.storeRepo= storeRepo;
         this.itemRepo=itemRepo;
         this.restTemplate = restTemplate;
+        this.catalogueRepo = catalogueRepo;
     }
     /**
      *
@@ -167,7 +171,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             } else if (order.getTotalCost() == null){
                 invalidMessage = "Invalid request: missing order cost";
                 invalidReq = true;
-            } else if (order.getItems() == null || order.getItems().isEmpty()){
+            } else if (order.getCartItems() == null || order.getCartItems().isEmpty()){
                 invalidMessage = "Invalid request: item list is empty or null";
                 invalidReq = true;
             }
@@ -1509,5 +1513,89 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
         return response;
     }
+
+    @Override
+    public void addToFrontOfQueue(AddToFrontOfQueueRequest request) throws InvalidRequestException {
+
+        boolean invalidReq = false;
+        String invalidMessage = "";
+
+        if (request == null || request.getOrder() == null){
+            invalidReq = true;
+            invalidMessage = "Invalid request: null value received";
+        } else {
+            Order order = request.getOrder();
+            if (order.getOrderID() == null){
+                invalidMessage = "Invalid request: Missing order ID";
+                invalidReq = true;
+            } else if (order.getUserID() == null){
+                invalidMessage = "Invalid request: missing user ID";
+                invalidReq = true;
+            } else if (order.getStoreID() == null){
+                invalidMessage = "Invalid request: missing store ID";
+                invalidReq = true;
+            } else if (order.getTotalCost() == null){
+                invalidMessage = "Invalid request: missing order cost";
+                invalidReq = true;
+            } else if (order.getCartItems() == null || order.getCartItems().isEmpty()){
+                invalidMessage = "Invalid request: item list is empty or null";
+                invalidReq = true;
+            }
+        }
+
+        if (invalidReq) throw new InvalidRequestException(invalidMessage);
+
+        Order updatedOrder = request.getOrder();
+
+        updatedOrder.setStatus(OrderStatus.IN_QUEUE);
+
+        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+
+        Store store=null;
+        try {
+            store= storeRepo.findById(request.getOrder().getStoreID()).orElse(null);
+        }catch(Exception e){
+            throw new InvalidRequestException(e.getMessage());
+        }
+
+        if (store.getOrderQueue() == null){
+            store.setOrderQueue(new ArrayList<>());
+        }
+        store.getOrderQueue().add(0, updatedOrder);
+
+        if(storeRepo!=null)
+            storeRepo.save(store);
+    }
+
+    @Override
+    public SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException{
+
+        if(request != null){
+
+            if(request.getCatalogue() == null){
+                throw new InvalidRequestException("Catalogue in parameter in request can't be null - can't save catalogue");
+            }
+
+            Catalogue catalogue = request.getCatalogue();
+
+            if(catalogueRepo!=null)
+            {
+                catalogueRepo.save(catalogue);
+                return new SaveCatalogueToRepoResponse(true, Calendar.getInstance().getTime(),"Catalogue successfully saved.");
+
+            }
+            else
+            {
+                return new SaveCatalogueToRepoResponse(false, Calendar.getInstance().getTime(),"Catalogue can't be saved.");
+
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null - can't save catalogue");
+        }
+    }
+
 }
 

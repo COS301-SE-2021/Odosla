@@ -3,6 +3,7 @@ package cs.superleague.payment.controller;
 import cs.superleague.api.PaymentApi;
 import cs.superleague.models.*;
 import cs.superleague.payment.PaymentServiceImpl;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderType;
@@ -156,7 +157,9 @@ public class PaymentController implements PaymentApi {
                 deliveryAddress = null;
             }
 
-            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignItems(body.getItems()),
+            List<CartItemObject> cartItemObjectList = convertCartItems(body.getItems());
+
+            UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignCartItems(cartItemObjectList),
                     discount, orderType, deliveryAddress);
 
             UpdateOrderResponse updateOrderResponse = paymentService.updateOrder(request);
@@ -232,8 +235,10 @@ public class PaymentController implements PaymentApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
+            List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
+
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
-                    assignItems(body.getListOfItems()), body.getDiscount().doubleValue(),
+                    assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
                     UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getDeliveryAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
@@ -336,7 +341,7 @@ public class PaymentController implements PaymentApi {
             GetItemsResponse getItemsResponse = paymentService.getItems(getItemsRequest);
             try {
                 response.setMessage(getItemsResponse.getMessage());
-                response.setItems(populateItems(getItemsResponse.getItems()));
+                response.setCartItems(populateCartItems(getItemsResponse.getCartItems()));
                 response.setSuccess(getItemsResponse.isSuccess());
                 response.setTimestamp(getItemsResponse.getTimestamp().toString());
             }catch(Exception e){
@@ -478,23 +483,115 @@ public class PaymentController implements PaymentApi {
 
     public OrderObject populateOrder(Order order){
         OrderObject orderObject = new OrderObject();
-        orderObject.setOrderId(order.getOrderID().toString());
-        orderObject.setUserId(order.getUserID().toString());
-        orderObject.setStoreId(order.getStoreID().toString());
-
+        if(order.getOrderID() != null)
+            orderObject.setOrderId(order.getOrderID().toString());
+        if(order.getUserID() != null)
+            orderObject.setUserId(order.getUserID().toString());
+        if(order.getStoreID() != null)
+            orderObject.setStoreId(order.getStoreID().toString());
         if(order.getShopperID() != null)
-        orderObject.setShopperId(order.getShopperID().toString());
-        orderObject.setCreateDate(order.getCreateDate().toString());
-
+            orderObject.setShopperId(order.getShopperID().toString());
+        if(order.getCreateDate()!=null)
+            orderObject.setCreateDate(order.getCreateDate().toString());
         if(order.getProcessDate() != null)
-        orderObject.setProcessDate(order.getProcessDate().toString());
-        orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
-        orderObject.setStatus(order.getStatus().toString());
-        orderObject.setItems(populateItems(order.getItems()));
-        orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
-        orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
-        orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+            orderObject.setProcessDate(order.getProcessDate().toString());
+        if(order.getTotalCost() != null)
+            orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+        if(order.getStatus()!=null)
+            orderObject.setStatus(order.getStatus().toString());
+        if(order.getCartItems()!=null)
+            orderObject.setCartItems(populateCartItems(order.getCartItems()));
+        if(order.getDiscount()!=null)
+            orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
+        if(order.getDeliveryAddress()!=null)
+            orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
+        if(order.getStoreAddress()!=null)
+            orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
         orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
         return orderObject;
+    }
+
+    List<CartItem> assignCartItems(List<CartItemObject> cartObjectList){
+
+        double price = 0.00;
+
+        List<CartItem> cartItems = new ArrayList<>();
+
+        if(cartObjectList == null){
+            return null;
+        }
+
+        for (CartItemObject i: cartObjectList) {
+            CartItem item = new CartItem();
+            item.setProductID(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreID(UUID.fromString(i.getStoreId()));
+            if(i.getPrice() != null)
+                price = i.getPrice().doubleValue();
+            item.setPrice(price);
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+            cartItems.add(item);
+
+        }
+        return cartItems;
+    }
+
+    List<CartItemObject> convertCartItems(List<ItemObject> itemObjectList){
+
+        List<CartItemObject> cartItems = new ArrayList<>();
+
+        if(itemObjectList == null){
+            return null;
+        }
+
+        for (ItemObject i: itemObjectList) {
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreId());
+            item.setPrice(i.getPrice());
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+            cartItems.add(item);
+
+        }
+        return cartItems;
+    }
+
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+
+        List<CartItemObject> responseBody = new ArrayList<>();
+
+        for (CartItem i: responseItems){
+
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreID().toString());
+            item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
+
+        }
+
+        return responseBody;
     }
 }

@@ -1,12 +1,14 @@
 package cs.superleague.payment;
 
 import com.itextpdf.text.*;
+import cs.superleague.integration.dataclass.UserType;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.CartItemRepo;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.repos.TransactionRepo;
@@ -15,8 +17,10 @@ import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.responses.GetCustomerByEmailResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -52,14 +56,16 @@ public class PaymentServiceImpl implements PaymentService {
     private final TransactionRepo transactionRepo;
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
+    private final CartItemRepo cartItemRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate, CartItemRepo cartItemRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
+        this.cartItemRepo = cartItemRepo;
     }
 
 
@@ -252,28 +258,36 @@ public class PaymentServiceImpl implements PaymentService {
             }
 
             assert shop != null;
-            //            List<OrderItems> orderItems = new ArrayList<>();
-            //            for(int k=0; k<request.getListOfItems().size(); k++)
-            //            {
-            //                OrderItems orderItems1 = new OrderItems();
-            //                orderItems1.setOrderID(orderID);
-            //                orderItems1.setBarcode(request.getListOfItems().get(k).getBarcode());
-            //                orderItems1.setName(request.getListOfItems().get(k).getName());
-            //                orderItems1.setDescription(request.getListOfItems().get(k).getDescription());
-            //                orderItems1.setBrand(request.getListOfItems().get(k).getBrand());
-            //                orderItems1.setItemType(request.getListOfItems().get(k).getItemType());
-            //                orderItems1.setImageUrl(request.getListOfItems().get(k).getImageUrl());
-            //                orderItems1.setPrice(request.getListOfItems().get(k).getPrice());
-            //                orderItems1.setQuantity(request.getListOfItems().get(k).getQuantity());
-            //                orderItems1.setProductID(request.getListOfItems().get(k).getProductID());
-            //                orderItems1.setSize(request.getListOfItems().get(k).getSize());
-            //                orderItems1.setTotalCost(request.getListOfItems().get(k).getQuantity()* request.getListOfItems().get(k).getPrice());
-            //
-            //                orderItems.add(orderItems1);
-            //            }
-            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
-            //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
+            //Setting total cost of each item
+            List<CartItem> cartItems = request.getListOfItems();
+            for(int k = 0; k < cartItems.size(); k++)
+            {
+                cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
+                cartItems.get(k).setStoreID(request.getStoreID());
+                cartItems.get(k).setOrderID(orderID);
+
+            }
+
+            if(cartItemRepo!=null)
+            cartItemRepo.saveAll(cartItems);
+            //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
+
+            Order o = new Order();
+            o.setOrderID(orderID);
+            o.setUserID(customerID);
+            o.setStoreID(request.getStoreID());
+            o.setShopperID(shopperID);
+            o.setCreateDate(new Date());
+            o.setProcessDate(null);
+            o.setTotalCost(totalC);
+            o.setType(orderType);
+            o.setStatus(OrderStatus.AWAITING_PAYMENT);
+            o.setCartItems(cartItems);
+            o.setDiscount(request.getDiscount());
+            o.setDeliveryAddress(customerLocation);
+            o.setStoreAddress(shop.getStore().getStoreLocation());
+            o.setRequiresPharmacy(requiresPharmacy);
 
             if (o != null) {
 
@@ -281,7 +295,7 @@ public class PaymentServiceImpl implements PaymentService {
                     if (orderRepo != null) {
                         orderRepo.save(o);
                         List<String> productIDs = new ArrayList<>();
-                        for (Item item : request.getListOfItems()){
+                        for (CartItem item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
                         }
 
@@ -352,7 +366,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException {
-        CancelOrderResponse response;
+        CancelOrderResponse response = null;
         Order order;
         double cancellationFee;
         String message;
@@ -372,49 +386,76 @@ public class PaymentServiceImpl implements PaymentService {
 
             CurrentUser currentUser = new CurrentUser();
 
-            String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
-            URI uri = new URI(stringURI);
-
-            Map<String, Object> parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail());
-
-            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
-                    uri, parts, GetCustomerByEmailResponse.class);
-
-            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
-            Customer customer = getCustomerByEmailResponse.getCustomer();
-
-            if (customer == null || customer.getCustomerID() == null ||
-                    !customer.getCustomerID().equals(order.getUserID())) {
-                throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
-            }
-
             List<Order> orders = orderRepo.findAll();
 
             if(order.getStatus() == OrderStatus.DELIVERED ||
-                order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
+                    order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
                     order.getStatus() == OrderStatus.DELIVERY_COLLECTED){
                 message = "Cannot cancel an order that has been delivered/collected.";
                 return new CancelOrderResponse(false,Calendar.getInstance().getTime(), message,orders);
             }
 
-            // remove Order from DB.
-            orderRepo.delete(order);
+            if (currentUser.getUserType() == UserType.CUSTOMER) {
+                if (order.getStatus().equals(OrderStatus.IN_QUEUE)){
+                    String stringURI = "http://"+shoppingHost+":"+shoppingPort+"/shopping/removeQueuedOrder";
+                    URI uri = new URI(stringURI);
 
-            RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
-            rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
+                    Map<String, Object> parts = new HashMap<>();
+                    parts.put("orderID", order.getOrderID());
+                    parts.put("storeID", order.getStoreID());
+
+                    ResponseEntity<RemoveQueuedOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(
+                            uri, parts, RemoveQueuedOrderResponse.class);
+                }
+
+                RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
+                rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
+                if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
+                    cancellationFee = 1000;
+                    message = "Order successfully cancelled. Customer has been charged " + cancellationFee;
+                }else {
+                    message = "Order has been successfully cancelled";
+                }
+                order.setStatus(OrderStatus.CANCELLED);
+                orderRepo.save(order);
+
+                response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
+            }else if (currentUser.getUserType() == UserType.SHOPPER){
+                cancellationFee = 1000;
+                message = "Order successfully cancelled. Shopper has been charged " + cancellationFee;
+                response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
+                order.setStatus(OrderStatus.IN_QUEUE);
+                orderRepo.save(order);
+                AddToFrontOfQueueRequest addToFrontOfQueueRequest = new AddToFrontOfQueueRequest(order);
+                rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToFrontOfQueue", addToFrontOfQueueRequest);
+            }
+//            String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+//            URI uri = new URI(stringURI);
 //
-            orders = orderRepo.findAll();
+//            Map<String, Object> parts = new HashMap<>();
+//            parts.put("email", currentUser.getEmail());
+//
+//            ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
+//                    uri, parts, GetCustomerByEmailResponse.class);
+
+//            GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
+//            Customer customer = getCustomerByEmailResponse.getCustomer();
+
+//            if (customer == null || customer.getCustomerID() == null ||
+//                    !customer.getCustomerID().equals(order.getUserID())) {
+//                throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
+//            }
+
+
+
+            // remove Order from DB.
+//            orderRepo.delete(order);
+
+
+            //orders = orderRepo.findAll();
 
             // refund customers order total - cancellation fee
-            if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
-                cancellationFee = 1000;
-                message = "Order successfully cancelled. Customer has been charged " + cancellationFee;
-            }else {
-                message = "Order has been successfully cancelled";
-            }
 
-            response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
         }
         else{
             throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
@@ -528,8 +569,8 @@ import java.util.List;50"
 
             if (request.getListOfItems() != null) {
                 System.out.println("hello");
-                order.setItems(request.getListOfItems());
-                cost = getCost(order.getItems());
+                order.setCartItems(request.getListOfItems());
+                cost = getCost(order.getCartItems());
                 order.setTotalCost(cost - discount);
             } // else refer them to cancel order
 
@@ -545,10 +586,6 @@ import java.util.List;50"
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
-        }
-
-        for(Item item: order.getItems()){
-            System.out.println(item.getPrice());
         }
 
         orderRepo.save(order);
@@ -751,10 +788,10 @@ import java.util.List;50"
         order = transaction.getOrder();
         Calendar timestamp = Calendar.getInstance();
 
-        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getItems());
+        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getCartItems());
         invoiceRepo.save(invoice);
 
-        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getItems(), invoice.getTotalCost());
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getCartItems(), invoice.getTotalCost());
 
         // send email
         // notificationService.sendEmail(PDF);
@@ -877,7 +914,7 @@ import java.util.List;50"
             return new GetItemsResponse(null, false, new Date(), message);
         }
 
-        return new GetItemsResponse(order.getItems(), true, new Date(), message);
+        return new GetItemsResponse(order.getCartItems(), true, new Date(), message);
     }
 
     @Override
@@ -901,17 +938,17 @@ import java.util.List;50"
     }
 
     // Helper
-    private double getCost(List<Item> items){
+    private double getCost(List<CartItem> items){
         double cost = 0;
 
-        for (Item item : items) {
+        for (CartItem item : items) {
             cost += item.getPrice() * item.getQuantity();
         }
 
         return cost;
     }
 
-    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<Item> ITEM, double TOTAL_PRICE) {
+    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<CartItem> ITEM, double TOTAL_PRICE) {
         String home = System.getProperty("user.home");
         String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
         Document pdf = new Document();
@@ -923,7 +960,7 @@ import java.util.List;50"
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
             pdf.add(new Paragraph("This is an invoice from Odosla", header));
 
-            for (Item item: ITEM) {
+            for (CartItem item: ITEM) {
                 pdf.add(new Paragraph("Item: " + item.getName(), body));
                 pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
                 pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
