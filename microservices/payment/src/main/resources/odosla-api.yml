@@ -329,10 +329,10 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        items:
+        cartItems:
           type: array
           items:
-            $ref: "#/components/schemas/ItemObject"
+            $ref: "#/components/schemas/CartItemObject"
         success:
           type: boolean
         message:
