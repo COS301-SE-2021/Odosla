@@ -1,4 +1,4 @@
-package cs.superleague.shopping.requests;
+package cs.superleague.payment.requests;
 
 public class GetAllCartItemsRequest {
 

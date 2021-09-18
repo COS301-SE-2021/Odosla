@@ -1,4 +1,4 @@
-package cs.superleague.shopping.responses;
+package cs.superleague.payment.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.payment.dataclass.CartItem;
