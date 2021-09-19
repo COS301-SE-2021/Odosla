@@ -5,7 +5,7 @@ import 'package:flutter_employee_app/models/Store.dart';
 import 'package:provider/provider.dart';
 
 class ShopProvider with ChangeNotifier{
-  Store _store=new Store("", "", 0, 0, true,"");
+  Store _store=new Store("", "", 0, 0, true,"","","","");
 
   ShopProvider();
 

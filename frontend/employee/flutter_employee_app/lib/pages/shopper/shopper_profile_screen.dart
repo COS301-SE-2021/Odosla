@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/User.dart';
+import 'package:flutter_employee_app/pages/contact_us_page.dart';
 import 'package:flutter_employee_app/pages/shopper/edit_profile_page.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
@@ -221,7 +222,10 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                       //   'Purchase History',
                       // ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => ContactPage()));
+                        },
                         child: ProfileListItem(
                           LineAwesomeIcons.question_circle,
                           'Help & Support',
@@ -238,13 +242,13 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
-
+                        onTap: () async {
+                          await _userService.deleteStorage(context);
                           MyNavigator.goToLogin(context);
-                          /* implement dleting from storage */
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.alternate_sign_out,
+
                           'Logout',
                         ),
                       ),

@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/functions.dart';
@@ -13,6 +11,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+
 class RegisterScreen extends StatefulWidget {
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -55,8 +54,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
 
   FixedExtentScrollController _scrollController =
   FixedExtentScrollController(initialItem: 1);
-
-
 
   Widget _buildNameTF() {
     return Column(
@@ -210,7 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
           decoration: kBoxDecorationStyle,
           height: 50.0,
           child: TextField(
-            obscureText: true,
+            obscureText: _showPassword?false:true,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
@@ -276,7 +273,7 @@ class _RegisterScreenState extends State<RegisterScreen>{
           decoration: kBoxDecorationStyle,
           height: 50.0,
           child: TextField(
-            obscureText: true,
+            obscureText: _showPassword?false:true,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
@@ -454,7 +451,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                         ]);
                         showDialog(
                           context: context,
-
                           builder: (BuildContext context) => _popUpSuccessfulRegisteration(context),
                         );
                       } else if (success == "Email has already been used") {
@@ -489,7 +485,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                           _userService.setRegistrationPassword(_password);
                           showDialog(
                             context: context,
-
                             builder: (BuildContext context) => _popUpSuccessfulRegisteration(context),
                           );
                         } else if (success == "Email has already been used") {
@@ -644,24 +639,22 @@ class _RegisterScreenState extends State<RegisterScreen>{
               fontWeight: FontWeight.w400,
             ),
           ),
-        Container(
-          alignment: Alignment.center,
-          child: FlatButton(
-            onPressed: () => selected==0?MyNavigator.goToShopperActivateAccount(context):MyNavigator.goToDriverActivateAccount(context),
-            padding: EdgeInsets.only(right: 0.0),
-            child: Text(selected==0?
-              'Activate shopper account?':"Activate driver account?",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'OpenSans',
-                fontSize: 15.0,
-              ),
-
+          Container(
+            alignment: Alignment.center,
+            child: FlatButton(
+              onPressed: () => selected==0?MyNavigator.goToShopperActivateAccount(context):MyNavigator.goToDriverActivateAccount(context),
+              padding: EdgeInsets.only(right: 0.0),
+              child: Text(selected==0?
+                'Activate shopper account?':"Activate driver account?",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'OpenSans',
+                  fontSize: 15.0,
+                ),
+          ),
         ),
-      ),
-    )
-      ]
+      )]
     );
   }
 
@@ -699,7 +692,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
             SizedBox(
               height: 7.0,
             ),
-            // _buildDifferentUserSignIns(),
             _buildNameTF(),
             SizedBox(
               height: 10.0,
@@ -787,7 +779,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                       SizedBox(
                         height: 12.0,
                       ),
-                      //_buildPhoneNumberTF(),
                       _nameSurnamePhoneNumberWidget(),
                       //_showAdditionalWidgetsOption(),
                       _buildRegisterBtn(),
@@ -799,7 +790,6 @@ class _RegisterScreenState extends State<RegisterScreen>{
                 ),
               ),
                 isLoading: _isInAsyncCall,
-                // demo of some additional parameters
                 opacity: 0.5,
                 color: Colors.white,
                 progressIndicator: CircularProgressIndicator(
@@ -812,7 +802,5 @@ class _RegisterScreenState extends State<RegisterScreen>{
       ),
     );
   }
-
-
 
 }
