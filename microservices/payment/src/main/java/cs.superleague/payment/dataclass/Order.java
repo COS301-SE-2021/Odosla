@@ -48,7 +48,7 @@ public class Order implements Serializable {
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @OneToMany
+    @OneToMany (cascade = CascadeType.ALL)
     @JoinColumn(name="order_id")
     private List<CartItem> cartItems;
 
