@@ -288,6 +288,9 @@ public class ShoppingServiceImpl implements ShoppingService {
             GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
             Order updateOrder = getOrderResponse.getOrder();
 
+            System.out.println("get order id:" + getOrderResponse.getOrder().getOrderID());
+            System.out.println("update order id: " + updateOrder.getOrderID());
+
             if(updateOrder!=null)
             {
                 System.out.println("Order is retrieved");
@@ -308,9 +311,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 System.out.println("Shopper is retrieved " + shopper.getName());
 
+                updateOrder.setOrderID(getOrderResponse.getOrder().getOrderID());
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
 
+                System.out.println("New update order ID: " + updateOrder.getOrderID());
                 System.out.println("Order shopper ID: " + updateOrder.getShopperID());
 
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
