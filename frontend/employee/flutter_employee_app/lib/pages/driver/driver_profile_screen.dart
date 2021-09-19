@@ -128,7 +128,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(width: kSpacingUnit.w * 3),
+        SizedBox(width: kSpacingUnit.w * 4),
         profileInfo,
         themeSwitcher,
         SizedBox(width: kSpacingUnit.w * 3),
@@ -159,7 +159,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                         child: Card(
                             margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*0.2,vertical: kSpacingUnit.w*0.1),
                             clipBehavior: Clip.antiAlias,
-                            color: Colors.deepOrangeAccent,
+                            color: Theme.of(context).backgroundColor,
                             elevation: 5.0,
                             child: Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
@@ -242,7 +242,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () async {
+                          await _userService.deleteStorage(context);
                           MyNavigator.goToLogin(context);
                           /* implement dleting from storage */
                         },

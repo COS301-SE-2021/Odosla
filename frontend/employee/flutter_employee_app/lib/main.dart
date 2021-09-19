@@ -1,11 +1,11 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/admin/admin_main_screen.dart';
+import 'package:flutter_employee_app/pages/contact_us_page.dart';
 import 'package:flutter_employee_app/pages/driver/driver_main_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_driver_account_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/activate_shopper_account_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/forgot_password_screen.dart';
-import 'package:flutter_employee_app/pages/home_screen.dart';
 import 'package:flutter_employee_app/pages/login_registration/intro_screen_driver.dart';
 import 'package:flutter_employee_app/pages/login_registration/intro_screen_shopper.dart';
 import 'package:flutter_employee_app/pages/login_registration/login_screen.dart';
@@ -29,9 +29,10 @@ import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import 'models/Store.dart';
+
 
 var routes = <String, WidgetBuilder>{
-  "/home": (BuildContext context) => HomeScreen(),
   "/introShopper": (BuildContext context) => IntroShopperScreen(),
   "/introDriver": (BuildContext context) => IntroDriverScreen(),
   "/login": (BuildContext context) => LoginScreen(),
@@ -41,8 +42,8 @@ var routes = <String, WidgetBuilder>{
   "/activateShopperAccount":(BuildContext context) =>ActivateShopperAccountScreen(),
   "/shopperHomePage":(BuildContext context) =>ShopperHomeScreen(1),
   "/driverHomePage":(BuildContext context) =>DriverHomeScreen(1),
-  "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(),
-  "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(),
+  "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(context,barcodeExpected: '',),
+  "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(context,store: Store("", "", 0, 0, true,"","","","")),
   "/adminHomePage":(BuildContext context)=>AdminHomeScreen(1),
 };
 

@@ -37,7 +37,7 @@ class ImporterService {
 
     final response = await http.post(
         URL, headers: headers, body: jsonEncode(data)).timeout(
-        Duration(seconds: 15),
+        Duration(seconds: 40),
         onTimeout:(){ return(http.Response('TimeOut',408));
         });
 
@@ -96,7 +96,7 @@ class ImporterService {
 
     final response = await http.post(
         URL, headers: headers, body: jsonEncode(data)).timeout(
-        Duration(seconds: 15),
+        Duration(seconds: 40),
         onTimeout:(){ return(http.Response('TimeOut',408));
         });;
 

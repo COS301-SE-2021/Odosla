@@ -28,8 +28,6 @@ bool validatePhoneNumber(String value) {
 
 List<Store> StoresFromJson(Map<String, dynamic> j) {
   List<Store> list;
-
-  //Iterable i = json.decode(j['items']);
   list = (json.decode(json.encode(j['stores'])) as List)
       .map((i) => Store.fromJson(i))
       .toList();
@@ -39,9 +37,7 @@ List<Store> StoresFromJson(Map<String, dynamic> j) {
 
 List<Item> ItemsFromJson(Map<String, dynamic> j) {
   List<Item> list;
-
-  //Iterable i = json.decode(j['items']);
-  list = (json.decode(json.encode(j['items'])) as List)
+  list = (json.decode(json.encode(j['cartItems'])) as List)
       .map((i) => Item.fromJson(i))
       .toList();
 
