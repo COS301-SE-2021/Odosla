@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import cs.superleague.shopping.dataclass.Item;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 import java.io.Serializable;
@@ -23,11 +24,14 @@ public class Order implements Serializable {
     private UUID shopperID;
     private UUID driverID;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
     private Date createDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    @DateTimeFormat (pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
     private Date processDate;
+
     private Double totalCost;
     private Double discount;
     private boolean requiresPharmacy;
