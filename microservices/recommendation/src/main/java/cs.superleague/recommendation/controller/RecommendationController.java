@@ -1,9 +1,11 @@
 package cs.superleague.recommendation.controller;
 
 import cs.superleague.api.RecommendationApi;
+import cs.superleague.models.CartItemObject;
 import cs.superleague.models.ItemObject;
 import cs.superleague.models.RecommendationGetCartRecommendationRequest;
 import cs.superleague.models.RecommendationGetCartRecommendationResponse;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.recommendation.RecommendationService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
@@ -60,7 +62,7 @@ public class RecommendationController implements RecommendationApi {
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
                 response.setIsSuccess(getCartRecommendationResponse.isSuccess());
-                response.setRecommendations(populateItems(getCartRecommendationResponse.getRecommendations()));
+                response.setRecommendations(populateCartItems(getCartRecommendationResponse.getRecommendations()));
             } catch (Exception e){
                 e.printStackTrace();
                 response.setMessage(e.getMessage());
@@ -101,6 +103,32 @@ public class RecommendationController implements RecommendationApi {
             currentItem.setSize(responseItems.get(i).getSize());
 
             responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+
+        List<CartItemObject> responseBody = new ArrayList<>();
+
+        for (CartItem i: responseItems){
+
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreID().toString());
+            item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
 
         }
 

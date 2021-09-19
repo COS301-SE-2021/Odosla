@@ -1,6 +1,8 @@
 package cs.superleague.recommendation;
 
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetAllCartItemsResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
@@ -100,9 +102,9 @@ public class RecommendationServiceImpl implements RecommendationService{
                     }
                 }
             }
-            List<Item> finalItemsRecommendation = new ArrayList<>();
+            List<CartItem> finalItemsRecommendation = new ArrayList<>();
             for (Order orders : finalRecommendation){
-                for (Item item : orders.getItems()){
+                for (CartItem item : orders.getCartItems()){
                     if (request.getItemIDs().contains(item.getProductID())){
                         continue;
                     }
@@ -168,22 +170,22 @@ public class RecommendationServiceImpl implements RecommendationService{
 
         int count = 0;
         int randomInt = 0;
-        List<Item> allItems;
-        List<Item> randomItems = new ArrayList<>();
+        List<CartItem> allItems;
+        List<CartItem> randomItems = new ArrayList<>();
         Random random = new Random();
         Map<String, Object> parts = new HashMap<>();
 
-        ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
-                "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getAllItems",
-                parts, GetAllItemsResponse.class);
+        ResponseEntity<GetAllCartItemsResponse> responseEntity = restTemplate.postForEntity(
+                "http://" + paymentHost + ":" + paymentPort + "/payment/getAllCartItems",
+                parts, GetAllCartItemsResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody() || responseEntity.getBody() == null
-            || responseEntity.getBody().getItems() == null){
+            || responseEntity.getBody().getCartItems() == null){
             return new GetCartRecommendationResponse(new ArrayList<>(),
                     false, "Could not retrieve Items");
         }
 
-        allItems = responseEntity.getBody().getItems();
+        allItems = responseEntity.getBody().getCartItems();
 
         if(allItems.size() < 3){
             count = allItems.size();
