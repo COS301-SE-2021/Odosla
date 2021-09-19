@@ -106,7 +106,6 @@ public class GetOrderIntegrationTest {
         cartItems.add(cI1);
         cartItems.add(cI2);
 
-        rabbitTemplate.setChannelTransacted(true);
         for (Item item: expectedListOfItems) {
             SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);

@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
@@ -608,13 +609,11 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
-        Optional<Order> orderOptional = orderRepo.findById(request.getOrderID());
+        order  = orderRepo.findById(request.getOrderID()).orElse(null);
 
-        if(orderOptional == null || !orderOptional.isPresent()){
+        if(order  == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
-
-        order = orderOptional.get();
 
         System.out.println("requests order id: " + request.getOrderID());
 //        order = orderRepo.findById(request.getOrderID()).orElse(null);
@@ -716,13 +715,11 @@ import java.util.List;50"
         }
         Thread.sleep(2000);
 
-        Order order;
-        Optional<Order> orderOptional = orderRepo.findById(request.getOrderID());
-        if (orderOptional == null || !orderOptional.isPresent()){
+        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if (order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
         }
 
-        order = orderOptional.get();
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.VERIFYING);
         SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
         VerifyPaymentRequest verifyPaymentRequest = new VerifyPaymentRequest(setStatusResponse.getOrder().getOrderID());
@@ -745,13 +742,11 @@ import java.util.List;50"
             throw new InvalidRequestException("Invalid request received - orderID cannot be null");
         }
         Thread.sleep(3000);
-        Order order;
-        Optional<Order> orderOptional = orderRepo.findById(request.getOrderID());
-        if (orderOptional == null || !orderOptional.isPresent()){
+        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
+        if (order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
         }
 
-        order = orderOptional.get();
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.PURCHASED);
         SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
         Thread.sleep(2000);
@@ -876,12 +871,29 @@ import java.util.List;50"
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
         customer = getCustomerByEmailResponse.getCustomer();
+
+        System.out.println(customer);
+
+//        for (Field field : customer.getClass().getDeclaredFields()) {
+//            field.setAccessible(true); // You might want to set modifier to public first.
+//            Object value = null;
+//            try {
+//                value = field.get(customer);
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//            if (value != null) {
+//                System.out.println(field.getName() + "=" + value);
+//            }
+//        }
+
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
         if (orders == null){
             throw new OrderDoesNotExist("No Orders found for this user in the database.");
         }
         for (Order o : orders){
-            if(o.getStatus().equals(OrderStatus.CUSTOMER_COLLECTED) || o.getStatus().equals(OrderStatus.DELIVERED)){
+            if(o.getStatus().equals(OrderStatus.CUSTOMER_COLLECTED) ||
+                    o.getStatus().equals(OrderStatus.DELIVERED)){
                 continue;
             }else{
                 response = new GetCustomersActiveOrdersResponse(o.getOrderID(), true, "Order successfully returned to customer.");
@@ -972,6 +984,7 @@ import java.util.List;50"
         double cost = 0;
 
         for (CartItem item : items) {
+            if(item != null)
             cost += item.getPrice() * item.getQuantity();
         }
 

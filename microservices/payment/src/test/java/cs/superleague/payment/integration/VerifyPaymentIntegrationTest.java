@@ -113,7 +113,6 @@ public class VerifyPaymentIntegrationTest {
         listOfOrders.add(o2);
 
         // save items to repo
-        rabbitTemplate.setChannelTransacted(true);
         for (Item item: expectedListOfItems) {
             SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);

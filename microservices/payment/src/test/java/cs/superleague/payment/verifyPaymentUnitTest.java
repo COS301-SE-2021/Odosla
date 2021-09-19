@@ -134,7 +134,7 @@ public class verifyPaymentUnitTest {
     @Description("Tests for when there is no order in the database")
     @DisplayName("Invalid orderID")
     void invalidOrderIDPassedInRequestObject_UnitTest(){
-        Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
         VerifyPaymentRequest request = new VerifyPaymentRequest(UUID.randomUUID());
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.verifyPayment(request));
         assertEquals("Order doesn't exist in database - could not create transaction", thrown.getMessage());

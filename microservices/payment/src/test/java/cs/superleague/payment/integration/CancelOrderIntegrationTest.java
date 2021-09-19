@@ -106,7 +106,6 @@ public class CancelOrderIntegrationTest {
         cartItems.add(cItem1);
         cartItems.add(cItem2);
 
-        rabbitTemplate.setChannelTransacted(true);
         for (Item item: expectedListOfItems) {
             SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
