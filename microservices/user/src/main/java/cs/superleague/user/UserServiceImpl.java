@@ -3,6 +3,7 @@ import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.payment.dataclass.*;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -120,22 +121,19 @@ public class UserServiceImpl implements UserService{
                 throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
             }
 
-
-
             Order orderEntity=null;
-            try {
 
-                Map<String, Object> parts = new HashMap<String, Object>();
-                parts.put("orderID", request.getOrderID());
-                String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-                URI uri = new URI(uriString);
+            System.out.println("order id from request: " + request.getOrderID());
 
-                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
-                GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
-                orderEntity = getOrderResponse.getOrder();
-            }
-            catch (Exception e){
-                throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+            Map<String, Object> parts = new HashMap<>();
+            parts.put("orderID", request.getOrderID());
+            String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                    uri, parts, GetOrderByUUIDResponse.class);
+
+            if(responseEntity.getBody() != null) {
+                orderEntity = responseEntity.getBody().getOrder();
             }
 
             if(orderEntity==null)
@@ -166,15 +164,14 @@ public class UserServiceImpl implements UserService{
             if(orderEntity.getType().equals(OrderType.DELIVERY))
             {
 
-                Map<String, Object> parts = new HashMap<String, Object>();
-
+                parts = new HashMap<>();
                 parts.put("orderID", orderEntity.getOrderID());
                 parts.put("customerID", orderEntity.getUserID());
                 parts.put("storeID", orderEntity.getStoreID());
                 parts.put("timeOfDelivery", null);
                 parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
                 String uriString = "http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery";
-                URI uri = new URI(uriString);
+                uri = new URI(uriString);
                 ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, CreateDeliveryResponse.class);
                 CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
             }
@@ -235,13 +232,16 @@ public class UserServiceImpl implements UserService{
             try {
                 //orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
 
-                Map<String, Object> parts = new HashMap<String, Object>();
+                Map<String, Object> parts = new HashMap<>();
                 parts.put("orderID", request.getOrderID());
-                String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-                URI uri = new URI(uriString);
-                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
-                GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
-                orderEntity = getOrderResponse.getOrder();
+                String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                        uri, parts, GetOrderByUUIDResponse.class);
+
+                if(responseEntity.getBody() != null) {
+                    orderEntity = responseEntity.getBody().getOrder();
+                }
             }
             catch (Exception e){
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
@@ -2042,14 +2042,17 @@ public class UserServiceImpl implements UserService{
         //Get Order By UUID
         //Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
 
-       Map<String, Object> parts = new HashMap<String, Object>();
+       Map<String, Object> parts = new HashMap<>();
        parts.put("orderID", request.getOrderID());
-       String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-       URI uri = new URI(uriString);
+       String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+       URI uri = new URI(stringUri);
+       ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+               uri, parts, GetOrderByUUIDResponse.class);
 
-       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
-       GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
-       Order currentOrder = getOrderResponse.getOrder();
+       Order currentOrder = null;
+       if(responseEntity.getBody() != null) {
+           currentOrder = responseEntity.getBody().getOrder();
+       }
 
         if(currentOrder==null){
             throw new OrderDoesNotExist("Order does not exist in database");
@@ -2092,17 +2095,16 @@ public class UserServiceImpl implements UserService{
 
         //Order order= orderRepo.findById(request.getOrderID()).orElse(null);
 
-        Map<String, Object> parts = new HashMap<String, Object>();
+        Map<String, Object> parts = new HashMap<>();
         parts.put("orderID", request.getOrderID());
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-        URI uri = new URI(uriString);
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        URI uri = new URI(stringUri);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                uri, parts, GetOrderByUUIDResponse.class);
 
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
-        GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
-        Order order = getOrderResponse.getOrder();
-
-        if(order==null){
-            throw new OrderDoesNotExist("Order does not exist in database");
+        Order order = null;
+        if(responseEntity.getBody() != null) {
+            order = responseEntity.getBody().getOrder();
         }
 
         order.setStatus(OrderStatus.DELIVERED);

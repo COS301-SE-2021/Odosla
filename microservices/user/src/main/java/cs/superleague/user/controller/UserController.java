@@ -461,6 +461,7 @@ public class UserController implements UserApi {
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
         try {
+            System.out.println("store id from front end: "+ body.getStoreID());
             UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.isOnShift(), UUID.fromString(body.getStoreID()));
             UpdateShopperShiftResponse response1 = userService.updateShopperShift(request);
             try {

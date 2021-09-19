@@ -185,6 +185,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetAllCartItemsResponse"
+
+  /payment/getOrderByUUID:
+    post:
+      summary: Endpoint for getting order by UUID
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getOrderByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetOrderByUUIDRequest"
+      responses:
+        "200":
+          description: Returns the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetOrderByUUIDResponse"
 components:
 
   schemas:
@@ -478,4 +500,22 @@ components:
         message:
           type: string
         timestamp:
+          type: string
+
+    payment_GetOrderByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetOrderByUUIDResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        order:
+          $ref: "#/components/schemas/OrderObject"
+        timestamp:
+          type: string
+        message:
           type: string

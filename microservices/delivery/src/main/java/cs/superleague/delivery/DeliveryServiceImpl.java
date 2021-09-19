@@ -14,6 +14,7 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -109,8 +110,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         Driver driver = responseEntity.getBody().getDriver();
 
         if (delivery.getDriverId() != null){
-            System.out.println("delivery"+delivery.getDriverId());
-            System.out.println("driver"+driver.getDriverID());
             if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
                 if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
                     return new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
@@ -121,25 +120,22 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("This delivery has already been taken by another driver.");
         }
 
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-        uri = new URI(uriString);
-        System.out.println(delivery.getOrderID());
+
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder;
-        try {
-            responseEntityOrder = restTemplate.postForEntity(uri,
-                    orderRequest, GetOrderResponse.class);
-        } catch (Exception e){
-            throw new InvalidRequestException("Invalid order.");
-        }
-        if(responseEntityOrder == null || !responseEntityOrder.hasBody()
-            || responseEntityOrder.getBody() == null){
-            throw new InvalidRequestException("Invalid order.");
+
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        uri = new URI(uriString);
+
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
+                orderRequest, GetOrderByUUIDResponse.class);
+
+        Order updateOrder= null;
+
+        if(responseEntity.getBody() != null) {
+            updateOrder = responseEntityOrder.getBody().getOrder();
         }
 
-
-        Order updateOrder= responseEntityOrder.getBody().getOrder();
 
         if(updateOrder!=null){
             if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
@@ -154,7 +150,7 @@ public class DeliveryServiceImpl implements DeliveryService {
                 orderRequest.put("orderID", delivery.getOrderID());
 
                 responseEntityOrder = restTemplate.postForEntity(uri,
-                        orderRequest, GetOrderResponse.class);
+                        orderRequest, GetOrderByUUIDResponse.class);
 
                 if(responseEntityOrder == null || !responseEntityOrder.hasBody()
                         || responseEntityOrder.getBody() == null){
@@ -203,17 +199,15 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Invalid customerID.");
         }
 
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", request.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder;
-        try {
-            responseEntityOrder = restTemplate.postForEntity(uri,
-                    orderRequest, GetOrderResponse.class);
-        }catch (Exception e){
-            throw new InvalidRequestException("Invalid orderID.");
-        }
+
+
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
+                orderRequest, GetOrderByUUIDResponse.class);
+
         if(responseEntityOrder == null || !responseEntityOrder.hasBody()
                 || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null){
             throw new InvalidRequestException("Invalid orderID.");
@@ -460,7 +454,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         } catch (Exception e){
             delivery.setDriverId(null);
             deliveryRepo.save(delivery);
-            System.out.println("t"+delivery.getPickUpLocation());
             TrackDeliveryResponse response = new TrackDeliveryResponse(delivery.getPickUpLocation(), "No driver has been assigned to this delivery.");
             return response;
         }
@@ -480,7 +473,6 @@ public class DeliveryServiceImpl implements DeliveryService {
             TrackDeliveryResponse response = new TrackDeliveryResponse(delivery.getPickUpLocation(), "No driver has been assigned to this delivery.");
             return response;
         }
-        System.out.println("l"+driver.getOnShift());
         return new TrackDeliveryResponse(driver.getCurrentAddress(), "Drivers current location.");
     }
 
@@ -531,10 +523,10 @@ public class DeliveryServiceImpl implements DeliveryService {
             uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
             uri = new URI(uriString);
             Map<String, Object> orderRequest = new HashMap<String, Object>();
-            orderRequest.put("orderID", delivery.getOrderID().toString());
+            orderRequest.put("orderID", delivery.getOrderID());
 
-            ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
-                    orderRequest, GetOrderResponse.class);
+            ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
+                    orderRequest, GetOrderByUUIDResponse.class);
 
             Order order;
             if(responseEntityOrder == null || !responseEntityOrder.hasBody()
@@ -614,17 +606,15 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
         }
 
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         URI uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<String, Object>();
         orderRequest.put("orderID", request.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder;
-        try {
-            responseEntityOrder = restTemplate.postForEntity(uri,
-                    orderRequest, GetOrderResponse.class);
-        } catch (Exception e){
-            throw new InvalidRequestException("Order does not exist");
-        }
+
+
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
+                orderRequest, GetOrderByUUIDResponse.class);
+
         if(responseEntityOrder == null || !responseEntityOrder.hasBody()
                 || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null){
             throw new InvalidRequestException("Order does not exist");
