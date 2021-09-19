@@ -259,19 +259,10 @@ public class PaymentServiceImpl implements PaymentService {
 
             assert shop != null;
 
-            //Setting total cost of each item
-            List<CartItem> cartItems = request.getListOfItems();
-            for(int k = 0; k < cartItems.size(); k++)
-            {
-                cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
-                cartItems.get(k).setStoreID(request.getStoreID());
-                cartItems.get(k).setOrderID(orderID);
-
-            }
 
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
-            System.out.println("Submit Order id: "+ orderID);
+//            System.out.println("Submit Order id: "+ orderID);
             Order o = new Order();
             o.setOrderID(orderID);
             o.setUserID(customerID);
@@ -282,7 +273,6 @@ public class PaymentServiceImpl implements PaymentService {
             o.setTotalCost(totalC);
             o.setType(orderType);
             o.setStatus(OrderStatus.AWAITING_PAYMENT);
-            o.setCartItems(cartItems);
             o.setDiscount(request.getDiscount());
             o.setDeliveryAddress(customerLocation);
             o.setStoreAddress(shop.getStore().getStoreLocation());
@@ -294,8 +284,31 @@ public class PaymentServiceImpl implements PaymentService {
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
                         orderRepo.save(o);
+                        System.out.println("-----------made it after order repo -----------");
+                        //Setting total cost of each item
+                        List<CartItem> cartItems = request.getListOfItems();
+
+                        System.out.println("Submit order cart size: " + cartItems.size());
+                        for(int k = 0; k < cartItems.size(); k++)
+                        {
+                            UUID cartID = UUID.randomUUID();
+                            while(cartItemRepo.existsById(cartID))
+                            {
+                                cartID = UUID.randomUUID();
+                            }
+                            cartItems.get(k).setCartItemNo(cartID);
+                            cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
+                            cartItems.get(k).setStoreID(request.getStoreID());
+                            cartItems.get(k).setOrderID(orderID);
+
+                        }
+
+                        o.setCartItems(cartItems);
+
                         if(cartItemRepo!=null)
                             cartItemRepo.saveAll(cartItems);
+
+                        orderRepo.save(o);
 
                         List<String> productIDs = new ArrayList<>();
                         for (CartItem item : request.getListOfItems()){
@@ -611,8 +624,11 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
+        System.out.println("requests order id: " + request.getOrderID());
         order = orderRepo.findById(request.getOrderID()).orElse(null);
-        order.setOrderID(request.getOrderID());
+        //order.setOrderID(request.getOrderID());
+        System.out.println("order total cost: " +order.getTotalCost());
+        System.out.println("order create date: " +order.getCreateDate());
         System.out.println("Order id from get Order: " + order.getOrderID());
         if(order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");

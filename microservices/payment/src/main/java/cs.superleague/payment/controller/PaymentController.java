@@ -238,6 +238,7 @@ public class PaymentController implements PaymentApi {
 
             List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
             System.out.println("BEFORE THE CALL");
+            System.out.println("Cart items list size : "+ cartItemObjects.size());
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
                     UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
@@ -525,6 +526,10 @@ public class PaymentController implements PaymentApi {
 
         for (CartItemObject i: cartObjectList) {
             CartItem item = new CartItem();
+            if(i.getCartItemNo()!=null)
+            {
+                item.setCartItemNo(UUID.fromString(i.getCartItemNo()));
+            }
             item.setProductID(i.getProductId());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
@@ -552,6 +557,8 @@ public class PaymentController implements PaymentApi {
             return null;
         }
 
+        System.out.println("length of itemobjectlist: " + itemObjectList.size());
+
         for (ItemObject i: itemObjectList) {
             CartItemObject item = new CartItemObject();
             item.setProductId(i.getProductId());
@@ -578,6 +585,10 @@ public class PaymentController implements PaymentApi {
         for (CartItem i: responseItems){
 
             CartItemObject item = new CartItemObject();
+            if(i.getCartItemNo()!=null)
+            {
+                item.setCartItemNo(i.getCartItemNo().toString());
+            }
             item.setProductId(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());

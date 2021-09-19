@@ -10,15 +10,14 @@ import java.util.UUID;
 public class CartItem implements Serializable {
 
     @Id
-    @GeneratedValue
-    private int cartItemNo;
+    private UUID cartItemNo;
 
     @JsonProperty("productId")
     private String productID;
 
-    @ManyToOne
-    @JoinColumn(name="order_id", insertable = false)
-    private Order order;
+//    @ManyToOne
+//    @JoinColumn(name="order_id", insertable = false)
+//    private Order order;
 
     private String name;
     private String barcode;
@@ -170,6 +169,14 @@ public class CartItem implements Serializable {
 
     public void setStoreID(UUID storeID) {
         this.storeID = storeID;
+    }
+
+    public UUID getCartItemNo() {
+        return cartItemNo;
+    }
+
+    public void setCartItemNo(UUID cartItemNo) {
+        this.cartItemNo = cartItemNo;
     }
 
 
