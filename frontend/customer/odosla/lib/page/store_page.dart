@@ -8,6 +8,7 @@ import 'package:odosla/page/cart_page.dart';
 import 'package:odosla/page/items_page.dart';
 import 'package:odosla/page/order_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
+import 'package:odosla/provider/store_provider.dart';
 import 'package:odosla/services/api_service.dart';
 import 'package:odosla/widget/cart_bar_widget.dart';
 import 'package:provider/provider.dart';
@@ -103,6 +104,8 @@ class _StorePageState extends State<StorePage> {
                     onTap: () {
                       if (isOpen(
                           items[index].openTime, items[index].closeTime)) {
+                        Provider.of<StoreProvider>(context, listen: false)
+                            .store = items[index];
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (BuildContext context) => ItemsPage(
                                     items[index].id, items[index].name, {

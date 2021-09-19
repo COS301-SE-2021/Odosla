@@ -14,7 +14,7 @@ class UserService {
 
   Future<bool> loginUser(String email, String password, String userType,
       BuildContext context) async {
-    final loginURL = Uri.parse(endpoint + "/user/loginUser");
+    final loginURL = Uri.parse(userEndpoint + "/user/loginUser");
 
     Map<String, String> headers = new Map<String, String>();
 
@@ -75,7 +75,7 @@ class UserService {
 
   Future<String> register(String name, String surname, String email,
       String password, String phoneNumber) async {
-    final loginURL = Uri.parse(endpoint + "/user/registerCustomer");
+    final loginURL = Uri.parse(userEndpoint + "/user/registerCustomer");
 
     Map<String, String> headers = new Map<String, String>();
 
@@ -122,7 +122,7 @@ class UserService {
 
   Future<String> verifyAccount(
       String email, String activationCode, String userType) async {
-    final loginURL = Uri.parse(endpoint + "/user/verifyAccount");
+    final loginURL = Uri.parse(userEndpoint + "/user/verifyAccount");
 
     Map<String, String> headers = new Map<String, String>();
 
