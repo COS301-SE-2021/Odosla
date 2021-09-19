@@ -2,8 +2,6 @@ package cs.superleague.delivery.requests;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 
-import java.util.UUID;
-
 public class GetNextOrderForDriverRequest {
     private GeoPoint currentLocation;
     private double rangeOfDelivery;

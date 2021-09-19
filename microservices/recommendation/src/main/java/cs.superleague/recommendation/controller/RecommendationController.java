@@ -1,74 +1,68 @@
 package cs.superleague.recommendation.controller;
 
 import cs.superleague.api.RecommendationApi;
-import cs.superleague.integration.ServiceSelector;
+import cs.superleague.models.CartItemObject;
 import cs.superleague.models.ItemObject;
 import cs.superleague.models.RecommendationGetCartRecommendationRequest;
 import cs.superleague.models.RecommendationGetCartRecommendationResponse;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.recommendation.dataclass.Recommendation;
-import cs.superleague.recommendation.exceptions.InvalidRequestException;
-import cs.superleague.recommendation.exceptions.RecommendationRepoException;
+import cs.superleague.payment.dataclass.CartItem;
+import cs.superleague.recommendation.RecommendationService;
+import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.repos.ItemRepo;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @CrossOrigin
 @RestController
 public class RecommendationController implements RecommendationApi {
-    @Autowired
+
     RecommendationRepo recommendationRepo;
+    RecommendationService recommendationService;
+    RestTemplate restTemplate;
+    HttpServletRequest httpServletRequest;
+
     @Autowired
-    OrderRepo orderRepo;
-    @Autowired
-    ItemRepo itemRepo;
+    public RecommendationController(RecommendationRepo recommendationRepo, RecommendationService recommendationService, RestTemplate restTemplate, HttpServletRequest httpServletRequest) {
+        this.recommendationRepo = recommendationRepo;
+        this.recommendationService = recommendationService;
+        this.restTemplate = restTemplate;
+        this.httpServletRequest = httpServletRequest;
+    }
 
     @Override
     public ResponseEntity<RecommendationGetCartRecommendationResponse> getCartRecommendation(RecommendationGetCartRecommendationRequest body) {
-//        UUID orderID = UUID.randomUUID();
-//        Order order = new Order();
-//        UUID storeUUID1 = UUID.randomUUID();
-//        Item item1=new Item("Tomato Sauce","p234058925","60019578",storeUUID1,31.99,1,"South Africa's firm favourite! It has a thick, smooth texture that can easily be poured and enjoyed on a variety of dishes.","item/tomatoSauce.png", "All Gold", "700ml", "Sauce");
-//        Item item2=new Item("Bar one","p123984123","6001068595808", storeUUID1,10.99,1,"Thick milk chocolate with nougat and caramel centre.","item/barOne.png", "Nestle", "55g", "Chocolate");
-//        Item item3=new Item("Milk","p423523144","6001007162474",storeUUID1,27.99,1,"Pasteurised, homogenised Full cream fresh milk","item/pnpMilk.png", "Pick n Pay", "2l", "Dairy");
-//        itemRepo.save(item1);
-//        itemRepo.save(item2);
-//        itemRepo.save(item3);
-//        List<Item> itemOrders = new ArrayList<>();
-//        itemOrders.add(item1);
-//        itemOrders.add(item2);
-//        itemOrders.add(item3);
-//        order.setItems(itemOrders);
-//        orderRepo.save(order);
-//        Recommendation recommendation1 = new Recommendation(UUID.randomUUID(), "p234058925", orderID);
-//        Recommendation recommendation2 = new Recommendation(UUID.randomUUID(), "p123984123", orderID);
-//        Recommendation recommendation3 = new Recommendation(UUID.randomUUID(), "p423523144", orderID);
-//        recommendationRepo.save(recommendation1);
-//        recommendationRepo.save(recommendation2);
-//        recommendationRepo.save(recommendation3);
         RecommendationGetCartRecommendationResponse response = new RecommendationGetCartRecommendationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
-            GetCartRecommendationResponse getCartRecommendationResponse = ServiceSelector.getRecommendationService().getCartRecommendation(request);
+            GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
                 response.setIsSuccess(getCartRecommendationResponse.isSuccess());
-                response.setRecommendations(populateItems(getCartRecommendationResponse.getRecommendations()));
+                response.setRecommendations(populateCartItems(getCartRecommendationResponse.getRecommendations()));
             } catch (Exception e){
                 e.printStackTrace();
                 response.setMessage(e.getMessage());
@@ -109,6 +103,32 @@ public class RecommendationController implements RecommendationApi {
             currentItem.setSize(responseItems.get(i).getSize());
 
             responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+
+        List<CartItemObject> responseBody = new ArrayList<>();
+
+        for (CartItem i: responseItems){
+
+            CartItemObject item = new CartItemObject();
+            item.setProductId(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreId(i.getStoreID().toString());
+            item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
 
         }
 

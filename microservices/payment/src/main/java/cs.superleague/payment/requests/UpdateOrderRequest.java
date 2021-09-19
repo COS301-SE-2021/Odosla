@@ -1,20 +1,17 @@
 package cs.superleague.payment.requests;
 
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.shopping.dataclass.Item;
 
-import javax.persistence.CascadeType;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
 import java.util.List;
 import java.util.UUID;
 
 public class UpdateOrderRequest {
     /** attrbiutes */
     private UUID orderID;
-    private List<Item> listOfItems;
+    private List<CartItem> listOfItems;
     private Double discount;
     private OrderType orderType;
     private GeoPoint deliveryAddress;
@@ -27,7 +24,7 @@ public class UpdateOrderRequest {
      * @param orderType - the type of order it is, whether it is a delivery or collection
      * @param deliveryAddress - the GeoPoint address of where the order is to be shipped if order type is delivery
      */
-    public UpdateOrderRequest(UUID orderID, List<Item> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
+    public UpdateOrderRequest(UUID orderID, List<CartItem> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
         this.orderID = orderID;
         this.listOfItems = listOfItems;
         this.discount = discount;
@@ -35,7 +32,7 @@ public class UpdateOrderRequest {
         this.deliveryAddress=deliveryAddress;
     }
 
-    public UpdateOrderRequest(List<Item> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
+    public UpdateOrderRequest(List<CartItem> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
         this.listOfItems = listOfItems;
         this.discount = discount;
         this.orderType = orderType;
@@ -50,7 +47,7 @@ public class UpdateOrderRequest {
         return discount;
     }
 
-    public List<Item> getListOfItems() {
+    public List<CartItem> getListOfItems() {
         return listOfItems;
     }
 
@@ -74,7 +71,7 @@ public class UpdateOrderRequest {
         this.discount = discount;
     }
 
-    public void setListOfItems(List<Item> listOfItems) {
+    public void setListOfItems(List<CartItem> listOfItems) {
         this.listOfItems = listOfItems;
     }
 

@@ -1,25 +1,34 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.payment.PaymentService;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.requests.GetOrdersRequest;
-import cs.superleague.payment.responses.GetOrdersResponse;
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.*;
-import cs.superleague.user.requests.GetUsersRequest;
-import cs.superleague.user.responses.GetUsersResponse;
 
+import cs.superleague.analytics.exceptions.InvalidRequestException;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrdersResponse;
+import cs.superleague.user.dataclass.Driver;
+import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.dataclass.User;
+import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.responses.GetAdminsResponse;
+import cs.superleague.user.responses.GetCustomersResponse;
+import cs.superleague.user.responses.GetDriversResponse;
+import cs.superleague.user.responses.GetShoppersResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CreateMonthlyAnalyticsData {
+    private String paymentHost;
+    private String paymentPort;
+    private String userHost;
+    private String userPort;
 
     private final List<Order> orders;
-    private List<User> users;
-    private List<Customer> customers;
-    private List<Driver> drivers;
-    private List<Shopper> shoppers;
-    private List<Admin> admins;
-    private List<UUID> userIds;
+    private final List<User> users;
+    private final List<Driver> drivers;
+    private final List<UUID> userIds;
     private int totalOrders;
     private double totalPrice;
     private double averageOrderNumPerUser;
@@ -35,13 +44,17 @@ public class CreateMonthlyAnalyticsData {
     private Driver [] topDrivers;
     private Order [] topOrders;
 
-    private GetOrdersResponse getOrdersResponse;
-    private GetUsersResponse getUsersResponse;
-
     private final Calendar startDate;
     private final Calendar endDate;
 
-    public CreateMonthlyAnalyticsData(PaymentService paymentService, UserService userService){
+    private ResponseEntity<GetAdminsResponse> adminResponseEntity;
+    private ResponseEntity<GetCustomersResponse> customerResponseEntity;
+    private ResponseEntity<GetDriversResponse> driverResponseEntity;
+    private ResponseEntity<GetShoppersResponse> shopperResponseEntity;
+    private ResponseEntity<GetOrdersResponse> responseEntityOrder;
+
+    public CreateMonthlyAnalyticsData(RestTemplate restTemplate, String paymentHost, String paymentPort,
+                                      String userHost, String userPort) throws URISyntaxException {
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -64,18 +77,45 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
-        try{
-            getOrdersResponse = paymentService.getOrders(getOrdersRequest);
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getAdmins";
+        URI uri = new URI(stringUri);
 
-            GetUsersRequest getUsersRequest = new GetUsersRequest();
-            getUsersResponse = userService.getUsers(getUsersRequest);
+        try{
+            Map<String, Object> parts = new HashMap<>();
+
+            adminResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetAdminsResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomers";
+            uri = new URI(stringUri);
+
+            customerResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetCustomersResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getDrivers";
+            uri = new URI(stringUri);
+
+            driverResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetDriversResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getShoppers";
+            uri = new URI(stringUri);
+
+            shopperResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetShoppersResponse.class);
+
+            stringUri = "http://"+ paymentHost + ":" + paymentPort +"/payment/getOrders";
+            uri = new URI(stringUri);
+
+            responseEntityOrder = restTemplate.postForEntity(uri, parts,
+                    GetOrdersResponse.class);
+
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, Object> getMonthlyStatisticsData(){
+    public HashMap<String, Object> getMonthlyStatisticsData() throws InvalidRequestException {
 
         HashMap<String, Object> data = new HashMap<>();
 
@@ -94,14 +134,20 @@ public class CreateMonthlyAnalyticsData {
             data.put("averageNumberOfOrderPerUser", averageOrderNumPerUser);
             data.put("topTenOrders", topOrders);
             data.put("averagePriceOfOrders", averagePriceOfOrders);
-            data.put("startDate", this.startDate.getTime());
-            data.put("endDate", this.endDate.getTime());
+            data.put("startDate", this.startDate);
+            data.put("endDate", this.endDate);
         }
 
         return data;
     }
 
-    private boolean generateMonthlyStatisticsData(){
+    private boolean generateMonthlyStatisticsData() throws InvalidRequestException {
+
+        if(responseEntityOrder == null){
+            return false;
+        }
+
+        GetOrdersResponse getOrdersResponse = responseEntityOrder.getBody();
 
         if(getOrdersResponse != null){
             orders.addAll(getOrdersResponse.getOrders());
@@ -109,16 +155,37 @@ public class CreateMonthlyAnalyticsData {
             return false;
         }
 
-        if(getUsersResponse != null) {
-            users.addAll(getUsersResponse.getUsers());
-        }else{
+        if(adminResponseEntity == null || customerResponseEntity == null
+                || driverResponseEntity == null || shopperResponseEntity == null){
             return false;
         }
 
+        GetAdminsResponse adminsResponse = adminResponseEntity.getBody();
+        GetCustomersResponse customersResponse = customerResponseEntity.getBody();
+        GetDriversResponse driversResponse = driverResponseEntity.getBody();
+        GetShoppersResponse shoppersResponse = shopperResponseEntity.getBody();
+
+        if(adminsResponse == null || customersResponse == null || driversResponse == null
+                || shoppersResponse == null){
+            return false;
+        }
+
+        if(adminsResponse.getUsers() != null)
+            users.addAll(adminsResponse.getUsers());
+
+        if(customersResponse.getUsers() != null)
+            users.addAll(customersResponse.getUsers());
+
+        if(driversResponse.getUsers() != null)
+            users.addAll(driversResponse.getUsers());
+
+        if(shoppersResponse.getUsers() != null)
+            users.addAll(shoppersResponse.getUsers());
+
         for (Order order : this.orders) {
 
-            if(startDate.getTimeInMillis() <= order.getCreateDate().getTimeInMillis()
-                && endDate.getTimeInMillis() >= order.getCreateDate().getTimeInMillis()) {
+            if(startDate.getTimeInMillis() <= order.getCreateDate().getTime()
+                && endDate.getTimeInMillis() >= order.getCreateDate().getTime()) {
 
                 if (!userIds.contains(order.getUserID())) {
                     userIds.add(order.getUserID());
@@ -133,6 +200,11 @@ public class CreateMonthlyAnalyticsData {
         for (User user : this.users) {
             userType = user.getAccountType();
 
+            if(startDate == null || endDate == null){
+                throw new InvalidRequestException("Start Date and End Date cannot be null");
+            }
+
+            if(user.getActivationDate() != null)
             if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
                     && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {
                 if (userType == UserType.CUSTOMER) {

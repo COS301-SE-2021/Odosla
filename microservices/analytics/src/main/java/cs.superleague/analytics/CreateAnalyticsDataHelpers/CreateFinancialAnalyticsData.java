@@ -1,13 +1,22 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.payment.PaymentService;
+import cs.superleague.analytics.exceptions.InvalidRequestException;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.requests.GetOrdersRequest;
 import cs.superleague.payment.responses.GetOrdersResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
+//@Configuration
+//@ConfigurationProperties
 public class CreateFinancialAnalyticsData {
+//    @Value("${paymentHost}")
+    private String paymentHost;
+//    @Value("${paymentPort}")
+    private String paymentPort;
 
     private final List<Order> orders;
     private final List<UUID> userIds;
@@ -17,12 +26,13 @@ public class CreateFinancialAnalyticsData {
     private double averagePriceOfOrders;
     private Order [] topOrders;
 
-    private GetOrdersResponse getOrdersResponse;
-
     private final Date startDate;
     private final Date endDate;
 
-    public CreateFinancialAnalyticsData(Date startDate, Date endDate, PaymentService paymentService){
+    private ResponseEntity<GetOrdersResponse> responseEntity;
+
+    public CreateFinancialAnalyticsData(Date startDate, Date endDate, RestTemplate restTemplate,
+        String paymentPort, String paymentHost) throws URISyntaxException {
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -33,15 +43,24 @@ public class CreateFinancialAnalyticsData {
         this.startDate = startDate;
         this.endDate = endDate;
 
-        GetOrdersRequest getOrdersRequest = new GetOrdersRequest();
+        this.paymentHost = paymentHost;
+        this.paymentHost = paymentHost;
+
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
+        URI uri = new URI(stringUri);
+
         try{
-            getOrdersResponse = paymentService.getOrders(getOrdersRequest);
+
+            Map<String, Object> parts = new HashMap<>();
+
+            responseEntity = restTemplate.postForEntity(uri, parts,
+                    GetOrdersResponse.class);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, Object> getFinancialStatisticsData(){
+    public HashMap<String, Object> getFinancialStatisticsData() throws InvalidRequestException {
 
         HashMap<String, Object> data = new HashMap<>();
 
@@ -51,14 +70,21 @@ public class CreateFinancialAnalyticsData {
             data.put("averageNumberOfOrderPerUser", averageOrderNumPerUser);
             data.put("topTenOrders", topOrders);
             data.put("averagePriceOfOrders", averagePriceOfOrders);
-            data.put("startDate", this.startDate.getTime());
-            data.put("endDate", this.endDate.getTime());
+            data.put("startDate", this.startDate);
+            data.put("endDate", this.endDate);
         }
 
         return data;
     }
 
-    private boolean generateFinancialStatisticsData(){
+    private boolean generateFinancialStatisticsData() throws InvalidRequestException {
+
+        if(responseEntity == null){
+            return false;
+        }
+
+        GetOrdersResponse getOrdersResponse = responseEntity.getBody();
+
 
         if(getOrdersResponse != null){
             orders.addAll(getOrdersResponse.getOrders());
@@ -68,8 +94,12 @@ public class CreateFinancialAnalyticsData {
 
         for (Order order : this.orders) {
 
-            if(startDate.getTime() <= order.getCreateDate().getTimeInMillis()
-                && endDate.getTime() >= order.getCreateDate().getTimeInMillis()) {
+            if(startDate == null || endDate == null){
+                throw new InvalidRequestException("Start Date and End Date cannot be null");
+            }
+
+            if(startDate.getTime() <= order.getCreateDate().getTime()
+                && endDate.getTime() >= order.getCreateDate().getTime()) {
 
                 if (!userIds.contains(order.getUserID())) {
                     userIds.add(order.getUserID());

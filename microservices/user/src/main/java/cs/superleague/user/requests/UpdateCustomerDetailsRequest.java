@@ -1,8 +1,5 @@
 package cs.superleague.user.requests;
-
 import cs.superleague.payment.dataclass.GeoPoint;
-
-import java.util.UUID;
 
 public class UpdateCustomerDetailsRequest {
 

@@ -5,21 +5,18 @@ import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
-import cs.superleague.shopping.exceptions.StoreClosedException;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.user.requests.GetUsersRequest;
-import cs.superleague.user.responses.GetUsersResponse;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
+
+import java.net.URISyntaxException;
 
 public interface PaymentService {
 
     // ORDER
 
-    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, cs.superleague.shopping.exceptions.InvalidRequestException, StoreDoesNotExistException, StoreClosedException, InterruptedException, cs.superleague.user.exceptions.InvalidRequestException;
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException;
 
-    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException;
+    CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException;
 
-    UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException;
+    UpdateOrderResponse updateOrder(UpdateOrderRequest request) throws PaymentException, URISyntaxException;
 
     GetOrderResponse getOrder(GetOrderRequest req) throws PaymentException;
 
@@ -48,6 +45,10 @@ public interface PaymentService {
 
     //CUSTOMER REQUESTS
 
-    GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, UserDoesNotExistException;
+    GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException;
+
+    void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException;
+
+    GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException;
 
 }

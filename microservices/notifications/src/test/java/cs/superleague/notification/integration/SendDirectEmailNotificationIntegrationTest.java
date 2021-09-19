@@ -1,19 +1,19 @@
 package cs.superleague.notification.integration;
 
-import cs.superleague.notification.NotificationServiceImpl;
-import cs.superleague.notification.exceptions.InvalidRequestException;
-import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.notification.responses.SendDirectEmailNotificationResponse;
+import cs.superleague.notifications.exceptions.InvalidRequestException;
+import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
+import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
+import cs.superleague.notifications.NotificationServiceImpl;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 
 import javax.transaction.Transactional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional

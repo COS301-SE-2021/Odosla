@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
  * AdminObject
  */
 @Validated
-public class AdminObject  implements OneOfuserGetCurrentUserResponseUser {
+public class AdminObject   {
   @JsonProperty("name")
   private String name = null;
 

@@ -1,35 +1,34 @@
 package cs.superleague.user;
-
-import cs.superleague.delivery.DeliveryService;
-import cs.superleague.delivery.requests.CreateDeliveryRequest;
-import cs.superleague.integration.ServiceSelector;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
-import cs.superleague.notification.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.notification.requests.SendEmailNotificationRequest;
-import cs.superleague.notification.responses.SendEmailNotificationResponse;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
-import cs.superleague.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.payment.repos.OrderRepo;
-import cs.superleague.shopping.ShoppingService;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.shopping.requests.GetStoresRequest;
-import cs.superleague.shopping.responses.GetStoresResponse;
+import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
+import cs.superleague.payment.dataclass.*;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
+import cs.superleague.delivery.responses.CreateDeliveryResponse;
+import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.requests.SaveOrderRequest;
+import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
+import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.shopping.responses.GetStoresResponse;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -41,31 +40,46 @@ import static cs.superleague.user.dataclass.UserType.CUSTOMER;
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService{
 
+    /* TO DO:
+    Complete packaging
+    Scan Item*/
+    @Value("${paymentPort}")
+    private String paymentPort;
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${deliveryPort}")
+    private String deliveryPort;
+    @Value("${deliveryHost}")
+    private String deliveryHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${notificationsHost}")
+    private String notificationHost;
+    @Value("${notificationsPort}")
+    private String notificationPort;
+
     private final ShopperRepo shopperRepo;
     private final DriverRepo driverRepo;
     private final AdminRepo adminRepo;
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
-    private final OrderRepo orderRepo;
     private CurrentUser currentUser;
-    private final ShoppingService shoppingService;
-    private final StoreRepo storeRepo;
-    private final DeliveryService deliveryService;
     private final JwtUtil jwtUtil;
     //private final UserService userService;
-
+    private RabbitTemplate rabbit;
+    private final RestTemplate restTemplate;
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrderRepo orderRepo, @Lazy ShoppingService shoppingService, StoreRepo storeRepo, DeliveryService deliveryService, JwtUtil jwtUtil){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, JwtUtil jwtUtil, RabbitTemplate rabbit, RestTemplate restTemplate){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
         this.customerRepo=customerRepo;
         this.groceryListRepo=groceryListRepo;
-        this.orderRepo= orderRepo;
-        this.shoppingService = shoppingService;
-        this.storeRepo = storeRepo;
-        this.deliveryService= deliveryService;
         this.jwtUtil = jwtUtil;
+        this.rabbit=rabbit;
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -96,18 +110,25 @@ public class UserServiceImpl implements UserService{
      * @throws InvalidRequestException
      * @throws OrderDoesNotExist
      */
-    @Override
+   @Override
     public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
         CompletePackagingOrderResponse response = null;
         if(request != null){
-
             if(request.getOrderID()==null){
                 throw new InvalidRequestException("OrderID is null in CompletePackagingOrderRequest request - could not retrieve order entity");
             }
 
+
+
             Order orderEntity=null;
             try {
-                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("orderID", request.getOrderID());
+
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+                GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+                orderEntity = getOrderResponse.getOrder();
             }
             catch (Exception e){
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
@@ -140,9 +161,16 @@ public class UserServiceImpl implements UserService{
 
             if(orderEntity.getType().equals(OrderType.DELIVERY))
             {
-                CreateDeliveryRequest createDeliveryRequest = new CreateDeliveryRequest(orderEntity.getOrderID(), orderEntity.getUserID(), orderEntity.getStoreID(), null, orderEntity.getDeliveryAddress());
-                if(deliveryService!=null)
-                deliveryService.createDelivery(createDeliveryRequest);
+
+                Map<String, Object> parts = new HashMap<String, Object>();
+
+                parts.put("orderID", orderEntity.getOrderID());
+                parts.put("customerID", orderEntity.getUserID());
+                parts.put("storeID", orderEntity.getStoreID());
+                parts.put("timeOfDelivery", null);
+                parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
+                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery", parts, CreateDeliveryResponse.class);
+                CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
             }
 
             response=new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(),"Order entity with corresponding ID is ready for collection");
@@ -184,8 +212,8 @@ public class UserServiceImpl implements UserService{
      * @throws InvalidRequestException
      * @throws OrderDoesNotExist
      */
-    @Override
-    public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist {
+   @Override
+   public ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist {
         ScanItemResponse response = null;
         if(request != null){
 
@@ -199,7 +227,14 @@ public class UserServiceImpl implements UserService{
             Order orderEntity=null;
 
             try {
-                orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+                //orderEntity = orderRepo.findById(request.getOrderID()).orElse(null);
+
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("orderID", request.getOrderID());
+
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+                GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+                orderEntity = getOrderResponse.getOrder();
             }
             catch (Exception e){
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
@@ -210,10 +245,10 @@ public class UserServiceImpl implements UserService{
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
 
-            List<Item> items = orderEntity.getItems();
+            List<CartItem> items = orderEntity.getCartItems();
             boolean itemFound= false;
 
-            for (Item item : items) {
+            for (CartItem item : items) {
                 if (item.getBarcode().equals(request.getBarcode())) {
                     itemFound = true;
                     response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
@@ -231,8 +266,7 @@ public class UserServiceImpl implements UserService{
         else{
             throw new InvalidRequestException("ScanItemRequest is null - could not fetch order entity");
         }
-
-    }
+   }
 
     @Override
     public RegisterCustomerResponse registerCustomer(RegisterCustomerRequest request) throws InvalidRequestException {
@@ -386,16 +420,21 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+                    /*
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
                     SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    try {
-                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-                        e.printStackTrace();
-                        System.out.println("Email failed to send");
-                    }
+                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+                    */
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+
                     return new RegisterCustomerResponse(true,Calendar.getInstance().getTime(), "Customer succesfully added to database");
                 }
                 else{
@@ -558,16 +597,18 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
-                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    try {
-                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-                        e.printStackTrace();
-                        System.out.println("Email failed to send");
-                    }
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
                     return new RegisterDriverResponse(true,Calendar.getInstance().getTime(), "Driver succesfully added to database");
                 }
                 else{
@@ -735,16 +776,18 @@ public class UserServiceImpl implements UserService{
 
                 if(isPresent){
                     /* send a notification with email */
+//                    HashMap<String, String> properties = new HashMap<>();
+//                    properties.put("Subject", "Registration for Odosla");
+//                    properties.put("Email", request.getEmail());
+//                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
+//                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
                     HashMap<String, String> properties = new HashMap<>();
                     properties.put("Subject", "Registration for Odosla");
                     properties.put("Email", request.getEmail());
-                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-                    try {
-                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-                        e.printStackTrace();
-                        System.out.println("Email failed to send");
-                    }
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
                     return new RegisterShopperResponse(true,Calendar.getInstance().getTime(), "Shopper succesfully added to database");
                 }
                 else{
@@ -913,12 +956,14 @@ public class UserServiceImpl implements UserService{
 //                    properties.put("Subject", "Registration for Odosla");
 //                    properties.put("Email", request.getEmail());
 //                    SendDirectEmailNotificationRequest request1 = new SendDirectEmailNotificationRequest("Please use the following activation code to activate your account " + activationCode,properties);
-//                    try {
-//                        ServiceSelector.getNotificationService().sendDirectEmailNotification(request1);
-//                    } catch (cs.superleague.notification.exceptions.InvalidRequestException e) {
-//                        e.printStackTrace();
-//                        System.out.println("Email failed to send");
-//                    }
+//                    rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+                    HashMap<String, String> properties = new HashMap<>();
+                    properties.put("Subject", "Registration for Odosla");
+                    properties.put("Email", request.getEmail());
+                    Map<String, Object> parts = new HashMap<String, Object>();
+                    parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+                    parts.put("properties", properties);
+                    ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
                     return new RegisterAdminResponse(true,Calendar.getInstance().getTime(), "Admin succesfully added to database");
                 }
                 else{
@@ -932,7 +977,6 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    private final String secret = "theOdoslaSuperLeagueProjectKeyForEncrptionMustBeCertainNumberOFBitsIReallyDontKnowHowToMakeThisStringLonger";
     @Override
     public LoginResponse loginUser(LoginRequest request) throws UserException {
         LoginResponse response=null;
@@ -1108,7 +1152,7 @@ public class UserServiceImpl implements UserService{
                     if(shopperToVerify.getActivationDate()==null){
 
                         if(shopperToVerify.getActivationCode().equals(request.getActivationCode())){
-                            shopperToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            shopperToVerify.setActivationDate(new Date());
                             shopperRepo.save(shopperToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account", UserType.SHOPPER);
                         }
@@ -1130,7 +1174,7 @@ public class UserServiceImpl implements UserService{
                     if(driverToVerify.getActivationDate()==null){
 
                         if(driverToVerify.getActivationCode().equals(request.getActivationCode())){
-                            driverToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            driverToVerify.setActivationDate(new Date());
                             driverRepo.save(driverToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account", UserType.DRIVER);
                         }
@@ -1152,7 +1196,7 @@ public class UserServiceImpl implements UserService{
                     if(customerToVerify.getActivationDate()==null){
 
                         if(customerToVerify.getActivationCode().equals(request.getActivationCode())){
-                            customerToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            customerToVerify.setActivationDate(new Date());
                             customerRepo.save(customerToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account", UserType.CUSTOMER);
                         }
@@ -1599,11 +1643,13 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        try {
-            response = shoppingService.getStores(new GetStoresRequest());
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        Map<String, Object> parts = new HashMap<String, Object>();
+
+        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
+
+        GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
+
+        response=getStoresResponse;
 
         if(response == null || !response.getResponse()){
             message = "Cannot find items - could not make the grocery list";
@@ -1890,8 +1936,12 @@ public class UserServiceImpl implements UserService{
             return new SetCartResponse(message, false, new Date());
         }
 
+        Map<String, Object> parts = new HashMap<String, Object>();
+
         try {
-            response = shoppingService.getStores(new GetStoresRequest());
+            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
+            GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
+            response=getStoresResponse;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1919,12 +1969,8 @@ public class UserServiceImpl implements UserService{
             return new SetCartResponse(message, false, new Date());
         }
 
-//        customer.getShoppingCart().addAll(cart);
         customer.setShoppingCart(cart);
 
-//        Customer c = new Customer("name", "surname", "name@email.com", "1111111111",
-//                "tetetE$4", new Date(), "fsdfghg", "safdf",
-//                "adg", true, UserType.CUSTOMER, UUID.randomUUID(), null, customer.getGroceryLists(), null, null, null);
         customerRepo.save(customer);
 
         return new SetCartResponse(message, true, new Date());
@@ -1961,9 +2007,8 @@ public class UserServiceImpl implements UserService{
         return new ClearShoppingCartResponse(customer.getShoppingCart(), message, true, new Date());
     }
 
-    @Override
-
-    public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
+   @Override
+   public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
 
         CollectOrderResponse response;
 
@@ -1983,28 +2028,31 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
+        //Get Order By UUID
+        //Optional<Order> currentOrder= orderRepo.findById(request.getOrderID());
 
-        if(currentOrder==null || !currentOrder.isPresent()){
+       Map<String, Object> parts = new HashMap<String, Object>();
+       parts.put("orderID", request.getOrderID());
+
+       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+       GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+       Order currentOrder = getOrderResponse.getOrder();
+
+        if(currentOrder==null){
             throw new OrderDoesNotExist("Order does not exist in database");
         }
 
-        Order order=currentOrder.get();
+        Order order=currentOrder;
         order.setStatus(OrderStatus.DELIVERY_COLLECTED);
 
         /* Send notification to User saying order has been collected */
 
-        orderRepo.save(order);
+        //orderRepo.save(order);
+        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        currentOrder= orderRepo.findById(request.getOrderID());
-        if(currentOrder==null || !currentOrder.isPresent() || currentOrder.get().getStatus()!=OrderStatus.DELIVERY_COLLECTED){
-            response=new CollectOrderResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been collected in database");
-        }
-        else{
-            response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
-        }
-
+        response=new CollectOrderResponse(true,Calendar.getInstance().getTime(),"Order successfully been collected and status has been changed");
         return response;
     }
 
@@ -2029,40 +2077,40 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException(errorMessage);
         }
 
-        Order order= orderRepo.findById(request.getOrderID()).orElse(null);
+        //Order order= orderRepo.findById(request.getOrderID()).orElse(null);
+
+        Map<String, Object> parts = new HashMap<String, Object>();
+        parts.put("orderID", request.getOrderID());
+
+        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+        GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
+        Order order = getOrderResponse.getOrder();
 
         if(order==null){
             throw new OrderDoesNotExist("Order does not exist in database");
         }
 
         order.setStatus(OrderStatus.DELIVERED);
-        orderRepo.save(order);
-
+        //orderRepo.save(order);
+        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
-        Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
-        if(currentOrder==null  || !currentOrder.getStatus().equals(OrderStatus.DELIVERED)){
-            response=new CompleteDeliveryResponse(false,Calendar.getInstance().getTime(),"Couldn't update that order has been delivered in database");
-        }
-        else{
-            Driver driver = driverRepo.findById(currentOrder.getDriverID()).orElse(null);
-            if(driver!=null)
-            {
-                int numDeliveries=0;
-                numDeliveries= driver.getDeliveriesCompleted()+1;
-                driver.setDeliveriesCompleted(numDeliveries);
-                driverRepo.save(driver);
-            }
-            else
-            {
-                throw new InvalidRequestException("Driver isn't set in order");
-            }
+        //Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
 
-            response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
+        Driver driver = driverRepo.findById(order.getDriverID()).orElse(null);
+        if(driver!=null)
+        {
+            int numDeliveries=0;
+            numDeliveries= driver.getDeliveriesCompleted()+1;
+            driver.setDeliveriesCompleted(numDeliveries);
+            driverRepo.save(driver);
         }
-
+        else
+        {
+           throw new InvalidRequestException("Driver isn't set in order");
+        }
+        response=new CompleteDeliveryResponse(true,Calendar.getInstance().getTime(),"Order successfully been delivered and status has been changed");
         return response;
-
-
     }
 
     public RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
@@ -2144,7 +2192,12 @@ public class UserServiceImpl implements UserService{
             response=new UpdateShopperShiftResponse(false,Calendar.getInstance(),message);
         }
         else{
-            Store store = storeRepo.findById(request.getStoreID()).orElse(null);
+
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("storeID", request.getStoreID());
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
+            Store store = getStoreByUUIDResponse.getStore();
             if (store == null){
                 throw new StoreDoesNotExistException("Store is not saved in database.");
             }
@@ -2173,7 +2226,8 @@ public class UserServiceImpl implements UserService{
                     store.setShoppers(shoppersAtStore);
                 }
             }
-            storeRepo.save(store);
+            /* Save in store */
+
 
             /*Check updates have happened */
             shopper=shopperRepo.findById(shopper1.getShopperID());
@@ -2311,8 +2365,6 @@ public class UserServiceImpl implements UserService{
                 return new ResetPasswordResponse(null, "Could not find customer with email - Could not reset", false);
             }
 
-            properties.put("UserID", customer.getCustomerID().toString());
-
             Date today = new Date();
             Date expiration = new Date(today.getTime() + (4 * 3600 * 1000));
 
@@ -2323,14 +2375,17 @@ public class UserServiceImpl implements UserService{
             customerRepo.save((Customer)user);
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
-
-            try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+//             {
+//                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
 
         }
         else if(userType.equals("SHOPPER")){
@@ -2357,13 +2412,17 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-            try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+//            try {
+//                //rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
         }
         else if(userType.equals("DRIVER")){
             Driver driver = driverRepo.findDriverByEmail(email);
@@ -2385,13 +2444,18 @@ public class UserServiceImpl implements UserService{
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
 
-            try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            try {
+//                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+
         }else if(userType.equals("ADMIN")){
             Admin admin = adminRepo.findAdminByEmail(email);
 
@@ -2411,14 +2475,18 @@ public class UserServiceImpl implements UserService{
             adminRepo.save((Admin)user);
 
             passwordResetMessage="\nPassword reset has been accepted.\n Please use the following code before " + user.getResetExpiration()+" to change your password.\n\n code: "+resetCode;
+//            SendDirectEmailNotificationRequest request1=new SendDirectEmailNotificationRequest(passwordResetMessage,properties);
+//            rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            try {
+//                rabbit.convertAndSend("NotificationsEXCHANGE", "RK_SendDirectEmailNotification", request1);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("message", passwordResetMessage);
+            parts.put("properties", properties);
+            ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
 
-            try {
-                SendEmailNotificationRequest sendEmailNotificationRequest = new SendEmailNotificationRequest(passwordResetMessage, properties);
-                SendEmailNotificationResponse sendEmailNotificationResponse = ServiceSelector.getNotificationService().sendEmailNotification(sendEmailNotificationRequest);
-                return new ResetPasswordResponse(resetCode, passwordResetMessage, true);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
         }
 
         return new ResetPasswordResponse(resetCode, "Account type given does not exist - Could not reset password", false);
@@ -2652,26 +2720,83 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public GetUsersResponse getUsers(GetUsersRequest request) throws Exception{
+    public GetAdminsResponse getAdmins(GetAdminsRequest request) throws Exception{
 
-        String message = "Users successfully returned";
-        List<User> users = new ArrayList<>();
+        String message = "Admins successfully returned";
+        List<Admin> users = new ArrayList<>();
 
         if(request == null) {
-            throw new InvalidRequestException("GetUser request is null - could not return users");
+            throw new InvalidRequestException("GetAdmins request is null - could not return admins");
         }
 
-        users.addAll(shopperRepo.findAll());
-        users.addAll(driverRepo.findAll());
-        users.addAll(customerRepo.findAll());
         users.addAll(adminRepo.findAll());
 
         if(users.isEmpty()){
-            message = "Could not retrieve users";
-            return new GetUsersResponse(users, false, message, new Date());
+            message = "Could not retrieve Admins";
+            return new GetAdminsResponse(users, false, message, new Date());
         }
 
-        return new GetUsersResponse(users, true, message, new Date());
+        return new GetAdminsResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetCustomersResponse getCustomers(GetCustomersRequest request) throws Exception{
+
+        String message = "Customers successfully returned";
+        List<Customer> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetCustomers request is null - could not return customers");
+        }
+
+        users.addAll(customerRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve customers";
+            return new GetCustomersResponse(users, false, message, new Date());
+        }
+
+        return new GetCustomersResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetDriversResponse getDrivers(GetDriversRequest request) throws Exception{
+
+        String message = "Drivers successfully returned";
+        List<Driver> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetDrivers request is null - could not return drivers");
+        }
+
+        users.addAll(driverRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve drivers";
+            return new GetDriversResponse(users, false, message, new Date());
+        }
+
+        return new GetDriversResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetShoppersResponse getShoppers(GetShoppersRequest request) throws Exception{
+
+        String message = "Shoppers successfully returned";
+        List<Shopper> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetShoppers request is null - could not return shoppers");
+        }
+
+        users.addAll(shopperRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve shoppers";
+            return new GetShoppersResponse(users, false, message, new Date());
+        }
+
+        return new GetShoppersResponse(users, true, message, new Date());
     }
 
     @Override
@@ -2785,6 +2910,58 @@ public class UserServiceImpl implements UserService{
         return response;
     }
 
+    @Override
+    public GetDriverByUUIDResponse getDriverByUUID(GetDriverByUUIDRequest request) throws UserException {
+        GetDriverByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetDriverByUUIDRequest request - could not return driver entity");
+            }
+
+            Driver driver=null;
+            try {
+                driver = driverRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+            }
+            if(driver==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
+            }
+            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance().getTime(),"Driver entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetDriverByUUID request is null - could not return driver entity");
+        }
+        return response;
+    }
+
+    @Override
+    public GetAdminByUUIDResponse getAdminByUUID(GetAdminByUUIDRequest request) throws UserException {
+        GetAdminByUUIDResponse response=null;
+        if(request != null){
+
+            if(request.getUserID()==null){
+                throw new InvalidRequestException("UserID is null in GetAdminByUUIDRequest request - could not return admin entity");
+            }
+
+            Admin admin=null;
+            try {
+                admin = adminRepo.findById(request.getUserID()).orElse(null);
+            }catch(Exception e){
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
+            }
+            if(admin==null) {
+                throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get admin entity");
+            }
+            response=new GetAdminByUUIDResponse(admin, Calendar.getInstance().getTime(),"Admin entity with corresponding user id was returned");
+        }
+        else{
+            throw new InvalidRequestException("GetAdminByUUID request is null - could not return admin entity");
+        }
+        return response;
+    }
+
     /**
      *
      * @param request is used to bring in:
@@ -2854,5 +3031,91 @@ public class UserServiceImpl implements UserService{
         else{
             throw new InvalidRequestException("DriverSetRating request is null - could not set rating");
         }
+    }
+
+    @Override
+    public GetCustomerByEmailResponse getCustomerByEmail(GetCustomerByEmailRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+
+        Customer customer=customerRepo.findByEmail(request.getEmail()).orElse(null);
+        if(customer==null){
+            throw new CustomerDoesNotExistException("Customer with email does not exist");
+        }else {
+            return new GetCustomerByEmailResponse(customer, true);
+        }
+    }
+
+    @Override
+    public GetShopperByEmailResponse getShopperByEmail(GetShopperByEmailRequest request) throws InvalidRequestException, ShopperDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Shopper shopper= shopperRepo.findByEmail(request.getEmail()).orElse(null);
+        if(shopper==null){
+            throw new ShopperDoesNotExistException("Shopper with email does not exist");
+        }else{
+            return new GetShopperByEmailResponse(shopper,true);
+        }
+    }
+
+    @Override
+    public GetDriverByEmailResponse getDriverByEmail(GetDriverByEmailRequest request) throws InvalidRequestException, DriverDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Driver driver=null;
+        try {
+            driver = driverRepo.findDriverByEmail(request.getEmail());
+        }catch (NullPointerException e){
+            driver=null;
+        }
+        if(driver==null){
+            throw new DriverDoesNotExistException("Driver with email does not exist");
+        }else{
+            return new GetDriverByEmailResponse(driver,true);
+        }
+
+    }
+
+    @Override
+    public GetAdminByEmailResponse getAdminByEmail(GetAdminByEmailRequest request) throws InvalidRequestException, AdminDoesNotExistException {
+        if(request.getEmail()==null){
+            throw new InvalidRequestException("Email can't be null");
+        }
+        Admin admin=null;
+        try {
+            admin = adminRepo.findAdminByEmail(request.getEmail());
+        }catch (NullPointerException e){
+            admin=null;
+        }
+        if(admin==null){
+            throw new AdminDoesNotExistException("Driver with email does not exist");
+        }else{
+            return new GetAdminByEmailResponse(admin,true);
+        }
+    }
+
+    @Override
+    public void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getDriver() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        driverRepo.save(request.getDriver());
+    }
+
+    @Override
+    public void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getShopper() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        shopperRepo.save(request.getShopper());
     }
 }

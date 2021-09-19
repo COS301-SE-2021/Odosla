@@ -1,16 +1,25 @@
 package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.Driver;
-import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.dataclass.User;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.requests.GetUsersRequest;
-import cs.superleague.user.responses.GetUsersResponse;
+import cs.superleague.analytics.exceptions.InvalidRequestException;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.responses.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Field;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CreateUserAnalyticsData {
+
+    private String userHost;
+    private String userPort;
 
     private final List<User> users;
     private final List<Driver> drivers;
@@ -23,15 +32,18 @@ public class CreateUserAnalyticsData {
     private int totalOrderCompleted;
     private double ratingSum;
     private Driver [] topDrivers;
-    private UserService userService;
-
-    private GetUsersResponse response;
-    private UserType userType;
 
     private final Date startDate;
     private final Date endDate;
 
-    public CreateUserAnalyticsData(Date startDate, Date endDate, UserService userService){
+    private ResponseEntity<GetAdminsResponse> adminResponseEntity;
+    private ResponseEntity<GetCustomersResponse> customerResponseEntity;
+    private ResponseEntity<GetDriversResponse> driverResponseEntity;
+    private ResponseEntity<GetShoppersResponse> shopperResponseEntity;
+
+    public CreateUserAnalyticsData(Date startDate, Date endDate,
+                               RestTemplate restTemplate, String userHost,
+                                   String userPort) throws URISyntaxException {
 
         this.users = new ArrayList<>();
         this.drivers = new ArrayList<>();
@@ -48,19 +60,45 @@ public class CreateUserAnalyticsData {
 
         this.startDate = startDate;
         this.endDate = endDate;
-        this.userService = userService;
 
-        GetUsersRequest request = new GetUsersRequest();
+        this.userHost = userHost;
+        this.userPort = userPort;
+
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getAdmins";
+        URI uri = new URI(stringUri);
+
         try{
-            response = this.userService.getUsers(request);
+
+            Map<String, Object> parts = new HashMap<>();
+
+            adminResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetAdminsResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomers";
+            uri = new URI(stringUri);
+
+            customerResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetCustomersResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getDrivers";
+            uri = new URI(stringUri);
+
+            driverResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetDriversResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getShoppers";
+            uri = new URI(stringUri);
+
+            shopperResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetShoppersResponse.class);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public HashMap<String, Object> getUserStatisticsData(){
+    public HashMap<String, Object> getUserStatisticsData() throws InvalidRequestException {
 
-        HashMap<String, Object> data = new HashMap<String, Object>();
+        HashMap<String, Object> data = new HashMap<>();
 
         if(generateUserStatisticsData()) {
             data.put("totalNum_Users", totalUsers);
@@ -72,50 +110,81 @@ public class CreateUserAnalyticsData {
             data.put("totalNum_DriversOnShift", driversOnShift);
             data.put("averageRating_Drivers", ratingSum);
             data.put("top10Drivers", topDrivers);
-            data.put("startDate", this.startDate.getTime());
-            data.put("endDate", this.endDate.getTime());
+            data.put("startDate", this.startDate);
+            data.put("endDate", this.endDate);
         }
 
         return data;
     }
 
-    private boolean generateUserStatisticsData(){
+    private boolean generateUserStatisticsData() throws InvalidRequestException {
 
-        if(response != null) {
-            users.addAll(response.getUsers());
-        }else{
+        if(adminResponseEntity == null || customerResponseEntity == null
+        || driverResponseEntity == null || shopperResponseEntity == null){
             return false;
         }
 
+        GetAdminsResponse adminsResponse = adminResponseEntity.getBody();
+        GetCustomersResponse customersResponse = customerResponseEntity.getBody();
+        GetDriversResponse driversResponse = driverResponseEntity.getBody();
+        GetShoppersResponse shoppersResponse = shopperResponseEntity.getBody();
+
+        if(adminsResponse == null || customersResponse == null || driversResponse == null
+        || shoppersResponse == null){
+            return false;
+        }
+
+        if(adminsResponse.getUsers() != null)
+        users.addAll(adminsResponse.getUsers());
+
+        if(customersResponse.getUsers() != null)
+        users.addAll(customersResponse.getUsers());
+
+        if(driversResponse.getUsers() != null)
+        users.addAll(driversResponse.getUsers());
+
+        if(shoppersResponse.getUsers() != null)
+        users.addAll(shoppersResponse.getUsers());
+
+        UserType userType;
         for (User user : this.users) {
             userType = user.getAccountType();
 
-            if(userType == UserType.CUSTOMER){
-                totalCustomers += 1;
-            }else if(userType == UserType.SHOPPER){
-
-                if(user instanceof Shopper){
-                    totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
-                }
-
-                totalShoppers += 1;
-            }else if(userType == UserType.ADMIN){
-                totalAdmins += 1;
-            }else if(userType == UserType.DRIVER){
-
-                if(user instanceof Driver){
-                    if(((Driver) user).getOnShift()){
-                        driversOnShift += 1;
-                    }
-
-                    drivers.add((Driver) user);
-                    ratingSum += ((Driver) user).getRating();
-                }
-                totalDrivers += 1;
+            if(startDate == null || endDate == null){
+                throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
-            totalUsers += 1;
+            if(user.getActivationDate() != null)
+            if (startDate.getTime() <= user.getActivationDate().getTime()
+                    && endDate.getTime() >= user.getActivationDate().getTime()) {
+                if (userType == UserType.CUSTOMER) {
+                    totalCustomers += 1;
+                } else if (userType == UserType.SHOPPER) {
 
+                    if (user instanceof Shopper) {
+                        totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
+                        System.out.println("Shopper:" + totalOrderCompleted);
+                    }
+
+                    totalShoppers += 1;
+                } else if (userType == UserType.ADMIN) {
+                    totalAdmins += 1;
+                } else if (userType == UserType.DRIVER) {
+
+                    if (user instanceof Driver) {
+                        if (((Driver) user).getOnShift()) {
+                            driversOnShift += 1;
+                        }
+
+                        drivers.add((Driver) user);
+                        ratingSum += ((Driver) user).getRating();
+                    }
+                    totalDrivers += 1;
+                }
+
+                totalUsers += 1;
+
+            }
         }
 
         if(totalDrivers > 0) {

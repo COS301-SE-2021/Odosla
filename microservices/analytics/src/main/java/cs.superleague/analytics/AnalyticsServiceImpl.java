@@ -15,34 +15,36 @@ import cs.superleague.analytics.requests.CreateUserReportRequest;
 import cs.superleague.analytics.responses.CreateFinancialReportResponse;
 import cs.superleague.analytics.responses.CreateMonthlyReportResponse;
 import cs.superleague.analytics.responses.CreateUserReportResponse;
-import cs.superleague.payment.PaymentService;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.UserService;
-import cs.superleague.user.dataclass.Admin;
-import cs.superleague.user.dataclass.UserType;
-import cs.superleague.user.repos.AdminRepo;
-import cs.superleague.user.requests.GetCurrentUserRequest;
-import cs.superleague.user.responses.GetCurrentUserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Service("analyticsServiceImpl")
 public class AnalyticsServiceImpl implements AnalyticsService {
 
-    private final AdminRepo adminRepo;
-    private final StoreRepo storeRepo;
-    private final UserService userService;
-    private final PaymentService paymentService;
+    @Value("${paymentHost}")
+    private String paymentHost;
+    @Value("${paymentPort}")
+    private String paymentPort;
+
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
+
+    @Value("${userHost}")
+    private String userHost;
+    @Value("${userPort}")
+    private String userPort;
+
+    RestTemplate restTemplate;
 
     @Autowired
-    public AnalyticsServiceImpl(AdminRepo adminRepo, StoreRepo storeRepo, UserService userService, PaymentService paymentService) {
-        this.adminRepo = adminRepo;
-        this.userService = userService;
-        this.paymentService = paymentService;
-        this.storeRepo = storeRepo;
+    public AnalyticsServiceImpl(RestTemplate restTemplate){
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -92,7 +94,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
 
         try {
             createUserAnalyticsData = new CreateUserAnalyticsData(request.getStartDate(),
-                    request.getEndDate(), userService);
+                    request.getEndDate(), restTemplate, userHost, userPort);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating user statistics report");
         }
@@ -100,13 +102,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         UserAnalyticsHelper userAnalyticsHelper = new UserAnalyticsHelper(createUserAnalyticsData.getUserStatisticsData());
 
         if(request.getReportType() == ReportType.PDF){
-            message = "UserReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = userAnalyticsHelper.createPDF();
             response =  new CreateUserReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "UserReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             StringBuilder sb = userAnalyticsHelper.createCSVReport();
-            response = new CreateUserReportResponse(true, message, new Date(), null, sb);
+            response = new CreateUserReportResponse(true, message, new Date(), null, sb.toString());
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
@@ -128,31 +130,33 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), request.getStartDate(), request.getEndDate());
 
         try{
-            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(), request.getEndDate(), paymentService);
+            createFinancialAnalyticsData = new CreateFinancialAnalyticsData(request.getStartDate(),
+                    request.getEndDate(), restTemplate, paymentPort, paymentHost);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating financial statistics report");
         }
 
-        FinancialAnalyticsHelper financialAnalyticsHelper = new FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(), storeRepo);
+        FinancialAnalyticsHelper financialAnalyticsHelper = new
+                FinancialAnalyticsHelper(createFinancialAnalyticsData.getFinancialStatisticsData(),
+                restTemplate, shoppingHost, shoppingPort);
 
         if(request.getReportType() == ReportType.PDF){
-            message = "FinancialReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = financialAnalyticsHelper.createPDF();
             response =  new CreateFinancialReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "FinancialReport.csv downloaded";
+            message = "FinancialReport CSV successfully generated";
             StringBuilder sb = financialAnalyticsHelper.createCSVReport();
-            response = new CreateFinancialReportResponse(true, message, new Date(), null, sb);
+            response = new CreateFinancialReportResponse(true, message, new Date(), null, sb.toString());
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");
         }
         return response;
     }
-
+//
     @Override
     public CreateMonthlyReportResponse createMonthlyReport(CreateMonthlyReportRequest request) throws Exception {
 
-        Admin admin;
         String message;
         CreateMonthlyReportResponse response;
         CreateMonthlyAnalyticsData createMonthlyAnalyticsData;
@@ -164,20 +168,22 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         validAnalyticsRequest(request.getReportType(), new Date(), new Date());
 
         try{
-            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(paymentService, userService);
+            createMonthlyAnalyticsData = new CreateMonthlyAnalyticsData(restTemplate, paymentHost, paymentPort,
+                    userHost, userPort);
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating monthly statistics report");
         }
 
-        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData.getMonthlyStatisticsData(), storeRepo);
+        MonthlyAnalyticsHelper monthlyAnalyticsHelper = new MonthlyAnalyticsHelper(createMonthlyAnalyticsData
+                .getMonthlyStatisticsData(), shoppingHost, shoppingPort);
 
         if(request.getReportType() == ReportType.PDF){
-            message = "MonthlyReport.pdf downloaded";
+            message = "FinancialReport PDF successfully generated";
             byte[] document = monthlyAnalyticsHelper.createPDF();
             response =  new CreateMonthlyReportResponse(true, message, new Date(), document, null);
         }else if(request.getReportType() == ReportType.CSV){
-            message = "MonthlyReport.csv downloaded";
-            StringBuilder sb = monthlyAnalyticsHelper.createCSVReport();
+            message = "FinancialReport CSV successfully generated";
+            String sb = monthlyAnalyticsHelper.createCSVReport().toString();
             response = new CreateMonthlyReportResponse(true, message, new Date(), null, sb);
         }else{
             throw new InvalidRequestException("Invalid Report Type Given - Unable to generate report");

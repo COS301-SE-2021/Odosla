@@ -1,6 +1,6 @@
 package cs.superleague.shopping.responses;
 
-import cs.superleague.models.OrderObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.payment.dataclass.Order;
 
 import java.util.Date;
@@ -8,6 +8,7 @@ import java.util.List;
 
 public class GetNextQueuedResponse {
 
+    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timeStamp;
     private final boolean response;
     private final String message;

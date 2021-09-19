@@ -21,7 +21,8 @@ import 'package:rating_dialog/rating_dialog.dart';
 import 'UserService.dart';
 
 class ApiService {
-  Future<List<CartItem>> getItems(String storeID) async {
+
+  Future<List<CartItem>> getItems(String storeID,BuildContext context) async {
     String sId = storeID;
 
     //localhost:8080/shopping/getItems
@@ -31,6 +32,8 @@ class ApiService {
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":Provider.of<StatusProvider>(context, listen: false)
+              .jwt,
         },
         body: jsonEncode({"storeID": storeID}));
 
@@ -62,8 +65,20 @@ class ApiService {
 
     return list;
   }
+  List<CartItem> recommendarCartItemsFromJson(Map<String, dynamic> j) {
+    List<CartItem> list;
 
-  Future<List<Store>> getStores() async {
+    //Iterable i = json.decode(j['items']);
+    debugPrint("x-1");
+    list = (json.decode(json.encode(j['recommendations'])) as List)
+        .map((i) => CartItem.fromJson(i))
+        .toList();
+    debugPrint("x-2");
+
+    return list;
+  }
+
+  Future<List<Store>> getStores(BuildContext context) async {
     final response =
         await http.post(Uri.parse(endpoint + '/shopping/getStores'),
             headers: {
@@ -71,6 +86,9 @@ class ApiService {
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "POST, OPTIONS",
+              "Authorization":Provider.of<StatusProvider>(context, listen: false)
+                  .jwt,
+
             },
             body: jsonEncode({}));
 
@@ -114,10 +132,10 @@ class ApiService {
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "POST, OPTIONS",
+              "Authorization": Provider.of<StatusProvider>(context, listen: false)
+                  .jwt
             },
-            body: jsonEncode({
-              "jwtToken": Provider.of<StatusProvider>(context, listen: false)
-                  .jwt, //getCurrentUser
+            body: jsonEncode({ //getCurrentUser
               "listOfItems": itemsList,
               "discount": 0,
               "storeId": "$storeID",
@@ -159,6 +177,7 @@ class ApiService {
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":Provider.of<StatusProvider>(context, listen: false).jwt
         },
         body: jsonEncode({
           "orderID": "$oid",
@@ -214,6 +233,7 @@ class ApiService {
           "content-type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":Provider.of<StatusProvider>(context, listen: false).jwt,
         },
         body: jsonEncode({
           "orderID": "$id",
@@ -265,6 +285,7 @@ class ApiService {
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "POST, OPTIONS",
+
             },
             body: jsonEncode({"JWTToken": jwt}));
 
@@ -346,6 +367,7 @@ class ApiService {
               "content-type": "application/json",
               "Access-Control-Allow-Origin": "*",
               "Access-Control-Allow-Methods": "POST, OPTIONS",
+              "Authorization":Provider.of<StatusProvider>(context, listen: false).jwt
             },
             body: jsonEncode({"deliveryID": deliveryID}));
 
@@ -373,7 +395,8 @@ class ApiService {
       "Accept": "application/json",
       "content-type": "application/json",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS"
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":Provider.of<StatusProvider>(context, listen: false).jwt
     };
 
     String jwt = Provider.of<StatusProvider>(context, listen: false).jwt;
@@ -389,6 +412,42 @@ class ApiService {
         User u = User.fromJson(responseData["user"]);
         return u;
       }
+    }
+  }
+
+  Future <List<CartItem>> getCartRecommendations(List<String> arrayOfItemIDs,BuildContext context) async {
+    List<dynamic> itemsList = arrayOfItemIDs;
+    UserService _userService = GetIt.I.get();
+
+    final response =
+    await http.post(Uri.parse(endpoint + '/recommendation/getCartRecommendation'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization": Provider.of<StatusProvider>(context, listen: false)
+              .jwt
+        },
+
+        body: jsonEncode({
+          "itemIDs":itemsList
+        }));
+    print(response.body);
+    print("JWT");
+    print(Provider.of<StatusProvider>(context, listen: false).jwt);
+    if (response.statusCode == 200) {
+      debugPrint("gotRecommendations");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      List<CartItem> list = recommendarCartItemsFromJson(map);
+      print("THIS IS THE LIST");
+      print(list);
+      return list;
+      debugPrint(map.toString());
+    } else {
+      List<CartItem> list = List.empty();
+      debugPrint("___ err " + response.statusCode.toString());
+      return list;
     }
   }
 }

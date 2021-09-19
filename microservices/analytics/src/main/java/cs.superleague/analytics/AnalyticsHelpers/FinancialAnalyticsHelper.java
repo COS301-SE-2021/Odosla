@@ -7,25 +7,32 @@ import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.shopping.dataclass.Store;
-import cs.superleague.shopping.repos.StoreRepo;
-import cs.superleague.user.dataclass.Driver;
+import cs.superleague.shopping.responses.GetStoresResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
+import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.List;
+import java.util.Map;
 
 public class FinancialAnalyticsHelper {
 
-    private final HashMap<String, Object> data;
-    private StoreRepo storeRepo;
+    private String shoppingHost;
+    private String shoppingPort;
 
-    public FinancialAnalyticsHelper(HashMap<String, Object> data, StoreRepo storeRepo){
+    private final HashMap<String, Object> data;
+    private final RestTemplate restTemplate;
+
+    public FinancialAnalyticsHelper(HashMap<String, Object> data, RestTemplate restTemplate,
+                                    String shoppingHost, String shoppingPort){
         this. data = data;
-        this.storeRepo = storeRepo;
+        this.restTemplate = restTemplate;
+        this.shoppingHost = shoppingHost;
+        this.shoppingPort = shoppingPort;
     }
 
     public byte[] createPDF() throws Exception{
@@ -34,10 +41,6 @@ public class FinancialAnalyticsHelper {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
         try{
-
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_FinancialReport.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(file_name));
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -78,24 +81,44 @@ public class FinancialAnalyticsHelper {
             Order[] topOrders;
             topOrders =  (Order[]) data.get("topTenOrders");
 
-            Optional<Store> storeOptional;
-            Store store;
-            if(topOrders != null)
-            for (int i = 0; i < topOrders.length; i++) {
-                table.addCell(String.valueOf(i + 1));
+            Store store = null;
+            List<Store> stores;
+            ResponseEntity<GetStoresResponse> responseEntity;
 
-                if(topOrders[0] != null) {
-                    storeOptional = storeRepo.findById(topOrders[i].getStoreID());
+            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+            URI uri = new URI(stringUri);
 
-                    if(storeOptional == null || !storeOptional.isPresent()){
-                        throw new AnalyticsException(storeOptional.toString());
-                    }
+            Map<String, Object> parts = new HashMap<>();
 
-                    store = storeOptional.get();
+            responseEntity = restTemplate.postForEntity(uri, parts,
+                    GetStoresResponse.class);
 
-                    if(store != null) {
-                        table.addCell(String.valueOf(store.getStoreBrand()));
-                        table.addCell(String.valueOf(topOrders[i].getTotalCost()));
+            if(responseEntity == null || !responseEntity.hasBody()
+                    || responseEntity.getBody() == null){
+                throw new AnalyticsException("Could not retrieve stores");
+            }
+
+            stores = responseEntity.getBody().getStores();
+
+
+            if(topOrders != null){
+                for (int i = 0; i < topOrders.length; i++) {
+                    table.addCell(String.valueOf(i + 1));
+
+                    if(topOrders[0] != null) {
+
+                        for (Store s: stores) {
+                            if(s.getStoreID() != null &&
+                                s.getStoreID().equals(topOrders[i].getStoreID())){
+                                store = s;
+                                break;
+                            }
+                        }
+
+                        if(store != null) {
+                            table.addCell(String.valueOf(store.getStoreBrand()));
+                            table.addCell(String.valueOf(topOrders[i].getTotalCost()));
+                        }
                     }
                 }
             }
@@ -127,15 +150,11 @@ public class FinancialAnalyticsHelper {
         }catch (Exception e){
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
-        byte[] pdfBytes = byteArrayOutputStream.toByteArray();
-        return pdfBytes;
+        return byteArrayOutputStream.toByteArray();
     }
 
     public StringBuilder createCSVReport() {
         try {
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_FinancialReport.csv";
-            PrintWriter pw = new PrintWriter(new FileOutputStream(file_name));
             StringBuilder sb = new StringBuilder(); //variable to start writing to csv
 
             sb.append("Total Orders");
@@ -154,12 +173,10 @@ public class FinancialAnalyticsHelper {
             sb.append(",");
             sb.append(data.get("averagePriceOfOrders"));
 
-            pw.write(sb.toString()); // write to the csv file
-            pw.close();  //stop writing
             System.out.println("finished");
 
             return sb;
-        } catch ( FileNotFoundException e) {
+        } catch ( Exception e) {
             e.printStackTrace();
             //throw new ReportException("Not able to create CSV file");
         } //lets us know if its successfully completed
