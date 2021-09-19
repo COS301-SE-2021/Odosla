@@ -3,9 +3,10 @@ package cs.superleague.user.responses;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cs.superleague.user.dataclass.Driver;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class GetDriverByUUIDResponse {
+public class GetDriverByUUIDResponse implements Serializable {
     private final Driver driver;
     @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;

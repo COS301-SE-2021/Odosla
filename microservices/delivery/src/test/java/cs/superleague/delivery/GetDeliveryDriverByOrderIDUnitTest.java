@@ -202,10 +202,10 @@ public class GetDeliveryDriverByOrderIDUnitTest {
 //        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
 //        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         GetDriverByUUIDResponse getDriverByUUIDResponse = new GetDriverByUUIDResponse(driver, new Date(), "");
-        uriString = "http://"+userHost+":"+userPort+"/user/findDriverById";
+        uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
         uri = new URI(uriString);
         Map<String, Object> parts = new HashMap<>();
-        parts.put("driverID", delivery.getDriverId());
+        parts.put("userID", delivery.getDriverId());
 
         ResponseEntity<GetDriverByUUIDResponse> responseEntity = new ResponseEntity<>(getDriverByUUIDResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,

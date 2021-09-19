@@ -1,6 +1,7 @@
 package cs.superleague.integration.security;
 
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import io.jsonwebtoken.Claims;
@@ -95,16 +96,16 @@ public class JwtUtil {
         return createToken(claims,admin.getAdminID(),admin.getEmail(),grantedAuthorities);
     }
 
-//    public String generateJWTTokenCustomer(Customer customer){
-//        Map<String,Object> claims=new HashMap<>();
-//        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(CUSTOMER_AUTHORITY);
-//        claims.put("userType","CUSTOMER");
-//        claims.put("email",customer.getEmail());
-//        claims.put("authorities",grantedAuthorities.stream()
-//                .map(GrantedAuthority::getAuthority)
-//                .collect(Collectors.toList()));
-//        return createToken(claims,customer.getCustomerID(),customer.getEmail(),grantedAuthorities);
-//    }
+    public String generateJWTTokenCustomer(Customer customer){
+        Map<String,Object> claims=new HashMap<>();
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(CUSTOMER_AUTHORITY);
+        claims.put("userType","CUSTOMER");
+        claims.put("email",customer.getEmail());
+        claims.put("authorities",grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+        return createToken(claims,customer.getCustomerID(),customer.getEmail(),grantedAuthorities);
+    }
 
     private String createToken(Map<String, Object> claims, UUID userID, String email, List<GrantedAuthority> grantedAuthorities) {
         return BEARER+Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())

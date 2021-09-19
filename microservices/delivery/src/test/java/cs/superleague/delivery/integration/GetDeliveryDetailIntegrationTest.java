@@ -15,6 +15,7 @@ import cs.superleague.user.dataclass.Admin;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.UserType;
 import cs.superleague.integration.security.JwtUtil;
+import cs.superleague.user.requests.SaveAdminToRepoRequest;
 import cs.superleague.user.requests.SaveDriverToRepoRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -85,11 +86,11 @@ public class GetDeliveryDetailIntegrationTest {
     void setUp(){
         time = Calendar.getInstance();
         status = DeliveryStatus.WaitingForShoppers;
-        orderID = UUID.randomUUID();
-        customerID = UUID.randomUUID();
-        storeID = UUID.randomUUID();
-        adminID=UUID.randomUUID();
-        deliveryID = UUID.randomUUID();
+        deliveryID = UUID.fromString("e6732473-7e91-4949-8811-d71e6fb6255d");
+        orderID = UUID.fromString("54287c26-ae7d-4137-afbe-353789533a47");
+        customerID = UUID.fromString("26634e65-21ca-4c6f-932a-ca3c48755123");
+        storeID = UUID.fromString("0b3837de-a2d7-4fdc-a819-63ebd6dea1aa");
+        adminID=UUID.fromString("91443e06-46b0-48b9-a2d4-f36799eb092d");
         pickUpLocation = new GeoPoint(0.0, 0.0, "address");
         dropOffLocation = new GeoPoint(1.0, 1.0, "address");
         admin = new Admin("John", "Doe", "u14254922@tuks.co.za", "0743149813", "Hello123", "123", UserType.ADMIN, adminID);
@@ -105,37 +106,38 @@ public class GetDeliveryDetailIntegrationTest {
         driver.setEmail("u19060468@tuks.co.za");
         driver.setAccountType(UserType.DRIVER);
 
-        String jwt = jwtUtil.generateJWTTokenDriver(driver);
+        String jwt = jwtUtil.generateJWTTokenAdmin(admin);
 
         System.out.println(jwt);
 
-//        Header header = new BasicHeader("Authorization", jwt);
-//        List<Header> headers = new ArrayList<>();
-//        headers.add(header);
-//        CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
-//        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
-//
-//        jwt = jwt.replace(HEADER,"");
-//        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
-//        List<String> authorities = (List) claims.get("authorities");
-//        String userType= (String) claims.get("userType");
-//        String email = (String) claims.get("email");
-//        System.out.println(userType);
-//        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
-//                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-//        HashMap<String, Object> info=new HashMap<String, Object>();
-//        info.put("userType",userType);
-//        info.put("email",email);
-//        auth.setDetails(info);
-//        SecurityContextHolder.getContext().setAuthentication(auth);
+        Header header = new BasicHeader("Authorization", jwt);
+        List<Header> headers = new ArrayList<>();
+        headers.add(header);
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-        // Store Admin
-//        SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-//        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveDriverToRepoRequest);
+        jwt = jwt.replace(HEADER,"");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        System.out.println(userType);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        SaveAdminToRepoRequest saveAdminToRepoRequest = new SaveAdminToRepoRequest(admin);
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveAdminToRepoTest", saveAdminToRepoRequest);
+
     }
 
     @AfterEach
     void tearDown(){
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -169,22 +171,22 @@ public class GetDeliveryDetailIntegrationTest {
         assertEquals("User is not an admin.", thrown.getMessage());
     }
 
-//    @Test
-//    @Description("Tests for when there are no details for the delivery or delivery does not exist.")
-//    @DisplayName("Invalid deliveryID")
-//    void invalidDeliveryIDPassedInRequestObject_IntegrationTest(){
-//        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.randomUUID());
-//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request));
-//        assertEquals("No details found for this delivery.", thrown.getMessage());
-//    }
-//
-//    @Test
-//    @Description("Tests for delivery details are found.")
-//    @DisplayName("Delivery details returned")
-//    void detailsReturnedSuccessfully_IntegrationTest() throws InvalidRequestException{
-//        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID);
-//        GetDeliveryDetailResponse response = deliveryService.getDeliveryDetail(request);
-//        assertEquals(response.getMessage(), "Details successfully found.");
-//        assertEquals(response.getDetail().get(0).getDetail(), "detail1");
-//    }
+    @Test
+    @Description("Tests for when there are no details for the delivery or delivery does not exist.")
+    @DisplayName("Invalid deliveryID")
+    void invalidDeliveryIDPassedInRequestObject_IntegrationTest(){
+        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(UUID.randomUUID());
+        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.getDeliveryDetail(request));
+        assertEquals("No details found for this delivery.", thrown.getMessage());
+    }
+
+    @Test
+    @Description("Tests for delivery details are found.")
+    @DisplayName("Delivery details returned")
+    void detailsReturnedSuccessfully_IntegrationTest() throws InvalidRequestException{
+        GetDeliveryDetailRequest request = new GetDeliveryDetailRequest(deliveryID);
+        GetDeliveryDetailResponse response = deliveryService.getDeliveryDetail(request);
+        assertEquals(response.getMessage(), "Details successfully found.");
+        assertEquals(response.getDetail().get(0).getDetail(), "detail1");
+    }
 }

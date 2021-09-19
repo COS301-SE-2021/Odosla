@@ -177,8 +177,9 @@ public class TrackDeliveryUnitTest {
         when(restTemplate.postForEntity(uri,
                 parts, GetDriverByUUIDResponse.class)).thenReturn(responseEntity);
         TrackDeliveryRequest request = new TrackDeliveryRequest(deliveryID);
-        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.trackDelivery(request));
-        assertEquals(thrown.getMessage(), "Invalid user.");
+        TrackDeliveryResponse response = deliveryService.trackDelivery(request);
+        assertEquals(response.getMessage(), "No driver has been assigned to this delivery.");
+        assertEquals(response.getCurrentLocation(), pickUpLocation);
     }
 
     @Test

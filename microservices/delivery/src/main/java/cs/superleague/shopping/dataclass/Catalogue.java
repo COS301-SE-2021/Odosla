@@ -1,4 +1,4 @@
-package cs.superleague.user.dataclass;
+package cs.superleague.shopping.dataclass;
 
 import cs.superleague.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;

@@ -33,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -81,18 +82,17 @@ public class UpdateDeliveryStatusIntegrationTest {
     @BeforeEach
     void setUp(){
         time = Calendar.getInstance();
-        customerID = UUID.randomUUID();
-        driverID = UUID.randomUUID();
-        deliveryID = UUID.randomUUID();
-        orderID = UUID.randomUUID();
-        storeID = UUID.randomUUID();
+        deliveryID = UUID.fromString("e6732473-7e91-4949-8811-d71e6fb6255d");
+        orderID = UUID.fromString("54287c26-ae7d-4137-afbe-353789533a47");
+        customerID = UUID.fromString("26634e65-21ca-4c6f-932a-ca3c48755123");
+        storeID = UUID.fromString("0b3837de-a2d7-4fdc-a819-63ebd6dea1aa");
+        driverID = UUID.fromString("f1299f1e-27bc-42fe-af16-d68d8a91df35");
         status = DeliveryStatus.CollectedByDriver;
         pickUpLocation = new GeoPoint(0.0, 0.0, "address");
         dropOffLocation = new GeoPoint(1.0, 1.0, "address");
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, DeliveryStatus.WaitingForShoppers, 0.0);
         delivery.setDriverId(driverID);
 
-        orderID = UUID.randomUUID();
         delivery.setOrderID(orderID);
         deliveryRepo.save(delivery);
 
@@ -130,11 +130,11 @@ public class UpdateDeliveryStatusIntegrationTest {
 
 
         order = new Order();
-        order.setOrderID(UUID.randomUUID());
+        order.setOrderID(orderID);
 
         // Store Driver
         SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveDriverToRepoRequest);
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
 
         // Save Order
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
@@ -190,31 +190,31 @@ public class UpdateDeliveryStatusIntegrationTest {
         assertEquals("Delivery does not exist in database.", thrown.getMessage());
     }
 
-//    @Test
-//    @Description("Tests for when the request delivery status is 'DELIVERED', Driver not found")
-//    @DisplayName("Successful update -> DELIVERED")
-//    void deliveryStatusUpdatedSuccessfully_DELIVERED_IntegrationTest(){
-//        UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
-//
-//        try {
-//            UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);
-//            assertEquals(response.getMessage(), "Successful status update.");
-//            Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
-//            assertEquals(delivery1.get().getStatus(), DeliveryStatus.Delivered);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            fail();
-//        }
-//    }
+    @Test
+    @Description("Tests for when the request delivery status is 'DELIVERED', Driver not found")
+    @DisplayName("Successful update -> DELIVERED")
+    void deliveryStatusUpdatedSuccessfully_DELIVERED_IntegrationTest(){
+        UpdateDeliveryStatusRequest request1 = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
 
-//    @Test
-//    @Description("Delivery successfully updated in the database")
-//    @DisplayName("Successful update")
-//    void deliveryStatusUpdatedSuccessfully_IntegrationTest() throws InvalidRequestException {
-//        UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
-//        UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request);
-//        assertEquals(response.getMessage(), "Successful status update.");
-//        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
-//        assertEquals(delivery1.get().getStatus(), DeliveryStatus.Delivered);
-//    }
+        try {
+            UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);
+            assertEquals(response.getMessage(), "Successful status update.");
+            Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+            assertEquals(delivery1.get().getStatus(), DeliveryStatus.Delivered);
+        }catch (Exception e){
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    @Description("Delivery successfully updated in the database")
+    @DisplayName("Successful update")
+    void deliveryStatusUpdatedSuccessfully_IntegrationTest() throws InvalidRequestException, URISyntaxException {
+        UpdateDeliveryStatusRequest request = new UpdateDeliveryStatusRequest(DeliveryStatus.Delivered, deliveryID, "detail");
+        UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request);
+        assertEquals(response.getMessage(), "Successful status update.");
+        Optional<Delivery> delivery1 = deliveryRepo.findById(deliveryID);
+        assertEquals(delivery1.get().getStatus(), DeliveryStatus.Delivered);
+    }
 }

@@ -2928,7 +2928,7 @@ public class UserServiceImpl implements UserService{
             if(driver==null) {
                 throw new CustomerDoesNotExistException("User with ID does not exist in repository - could not get driver entity");
             }
-            response=new GetDriverByUUIDResponse(driver, Calendar.getInstance().getTime(),"Driver entity with corresponding user id was returned");
+            response=new GetDriverByUUIDResponse(driver, new Date(),"Driver entity with corresponding user id was returned");
         }
         else{
             throw new InvalidRequestException("GetDriverByUUID request is null - could not return driver entity");

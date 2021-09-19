@@ -200,7 +200,7 @@ public class UpdateDeliveryStatusUnitTest {
         parts.put("userID", delivery.getDriverId().toString());
 
         Map<String, Object> orderRequest = new HashMap<>();
-        orderRequest.put("orderId", delivery.getOrderID().toString());
+        orderRequest.put("orderID", delivery.getOrderID().toString());
         String uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
         URI uri = new URI(uriString);
         Mockito.when(restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class))
