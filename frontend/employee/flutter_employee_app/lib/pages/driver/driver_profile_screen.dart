@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/pages/driver/edit_page_driver.dart';
+import 'package:flutter_employee_app/pages/wallet_page.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
@@ -7,6 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
+
+import '../contact_us_page.dart';
 
 class DriverProfileScreen extends StatefulWidget {
   @override
@@ -217,7 +221,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                       ),
                       SizedBox(height: kSpacingUnit.w*2),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => WalletPage()));
+                        },
                         child: ProfileListItem(
                             LineAwesomeIcons.wallet,
                             'Wallet'
@@ -228,14 +235,20 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                       //   'Purchase History',
                       // ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => ContactPage()));
+                        },
                         child: ProfileListItem(
                           LineAwesomeIcons.question_circle,
                           'Help & Support',
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditDriverProfilePage()));
+                        },
                         child:ProfileListItem(
                           LineAwesomeIcons.cog,
                           'Settings',

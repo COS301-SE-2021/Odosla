@@ -310,7 +310,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
               initialCameraPosition: initialCameraPosition,
               onMapCreated: (GoogleMapController controller) {
                 _controller.complete(controller);
-                print(_delivery.deliveryStatus);
                 if(_delivery.deliveryStatus=="CollectingFromStore" ){
                   showPinsOnMap();
                 } else if(_delivery.deliveryStatus=="DeliveringToCustomer"){
@@ -324,7 +323,6 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    print(Provider.of<UtilityProvider>(context).redo);
     if(_done==false) {
       setState(() {
         _delivery = Provider
@@ -390,14 +388,17 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
                   ),
                 ),
                 Expanded(
-                  child: Text(
-                    _delivery.deliveryStatus=="CollectingFromStore"?_delivery.pickUpLocation.address:_delivery.deliveryStatus=="DeliveringToCustomer"?_delivery.dropOffLocation.address:"",
-                    textAlign: TextAlign.right,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    style: kTitleTextStyle.copyWith(
-                      fontWeight: FontWeight.w600
-                    )
+                  child: Padding(
+                    padding: const EdgeInsets.only(right:20.0),
+                    child: Text(
+                      _delivery.deliveryStatus=="CollectingFromStore"?_delivery.pickUpLocation.address:_delivery.deliveryStatus=="DeliveringToCustomer"?_delivery.dropOffLocation.address:"",
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: kTitleTextStyle.copyWith(
+                        fontWeight: FontWeight.w600
+                      )
+                    ),
                   ),
                 )
               ]

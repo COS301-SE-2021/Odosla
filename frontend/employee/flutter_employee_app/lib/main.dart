@@ -14,6 +14,7 @@ import 'package:flutter_employee_app/pages/login_registration/splash_screen.dart
 import 'package:flutter_employee_app/pages/shopper/barcode_scanner_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
+import 'package:flutter_employee_app/pages/wallet_page.dart';
 import 'package:flutter_employee_app/provider/UtilityProvider.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/provider/jwt_provider.dart';
@@ -88,7 +89,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:SplashScreen(),
+            home:DriverHomeScreen(1),
             routes: routes,
           );
         },

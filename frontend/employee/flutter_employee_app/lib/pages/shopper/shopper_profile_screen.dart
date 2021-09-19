@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/User.dart';
 import 'package:flutter_employee_app/pages/contact_us_page.dart';
 import 'package:flutter_employee_app/pages/shopper/edit_profile_page.dart';
+import 'package:flutter_employee_app/pages/wallet_page.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
@@ -211,7 +212,10 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                       ),
                       SizedBox(height: kSpacingUnit.w*2),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => WalletPage()));
+                        },
                         child: ProfileListItem(
                             LineAwesomeIcons.wallet,
                             'Wallet'

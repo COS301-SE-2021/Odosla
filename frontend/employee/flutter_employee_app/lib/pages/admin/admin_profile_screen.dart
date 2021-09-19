@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/User.dart';
+import 'package:flutter_employee_app/pages/admin/edit_pade_admin.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
@@ -10,6 +11,8 @@ import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:provider/provider.dart';
+
+import '../contact_us_page.dart';
 
 
 class AdminProfileScreen extends StatefulWidget {
@@ -156,14 +159,20 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                     children: <Widget>[
                       SizedBox(height: kSpacingUnit.w*2),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => ContactPage()));
+                        },
                         child: ProfileListItem(
                           LineAwesomeIcons.question_circle,
                           'Help & Support',
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => EditAdminProfilePage()));
+                        },
                         child:ProfileListItem(
                           LineAwesomeIcons.cog,
                           'Settings',

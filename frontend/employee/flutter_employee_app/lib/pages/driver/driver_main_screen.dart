@@ -3,6 +3,8 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/Delivery.dart';
+import 'package:flutter_employee_app/models/GeoPoint.dart';
 import 'package:flutter_employee_app/models/Order.dart';
 import 'package:flutter_employee_app/models/Store.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_employee_app/pages/shopper/list_of_stores_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
 import 'package:flutter_employee_app/provider/UtilityProvider.dart';
+import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'driver_profile_screen.dart';
@@ -75,6 +78,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<DeliveryProvider>(context, listen: false).delivery=Delivery("123",GeoPoint(-25.754618,28.233255,"f"),GeoPoint(-25.188660,28.142833,"G"),"","","","","DeliveringToCustomer",40,false);
     return Scaffold(
       body: buildPageView(),
       bottomNavigationBar: CurvedNavigationBar(

@@ -53,7 +53,7 @@ class BarcodeScanPage extends StatelessWidget {
         Container(
           alignment: Alignment.centerLeft,
           height: 60.0,
-          width: 80,
+          width: MediaQuery.of(context).size.width*0.7,
           color: Colors.deepOrangeAccent,
           child: TextField(
             keyboardType: TextInputType.emailAddress,
@@ -71,10 +71,6 @@ class BarcodeScanPage extends StatelessWidget {
             decoration: InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
-              // prefixIcon: Icon(
-              //   Icons.wri,
-              //   color: Colors.white,
-              // ),
               hintText: 'Product ID',
             ),
           ),
