@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/services/AnalyticsService.dart';
@@ -7,8 +5,6 @@ import 'package:flutter_employee_app/utilities/mobile.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-
-import 'check.dart';
 
 class AnalyticsScreen extends StatefulWidget {
 
@@ -204,10 +200,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   )
               )
           ),
-          SizedBox(height: 30.0),
+          SizedBox(height: 19.0),
           Container(
               alignment: Alignment.centerLeft,
-              height: 84.0,
+              height: MediaQuery.of(context).size.height*0.15,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -217,7 +213,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 36.0
+                            fontSize: MediaQuery.of(context).size.height*0.05,
 
                         ),
                       )
@@ -228,7 +224,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                         style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
-                            fontSize: 36.0
+                            fontSize: MediaQuery.of(context).size.height*0.05,
 
                         ),
                       )
@@ -294,22 +290,22 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   }
 
   Widget _createReportButton(){
-  return Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-    RaisedButton(
+  return Container(
+    padding: EdgeInsets.all(24),
+    child: RaisedButton(
       elevation: 5.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
-    child: Text('Generate report',
+      color: Theme.of(context).backgroundColor,
+    child: Text('GENERATE REPORT',
         style: TextStyle(
         color: Color(0xFFE9884A),
     letterSpacing: 1.5,
     fontSize: 22.0,
     fontWeight: FontWeight.bold,
     fontFamily: 'OpenSans',
-  ),),
+    ),),
     onPressed: () async {
       String startMonth=_dateTimeStart.month.toString();
       String endMonth =_dateTimeEnd.month.toString();
@@ -423,8 +419,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         });
       }
       },
-    )
-    ],
+    ),
   );
 }
 
@@ -434,7 +429,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: MyHomePage(),
       body: Stack(
         children: [
           Container(
@@ -455,45 +449,69 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             ),
           ),
           LoadingOverlay(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(height: 80.0),
-                Text(
-                  'Choose a report',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'OpenSans',
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height*0.55,
+                    child: Column(
+                      children: [
+                        SizedBox(height:MediaQuery.of(context).size.height*0.11),
+                        Container(
+                          width: MediaQuery.of(context).size.height*0.3,
+                          alignment: Alignment.center,
+                          //color: Theme.of(context).backgroundColor,
+                          child: Text(
+                            'CHOOSE \n REPORT TYPE',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'OpenSans',
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height:MediaQuery.of(context).size.height*0.05),
+                        _decisionWheel(),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 15.0),
-                _decisionWheel(),
-                SizedBox(height: 10.0),
-                Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          selected==1?Container():_calendarPickerStartDate(),
-                          SizedBox(width: 5,),
-                          selected==1?Container():_calendarPickerEndDate(),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      _dropDown(),
-                      SizedBox(height: 10,),
-                      selected==1?Container():Text("Generate "+_chosenValue+" report: \n Start Date: "+_dateTimeStart.day.toString()+" "+returnMonth(_dateTimeStart).toString()+" "+_dateTimeStart.year.toString()+"\nEnd Date:"+_dateTimeEnd.day.toString()+" "+returnMonth(_dateTimeEnd).toString()+" "+_dateTimeEnd.year.toString(),
-                      style: TextStyle(fontWeight: FontWeight.w800,fontSize: 17),textAlign: TextAlign.center,),
-                      SizedBox(height: 10),
-                      _createReportButton(),
-                    ]
+                  Container(
+                    height: MediaQuery.of(context).size.height*0.255,
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                selected==1?Container():_calendarPickerStartDate(),
+                                SizedBox(width: 5,),
+                                selected==1?Container():_calendarPickerEndDate(),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            _dropDown(),
+                            SizedBox(height: 10,),
+                            selected==1?Container():Text("Generate "+_chosenValue+" report: \n Start Date: "+_dateTimeStart.day.toString()+" "+returnMonth(_dateTimeStart).toString()+" "+_dateTimeStart.year.toString()+"\nEnd Date:"+_dateTimeEnd.day.toString()+" "+returnMonth(_dateTimeEnd).toString()+" "+_dateTimeEnd.year.toString(),
+                            style: TextStyle(fontWeight: FontWeight.w800,fontSize: 17),textAlign: TextAlign.center,),
+
+                          ]
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Container(
+                      height: MediaQuery.of(context).size.height*0.11,
+                      child: _createReportButton()
+                  ),
+                ],
+              ),
             ),
             isLoading: _isInAsyncCall,
             // demo of some additional parameters

@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-class BarcodeScanPage extends StatefulWidget {
-  @override
-  _BarcodeScanPageState createState() => _BarcodeScanPageState();
-}
+// class BarcodeScanPage extends StatefulWidget {
+//
+//   final String barcodeExpected;
+//   const BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected}) : super(key: key);
+//   @override
+//   _BarcodeScanPageState createState() => _BarcodeScanPageState();
+// }
 
-class _BarcodeScanPageState extends State<BarcodeScanPage> {
-  String barcode = 'Unknown';
+class BarcodeScanPage extends StatelessWidget {
+  String barcode = 'Unknown barcode';
+  bool _correctBarcode=false;
+  final String barcodeExpected;
+  BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -30,24 +36,55 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
           ),
           SizedBox(height: 8),
           Text(
-            '$barcode',
+            _correctBarcode==false?"Barcode expected: "+barcodeExpected:"Correct barcode scanned",
             style: TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
             ),
+            textAlign: TextAlign.center,
           ),
           SizedBox(height: 72),
           ButtonWidget(
             text: 'Start Barcode scan',
-            onClicked: scanBarcode,
+            onClicked: () async {
+              await scanBarcode(context);},
           ),
+        SizedBox(height: 10.0),
+        Container(
+          alignment: Alignment.centerLeft,
+          height: 60.0,
+          width: 80,
+          color: Colors.deepOrangeAccent,
+          child: TextField(
+            keyboardType: TextInputType.emailAddress,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'OpenSans',
+            ),
+            onChanged: (value) =>
+            {
+              barcode=value,
+              if(value==barcodeExpected){
+                Navigator.pop(context, true)
+              }
+            },
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(top: 14.0),
+              // prefixIcon: Icon(
+              //   Icons.wri,
+              //   color: Colors.white,
+              // ),
+              hintText: 'Product ID',
+            ),
+          ),
+        ),
         ],
       ),
     ),
   );
 
-  Future<void> scanBarcode() async {
+  Future scanBarcode(BuildContext context) async {
     try {
       final barcode = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666',
@@ -55,13 +92,15 @@ class _BarcodeScanPageState extends State<BarcodeScanPage> {
         true,
         ScanMode.BARCODE,
       );
-
-      if (!mounted) return;
-
-      setState(() {
-        this.barcode = barcode;
-      });
-    } on PlatformException {
+        if(barcode==barcodeExpected){
+          this._correctBarcode=true;
+          Navigator.pop(context, true);
+        }
+        else{
+          this._correctBarcode=false;
+        }
+      }
+      on Exception {
       barcode = 'Failed to get platform version.';
     }
   }
@@ -86,7 +125,6 @@ class ButtonWidget extends StatelessWidget{
     shape: StadiumBorder(),
     color: Theme.of(context).primaryColor,
     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    textColor: Colors.white,
     onPressed: onClicked,
   );
 }
