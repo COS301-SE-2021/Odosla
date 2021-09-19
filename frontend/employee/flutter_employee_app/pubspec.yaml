@@ -125,6 +125,15 @@ flutter:
     - assets/analytics/monthlyReport.png
     - assets/analytics/userReport.png
     - assets/importer/store.png
+    - assets/gifs/groceryGif.gif
+    - assets/gifs/shoppingCart.gif
+    - assets/gifs/deliveryGif.gif
+    - assets/gifs/deliveryTruck.gif
+    - assets/shopping/staticShoppingCart.png
+    - assets/delivery/staticDeliveryTruck.png
+    - assets/gifs/customerService.gif
+    - assets/mail.png
+    - assets/phone.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
