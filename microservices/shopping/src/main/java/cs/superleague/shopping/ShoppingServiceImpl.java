@@ -277,7 +277,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("orderID", correspondingOrder.getOrderID().toString());
+            parts.put("orderID", correspondingOrder.getOrderID());
 
             String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
             URI uri = new URI(stringUri);
