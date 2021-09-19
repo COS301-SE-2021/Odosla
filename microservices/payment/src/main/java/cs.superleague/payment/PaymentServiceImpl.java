@@ -269,10 +269,9 @@ public class PaymentServiceImpl implements PaymentService {
 
             }
 
-            if(cartItemRepo!=null)
-            cartItemRepo.saveAll(cartItems);
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
+            System.out.println("Submit Order id: "+ orderID);
             Order o = new Order();
             o.setOrderID(orderID);
             o.setUserID(customerID);
@@ -289,11 +288,15 @@ public class PaymentServiceImpl implements PaymentService {
             o.setStoreAddress(shop.getStore().getStoreLocation());
             o.setRequiresPharmacy(requiresPharmacy);
 
+
             if (o != null) {
 
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
                         orderRepo.save(o);
+                        if(cartItemRepo!=null)
+                            cartItemRepo.saveAll(cartItems);
+
                         List<String> productIDs = new ArrayList<>();
                         for (CartItem item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
