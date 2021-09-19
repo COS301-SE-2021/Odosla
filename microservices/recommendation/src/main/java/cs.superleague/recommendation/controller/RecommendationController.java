@@ -116,6 +116,10 @@ public class RecommendationController implements RecommendationApi {
         for (CartItem i: responseItems){
 
             CartItemObject item = new CartItemObject();
+            if(i.getCartItemNo()!=null)
+            {
+                item.setCartItemNo(i.getCartItemNo().toString());
+            }
             item.setProductId(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());

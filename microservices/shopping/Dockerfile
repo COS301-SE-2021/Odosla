@@ -7,6 +7,6 @@ MAINTAINER azul.com
 COPY target/shopping-1.0-SNAPSHOT.jar shopping-1.0-SNAPSHOT.jar
 
 #execute
-ENTRYPOINT ["java", "-jar", "/shopping-1.0-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /shopping-1.0-SNAPSHOT.jar"]
 
 EXPOSE 8800
