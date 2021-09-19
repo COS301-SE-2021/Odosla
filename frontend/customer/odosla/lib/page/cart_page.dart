@@ -168,6 +168,9 @@ Widget buildCartPage(BuildContext context) {
             SizedBox(height: 25),
             Expanded(child: Container(child: buildCartItems(context))),
             SizedBox(height: 25),
+            SizedBox(height: 25),
+            Text("Recommended for you", style: TextStyle(fontWeight: FontWeight.w600),),
+            Container(child: buildRecommendationItems(context)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
