@@ -50,20 +50,29 @@ public class DriverObject   {
   @JsonProperty("driverID")
   private String driverID = null;
 
+  @JsonProperty("deliveryID")
+  private String deliveryID = null;
+
+  @JsonProperty("totalRatings")
+  private BigDecimal totalRatings = null;
+
   @JsonProperty("rating")
   private BigDecimal rating = null;
 
   @JsonProperty("onShift")
   private Boolean onShift = null;
 
-  @JsonProperty("currentAddress")
-  private GeoPointObject currentAddress = null;
+  @JsonProperty("isCurrentlyDelivering")
+  private Boolean isCurrentlyDelivering = null;
 
   @JsonProperty("deliveriesCompleted")
   private BigDecimal deliveriesCompleted = null;
 
-  @JsonProperty("deliveryID")
-  private String deliveryID = null;
+  @JsonProperty("numberOfRatings")
+  private BigDecimal numberOfRatings = null;
+
+  @JsonProperty("currentAddress")
+  private GeoPointObject currentAddress = null;
 
   public DriverObject name(String name) {
     this.name = name;
@@ -274,6 +283,45 @@ public class DriverObject   {
     this.driverID = driverID;
   }
 
+  public DriverObject deliveryID(String deliveryID) {
+    this.deliveryID = deliveryID;
+    return this;
+  }
+
+  /**
+   * Get deliveryID
+   * @return deliveryID
+  **/
+  @ApiModelProperty(value = "")
+  
+    public String getDeliveryID() {
+    return deliveryID;
+  }
+
+  public void setDeliveryID(String deliveryID) {
+    this.deliveryID = deliveryID;
+  }
+
+  public DriverObject totalRatings(BigDecimal totalRatings) {
+    this.totalRatings = totalRatings;
+    return this;
+  }
+
+  /**
+   * Get totalRatings
+   * @return totalRatings
+  **/
+  @ApiModelProperty(value = "")
+  
+    @Valid
+    public BigDecimal getTotalRatings() {
+    return totalRatings;
+  }
+
+  public void setTotalRatings(BigDecimal totalRatings) {
+    this.totalRatings = totalRatings;
+  }
+
   public DriverObject rating(BigDecimal rating) {
     this.rating = rating;
     return this;
@@ -313,24 +361,23 @@ public class DriverObject   {
     this.onShift = onShift;
   }
 
-  public DriverObject currentAddress(GeoPointObject currentAddress) {
-    this.currentAddress = currentAddress;
+  public DriverObject isCurrentlyDelivering(Boolean isCurrentlyDelivering) {
+    this.isCurrentlyDelivering = isCurrentlyDelivering;
     return this;
   }
 
   /**
-   * Get currentAddress
-   * @return currentAddress
+   * Get isCurrentlyDelivering
+   * @return isCurrentlyDelivering
   **/
   @ApiModelProperty(value = "")
   
-    @Valid
-    public GeoPointObject getCurrentAddress() {
-    return currentAddress;
+    public Boolean isIsCurrentlyDelivering() {
+    return isCurrentlyDelivering;
   }
 
-  public void setCurrentAddress(GeoPointObject currentAddress) {
-    this.currentAddress = currentAddress;
+  public void setIsCurrentlyDelivering(Boolean isCurrentlyDelivering) {
+    this.isCurrentlyDelivering = isCurrentlyDelivering;
   }
 
   public DriverObject deliveriesCompleted(BigDecimal deliveriesCompleted) {
@@ -353,23 +400,44 @@ public class DriverObject   {
     this.deliveriesCompleted = deliveriesCompleted;
   }
 
-  public DriverObject deliveryID(String deliveryID) {
-    this.deliveryID = deliveryID;
+  public DriverObject numberOfRatings(BigDecimal numberOfRatings) {
+    this.numberOfRatings = numberOfRatings;
     return this;
   }
 
   /**
-   * Get deliveryID
-   * @return deliveryID
+   * Get numberOfRatings
+   * @return numberOfRatings
   **/
   @ApiModelProperty(value = "")
   
-    public String getDeliveryID() {
-    return deliveryID;
+    @Valid
+    public BigDecimal getNumberOfRatings() {
+    return numberOfRatings;
   }
 
-  public void setDeliveryID(String deliveryID) {
-    this.deliveryID = deliveryID;
+  public void setNumberOfRatings(BigDecimal numberOfRatings) {
+    this.numberOfRatings = numberOfRatings;
+  }
+
+  public DriverObject currentAddress(GeoPointObject currentAddress) {
+    this.currentAddress = currentAddress;
+    return this;
+  }
+
+  /**
+   * Get currentAddress
+   * @return currentAddress
+  **/
+  @ApiModelProperty(value = "")
+  
+    @Valid
+    public GeoPointObject getCurrentAddress() {
+    return currentAddress;
+  }
+
+  public void setCurrentAddress(GeoPointObject currentAddress) {
+    this.currentAddress = currentAddress;
   }
 
 
@@ -393,16 +461,19 @@ public class DriverObject   {
         Objects.equals(this.resetExpiration, driverObject.resetExpiration) &&
         Objects.equals(this.accountType, driverObject.accountType) &&
         Objects.equals(this.driverID, driverObject.driverID) &&
+        Objects.equals(this.deliveryID, driverObject.deliveryID) &&
+        Objects.equals(this.totalRatings, driverObject.totalRatings) &&
         Objects.equals(this.rating, driverObject.rating) &&
         Objects.equals(this.onShift, driverObject.onShift) &&
-        Objects.equals(this.currentAddress, driverObject.currentAddress) &&
+        Objects.equals(this.isCurrentlyDelivering, driverObject.isCurrentlyDelivering) &&
         Objects.equals(this.deliveriesCompleted, driverObject.deliveriesCompleted) &&
-        Objects.equals(this.deliveryID, driverObject.deliveryID);
+        Objects.equals(this.numberOfRatings, driverObject.numberOfRatings) &&
+        Objects.equals(this.currentAddress, driverObject.currentAddress);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, driverID, rating, onShift, currentAddress, deliveriesCompleted, deliveryID);
+    return Objects.hash(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType, driverID, deliveryID, totalRatings, rating, onShift, isCurrentlyDelivering, deliveriesCompleted, numberOfRatings, currentAddress);
   }
 
   @Override
@@ -421,11 +492,14 @@ public class DriverObject   {
     sb.append("    resetExpiration: ").append(toIndentedString(resetExpiration)).append("\n");
     sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
     sb.append("    driverID: ").append(toIndentedString(driverID)).append("\n");
+    sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
+    sb.append("    totalRatings: ").append(toIndentedString(totalRatings)).append("\n");
     sb.append("    rating: ").append(toIndentedString(rating)).append("\n");
     sb.append("    onShift: ").append(toIndentedString(onShift)).append("\n");
-    sb.append("    currentAddress: ").append(toIndentedString(currentAddress)).append("\n");
+    sb.append("    isCurrentlyDelivering: ").append(toIndentedString(isCurrentlyDelivering)).append("\n");
     sb.append("    deliveriesCompleted: ").append(toIndentedString(deliveriesCompleted)).append("\n");
-    sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
+    sb.append("    numberOfRatings: ").append(toIndentedString(numberOfRatings)).append("\n");
+    sb.append("    currentAddress: ").append(toIndentedString(currentAddress)).append("\n");
     sb.append("}");
     return sb.toString();
   }
