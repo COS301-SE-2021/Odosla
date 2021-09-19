@@ -72,20 +72,19 @@ public class AssignDriverToDeliveryIntegrationTest {
     String jwtToken;
     Customer customer;
     Order order;
-    SaveOrderToRepoRequest saveOrderToRepoRequest;
 
     @BeforeEach
     void setUp(){
-        driverID = UUID.randomUUID();
+        driverID = UUID.fromString("00b310ec-4d81-409a-9231-3e42e012da7c");
         time = Calendar.getInstance();
-        customerID = UUID.randomUUID();
-        deliveryID = UUID.randomUUID();
-        orderID = UUID.randomUUID();
-        storeID = UUID.randomUUID();
+        customerID = UUID.fromString("e9661ab6-c26a-49fd-acd5-b343202c94f1");
+        deliveryID = UUID.fromString("b5b91167-120e-4396-b663-5d795bc6e7c9");
+        orderID = UUID.fromString("715d39f3-48ad-459a-a590-a7853f23596e");
+        storeID = UUID.fromString("35e2914a-e486-4c08-bd1f-649700a5aaa1");
         status = DeliveryStatus.CollectedByDriver;
         pickUpLocation = new GeoPoint(0.0, 0.0, "address");
         dropOffLocation = new GeoPoint(1.0, 1.0, "address");
-        driver = new Driver("Seamus", "Brennan", "u19060468tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.DRIVER, driverID);
+        driver = new Driver("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.DRIVER, driverID);
 
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, DeliveryStatus.WaitingForShoppers, 0.0);
         order = new Order();
@@ -122,9 +121,8 @@ public class AssignDriverToDeliveryIntegrationTest {
 
         driver.setActivationDate(new Date());
         SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-        saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
+        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
 
-        rabbitTemplate.setChannelTransacted(true);
         rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
         rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
