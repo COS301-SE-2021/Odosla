@@ -114,3 +114,5 @@ components:
           type: string
         totalCost:
           type: number
+        cartItemNo:
+          type: string
