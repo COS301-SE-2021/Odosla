@@ -30,6 +30,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -111,7 +113,7 @@ public class UserServiceImpl implements UserService{
      * @throws OrderDoesNotExist
      */
    @Override
-    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException {
+    public CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException, URISyntaxException {
         CompletePackagingOrderResponse response = null;
         if(request != null){
             if(request.getOrderID()==null){
@@ -125,8 +127,10 @@ public class UserServiceImpl implements UserService{
 
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("orderID", request.getOrderID());
+                String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+                URI uri = new URI(uriString);
 
-                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
                 GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
                 orderEntity = getOrderResponse.getOrder();
             }
@@ -169,7 +173,9 @@ public class UserServiceImpl implements UserService{
                 parts.put("storeID", orderEntity.getStoreID());
                 parts.put("timeOfDelivery", null);
                 parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
-                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery", parts, CreateDeliveryResponse.class);
+                String uriString = "http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery";
+                URI uri = new URI(uriString);
+                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, CreateDeliveryResponse.class);
                 CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
             }
 
@@ -231,8 +237,9 @@ public class UserServiceImpl implements UserService{
 
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("orderID", request.getOrderID());
-
-                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+                String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+                URI uri = new URI(uriString);
+                ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
                 GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
                 orderEntity = getOrderResponse.getOrder();
             }
@@ -1608,7 +1615,7 @@ public class UserServiceImpl implements UserService{
      * @throws CustomerDoesNotExistException
      */
     @Override
-    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException{
+    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException, URISyntaxException {
         UUID userID;
         String name, message;
         Customer customer = null;
@@ -1644,8 +1651,10 @@ public class UserServiceImpl implements UserService{
         }
 
         Map<String, Object> parts = new HashMap<String, Object>();
+        String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+        URI uri = new URI(uriString);
 
-        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
+        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity(uri, parts, GetStoresResponse.class);
 
         GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
 
@@ -1939,7 +1948,9 @@ public class UserServiceImpl implements UserService{
         Map<String, Object> parts = new HashMap<String, Object>();
 
         try {
-            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores", parts, GetStoresResponse.class);
+            String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+            URI uri = new URI(uriString);
+            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity(uri, parts, GetStoresResponse.class);
             GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
             response=getStoresResponse;
         }catch (Exception e){
@@ -2008,7 +2019,7 @@ public class UserServiceImpl implements UserService{
     }
 
    @Override
-   public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException {
+   public CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException, URISyntaxException {
 
         CollectOrderResponse response;
 
@@ -2033,8 +2044,10 @@ public class UserServiceImpl implements UserService{
 
        Map<String, Object> parts = new HashMap<String, Object>();
        parts.put("orderID", request.getOrderID());
+       String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+       URI uri = new URI(uriString);
 
-       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+       ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
        GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
        Order currentOrder = getOrderResponse.getOrder();
 
@@ -2057,7 +2070,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException {
+    public CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException, URISyntaxException {
 
         CompleteDeliveryResponse response;
 
@@ -2081,8 +2094,10 @@ public class UserServiceImpl implements UserService{
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("orderID", request.getOrderID());
+        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        URI uri = new URI(uriString);
 
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
+        ResponseEntity<GetOrderResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetOrderResponse.class);
         GetOrderResponse getOrderResponse = useCaseResponseEntity.getBody();
         Order order = getOrderResponse.getOrder();
 
@@ -2159,7 +2174,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
+    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, URISyntaxException {
         UpdateShopperShiftResponse response;
         if (request == null){
             throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
@@ -2195,7 +2210,9 @@ public class UserServiceImpl implements UserService{
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("storeID", request.getStoreID());
-            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
+            String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+            URI uri = new URI(uriString);
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
             if (store == null){
@@ -2386,6 +2403,7 @@ public class UserServiceImpl implements UserService{
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }
+            return new ResetPasswordResponse(resetCode, "Password reset has been accepted", true);
 
         }
         else if(userType.equals("SHOPPER")){
@@ -2423,6 +2441,7 @@ public class UserServiceImpl implements UserService{
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }
+            return new ResetPasswordResponse(resetCode, "Password reset has been accepted", true);
         }
         else if(userType.equals("DRIVER")){
             Driver driver = driverRepo.findDriverByEmail(email);
@@ -2455,6 +2474,7 @@ public class UserServiceImpl implements UserService{
             parts.put("message", passwordResetMessage);
             parts.put("properties", properties);
             ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+            return new ResetPasswordResponse(resetCode, "Password reset has been accepted", true);
 
         }else if(userType.equals("ADMIN")){
             Admin admin = adminRepo.findAdminByEmail(email);
@@ -2486,6 +2506,7 @@ public class UserServiceImpl implements UserService{
             parts.put("message", passwordResetMessage);
             parts.put("properties", properties);
             ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://"+notificationHost+":"+notificationPort+"/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+            return new ResetPasswordResponse(resetCode, "Password reset has been accepted", true);
 
         }
 
