@@ -17,6 +17,7 @@ import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -1058,6 +1059,36 @@ import java.util.List;50"
         }
         else{
             throw new InvalidRequestException("The GetAllCartItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
+    }
+
+    @Override
+    public GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException
+    {
+        GetOrderByUUIDResponse response = null;
+        if(request != null){
+
+            System.out.println("get order by uuid id: "+ request.getOrderID());
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("OrderID is null in GetOrderByUUIDRequest request - could not return order entity");
+            }
+
+            Order order =null;
+            try {
+                order = orderRepo.findById(request.getOrderID()).orElse(null);
+            }catch (NullPointerException e){
+                //Catching nullPointerException from mockito unit test, when(storeRepo.findById(mockito.any())) return null - which will return null pointer exception
+            }
+
+            if(order==null) {
+                throw new InvalidRequestException("Order with ID does not exist in repository - could not get Order entity");
+            }
+            System.out.println("found order id: "+ order.getOrderID());
+            response=new GetOrderByUUIDResponse(order,Calendar.getInstance().getTime(),"Order entity with corresponding id was returned");
+        }
+        else{
+            throw new InvalidRequestException("Order request is null - could not return order entity");
         }
         return response;
     }

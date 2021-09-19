@@ -12,6 +12,7 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -625,6 +626,30 @@ public class PaymentController implements PaymentApi {
 
         } catch (InvalidRequestException e) {
 
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentGetOrderByUUIDResponse> getOrderByUUID(PaymentGetOrderByUUIDRequest body){
+
+        //creating response object and default return status:
+        PaymentGetOrderByUUIDResponse response = new PaymentGetOrderByUUIDResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        GetOrderByUUIDResponse getOrderByUUIDResponse = null;
+        try {
+            getOrderByUUIDResponse = paymentService.getOrderByUUID(new GetOrderByUUIDRequest(UUID.fromString(body.getOrderID())));
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+        try {
+
+            response.setOrder(populateOrder(getOrderByUUIDResponse.getOrder()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return new ResponseEntity<>(response, httpStatus);
