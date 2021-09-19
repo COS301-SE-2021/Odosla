@@ -23,6 +23,7 @@ class _ActivateShopperAccountState extends State<ActivateShopperAccountScreen> {
   String _password="";
 
   Widget _popUpSuccessfulActivation(BuildContext context){
+
     return new AlertDialog(
       title: const Text('Successful activation'),
       content: new Column(
@@ -40,6 +41,39 @@ class _ActivateShopperAccountState extends State<ActivateShopperAccountScreen> {
             MyNavigator.goToShopperIntro(context);
           },
           child: const Text('Proceed to app'),
+        ),
+        new FlatButton(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          textColor: Theme.of(context).primaryColor,
+          child: Icon(
+              Icons.close_rounded,
+              color:Colors.red
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _popUpSuccessfulActivationLoginScreen(BuildContext context){
+
+    return new AlertDialog(
+      title: const Text('Successful activation'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Account with $_email"+"\n has been successfully activated",
+              textAlign: TextAlign.center
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () {
+            MyNavigator.goToLogin(context);
+          },
+          child: const Text('Please login'),
         ),
         new FlatButton(
           onPressed: () {
@@ -78,6 +112,7 @@ class _ActivateShopperAccountState extends State<ActivateShopperAccountScreen> {
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +180,7 @@ class _ActivateShopperAccountState extends State<ActivateShopperAccountScreen> {
                           ),
                           SizedBox(height: 6.0),
                           TextField(
+                            enableInteractiveSelection: true,
                               decoration: InputDecoration(
                                   labelText: 'ACTIVATION CODE',
                                   labelStyle: TextStyle(
@@ -186,24 +222,43 @@ class _ActivateShopperAccountState extends State<ActivateShopperAccountScreen> {
                                       await _userService.verifyAccount(_email, _activationCode, "SHOPPER").then(
                                               (success) async {
                                                 if (success == "true") {
-
-                                                  await _userService.loginUser(_email, _password, "SHOPPER",context).then(
-                                                          (success){
-                                                        if(success){
-                                                          _userService.getJWTAsString(context).then((value) =>  {
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (BuildContext context) =>
-                                                                  _popUpSuccessfulActivation(
-                                                                      context),
-                                                            )
+                                                  if(_password!="") {
+                                                    await _userService
+                                                        .loginUser(
+                                                        _email, _password,
+                                                        "SHOPPER", context)
+                                                        .then(
+                                                            (success) {
+                                                          if (success) {
+                                                            _userService
+                                                                .getJWTAsString(
+                                                                context).then((
+                                                                value) =>
+                                                            {
+                                                              showDialog(
+                                                                context: context,
+                                                                builder: (
+                                                                    BuildContext context) =>
+                                                                    _popUpSuccessfulActivation(
+                                                                        context),
+                                                              )
+                                                            });
+                                                          }
+                                                          setState(() {
+                                                            _isInAsyncCall =
+                                                            false;
                                                           });
                                                         }
-                                                        setState(() {
-                                                          _isInAsyncCall = false;
-                                                        });
-                                                      }
-                                                  );
+                                                    );
+                                                  } else{
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (
+                                                          BuildContext context) =>
+                                                          _popUpSuccessfulActivationLoginScreen(
+                                                              context),
+                                                    );
+                                                  }
                                                 } else if (success ==
                                                     "Activated") {
                                                   ScaffoldMessenger.of(context)

@@ -50,7 +50,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
 
   void pageChanged(int index) {
     setState(() {
-
       bottomSelectedIndex = index;
     });
   }

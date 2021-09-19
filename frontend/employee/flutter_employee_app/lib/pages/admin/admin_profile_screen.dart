@@ -170,9 +170,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () async {
+                          await _userService.deleteStorage(context);
                           MyNavigator.goToLogin(context);
-                          /* implement dleting from storage */
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.alternate_sign_out,
