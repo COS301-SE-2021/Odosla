@@ -269,10 +269,9 @@ public class PaymentServiceImpl implements PaymentService {
 
             }
 
-            if(cartItemRepo!=null)
-            cartItemRepo.saveAll(cartItems);
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
+            System.out.println("Submit Order id: "+ orderID);
             Order o = new Order();
             o.setOrderID(orderID);
             o.setUserID(customerID);
@@ -289,11 +288,15 @@ public class PaymentServiceImpl implements PaymentService {
             o.setStoreAddress(shop.getStore().getStoreLocation());
             o.setRequiresPharmacy(requiresPharmacy);
 
+
             if (o != null) {
 
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
                         orderRepo.save(o);
+                        if(cartItemRepo!=null)
+                            cartItemRepo.saveAll(cartItems);
+
                         List<String> productIDs = new ArrayList<>();
                         for (CartItem item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
@@ -608,7 +611,12 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
+        System.out.println("requests order id: " + request.getOrderID());
         order = orderRepo.findById(request.getOrderID()).orElse(null);
+        //order.setOrderID(request.getOrderID());
+        System.out.println("order total cost: " +order.getTotalCost());
+        System.out.println("order create date: " +order.getCreateDate());
+        System.out.println("Order id from get Order: " + order.getOrderID());
         if(order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
@@ -889,6 +897,8 @@ import java.util.List;50"
         {
             System.out.println("I made it here 2");
             Order order = request.getOrder();
+            System.out.println("request order id:" + request.getOrder().getOrderID());
+            order.setOrderID(request.getOrder().getOrderID());
             System.out.println("shoppers id: "+ order.getShopperID());
             System.out.println("order id: " + order.getOrderID());
             orderRepo.save(order);
