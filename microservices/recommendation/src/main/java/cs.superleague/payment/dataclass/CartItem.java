@@ -10,8 +10,7 @@ import java.util.UUID;
 public class CartItem implements Serializable {
 
     @Id
-    @GeneratedValue
-    private int cartItemNo;
+    private UUID cartItemNo;
 
     @JsonProperty("productId")
     private String productID;
@@ -170,6 +169,14 @@ public class CartItem implements Serializable {
 
     public void setStoreID(UUID storeID) {
         this.storeID = storeID;
+    }
+
+    public UUID getCartItemNo() {
+        return cartItemNo;
+    }
+
+    public void setCartItemNo(UUID cartItemNo) {
+        this.cartItemNo = cartItemNo;
     }
 
 

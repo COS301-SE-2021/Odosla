@@ -460,6 +460,8 @@ components:
           type: string
         totalCost:
           type: number
+        cartItemNo:
+          type: string
 
     payment_GetAllCartItemsRequest:
       description: This object is expected as input
