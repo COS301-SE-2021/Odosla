@@ -609,6 +609,8 @@ import java.util.List;50"
         }
 
         order = orderRepo.findById(request.getOrderID()).orElse(null);
+        order.setOrderID(request.getOrderID());
+        System.out.println("Order id from get Order: " + order.getOrderID());
         if(order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
