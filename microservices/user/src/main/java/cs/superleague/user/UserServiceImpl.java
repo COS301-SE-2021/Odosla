@@ -3118,4 +3118,26 @@ public class UserServiceImpl implements UserService{
         }
         shopperRepo.save(request.getShopper());
     }
+
+    @Override
+    public void saveCustomer(SaveCustomerToRepoRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getCustomer() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        customerRepo.save(request.getCustomer());
+    }
+
+    @Override
+    public void saveAdmin(SaveAdminToRepoRequest request) throws InvalidRequestException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getAdmin() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        adminRepo.save(request.getAdmin());
+    }
 }
