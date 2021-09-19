@@ -1152,7 +1152,7 @@ public class UserServiceImpl implements UserService{
                     if(shopperToVerify.getActivationDate()==null){
 
                         if(shopperToVerify.getActivationCode().equals(request.getActivationCode())){
-                            shopperToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            shopperToVerify.setActivationDate(new Date());
                             shopperRepo.save(shopperToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account", UserType.SHOPPER);
                         }
@@ -1174,7 +1174,7 @@ public class UserServiceImpl implements UserService{
                     if(driverToVerify.getActivationDate()==null){
 
                         if(driverToVerify.getActivationCode().equals(request.getActivationCode())){
-                            driverToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            driverToVerify.setActivationDate(new Date());
                             driverRepo.save(driverToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account", UserType.DRIVER);
                         }
@@ -1196,7 +1196,7 @@ public class UserServiceImpl implements UserService{
                     if(customerToVerify.getActivationDate()==null){
 
                         if(customerToVerify.getActivationCode().equals(request.getActivationCode())){
-                            customerToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            customerToVerify.setActivationDate(new Date());
                             customerRepo.save(customerToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account", UserType.CUSTOMER);
                         }

@@ -1,16 +1,16 @@
 package cs.superleague.user.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
-public class User implements Serializable {
+public class User {
 
     /* Attributes */
     private String name;
@@ -20,8 +20,11 @@ public class User implements Serializable {
     private String phoneNumber;
     private String password;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
     private Date activationDate;
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
     private String activationCode;
     private String resetCode;
     private String resetExpiration;
@@ -32,7 +35,7 @@ public class User implements Serializable {
 
     /* Constructor  */
 
-    public User(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, UserType accountType) {
+    public User(String name, String surname,String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, UserType accountType) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -140,10 +143,5 @@ public class User implements Serializable {
     public void setAccountType(UserType accountType) {
         this.accountType = accountType;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Person [name=" + name + ", surname=" + surname + "]";
-//    }
 
 }
