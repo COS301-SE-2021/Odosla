@@ -611,8 +611,11 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
+        System.out.println("requests order id: " + request.getOrderID());
         order = orderRepo.findById(request.getOrderID()).orElse(null);
-        order.setOrderID(request.getOrderID());
+        //order.setOrderID(request.getOrderID());
+        System.out.println("order total cost: " +order.getTotalCost());
+        System.out.println("order create date: " +order.getCreateDate());
         System.out.println("Order id from get Order: " + order.getOrderID());
         if(order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");

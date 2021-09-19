@@ -276,6 +276,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
             }
 
+            System.out.println("corresponding order id: " + correspondingOrder.getOrderID());
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("orderID", correspondingOrder.getOrderID());
 
