@@ -890,7 +890,9 @@ import java.util.List;50"
             System.out.println("I made it here 2");
             Order order = request.getOrder();
             System.out.println("shoppers id: "+ order.getShopperID());
+            System.out.println("order id: " + order.getOrderID());
             orderRepo.save(order);
+            System.out.println("after safe");
         }
 
     }
