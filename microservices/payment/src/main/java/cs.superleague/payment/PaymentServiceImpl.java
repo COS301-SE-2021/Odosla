@@ -1068,6 +1068,7 @@ import java.util.List;50"
         GetOrderByUUIDResponse response = null;
         if(request != null){
 
+            System.out.println("get order by uuid id: "+ request.getOrderID());
             if(request.getOrderID()==null){
                 throw new InvalidRequestException("OrderID is null in GetOrderByUUIDRequest request - could not return order entity");
             }
@@ -1082,6 +1083,7 @@ import java.util.List;50"
             if(order==null) {
                 throw new InvalidRequestException("Order with ID does not exist in repository - could not get Order entity");
             }
+            System.out.println("found order id: "+ order.getOrderID());
             response=new GetOrderByUUIDResponse(order,Calendar.getInstance().getTime(),"Order entity with corresponding id was returned");
         }
         else{

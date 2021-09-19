@@ -123,6 +123,7 @@ public class UserServiceImpl implements UserService{
 
             Order orderEntity=null;
 
+            System.out.println("order id from request: " + request.getOrderID());
 
             Map<String, Object> parts = new HashMap<>();
             parts.put("orderID", request.getOrderID());
@@ -135,6 +136,8 @@ public class UserServiceImpl implements UserService{
                 orderEntity = responseEntity.getBody().getOrder();
             }
 
+            System.out.println("order entity id: " + orderEntity.getOrderID());
+            System.out.println("order entity shopper id: "+ orderEntity.getShopperID());
 
             if(orderEntity==null)
             {
@@ -2181,6 +2184,8 @@ public class UserServiceImpl implements UserService{
         if (request.getStoreID() == null){
             throw new InvalidRequestException("StoreID in UpdateShopperShiftRequest is null");
         }
+
+        System.out.println("Store id from update shopper shift req: "+ request.getStoreID());
         currentUser=new CurrentUser();
         Shopper shopper1 = shopperRepo.findByEmail(currentUser.getEmail()).orElse(null);
         if (shopper1 == null){
