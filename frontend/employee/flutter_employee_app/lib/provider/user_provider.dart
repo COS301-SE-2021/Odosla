@@ -19,7 +19,7 @@ class UserProvider with ChangeNotifier{
 
   bool isUser(){
     DateTime currentTime = DateTime.now();
-    var duration=const Duration(minutes: 2);
+    var duration=const Duration(minutes: 10);
     currentTime = currentTime.subtract(duration);
     if(_user.email==null || _user.email==""){
       return false;

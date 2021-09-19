@@ -1,10 +1,11 @@
 class User{
+
   String name="";
   String surname="";
   String email="";
   String userType="";
   String phoneNumber="";
-
+  String storeID="";
   bool onShift=false;
   String ordersCompleted="0";
 
@@ -41,6 +42,14 @@ class User{
 
   void setOrdersCompleted(String orders){
     ordersCompleted=orders;
+  }
+
+  void setStoreID(String storeID){
+    this.storeID=storeID;
+  }
+
+  String getStoreID(){
+    return storeID;
   }
 
   String getOrdersCompleted(){

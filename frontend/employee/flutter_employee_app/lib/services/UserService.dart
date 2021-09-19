@@ -21,6 +21,35 @@ class UserService{
 
   final _storage = new FlutterSecureStorage();
 
+  Future<String?> getRegistrationPassword() async {
+    return await _storage.read(key: "passwordRegistration");
+  }
+
+  Future<void> setRegistrationPassword(_password) async {
+    await Future.wait([
+      _storage.write(key: "passwordRegistration", value: _password),
+    ]);
+  }
+
+  Future<String?> getJWTAsString(BuildContext context) async {
+    String jwt = Provider.of<JWTProvider>(context,listen: false).jwt;
+    if(jwt == "" || jwt == null) {
+      String? jwt= await _storage.read(key: "jwt");
+      if(jwt!=null){
+        Provider.of<JWTProvider>(context,listen: false).jwt=jwt;
+      }
+      return jwt;
+    }else{
+      return jwt;
+    }
+  }
+
+  Future<void> deleteStorage(BuildContext context) async {
+    await _storage.deleteAll();
+    Provider.of<JWTProvider>(context,listen: false).jwt="";
+    Provider.of<UserProvider>(context,listen: false).user=new User.withParameters("","","","","",false,"0");
+  }
+
   Future<bool> loginUser(String email, String password, String userType, BuildContext context) async{
 
     final url = Uri.parse(userEndPoint+"user/loginUser");
@@ -41,7 +70,10 @@ class UserService{
       "userType": userType,
     };
 
-    final response = await http.post(url, headers: headers, body: jsonEncode(data));
+    final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
+        Duration(seconds: 40),
+        onTimeout:(){ return(http.Response('TimeOut',408));
+        });;
 
     if (response.statusCode==200) {
 
@@ -49,47 +81,39 @@ class UserService{
 
       if (responseData["success"] == true) {
         String token=responseData["Token"];
-        print(token);
         await Future.wait([
           _storage.write(key: "jwt", value: token),
         ]);
 
         Provider.of<JWTProvider>(context,listen: false).jwt=responseData["Token"];
+        User? user=await this.getCurrentUser(context);
         return true;
-
-      } else if(responseData["message"]!=null && responseData["message"].contains("Please verify account")){
+      }
+      else if(responseData["message"]!=null && responseData["message"].contains("Please verify account")){
 
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Please verify account before logging in")));
         return false;
       }
     }
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Error with logging in")));
-    return false;
-  }
-
-  Future<String?> getJWTAsString(BuildContext context) async {
-    String jwt = Provider.of<JWTProvider>(context,listen: false).jwt;
-    if(jwt == "" || jwt == null) {
-      String? jwt= await _storage.read(key: "jwt");
-      if(jwt!=null){
-        Provider.of<JWTProvider>(context,listen: false).jwt=jwt;
-      }
-      return jwt;
-    }else{
-      return jwt;
+    else if (response.statusCode == 403) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+          SnackBar(content: Text("You are unauthorized to use this app")));
     }
-  }
-
-  Future<String?> getRegistrationPassword() async {
-    return await _storage.read(key: "passwordRegistration");
-  }
-
-  Future<void> setRegistrationPassword(_password) async {
-    await Future.wait([
-      _storage.write(key: "passwordRegistration", value: _password),
-    ]);
+    else if (response.statusCode == 500) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Internal server error")));
+    }
+    else if (response.statusCode==408){
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Request timed out")));
+    }
+    else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Error with logging in")));
+    }
+    return false;
   }
 
   Future<String> registerDriver(String name,String surname, String email, String password, String phoneNumber) async {
@@ -116,7 +140,7 @@ class UserService{
 
     final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
         Duration(seconds: 15),
-        onTimeout:(){ return(http.Response('TimeOut',500));
+        onTimeout:(){ return(http.Response('TimeOut',408));
         }
     );
 
@@ -134,7 +158,7 @@ class UserService{
         }
         return "false";
       }
-    }else if(response.statusCode==500){
+    }else if(response.statusCode==408){
       print(response);
       return "timeout";
     }else{
@@ -166,7 +190,7 @@ class UserService{
 
     final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
         Duration(seconds: 17),
-        onTimeout:(){ return(http.Response('TimeOut',500));
+        onTimeout:(){ return(http.Response('TimeOut',408));
         }
     );
 
@@ -183,7 +207,7 @@ class UserService{
         return "false";
       }
     }
-    else if(response.statusCode==500){
+    else if(response.statusCode==408){
       print(response);
       return "timeout";
     }
@@ -213,7 +237,7 @@ class UserService{
     };
     final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
         Duration(seconds: 17),
-        onTimeout:(){ return(http.Response('TimeOut',500));
+        onTimeout:(){ return(http.Response('TimeOut',408));
         }
     );
     print(response.body);
@@ -247,7 +271,6 @@ class UserService{
       jwt=value!
     });
 
-    print(jwt);
     final data = {
       "JWTToken":jwt
     };
@@ -268,15 +291,14 @@ class UserService{
       print(responseData);
 
       if (responseData["success"] == true) {
-
         String userType=responseData["user"]["accountType"];
 
         if(userType=="SHOPPER"){
 
           Shopper shopper = Shopper.fromJson(responseData["user"]);
-          Provider.of<UserProvider>(context,listen: false).user=shopper;
+
           shopper.setOrdersCompleted(responseData["user"]["ordersCompleted"].toString());
-          Provider.of<UserProvider>(context,listen: false).user.ordersCompleted=(responseData["user"]["ordersCompleted"]).toString();
+          shopper.setStoreID(responseData["user"]["storeID"].toString());
           shopper.setOnShift(responseData["user"]["onShift"]);
           Provider.of<ShopProvider>(context,listen: false).store.id=(responseData["user"]["storeID"]);
 
@@ -298,6 +320,9 @@ class UserService{
           Provider.of<UserProvider>(context,listen: false).user.onShift=shopper.onShift;
 
           return shopper;
+        } else if (userType=="ADMIN"){
+          Shopper shopper = Shopper.fromJson(responseData["user"]);
+          Provider.of<UserProvider>(context,listen: false).user=shopper;
         }
       }else if (responseData["message"].contains("JWT expired at")){
         MyNavigator.goToLogin(context);
@@ -340,15 +365,32 @@ class UserService{
       "storeID":storeID
     };
 
-    final response = await http.post(url, headers: headers, body: jsonEncode(data));
+    print(data);
+
+    final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
+        Duration(seconds: 40),
+        onTimeout:(){ return(http.Response('TimeOut',408));
+        });
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
       print(responseData);
       if (responseData["success"] == true) {
         Provider.of<UserProvider>(context,listen: false).user.onShift=(onShift);
-
         return true;
+      }
+      else if (response.statusCode == 403) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(
+            SnackBar(content: Text("You are unauthorized to use this app")));
+      }
+      else if (response.statusCode == 500) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Internal server error")));
+      }
+      else if (response.statusCode==408){
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Request timed out")));
       }
     }
     return false;
