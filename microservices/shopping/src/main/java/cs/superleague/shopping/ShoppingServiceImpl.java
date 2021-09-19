@@ -4,7 +4,6 @@ import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
@@ -250,6 +249,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             try {
                 store = storeRepo.findById(request.getStoreID()).orElse(null);
+                System.out.println("## storeid " + store.getStoreID().toString());
             }
             catch(Exception e){
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
@@ -261,35 +261,48 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Order> orderQueue= store.getOrderQueue();
 
+            System.out.println("##1");
+
             if(orderQueue==null || orderQueue.isEmpty()){
                 response=new GetNextQueuedResponse(Calendar.getInstance().getTime(),false,"The order queue of shop is empty",orderQueue,null);
                 return response;
             }
+            System.out.println("##2");
 
             Date oldestProcessedDate=orderQueue.get(0).getProcessDate();
             Order correspondingOrder=orderQueue.get(0);
 
+            System.out.println("##3");
             for (Order o: orderQueue) {
                 if (oldestProcessedDate.after(o.getProcessDate())) {
                     oldestProcessedDate = o.getProcessDate();
                     correspondingOrder = o;
                 }
             }
+            System.out.println("##4");
 
             System.out.println("corresponding order id: " + correspondingOrder.getOrderID());
-            Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("orderID", correspondingOrder.getOrderID());
 
-            String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-            URI uri = new URI(stringUri);
+//            Map<String, Object> parts = new HashMap<String, Object>();
+//            parts.put("orderID", correspondingOrder.getOrderID());
+//
+//            String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+//            URI uri = new URI(stringUri);
+//
+//
+//
+//            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate
+//                    .postForEntity(uri, parts, GetOrderResponse.class);
+//            System.out.println("##pp");
+//
+//            GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
+//
+//            Order updateOrder = getOrderResponse.getOrder();
 
-            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate
-                    .postForEntity(uri, parts, GetOrderResponse.class);
+            Order updateOrder = correspondingOrder;
 
-            GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
-            Order updateOrder = getOrderResponse.getOrder();
 
-            System.out.println("get order id:" + getOrderResponse.getOrder().getOrderID());
+
             System.out.println("update order id: " + updateOrder.getOrderID());
 
             if(updateOrder!=null)
@@ -297,11 +310,13 @@ public class ShoppingServiceImpl implements ShoppingService {
                 System.out.println("Order is retrieved");
                 CurrentUser currentUser = new CurrentUser();
 
-                parts = new HashMap<>();
+
+
+                Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("email", currentUser.getEmail());
 
-                stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByEmail";
-                uri = new URI(stringUri);
+                String stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByEmail";
+                URI uri = new URI(stringUri);
 
                 ResponseEntity<GetShopperByEmailResponse> getShopperByEmailResponseEntity =
                         restTemplate.postForEntity(uri, parts, GetShopperByEmailResponse.class);
@@ -312,7 +327,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 System.out.println("Shopper is retrieved " + shopper.getName());
 
-                updateOrder.setOrderID(getOrderResponse.getOrder().getOrderID());
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
 
