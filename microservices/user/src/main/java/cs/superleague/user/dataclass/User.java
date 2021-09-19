@@ -7,11 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @MappedSuperclass
-public class User {
+public class User implements Serializable {
 
     /* Attributes */
     private String name;

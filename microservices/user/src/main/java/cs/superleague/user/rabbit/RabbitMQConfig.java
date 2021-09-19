@@ -49,6 +49,16 @@ public class RabbitMQConfig {
         return new Queue("Q_SaveShopperToRepo", true);
     }
 
+    @Bean
+    Queue SaveCustomerToRepoQueue() {
+        return new Queue("Q_SaveCustomerToRepoTest", true);
+    }
+
+    @Bean
+    Queue SaveAdminToRepoQueue() {
+        return new Queue("Q_SaveAdminToRepoTest", true);
+    }
+
     //
     // BINDING
     //
@@ -66,9 +76,29 @@ public class RabbitMQConfig {
     Binding SaveShopperToRepoBinding(){
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
-                .bind(SaveDriverToRepoQueue())
+                .bind(SaveShopperToRepoQueue())
                 .to(UserExchange())
                 .with("RK_SaveShopperToRepo")
+                .noargs();
+    }
+
+    @Bean
+    Binding SaveCustomerToRepoBinding(){
+        //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
+        return BindingBuilder
+                .bind(SaveCustomerToRepoQueue())
+                .to(UserExchange())
+                .with("RK_SaveCustomerToRepoTest")
+                .noargs();
+    }
+
+    @Bean
+    Binding SaveAdminToRepoBinding(){
+        //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
+        return BindingBuilder
+                .bind(SaveAdminToRepoQueue())
+                .to(UserExchange())
+                .with("RK_SaveAdminToRepoTest")
                 .noargs();
     }
 
@@ -91,7 +121,7 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer(){
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue(), SaveCustomerToRepoQueue(), SaveAdminToRepoQueue());                                               // <------- add all queues to listen to here
         simpleMessageListenerContainer.setMessageListener(new UserListener(userService));
         return simpleMessageListenerContainer;
     }
