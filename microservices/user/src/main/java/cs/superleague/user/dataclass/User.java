@@ -1,6 +1,7 @@
 package cs.superleague.user.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.EnumType;
@@ -20,7 +21,8 @@ public class User {
     private String phoneNumber;
     private String password;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
     private Date activationDate;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")

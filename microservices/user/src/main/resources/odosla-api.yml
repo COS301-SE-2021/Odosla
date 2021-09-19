@@ -715,27 +715,93 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_GetAdminByEmailResponse"
 
-  /user/getUsers:
+  /user/getAdmins:
     post:
-      summary: Endpoint for getting users
+      summary: Endpoint for getting admins
       tags:
         - "User"
       description: Refer to summary
-      operationId: getUsers
+      operationId: getAdmins
       requestBody:
         description: The input body required by this request
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/user_GetUsersRequest"
+              $ref: "#/components/schemas/user_GetAdminsRequest"
       responses:
         "200":
-          description: Returns the recommended items
+          description: Returns list of customers
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user_GetUsersResponse"
+                $ref: "#/components/schemas/user_GetAdminsResponse"
+
+  /user/getCustomers:
+    post:
+      summary: Endpoint for getting customers
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getCustomers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetCustomersRequest"
+      responses:
+        "200":
+          description: Returns list of admins
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetCustomersResponse"
+
+  /user/getDrivers:
+    post:
+      summary: Endpoint for getting drivers
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getDrivers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetDriversRequest"
+      responses:
+        "200":
+          description: Returns list of drivers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetDriversResponse"
+
+  /user/getShoppers:
+    post:
+      summary: Endpoint for getting shoppers
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getShoppers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetShoppersRequest"
+      responses:
+        "200":
+          description: Returns list of shoppers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetShoppersResponse"
 
 components:
 
@@ -1332,7 +1398,6 @@ components:
     user_GetGroceryListRequest:
       description: This object is expected as input
       type: object
-      properties:
 
     user_GetGroceryListResponse:
       description: This object is expected as output
@@ -1670,11 +1735,11 @@ components:
         success:
           type: boolean
 
-    user_GetUsersRequest:
+    user_GetAdminsRequest:
       description: This object is expected as input
       type: object
 
-    user_GetUsersResponse:
+    user_GetAdminsResponse:
       description: This object is returned as output
       type: object
       properties:
@@ -1687,8 +1752,61 @@ components:
         users:
           type: array
           items:
-            allOf:
-              - $ref: "#/components/schemas/AdminObject"
-              - $ref: "#/components/schemas/CustomerObject"
-              - $ref: "#/components/schemas/DriverObject"
-              - $ref: "#/components/schemas/ShopperObject"
+            $ref: "#/components/schemas/AdminObject"
+
+    user_GetCustomersRequest:
+      description: This object is expected as input
+      type: object
+
+    user_GetCustomersResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        users:
+          type: array
+          items:
+            - $ref: "#/components/schemas/CustomerObject"
+
+    user_GetDriversRequest:
+      description: This object is expected as input
+      type: object
+
+    user_GetDriversResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/DriverObject"
+
+    user_GetShoppersRequest:
+      description: This object is expected as input
+      type: object
+
+    user_GetShoppersResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+        success:
+          type: boolean
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"

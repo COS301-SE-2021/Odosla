@@ -29,6 +29,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +53,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public CreateNotificationResponse createNotification(CreateNotificationRequest request) throws InvalidRequestException {
+    public CreateNotificationResponse createNotification(CreateNotificationRequest request) throws InvalidRequestException, URISyntaxException {
         if(request == null){
             throw new InvalidRequestException("Null request object.");
         }
@@ -117,38 +119,62 @@ public class NotificationServiceImpl implements NotificationService {
             throw new InvalidRequestException("Invalid UserType.");
         }
         if (userType == UserType.ADMIN){
-
-            Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
-            Admin admin = useCaseResponseEntity.getBody().getAdmin();
+            Admin admin = null;
+            try {
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("userID", request.getProperties().get("UserID"));
+                String stringUri = "http://" + userHost + ":" + userPort + "/user/getAdminByUUID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetAdminByUUIDResponse.class);
+                admin = useCaseResponseEntity.getBody().getAdmin();
+            }catch (Exception e){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
             if (admin == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.CUSTOMER){
-
-            Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
-            Customer customer = useCaseResponseEntity.getBody().getCustomer();
+            Customer customer = null;
+            try {
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("userID", request.getProperties().get("UserID"));
+                String stringUri = "http://" + userHost + ":" + userPort + "/user/getCustomerByUUID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetCustomerByUUIDResponse.class);
+                customer = useCaseResponseEntity.getBody().getCustomer();
+            }catch (Exception e){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
             if (customer == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.DRIVER){
-
-            Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
-            Driver driver = useCaseResponseEntity.getBody().getDriver();
+            Driver driver = null;
+            try{
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("userID", request.getProperties().get("UserID"));
+                String stringUri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class);
+                driver = useCaseResponseEntity.getBody().getDriver();
+            }catch (Exception e){
+                throw new InvalidRequestException("User does not exist in database.");
+            }
             if (driver == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
         } else if (userType == UserType.SHOPPER){
-
-            Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", request.getProperties().get("UserID"));
-            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
-            Shopper shopper = useCaseResponseEntity.getBody().getShopper();
+            Shopper shopper = null;
+            try {
+                Map<String, Object> parts = new HashMap<String, Object>();
+                parts.put("userID", request.getProperties().get("UserID"));
+                String stringUri = "http://" + userHost + ":" + userPort + "/user/getShopperByUUID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
+                shopper = useCaseResponseEntity.getBody().getShopper();
+            }catch (Exception e){
+            throw new InvalidRequestException("User does not exist in database.");
+        }
             if (shopper == null){
                 throw new InvalidRequestException("User does not exist in database.");
             }
@@ -194,7 +220,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException {
+    public SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException, URISyntaxException {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         if(request == null){
@@ -233,7 +259,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException {
+    public SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException, URISyntaxException {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         if (request == null){
@@ -315,14 +341,21 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    public String getEmail(UserType userType, UUID userID){
+    public String getEmail(UserType userType, UUID userID) throws URISyntaxException {
         String email = "";
         if (userType == UserType.ADMIN){
             //Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", userID);
-            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getAdminByUUID", parts, GetAdminByUUIDResponse.class);
+            parts.put("userID", userID.toString());
+            String stringUri = "http://"+userHost+":"+userPort+"/user/getAdminByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity;
+            try {
+                useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetAdminByUUIDResponse.class);
+            }catch (Exception e){
+                return "";
+            }
             Admin admin = useCaseResponseEntity.getBody().getAdmin();
             if (admin == null){
                 return "";
@@ -332,8 +365,15 @@ public class NotificationServiceImpl implements NotificationService {
             //Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", userID);
-            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getCustomerByUUID", parts, GetCustomerByUUIDResponse.class);
+            parts.put("userID", userID.toString());
+            String stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity;
+            try {
+                useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetCustomerByUUIDResponse.class);
+            }catch (Exception e){
+            return "";
+            }
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
             if (customer == null){
                 return "";
@@ -343,8 +383,15 @@ public class NotificationServiceImpl implements NotificationService {
             //Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", userID);
-            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getDriverByUUID", parts, GetDriverByUUIDResponse.class);
+            parts.put("userID", userID.toString());
+            String stringUri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity;
+            try {
+                useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class);
+            }catch (Exception e){
+                return "";
+            }
             Driver driver = useCaseResponseEntity.getBody().getDriver();
             if (driver == null){
                 return "";
@@ -353,8 +400,15 @@ public class NotificationServiceImpl implements NotificationService {
         }else if (userType == UserType.SHOPPER) {
             //Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("userID", userID);
-            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            parts.put("userID", userID.toString());
+            String stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity;
+            try {
+                useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
+            } catch (Exception e){
+                return "";
+            }
             Shopper shopper = useCaseResponseEntity.getBody().getShopper();
             if (shopper == null) {
                 return "";

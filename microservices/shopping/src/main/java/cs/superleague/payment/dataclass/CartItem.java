@@ -10,15 +10,15 @@ import java.util.UUID;
 public class CartItem implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int cartItemNo;
 
     @JsonProperty("productId")
     private String productID;
 
-    @ManyToOne
-    @JoinColumn(name="order_id", insertable = false, updatable = false)
-    private Order order;
+//    @ManyToOne
+//    @JoinColumn(name="order_id", insertable = false)
+//    private Order order;
 
     private String name;
     private String barcode;

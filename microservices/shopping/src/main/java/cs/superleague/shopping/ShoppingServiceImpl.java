@@ -5,11 +5,13 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
+import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
+import cs.superleague.shopping.repos.CatalogueRepo;
 import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
@@ -43,6 +45,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     private final StoreRepo storeRepo;
     private final ItemRepo itemRepo;
+    private final CatalogueRepo catalogueRepo;
 
     @Autowired
     private RabbitTemplate rabbit;
@@ -51,10 +54,11 @@ public class ShoppingServiceImpl implements ShoppingService {
 
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate, CatalogueRepo catalogueRepo) {
         this.storeRepo= storeRepo;
         this.itemRepo=itemRepo;
         this.restTemplate = restTemplate;
+        this.catalogueRepo = catalogueRepo;
     }
     /**
      *
@@ -272,8 +276,9 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
             }
 
+            System.out.println("corresponding order id: " + correspondingOrder.getOrderID());
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("orderID", correspondingOrder.getOrderID().toString());
+            parts.put("orderID", correspondingOrder.getOrderID());
 
             String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
             URI uri = new URI(stringUri);
@@ -284,8 +289,12 @@ public class ShoppingServiceImpl implements ShoppingService {
             GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
             Order updateOrder = getOrderResponse.getOrder();
 
+            System.out.println("get order id:" + getOrderResponse.getOrder().getOrderID());
+            System.out.println("update order id: " + updateOrder.getOrderID());
+
             if(updateOrder!=null)
             {
+                System.out.println("Order is retrieved");
                 CurrentUser currentUser = new CurrentUser();
 
                 parts = new HashMap<>();
@@ -301,12 +310,18 @@ public class ShoppingServiceImpl implements ShoppingService {
                 Shopper shopper = getShopperByEmailResponse.getShopper();
                 assert shopper != null;
 
+                System.out.println("Shopper is retrieved " + shopper.getName());
 
+                updateOrder.setOrderID(getOrderResponse.getOrder().getOrderID());
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
 
+                System.out.println("New update order ID: " + updateOrder.getOrderID());
+                System.out.println("Order shopper ID: " + updateOrder.getShopperID());
+
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
                 rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+
 
             }
 
@@ -1563,5 +1578,35 @@ public class ShoppingServiceImpl implements ShoppingService {
         if(storeRepo!=null)
             storeRepo.save(store);
     }
+
+    @Override
+    public SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException{
+
+        if(request != null){
+
+            if(request.getCatalogue() == null){
+                throw new InvalidRequestException("Catalogue in parameter in request can't be null - can't save catalogue");
+            }
+
+            Catalogue catalogue = request.getCatalogue();
+
+            if(catalogueRepo!=null)
+            {
+                catalogueRepo.save(catalogue);
+                return new SaveCatalogueToRepoResponse(true, Calendar.getInstance().getTime(),"Catalogue successfully saved.");
+
+            }
+            else
+            {
+                return new SaveCatalogueToRepoResponse(false, Calendar.getInstance().getTime(),"Catalogue can't be saved.");
+
+            }
+
+        }
+        else{
+            throw new InvalidRequestException("Request object can't be null - can't save catalogue");
+        }
+    }
+
 }
 

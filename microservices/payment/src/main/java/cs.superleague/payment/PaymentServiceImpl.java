@@ -269,10 +269,9 @@ public class PaymentServiceImpl implements PaymentService {
 
             }
 
-            if(cartItemRepo!=null)
-            cartItemRepo.saveAll(cartItems);
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
+            System.out.println("Submit Order id: "+ orderID);
             Order o = new Order();
             o.setOrderID(orderID);
             o.setUserID(customerID);
@@ -289,11 +288,15 @@ public class PaymentServiceImpl implements PaymentService {
             o.setStoreAddress(shop.getStore().getStoreLocation());
             o.setRequiresPharmacy(requiresPharmacy);
 
+
             if (o != null) {
 
                 if (shop.getStore().getOpen() == true) {
                     if (orderRepo != null) {
                         orderRepo.save(o);
+                        if(cartItemRepo!=null)
+                            cartItemRepo.saveAll(cartItems);
+
                         List<String> productIDs = new ArrayList<>();
                         for (CartItem item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
@@ -613,6 +616,13 @@ import java.util.List;50"
 
         order = orderOptional.get();
 
+        System.out.println("requests order id: " + request.getOrderID());
+//        order = orderRepo.findById(request.getOrderID()).orElse(null);
+        //order.setOrderID(request.getOrderID());
+        System.out.println("order total cost: " +order.getTotalCost());
+        System.out.println("order create date: " +order.getCreateDate());
+        System.out.println("Order id from get Order: " + order.getOrderID());
+
         message = "Order retrieval successful.";
         return new GetOrderResponse(order, true, new Date(), message);
     }
@@ -890,7 +900,20 @@ import java.util.List;50"
         if (request.getOrder() == null){
             throw new InvalidRequestException("Null parameters");
         }
-        orderRepo.save(request.getOrder());
+
+        System.out.println("check if order repo not null");
+        if(orderRepo!=null)
+        {
+            System.out.println("I made it here 2");
+            Order order = request.getOrder();
+            System.out.println("request order id:" + request.getOrder().getOrderID());
+            order.setOrderID(request.getOrder().getOrderID());
+            System.out.println("shoppers id: "+ order.getShopperID());
+            System.out.println("order id: " + order.getOrderID());
+            orderRepo.save(order);
+            System.out.println("after safe");
+        }
+
     }
 
     @Override
@@ -984,5 +1007,32 @@ import java.util.List;50"
             System.out.println("PDF Error");
         }
         return output.toByteArray();
+    }
+
+    @Override
+    public GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException {
+        GetAllCartItemsResponse response=null;
+
+        if(request!=null){
+
+            List<CartItem> items;
+            try {
+                items = cartItemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetAllCartItemsResponse(null, Calendar.getInstance().getTime(), "All items can't be retrieved");
+            }
+            else {
+                response = new GetAllCartItemsResponse(items, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllCartItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
     }
 }

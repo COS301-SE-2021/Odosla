@@ -2,6 +2,7 @@ package cs.superleague.user;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
+import cs.superleague.payment.dataclass.*;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -9,10 +10,6 @@ import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.requests.SaveOrderRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
@@ -248,10 +245,10 @@ public class UserServiceImpl implements UserService{
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
 
-            List<Item> items = orderEntity.getItems();
+            List<CartItem> items = orderEntity.getCartItems();
             boolean itemFound= false;
 
-            for (Item item : items) {
+            for (CartItem item : items) {
                 if (item.getBarcode().equals(request.getBarcode())) {
                     itemFound = true;
                     response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
@@ -1155,7 +1152,7 @@ public class UserServiceImpl implements UserService{
                     if(shopperToVerify.getActivationDate()==null){
 
                         if(shopperToVerify.getActivationCode().equals(request.getActivationCode())){
-                            shopperToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            shopperToVerify.setActivationDate(new Date());
                             shopperRepo.save(shopperToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account", UserType.SHOPPER);
                         }
@@ -1177,7 +1174,7 @@ public class UserServiceImpl implements UserService{
                     if(driverToVerify.getActivationDate()==null){
 
                         if(driverToVerify.getActivationCode().equals(request.getActivationCode())){
-                            driverToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            driverToVerify.setActivationDate(new Date());
                             driverRepo.save(driverToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account", UserType.DRIVER);
                         }
@@ -1199,7 +1196,7 @@ public class UserServiceImpl implements UserService{
                     if(customerToVerify.getActivationDate()==null){
 
                         if(customerToVerify.getActivationCode().equals(request.getActivationCode())){
-                            customerToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            customerToVerify.setActivationDate(new Date());
                             customerRepo.save(customerToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account", UserType.CUSTOMER);
                         }
@@ -2197,7 +2194,7 @@ public class UserServiceImpl implements UserService{
         else{
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeId", request.getStoreID());
+            parts.put("storeID", request.getStoreID());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
             GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
             Store store = getStoreByUUIDResponse.getStore();
@@ -2723,26 +2720,83 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public GetUsersResponse getUsers(GetUsersRequest request) throws Exception{
+    public GetAdminsResponse getAdmins(GetAdminsRequest request) throws Exception{
 
-        String message = "Users successfully returned";
-        List<User> users = new ArrayList<>();
+        String message = "Admins successfully returned";
+        List<Admin> users = new ArrayList<>();
 
         if(request == null) {
-            throw new InvalidRequestException("GetUser request is null - could not return users");
+            throw new InvalidRequestException("GetAdmins request is null - could not return admins");
         }
 
-        users.addAll(shopperRepo.findAll());
-        users.addAll(driverRepo.findAll());
-        users.addAll(customerRepo.findAll());
         users.addAll(adminRepo.findAll());
 
         if(users.isEmpty()){
-            message = "Could not retrieve users";
-            return new GetUsersResponse(users, false, message, new Date());
+            message = "Could not retrieve Admins";
+            return new GetAdminsResponse(users, false, message, new Date());
         }
 
-        return new GetUsersResponse(users, true, message, new Date());
+        return new GetAdminsResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetCustomersResponse getCustomers(GetCustomersRequest request) throws Exception{
+
+        String message = "Customers successfully returned";
+        List<Customer> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetCustomers request is null - could not return customers");
+        }
+
+        users.addAll(customerRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve customers";
+            return new GetCustomersResponse(users, false, message, new Date());
+        }
+
+        return new GetCustomersResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetDriversResponse getDrivers(GetDriversRequest request) throws Exception{
+
+        String message = "Drivers successfully returned";
+        List<Driver> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetDrivers request is null - could not return drivers");
+        }
+
+        users.addAll(driverRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve drivers";
+            return new GetDriversResponse(users, false, message, new Date());
+        }
+
+        return new GetDriversResponse(users, true, message, new Date());
+    }
+
+    @Override
+    public GetShoppersResponse getShoppers(GetShoppersRequest request) throws Exception{
+
+        String message = "Shoppers successfully returned";
+        List<Shopper> users = new ArrayList<>();
+
+        if(request == null) {
+            throw new InvalidRequestException("GetShoppers request is null - could not return shoppers");
+        }
+
+        users.addAll(shopperRepo.findAll());
+
+        if(users.isEmpty()){
+            message = "Could not retrieve shoppers";
+            return new GetShoppersResponse(users, false, message, new Date());
+        }
+
+        return new GetShoppersResponse(users, true, message, new Date());
     }
 
     @Override

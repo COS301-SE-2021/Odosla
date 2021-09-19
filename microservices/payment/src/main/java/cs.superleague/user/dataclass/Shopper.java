@@ -1,5 +1,8 @@
 package cs.superleague.user.dataclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -120,6 +123,8 @@ public class Shopper extends User {
     private String password;
 
     @Column(name="activation_date")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private Date activationDate;
 
     @Column(name="activation_code")
