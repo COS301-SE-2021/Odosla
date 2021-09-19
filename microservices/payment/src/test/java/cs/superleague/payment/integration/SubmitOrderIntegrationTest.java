@@ -211,40 +211,6 @@ public class SubmitOrderIntegrationTest {
     }
 
     @Test
-    @Description("Tests for if the store does not exist")
-    @DisplayName("When order parameter gives id of a store that does not exist")
-    void IntegrationTest_StoreDoesNotExist() throws InvalidRequestException {
-//        UUID storeID2=UUID.randomUUID();
-//        submitOrderRequest=new SubmitOrderRequest(cartItems,3.0,storeID2,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
-//        assertThrows(InvalidRequestException.class, ()-> {
-//            SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
-//        });
-    }
-
-    @Test
-    @Description("Tests for if the store does is closed")
-    @DisplayName("When store with store ID is closed")
-    void IntegrationTest_StoreDoesisClosed() throws InvalidRequestException {
-//        storeRepo.deleteAll();
-//        Store updateStore = storeRepo.findById(storeID).orElse(null);
-//        store.setOpen(false);
-        //store.setOpen(false);
-        //storeRepo.save(store);
-//        storeRepo.save(updateStore);
-
-//        SaveStoreToRepoRequest saveStoreToRepoRequest = new SaveStoreToRepoRequest(store);
-//        rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveStoreToRepoRequest);
-//
-//        submitOrderRequest=new SubmitOrderRequest(cartItems,3.0,storeID,OrderType.DELIVERY, 3.3, 3.5, "Homer Street");
-//        assertThrows(cs.superleague.payment.exceptions.InvalidRequestException.class, ()-> {
-//            SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
-//        });
-    }
-
-
-
-
-    @Test
     @Description("Tests whether the SubmitOrderRequest object is constructed correctly")
     @DisplayName("SubmitOrderRequest correct construction")
     void IntegrationTest_SubmitOrderRequestConstruction() {
@@ -257,46 +223,4 @@ public class SubmitOrderIntegrationTest {
         assertEquals(storeID,submitOrderRequest.getStoreID());
         assertEquals(OrderType.DELIVERY,submitOrderRequest.getOrderType());
     }
-
-    @Test
-    @Description("This test tests whether an order is created correctly - should return valid data stored in order entity")
-    @DisplayName("When Order is created correctly")
-    void IntegrationTest_CreatOrderConstruction() throws PaymentException, InterruptedException, URISyntaxException {
-//        Order order=null;
-//        submitOrderRequest=new SubmitOrderRequest(cartItems,3.0,
-//                UUID.fromString("4a0d95d8-8ca3-4224-a6ca-744932b3abba"),OrderType.DELIVERY,
-//                3.3, 3.5, "Homer Street");
-//        SubmitOrderResponse submitOrderResponse= paymentService.submitOrder(submitOrderRequest);
-//
-//        if(orderRepo.findById(submitOrderResponse.getOrder().getOrderID()).isPresent()){
-//            order=orderRepo.findById(submitOrderResponse.getOrder().getOrderID()).orElse(null);
-//        }
-//        assertNotNull(order);
-//        assertEquals(userID, order.getUserID());
-//        assertEquals(itemList.size(),order.getCartItems().size());
-//        Iterator<Item> itemIterator_it = itemList.iterator();
-//        Iterator<CartItem> orderItemIterator_it = order.getCartItems().iterator();
-//        while(itemIterator_it.hasNext() && orderItemIterator_it.hasNext()){
-//                Item item=itemIterator_it.next();
-//                CartItem orderItem=orderItemIterator_it.next();
-//                assertEquals(item.getPrice(),orderItem.getPrice());
-//                assertEquals(item.getQuantity(),orderItem.getQuantity());
-//                assertEquals(item.getBarcode(),orderItem.getBarcode());
-//                assertEquals(item.getStoreID(),orderItem.getStoreID());
-//                assertEquals(item.getDescription(),orderItem.getDescription());
-//                assertEquals(item.getProductID(),orderItem.getProductID());
-//                assertEquals(item.getImageUrl(),orderItem.getImageUrl());
-//        }
-//
-//        assertEquals(3.0,order.getDiscount());
-//        assertEquals(UUID.fromString("4a0d95d8-8ca3-4224-a6ca-744932b3abba"),order.getStoreID());
-//        //assertEquals(geoPoint2.getGeoID(),order.getStoreAddress().getGeoID());
-//        assertEquals(geoPoint2.getAddress(),order.getStoreAddress().getAddress());
-//        assertEquals(geoPoint2.getLatitude(),order.getStoreAddress().getLatitude());
-//        assertEquals(geoPoint2.getLongitude(),order.getStoreAddress().getLongitude());
-//        //assertEquals(geoPoint1.getGeoID(),order.getDeliveryAddress().getGeoID());
-//        assertEquals(OrderType.DELIVERY,order.getType());
-    }
-
-
 }

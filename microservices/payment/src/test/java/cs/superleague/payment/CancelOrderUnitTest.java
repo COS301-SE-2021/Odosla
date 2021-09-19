@@ -197,16 +197,6 @@ class CancelOrderUnitTest {
         assertEquals("OrderID cannot be null in request object - cannot get order.", thrown.getMessage());
     }
 
-    @Test
-    @DisplayName("When order does not exist")
-    void cancelOrderWhenOrderDoesNotExist(){
-//        when(orderRepo.findById(Mockito.any())).thenReturn(null);
-//        CancelOrderRequest req=new CancelOrderRequest(UUID.randomUUID());
-//        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.cancelOrder(req));
-//        assertEquals("Order doesn't exist in database - cannot get order.", thrown.getMessage());
-    }
-
-
     /** Checking request object is created correctly */
     @Test
     @Description("Tests whether the CancelOrderRequest object was created correctly")

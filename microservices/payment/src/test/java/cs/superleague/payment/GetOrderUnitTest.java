@@ -123,15 +123,6 @@ public class GetOrderUnitTest {
         assertEquals("OrderID cannot be null in request object - cannot get order.", thrown.getMessage());
     }
 
-    @Test
-    @Description("Tests for when an order is updated with an nonexistent orderID in the request object- exception should be thrown")
-    @DisplayName("When orderID in the request object does not exist")
-    void UnitTest_OrderID_Parameter_RequestObject_Not_In_DB() {
-//        GetOrderRequest request = new GetOrderRequest(UUID.randomUUID());
-//        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, () -> paymentService.getOrder(request));
-//        assertEquals("Order doesn't exist in database - cannot get order.", thrown.getMessage());
-    }
-
     // success
     @Test
     @Description("Tests for when order requested is found - should return the object")
