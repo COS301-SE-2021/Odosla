@@ -2,6 +2,8 @@ package cs.superleague.user.rabbit;
 
 import cs.superleague.user.UserService;
 import cs.superleague.user.exceptions.InvalidRequestException;
+import cs.superleague.user.requests.SaveAdminToRepoRequest;
+import cs.superleague.user.requests.SaveCustomerToRepoRequest;
 import cs.superleague.user.requests.SaveDriverToRepoRequest;
 import cs.superleague.user.requests.SaveShopperToRepoRequest;
 import org.springframework.amqp.core.Message;
@@ -30,6 +32,12 @@ public class UserListener implements MessageListener {
             } else if (o instanceof SaveShopperToRepoRequest){
                 SaveShopperToRepoRequest saveShopperToRepoRequest = (SaveShopperToRepoRequest) o;
                 userService.saveShopper(saveShopperToRepoRequest);
+            } else if (o instanceof SaveCustomerToRepoRequest){
+                SaveCustomerToRepoRequest saveCustomerToRepoRequest = (SaveCustomerToRepoRequest) o;
+                userService.saveCustomer(saveCustomerToRepoRequest);
+            } else if (o instanceof SaveAdminToRepoRequest){
+                SaveAdminToRepoRequest saveAdminToRepoRequest = (SaveAdminToRepoRequest) o;
+                userService.saveAdmin(saveAdminToRepoRequest);
             }
 
         } catch (IOException | ClassNotFoundException | InvalidRequestException e) {

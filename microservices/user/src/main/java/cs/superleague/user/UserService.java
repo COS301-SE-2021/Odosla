@@ -61,4 +61,6 @@ public interface UserService {
 
     void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException;
     void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
+    void saveCustomer(SaveCustomerToRepoRequest request) throws InvalidRequestException;
+    void saveAdmin(SaveAdminToRepoRequest request) throws InvalidRequestException;
 }
