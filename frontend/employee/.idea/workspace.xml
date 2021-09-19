@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5c839d79-4a18-411e-b0a7-bb2c3706f90c" name="Default Changelist" comment="xml">
+      <change afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/admin/edit_pade_admin.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/edit_page_driver.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/wallet_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/employee.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/employee.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/admin/admin_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/admin/admin_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/contact_us_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/contact_us_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_main_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_main_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_map.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_map.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_work_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/driver/driver_work_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/shopper/barcode_scanner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/shopper/barcode_scanner_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/pages/shopper/shopper_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/pages/shopper/shopper_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/lib/services/UserService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/lib/services/UserService.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flutter_employee_app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/flutter_employee_app/pubspec.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[R58M4678AFB]" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1yMY68bgIwRWPkPxz1Ons9JYCRo" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RunManager">
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" temporary="true" nameIsGenerated="true">
+      <option name="additionalArgs" value="--no-sound-null-safety" />
+      <option name="filePath" value="$PROJECT_DIR$/flutter_employee_app/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Flutter.main.dart" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5c839d79-4a18-411e-b0a7-bb2c3706f90c" name="Default Changelist" comment="xml" />
+      <created>1632062746127</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1632062746127</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+</project>
