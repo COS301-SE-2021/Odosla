@@ -49,7 +49,7 @@ public class Order implements Serializable {
     private GeoPoint storeAddress;
 
     @OneToMany (cascade = CascadeType.ALL)
-    @JoinColumn(name="order_id")
+    @JoinColumn(name="orderid")
     private List<CartItem> cartItems;
 
     public Order(){

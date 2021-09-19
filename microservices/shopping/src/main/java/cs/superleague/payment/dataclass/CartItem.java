@@ -16,9 +16,9 @@ public class CartItem implements Serializable {
     @JsonProperty("productId")
     private String productID;
 
-    @ManyToOne
-    @JoinColumn(name="order_id", insertable = false)
-    private Order order;
+//    @ManyToOne
+//    @JoinColumn(name="order_id", insertable = false)
+//    private Order order;
 
     private String name;
     private String barcode;
