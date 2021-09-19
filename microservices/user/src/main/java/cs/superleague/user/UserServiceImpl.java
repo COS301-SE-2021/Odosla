@@ -12,7 +12,7 @@ import cs.superleague.user.responses.*;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.payment.requests.SaveOrderRequest;
+import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
@@ -2064,7 +2064,7 @@ public class UserServiceImpl implements UserService{
         /* Send notification to User saying order has been collected */
 
         //orderRepo.save(order);
-        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        SaveOrderToRepoRequest saveOrderRequest = new SaveOrderToRepoRequest(order);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
 
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
@@ -2106,10 +2106,13 @@ public class UserServiceImpl implements UserService{
         if(responseEntity.getBody() != null) {
             order = responseEntity.getBody().getOrder();
         }
+        if (order == null){
+            throw new OrderDoesNotExist("Order does not exist in database");
+        }
 
         order.setStatus(OrderStatus.DELIVERED);
         //orderRepo.save(order);
-        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        SaveOrderToRepoRequest saveOrderRequest = new SaveOrderToRepoRequest(order);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
         //Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);

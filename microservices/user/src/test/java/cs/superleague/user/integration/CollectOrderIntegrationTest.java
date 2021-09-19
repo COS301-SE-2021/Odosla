@@ -1,24 +1,39 @@
 package cs.superleague.user.integration;
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
-import cs.superleague.payment.requests.SaveOrderRequest;
+import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.exceptions.InvalidRequestException;
 import cs.superleague.user.repos.DriverRepo;
 import cs.superleague.user.requests.CollectOrderRequest;
 import cs.superleague.user.responses.CollectOrderResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.junit.jupiter.api.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,7 +82,7 @@ public class CollectOrderIntegrationTest {
         order2 = new Order();
         order2.setOrderID(orderId2);
         order.setOrderID(orderId);
-        SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
+        SaveOrderToRepoRequest saveOrderRequest = new SaveOrderToRepoRequest(order);
         rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
     }
 
