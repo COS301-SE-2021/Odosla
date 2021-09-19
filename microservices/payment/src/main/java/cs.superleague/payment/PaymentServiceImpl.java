@@ -16,7 +16,6 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
@@ -177,7 +175,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
 
-            if (shop != null) {
+            if (shop != null && shop.getStore() != null) {
                 if (shop.getStore().getStoreLocation() == null) {
                     invalidReq = true;
                     invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
@@ -187,6 +185,8 @@ public class PaymentServiceImpl implements PaymentService {
                     invalidReq = true;
                     invalidMessage = ("Store is currently closed - could not create order");
                 }
+            }else{
+                throw new InvalidRequestException("Store with ID does not exist in repository - could not get Store entity");
             }
 
             if(invalidReq)
@@ -557,9 +557,7 @@ import java.util.List;50"
                 status != OrderStatus.DELIVERED &&
                 status != OrderStatus.PACKING) { // statuses which do not allow for the updating of an order
 
-            System.out.println("hello");
             if (request.getOrderType() != null) {
-                System.out.println(request.getOrderType());
                 order.setType(request.getOrderType());
             }
 
@@ -568,7 +566,6 @@ import java.util.List;50"
             }
 
             if (request.getListOfItems() != null) {
-                System.out.println("hello");
                 order.setCartItems(request.getListOfItems());
                 cost = getCost(order.getCartItems());
                 order.setTotalCost(cost - discount);
@@ -608,10 +605,13 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
-        order = orderRepo.findById(request.getOrderID()).orElse(null);
-        if(order == null){
+        Optional<Order> orderOptional = orderRepo.findById(request.getOrderID());
+
+        if(orderOptional == null || !orderOptional.isPresent()){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
+
+        order = orderOptional.get();
 
         message = "Order retrieval successful.";
         return new GetOrderResponse(order, true, new Date(), message);
@@ -705,10 +705,14 @@ import java.util.List;50"
             throw new InvalidRequestException("Invalid request received - orderID cannot be null");
         }
         Thread.sleep(2000);
-        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
-        if (order == null){
+
+        Order order;
+        Optional<Order> orderOptional = orderRepo.findById(request.getOrderID());
+        if (orderOptional == null || !orderOptional.isPresent()){
             throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
         }
+
+        order = orderOptional.get();
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.VERIFYING);
         SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
         VerifyPaymentRequest verifyPaymentRequest = new VerifyPaymentRequest(setStatusResponse.getOrder().getOrderID());
@@ -731,10 +735,13 @@ import java.util.List;50"
             throw new InvalidRequestException("Invalid request received - orderID cannot be null");
         }
         Thread.sleep(3000);
-        Order order = orderRepo.findById(request.getOrderID()).orElse(null);
-        if (order == null){
+        Order order;
+        Optional<Order> orderOptional = orderRepo.findById(request.getOrderID());
+        if (orderOptional == null || !orderOptional.isPresent()){
             throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
         }
+
+        order = orderOptional.get();
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.PURCHASED);
         SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
         Thread.sleep(2000);
@@ -949,8 +956,6 @@ import java.util.List;50"
     }
 
     public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<CartItem> ITEM, double TOTAL_PRICE) {
-        String home = System.getProperty("user.home");
-        String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
         Document pdf = new Document();
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
