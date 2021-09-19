@@ -51,4 +51,5 @@ public interface PaymentService {
 
     GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException;
 
+    GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException;
 }
