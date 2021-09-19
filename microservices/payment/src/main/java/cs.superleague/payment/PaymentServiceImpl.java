@@ -883,7 +883,13 @@ import java.util.List;50"
         if (request.getOrder() == null){
             throw new InvalidRequestException("Null parameters");
         }
-        orderRepo.save(request.getOrder());
+
+        if(orderRepo!=null)
+        {
+            Order order = request.getOrder();
+            orderRepo.save(order);
+        }
+
     }
 
     @Override
