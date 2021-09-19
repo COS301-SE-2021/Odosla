@@ -90,9 +90,8 @@ public class GenerateInvoiceIntegrationTest {
         // Assigning items
         item = new Item("Heinz Tamatoe Sauce","123456","123456",storeID,36.99,1,"description","img/");
         cartItem = new CartItem("Heinz Tamatoe Sauce","123456","123456",storeID,36.99,1,"description","img/");
+        cartItem.setCartItemNo(UUID.randomUUID());
 
-
-        rabbitTemplate.setChannelTransacted(true);
         SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
         rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
 

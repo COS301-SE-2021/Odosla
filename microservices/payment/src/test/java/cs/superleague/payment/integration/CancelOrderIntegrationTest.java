@@ -100,6 +100,9 @@ public class CancelOrderIntegrationTest {
         cItem1 = new CartItem("Heinz Tamatoe Sauce","123456","123456",storeID,36.99,1,"description","img/");
         cItem2 = new CartItem("Bar one","012345","012345",storeID,14.99,3,"description","img/");
 
+        cItem1.setCartItemNo(UUID.randomUUID());
+        cItem2.setCartItemNo(UUID.randomUUID());
+
         // Adding items to the items list
         expectedListOfItems.add(item1);
         expectedListOfItems.add(item2);

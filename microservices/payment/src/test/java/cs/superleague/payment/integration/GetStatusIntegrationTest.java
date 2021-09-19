@@ -104,6 +104,8 @@ public class GetStatusIntegrationTest {
         cI1 = new CartItem("Heinz Tamatoe Sauce", "123456", "123456", expectedStoreId, 36.99, 1, "description", "img/");
         I2 = new Item("Bar one", "012345", "012345", expectedStoreId, 14.99, 3, "description", "img/");
         cI2 = new CartItem("Bar one", "012345", "012345", expectedStoreId, 14.99, 3, "description", "img/");
+        cI1.setCartItemNo(UUID.randomUUID());
+        cI2.setCartItemNo(UUID.randomUUID());
 
         expectedDiscount = 0.0;
         expectedListOfItems.add(I1);

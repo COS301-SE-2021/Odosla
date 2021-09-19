@@ -71,6 +71,8 @@ public class CreateTransactionIntegrationTest {
 
         cI1 = new CartItem("Heinz Tamatoe Sauce","123456","123456",expectedS1,36.99,1,"description","img/");
         cI2 = new CartItem("Bar one","012345","012345",expectedS1,14.99,3,"description","img/");
+        cI1.setCartItemNo(UUID.randomUUID());
+        cI2.setCartItemNo(UUID.randomUUID());
 
         expectedMessage="Order successfully created.";
         expectedDiscount=0.0;

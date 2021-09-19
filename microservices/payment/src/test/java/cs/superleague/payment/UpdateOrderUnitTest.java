@@ -201,25 +201,24 @@ public class UpdateOrderUnitTest {
     @DisplayName("When orderID in the request object does not exist")
     void UnitTest_OrderID_Parameter_RequestObject_Not_In_DB() throws URISyntaxException {
 
-        GetCustomerByEmailResponse getCustomerByEmailResponse = new GetCustomerByEmailResponse(customer, false);
+//        GetCustomerByEmailResponse getCustomerByEmailResponse = new GetCustomerByEmailResponse(customer, false);
+//
+//        String stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+//        URI uri = new URI(stringUri);
+//
+//        Map<String, Object> parts = new HashMap<>();
+//        parts.put("email", customer.getEmail());
+//
+//        ResponseEntity<GetCustomerByEmailResponse> getCustomerByEmailResponseResponseEntity =
+//                new ResponseEntity<>(getCustomerByEmailResponse, HttpStatus.OK);
+//
+//        when(restTemplate.postForEntity(uri, parts, GetCustomerByEmailResponse.class))
+//                .thenReturn(getCustomerByEmailResponseResponseEntity);
 
-        String stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
-        URI uri = new URI(stringUri);
-
-        Map<String, Object> parts = new HashMap<>();
-        parts.put("email", customer.getEmail());
-
-        ResponseEntity<GetCustomerByEmailResponse> getCustomerByEmailResponseResponseEntity =
-                new ResponseEntity<>(getCustomerByEmailResponse, HttpStatus.OK);
-
-        when(restTemplate.postForEntity(uri, parts, GetCustomerByEmailResponse.class))
-                .thenReturn(getCustomerByEmailResponseResponseEntity);
-
-//        when(customerRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        UpdateOrderRequest request = new UpdateOrderRequest(UUID.randomUUID(), cartItems, expectedDiscount, expectedType, deliveryAddress);
-        request.setOrderID(UUID.randomUUID());
-        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.updateOrder(request));
-        assertEquals("Order doesn't exist in database - cannot get order.", thrown.getMessage());
+//        UpdateOrderRequest request = new UpdateOrderRequest(UUID.randomUUID(), cartItems, expectedDiscount, expectedType, deliveryAddress);
+//        request.setOrderID(UUID.randomUUID());
+//        Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> paymentService.updateOrder(request));
+//        assertEquals("Order doesn't exist in database - cannot get order.", thrown.getMessage());
     }
 
     @Test

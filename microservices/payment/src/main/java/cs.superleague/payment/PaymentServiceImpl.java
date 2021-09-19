@@ -646,9 +646,9 @@ import java.util.List;50"
         System.out.println("requests order id: " + request.getOrderID());
         order = orderRepo.findById(request.getOrderID()).orElse(null);
         //order.setOrderID(request.getOrderID());
-        System.out.println("order total cost: " +order.getTotalCost());
-        System.out.println("order create date: " +order.getCreateDate());
-        System.out.println("Order id from get Order: " + order.getOrderID());
+//        System.out.println("order total cost: " +order.getTotalCost());
+//        System.out.println("order create date: " +order.getCreateDate());
+//        System.out.println("Order id from get Order: " + order.getOrderID());
         if(order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
@@ -995,6 +995,7 @@ import java.util.List;50"
         double cost = 0;
 
         for (CartItem item : items) {
+            if(item != null)
             cost += item.getPrice() * item.getQuantity();
         }
 
