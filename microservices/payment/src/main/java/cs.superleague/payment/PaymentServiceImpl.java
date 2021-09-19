@@ -884,9 +884,12 @@ import java.util.List;50"
             throw new InvalidRequestException("Null parameters");
         }
 
+        System.out.println("check if order repo not null");
         if(orderRepo!=null)
         {
+            System.out.println("I made it here 2");
             Order order = request.getOrder();
+            System.out.println("shoppers id: "+ order.getShopperID());
             orderRepo.save(order);
         }
 
