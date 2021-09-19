@@ -17,7 +17,7 @@ public class CartItem implements Serializable {
     private String productID;
 
     @ManyToOne
-    @JoinColumn(name="order_id", insertable = false, updatable = false)
+    @JoinColumn(name="order_id")
     private Order order;
 
     private String name;
