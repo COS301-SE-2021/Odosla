@@ -2,6 +2,7 @@ package cs.superleague.user;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
+import cs.superleague.payment.dataclass.*;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -9,10 +10,6 @@ import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
-import cs.superleague.payment.dataclass.GeoPoint;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.dataclass.OrderStatus;
-import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.requests.SaveOrderRequest;
 import cs.superleague.payment.responses.GetOrderResponse;
@@ -248,10 +245,10 @@ public class UserServiceImpl implements UserService{
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
 
-            List<Item> items = orderEntity.getItems();
+            List<CartItem> items = orderEntity.getCartItems();
             boolean itemFound= false;
 
-            for (Item item : items) {
+            for (CartItem item : items) {
                 if (item.getBarcode().equals(request.getBarcode())) {
                     itemFound = true;
                     response = new ScanItemResponse(true, Calendar.getInstance().getTime(), "Item successfully scanned");
@@ -1155,7 +1152,7 @@ public class UserServiceImpl implements UserService{
                     if(shopperToVerify.getActivationDate()==null){
 
                         if(shopperToVerify.getActivationCode().equals(request.getActivationCode())){
-                            shopperToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            shopperToVerify.setActivationDate(new Date());
                             shopperRepo.save(shopperToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Shopper with email '"+request.getEmail()+"' has successfully activated their Shopper account", UserType.SHOPPER);
                         }
@@ -1177,7 +1174,7 @@ public class UserServiceImpl implements UserService{
                     if(driverToVerify.getActivationDate()==null){
 
                         if(driverToVerify.getActivationCode().equals(request.getActivationCode())){
-                            driverToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            driverToVerify.setActivationDate(new Date());
                             driverRepo.save(driverToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Driver with email '"+request.getEmail()+"' has successfully activated their Driver account", UserType.DRIVER);
                         }
@@ -1199,7 +1196,7 @@ public class UserServiceImpl implements UserService{
                     if(customerToVerify.getActivationDate()==null){
 
                         if(customerToVerify.getActivationCode().equals(request.getActivationCode())){
-                            customerToVerify.setActivationDate(Calendar.getInstance().getTime());
+                            customerToVerify.setActivationDate(new Date());
                             customerRepo.save(customerToVerify);
                             return new AccountVerifyResponse(true,Calendar.getInstance().getTime(),"Customer with email '"+request.getEmail()+"' has successfully activated their Customer account", UserType.CUSTOMER);
                         }

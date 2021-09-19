@@ -603,13 +603,11 @@ public class ShoppingController implements ShoppingApi{
                 currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
                 currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
 
-                try{
+                if(responseOrders.get(i).getShopperID()!=null)
+                {
                     currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
                 }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
+
                 currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().toString());
                 currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
                 currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));

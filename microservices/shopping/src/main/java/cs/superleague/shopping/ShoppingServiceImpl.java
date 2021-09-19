@@ -277,7 +277,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             }
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("orderID", correspondingOrder.getOrderID().toString());
+            parts.put("orderID", correspondingOrder.getOrderID());
 
             String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
             URI uri = new URI(stringUri);
@@ -290,6 +290,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             if(updateOrder!=null)
             {
+                System.out.println("Order is retrieved");
                 CurrentUser currentUser = new CurrentUser();
 
                 parts = new HashMap<>();
@@ -305,12 +306,16 @@ public class ShoppingServiceImpl implements ShoppingService {
                 Shopper shopper = getShopperByEmailResponse.getShopper();
                 assert shopper != null;
 
+                System.out.println("Shopper is retrieved " + shopper.getName());
 
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
 
+                System.out.println("Order shopper ID: " + updateOrder.getShopperID());
+
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
                 rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+
 
             }
 

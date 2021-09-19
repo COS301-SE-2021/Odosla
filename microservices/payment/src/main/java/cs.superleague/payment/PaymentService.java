@@ -48,4 +48,7 @@ public interface PaymentService {
     GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException;
 
     void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException;
+
+    GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException;
+
 }

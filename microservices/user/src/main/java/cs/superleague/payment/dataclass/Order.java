@@ -1,15 +1,17 @@
 package cs.superleague.payment.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import cs.superleague.shopping.dataclass.Item;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import cs.superleague.shopping.dataclass.Item;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "orderTable")
@@ -21,10 +23,15 @@ public class Order implements Serializable {
     private UUID storeID;
     private UUID shopperID;
     private UUID driverID;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
+
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
     private Date createDate;
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
+
+    @DateTimeFormat (pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
     private Date processDate;
+
     private Double totalCost;
     private Double discount;
     private boolean requiresPharmacy;
@@ -41,16 +48,15 @@ public class Order implements Serializable {
     @OneToOne (cascade={CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @ManyToMany
-    @JoinTable
-    @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Item> items;
+    @OneToMany (cascade = CascadeType.ALL)
+    @JoinColumn(name="order_id")
+    private List<CartItem> cartItems;
 
     public Order(){
 
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint deliveryAddress, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
@@ -60,14 +66,13 @@ public class Order implements Serializable {
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
-        this.items = items;
         this.discount = discount;
         this.deliveryAddress = deliveryAddress;
         this.storeAddress = storeAddress;
         this.requiresPharmacy = requiresPharmacy;
     }
 
-    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, List<Item> items, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint storeAddress, boolean requiresPharmacy) {
         this.orderID = orderID;
         this.userID = userID;
         this.storeID = storeID;
@@ -77,7 +82,21 @@ public class Order implements Serializable {
         this.totalCost = totalCost;
         this.type = type;
         this.status = status;
-        this.items = items;
+        this.discount = discount;
+        this.storeAddress = storeAddress;
+        this.requiresPharmacy = requiresPharmacy;
+    }
+
+    public Order(UUID orderID, UUID userID, UUID storeID, UUID shopperID, Date createDate, Date processDate, Double totalCost, OrderType type, OrderStatus status, double discount, GeoPoint storeAddress) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.storeID = storeID;
+        this.shopperID = shopperID;
+        this.createDate = createDate;
+        this.processDate = processDate;
+        this.totalCost = totalCost;
+        this.type = type;
+        this.status = status;
         this.discount = discount;
         this.storeAddress = storeAddress;
         this.requiresPharmacy = requiresPharmacy;
@@ -151,14 +170,6 @@ public class Order implements Serializable {
         this.status = status;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
     public Double getDiscount() {
         return discount;
     }
@@ -197,5 +208,13 @@ public class Order implements Serializable {
 
     public void setDriverID(UUID driverID) {
         this.driverID = driverID;
+    }
+
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
     }
 }

@@ -883,7 +883,18 @@ import java.util.List;50"
         if (request.getOrder() == null){
             throw new InvalidRequestException("Null parameters");
         }
-        orderRepo.save(request.getOrder());
+
+        System.out.println("check if order repo not null");
+        if(orderRepo!=null)
+        {
+            System.out.println("I made it here 2");
+            Order order = request.getOrder();
+            System.out.println("shoppers id: "+ order.getShopperID());
+            System.out.println("order id: " + order.getOrderID());
+            orderRepo.save(order);
+            System.out.println("after safe");
+        }
+
     }
 
     @Override
@@ -979,5 +990,32 @@ import java.util.List;50"
             System.out.println("PDF Error");
         }
         return output.toByteArray();
+    }
+
+    @Override
+    public GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException {
+        GetAllCartItemsResponse response=null;
+
+        if(request!=null){
+
+            List<CartItem> items;
+            try {
+                items = cartItemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetAllCartItemsResponse(null, Calendar.getInstance().getTime(), "All items can't be retrieved");
+            }
+            else {
+                response = new GetAllCartItemsResponse(items, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllCartItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
     }
 }
