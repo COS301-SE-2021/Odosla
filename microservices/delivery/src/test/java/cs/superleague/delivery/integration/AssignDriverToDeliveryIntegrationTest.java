@@ -24,6 +24,7 @@ import org.apache.http.message.BasicHeader;
 import org.junit.jupiter.api.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -54,7 +55,8 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Autowired
     RabbitTemplate rabbitTemplate;
 
-    private final String SECRET = "uQmMa86HgOi6uweJ1JSftIN7TBHFDa3KVJh6kCyoJ9bwnLBqA0YoCAhMMk";
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     UUID driverID;
     UUID deliveryID;
@@ -70,6 +72,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     String jwtToken;
     Customer customer;
     Order order;
+    SaveOrderToRepoRequest saveOrderToRepoRequest;
 
     @BeforeEach
     void setUp(){
@@ -82,7 +85,7 @@ public class AssignDriverToDeliveryIntegrationTest {
         status = DeliveryStatus.CollectedByDriver;
         pickUpLocation = new GeoPoint(0.0, 0.0, "address");
         dropOffLocation = new GeoPoint(1.0, 1.0, "address");
-        driver = new Driver("Seamus", "Brennan", "u19060468@tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.DRIVER, driverID);
+        driver = new Driver("Seamus", "Brennan", "u19060468tuks.co.za", "0743149813", "Hello123$$$", "123", UserType.DRIVER, driverID);
 
         delivery = new Delivery(deliveryID, orderID, pickUpLocation, dropOffLocation, customerID, storeID, DeliveryStatus.WaitingForShoppers, 0.0);
         order = new Order();
@@ -119,11 +122,12 @@ public class AssignDriverToDeliveryIntegrationTest {
 
         driver.setActivationDate(new Date());
         SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
+        saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
+
         rabbitTemplate.setChannelTransacted(true);
+        rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
         rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
-        rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
     }
 
     @AfterEach
@@ -156,6 +160,7 @@ public class AssignDriverToDeliveryIntegrationTest {
     @Description("Tests for when the driver is successfully assigned to the delivery.")
     @DisplayName("Successful assigning")
     void successfulAssigningOfDriverToDelivery_IntegrationTest() throws InvalidRequestException, URISyntaxException {
+
         AssignDriverToDeliveryRequest request = new AssignDriverToDeliveryRequest(deliveryID);
         AssignDriverToDeliveryResponse response = deliveryService.assignDriverToDelivery(request);
         assertEquals(response.getMessage(), "Driver successfully assigned to delivery.");

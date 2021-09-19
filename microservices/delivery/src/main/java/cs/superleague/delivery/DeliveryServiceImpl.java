@@ -109,6 +109,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         Driver driver = responseEntity.getBody().getDriver();
 
         if (delivery.getDriverId() != null){
+            System.out.println("delivery"+delivery.getDriverId());
+            System.out.println("driver"+driver.getDriverID());
             if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
                 if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
                     return new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
@@ -121,14 +123,16 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
         uri = new URI(uriString);
-
+        System.out.println(delivery.getOrderID());
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
-
-
-        ResponseEntity<GetOrderResponse> responseEntityOrder = restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class);
-
+        ResponseEntity<GetOrderResponse> responseEntityOrder;
+        try {
+            responseEntityOrder = restTemplate.postForEntity(uri,
+                    orderRequest, GetOrderResponse.class);
+        } catch (Exception e){
+            throw new InvalidRequestException("Invalid order.");
+        }
         if(responseEntityOrder == null || !responseEntityOrder.hasBody()
             || responseEntityOrder.getBody() == null){
             throw new InvalidRequestException("Invalid order.");
