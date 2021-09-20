@@ -372,7 +372,8 @@ public class NotificationServiceImpl implements NotificationService {
             try {
                 useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetCustomerByUUIDResponse.class);
             }catch (Exception e){
-            return "";
+                e.printStackTrace();
+                return "";
             }
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
             if (customer == null){
