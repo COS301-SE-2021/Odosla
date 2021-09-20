@@ -80,7 +80,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src=https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_200_200/0/1620256271448?e=1632232800&v=beta&t=ZIbuSEJCwv7TrTJ3lTZ3DQdNpWjMR8UM7sHxvepDefc" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_200_200/0/1620256271448?e=1632232800&v=beta&t=ZIbuSEJCwv7TrTJ3lTZ3DQdNpWjMR8UM7sHxvepDefc" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Seamus Brennan </h4>
 <p align="center">I have been coding for many years and have gained a lot of experience in the process. I am always interested in learning new technologies to help solve problems in the most efficient way possible. I have experience in all the technologies listed and this makes me very confident that our final product will be able to meet the requirements and to exceed them.</p>
