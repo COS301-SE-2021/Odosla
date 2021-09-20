@@ -264,6 +264,7 @@ public class ShoppingController implements ShoppingApi{
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
+            System.out.println("getNextqueued controller store id: "+ body.getStoreID());
             GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
             GetNextQueuedResponse getNextQueuedResponse = shoppingService.getNextQueued(getNextQueuedRequest);
             try {
@@ -310,6 +311,8 @@ public class ShoppingController implements ShoppingApi{
 
         ShoppingGetQueueResponse response = new ShoppingGetQueueResponse();
         HttpStatus httpStatus = HttpStatus.OK;
+
+        System.out.println("getQueue body getStore ID: "+ body.getStoreID());
         try{
             GetQueueRequest request = new GetQueueRequest(UUID.fromString(body.getStoreID()));
             GetQueueResponse getQueueResponse = shoppingService.getQueue(request);
@@ -726,6 +729,13 @@ public class ShoppingController implements ShoppingApi{
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            System.out.println("controller getStoreyByUUID : "+ body.getStoreID());
             GetStoreByUUIDResponse getStoreByUUIDResponse = shoppingService.getStoreByUUID(new GetStoreByUUIDRequest(UUID.fromString(body.getStoreID())));
             try {
 
