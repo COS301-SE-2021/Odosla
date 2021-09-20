@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService{
             System.out.println("order id from request: " + request.getOrderID());
 
             Map<String, Object> parts = new HashMap<>();
-            parts.put("orderID", request.getOrderID());
+            parts.put("orderID", request.getOrderID().toString());
             String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
@@ -165,9 +165,9 @@ public class UserServiceImpl implements UserService{
             {
 
                 parts = new HashMap<>();
-                parts.put("orderID", orderEntity.getOrderID());
-                parts.put("customerID", orderEntity.getUserID());
-                parts.put("storeID", orderEntity.getStoreID());
+                parts.put("orderID", orderEntity.getOrderID().toString());
+                parts.put("customerID", orderEntity.getUserID().toString());
+                parts.put("storeID", orderEntity.getStoreID().toString());
                 parts.put("timeOfDelivery", null);
                 parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
                 String uriString = "http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery";

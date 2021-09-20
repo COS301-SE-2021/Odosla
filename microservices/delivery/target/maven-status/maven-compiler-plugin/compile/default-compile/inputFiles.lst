@@ -20,6 +20,7 @@ D:\Odosla 2\microservices\delivery\target\generated-sources\src\main\java\cs\sup
 D:\Odosla 2\microservices\delivery\target\generated-sources\src\main\java\cs\superleague\models\DeliveryGetDeliveryDetailRequest.java
 D:\Odosla 2\microservices\delivery\src\main\java\cs\superleague\delivery\responses\GetDeliveryCostResponse.java
 D:\Odosla 2\microservices\delivery\src\main\java\cs\superleague\delivery\responses\GetNextOrderForDriverResponse.java
+D:\Odosla 2\microservices\delivery\src\main\java\cs\superleague\payment\responses\GetOrderByUUIDResponse.java
 D:\Odosla 2\microservices\delivery\src\main\java\cs\superleague\user\dataclass\User.java
 D:\Odosla 2\microservices\delivery\target\generated-sources\src\main\java\cs\superleague\models\DeliveryDetailObject.java
 D:\Odosla 2\microservices\delivery\src\main\java\cs\superleague\integration\dataclass\UserType.java

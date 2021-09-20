@@ -3,7 +3,7 @@ package cs.superleague.models;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import cs.superleague.models.ItemObject;
+import cs.superleague.models.CartItemObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ import javax.validation.constraints.*;
 public class RecommendationGetCartRecommendationResponse   {
   @JsonProperty("recommendations")
   @Valid
-  private List<ItemObject> recommendations = null;
+  private List<CartItemObject> recommendations = null;
 
   @JsonProperty("isSuccess")
   private Boolean isSuccess = null;
@@ -28,14 +28,14 @@ public class RecommendationGetCartRecommendationResponse   {
   @JsonProperty("message")
   private String message = null;
 
-  public RecommendationGetCartRecommendationResponse recommendations(List<ItemObject> recommendations) {
+  public RecommendationGetCartRecommendationResponse recommendations(List<CartItemObject> recommendations) {
     this.recommendations = recommendations;
     return this;
   }
 
-  public RecommendationGetCartRecommendationResponse addRecommendationsItem(ItemObject recommendationsItem) {
+  public RecommendationGetCartRecommendationResponse addRecommendationsItem(CartItemObject recommendationsItem) {
     if (this.recommendations == null) {
-      this.recommendations = new ArrayList<ItemObject>();
+      this.recommendations = new ArrayList<CartItemObject>();
     }
     this.recommendations.add(recommendationsItem);
     return this;
@@ -47,11 +47,11 @@ public class RecommendationGetCartRecommendationResponse   {
   **/
   @ApiModelProperty(value = "")
       @Valid
-    public List<ItemObject> getRecommendations() {
+    public List<CartItemObject> getRecommendations() {
     return recommendations;
   }
 
-  public void setRecommendations(List<ItemObject> recommendations) {
+  public void setRecommendations(List<CartItemObject> recommendations) {
     this.recommendations = recommendations;
   }
 

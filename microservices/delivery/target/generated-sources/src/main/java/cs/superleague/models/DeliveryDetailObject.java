@@ -24,8 +24,8 @@ public class DeliveryDetailObject   {
   @JsonProperty("time")
   private String time = null;
 
-  @JsonProperty("deliveryStatus")
-  private String deliveryStatus = null;
+  @JsonProperty("status")
+  private String status = null;
 
   @JsonProperty("detail")
   private String detail = null;
@@ -87,23 +87,23 @@ public class DeliveryDetailObject   {
     this.time = time;
   }
 
-  public DeliveryDetailObject deliveryStatus(String deliveryStatus) {
-    this.deliveryStatus = deliveryStatus;
+  public DeliveryDetailObject status(String status) {
+    this.status = status;
     return this;
   }
 
   /**
-   * Get deliveryStatus
-   * @return deliveryStatus
+   * Get status
+   * @return status
   **/
   @ApiModelProperty(value = "")
   
-    public String getDeliveryStatus() {
-    return deliveryStatus;
+    public String getStatus() {
+    return status;
   }
 
-  public void setDeliveryStatus(String deliveryStatus) {
-    this.deliveryStatus = deliveryStatus;
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public DeliveryDetailObject detail(String detail) {
@@ -138,13 +138,13 @@ public class DeliveryDetailObject   {
     return Objects.equals(this.id, deliveryDetailObject.id) &&
         Objects.equals(this.deliveryID, deliveryDetailObject.deliveryID) &&
         Objects.equals(this.time, deliveryDetailObject.time) &&
-        Objects.equals(this.deliveryStatus, deliveryDetailObject.deliveryStatus) &&
+        Objects.equals(this.status, deliveryDetailObject.status) &&
         Objects.equals(this.detail, deliveryDetailObject.detail);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, deliveryID, time, deliveryStatus, detail);
+    return Objects.hash(id, deliveryID, time, status, detail);
   }
 
   @Override
@@ -155,7 +155,7 @@ public class DeliveryDetailObject   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
     sb.append("    time: ").append(toIndentedString(time)).append("\n");
-    sb.append("    deliveryStatus: ").append(toIndentedString(deliveryStatus)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
     sb.append("}");
     return sb.toString();

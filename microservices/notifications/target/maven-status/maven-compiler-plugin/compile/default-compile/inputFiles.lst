@@ -1,6 +1,5 @@
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\user\dataclass\Customer.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\notifications\repos\NotificationRepo.java
-D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\user\requests\SaveCustomerToRepoRequest.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\shopping\dataclass\Item.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\integration\dataclass\UserType.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\user\responses\GetDriverByUUIDResponse.java
@@ -17,7 +16,6 @@ D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\integration
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\NotificationApp.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\notifications\requests\SendDirectEmailNotificationRequest.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\integration\security\CurrentUser.java
-D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\integration\security\JwtUtil.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\notifications\requests\CreateNotificationRequest.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\user\dataclass\Wallet.java
 D:\Odosla 2\microservices\notifications\src\main\java\cs\superleague\user\dataclass\Shopper.java

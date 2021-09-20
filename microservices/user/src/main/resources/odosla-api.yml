@@ -846,13 +846,13 @@ components:
       description: "Generic schema for an item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -916,7 +916,7 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        customerID:
+        userID:
           type: string
           description: generated token used to identify the caller of the endpoint
 
@@ -1052,7 +1052,6 @@ components:
           type: string
         activationDate:
           type: string
-          nullable: true
         activationCode:
           type: string
         resetCode:
@@ -1063,16 +1062,22 @@ components:
           type: string
         driverID:
           type: string
+        deliveryID:
+          type: string
+        totalRatings:
+          type: number
         rating:
           type: number
         onShift:
           type: boolean
-        currentAddress:
-          $ref: "#/components/schemas/GeoPointObject"
+        isCurrentlyDelivering:
+          type: boolean
         deliveriesCompleted:
           type: number
-        deliveryID:
-          type: string
+        numberOfRatings:
+          type: number
+        currentAddress:
+          $ref: "#/components/schemas/GeoPointObject"
 
     GeoPointObject:
       description: This is a geoPoint object
@@ -1175,7 +1180,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_RegisterDriverRequest:
@@ -1201,7 +1206,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_RegisterShopperRequest:
@@ -1227,7 +1232,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_RegisterAdminRequest:
@@ -1253,7 +1258,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_RegisterCustomerRequest:
@@ -1279,7 +1284,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_AccountVerifyRequest:
@@ -1301,7 +1306,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
         userType:
           type: string
@@ -1327,7 +1332,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_GetCurrentUserRequest:
@@ -1345,7 +1350,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
         user:
           oneOf:
@@ -1372,7 +1377,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_CompletePackagingOrderRequest:
@@ -1392,7 +1397,7 @@ components:
           type: string
         success:
           type: boolean
-        date:
+        timestamp:
           type: string
 
     user_GetGroceryListRequest:
