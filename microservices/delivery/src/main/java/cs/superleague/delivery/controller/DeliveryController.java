@@ -73,6 +73,8 @@ public class DeliveryController implements DeliveryApi {
         HttpStatus httpStatus = HttpStatus.OK;
         try{
 
+            System.out.println("delivery id: " + body.getDeliveryID());
+
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
             headers.add(header);
@@ -194,6 +196,7 @@ public class DeliveryController implements DeliveryApi {
             System.out.println("ASD 1");
 
             DeliveryObject deliveryObject = new DeliveryObject();
+            
 
             System.out.println("ASD delv id " + getNextOrderForDriverResponse.getDelivery().toString());
             deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());

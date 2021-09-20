@@ -143,7 +143,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
 
-                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_saveOrderToRepo", saveOrderToRepoRequest);
+                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
                 //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
 
@@ -162,7 +162,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
                 saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder2);
 
-                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_saveOrderToRepo", saveOrderToRepoRequest);
+                rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
                 delivery.setDriverId(driver.getDriverID());
                 deliveryRepo.save(delivery);
@@ -216,7 +216,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
-        storeRequest.put("storeID", request.getStoreID());
+        storeRequest.put("StoreID", request.getStoreID());
 
 
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = restTemplate.postForEntity(uri,
@@ -370,7 +370,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
             System.out.println("_before rab_ " + saveDriverToRepoRequest.getDriver().toString());
 
-            rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverToRepoRequest);
+            rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
         }
         else
         {
@@ -517,7 +517,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             {
                 driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
                 SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-                rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriver", saveDriverToRepoRequest);
+                rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
             }
             deliveryRepo.save(delivery);
 
@@ -541,7 +541,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             order.setStatus(OrderStatus.DELIVERED);
             SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(order);
 
-            rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrder", saveOrderToRepoRequest);
+            rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
         }
 
         return new UpdateDeliveryStatusResponse("Successful status update.");
@@ -636,10 +636,10 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         for (Delivery delivery : deliveries) {
             if (delivery.getOrderID().compareTo(request.getOrderID()) == 0) {
-                uriString = "http://"+userHost+":"+userPort+"/user/findDriverById";
+                uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
                 uri = new URI(uriString);
                 Map<String, Object> parts = new HashMap<>();
-                parts.put("driverID", delivery.getDriverId());
+                parts.put("userID", delivery.getDriverId());
 
                 ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
                         parts, GetDriverByUUIDResponse.class);
