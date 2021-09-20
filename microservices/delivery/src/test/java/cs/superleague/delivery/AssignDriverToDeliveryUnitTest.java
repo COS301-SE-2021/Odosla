@@ -14,6 +14,7 @@ import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.user.dataclass.*;
@@ -200,15 +201,15 @@ public class AssignDriverToDeliveryUnitTest {
                 parts, GetDriverByEmailResponse.class)).thenReturn(responseEntity);
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
         //when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order, new Date(), "");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
 
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 //        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
 //        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
@@ -262,15 +263,15 @@ public class AssignDriverToDeliveryUnitTest {
                 parts, GetDriverByEmailResponse.class)).thenReturn(responseEntity);
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
         //when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(null, true, new Date(), "");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(null, new Date(), "");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
 
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 //        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
 //        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
@@ -296,15 +297,15 @@ public class AssignDriverToDeliveryUnitTest {
                 parts, GetDriverByEmailResponse.class)).thenReturn(responseEntity);
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
 //        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order, new Date(), "");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
 
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 //        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
 //        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);
@@ -330,15 +331,15 @@ public class AssignDriverToDeliveryUnitTest {
                 parts, GetDriverByEmailResponse.class)).thenReturn(responseEntity);
         when(deliveryRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(delivery));
 //        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order,  new Date(), "");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
 
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 //        GetCurrentUserResponse getCurrentUserResponse = new GetCurrentUserResponse((User) driver, true, null, "");
 //        when(userService.getCurrentUser(Mockito.any())).thenReturn(getCurrentUserResponse);
         AssignDriverToDeliveryRequest request1 = new AssignDriverToDeliveryRequest(deliveryID);

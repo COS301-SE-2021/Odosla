@@ -1,26 +1,41 @@
 package cs.superleague.notification.integration;
 
 
+import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.NotificationServiceImpl;
 import cs.superleague.notifications.exceptions.InvalidRequestException;
 import cs.superleague.notifications.repos.NotificationRepo;
 import cs.superleague.notifications.requests.SendEmailNotificationRequest;
 import cs.superleague.notifications.responses.SendEmailNotificationResponse;
 import cs.superleague.user.dataclass.Admin;
+import cs.superleague.user.dataclass.Customer;
 import cs.superleague.user.dataclass.UserType;
+import cs.superleague.user.requests.SaveCustomerToRepoRequest;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import org.apache.http.Header;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
 import org.junit.jupiter.api.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @Transactional
@@ -28,6 +43,12 @@ class SendEmailNotificationIntegrationTest {
 
     @Autowired
     NotificationRepo notificationRepo;
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+    @Autowired
+    RestTemplate restTemplate;
+    @Value("${jwt.secret}")
+    private String SECRET;
 
     @Autowired
     private NotificationServiceImpl notificationService;
@@ -45,8 +66,36 @@ class SendEmailNotificationIntegrationTest {
 //        RegisterAdminResponse response = userService.registerAdmin(request);
 //        System.out.println(response.getMessage());
 //        adminCorrectEmail = adminRepo.findAdminByEmail(email);
-        userID1 = UUID.fromString("44225142-f557-4fb7-9946-f733e0a5d5f5");;
+        userID1 = UUID.fromString("26634e65-21ca-4c6f-932a-ca3c48755123");
         invalidID = UUID.randomUUID();
+        Customer customer = new Customer();
+        customer.setCustomerID(userID1);
+        customer.setEmail(email);
+        customer.setAccountType(UserType.CUSTOMER);
+        SaveCustomerToRepoRequest saveCustomerToRepoRequest = new SaveCustomerToRepoRequest(customer);
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveCustomerToRepoTest", saveCustomerToRepoRequest);
+        JwtUtil jwtUtil = new JwtUtil();
+        String jwt = jwtUtil.generateJWTTokenCustomer(customer);
+
+        Header header = new BasicHeader("Authorization", jwt);
+        List<Header> headers = new ArrayList<>();
+        headers.add(header);
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+        jwt = jwt.replace("Bearer ","");
+        Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
+        List<String> authorities = (List) claims.get("authorities");
+        String userType= (String) claims.get("userType");
+        String email = (String) claims.get("email");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        HashMap<String, Object> info=new HashMap<String, Object>();
+        info.put("userType",userType);
+        info.put("email",email);
+        auth.setDetails(info);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
         while (invalidID == userID1){
             invalidID = UUID.randomUUID();
         }
@@ -54,6 +103,7 @@ class SendEmailNotificationIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        SecurityContextHolder.clearContext();
         notificationRepo.deleteAll();
     }
 

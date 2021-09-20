@@ -11,6 +11,7 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -172,22 +173,22 @@ public class CreateDeliveryUnitTest {
         when(restTemplate.postForEntity(uri,
                 parts, GetCustomerByUUIDResponse.class)).thenReturn(responseEntity);
         //when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "null");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order,  new Date(), "null");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", orderID);
 
 
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
         //when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(null, null, null);
         uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
-        storeRequest.put("storeID", storeID);
+        storeRequest.put("StoreID", storeID);
 
 
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = new ResponseEntity<>(getStoreByUUIDResponse, HttpStatus.OK);
@@ -212,16 +213,16 @@ public class CreateDeliveryUnitTest {
                 parts, GetCustomerByUUIDResponse.class)).thenReturn(responseEntity);
 //        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
 //        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(null, true, new Date(), "null");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(null, new Date(), "null");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", orderID);
 
 
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
         CreateDeliveryRequest request1 = new CreateDeliveryRequest(orderID, customerID, storeID, time, dropOffLocation);
         Throwable thrown1 = Assertions.assertThrows(InvalidRequestException.class, ()->deliveryService.createDelivery(request1));
         assertEquals("Invalid orderID.", thrown1.getMessage());
@@ -244,20 +245,20 @@ public class CreateDeliveryUnitTest {
         when(restTemplate.postForEntity(uri,
                 parts, GetCustomerByUUIDResponse.class)).thenReturn(responseEntity);
 
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "null");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order, new Date(), "null");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", orderID);
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(store, new Date(), "null");
         uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
-        storeRequest.put("storeID", storeID);
+        storeRequest.put("StoreID", storeID);
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = new ResponseEntity<>(getStoreByUUIDResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
                 storeRequest, GetStoreByUUIDResponse.class)).thenReturn(responseEntityStore);
@@ -282,20 +283,20 @@ public class CreateDeliveryUnitTest {
         when(restTemplate.postForEntity(uri,
                 parts, GetCustomerByUUIDResponse.class)).thenReturn(responseEntity);
 
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "null");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order,  new Date(), "null");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", orderID);
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(store, new Date(), "null");
         uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
-        storeRequest.put("storeID", storeID);
+        storeRequest.put("StoreID", storeID);
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = new ResponseEntity<>(getStoreByUUIDResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
                 storeRequest, GetStoreByUUIDResponse.class)).thenReturn(responseEntityStore);
@@ -317,23 +318,23 @@ public class CreateDeliveryUnitTest {
         when(restTemplate.postForEntity(uri,
                 parts, GetCustomerByUUIDResponse.class)).thenReturn(responseEntity);
         //when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "null");
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order,  new Date(), "null");
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", orderID);
 
 
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 //        when(customerRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(customer));
 //        when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(store, new Date(), "null");
         uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
-        storeRequest.put("storeID", storeID);
+        storeRequest.put("StoreID", storeID);
 
 
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = new ResponseEntity<>(getStoreByUUIDResponse, HttpStatus.OK);

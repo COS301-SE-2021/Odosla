@@ -216,7 +216,7 @@ public class DeliveryServiceImpl implements DeliveryService {
         uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
-        storeRequest.put("storeID", request.getStoreID());
+        storeRequest.put("StoreID", request.getStoreID());
 
 
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = restTemplate.postForEntity(uri,
@@ -520,7 +520,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             }
             deliveryRepo.save(delivery);
 
-            uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+            uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
             uri = new URI(uriString);
             Map<String, Object> orderRequest = new HashMap<String, Object>();
             orderRequest.put("orderID", delivery.getOrderID());
