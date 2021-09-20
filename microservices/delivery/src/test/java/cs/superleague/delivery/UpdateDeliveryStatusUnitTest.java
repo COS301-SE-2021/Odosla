@@ -10,6 +10,7 @@ import cs.superleague.delivery.requests.UpdateDeliveryStatusRequest;
 import cs.superleague.delivery.responses.UpdateDeliveryStatusResponse;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.user.dataclass.Admin;
@@ -187,28 +188,28 @@ public class UpdateDeliveryStatusUnitTest {
 
         GetDriverByUUIDResponse getDriverByUUIDResponse = new GetDriverByUUIDResponse(driver,
                 new Date(), "Driver successfully retrieved");
-        GetOrderResponse getOrderResponse = new GetOrderResponse(new Order(), true, new Date(), "");
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(new Order(), new Date(), "");
 
         ResponseEntity<GetDriverByUUIDResponse> responseEntity = new ResponseEntity<>(getDriverByUUIDResponse,
                 HttpStatus.OK);
 
 
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse,
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse,
                 HttpStatus.OK);
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("userID", delivery.getDriverId().toString());
 
         Map<String, Object> orderRequest = new HashMap<>();
-        orderRequest.put("orderID", delivery.getOrderID().toString());
+        orderRequest.put("orderID", delivery.getOrderID());
         String uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
         URI uri = new URI(uriString);
         Mockito.when(restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class))
                 .thenReturn(responseEntity);
 
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         uri = new URI(uriString);
-        Mockito.when(restTemplate.postForEntity(uri, orderRequest, GetOrderResponse.class))
+        Mockito.when(restTemplate.postForEntity(uri, orderRequest, GetOrderByUUIDResponse.class))
                 .thenReturn(responseEntityOrder);
         UpdateDeliveryStatusResponse response = deliveryService.updateDeliveryStatus(request1);
         assertEquals(response.getMessage(), "Successful status update.");

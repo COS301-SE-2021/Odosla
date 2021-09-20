@@ -13,6 +13,7 @@ import cs.superleague.delivery.responses.GetDeliveryDriverByOrderIDResponse;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.user.dataclass.Admin;
@@ -168,16 +169,16 @@ public class GetDeliveryDriverByOrderIDUnitTest {
     void noOrderAssignedToDelivery_UnitTest() throws InvalidRequestException, URISyntaxException {
         delivery.setOrderID(UUID.randomUUID());
         //when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "message");
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order, new Date(), "");
+        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         URI uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<String, Object>();
         orderRequest.put("orderID", orderID);
 
 
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
         GetDeliveryDriverByOrderIDRequest request1 = new GetDeliveryDriverByOrderIDRequest(orderID);
         GetDeliveryDriverByOrderIDResponse response = deliveryService.getDeliveryDriverByOrderID(request1);
         assertEquals("Driver not found", response.getMessage());
@@ -189,16 +190,16 @@ public class GetDeliveryDriverByOrderIDUnitTest {
     void DriverFoundInDeliveryOrder_UnitTest() throws InvalidRequestException, URISyntaxException {
 
         deliveries.add(delivery);
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "message");
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order, new Date(), "message");
+        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         URI uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<String, Object>();
         orderRequest.put("orderID", orderID);
 
 
-        ResponseEntity<GetOrderResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
         when(restTemplate.postForEntity(uri,
-                orderRequest, GetOrderResponse.class)).thenReturn(responseEntityOrder);
+                orderRequest, GetOrderByUUIDResponse.class)).thenReturn(responseEntityOrder);
 //        when(driverRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(driver));
 //        when(orderRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(order));
         GetDriverByUUIDResponse getDriverByUUIDResponse = new GetDriverByUUIDResponse(driver, new Date(), "");
