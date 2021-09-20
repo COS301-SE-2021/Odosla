@@ -513,6 +513,12 @@ public class PaymentController implements PaymentApi {
 
         GetOrderByUUIDResponse getOrderByUUIDResponse = null;
         try {
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             getOrderByUUIDResponse = paymentService.getOrderByUUID(new GetOrderByUUIDRequest(UUID.fromString(body.getOrderID())));
         } catch (InvalidRequestException e) {
             e.printStackTrace();

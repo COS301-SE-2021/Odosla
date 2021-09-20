@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,9 @@ public class CreateUserReportUnitTest {
 
     @InjectMocks
     private AnalyticsServiceImpl analyticsService;
+
+    @Mock
+    RestTemplate restTemplate;
 
     @InjectMocks
     JwtUtil jwtTokenUtil;

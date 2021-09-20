@@ -93,14 +93,15 @@ public class TrackDeliveryIntegrationTest {
         driverLocation = new GeoPoint(10.0, 10.0, "address");
         driver.setCurrentAddress(driverLocation);
         driver.setOnShift(true);
+        SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
+
         customer = new Customer();
         customer.setEmail("seamus.peter.brennan@gmail.com");
         customer.setCustomerID(customerID);
         customer.setAccountType(UserType.CUSTOMER);
         SaveCustomerToRepoRequest saveCustomerToRepoRequest = new SaveCustomerToRepoRequest(customer);
         rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveCustomerToRepoTest", saveCustomerToRepoRequest);
-        SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
         String jwt = jwtUtil.generateJWTTokenDriver(driver);
         jwt = jwt.replace(HEADER,"");
         Claims claims= Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwt).getBody();
@@ -183,8 +184,6 @@ public class TrackDeliveryIntegrationTest {
     void driverIsAssignedAndDriverLocationIsReturned_IntegrationTest() throws InvalidRequestException, URISyntaxException {
         delivery.setDriverId(driverID);
         driver.setOnShift(true);
-        SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
-        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
         deliveryRepo.save(delivery);
         TrackDeliveryRequest request = new TrackDeliveryRequest(deliveryID);
         TrackDeliveryResponse response = deliveryService.trackDelivery(request);
