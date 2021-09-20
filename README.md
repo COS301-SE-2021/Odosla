@@ -40,7 +40,7 @@
 <div align="center"><a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄 version 1 </a></div>
  
 <h3 align="center"> You can view our latest Testing Policy here: <a href="https://www.overleaf.com/read/dyjfgpqzypyx" target="blank">📄Our Testing Policy</a></h3>
- 
+ <br>
 <h3 align="center"> You can view our GitHub Project Board here:</h3>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
  
@@ -120,9 +120,9 @@ to achieve the objective. I am most passionate about using my programming and de
    <ul>
     <li>develop
       <ul>
-       <li>develop_shopping
+       <li>develop_microservices
         <ul>
-         <li>feature_shopping_getCatalogue</li>
+         <li>feature_microservices_payment</li>
          </ul>
        </li>
      </ul>
