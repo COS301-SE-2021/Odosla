@@ -44,17 +44,16 @@ public class ShoppingServiceImpl implements ShoppingService {
     private final StoreRepo storeRepo;
     private final ItemRepo itemRepo;
 
-    @Autowired
-    private RabbitTemplate rabbit;
-
     private final RestTemplate restTemplate;
-
+    private final RabbitTemplate rabbit;
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate,
+                               RabbitTemplate rabbit) {
         this.storeRepo= storeRepo;
         this.itemRepo=itemRepo;
         this.restTemplate = restTemplate;
+        this.rabbit = rabbit;
     }
     /**
      *
@@ -277,6 +276,8 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
             URI uri = new URI(stringUri);
+
+            System.out.println(stringUri);
 
             ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate
                     .postForEntity(uri, parts, GetOrderResponse.class);
