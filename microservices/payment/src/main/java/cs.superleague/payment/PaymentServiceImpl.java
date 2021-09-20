@@ -335,8 +335,8 @@ public class PaymentServiceImpl implements PaymentService {
                             productIDs.add(item.getProductID());
                         }
 
-                        //AddRecommendationRequest addRecommendationRequest = new AddRecommendationRequest(o.getOrderID(), productIDs);
-                        //rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
+                        AddRecommendationRequest addRecommendationRequest = new AddRecommendationRequest(o.getOrderID(), productIDs);
+                        rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
                     UUID finalOrderID = orderID;
                     new Thread(() -> {

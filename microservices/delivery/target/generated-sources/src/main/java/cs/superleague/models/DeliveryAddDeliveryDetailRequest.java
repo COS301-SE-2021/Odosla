@@ -15,8 +15,8 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object is expected as input")
 @Validated
 public class DeliveryAddDeliveryDetailRequest   {
-  @JsonProperty("deliveryStatus")
-  private String deliveryStatus = null;
+  @JsonProperty("status")
+  private String status = null;
 
   @JsonProperty("detail")
   private String detail = null;
@@ -27,23 +27,23 @@ public class DeliveryAddDeliveryDetailRequest   {
   @JsonProperty("timestamp")
   private String timestamp = null;
 
-  public DeliveryAddDeliveryDetailRequest deliveryStatus(String deliveryStatus) {
-    this.deliveryStatus = deliveryStatus;
+  public DeliveryAddDeliveryDetailRequest status(String status) {
+    this.status = status;
     return this;
   }
 
   /**
-   * Get deliveryStatus
-   * @return deliveryStatus
+   * Get status
+   * @return status
   **/
   @ApiModelProperty(value = "")
   
-    public String getDeliveryStatus() {
-    return deliveryStatus;
+    public String getStatus() {
+    return status;
   }
 
-  public void setDeliveryStatus(String deliveryStatus) {
-    this.deliveryStatus = deliveryStatus;
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public DeliveryAddDeliveryDetailRequest detail(String detail) {
@@ -113,7 +113,7 @@ public class DeliveryAddDeliveryDetailRequest   {
       return false;
     }
     DeliveryAddDeliveryDetailRequest deliveryAddDeliveryDetailRequest = (DeliveryAddDeliveryDetailRequest) o;
-    return Objects.equals(this.deliveryStatus, deliveryAddDeliveryDetailRequest.deliveryStatus) &&
+    return Objects.equals(this.status, deliveryAddDeliveryDetailRequest.status) &&
         Objects.equals(this.detail, deliveryAddDeliveryDetailRequest.detail) &&
         Objects.equals(this.deliveryID, deliveryAddDeliveryDetailRequest.deliveryID) &&
         Objects.equals(this.timestamp, deliveryAddDeliveryDetailRequest.timestamp);
@@ -121,7 +121,7 @@ public class DeliveryAddDeliveryDetailRequest   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(deliveryStatus, detail, deliveryID, timestamp);
+    return Objects.hash(status, detail, deliveryID, timestamp);
   }
 
   @Override
@@ -129,7 +129,7 @@ public class DeliveryAddDeliveryDetailRequest   {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryAddDeliveryDetailRequest {\n");
     
-    sb.append("    deliveryStatus: ").append(toIndentedString(deliveryStatus)).append("\n");
+    sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
     sb.append("    deliveryID: ").append(toIndentedString(deliveryID)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");

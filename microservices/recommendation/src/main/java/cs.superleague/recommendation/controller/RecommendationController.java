@@ -93,8 +93,8 @@ public class RecommendationController implements RecommendationApi {
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
             currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setProductID(responseItems.get(i).getProductID());
+            currentItem.setStoreID(responseItems.get(i).getStoreID().toString());
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
@@ -120,11 +120,11 @@ public class RecommendationController implements RecommendationApi {
             {
                 item.setCartItemNo(i.getCartItemNo().toString());
             }
-            item.setProductId(i.getProductID());
+            item.setProductID(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreId(i.getStoreID().toString());
+            item.setStoreID(i.getStoreID().toString());
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());
