@@ -150,7 +150,7 @@ public class PaymentController implements PaymentApi {
             if(body.getDiscount() != null)
                 discount = body.getDiscount().doubleValue();
 
-            UUID orderID = UUID.fromString(body.getOrderId());
+            UUID orderID = UUID.fromString(body.getOrderID());
             GeoPoint deliveryAddress = new GeoPoint();
 
             if(body.getDeliveryAddress() != null) {
@@ -159,7 +159,7 @@ public class PaymentController implements PaymentApi {
                 deliveryAddress = null;
             }
 
-            List<CartItemObject> cartItemObjectList = convertCartItems(body.getItems());
+            List<CartItemObject> cartItemObjectList = convertCartItems(body.getListOfItems());
 
             UpdateOrderRequest request = new UpdateOrderRequest(orderID, assignCartItems(cartItemObjectList),
                     discount, orderType, deliveryAddress);
@@ -167,7 +167,7 @@ public class PaymentController implements PaymentApi {
             UpdateOrderResponse updateOrderResponse = paymentService.updateOrder(request);
             try {
                 response.setMessage(updateOrderResponse.getMessage());
-                response.setOrder(updateOrderResponse.getOrder());
+                response.setOrder(populateOrder(updateOrderResponse.getOrder()));
                 response.setSuccess(updateOrderResponse.isSuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(updateOrderResponse.getTimestamp()));
             }catch(Exception e){
@@ -242,13 +242,13 @@ public class PaymentController implements PaymentApi {
             System.out.println("Cart items list size : "+ cartItemObjects.size());
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
-                    UUID.fromString(body.getStoreId()), orderType, body.getLongitude().doubleValue(),
-                    body.getLatitude().doubleValue(), body.getDeliveryAddress());
+                    UUID.fromString(body.getStoreID()), orderType, body.getLongitude().doubleValue(),
+                    body.getLatitude().doubleValue(), body.getAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             System.out.println("AFTER THE CALL");
             try {
                 response.setMessage(submitOrderResponse.getMessage());
-                response.setOrderId(submitOrderResponse.getOrder().getOrderID().toString());
+                response.setOrder(populateOrder(submitOrderResponse.getOrder()));
                 response.setSuccess(submitOrderResponse.getsuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
             }catch(Exception e){
@@ -345,7 +345,7 @@ public class PaymentController implements PaymentApi {
             GetItemsResponse getItemsResponse = paymentService.getItems(getItemsRequest);
             try {
                 response.setMessage(getItemsResponse.getMessage());
-                response.setCartItems(populateCartItems(getItemsResponse.getCartItems()));
+                response.setItemList(populateCartItems(getItemsResponse.getCartItems()));
                 response.setSuccess(getItemsResponse.isSuccess());
                 response.setTimestamp(getItemsResponse.getTimestamp().toString());
             }catch(Exception e){
@@ -388,7 +388,7 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
-    public ResponseEntity<PaymentGetOrdersResponse> getOrder(PaymentGetOrdersRequest body) {
+    public ResponseEntity<PaymentGetOrdersResponse> getOrders(PaymentGetOrdersRequest body) {
         PaymentGetOrdersResponse response = new PaymentGetOrdersResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
@@ -433,11 +433,11 @@ public class PaymentController implements PaymentApi {
 
         for (ItemObject i: itemObjectList) {
             Item item = new Item();
-            item.setProductID(i.getProductId());
+            item.setProductID(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreID(UUID.fromString(i.getStoreId()));
+            item.setStoreID(UUID.fromString(i.getStoreID()));
             if(i.getPrice() != null)
                 price = i.getPrice().doubleValue();
 
@@ -464,8 +464,8 @@ public class PaymentController implements PaymentApi {
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
             currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setProductID(responseItems.get(i).getProductID());
+            currentItem.setStoreID(responseItems.get(i).getStoreID().toString());
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
@@ -488,19 +488,19 @@ public class PaymentController implements PaymentApi {
     public OrderObject populateOrder(Order order){
         OrderObject orderObject = new OrderObject();
         if(order.getOrderID() != null)
-            orderObject.setOrderId(order.getOrderID().toString());
+            orderObject.setOrderID(order.getOrderID().toString());
         if(order.getUserID() != null)
-            orderObject.setUserId(order.getUserID().toString());
+            orderObject.setUserID(order.getUserID().toString());
         if(order.getStoreID() != null)
-            orderObject.setStoreId(order.getStoreID().toString());
+            orderObject.setStoreID(order.getStoreID().toString());
         if(order.getShopperID() != null)
-            orderObject.setShopperId(order.getShopperID().toString());
+            orderObject.setShopperID(order.getShopperID().toString());
         if(order.getCreateDate()!=null)
             orderObject.setCreateDate(order.getCreateDate().toString());
         if(order.getProcessDate() != null)
             orderObject.setProcessDate(order.getProcessDate().toString());
         if(order.getTotalCost() != null)
-            orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+            orderObject.setTotalCost(BigDecimal.valueOf(order.getTotalCost()));
         if(order.getStatus()!=null)
             orderObject.setStatus(order.getStatus().toString());
         if(order.getCartItems()!=null)
@@ -531,11 +531,11 @@ public class PaymentController implements PaymentApi {
             {
                 item.setCartItemNo(UUID.fromString(i.getCartItemNo()));
             }
-            item.setProductID(i.getProductId());
+            item.setProductID(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreID(UUID.fromString(i.getStoreId()));
+            item.setStoreID(UUID.fromString(i.getStoreID()));
             if(i.getPrice() != null)
                 price = i.getPrice().doubleValue();
             item.setPrice(price);
@@ -562,11 +562,11 @@ public class PaymentController implements PaymentApi {
 
         for (ItemObject i: itemObjectList) {
             CartItemObject item = new CartItemObject();
-            item.setProductId(i.getProductId());
+            item.setProductID(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreId(i.getStoreId());
+            item.setStoreID(i.getStoreID());
             item.setPrice(i.getPrice());
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());
@@ -590,11 +590,11 @@ public class PaymentController implements PaymentApi {
             {
                 item.setCartItemNo(i.getCartItemNo().toString());
             }
-            item.setProductId(i.getProductID());
+            item.setProductID(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreId(i.getStoreID().toString());
+            item.setStoreID(i.getStoreID().toString());
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());

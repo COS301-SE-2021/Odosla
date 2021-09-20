@@ -215,13 +215,13 @@ components:
       description: "Generic schema for an item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
