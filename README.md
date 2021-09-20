@@ -9,29 +9,43 @@
 
  <hr>
  
-<h3 align="center">You can watch our latest demo here: <a href="https://drive.google.com/file/d/1hjA8lwxxnqWCcqhJVelS3THr9C8SG152/view">📺demo 3</a></h3>
+<h3 align="center">You can watch our latest demo here: <a href="https://drive.google.com/file/d/1KexQVbhDg1P_RWmrzMhgehKY5F4JFFgG/view?usp=sharing">📺demo 4</a></h3>
 <h4 align="center">or previous demos: </h4>
+ <div align="center"><a href="https://drive.google.com/file/d/1hjA8lwxxnqWCcqhJVelS3THr9C8SG152/view">📺Demo 3</a></div>
 <div align="center"><a href="https://youtu.be/XCzTA11hocs">📺Demo 2</a></div>
 <div align="center"><a href="https://drive.google.com/file/d/1aXYEfV5T6ZS2eNX6-06WfX7_ZoTsxiF_/view">📺Demo 1</a></div>
  
- <h3 align="center"> You can view the latest SRS here: <a href="https://www.overleaf.com/read/pxkfskchnjbv" target="blank">📄SRS Document</a></h3>
+ <h3 align="center"> You can view the latest SRS here: <a href="https://www.overleaf.com/read/tdtpqhvpcxsp" target="blank">📄SRS Document</a></h3>
  <h4 align="center">or previous versions: </h4>
 <div align="center"><a href="https://www.overleaf.com/read/gmnfnhvhddnc" target="blank">📄 version 1</a></div>
 <div align="center"><a href="https://www.overleaf.com/read/pqrmhjwhmbzy" target="blank">📄 version 2</a></div>
+ <div align="center"><a href="https://www.overleaf.com/read/pxkfskchnjbv" target="blank">📄 version 3</a></div>
  
  <h3 align="center"> You can view our latest Architectural Requirements document here:</h3>
-<div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄Architectural Requirements Document</a></div>
+<div align="center"><a href="https://www.overleaf.com/read/wdddkgkfvcnc" target="blank">📄Architectural Requirements Document</a></div>
 <h4 align="center"> or previous versions: </h4>
 <div align="center"><a href="https://www.overleaf.com/read/fjwbscnkpmkj" target="blank">📄 version 1 </a></div>
+ <div align="center"><a href="https://www.overleaf.com/read/kyfsrdyrkqhb" target="blank">📄 version 2 </a></div>
 
-<h3 align="center"> You can view our latest Coding Standards document: <a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄Coding Standards Document</a></h3>
+<h3 align="center"> You can view our latest Coding Standards document: <a href="https://www.overleaf.com/read/mgjkjdrfvxsm" target="blank">📄Coding Standards Document</a></h3>
+<h4 align="center"> or previous versions: </h4>
+<div align="center"><a href="https://www.overleaf.com/read/ryphbnjdrjnh" target="blank">📄 version 1 </a></div>
  
-<h3 align="center"> You can view our latest Installation Guide here: <a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄Our Installation Guide</a></h3>
+<h3 align="center"> You can view our latest Installation Guide here: <a href="https://www.overleaf.com/read/pjfxvqfzvqjz" target="blank">📄Our Installation Guide</a></h3>
+ <h4 align="center"> or previous versions: </h4>
+<div align="center"><a href="https://www.overleaf.com/read/rscpstmggbtr" target="blank">📄 version 1 </a></div>
  
-<h3 align="center"> You can view our latest User Manual here: <a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄Our User Manual</a></h3>
+<h3 align="center"> You can view our latest User Manual here: <a href="https://www.overleaf.com/read/ddjyqqdgzhbh" target="blank">📄Our User Manual</a></h3>
+ <h4 align="center"> or previous versions: </h4>
+<div align="center"><a href="https://www.overleaf.com/read/dyqcwrhvpcwj" target="blank">📄 version 1 </a></div>
+ 
+<h3 align="center"> You can view our latest Testing Policy here: <a href="https://www.overleaf.com/read/dyjfgpqzypyx" target="blank">📄Our Testing Policy</a></h3>
  
 <h3 align="center"> You can view our GitHub Project Board here:</h3>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
+ 
+ <h3 align="center"> You can access our APK for the employee app here: <a href="https://drive.google.com/drive/folders/1FbLj1t7UXooKe-3ylBWhWmjyeyr_pWKf?usp=sharing" target="blank">📄Employee App APK</a></h3>
+ 
 <br>
 
 </div>
