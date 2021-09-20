@@ -2173,7 +2173,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException {
+    public UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, URISyntaxException {
         UpdateShopperShiftResponse response;
         if (request == null){
             throw new InvalidRequestException("UpdateShopperShiftRequest object is null");
@@ -2209,11 +2209,17 @@ public class UserServiceImpl implements UserService{
         }
         else{
 
-            Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeID", request.getStoreID());
-            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity("http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID", parts, GetStoreByUUIDResponse.class);
-            GetStoreByUUIDResponse getStoreByUUIDResponse = getStoreByUUIDResponseEntity.getBody();
-            Store store = getStoreByUUIDResponse.getStore();
+            Map<String, Object> parts = new HashMap<>();
+            parts.put("storeID", request.getStoreID().toString());
+            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetStoreByUUIDResponse.class);
+
+            Store store = null;
+            if(getStoreByUUIDResponseEntity.getBody() != null) {
+                store = getStoreByUUIDResponseEntity.getBody().getStore();
+            }
+
             if (store == null){
                 throw new StoreDoesNotExistException("Store is not saved in database.");
             }
