@@ -103,5 +103,5 @@ components:
         responseMessage:
           type: string
           description: Will contain a descriptive error message if response code is not 200, else will be empty
-        success:
+        isSuccess:
           type: boolean
