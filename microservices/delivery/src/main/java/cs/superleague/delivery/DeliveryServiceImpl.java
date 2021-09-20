@@ -337,6 +337,11 @@ public class DeliveryServiceImpl implements DeliveryService {
         if(request.getCurrentLocation() == null){
             throw new InvalidRequestException("Null parameters.");
         }
+
+        System.out.println(request.getRangeOfDelivery());
+        System.out.println("_REQ_");
+        System.out.println(request.getCurrentLocation().getAddress().toString());
+
         double range = request.getRangeOfDelivery();
         CurrentUser currentUser = new CurrentUser();
 
@@ -349,6 +354,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetDriverByEmailResponse.class);
 
+        System.out.println("_responsex_ " + responseEntity.getBody() + " " + responseEntity.getBody().getDriver().toString());
+
         if(responseEntity == null || !responseEntity.hasBody()
                 || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
             throw new InvalidRequestException("Invalid user.");
@@ -360,6 +367,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         {
             driver.setCurrentAddress(request.getCurrentLocation());
             SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
+
+            System.out.println("_before rab_ " + saveDriverToRepoRequest.getDriver().toString());
 
             rabbitTemplate.convertAndSend("userEXCHANGE", "RK_saveDriverToRepo", saveDriverToRepoRequest);
         }

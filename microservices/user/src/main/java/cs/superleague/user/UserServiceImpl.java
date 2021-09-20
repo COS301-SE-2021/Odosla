@@ -3,6 +3,7 @@ import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.payment.dataclass.*;
+import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
@@ -126,7 +127,9 @@ public class UserServiceImpl implements UserService{
             System.out.println("order id from request: " + request.getOrderID());
 
             Map<String, Object> parts = new HashMap<>();
-            parts.put("orderID", request.getOrderID().toString());
+
+            String strOrderID = request.getOrderID().toString();
+            parts.put("orderID", strOrderID);
             String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
@@ -135,6 +138,9 @@ public class UserServiceImpl implements UserService{
             if(responseEntity.getBody() != null) {
                 orderEntity = responseEntity.getBody().getOrder();
             }
+
+            System.out.println("#BODY " + responseEntity.getBody().toString());
+            System.out.println("#BODY2 " + responseEntity.getBody());
 
             System.out.println("order entity id: " + orderEntity.getOrderID());
             System.out.println("order entity shopper id: "+ orderEntity.getShopperID());
@@ -164,7 +170,10 @@ public class UserServiceImpl implements UserService{
 
             orderEntity.setStatus(OrderStatus.AWAITING_COLLECTION);
 
-            if(orderEntity.getType().equals(OrderType.DELIVERY))
+            SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(orderEntity);
+            rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+
+            if(true) //orderEntity.getType().equals(OrderType.DELIVERY))
             {
 
                 parts = new HashMap<>();
@@ -173,7 +182,11 @@ public class UserServiceImpl implements UserService{
                 parts.put("storeID", orderEntity.getStoreID().toString());
                 parts.put("timeOfDelivery", null);
                 parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
-                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity("http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery", parts, CreateDeliveryResponse.class);
+
+                String strURL = "http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery";
+                URI uri2 = new URI(strURL);
+
+                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
                 CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
             }
 
@@ -2211,7 +2224,7 @@ public class UserServiceImpl implements UserService{
 
             System.out.println("request getStoreID: "+ request.getStoreID());
             Map<String, Object> parts = new HashMap<>();
-            parts.put("storeID", request.getStoreID());
+            parts.put("StoreID", request.getStoreID().toString());
             String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
             System.out.println("String uri path for getStoreBYUUID: "+ stringUri);
             URI uri = new URI(stringUri);

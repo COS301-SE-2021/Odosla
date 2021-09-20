@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 import 'package:odosla/page/login/splash_screen.dart';
 import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/provider/driver_provider.dart';
-import 'package:odosla/provider/recommendations_provider.dart';
 import 'package:odosla/provider/status_provider.dart';
 import 'package:odosla/provider/wallet_provider.dart';
 import 'package:odosla/services/UserService.dart';

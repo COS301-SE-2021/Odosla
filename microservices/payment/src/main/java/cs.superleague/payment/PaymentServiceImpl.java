@@ -179,7 +179,7 @@ public class PaymentServiceImpl implements PaymentService {
             System.out.println("__uri " + uri.toString());
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeID", request.getStoreID());
+            parts.put("StoreID", request.getStoreID().toString());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate
                     .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
@@ -207,7 +207,7 @@ public class PaymentServiceImpl implements PaymentService {
             CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail());
+            parts.put("email", currentUser.getEmail().toString());
 
             stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
             uri = new URI(stringUri);
