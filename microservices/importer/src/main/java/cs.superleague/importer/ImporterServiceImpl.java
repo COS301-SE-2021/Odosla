@@ -71,32 +71,32 @@ public class ImporterServiceImpl implements ImporterService{
                         switch (counter){
                             case 0:
 
-                                Map<String, Object> parts = new HashMap<String, Object>();
-
-                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems";
-                                URI uri = new URI(stringUri);
-
-                                ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
-                                        uri, parts, GetAllItemsResponse.class);
-
-                                if(responseEntity == null || !responseEntity.hasBody()){
-                                    throw new InvalidRequestException("Could not retrieve Items");
-                                }
-
-                                GetAllItemsResponse getAllItemsResponse = responseEntity.getBody();
-                                List<Item> itemList = getAllItemsResponse.getItems();
-
-                                for(int j=0; j< itemList.size(); j++)
-                                {
-                                    if(itemList.get(j)!=null)
-                                    {
-                                        if(itemList.get(j).getProductID().equals(currentWord))
-                                        {
-                                            throw new InvalidRequestException("Item already exists");
-                                        }
-                                    }
-
-                                }
+//                                Map<String, Object> parts = new HashMap<String, Object>();
+//
+//                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems";
+//                                URI uri = new URI(stringUri);
+//
+//                                ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
+//                                        uri, parts, GetAllItemsResponse.class);
+//
+//                                if(responseEntity == null || !responseEntity.hasBody()){
+//                                    throw new InvalidRequestException("Could not retrieve Items");
+//                                }
+//
+//                                GetAllItemsResponse getAllItemsResponse = responseEntity.getBody();
+//                                List<Item> itemList = getAllItemsResponse.getItems();
+//
+//                                for(int j=0; j< itemList.size(); j++)
+//                                {
+//                                    if(itemList.get(j)!=null)
+//                                    {
+//                                        if(itemList.get(j).getProductID().equals(currentWord))
+//                                        {
+//                                            throw new InvalidRequestException("Item already exists");
+//                                        }
+//                                    }
+//
+//                                }
 
                                 item.setProductID(currentWord);
                                 counter++;
