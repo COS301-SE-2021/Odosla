@@ -16,11 +16,11 @@ class Order{
   Order(this.orderID, this.customerID, this.storeID, this.createdDate, this.totalCost, this.items, this.discount);
 
   Order.fromJson(Map<String, dynamic> json)
-      : orderID=json["orderId"],
-        customerID=json["userId"],
-        storeID=json["storeId"],
+      : orderID=json["orderID"],
+        customerID=json["userID"],
+        storeID=json["storeID"],
         createdDate=json["createDate"],
-        totalCost=json["totalPrice"],
+        totalCost=json["totalCost"],
         discount=json["discount"].toString(),
         items=ItemsFromJson(json);
 }

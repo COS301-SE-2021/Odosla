@@ -362,9 +362,8 @@ class UserService{
 
     final data = {
       "onShift":onShift,
-      "storeID":storeID
+      "storeID":"$storeID"
     };
-
     print(data);
 
     final response = await http.post(url, headers: headers, body: jsonEncode(data)).timeout(
@@ -462,18 +461,20 @@ class UserService{
     };
     print(orderID);
     final data = {
-      "orderID":orderID,
+      "orderID":"$orderID",
       "getNext":false,
     };
+
+    print(data);
 
     final response = await http.post(url, headers: headers, body: jsonEncode(data));
 
     if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
       print(responseData);
+
       if (responseData["success"] == true) {
         Provider.of<OrderProvider>(context,listen: false).order=Order("","","","",0.0,List.empty(),"");
-
         return true;
       }
     }

@@ -45,19 +45,35 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () {
-          Order order=Provider.of<OrderProvider>(context,listen: false).order;
-          _userService.completePackagingOrder(order.orderID,context).then((value) =>
-          {
-            if(value==false){
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(
-                  "Could send request")))
-            } else{
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) => ShopperHomeScreen(1)))
+          bool completedOrder=true;
+          for(int i=0;i<completePackagingForItem.length;i++){
+            if(completePackagingForItem[0]==false){
+              completedOrder=false;
             }
           }
-          );
+          if(completedOrder) {
+            Order order = Provider
+                .of<OrderProvider>(context, listen: false)
+                .order;
+            _userService.completePackagingOrder(order.orderID, context).then((
+                value) =>
+            {
+              if(value == false){
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(
+                    "Couldn't send request")))
+              } else
+                {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ShopperHomeScreen(1)))
+                }
+            }
+            );
+          }else{
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(
+                "Please finish packing order first")));
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -79,9 +95,6 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
   }
 
   Widget customMenuItem(var img, var text, var price, var brand, var quantity, var barcode, int currentAmount,int count) {
-    print("CCCCCCCCC");
-    print(count);
-    print(currentAmountPacked[c]);
     setState(() {
       c=c+1;
       if(c==order.items.length){
@@ -103,11 +116,14 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
               }else {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BarcodeScanPage(context, barcodeExpected: barcode)),
+                  MaterialPageRoute(builder: (context) => BarcodeScanPage(context, barcodeExpected: barcode,productImageURL: img,productName: text,brand: brand,)),
                 ).then((value) => {
                   if(value==true){
                     setState(() {
                       currentAmountPacked[count]=currentAmountPacked[count]+1;
+                      if(currentAmountPacked[count]==quantity){
+                        completePackagingForItem[count]=true;
+                      }
                     }),
                   }
                 });
@@ -243,10 +259,16 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
   @override
   Widget build(BuildContext context) {
     order=Provider.of<OrderProvider>(context).order;
+    print(order.orderID);
     print(order);
-    if(currentAmountPacked==0) {
+    if(currentAmountPacked.length==0) {
       for (int i = 0; i < order.items.length; i++) {
         currentAmountPacked.add(0);
+      }
+    }
+    if(completePackagingForItem.length==0) {
+      for (int i = 0; i < order.items.length; i++) {
+        completePackagingForItem.add(false);
       }
     }
       return Scaffold(

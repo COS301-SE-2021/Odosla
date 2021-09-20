@@ -69,13 +69,13 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
       );
     }
 
-    if(_onShift==true){
-      if(Provider.of<ShopProvider>(context,listen: false).store.imageUrl==""){
-        if(Provider.of<ShopProvider>(context,listen: false).store.id!=""){
-          _shoppingService.getStoreByID(context, Provider.of<ShopProvider>(context,listen: false).store.id);
-        }
-      }
-    }
+    // if(_onShift==true){
+    //   if(Provider.of<ShopProvider>(context,listen: false).store.imageUrl==""){
+    //     if(Provider.of<ShopProvider>(context,listen: false).store.id!=""){
+    //       _shoppingService.getStoreByID(context, Provider.of<ShopProvider>(context,listen: false).store.id);
+    //     }
+    //   }
+    // }
   }
 
   Widget _completePackingBTN()  {

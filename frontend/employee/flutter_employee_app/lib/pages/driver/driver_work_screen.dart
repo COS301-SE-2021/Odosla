@@ -197,7 +197,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _onShift=true;
     ScreenUtil.init(
         BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width,
@@ -729,27 +728,27 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
               ]
               ),
               SizedBox(height:13),
-              _isDelivery&&(_collectedFromStore==false)?RaisedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (BuildContext context) => DriverHomeScreen(0) //ProductPage(product: product),
-                ));
-              },
-                  padding: EdgeInsets.all(15.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  color: Theme.of(context).backgroundColor,
-                  elevation: 5.0,
-                  child:Text("Cancel delivery",
-                    style: TextStyle(
-                      color: Color(0xFFE9884A),
-                      letterSpacing: 1.5,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'OpenSans',
-                    ),
-                  )
-              ):Container()
+              // _isDelivery&&(_collectedFromStore==false)?RaisedButton(onPressed: (){
+              //   Navigator.of(context).push(MaterialPageRoute(
+              //       builder: (BuildContext context) => DriverHomeScreen(0) //ProductPage(product: product),
+              //   ));
+              // },
+              //     padding: EdgeInsets.all(15.0),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30.0),
+              //     ),
+              //     color: Theme.of(context).backgroundColor,
+              //     elevation: 5.0,
+              //     child:Text("Cancel delivery",
+              //       style: TextStyle(
+              //         color: Color(0xFFE9884A),
+              //         letterSpacing: 1.5,
+              //         fontSize: 14.0,
+              //         fontWeight: FontWeight.w600,
+              //         fontFamily: 'OpenSans',
+              //       ),
+              //     )
+              // ):Container()
             ],
           ),
         ),

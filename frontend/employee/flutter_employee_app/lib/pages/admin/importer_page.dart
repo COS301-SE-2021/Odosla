@@ -205,6 +205,7 @@ class _ImporterScreenState extends State<ImporterScreen> {
     final csvFile = picked.openRead();
     List<List<dynamic>> data=await csvFile.transform(utf8.decoder).transform(CsvToListConverter(eol: '\n')).toList();
     String res = const ListToCsvConverter(eol: '\n', fieldDelimiter: ";").convert(data);
+    print(res);
     return res;
   }
 

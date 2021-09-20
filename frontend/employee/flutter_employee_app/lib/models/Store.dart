@@ -24,7 +24,7 @@ class Store {
         open = json['isOpen'],
         openTime = json['openingTime'],
         closeTime = json['closingTime'],
-        imageUrl = json["imageUrl"],
+        imageUrl = json["imgUrl"],
         storeLocationLatitude = json["storeLocation"]["latitude"].toString(),
         storeLocationLongitude = json["storeLocation"]["longitude"].toString(),
         address=json["storeLocation"]["address"];

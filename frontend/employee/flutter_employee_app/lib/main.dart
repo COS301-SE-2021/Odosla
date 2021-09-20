@@ -43,7 +43,7 @@ var routes = <String, WidgetBuilder>{
   "/activateShopperAccount":(BuildContext context) =>ActivateShopperAccountScreen(),
   "/shopperHomePage":(BuildContext context) =>ShopperHomeScreen(1),
   "/driverHomePage":(BuildContext context) =>DriverHomeScreen(1),
-  "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(context,barcodeExpected: '',),
+  "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(context,barcodeExpected: '', brand: '', productName: '', productImageURL: '',),
   "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(context,store: Store("", "", 0, 0, true,"","","","")),
   "/adminHomePage":(BuildContext context)=>AdminHomeScreen(1),
 };
@@ -89,7 +89,7 @@ class OdoslaApp extends StatelessWidget  {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeProvider.of(context),
-            home:DriverHomeScreen(1),
+            home:SplashScreen(),
             routes: routes,
           );
         },

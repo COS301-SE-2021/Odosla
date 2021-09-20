@@ -68,15 +68,19 @@ class ShoppingService {
     };
 
     final data = {
-      "storeID":storeID,
+      "storeID":"$storeID",
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    print("CURRENT ORDER");
     print(response.body);
-    if (response.statusCode==200) {
 
+    if (response.statusCode==200) {
       Map<String,dynamic> responseData = json.decode(response.body);
-      if (responseData["success"] == true) {
+      print(responseData["newCurrentOrder"]);
+      print(responseData["message"]);
+      if (responseData["message"] != "") {
+        print(responseData["newCurrentOrder"]);
         Order order= Order.fromJson(responseData["newCurrentOrder"]);
         Provider.of<OrderProvider>(context,listen: false).order=order;
         return order;
@@ -108,7 +112,7 @@ class ShoppingService {
 
     print(storeID);
     final data = {
-      "storeID":storeID
+      "storeID":"$storeID"
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
@@ -148,7 +152,7 @@ class ShoppingService {
 
     print(storeID);
     final data = {
-      "storeID":storeID
+      "storeID":"$storeID"
     };
 
     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));

@@ -78,7 +78,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<DeliveryProvider>(context, listen: false).delivery=Delivery("123",GeoPoint(-25.754618,28.233255,"f"),GeoPoint(-25.188660,28.142833,"G"),"","","","","DeliveringToCustomer",40,false);
     return Scaffold(
       body: buildPageView(),
       bottomNavigationBar: CurvedNavigationBar(

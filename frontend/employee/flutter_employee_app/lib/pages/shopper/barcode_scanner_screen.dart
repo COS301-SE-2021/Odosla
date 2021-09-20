@@ -3,78 +3,111 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-// class BarcodeScanPage extends StatefulWidget {
-//
-//   final String barcodeExpected;
-//   const BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected}) : super(key: key);
-//   @override
-//   _BarcodeScanPageState createState() => _BarcodeScanPageState();
-// }
-
 class BarcodeScanPage extends StatelessWidget {
   String barcode = 'Unknown barcode';
   bool _correctBarcode=false;
   final String barcodeExpected;
-  BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected}) : super(key: key);
+  final String productImageURL;
+  final String productName;
+  final String brand;
+  BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected, required this.productImageURL, required this.productName, required this.brand}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
       title: Text("Barcode scanner"),
     ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    body: Container(
+      height: MediaQuery.of(context).size.height,
+      alignment: Alignment.center,
+      child: ListView(
         children: <Widget>[
-          Text(
-            'Scan Result',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.white54,
-              fontWeight: FontWeight.bold,
+          Center(
+            child: Container(
+              height:MediaQuery.of(context).size.height*0.22,
+              child:Image(
+                fit: BoxFit.fill,
+                image: AssetImage("assets/"+productImageURL),
+              ),
             ),
           ),
-          SizedBox(height: 8),
-          Text(
-            _correctBarcode==false?"Barcode expected: "+barcodeExpected:"Correct barcode scanned",
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 72),
-          ButtonWidget(
-            text: 'Start Barcode scan',
-            onClicked: () async {
-              await scanBarcode(context);},
-          ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          height: 60.0,
-          width: MediaQuery.of(context).size.width*0.7,
-          color: Colors.deepOrangeAccent,
-          child: TextField(
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            onChanged: (value) =>
-            {
-              barcode=value,
-              if(value==barcodeExpected){
-                Navigator.pop(context, true)
-              }
-            },
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              hintText: 'Product ID',
+          Container(
+            height: MediaQuery.of(context).size.height*0.07,
+            child: Column(
+              children: [
+                Text(
+                  productName,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  brand,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
+          SizedBox(height: 10,),
+          Container(
+            height: MediaQuery.of(context).size.height*0.09,
+            color: Colors.deepOrangeAccent,
+            alignment: Alignment.center,
+            child: Text(
+              _correctBarcode==false?"Barcode expected: "+barcodeExpected:"Correct barcode scanned",
+              style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(height: 40,),
+          Center(
+            child: ButtonWidget(
+              text: 'Start Barcode scan',
+              onClicked: () async {
+                await scanBarcode(context);},
+            ),
+          ),
+          SizedBox(height: 10,),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                border:Border.all(
+                    color: Colors.deepOrangeAccent
+                ),
+              ),
+              alignment: Alignment.topCenter,
+              width: MediaQuery.of(context).size.width*0.7,
+              child: TextField(
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(
+                    fontFamily: 'OpenSans',
+                    fontSize: 25
+                ),
+                onChanged: (value) =>
+                {
+                  barcode=value,
+                  if(value==barcodeExpected){
+                    Navigator.pop(context, true)
+                  }
+                },
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top: 14.0),
+                  hintText: 'Product ID',
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     ),
@@ -120,7 +153,7 @@ class ButtonWidget extends StatelessWidget{
     ),
     shape: StadiumBorder(),
     color: Theme.of(context).primaryColor,
-    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 3),
     onPressed: onClicked,
   );
 }

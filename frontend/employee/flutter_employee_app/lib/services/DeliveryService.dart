@@ -86,7 +86,7 @@ class DeliveryService{
      };
 
      final data = {
-       "deliveryID":deliveryID,
+       "deliveryID":"$deliveryID",
      };
 
      final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
@@ -130,7 +130,7 @@ class DeliveryService{
          .delivery.deliveryID;
      final data = {
        "status":status,
-       "deliveryID":deliveryID,
+       "deliveryID":"$deliveryID",
        "detail":"Driver is on way to collect delivery from store"
      };
 
@@ -176,7 +176,7 @@ class DeliveryService{
      };
 
      final data = {
-       "userID":customerID
+       "userID":"$customerID"
      };
 
      final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
