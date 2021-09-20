@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Description;
 import cs.superleague.shopping.dataclass.Catalogue;
@@ -59,6 +60,9 @@ public class GetNextQueuedUnitTest {
 
     @Mock
     private RestTemplate restTemplate;
+
+    @Mock
+    private RabbitTemplate rabbitTemplate;
 
     @InjectMocks
     private ShoppingServiceImpl shoppingService;
@@ -198,25 +202,11 @@ public class GetNextQueuedUnitTest {
 
         List<Order> orderQueue= s.getOrderQueue();
 
-        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByEmail";
         URI uri = new URI(stringUri);
 
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("orderID", orderQueue.get(1).getOrderID().toString());
-
-        GetOrderResponse getOrderResponse = new GetOrderResponse(o, true, new Date(),
-                "Order successfully retrieved");
-
-        ResponseEntity<GetOrderResponse> responseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
-
-        Mockito.when(restTemplate.postForEntity(uri, parts, GetOrderResponse.class)).thenReturn(responseEntity);
-
-        parts = new HashMap<>();
         parts.put("email", shopper.getEmail());
-
-        stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByEmail";
-        uri = new URI(stringUri);
-
 
         GetShopperByEmailResponse getShopperByEmailResponse = new GetShopperByEmailResponse(shopper, true);
 
@@ -225,12 +215,6 @@ public class GetNextQueuedUnitTest {
 
         Mockito.when(restTemplate.postForEntity(uri, parts, GetShopperByEmailResponse.class))
                 .thenReturn(getShopperByEmailResponseResponseEntity);
-
-        CurrentUser currentUser = new CurrentUser();
-
-        currentUser.setEmail(shopper.getEmail());
-
-        Mockito.when(new CurrentUser()).thenReturn(currentUser);
 
         GetNextQueuedResponse response=shoppingService.getNextQueued(request);
         listOfOrders.remove(o2);

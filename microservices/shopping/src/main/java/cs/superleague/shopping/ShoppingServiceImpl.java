@@ -46,18 +46,19 @@ public class ShoppingServiceImpl implements ShoppingService {
     private final ItemRepo itemRepo;
     private final CatalogueRepo catalogueRepo;
 
-    @Autowired
     private RabbitTemplate rabbit;
 
     private final RestTemplate restTemplate;
 
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate, CatalogueRepo catalogueRepo) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate,
+                               CatalogueRepo catalogueRepo, RabbitTemplate rabbit) {
         this.storeRepo= storeRepo;
         this.itemRepo=itemRepo;
         this.restTemplate = restTemplate;
         this.catalogueRepo = catalogueRepo;
+        this.rabbit = rabbit;
     }
     /**
      *
@@ -791,6 +792,11 @@ public class ShoppingServiceImpl implements ShoppingService {
             parts.put("userID", request.getShopperID().toString());
             ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
 
+            if(getShopperByUUIDResponseEntity.getBody() == null || !getShopperByUUIDResponseEntity.hasBody()
+            || getShopperByUUIDResponseEntity.getBody() == null || getShopperByUUIDResponseEntity.getBody().equals(null)){
+                throw  new cs.superleague.user.exceptions.InvalidRequestException("User does not exist in database");
+            }
+
             GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
             Boolean notPresent = true;
@@ -919,6 +925,11 @@ public class ShoppingServiceImpl implements ShoppingService {
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("userID", request.getShopperID().toString());
                 ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://"+userHost+":"+userPort+"/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+
+                if(getShopperByUUIDResponseEntity.getBody() == null || !getShopperByUUIDResponseEntity.hasBody()
+                        || getShopperByUUIDResponseEntity.getBody() == null || getShopperByUUIDResponseEntity.getBody().equals(null)){
+                    throw  new cs.superleague.user.exceptions.InvalidRequestException("User does not exist in database");
+                }
 
                 GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 

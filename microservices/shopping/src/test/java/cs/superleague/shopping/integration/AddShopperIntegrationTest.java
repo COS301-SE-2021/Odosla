@@ -1,28 +1,23 @@
 //package cs.superleague.shopping.integration;
 //
-//import cs.superleague.integration.ServiceSelector;
 //import cs.superleague.shopping.ShoppingServiceImpl;
 //import cs.superleague.shopping.dataclass.Store;
 //import cs.superleague.shopping.exceptions.InvalidRequestException;
 //import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
-//import cs.superleague.shopping.repos.CatalogueRepo;
-//import cs.superleague.shopping.repos.ItemRepo;
 //import cs.superleague.shopping.repos.StoreRepo;
 //import cs.superleague.shopping.requests.AddShopperRequest;
 //import cs.superleague.shopping.responses.AddShopperResponse;
-//import cs.superleague.user.UserServiceImpl;
 //import cs.superleague.user.dataclass.Shopper;
 //import cs.superleague.user.exceptions.ShopperDoesNotExistException;
-//import cs.superleague.user.exceptions.UserDoesNotExistException;
 //import cs.superleague.user.exceptions.UserException;
-//import cs.superleague.user.repos.ShopperRepo;
-//import cs.superleague.user.responses.GetShopperByUUIDResponse;
+//import cs.superleague.user.requests.SaveShopperToRepoRequest;
 //import org.junit.jupiter.api.*;
-//import org.mockito.Mockito;
+//import org.springframework.amqp.rabbit.core.RabbitTemplate;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.context.annotation.Description;
 //import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.web.client.RestTemplate;
 //
 //import java.util.ArrayList;
 //import java.util.List;
@@ -30,7 +25,6 @@
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import static org.junit.jupiter.api.Assertions.assertNotNull;
-//import static org.mockito.Mockito.when;
 //
 //@SpringBootTest
 //@Transactional
@@ -39,16 +33,14 @@
 //    @Autowired
 //    ShoppingServiceImpl shoppingService;
 //
-//    //OPTIONAL SERVICES
-//    @Autowired
-//    UserServiceImpl userService;
-//
 //    @Autowired
 //    StoreRepo storeRepo;
 //
 //    @Autowired
-//    ShopperRepo shopperRepo;
+//    RestTemplate restTemplate;
 //
+//    @Autowired
+//    RabbitTemplate rabbit;
 //
 //    UUID storeUUID1= UUID.randomUUID();
 //    Store store;
@@ -72,8 +64,11 @@
 //        shopper2.setShopperID(shopperID3);
 //        shopperList.add(shopper1);
 //        shopperList.add(shopper2);
-//        shopperRepo.save(shopper1);
-//        shopperRepo.save(shopper2);
+//
+//        SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(shopper1);
+//        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
+//        saveShopperToRepoRequest = new SaveShopperToRepoRequest(shopper2);
+//        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
 //    }
 //
 //    @AfterEach
@@ -85,7 +80,7 @@
 //    @Description("Tests for when addShoppers is submited with a null request object- exception should be thrown")
 //    @DisplayName("When request object is not specificed")
 //    void IntegrationTest_testingNullRequestObject(){
-//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getShoppingService().addShopper(null));
+//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(null));
 //        assertEquals("Request object can't be null for addShopper", thrown.getMessage());
 //    }
 //
@@ -94,7 +89,7 @@
 //    @DisplayName("When request object has null parameter")
 //    void IntegrationTest_StoreID_inRequest_NullRequestObject(){
 //        AddShopperRequest request=new AddShopperRequest(shopperID,null);
-//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
+//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(request));
 //        assertEquals("Store ID in request object for add shopper is null", thrown.getMessage());
 //    }
 //    @Test
@@ -102,7 +97,7 @@
 //    @DisplayName("When request object has null parameter")
 //    void IntegrationTest_ShopperID_inRequest_NullRequestObject(){
 //        AddShopperRequest request=new AddShopperRequest(null,storeID);
-//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
+//        Throwable thrown = Assertions.assertThrows(InvalidRequestException.class, ()-> shoppingService.addShopper(request));
 //        assertEquals("Shopper ID in request object for add shopper is null", thrown.getMessage());
 //    }
 //
@@ -121,7 +116,7 @@
 //    @DisplayName("When Store with ID doesn't exist")
 //    void IntegrationTest_Store_doesnt_exist(){
 //        AddShopperRequest request=new AddShopperRequest(shopperID,storeID);
-//        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
+//        Throwable thrown = Assertions.assertThrows(StoreDoesNotExistException.class, ()-> shoppingService.addShopper(request));
 //        assertEquals("Store with ID does not exist in repository - could not add Shopper", thrown.getMessage());
 //    }
 //
@@ -133,7 +128,7 @@
 //        store.setShoppers(shopperList);
 //        AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
 //        storeRepo.save(store);
-//        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> ServiceSelector.getShoppingService().addShopper(request));
+//        Throwable thrown = Assertions.assertThrows(ShopperDoesNotExistException.class, ()-> shoppingService.addShopper(request));
 //        assertEquals("User with ID does not exist in repository - could not get Shopper entity",thrown.getMessage());
 //    }
 //
@@ -146,7 +141,7 @@
 //        store.setShoppers(shopperList);
 //        AddShopperRequest request=new AddShopperRequest(shopper1.getShopperID(),storeUUID1);
 //        storeRepo.save(store);
-//        AddShopperResponse response=ServiceSelector.getShoppingService().addShopper(request);
+//        AddShopperResponse response= shoppingService.addShopper(request);
 //        assertNotNull(response);
 //        assertEquals(false,response.isSuccess());
 //        assertEquals("Shopper already is in listOfShoppers",response.getMessage());
@@ -160,9 +155,10 @@
 //        store.setShoppers(shopperList);
 //        AddShopperRequest request=new AddShopperRequest(shopperID,storeUUID1);
 //        storeRepo.save(store);
-//        shopperRepo.save(shopper);
+//        SaveShopperToRepoRequest saveShopperToRepoRequest = new SaveShopperToRepoRequest(shopper);
+//        rabbit.convertAndSend("UserEXCHANGE", "RK_SaveShopperToRepo", saveShopperToRepoRequest);
 //        int size=shopperList.size();
-//        AddShopperResponse response=ServiceSelector.getShoppingService().addShopper(request);
+//        AddShopperResponse response = shoppingService.addShopper(request);
 //        assertNotNull(response);
 //        assertEquals(true,response.isSuccess());
 //        assertEquals("Shopper was successfully added",response.getMessage());
