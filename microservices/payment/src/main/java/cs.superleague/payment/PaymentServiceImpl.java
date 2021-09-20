@@ -113,6 +113,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException {
 
+        System.out.println("submit order store id: "+ request.getStoreID());
         System.out.println("__1");
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
@@ -663,6 +664,7 @@ import java.util.List;50"
         String message;
         Order order;
 
+        System.out.println("get status request order id: "+ request.getOrderID());
         if(request == null){
             throw new InvalidRequestException("Invalid getStatusRequest received - could not get status.");
         }

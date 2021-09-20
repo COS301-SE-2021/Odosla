@@ -245,6 +245,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
 
+            System.out.println("## storeid request" + request.getStoreID().toString());
             Store store;
 
             try {
@@ -1268,6 +1269,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         if(request!=null){
 
+            System.out.println("get queue request store id"+ request.getStoreID());
             if(request.getStoreID()==null){
                 throw new InvalidRequestException("Store ID parameter in request can't be null - can't get queue of orders");
             }

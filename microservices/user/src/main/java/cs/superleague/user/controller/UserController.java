@@ -540,6 +540,12 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetCustomerByEmailRequest request = new GetCustomerByEmailRequest(body.getEmail());
 
             GetCustomerByEmailResponse response = userService.getCustomerByEmail(request);
@@ -822,6 +828,8 @@ public class UserController implements UserApi {
 
         UserCompletePackagingOrderResponse userCompletePackagingOrderResponse = new UserCompletePackagingOrderResponse();
         HttpStatus status = HttpStatus.OK;
+
+        System.out.println("complete packing controller order id"+ body.getOrderID());
 
         try{
 

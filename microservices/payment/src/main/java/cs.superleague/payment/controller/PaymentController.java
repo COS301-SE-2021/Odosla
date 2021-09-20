@@ -119,8 +119,14 @@ public class PaymentController implements PaymentApi {
 
         PaymentGetStatusResponse response = new PaymentGetStatusResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-
+        System.out.println("controller getStatus order id: "+ body.getOrderID());
         try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetStatusRequest getStatusRequest = new GetStatusRequest(UUID.fromString(body.getOrderID()));
             GetStatusResponse getStatusResponse = paymentService.getStatus(getStatusRequest);
             try {

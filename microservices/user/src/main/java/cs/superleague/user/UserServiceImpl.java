@@ -2209,9 +2209,11 @@ public class UserServiceImpl implements UserService{
         }
         else{
 
+            System.out.println("request getStoreID: "+ request.getStoreID());
             Map<String, Object> parts = new HashMap<>();
-            parts.put("storeID", request.getStoreID().toString());
+            parts.put("storeID", request.getStoreID());
             String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+            System.out.println("String uri path for getStoreBYUUID: "+ stringUri);
             URI uri = new URI(stringUri);
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetStoreByUUIDResponse.class);
 
@@ -2219,6 +2221,8 @@ public class UserServiceImpl implements UserService{
             if(getStoreByUUIDResponseEntity.getBody() != null) {
                 store = getStoreByUUIDResponseEntity.getBody().getStore();
             }
+
+            System.out.println("Store id from getStoreNByUUID: "+ store.getStoreID());
 
             if (store == null){
                 throw new StoreDoesNotExistException("Store is not saved in database.");
