@@ -152,7 +152,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            GetShoppingCartRequest request = new GetShoppingCartRequest(body.getCustomerID());
+            GetShoppingCartRequest request = new GetShoppingCartRequest(body.getUserID());
 
             GetShoppingCartResponse response = userService.getShoppingCart(request);
             try{
@@ -186,8 +186,8 @@ public class UserController implements UserApi {
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
             currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setProductID(responseItems.get(i).getProductID());
+            currentItem.setStoreID(responseItems.get(i).getStoreID().toString());
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
@@ -287,7 +287,7 @@ public class UserController implements UserApi {
                 response.setMessage(loginResponse.getMessage());
                 response.setToken(loginResponse.getToken());
                 response.setSuccess(loginResponse.isSuccess());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(loginResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(loginResponse.getTimestamp()));
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -311,7 +311,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(driverResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(driverResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(driverResponse.getTimestamp()));
                 response.setSuccess(driverResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -334,7 +334,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(customerResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(customerResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(customerResponse.getTimestamp()));
                 response.setSuccess(customerResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -357,7 +357,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(adminResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(adminResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(adminResponse.getTimestamp()));
                 response.setSuccess(adminResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -380,7 +380,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(shopperResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(shopperResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(shopperResponse.getTimestamp()));
                 response.setSuccess(shopperResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -413,7 +413,7 @@ public class UserController implements UserApi {
 
             AccountVerifyResponse userResponse = userService.verifyAccount(request);
             try{
-                response.setDate(userResponse.getTimestamp().toString());
+                response.setTimestamp(userResponse.getTimestamp().toString());
                 response.setMessage(userResponse.getMessage());
                 response.setSuccess(userResponse.isSuccess());
                 response.setUserType(body.getUserType());
@@ -440,7 +440,7 @@ public class UserController implements UserApi {
 
             SetCurrentLocationResponse response = userService.setCurrentLocation(request);
             try{
-                setCurrentLocationResponse.setDate(response.getTimestamp().toString());
+                setCurrentLocationResponse.setTimestamp(response.getTimestamp().toString());
                 setCurrentLocationResponse.setMessage(response.getMessage());
                 setCurrentLocationResponse.setSuccess(response.isSuccess());
 
@@ -495,7 +495,7 @@ public class UserController implements UserApi {
 
             GetCurrentUserResponse response = userService.getCurrentUser(request);
             try{
-                userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
+                userGetCurrentUserResponse.setTimestamp(response.getTimestamp().toString());
                 userGetCurrentUserResponse.setMessage(response.getMessage());
                 userGetCurrentUserResponse.setSuccess(response.isSuccess());
                 if (response.getUser().getAccountType() == UserType.CUSTOMER){
@@ -802,7 +802,7 @@ public class UserController implements UserApi {
 
             ScanItemResponse response = userService.scanItem(request);
             try{
-                userScanItemResponse.setDate(response.getTimestamp().toString());
+                userScanItemResponse.setTimestamp(response.getTimestamp().toString());
                 userScanItemResponse.setMessage(response.getMessage());
                 userScanItemResponse.setSuccess(response.isSuccess());
 
@@ -835,7 +835,7 @@ public class UserController implements UserApi {
 
             CompletePackagingOrderResponse response = userService.completePackagingOrder(request);
             try{
-                userCompletePackagingOrderResponse.setDate(response.getTimestamp().toString());
+                userCompletePackagingOrderResponse.setTimestamp(response.getTimestamp().toString());
                 userCompletePackagingOrderResponse.setMessage(response.getMessage());
                 userCompletePackagingOrderResponse.setSuccess(response.isSuccess());
 
