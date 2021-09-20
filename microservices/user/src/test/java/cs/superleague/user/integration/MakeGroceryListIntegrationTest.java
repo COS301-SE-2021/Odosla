@@ -1,13 +1,9 @@
 //package cs.superleague.user.integration;
 //
 //import cs.superleague.integration.security.JwtUtil;
-//import cs.superleague.shopping.ShoppingService;
 //import cs.superleague.shopping.dataclass.Catalogue;
 //import cs.superleague.shopping.dataclass.Item;
 //import cs.superleague.shopping.dataclass.Store;
-//import cs.superleague.shopping.repos.CatalogueRepo;
-//import cs.superleague.shopping.repos.ItemRepo;
-//import cs.superleague.shopping.repos.StoreRepo;
 //import cs.superleague.user.UserServiceImpl;
 //import cs.superleague.user.dataclass.Customer;
 //import cs.superleague.user.dataclass.GroceryList;
@@ -49,19 +45,7 @@
 //    GroceryListRepo groceryListRepo;
 //
 //    @Autowired
-//    ItemRepo itemRepo;
-//
-//    @Autowired
 //    ShopperRepo shopperRepo;
-//
-//    @Autowired
-//    CatalogueRepo catalogueRepo;
-//
-//    @Autowired
-//    StoreRepo storeRepo;
-//
-//    @Autowired
-//    private ShoppingService shoppingService;
 //
 //    @Autowired
 //    private UserServiceImpl userService;

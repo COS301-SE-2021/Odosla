@@ -3,6 +3,7 @@ package cs.superleague.user;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.exceptions.InvalidRequestException;
@@ -94,11 +95,11 @@ public class CompleteDeliveryUnitTest {
         //Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(null);
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("orderID", request.getOrderID());
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         URI uri = new URI(uriString);
-        GetOrderResponse getOrderResponse = new GetOrderResponse(null, true, new Date(), "");
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
-        Mockito.when(restTemplate.postForEntity(uri, parts, GetOrderResponse.class)).thenReturn(useCaseResponseEntity);
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(null, new Date(), "");
+        ResponseEntity<GetOrderByUUIDResponse> useCaseResponseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        Mockito.when(restTemplate.postForEntity(uri, parts, GetOrderByUUIDResponse.class)).thenReturn(useCaseResponseEntity);
 
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completeDelivery(request));
         assertEquals("Order does not exist in database", thrown.getMessage());
@@ -112,11 +113,11 @@ public class CompleteDeliveryUnitTest {
         //Mockito.when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(order));
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("orderID", request.getOrderID());
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
+        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
         URI uri = new URI(uriString);
-        GetOrderResponse getOrderResponse = new GetOrderResponse(order, true, new Date(), "");
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
-        Mockito.when(restTemplate.postForEntity(uri, parts, GetOrderResponse.class)).thenReturn(useCaseResponseEntity);
+        GetOrderByUUIDResponse getOrderResponse = new GetOrderByUUIDResponse(order, new Date(), "");
+        ResponseEntity<GetOrderByUUIDResponse> useCaseResponseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
+        Mockito.when(restTemplate.postForEntity(uri, parts, GetOrderByUUIDResponse.class)).thenReturn(useCaseResponseEntity);
 
         response=userService.completeDelivery(request);
         assertNotNull(response);

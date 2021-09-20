@@ -20,6 +20,7 @@ cs\superleague\notifications\NotificationService.class
 cs\superleague\user\dataclass\User.class
 cs\superleague\NotificationApp.class
 cs\superleague\notifications\rabbit\RabbitMQConfig.class
+cs\superleague\notifications\NotificationServiceImpl.class
 cs\superleague\notifications\responses\SendDirectEmailNotificationResponse.class
 cs\superleague\user\responses\GetCustomerByUUIDResponse.class
 cs\superleague\notifications\exceptions\InvalidRequestException.class
@@ -32,6 +33,7 @@ cs\superleague\user\dataclass\Wallet.class
 cs\superleague\notifications\exceptions\NotificationException.class
 cs\superleague\models\NotificationSendEmailNotificationResponse.class
 cs\superleague\notifications\rest\RestConfig.class
+cs\superleague\notifications\controller\NotificationController.class
 cs\superleague\user\dataclass\UserType.class
 cs\superleague\user\dataclass\Customer.class
 cs\superleague\integration\security\CurrentUser.class

@@ -6,6 +6,7 @@ import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.user.exceptions.InvalidRequestException;
@@ -119,48 +120,21 @@ public class CompletePackingOrderUnitTest {
     @Test
     @Description("Test for when Order with orderID does not exist in database - OrderDoesNotExist Exception should be thrown")
     @DisplayName("When Order with ID doesn't exist")
-    void UnitTest_Order_doesnt_exist(){
+    void UnitTest_Order_doesnt_exist() throws URISyntaxException {
 
         CompletePackagingOrderRequest request=new CompletePackagingOrderRequest(UUID.randomUUID(), true);
         //when(orderRepo.findById(Mockito.any())).thenReturn(null);
+        Map<String, Object> parts = new HashMap<>();
+        parts.put("orderID", request.getOrderID().toString());
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        URI uri = new URI(stringUri);
+        GetOrderByUUIDResponse getOrderByUUIDResponse = new GetOrderByUUIDResponse(null, new Date(), "");
+        ResponseEntity<GetOrderByUUIDResponse> responseEntity = new ResponseEntity<>(getOrderByUUIDResponse, HttpStatus.OK);
+        when(restTemplate.postForEntity(uri, parts, GetOrderByUUIDResponse.class)).thenReturn(responseEntity);
         Throwable thrown = Assertions.assertThrows(OrderDoesNotExist.class, ()-> userService.completePackagingOrder(request));
         assertEquals("Order with ID does not exist in repository - could not get Order entity", thrown.getMessage());
     }
 
-    @Test
-    @Description("Test for when order does exist")
-    @DisplayName("When Order with ID does exist")
-    void UnitTest_Order_does_exist() throws OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, cs.superleague.delivery.exceptions.InvalidRequestException, URISyntaxException {
-
-        CompletePackagingOrderRequest request= new CompletePackagingOrderRequest(expectedShopper1, true);
-        //when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(o));
-        Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("orderID", request.getOrderID());
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-        URI uri = new URI(uriString);
-        GetOrderResponse getOrderResponse = new GetOrderResponse(o, true, new Date(), "");
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
-        Mockito.when(restTemplate.postForEntity(uri, parts, GetOrderResponse.class)).thenReturn(useCaseResponseEntity);
-
-        when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
-        parts = new HashMap<String, Object>();
-
-        parts.put("orderID", o.getOrderID());
-        parts.put("customerID", o.getUserID());
-        parts.put("storeID", o.getStoreID());
-        parts.put("timeOfDelivery", null);
-        parts.put("placeOfDelivery", o.getDeliveryAddress());
-        uriString = "http://"+deliveryHost+":"+deliveryPort+"/delivery/createDelivery";
-        uri = new URI(uriString);
-        CreateDeliveryResponse createDeliveryResponse = new CreateDeliveryResponse(true, "", UUID.randomUUID());
-        ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity1 = new ResponseEntity<>(createDeliveryResponse, HttpStatus.OK);
-        Mockito.when(restTemplate.postForEntity(uri, parts, CreateDeliveryResponse.class)).thenReturn(useCaseResponseEntity1);
-
-        CompletePackagingOrderResponse response= userService.completePackagingOrder(request);
-        assertNotNull(response);
-        assertEquals(true,response.isSuccess());
-        assertEquals("Order entity with corresponding ID is ready for collection",response.getMessage());
-    }
 
 
 }

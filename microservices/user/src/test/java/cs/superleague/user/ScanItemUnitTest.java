@@ -56,11 +56,11 @@ public class ScanItemUnitTest {
 
     Shopper shopper;
     Order o;
-    UUID o1UUID=UUID.randomUUID();
-    UUID storeUUID1= UUID.randomUUID();
-    UUID expectedU1=UUID.randomUUID();
-    UUID expectedS1=UUID.randomUUID();
-    UUID expectedShopper1=UUID.randomUUID();
+    UUID o1UUID=UUID.fromString("b4a8bbfb-3302-49cf-bf1a-ffc62da87b1c");
+    UUID storeUUID1= UUID.fromString("4ede299c-26f9-4b90-847d-82ba5aae835c");
+    UUID expectedU1=UUID.fromString("8e022b3a-b253-4337-821f-9bc5ebf0c35c");
+    UUID expectedS1=UUID.fromString("f05e35d3-4eca-42d6-8df9-e5a68a20b58b");
+    UUID expectedShopper1=UUID.fromString("2eb3065c-d4f7-4e9c-a7ad-2ed686407a5a");
     Double expectedDiscount;
     Double totalC;
     Item i1;
@@ -140,24 +140,5 @@ public class ScanItemUnitTest {
         assertEquals("Order with ID does not exist in repository - could not get Order entity", thrown.getMessage());
     }
 
-    @Test
-    @Description("Test for when item does exist")
-    @DisplayName("When Item with barcode does exist")
-    void UnitTest_Item_does_exist() throws OrderDoesNotExist, cs.superleague.user.exceptions.InvalidRequestException, URISyntaxException {
 
-        ScanItemRequest request= new ScanItemRequest("123456", o1UUID);
-        //when(orderRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(o));
-        Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("orderID", request.getOrderID());
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-        URI uri = new URI(uriString);
-        GetOrderResponse getOrderResponse = new GetOrderResponse(o, true, new Date(), "");
-        ResponseEntity<GetOrderResponse> useCaseResponseEntity = new ResponseEntity<>(getOrderResponse, HttpStatus.OK);
-        when(restTemplate.postForEntity(uri, parts, GetOrderResponse.class)).thenReturn(useCaseResponseEntity);
-
-        ScanItemResponse response= userService.scanItem(request);
-        assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("Item successfully scanned",response.getMessage());
-    }
 }

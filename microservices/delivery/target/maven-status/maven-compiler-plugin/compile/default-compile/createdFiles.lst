@@ -1,6 +1,7 @@
 cs\superleague\delivery\requests\GetDeliveryStatusRequest.class
 cs\superleague\models\DeliveryDetailObject.class
 cs\superleague\models\DeliveryGetDeliveryStatusResponse.class
+cs\superleague\payment\responses\GetOrderByUUIDResponse.class
 cs\superleague\user\requests\SaveCustomerToRepoRequest.class
 cs\superleague\models\GeoPointObject.class
 cs\superleague\delivery\responses\RemoveDriverFromDeliveryResponse.class

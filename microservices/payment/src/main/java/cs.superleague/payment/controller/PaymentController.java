@@ -380,6 +380,10 @@ public class PaymentController implements PaymentApi {
             orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
         if(order.getStoreAddress()!=null)
             orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+        if(order.getDriverID()!=null)
+            orderObject.setDriverID(order.getDriverID().toString());
+        if(order.getType()!=null)
+            orderObject.setType(order.getType().toString());
         orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
         return orderObject;
     }

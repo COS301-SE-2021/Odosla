@@ -2214,7 +2214,7 @@ public class UserServiceImpl implements UserService{
         else{
 
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeID", request.getStoreID());
+            parts.put("StoreID", request.getStoreID());
             String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
             URI uri = new URI(uriString);
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetStoreByUUIDResponse.class);

@@ -114,7 +114,9 @@ public class CompleteDeliveryIntegrationTest {
     }
 
     @AfterEach
-    void teardown(){SecurityContextHolder.clearContext();}
+    void teardown(){
+        //SecurityContextHolder.clearContext();
+        }
 
     @Test
     @DisplayName("When request object is not specified")

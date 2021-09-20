@@ -270,6 +270,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/CartItemObject"
+        driverID:
+          type: string
+        type:
+          type: string
 
     payment_UpdateOrderRequest:
       description: This object is expected as input
