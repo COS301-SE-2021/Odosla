@@ -44,6 +44,7 @@
 <h3 align="center"> You can view our GitHub Project Board here:</h3>
 <div align="center"><a href="https://github.com/COS301-SE-2021/Odosla/projects/2" target="blank">📅Project Board</a></div>
  
+ <br>
  <h3 align="center"> You can access our APK for the employee app here: <a href="https://drive.google.com/drive/folders/1FbLj1t7UXooKe-3ylBWhWmjyeyr_pWKf?usp=sharing" target="blank">📄Employee App APK</a></h3>
  
 <br>
