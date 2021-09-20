@@ -83,6 +83,9 @@ public class RecommendationServiceImpl implements RecommendationService{
 
                     Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+
+                    System.out.println("parts id: " + orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+
                     String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
                     URI uri = new URI(stringUri);
                     ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
