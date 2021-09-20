@@ -12,6 +12,8 @@ import 'package:odosla/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+import 'item_detail_page.dart';
+
 class CartPage extends StatefulWidget {
   @override
   _CartPage createState() => _CartPage();
@@ -21,6 +23,7 @@ class _CartPage extends State<CartPage> {
   GlobalKey<SliderMenuContainerState> _key =
       new GlobalKey<SliderMenuContainerState>();
   late String title;
+
 
   UserService _userService = GetIt.I.get();
 
@@ -141,6 +144,9 @@ Widget buildCartPage(BuildContext context) {
             SizedBox(height: 25),
             Expanded(child: Container(child: buildCartItems(context))),
             SizedBox(height: 25),
+            Text("Recommended for you", style: TextStyle(fontWeight: FontWeight.w600),),
+            Container(child: buildRecommendationItems(context)),
+            SizedBox(height: 15,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -196,6 +202,42 @@ Widget buildCartItems(BuildContext context) {
     );
 }
 
+Widget buildRecommendationItems(BuildContext context){
+  ApiService apiService = ApiService();
+  return FutureBuilder(
+    future: apiService.getCartRecommendations(Provider.of<CartProvider>(context, listen: false)
+        .ids , context),
+    builder: (BuildContext context, snapshot) {
+      //let's check if we got a response or not
+      debugPrint(snapshot.data.toString() + "__");
+
+      if (snapshot.hasError) {
+        debugPrint("snapshot error: " + snapshot.error.toString());
+      }
+
+      if (snapshot.hasData) {
+        debugPrint("HasData");
+        //Now let's make a list of articles
+        List<CartItem> items = snapshot.data as List<CartItem>;
+        return Container(
+                child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: items.map((item) => buildRecommendationItem(item,context)).toList())
+              );
+
+      }
+      debugPrint("_2");
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      );
+    },
+  );
+}
 Widget buildCartItem(CartItem cartItem, BuildContext context) {
   final provider = Provider.of<CartProvider>(context);
 
@@ -240,6 +282,30 @@ Widget buildCartItem(CartItem cartItem, BuildContext context) {
       ),
     ),
   );
+}
+
+Widget buildRecommendationItem(CartItem cartItem, BuildContext context) {
+  return Expanded(
+    child: GestureDetector(
+      onTap: (){
+        // Navigator.of(context).push(MaterialPageRoute(
+        //     builder: (BuildContext context) => ItemDetailPage(
+        //         cartItem,
+        //         cartItem.storeID,
+        //         cartItem.) //ProductPage(product: product),
+        // ));
+      },
+      child:Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: 80,minHeight: 30),
+            child: Center(child: Image.asset("assets/"+cartItem.imgUrl))),
+        ConstrainedBox( constraints: BoxConstraints(maxHeight: 30,minHeight: 20),child: Center(child: Text(cartItem.title, style: TextStyle(fontWeight: FontWeight.w400),)))
+      ],
+    ),
+  ));
 }
 
 Widget buildCheckoutButton(BuildContext context) {
