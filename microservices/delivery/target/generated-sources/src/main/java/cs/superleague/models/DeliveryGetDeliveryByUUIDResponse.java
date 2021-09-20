@@ -16,8 +16,8 @@ import javax.validation.constraints.*;
 @ApiModel(description = "This object is expected as output")
 @Validated
 public class DeliveryGetDeliveryByUUIDResponse   {
-  @JsonProperty("delivery")
-  private DeliveryObject delivery = null;
+  @JsonProperty("deliveryEntity")
+  private DeliveryObject deliveryEntity = null;
 
   @JsonProperty("message")
   private String message = null;
@@ -25,24 +25,24 @@ public class DeliveryGetDeliveryByUUIDResponse   {
   @JsonProperty("timestamp")
   private String timestamp = null;
 
-  public DeliveryGetDeliveryByUUIDResponse delivery(DeliveryObject delivery) {
-    this.delivery = delivery;
+  public DeliveryGetDeliveryByUUIDResponse deliveryEntity(DeliveryObject deliveryEntity) {
+    this.deliveryEntity = deliveryEntity;
     return this;
   }
 
   /**
-   * Get delivery
-   * @return delivery
+   * Get deliveryEntity
+   * @return deliveryEntity
   **/
   @ApiModelProperty(value = "")
   
     @Valid
-    public DeliveryObject getDelivery() {
-    return delivery;
+    public DeliveryObject getDeliveryEntity() {
+    return deliveryEntity;
   }
 
-  public void setDelivery(DeliveryObject delivery) {
-    this.delivery = delivery;
+  public void setDeliveryEntity(DeliveryObject deliveryEntity) {
+    this.deliveryEntity = deliveryEntity;
   }
 
   public DeliveryGetDeliveryByUUIDResponse message(String message) {
@@ -93,14 +93,14 @@ public class DeliveryGetDeliveryByUUIDResponse   {
       return false;
     }
     DeliveryGetDeliveryByUUIDResponse deliveryGetDeliveryByUUIDResponse = (DeliveryGetDeliveryByUUIDResponse) o;
-    return Objects.equals(this.delivery, deliveryGetDeliveryByUUIDResponse.delivery) &&
+    return Objects.equals(this.deliveryEntity, deliveryGetDeliveryByUUIDResponse.deliveryEntity) &&
         Objects.equals(this.message, deliveryGetDeliveryByUUIDResponse.message) &&
         Objects.equals(this.timestamp, deliveryGetDeliveryByUUIDResponse.timestamp);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(delivery, message, timestamp);
+    return Objects.hash(deliveryEntity, message, timestamp);
   }
 
   @Override
@@ -108,7 +108,7 @@ public class DeliveryGetDeliveryByUUIDResponse   {
     StringBuilder sb = new StringBuilder();
     sb.append("class DeliveryGetDeliveryByUUIDResponse {\n");
     
-    sb.append("    delivery: ").append(toIndentedString(delivery)).append("\n");
+    sb.append("    deliveryEntity: ").append(toIndentedString(deliveryEntity)).append("\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
     sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
     sb.append("}");
