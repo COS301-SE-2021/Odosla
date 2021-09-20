@@ -29,16 +29,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac2ae91f-84fd-418a-ab7b-a09c8574d2c3" name="Default Changelist" comment="fixed shopping port">
-      <change afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/requests/SaveOrderToRepoRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Odosla.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Odosla.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/customer/odosla/lib/page/cart_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/DeliveryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/DeliveryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/controller/DeliveryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/delivery/controller/DeliveryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/payment/dataclass/GeoPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/payment/dataclass/GeoPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/user/dataclass/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/src/main/java/cs/superleague/user/dataclass/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/api/DeliveryApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/api/DeliveryApi.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/models/DeliveryAddDeliveryDetailResponse.java" afterDir="false" />
@@ -68,28 +59,6 @@
       <change beforePath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/models/GeoPointObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/target/generated-sources/src/main/java/cs/superleague/models/GeoPointObject.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/delivery/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/delivery/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/delivery/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/src/main/java/cs.superleague/integration/security/SpringSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/importer/src/main/java/cs.superleague/integration/security/SpringSecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/classes/odosla-api.yml" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/importer/target/classes/odosla-api.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/AdminObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/CustomerObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/DriverObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/GeoPointObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/GroceryListObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/ItemObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/OrderItemsObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/OrderObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/ShopperObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/StoreObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/generated-sources/src/main/java/cs/superleague/models/UserObject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/importer/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/importer/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/importer/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/notifications/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/notifications/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/notifications/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/notifications/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/PaymentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/PaymentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/CartItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/CartItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/OrderStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/OrderType.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/payment/src/main/java/cs.superleague/payment/dataclass/OrderType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/recommendation/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/recommendation/target/classes/cs/superleague/recommendation/RecommendationServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/target/classes/cs/superleague/recommendation/RecommendationServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/recommendation/target/generated-sources/src/main/java/cs/superleague/api/RecommendationApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/target/generated-sources/src/main/java/cs/superleague/api/RecommendationApi.java" afterDir="false" />
@@ -98,13 +67,6 @@
       <change beforePath="$PROJECT_DIR$/microservices/recommendation/target/generated-sources/src/main/java/cs/superleague/models/RecommendationGetCartRecommendationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/target/generated-sources/src/main/java/cs/superleague/models/RecommendationGetCartRecommendationResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/recommendation/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/microservices/recommendation/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/recommendation/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/dataclass/GeoPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/dataclass/GeoPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/dataclass/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/dataclass/OrderStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/dataclass/OrderType.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/payment/dataclass/OrderType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/dataclass/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/dataclass/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/responses/GetDriverByEmailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/microservices/user/src/main/java/cs/superleague/user/responses/GetDriverByEmailResponse.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -157,8 +119,6 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/microservices/shopping/src/main/java/cs/superleague/shopping/ShoppingServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/rabbit_test/rms_1/Dockerfile" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/rabbit_test/rms_2/Dockerfile" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JpbToolWindowState">
     <option name="myId2FirstActivated">
@@ -242,7 +202,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Flutter.main.dart">
+  <component name="RunManager" selected="JUnit.AssignDriverToDeliveryIntegrationTest.deliveryAlreadyTakenByADifferentDriver_IntegrationTest">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -253,6 +213,22 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="SwaggerCodegen">
+      <option name="activeConfigurationType" value="FILE" />
+      <option name="configurationPath" value="" />
+      <option name="customJreEnabled" value="false" />
+      <option name="customTemplatesPath" value="" />
+      <option name="enableDebugLogging" value="false" />
+      <option name="generateToPath" value="C:\Code\CrowdBook_Gamma\Odosla\gen" />
+      <option name="generationParameters">
+        <list />
+      </option>
+      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
+      <option name="jdkPath" value="Default" />
+      <option name="language" value="java" />
+      <option name="specificationPath" value="C:\Code\CrowdBook_Gamma\Odosla\rabbit_test\rms_1\src\main\resources\odosla-api.yml" />
+      <method v="2" />
     </configuration>
     <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" nameIsGenerated="true">
       <option name="additionalArgs" value="--no-sound-null-safety" />
@@ -326,13 +302,6 @@
     </configuration>
     <configuration default="true" type="JetRunConfigurationType">
       <module name="notifications" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -340,33 +309,6 @@
     <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
       <module name="notifications" />
       <option name="filePath" />
-      <option name="vmParameters" />
-      <option name="alternativeJrePath" />
-      <option name="programParameters" />
-      <option name="passParentEnvs" value="true" />
-      <option name="workingDirectory" />
-      <option name="isAlternativeJrePathEnabled" value="false" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="filePath" />
-      <option name="vmParameters" />
-      <option name="alternativeJrePath" />
-      <option name="programParameters" />
-      <option name="passParentEnvs" value="true" />
-      <option name="workingDirectory" />
-      <option name="isAlternativeJrePathEnabled" value="false" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="WORKING_DIRECTORY" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -493,22 +435,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="SwaggerCodegen">
-      <option name="activeConfigurationType" value="FILE" />
-      <option name="configurationPath" value="" />
-      <option name="customJreEnabled" value="false" />
-      <option name="customTemplatesPath" value="" />
-      <option name="enableDebugLogging" value="false" />
-      <option name="generateToPath" value="C:\Code\CrowdBook_Gamma\Odosla\gen" />
-      <option name="generationParameters">
-        <list />
-      </option>
-      <option name="generatorPath" value="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.0.0/openapi-generator-cli-5.0.0.jar" />
-      <option name="jdkPath" value="Default" />
-      <option name="language" value="java" />
-      <option name="specificationPath" value="C:\Code\CrowdBook_Gamma\Odosla\rabbit_test\rms_1\src\main\resources\odosla-api.yml" />
-      <method v="2" />
-    </configuration>
     <configuration name="odosla-api.yml" type="SwaggerCodegen">
       <option name="activeConfigurationType" value="FILE" />
       <option name="configurationPath" value="" />
@@ -526,27 +452,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Flutter.main.dart" />
-      <item itemvalue="HTTP Request.scratch#1" />
       <item itemvalue="JUnit.AssignDriverToDeliveryIntegrationTest.deliveryAlreadyTakenByADifferentDriver_IntegrationTest" />
       <item itemvalue="JUnit.AssignDriverToDeliveryIntegrationTest.successfulAssigningOfDriverToDelivery_IntegrationTest" />
       <item itemvalue="JUnit.cs.superleague.delivery in delivery" />
       <item itemvalue="JUnit.GetDeliveryDetailIntegrationTest.runSetUp" />
-      <item itemvalue="Spring Boot.Application (1)" />
-      <item itemvalue="Spring Boot.Application (10)" />
-      <item itemvalue="Spring Boot.Application (11)" />
-      <item itemvalue="Spring Boot.Application (2)" />
-      <item itemvalue="Spring Boot.Application (3)" />
-      <item itemvalue="Spring Boot.Application (4)" />
-      <item itemvalue="Spring Boot.Application (5)" />
-      <item itemvalue="Spring Boot.Application (6)" />
-      <item itemvalue="Spring Boot.Application (8)" />
-      <item itemvalue="Spring Boot.Application (9)" />
-      <item itemvalue="Spring Boot.PaymentApplication" />
-      <item itemvalue="Spring Boot.DeliveryApp" />
-      <item itemvalue="Spring Boot.ShoppingApp" />
-      <item itemvalue="Spring Boot.ImporterApp" />
-      <item itemvalue="Swagger Codegen.odosla-api.yml" />
     </list>
     <recent_temporary>
       <list>
@@ -554,7 +463,6 @@
         <item itemvalue="JUnit.cs.superleague.delivery in delivery" />
         <item itemvalue="JUnit.AssignDriverToDeliveryIntegrationTest.successfulAssigningOfDriverToDelivery_IntegrationTest" />
         <item itemvalue="JUnit.AssignDriverToDeliveryIntegrationTest.deliveryAlreadyTakenByADifferentDriver_IntegrationTest" />
-        <item itemvalue="HTTP Request.scratch#1" />
       </list>
     </recent_temporary>
   </component>
