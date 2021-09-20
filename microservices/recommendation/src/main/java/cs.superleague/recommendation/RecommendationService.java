@@ -9,8 +9,10 @@ import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 
+import java.net.URISyntaxException;
+
 public interface RecommendationService {
-    GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException;
+    GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException;
 
     GetOrderRecommendationResponse getOrderRecommendation(GetOrderRecommendationRequest request);
 

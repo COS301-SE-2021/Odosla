@@ -104,15 +104,15 @@ public class NotificationController implements NotificationApi {
             SendDirectEmailNotificationRequest request = new SendDirectEmailNotificationRequest(body.getMessage(), body.getProperties());
             SendDirectEmailNotificationResponse sendDirectEmailNotificationResponse = notificationService.sendDirectEmailNotification(request);
             try{
-                response.setSuccess(sendDirectEmailNotificationResponse.isSuccess());
+                response.setIsSuccess(sendDirectEmailNotificationResponse.isSuccess());
                 response.setResponseMessage(sendDirectEmailNotificationResponse.getResponseMessage());
             }catch (Exception e){
-                response.setSuccess(false);
+                response.setIsSuccess(false);
                 response.setResponseMessage(e.getMessage());
                 e.printStackTrace();
             }
         } catch (Exception e){
-            response.setSuccess(false);
+            response.setIsSuccess(false);
             response.setResponseMessage(e.getMessage());
             e.printStackTrace();
         }

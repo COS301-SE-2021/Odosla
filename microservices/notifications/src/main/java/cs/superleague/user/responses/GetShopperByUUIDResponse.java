@@ -11,6 +11,12 @@ public class GetShopperByUUIDResponse {
     private final Date timestamp;
     private final String message;
 
+    public GetShopperByUUIDResponse() {
+        this.shopperEntity = null;
+        this.timestamp = null;
+        this.message = null;
+    }
+
     public GetShopperByUUIDResponse(Shopper shopperEntity, Date timestamp, String message) {
         this.shopperEntity = shopperEntity;
         this.timestamp = timestamp;

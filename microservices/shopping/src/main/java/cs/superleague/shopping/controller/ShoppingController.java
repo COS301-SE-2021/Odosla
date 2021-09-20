@@ -38,6 +38,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @CrossOrigin
@@ -99,7 +100,7 @@ public class ShoppingController implements ShoppingApi{
             AddShopperResponse addShopperResponse = shoppingService.addShopper(req);
 
             try {
-                response.setDate(addShopperResponse.getTimestamp().toString());
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(addShopperResponse.getTimestamp()));
                 response.setMessage(addShopperResponse.getMessage());
                 response.setSuccess(addShopperResponse.isSuccess());
             } catch (Exception e) {
@@ -207,7 +208,10 @@ public class ShoppingController implements ShoppingApi{
             GetShoppersResponse getShoppersResponse = shoppingService.getShoppers(req);
 
             try {
-                response.setShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
+                response.setListOfShoppers(populateShoppers(getShoppersResponse.getListOfShoppers()));
+                response.setMessage(getShoppersResponse.getMessage());
+                response.setSuccess(getShoppersResponse.isSuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getShoppersResponse.getTimeStamp()));
 
             } catch (Exception e){
                 e.printStackTrace();
@@ -263,29 +267,28 @@ public class ShoppingController implements ShoppingApi{
             GetNextQueuedRequest getNextQueuedRequest = new GetNextQueuedRequest(UUID.fromString(body.getStoreID()));
             GetNextQueuedResponse getNextQueuedResponse = shoppingService.getNextQueued(getNextQueuedRequest);
             try {
-
-                response.setDate(getNextQueuedResponse.getTimeStamp().toString());
+                response.setTimeStamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getNextQueuedResponse.getTimeStamp()));
                 response.setMessage(getNextQueuedResponse.getMessage());
-                response.setSuccess(getNextQueuedResponse.isResponse());
+                response.setResponse(getNextQueuedResponse.isResponse());
                 OrderObject orderObject = new OrderObject();
                 Order order = getNextQueuedResponse.getNewCurrentOrder();
 
-                orderObject.setStoreAddress(order.getStoreAddress().getAddress());
-                orderObject.setOrderId(order.getOrderID().toString());
+                orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+                orderObject.setOrderID(order.getOrderID().toString());
                 orderObject.setCartItems(populateCartItems(order.getCartItems()));
                 //orderObject.setOrderItems(populateOrderItems(order.getOrderItems()));
                 orderObject.setCreateDate(order.getCreateDate().toString());
                 orderObject.setStatus(order.getStatus().toString());
-                orderObject.setDeliveryAddress(order.getDeliveryAddress().getAddress());
+                orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
                 orderObject.setDiscount(BigDecimal.valueOf(order.getDiscount()));
                 orderObject.setProcessDate(order.getProcessDate().toString());
                 orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
-                orderObject.setUserId(order.getUserID().toString());
-                orderObject.setStoreId(order.getStoreID().toString());
+                orderObject.setUserID(order.getUserID().toString());
+                orderObject.setStoreID(order.getStoreID().toString());
 
                 if(order.getShopperID() != null)
-                orderObject.setShopperId(order.getShopperID().toString());
-                orderObject.setTotalPrice(BigDecimal.valueOf(order.getTotalCost()));
+                orderObject.setShopperID(order.getShopperID().toString());
+                orderObject.setTotalCost(BigDecimal.valueOf(order.getTotalCost()));
 
                 response.setNewCurrentOrder(orderObject);
                 response.setQueueOfOrders(populateOrders(getNextQueuedResponse.getQueueOfOrders()));
@@ -500,8 +503,8 @@ public class ShoppingController implements ShoppingApi{
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
             currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setProductID(responseItems.get(i).getProductID());
+            currentItem.setStoreID(responseItems.get(i).getStoreID().toString());
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
@@ -574,7 +577,7 @@ public class ShoppingController implements ShoppingApi{
             currentStore.setMaxOrders(responseStores.get(i).getMaxOrders());
             currentStore.setMaxShoppers(responseStores.get(i).getMaxShoppers());
             currentStore.setIsOpen(responseStores.get(i).getOpen());
-            currentStore.setImageUrl(responseStores.get(i).getImgUrl());
+            currentStore.setImgUrl(responseStores.get(i).getImgUrl());
 
             if(responseStores.get(i).getStoreLocation()!=null)
             {
@@ -599,25 +602,23 @@ public class ShoppingController implements ShoppingApi{
             OrderObject currentOrder = new OrderObject();
 
             try{
-                currentOrder.setOrderId(responseOrders.get(i).getOrderID().toString());
-                currentOrder.setUserId(responseOrders.get(i).getUserID().toString());
-                currentOrder.setStoreId(responseOrders.get(i).getStoreID().toString());
+                currentOrder.setOrderID(responseOrders.get(i).getOrderID().toString());
+                currentOrder.setUserID(responseOrders.get(i).getUserID().toString());
+                currentOrder.setStoreID(responseOrders.get(i).getStoreID().toString());
 
-                try{
-                    currentOrder.setShopperId(responseOrders.get(i).getShopperID().toString());
-                }
-                catch(Exception e)
+                if(responseOrders.get(i).getShopperID()!=null)
                 {
-                    e.printStackTrace();
+                    currentOrder.setShopperID(responseOrders.get(i).getShopperID().toString());
                 }
+
                 currentOrder.setCreateDate(responseOrders.get(i).getCreateDate().toString());
                 currentOrder.setProcessDate(responseOrders.get(i).getProcessDate().toString());
-                currentOrder.setTotalPrice(new BigDecimal(responseOrders.get(i).getTotalCost()));
+                currentOrder.setTotalCost(new BigDecimal(responseOrders.get(i).getTotalCost()));
                 currentOrder.setStatus(responseOrders.get(i).getStatus().name());
                 currentOrder.setCartItems(populateCartItems(responseOrders.get(i).getCartItems()));
                 currentOrder.setDiscount(new BigDecimal(responseOrders.get(i).getDiscount()));
-                currentOrder.setDeliveryAddress(responseOrders.get(i).getDeliveryAddress().getAddress());
-                currentOrder.setStoreAddress(responseOrders.get(i).getStoreAddress().getAddress());
+                currentOrder.setDeliveryAddress(populateGeoPointObject(responseOrders.get(i).getDeliveryAddress()));
+                currentOrder.setStoreAddress(populateGeoPointObject(responseOrders.get(i).getStoreAddress()));
                 currentOrder.setRequiresPharmacy(responseOrders.get(i).isRequiresPharmacy());
 
 
@@ -756,7 +757,7 @@ public class ShoppingController implements ShoppingApi{
         responseBody.setMaxOrders(responseStore.getMaxOrders());
         responseBody.setMaxShoppers(responseStore.getMaxShoppers());
         responseBody.setIsOpen(responseStore.getOpen());
-        responseBody.setImageUrl(responseStore.getImgUrl());
+        responseBody.setImgUrl(responseStore.getImgUrl());
 
         if(responseStore.getStoreLocation()!=null)
         {
@@ -773,11 +774,15 @@ public class ShoppingController implements ShoppingApi{
         for (CartItem i: responseItems){
 
             CartItemObject item = new CartItemObject();
+            if(i.getCartItemNo()!=null)
+            {
+                item.setCartItemNo(i.getCartItemNo().toString());
+            }
             item.setProductId(i.getProductID());
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreId(i.getStoreID().toString());
+            item.setStoreID(i.getStoreID().toString());
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());

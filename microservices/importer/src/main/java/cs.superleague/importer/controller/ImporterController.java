@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class ImporterController implements ImporterApi {
             try {
                 response.setMessage(itemsCSVImporterResponse.getMessage());
                 response.setSuccess(itemsCSVImporterResponse.isSuccess());
-                response.setTimestamp(itemsCSVImporterResponse.getTimestamp().toString());
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(itemsCSVImporterResponse.getTimestamp()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,7 +91,7 @@ public class ImporterController implements ImporterApi {
             try {
                 response.setMessage(storeCSVImporterResponse.getMessage());
                 response.setSuccess(storeCSVImporterResponse.isSuccess());
-                response.setTimestamp(storeCSVImporterResponse.getTimestamp().toString());
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(storeCSVImporterResponse.getTimestamp()));
             } catch (Exception e) {
                 e.printStackTrace();
             }

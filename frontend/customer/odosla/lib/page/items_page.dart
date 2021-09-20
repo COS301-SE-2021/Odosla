@@ -84,7 +84,7 @@ class _ItemsPageState extends State<ItemsPage> {
     //final provider = Provider.of<CartItemProvider>(context);
 
     return FutureBuilder(
-      future: apiService.getItems(storeID),
+      future: apiService.getItems(storeID,context),
       builder: (BuildContext context, snapshot) {
         //let's check if we got a response or not
         debugPrint(snapshot.data.toString() + "__");

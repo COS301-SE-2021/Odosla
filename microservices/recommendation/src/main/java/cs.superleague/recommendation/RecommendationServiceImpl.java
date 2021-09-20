@@ -1,5 +1,10 @@
 package cs.superleague.recommendation;
 
+import cs.superleague.payment.dataclass.CartItem;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.responses.GetAllCartItemsResponse;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
+import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
@@ -8,21 +13,19 @@ import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
-import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Service("recommendationServiceImpl")
@@ -31,6 +34,11 @@ public class RecommendationServiceImpl implements RecommendationService{
     private String paymentHost;
     @Value("${paymentPort}")
     private String paymentPort;
+
+    @Value("${shoppingHost}")
+    private String shoppingHost;
+    @Value("${shoppingPort}")
+    private String shoppingPort;
 
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
@@ -43,15 +51,15 @@ public class RecommendationServiceImpl implements RecommendationService{
 
 
     @Override
-    public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException {
+    public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException {
         if (request == null){
-            throw new InvalidRequestException("Null request object.");
+            return  getRandomRecommendations("Null request object.");
         }
         if (request.getItemIDs() == null){
-            throw new InvalidRequestException("Null item list.");
+            return getRandomRecommendations("Null item list.");
         }
         if (request.getItemIDs().size() == 0){
-            throw new InvalidRequestException("No items in item list.");
+            return getRandomRecommendations("No items in item list.");
         }
         if (recommendationRepo != null){
             List<UUID> orderIDs = new ArrayList<>();
@@ -70,26 +78,39 @@ public class RecommendationServiceImpl implements RecommendationService{
                 }
             }
             if (orderIDs.size() == 0){
-                GetCartRecommendationResponse response = new GetCartRecommendationResponse(null, false, "None of these items have been bought before.");
-                return response;
+                return getRandomRecommendations("None of these items have been bought before.");
             }
             List<Order> finalRecommendation = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
 //                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
 
-                    Map<String, Object> parts = new HashMap<String, Object>();
+
+                    Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
-                    ResponseEntity<GetOrderResponse> responseEntity = restTemplate.postForEntity("http://"+paymentHost+":"+paymentPort+"/payment/getOrder", parts, GetOrderResponse.class);
-                    Order order = responseEntity.getBody().getOrder();
+                    String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+                    URI uri = new URI(stringUri);
+                    ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                            uri, parts, GetOrderByUUIDResponse.class);
+
+                    Order order = null;
+                    if(responseEntity.getBody() != null) {
+                        order = responseEntity.getBody().getOrder();
+                    }
+
+                    if(responseEntity == null || !responseEntity.hasBody() ||
+                    responseEntity.getBody() == null || responseEntity.getBody().getOrder() == null){
+                        return getRandomRecommendations("Could not Retrieve Orders");
+                    }
+
                     if (order != null){
                         finalRecommendation.add(order);
                     }
                 }
             }
-            List<Item> finalItemsRecommendation = new ArrayList<>();
+            List<CartItem> finalItemsRecommendation = new ArrayList<>();
             for (Order orders : finalRecommendation){
-                for (Item item : orders.getItems()){
+                for (CartItem item : orders.getCartItems()){
                     if (request.getItemIDs().contains(item.getProductID())){
                         continue;
                     }
@@ -103,13 +124,12 @@ public class RecommendationServiceImpl implements RecommendationService{
                 }
             }
             if (finalItemsRecommendation.size() == 0){
-                GetCartRecommendationResponse response = new GetCartRecommendationResponse(null, false, "There are no orders that have all the requested items in them.");
-                return response;
+                return getRandomRecommendations("There are no orders that have all the requested items in them.");
             }
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
         }else{
-            throw new RecommendationRepoException("No recommendation repository found.");
+            return getRandomRecommendations("No recommendation repository found.");
         }
     }
 
@@ -148,6 +168,45 @@ public class RecommendationServiceImpl implements RecommendationService{
         for (Recommendation recommendation : recommendations){
             recommendationRepo.delete(recommendation);
         }
+    }
+
+    // Helper/s
+
+    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage){
+
+        int count = 0;
+        int randomInt = 0;
+        List<CartItem> allItems;
+        List<CartItem> randomItems = new ArrayList<>();
+        Random random = new Random();
+        Map<String, Object> parts = new HashMap<>();
+
+        ResponseEntity<GetAllCartItemsResponse> responseEntity = restTemplate.postForEntity(
+                "http://" + paymentHost + ":" + paymentPort + "/payment/getAllCartItems",
+                parts, GetAllCartItemsResponse.class);
+
+        if(responseEntity == null || !responseEntity.hasBody() || responseEntity.getBody() == null
+            || responseEntity.getBody().getCartItems() == null){
+            return new GetCartRecommendationResponse(new ArrayList<>(),
+                    false, "Could not retrieve Items");
+        }
+
+        allItems = responseEntity.getBody().getCartItems();
+
+        if(allItems.size() < 3){
+            count = allItems.size();
+        }else{
+            count = 3;
+        }
+
+        System.out.println(count);
+        for(int i = 0; i < count; i++){
+            randomInt = random.nextInt(allItems.size());
+            randomItems.add(allItems.get(randomInt));
+        }
+
+        errorMessage = "Random recommendations returned because " + errorMessage;
+        return new GetCartRecommendationResponse(randomItems, false, errorMessage);
     }
 
 }

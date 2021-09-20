@@ -2,21 +2,21 @@ package cs.superleague.analytics.CreateAnalyticsDataHelpers;
 
 
 import cs.superleague.analytics.exceptions.InvalidRequestException;
-import cs.superleague.payment.responses.GetOrdersResponse;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.user.responses.GetUsersResponse;
+import cs.superleague.payment.responses.GetOrdersResponse;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.dataclass.Shopper;
 import cs.superleague.user.dataclass.User;
 import cs.superleague.user.dataclass.UserType;
-import org.springframework.beans.factory.annotation.Value;
+import cs.superleague.user.responses.GetAdminsResponse;
+import cs.superleague.user.responses.GetCustomersResponse;
+import cs.superleague.user.responses.GetDriversResponse;
+import cs.superleague.user.responses.GetShoppersResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 public class CreateMonthlyAnalyticsData {
@@ -47,11 +47,14 @@ public class CreateMonthlyAnalyticsData {
     private final Calendar startDate;
     private final Calendar endDate;
 
-    private ResponseEntity<GetUsersResponse> responseEntityUser;
+    private ResponseEntity<GetAdminsResponse> adminResponseEntity;
+    private ResponseEntity<GetCustomersResponse> customerResponseEntity;
+    private ResponseEntity<GetDriversResponse> driverResponseEntity;
+    private ResponseEntity<GetShoppersResponse> shopperResponseEntity;
     private ResponseEntity<GetOrdersResponse> responseEntityOrder;
 
     public CreateMonthlyAnalyticsData(RestTemplate restTemplate, String paymentHost, String paymentPort,
-                                      String userHost, String userPort){
+                                      String userHost, String userPort) throws URISyntaxException {
 
         this.orders = new ArrayList<>();
         this.userIds = new ArrayList<>();
@@ -74,15 +77,36 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getUsers";
+        String stringUri = "http://"+userHost+":"+userPort+"/user/getAdmins";
+        URI uri = new URI(stringUri);
 
         try{
             Map<String, Object> parts = new HashMap<>();
 
-            responseEntityUser = restTemplate.postForEntity(uri, parts,
-                    GetUsersResponse.class);
+            adminResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetAdminsResponse.class);
 
-            uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrders";
+            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomers";
+            uri = new URI(stringUri);
+
+            customerResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetCustomersResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getDrivers";
+            uri = new URI(stringUri);
+
+            driverResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetDriversResponse.class);
+
+            stringUri = "http://"+userHost+":"+userPort+"/user/getShoppers";
+            uri = new URI(stringUri);
+
+            shopperResponseEntity = restTemplate.postForEntity(uri, parts,
+                    GetShoppersResponse.class);
+
+            stringUri = "http://"+ paymentHost + ":" + paymentPort +"/payment/getOrders";
+            uri = new URI(stringUri);
+
             responseEntityOrder = restTemplate.postForEntity(uri, parts,
                     GetOrdersResponse.class);
 
@@ -131,17 +155,32 @@ public class CreateMonthlyAnalyticsData {
             return false;
         }
 
-        if(responseEntityUser == null){
+        if(adminResponseEntity == null || customerResponseEntity == null
+                || driverResponseEntity == null || shopperResponseEntity == null){
             return false;
         }
 
-        GetUsersResponse getUsersResponse = responseEntityUser.getBody();
+        GetAdminsResponse adminsResponse = adminResponseEntity.getBody();
+        GetCustomersResponse customersResponse = customerResponseEntity.getBody();
+        GetDriversResponse driversResponse = driverResponseEntity.getBody();
+        GetShoppersResponse shoppersResponse = shopperResponseEntity.getBody();
 
-        if(getUsersResponse != null) {
-            users.addAll(getUsersResponse.getUsers());
-        }else{
+        if(adminsResponse == null || customersResponse == null || driversResponse == null
+                || shoppersResponse == null){
             return false;
         }
+
+        if(adminsResponse.getUsers() != null)
+            users.addAll(adminsResponse.getUsers());
+
+        if(customersResponse.getUsers() != null)
+            users.addAll(customersResponse.getUsers());
+
+        if(driversResponse.getUsers() != null)
+            users.addAll(driversResponse.getUsers());
+
+        if(shoppersResponse.getUsers() != null)
+            users.addAll(shoppersResponse.getUsers());
 
         for (Order order : this.orders) {
 

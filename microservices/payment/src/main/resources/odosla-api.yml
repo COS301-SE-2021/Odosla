@@ -148,7 +148,7 @@ paths:
       tags:
         - "payment"
       description: Refer to summary
-      operationId: getOrder
+      operationId: getOrders
       requestBody:
         description: The input body required by this request
         required: true
@@ -163,6 +163,50 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetOrdersResponse"
+
+  /payment/getAllCartItems:
+    post:
+      summary: Endpoint for getting all the cart items
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getAllCartItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetAllCartItemsRequest"
+      responses:
+        "200":
+          description: Returns the items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetAllCartItemsResponse"
+
+  /payment/getOrderByUUID:
+    post:
+      summary: Endpoint for getting order by UUID
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getOrderByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetOrderByUUIDRequest"
+      responses:
+        "200":
+          description: Returns the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetOrderByUUIDResponse"
 components:
 
   schemas:
@@ -171,13 +215,13 @@ components:
       description: "Generic schema for an item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -198,26 +242,22 @@ components:
       description: "Generic schema for an Order"
       type: object
       properties:
-        orderId:
+        orderID:
           type: string
-        userId:
+        userID:
           type: string
-        storeId:
+        storeID:
           type: string
-        shopperId:
+        shopperID:
           type: string
         createDate:
           type: string
         processDate:
           type: string
-        totalPrice:
+        totalCost:
           type: number
         status:
           type: string
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
         deliveryAddress:
@@ -235,10 +275,10 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        orderId:
+        orderID:
           type: string
           description: the id of the order to be generated
-        items:
+        listOfItems:
           type: array
           items:
             $ref: "#/components/schemas/ItemObject"
@@ -261,7 +301,7 @@ components:
         timestamp:
           type: string
         order:
-          type: object
+          $ref: "#/components/schemas/OrderObject"
 
     payment_SubmitOrderRequest:
       description: This object is expected as input
@@ -273,7 +313,7 @@ components:
             $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
-        storeId:
+        storeID:
           type: string
         orderType:
           type: string
@@ -281,15 +321,15 @@ components:
           type: number
         longitude:
           type: number
-        deliveryAddress:
+        address:
           type: string
 
     payment_SubmitOrderResponse:
       description: This object is expected as output
       type: object
       properties:
-        orderId:
-          type: string
+        order:
+          $ref: "#/components/schemas/OrderObject"
         message:
           type: string
           description: Will contain a descriptive error message if response code is not 200, else will be empty
@@ -329,7 +369,7 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        cartItems:
+        itemList:
           type: array
           items:
             $ref: "#/components/schemas/CartItemObject"
@@ -343,9 +383,6 @@ components:
     payment_GetCustomersActiveOrdersRequest:
       description: This object is expected as input
       type: object
-      properties:
-        jwtToken:
-          type: string
 
     payment_GetCustomersActiveOrdersResponse:
       description: This object is expected as output
@@ -412,13 +449,13 @@ components:
       description: "Generic schema for a cart item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -434,7 +471,44 @@ components:
           type: string
         itemType:
           type: string
-        orderId:
+        orderID:
           type: string
         totalCost:
           type: number
+        cartItemNo:
+          type: string
+
+    payment_GetAllCartItemsRequest:
+      description: This object is expected as input
+      type: object
+
+    payment_GetAllCartItemsResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    payment_GetOrderByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    payment_GetOrderByUUIDResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        order:
+          $ref: "#/components/schemas/OrderObject"
+        timestamp:
+          type: string
+        message:
+          type: string

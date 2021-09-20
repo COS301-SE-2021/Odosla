@@ -12,7 +12,6 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-@Component
 public class PaymentsListener implements MessageListener {
     private final PaymentService paymentService;
 
@@ -22,15 +21,17 @@ public class PaymentsListener implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        SaveOrderToRepoRequest request = null;
+
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
             Object o = in.readObject();
             if(o instanceof SaveOrderToRepoRequest)
             {
-                request = (SaveOrderToRepoRequest) o;
+                System.out.println("i made it here 1");
+                SaveOrderToRepoRequest request = (SaveOrderToRepoRequest) o;
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(request.getOrder());
                 paymentService.saveOrderToRepo(saveOrderToRepoRequest);
+                System.out.println("I made it here 3");
             }
         } catch (IOException e) {
             e.printStackTrace();

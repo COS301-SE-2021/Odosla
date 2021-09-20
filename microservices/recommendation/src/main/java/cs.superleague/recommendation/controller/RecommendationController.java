@@ -1,9 +1,11 @@
 package cs.superleague.recommendation.controller;
 
 import cs.superleague.api.RecommendationApi;
+import cs.superleague.models.CartItemObject;
 import cs.superleague.models.ItemObject;
 import cs.superleague.models.RecommendationGetCartRecommendationRequest;
 import cs.superleague.models.RecommendationGetCartRecommendationResponse;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.recommendation.RecommendationService;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
@@ -60,7 +62,7 @@ public class RecommendationController implements RecommendationApi {
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
                 response.setIsSuccess(getCartRecommendationResponse.isSuccess());
-                response.setRecommendations(populateItems(getCartRecommendationResponse.getRecommendations()));
+                response.setRecommendations(populateCartItems(getCartRecommendationResponse.getRecommendations()));
             } catch (Exception e){
                 e.printStackTrace();
                 response.setMessage(e.getMessage());
@@ -91,8 +93,8 @@ public class RecommendationController implements RecommendationApi {
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
             currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setProductID(responseItems.get(i).getProductID());
+            currentItem.setStoreID(responseItems.get(i).getStoreID().toString());
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
@@ -101,6 +103,36 @@ public class RecommendationController implements RecommendationApi {
             currentItem.setSize(responseItems.get(i).getSize());
 
             responseBody.add(currentItem);
+
+        }
+
+        return responseBody;
+    }
+
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+
+        List<CartItemObject> responseBody = new ArrayList<>();
+
+        for (CartItem i: responseItems){
+
+            CartItemObject item = new CartItemObject();
+            if(i.getCartItemNo()!=null)
+            {
+                item.setCartItemNo(i.getCartItemNo().toString());
+            }
+            item.setProductID(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreID(i.getStoreID().toString());
+            item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
 
         }
 
