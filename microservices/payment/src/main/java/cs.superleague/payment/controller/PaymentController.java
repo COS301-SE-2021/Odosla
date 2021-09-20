@@ -59,74 +59,8 @@ public class PaymentController implements PaymentApi {
         this.httpServletRequest = httpServletRequest;
     }
 
-//    UUID storeID = UUID.fromString("01234567-9ABC-DEF0-1234-56789ABCDEF0");
-//    UUID shopperID = UUID.randomUUID();
-//    UUID userID = UUID.fromString("7bc59ea6-aa30-465d-bcab-64e894bef586");
-//    UUID orderId_AWAITNG_PAYMENT = UUID.fromString("8d8fe4d6-492b-453e-8ef1-214d0e897e2d");
-//    UUID orderId_PURCHASED = UUID.fromString("b809b6a4-f5c6-425b-a70b-dc941f3b9dad");
-//    UUID orderId_IN_QUEUE = UUID.fromString("84681571-c046-4811-8b20-b22e25a4084c");
-//    UUID orderID_PACKING = UUID.fromString("95ca0860-d2d5-4f85-a65f-54942110a363");
-//    UUID orderID_COLLECTION = UUID.fromString("3197bb1-34e7-42d3-8735-09871ad2504c");
-//    UUID orderID_DELIVERY_COLLECTED = UUID.fromString("34ff8f71-9ef0-4c4a-86fc-740fa9398b27");
-//    UUID orderID_CUSTOMER_COLLECTED = UUID.fromString("b43aefcc-a8f9-40a6-a8ba-71f4d137a40e");
-//    UUID orderID_DELIVERED = UUID.fromString("a8f54965-5c09-4748-b28f-e6a106985ff1");
-//
-//    List<Order> orders = new ArrayList<>();
     @Override
     public ResponseEntity<PaymentUpdateOrderResponse> updateOrder(PaymentUpdateOrderRequest body) {
-
-
-        //add mock data to repo
-//        List<Item> mockItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-//        mockItemList.add(item1); mockItemList.add(item2);
-//
-//        double totalCost = 14.99 + 36.99;
-//        Order order = new Order();
-//        order.setOrderID(orderId_AWAITNG_PAYMENT);
-//        order.setUserID(userID);
-//        order.setStoreID(storeID);
-//        order.setShopperID(shopperID);
-//        order.setCreateDate(Calendar.getInstance());
-//        order.setTotalCost(totalCost);
-//        order.setType(OrderType.DELIVERY);
-//        order.setStatus(OrderStatus.AWAITING_PAYMENT);
-//        order.setItems(mockItemList);
-//        order.setStoreAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-//        order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-//        totalCost = 0;
-//
-//        orders.add(order);
-//
-//        order.setOrderID(orderId_PURCHASED);
-//        order.setStatus(OrderStatus.PURCHASED);
-//        orders.add(order);
-//
-//        order.setOrderID(orderId_IN_QUEUE);
-//        order.setStatus(OrderStatus.IN_QUEUE);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_PACKING);
-//        order.setStatus(OrderStatus.PACKING);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_COLLECTION);
-//        order.setStatus(OrderStatus.AWAITING_COLLECTION);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_DELIVERY_COLLECTED);
-//        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_CUSTOMER_COLLECTED);
-//        order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_DELIVERED);
-//        order.setStatus(OrderStatus.DELIVERED);
-
 
         PaymentUpdateOrderResponse response = new PaymentUpdateOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -169,7 +103,7 @@ public class PaymentController implements PaymentApi {
                 response.setMessage(updateOrderResponse.getMessage());
                 response.setOrder(populateOrder(updateOrderResponse.getOrder()));
                 response.setSuccess(updateOrderResponse.isSuccess());
-                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(updateOrderResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(updateOrderResponse.getTimestamp()));
             }catch(Exception e){
 
             }
@@ -193,7 +127,7 @@ public class PaymentController implements PaymentApi {
                 response.setMessage(getStatusResponse.getMessage());
                 response.setStatus(getStatusResponse.getStatus());
                 response.setSuccess(getStatusResponse.isSuccess());
-                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
             }catch(Exception e){
 
             }
@@ -206,18 +140,6 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
-
-        //add mock data to repo
-
-//        GeoPoint storeAddress=new GeoPoint(3.0, 3.0, "PnP, Hillcrest Boulevard");
-//        Store store1 = new Store();
-//        store1.setStoreID(storeID);
-//        store1.setStoreBrand("PnP");
-//        store1.setOpeningTime(7);
-//        store1.setClosingTime(20);
-//        store1.setOpen(true);
-//        store1.setMaxOrders(5);
-//        store1.setStoreLocation(storeAddress);
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
         HttpStatus httpStatus = HttpStatus.OK;
@@ -250,7 +172,7 @@ public class PaymentController implements PaymentApi {
                 response.setMessage(submitOrderResponse.getMessage());
                 response.setOrder(populateOrder(submitOrderResponse.getOrder()));
                 response.setSuccess(submitOrderResponse.getsuccess());
-                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
             }catch(Exception e){
 
             }
@@ -283,59 +205,6 @@ public class PaymentController implements PaymentApi {
     @Override
     public ResponseEntity<PaymentGetItemsResponse> getItemsPayments(PaymentGetItemsRequest body) {
 
-
-        //add mock data to repo
-//        List<Item> mockItemList = new ArrayList<>();
-//        Item item1, item2;
-//        item1=new Item("Heinz Tomato Sauce","p234058925","91234567-9ABC-DEF0-1234-56789ABCDEFF",storeID,36.99,1,"description","img/");
-//        item2=new Item("Bar one","p123984123","62234567-9ABC-DEF0-1234-56789ABCDEFA", storeID,14.99,3,"description","img/");
-//        mockItemList.add(item1); mockItemList.add(item2);
-//
-//        double totalCost = 14.99 + 36.99;
-//        Order order = new Order();
-//        order.setOrderID(orderId_AWAITNG_PAYMENT);
-//        order.setUserID(userID);
-//        order.setStoreID(storeID);
-//        order.setShopperID(shopperID);
-//        order.setCreateDate(Calendar.getInstance());
-//        order.setTotalCost(totalCost);
-//        order.setType(OrderType.DELIVERY);
-//        order.setStatus(OrderStatus.AWAITING_PAYMENT);
-//        order.setItems(mockItemList);
-//        order.setStoreAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-//        order.setDeliveryAddress(new GeoPoint(-25.74929765305105, 28.235606061624217, "Hatfield Plaza 1122 Burnett Street &, Grosvenor St, Hatfield, Pretoria, 0083"));
-//        totalCost = 0;
-//
-//        orders.add(order);
-//
-//        order.setOrderID(orderId_PURCHASED);
-//        order.setStatus(OrderStatus.PURCHASED);
-//        orders.add(order);
-//
-//        order.setOrderID(orderId_IN_QUEUE);
-//        order.setStatus(OrderStatus.IN_QUEUE);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_PACKING);
-//        order.setStatus(OrderStatus.PACKING);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_COLLECTION);
-//        order.setStatus(OrderStatus.AWAITING_COLLECTION);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_DELIVERY_COLLECTED);
-//        order.setStatus(OrderStatus.DELIVERY_COLLECTED);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_CUSTOMER_COLLECTED);
-//        order.setStatus(OrderStatus.CUSTOMER_COLLECTED);
-//        orders.add(order);
-//
-//        order.setOrderID(orderID_DELIVERED);
-//        order.setStatus(OrderStatus.DELIVERED);
-//
-
         PaymentGetItemsResponse response = new PaymentGetItemsResponse();
         HttpStatus httpStatus = HttpStatus.OK;
 
@@ -347,7 +216,7 @@ public class PaymentController implements PaymentApi {
                 response.setMessage(getItemsResponse.getMessage());
                 response.setItemList(populateCartItems(getItemsResponse.getCartItems()));
                 response.setSuccess(getItemsResponse.isSuccess());
-                response.setTimestamp(getItemsResponse.getTimestamp().toString());
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getItemsResponse.getTimestamp()));
             }catch(Exception e){
 
             }
@@ -369,7 +238,7 @@ public class PaymentController implements PaymentApi {
                 response.setOrder(populateOrder(getOrderResponse.getOrder()));
                 response.setMessage(getOrderResponse.getMessage());
                 response.setSuccess(getOrderResponse.isSuccess());
-                response.setTimestamp(String.valueOf(getOrderResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getOrderResponse.getTimestamp()));
             }catch (Exception e){
                 e.printStackTrace();
                 response.setOrder(null);
@@ -402,7 +271,7 @@ public class PaymentController implements PaymentApi {
                 response.setOrders(orderObjects);
                 response.setMessage(getOrdersResponse.getMessage());
                 response.setSuccess(getOrdersResponse.isSuccess());
-                response.setTimestamp(String.valueOf(getOrdersResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getOrdersResponse.getTimestamp()));
             }catch (Exception e){
                 e.printStackTrace();
                 response.setOrders(null);
