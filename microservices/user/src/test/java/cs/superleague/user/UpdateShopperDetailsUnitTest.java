@@ -140,22 +140,6 @@ public class UpdateShopperDetailsUnitTest {
         }
     }
 
-    @Test
-    @DisplayName("When user tries to update to existingEmail")
-    void UnitTest_testingExistingEmailUpdateAttempt(){
-        request.setEmail(shopperExistingEmail.getEmail());
-        when(shopperRepo.findByEmail(Mockito.any())).thenReturn(Optional.ofNullable(shopper));
-        when(shopperRepo.findByEmail(request.getEmail())).thenReturn(Optional.ofNullable(shopperExistingEmail));
-        try {
-            response = userService.updateShopperDetails(request);
-            assertEquals("Email is already taken", response.getMessage());
-            assertFalse(response.isSuccess());
-            assertNotNull(response.getTimestamp());
-        }catch(Exception e){
-            e.printStackTrace();
-            fail();
-        }
-    }
 
     @Test
     @DisplayName("When nonnull update values are given")

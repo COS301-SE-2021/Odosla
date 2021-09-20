@@ -1,6 +1,7 @@
 cs\superleague\integration\security\JWTAuthFilter.class
 cs\superleague\notifications\rabbit\NotificationListener.class
 cs\superleague\notifications\dataclass\Notification.class
+cs\superleague\user\requests\SaveCustomerToRepoRequest.class
 cs\superleague\models\NotificationSendEmailNotificationRequest.class
 cs\superleague\notifications\requests\SendEmailNotificationRequest.class
 cs\superleague\user\responses\GetAdminByUUIDResponse.class
@@ -31,6 +32,7 @@ cs\superleague\user\dataclass\Shopper.class
 cs\superleague\integration\TestController.class
 cs\superleague\user\dataclass\Wallet.class
 cs\superleague\notifications\exceptions\NotificationException.class
+cs\superleague\integration\security\JwtUtil.class
 cs\superleague\models\NotificationSendEmailNotificationResponse.class
 cs\superleague\notifications\rest\RestConfig.class
 cs\superleague\notifications\controller\NotificationController.class

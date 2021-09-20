@@ -150,7 +150,7 @@ public class UpdateShopperShiftUnitTest {
         Mockito.when(shopperRepo.findByEmail(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         //Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("storeID", request.getStoreID());
+        parts.put("StoreID", request.getStoreID());
         String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         URI uri = new URI(uriString);
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(store, new Date(), "");
@@ -174,7 +174,7 @@ public class UpdateShopperShiftUnitTest {
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         //Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("storeID", request.getStoreID());
+        parts.put("StoreID", request.getStoreID());
         String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         URI uri = new URI(uriString);
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(store, new Date(), "");
@@ -197,7 +197,7 @@ public class UpdateShopperShiftUnitTest {
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         //Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(store));
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("storeID", request.getStoreID());
+        parts.put("StoreID", request.getStoreID());
         String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         URI uri = new URI(uriString);
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(store, new Date(), "");
@@ -220,7 +220,7 @@ public class UpdateShopperShiftUnitTest {
         Mockito.when(shopperRepo.findById(Mockito.any())).thenReturn(java.util.Optional.ofNullable(shopper));
         //Mockito.when(storeRepo.findById(Mockito.any())).thenReturn(Optional.ofNullable(null));
         Map<String, Object> parts = new HashMap<String, Object>();
-        parts.put("storeID", request.getStoreID());
+        parts.put("StoreID", request.getStoreID());
         String uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
         URI uri = new URI(uriString);
         GetStoreByUUIDResponse getStoreByUUIDResponse = new GetStoreByUUIDResponse(null, new Date(), "");
