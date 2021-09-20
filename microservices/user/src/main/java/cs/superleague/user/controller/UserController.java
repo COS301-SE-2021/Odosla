@@ -628,7 +628,7 @@ public class UserController implements UserApi {
         } catch (Exception e){
             userGetShopperByUUIDResponse.setShopperEntity(null);
             userGetShopperByUUIDResponse.setMessage(e.getMessage());
-            userGetShopperByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+            userGetShopperByUUIDResponse.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(Calendar.getInstance().toString()));
         }
         return new ResponseEntity<>(userGetShopperByUUIDResponse, status);
     }
