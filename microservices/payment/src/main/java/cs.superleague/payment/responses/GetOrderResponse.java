@@ -12,12 +12,20 @@ public class GetOrderResponse {
     private final Date timestamp;
     private final String message;
 
+    public GetOrderResponse() {
+        this.order = null;
+        this.success = false;
+        this.timestamp = null;
+        this.message = null;
+    }
+
     /** CONSTRUCTOR
      * @param order - the order object requested
      * @param success - success status of the operation
      * @param timestamp - time that the system sends the response object
      * @param message - message returned after response
      */
+
     public GetOrderResponse(Order order, boolean success, Date timestamp, String message) {
         this.order = order;
         this.success = success;

@@ -55,7 +55,7 @@ public class DeliveryController implements DeliveryApi {
         DeliveryAddDeliveryDetailResponse response = new DeliveryAddDeliveryDetailResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
-            AddDeliveryDetailRequest request = new AddDeliveryDetailRequest(DeliveryStatus.valueOf(body.getDeliveryStatus()), body.getDetail(), UUID.fromString(body.getDeliveryID()), Calendar.getInstance());
+            AddDeliveryDetailRequest request = new AddDeliveryDetailRequest(DeliveryStatus.valueOf(body.getStatus()), body.getDetail(), UUID.fromString(body.getDeliveryID()), Calendar.getInstance());
             AddDeliveryDetailResponse addDeliveryDetailResponse = deliveryService.addDeliveryDetail(request);
             response.setMessage(addDeliveryDetailResponse.getMessage());
             response.setId(addDeliveryDetailResponse.getId());
@@ -191,8 +191,14 @@ public class DeliveryController implements DeliveryApi {
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = deliveryService.getNextOrderForDriver(request);
 
+            System.out.println("ASD 1");
+
             DeliveryObject deliveryObject = new DeliveryObject();
+
+            System.out.println("ASD delv id " + getNextOrderForDriverResponse.getDelivery().toString());
             deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());
+
+            System.out.println("ASD 1");
 
             GeoPointObject dropOffLocation=new GeoPointObject();
             dropOffLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getAddress());
@@ -330,14 +336,14 @@ public class DeliveryController implements DeliveryApi {
             deliveryObject.setCompleted(getDeliveryByUUIDResponse.getDelivery().isCompleted());
             deliveryObject.setDeliveryDetail(populateDeliveryDetails(getDeliveryByUUIDResponse.getDelivery().getDeliveryDetail()));
 
-            response.setDelivery(deliveryObject);
+            response.setDeliveryEntity(deliveryObject);
             response.setMessage(getDeliveryByUUIDResponse.getMessage());
             response.setTimestamp(getDeliveryByUUIDResponse.getTimestamp().toString());
 
         }catch (Exception e){
             e.printStackTrace();
             response.setMessage(e.getMessage());
-            response.setDelivery(null);
+            response.setDeliveryEntity(null);
         }
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -354,7 +360,7 @@ public class DeliveryController implements DeliveryApi {
             deliveryDetailObject.setId(deliveryDetails.get(i).getId());
             deliveryDetailObject.setDeliveryID(String.valueOf(deliveryDetails.get(i).getDeliveryID()));
             deliveryDetailObject.setTime(String.valueOf(deliveryDetails.get(i).getTime().getTime()));
-            deliveryDetailObject.setDeliveryStatus(String.valueOf(deliveryDetails.get(i).getStatus()));
+            deliveryDetailObject.setStatus(String.valueOf(deliveryDetails.get(i).getStatus()));
             deliveryDetailObject.setDetail(deliveryDetails.get(i).getDetail());
             deliveryDetailObjects.add(deliveryDetailObject);
         }

@@ -16,8 +16,8 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Generic schema for an item")
 @Validated
 public class ItemObject   {
-  @JsonProperty("productId")
-  private String productId = null;
+  @JsonProperty("productID")
+  private String productID = null;
 
   @JsonProperty("name")
   private String name = null;
@@ -25,8 +25,8 @@ public class ItemObject   {
   @JsonProperty("barcode")
   private String barcode = null;
 
-  @JsonProperty("storeId")
-  private String storeId = null;
+  @JsonProperty("storeID")
+  private String storeID = null;
 
   @JsonProperty("price")
   private BigDecimal price = null;
@@ -49,23 +49,23 @@ public class ItemObject   {
   @JsonProperty("itemType")
   private String itemType = null;
 
-  public ItemObject productId(String productId) {
-    this.productId = productId;
+  public ItemObject productID(String productID) {
+    this.productID = productID;
     return this;
   }
 
   /**
-   * Get productId
-   * @return productId
+   * Get productID
+   * @return productID
   **/
   @ApiModelProperty(value = "")
   
-    public String getProductId() {
-    return productId;
+    public String getProductID() {
+    return productID;
   }
 
-  public void setProductId(String productId) {
-    this.productId = productId;
+  public void setProductID(String productID) {
+    this.productID = productID;
   }
 
   public ItemObject name(String name) {
@@ -106,23 +106,23 @@ public class ItemObject   {
     this.barcode = barcode;
   }
 
-  public ItemObject storeId(String storeId) {
-    this.storeId = storeId;
+  public ItemObject storeID(String storeID) {
+    this.storeID = storeID;
     return this;
   }
 
   /**
-   * Get storeId
-   * @return storeId
+   * Get storeID
+   * @return storeID
   **/
   @ApiModelProperty(value = "")
   
-    public String getStoreId() {
-    return storeId;
+    public String getStoreID() {
+    return storeID;
   }
 
-  public void setStoreId(String storeId) {
-    this.storeId = storeId;
+  public void setStoreID(String storeID) {
+    this.storeID = storeID;
   }
 
   public ItemObject price(BigDecimal price) {
@@ -269,10 +269,10 @@ public class ItemObject   {
       return false;
     }
     ItemObject itemObject = (ItemObject) o;
-    return Objects.equals(this.productId, itemObject.productId) &&
+    return Objects.equals(this.productID, itemObject.productID) &&
         Objects.equals(this.name, itemObject.name) &&
         Objects.equals(this.barcode, itemObject.barcode) &&
-        Objects.equals(this.storeId, itemObject.storeId) &&
+        Objects.equals(this.storeID, itemObject.storeID) &&
         Objects.equals(this.price, itemObject.price) &&
         Objects.equals(this.quantity, itemObject.quantity) &&
         Objects.equals(this.description, itemObject.description) &&
@@ -284,7 +284,7 @@ public class ItemObject   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(productId, name, barcode, storeId, price, quantity, description, imageUrl, brand, size, itemType);
+    return Objects.hash(productID, name, barcode, storeID, price, quantity, description, imageUrl, brand, size, itemType);
   }
 
   @Override
@@ -292,10 +292,10 @@ public class ItemObject   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ItemObject {\n");
     
-    sb.append("    productId: ").append(toIndentedString(productId)).append("\n");
+    sb.append("    productID: ").append(toIndentedString(productID)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    barcode: ").append(toIndentedString(barcode)).append("\n");
-    sb.append("    storeId: ").append(toIndentedString(storeId)).append("\n");
+    sb.append("    storeID: ").append(toIndentedString(storeID)).append("\n");
     sb.append("    price: ").append(toIndentedString(price)).append("\n");
     sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");

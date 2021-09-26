@@ -1,15 +1,19 @@
 package cs.superleague.user.dataclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "shopper")
-public class Shopper extends User {
+public class Shopper extends User implements Serializable {
 
     /* Attributes */
     @Id
@@ -120,6 +124,8 @@ public class Shopper extends User {
     private String password;
 
     @Column(name="activation_date")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private Date activationDate;
 
     @Column(name="activation_code")

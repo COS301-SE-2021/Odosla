@@ -1,9 +1,12 @@
+D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\dataclass\CartItem.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\integration\dataclass\UserType.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\responses\GetOrderResponse.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\exceptions\RecommendationException.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\integration\ServiceSelector.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\rest\RestConfig.java
+D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\responses\GetAllCartItemsResponse.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\dataclass\OrderType.java
+D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\shopping\responses\GetAllItemsResponse.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\integration\security\SpringSecurityConfig.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\rabbit\RecommendationListener.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\responses\GetCartRecommendationResponse.java
@@ -18,6 +21,7 @@ D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommenda
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\responses\GetOrderRecommendationResponse.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\dataclass\Order.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\integration\security\CurrentUser.java
+D:\Odosla 2\microservices\recommendation\target\generated-sources\src\main\java\cs\superleague\models\CartItemObject.java
 D:\Odosla 2\microservices\recommendation\target\generated-sources\src\main\java\cs\superleague\models\RecommendationGetCartRecommendationRequest.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\integration\security\JWTAuthProvider.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\requests\RemoveRecommendationRequest.java
@@ -33,3 +37,4 @@ D:\Odosla 2\microservices\recommendation\target\generated-sources\src\main\java\
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\dataclass\OrderStatus.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\dataclass\Recommendation.java
 D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\recommendation\RecommendationService.java
+D:\Odosla 2\microservices\recommendation\src\main\java\cs.superleague\payment\responses\GetOrderByUUIDResponse.java

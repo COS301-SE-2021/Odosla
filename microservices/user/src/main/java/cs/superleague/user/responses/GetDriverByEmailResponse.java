@@ -2,7 +2,9 @@ package cs.superleague.user.responses;
 
 import cs.superleague.user.dataclass.Driver;
 
-public class GetDriverByEmailResponse {
+import java.io.Serializable;
+
+public class GetDriverByEmailResponse implements Serializable {
     final Driver driver;
     private final boolean success;
 

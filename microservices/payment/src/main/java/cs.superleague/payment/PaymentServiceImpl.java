@@ -8,6 +8,7 @@ import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.exceptions.PaymentException;
+import cs.superleague.payment.repos.CartItemRepo;
 import cs.superleague.payment.repos.InvoiceRepo;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.repos.TransactionRepo;
@@ -16,6 +17,7 @@ import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -55,14 +57,16 @@ public class PaymentServiceImpl implements PaymentService {
     private final TransactionRepo transactionRepo;
     private final RabbitTemplate rabbitTemplate;
     private final RestTemplate restTemplate;
+    private final CartItemRepo cartItemRepo;
 
     @Autowired
-    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate) throws InvalidRequestException {
+    public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate, CartItemRepo cartItemRepo) throws InvalidRequestException {
         this.orderRepo = orderRepo;
         this.invoiceRepo = invoiceRepo;
         this.transactionRepo = transactionRepo;
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
+        this.cartItemRepo = cartItemRepo;
     }
 
 
@@ -109,6 +113,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException {
 
+        System.out.println("submit order store id: "+ request.getStoreID());
+        System.out.println("__1");
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
         AtomicReference<Double> totalCost= new AtomicReference<>((double) 0);
@@ -121,7 +127,7 @@ public class PaymentServiceImpl implements PaymentService {
         GetStoreByUUIDResponse shop=null;
         if (request!=null)
         {
-
+            System.out.println("__2");
             if(request.getListOfItems()==null){
                 invalidReq = true;
                 invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
@@ -165,14 +171,20 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
 
+            System.out.println("__3");
+
             String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
             URI uri = new URI(stringUri);
 
+            System.out.println("__uri " + uri.toString());
+
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeID", request.getStoreID());
+            parts.put("StoreID", request.getStoreID().toString());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate
                     .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
+
+            System.out.println("__4");
 
             if (shop != null) {
                 if (shop.getStore().getStoreLocation() == null) {
@@ -185,16 +197,17 @@ public class PaymentServiceImpl implements PaymentService {
                     invalidMessage = ("Store is currently closed - could not create order");
                 }
             }
+            System.out.println("__5");
 
             if(invalidReq)
             {
                 throw new InvalidRequestException(invalidMessage);
             }
-
+            System.out.println("__6");
             CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail());
+            parts.put("email", currentUser.getEmail().toString());
 
             stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
             uri = new URI(stringUri);
@@ -205,6 +218,7 @@ public class PaymentServiceImpl implements PaymentService {
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
 
+            System.out.println("__7");
             assert customer != null;
 
             customerID = customer.getCustomerID();
@@ -221,6 +235,8 @@ public class PaymentServiceImpl implements PaymentService {
                     finalTotalCost.updateAndGet(v -> ((double) (v + itemPrice)));
                 }
             });
+
+            System.out.println("__8");
 
             /* Take off discount */
             finalTotalCost.updateAndGet(v -> ((double) (v - discount)));
@@ -239,6 +255,8 @@ public class PaymentServiceImpl implements PaymentService {
 
             GeoPoint customerLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
 
+            System.out.println("__9");
+
             Order alreadyExists = null;
             while (true) {
                 try {
@@ -247,6 +265,8 @@ public class PaymentServiceImpl implements PaymentService {
                     e.printStackTrace();
                 }
 
+                System.out.println("__9.1");
+
                 if (alreadyExists != null) {
                     orderID = UUID.randomUUID();
                 } else {
@@ -254,37 +274,65 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
 
+            System.out.println("__10");
+
             assert shop != null;
-            //            List<OrderItems> orderItems = new ArrayList<>();
-            //            for(int k=0; k<request.getListOfItems().size(); k++)
-            //            {
-            //                OrderItems orderItems1 = new OrderItems();
-            //                orderItems1.setOrderID(orderID);
-            //                orderItems1.setBarcode(request.getListOfItems().get(k).getBarcode());
-            //                orderItems1.setName(request.getListOfItems().get(k).getName());
-            //                orderItems1.setDescription(request.getListOfItems().get(k).getDescription());
-            //                orderItems1.setBrand(request.getListOfItems().get(k).getBrand());
-            //                orderItems1.setItemType(request.getListOfItems().get(k).getItemType());
-            //                orderItems1.setImageUrl(request.getListOfItems().get(k).getImageUrl());
-            //                orderItems1.setPrice(request.getListOfItems().get(k).getPrice());
-            //                orderItems1.setQuantity(request.getListOfItems().get(k).getQuantity());
-            //                orderItems1.setProductID(request.getListOfItems().get(k).getProductID());
-            //                orderItems1.setSize(request.getListOfItems().get(k).getSize());
-            //                orderItems1.setTotalCost(request.getListOfItems().get(k).getQuantity()* request.getListOfItems().get(k).getPrice());
-            //
-            //                orderItems.add(orderItems1);
-            //            }
-            Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
 
-            //Order o = new Order(requiresPharmacy, orderID, customerID, request.getStoreID(), shopperID, Calendar.getInstance(), null, totalC, orderType,OrderStatus.AWAITING_PAYMENT,orderItems, request.getDiscount(), customerLocation , shop.getStore().getStoreLocation());
 
+            //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
+            System.out.println("__11");
+//            System.out.println("Submit Order id: "+ orderID);
+            Order o = new Order();
+            o.setOrderID(orderID);
+            o.setUserID(customerID);
+            o.setStoreID(request.getStoreID());
+            o.setShopperID(shopperID);
+            o.setCreateDate(new Date());
+            o.setProcessDate(null);
+            o.setTotalCost(totalC);
+            o.setType(orderType);
+            o.setStatus(OrderStatus.AWAITING_PAYMENT);
+            o.setDiscount(request.getDiscount());
+            o.setDeliveryAddress(customerLocation);
+            o.setStoreAddress(shop.getStore().getStoreLocation());
+            o.setRequiresPharmacy(requiresPharmacy);
+
+            System.out.println("__12");
             if (o != null) {
-
+                System.out.println("__13");
                 if (shop.getStore().getOpen() == true) {
+                    System.out.println("__14");
                     if (orderRepo != null) {
+                        System.out.println("__x");
                         orderRepo.save(o);
+                        System.out.println("-----------made it after order repo -----------");
+                        //Setting total cost of each item
+                        List<CartItem> cartItems = request.getListOfItems();
+
+                        System.out.println("Submit order cart size: " + cartItems.size());
+                        for(int k = 0; k < cartItems.size(); k++)
+                        {
+                            UUID cartID = UUID.randomUUID();
+                            while(cartItemRepo.existsById(cartID))
+                            {
+                                cartID = UUID.randomUUID();
+                            }
+                            cartItems.get(k).setCartItemNo(cartID);
+                            cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
+                            cartItems.get(k).setStoreID(request.getStoreID());
+                            cartItems.get(k).setOrderID(orderID);
+
+                        }
+
+                        o.setCartItems(cartItems);
+
+                        if(cartItemRepo!=null)
+                            cartItemRepo.saveAll(cartItems);
+
+                        orderRepo.save(o);
+
                         List<String> productIDs = new ArrayList<>();
-                        for (Item item : request.getListOfItems()){
+                        for (CartItem item : request.getListOfItems()){
                             productIDs.add(item.getProductID());
                         }
 
@@ -558,8 +606,8 @@ import java.util.List;50"
 
             if (request.getListOfItems() != null) {
                 System.out.println("hello");
-                order.setItems(request.getListOfItems());
-                cost = getCost(order.getItems());
+                order.setCartItems(request.getListOfItems());
+                cost = getCost(order.getCartItems());
                 order.setTotalCost(cost - discount);
             } // else refer them to cancel order
 
@@ -575,10 +623,6 @@ import java.util.List;50"
         } else {
             message = "Can no longer update the order - UpdateOrder Unsuccessful.";
             return new UpdateOrderResponse(order, false, Calendar.getInstance().getTime(), message);
-        }
-
-        for(Item item: order.getItems()){
-            System.out.println(item.getPrice());
         }
 
         orderRepo.save(order);
@@ -601,7 +645,12 @@ import java.util.List;50"
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
+        System.out.println("requests order id: " + request.getOrderID());
         order = orderRepo.findById(request.getOrderID()).orElse(null);
+        //order.setOrderID(request.getOrderID());
+        System.out.println("order total cost: " +order.getTotalCost());
+        System.out.println("order create date: " +order.getCreateDate());
+        System.out.println("Order id from get Order: " + order.getOrderID());
         if(order == null){
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
@@ -615,6 +664,7 @@ import java.util.List;50"
         String message;
         Order order;
 
+        System.out.println("get status request order id: "+ request.getOrderID());
         if(request == null){
             throw new InvalidRequestException("Invalid getStatusRequest received - could not get status.");
         }
@@ -781,10 +831,10 @@ import java.util.List;50"
         order = transaction.getOrder();
         Calendar timestamp = Calendar.getInstance();
 
-        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getItems());
+        invoice = new Invoice(invoiceID, request.getCustomerID(), timestamp, "", order.getTotalCost(), order.getCartItems());
         invoiceRepo.save(invoice);
 
-        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getItems(), invoice.getTotalCost());
+        byte[] PDF = PDF(invoiceID, invoice.getDate(), invoice.getDetails(), order.getCartItems(), invoice.getTotalCost());
 
         // send email
         // notificationService.sendEmail(PDF);
@@ -876,7 +926,20 @@ import java.util.List;50"
         if (request.getOrder() == null){
             throw new InvalidRequestException("Null parameters");
         }
-        orderRepo.save(request.getOrder());
+
+        System.out.println("check if order repo not null");
+        if(orderRepo!=null)
+        {
+            System.out.println("I made it here 2");
+            Order order = request.getOrder();
+            System.out.println("request order id:" + request.getOrder().getOrderID());
+            order.setOrderID(request.getOrder().getOrderID());
+            System.out.println("shoppers id: "+ order.getShopperID());
+            System.out.println("order id: " + order.getOrderID());
+            orderRepo.save(order);
+            System.out.println("after safe");
+        }
+
     }
 
     @Override
@@ -907,7 +970,7 @@ import java.util.List;50"
             return new GetItemsResponse(null, false, new Date(), message);
         }
 
-        return new GetItemsResponse(order.getItems(), true, new Date(), message);
+        return new GetItemsResponse(order.getCartItems(), true, new Date(), message);
     }
 
     @Override
@@ -931,17 +994,17 @@ import java.util.List;50"
     }
 
     // Helper
-    private double getCost(List<Item> items){
+    private double getCost(List<CartItem> items){
         double cost = 0;
 
-        for (Item item : items) {
+        for (CartItem item : items) {
             cost += item.getPrice() * item.getQuantity();
         }
 
         return cost;
     }
 
-    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<Item> ITEM, double TOTAL_PRICE) {
+    public byte[] PDF(UUID invoiceID, Calendar INVOICED_DATE, String DETAILS, List<CartItem> ITEM, double TOTAL_PRICE) {
         String home = System.getProperty("user.home");
         String file_name = home + "/Downloads/Odosla_Invoice_" + invoiceID + ".pdf";
         Document pdf = new Document();
@@ -953,7 +1016,7 @@ import java.util.List;50"
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
             pdf.add(new Paragraph("This is an invoice from Odosla", header));
 
-            for (Item item: ITEM) {
+            for (CartItem item: ITEM) {
                 pdf.add(new Paragraph("Item: " + item.getName(), body));
                 pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
                 pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
@@ -972,5 +1035,62 @@ import java.util.List;50"
             System.out.println("PDF Error");
         }
         return output.toByteArray();
+    }
+
+    @Override
+    public GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException {
+        GetAllCartItemsResponse response=null;
+
+        if(request!=null){
+
+            List<CartItem> items;
+            try {
+                items = cartItemRepo.findAll();
+            }
+            catch (Exception e) {
+                throw new InvalidRequestException("No items exist in repository");
+            }
+
+            if(items == null){
+                response = new GetAllCartItemsResponse(null, Calendar.getInstance().getTime(), "All items can't be retrieved");
+            }
+            else {
+                response = new GetAllCartItemsResponse(items, Calendar.getInstance().getTime(), "All items have been retrieved");
+            }
+        }
+        else{
+            throw new InvalidRequestException("The GetAllCartItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
+    }
+
+    @Override
+    public GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException
+    {
+        GetOrderByUUIDResponse response = null;
+        if(request != null){
+
+            System.out.println("get order by uuid id: "+ request.getOrderID());
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("OrderID is null in GetOrderByUUIDRequest request - could not return order entity");
+            }
+
+            Order order =null;
+            try {
+                order = orderRepo.findById(request.getOrderID()).orElse(null);
+            }catch (NullPointerException e){
+                //Catching nullPointerException from mockito unit test, when(storeRepo.findById(mockito.any())) return null - which will return null pointer exception
+            }
+
+            if(order==null) {
+                throw new InvalidRequestException("Order with ID does not exist in repository - could not get Order entity");
+            }
+            System.out.println("found order id: "+ order.getOrderID());
+            response=new GetOrderByUUIDResponse(order,Calendar.getInstance().getTime(),"Order entity with corresponding id was returned");
+        }
+        else{
+            throw new InvalidRequestException("Order request is null - could not return order entity");
+        }
+        return response;
     }
 }

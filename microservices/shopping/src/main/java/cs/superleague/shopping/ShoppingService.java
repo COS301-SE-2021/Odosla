@@ -52,4 +52,7 @@ public interface ShoppingService {
     GetItemsByIDResponse getItemsByID(GetItemsByIDRequest request) throws InvalidRequestException;
 
     void addToFrontOfQueue(AddToFrontOfQueueRequest request) throws InvalidRequestException;
+
+    SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException;
+
 }

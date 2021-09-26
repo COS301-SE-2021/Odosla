@@ -6,11 +6,13 @@ import cs.superleague.user.responses.*;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 
+import java.net.URISyntaxException;
+
 public interface UserService {
 //    public RegisterResponse registerUser(RegisterUserRequest registerRequest);
 //    public RegisterResponse registerAdminUser(RegisterUserRequest registerRequest);
 
-    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException;
+    CompletePackagingOrderResponse completePackagingOrder(CompletePackagingOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, cs.superleague.delivery.exceptions.InvalidRequestException, URISyntaxException;
     ScanItemResponse scanItem(ScanItemRequest request) throws InvalidRequestException, OrderDoesNotExist;
     RegisterCustomerResponse registerCustomer (RegisterCustomerRequest request) throws InvalidRequestException;
     RegisterDriverResponse registerDriver(RegisterDriverRequest request) throws InvalidRequestException;
@@ -35,14 +37,17 @@ public interface UserService {
     UpdateCustomerDetailsResponse updateCustomerDetails(UpdateCustomerDetailsRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     SetCartResponse setCart(SetCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
     ClearShoppingCartResponse clearShoppingCart(ClearShoppingCartRequest request) throws InvalidRequestException, UserDoesNotExistException;
-    CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException;
-    CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException;
+    CollectOrderResponse collectOrder(CollectOrderRequest request) throws OrderDoesNotExist, InvalidRequestException, URISyntaxException;
+    CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException, URISyntaxException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
-    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, StoreDoesNotExistException;
+    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, StoreDoesNotExistException, URISyntaxException;
 
     /* Analytics user data*/
-    GetUsersResponse getUsers(GetUsersRequest request) throws Exception;
+    GetAdminsResponse getAdmins(GetAdminsRequest request) throws Exception;
+    GetCustomersResponse getCustomers(GetCustomersRequest request) throws Exception;
+    GetDriversResponse getDrivers(GetDriversRequest request) throws Exception;
+    GetShoppersResponse getShoppers(GetShoppersRequest request) throws Exception;
 
     GetGroceryListsResponse getGroceryLists(GetGroceryListsRequest request) throws UserException;
     GetCustomerByUUIDResponse getCustomerByUUID(GetCustomerByUUIDRequest request) throws UserException;

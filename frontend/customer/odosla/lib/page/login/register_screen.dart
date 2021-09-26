@@ -448,13 +448,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     });
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content:
-                            Text("Email has already been used for a Driver")));
+                            Text("Email has already been used for a Customer")));
                   } else if (success == "timeout") {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text("Request timed out - please retry")));
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Failed to Register Driver")));
+                        SnackBar(content: Text("Failed to Register Customer")));
                   }
                   setState(() {
                     _isInAsyncCall = false;
