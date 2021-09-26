@@ -171,6 +171,32 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(userGetShoppingCartResponse, status);
     }
 
+    @Override
+    public ResponseEntity<UserItemNotAvailableResponse> itemNotAvailable(UserItemNotAvailableRequest body) {
+        UserItemNotAvailableResponse userItemNotAvailableResponse = new UserItemNotAvailableResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ItemNotAvailableRequest request = new ItemNotAvailableRequest(UUID.fromString(body.getOrderID()), body.getCurrentProductBarcode(), body.getAlternativeProductBarcode());
+
+            ItemNotAvailableResponse response = userService.itemNotAvailable(request);
+            try{
+                userItemNotAvailableResponse.setMessage(response.getMessage());
+                userItemNotAvailableResponse.setSuccess(response.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+                userItemNotAvailableResponse.setMessage(e.getMessage());
+                userItemNotAvailableResponse.setSuccess(false);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            userItemNotAvailableResponse.setMessage(e.getMessage());
+            userItemNotAvailableResponse.setSuccess(false);
+        }
+        return new ResponseEntity<>(userItemNotAvailableResponse, status);
+    }
+
     //Populate ItemObject list from items returned by use case
     private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
 

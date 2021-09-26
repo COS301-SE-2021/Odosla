@@ -691,7 +691,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/user_UpdateDriverDetailsResponse"
+                $ref: "#/components/schemas/user_updateDriverDetailsResponse"
 
   /user/getAdminByEmail:
     post:
@@ -802,6 +802,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/user_GetShoppersResponse"
+
+  /user/itemNotAvailable:
+    post:
+      summary: Endpoint for reporting an issue with an order
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: itemNotAvailable
+      requestBody:
+        description: The input body of the request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_ItemNotAvailableRequest"
+      responses:
+        "200":
+          description: Returns whether or not the item repoted as not available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_ItemNotAvailableResponse"
 
 components:
 
@@ -1633,7 +1655,7 @@ components:
         longitude:
           type: number
 
-    user_updateCustomerDetailsResponse:
+    user_UpdateCustomerDetailsResponse:
       description: This object is returned as output
       type: object
       properties:
@@ -1663,7 +1685,7 @@ components:
         currentPassword:
           type: string
 
-    user_updateAdminDetailsResponse:
+    user_UpdateAdminDetailsResponse:
       description: This object is returned as output
       type: object
       properties:
@@ -1776,7 +1798,7 @@ components:
         users:
           type: array
           items:
-            - $ref: "#/components/schemas/CustomerObject"
+            $ref: "#/components/schemas/CustomerObject"
 
     user_GetDriversRequest:
       description: This object is expected as input
@@ -1815,3 +1837,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ShopperObject"
+
+    user_ItemNotAvailableRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+        currentProductBarcode:
+          type: string
+        alternativeProductBarcode:
+          type: string
+
+    user_ItemNotAvailableResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean

@@ -63,4 +63,6 @@ public interface UserService {
 
     void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException;
     void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
+
+    ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist;
 }
