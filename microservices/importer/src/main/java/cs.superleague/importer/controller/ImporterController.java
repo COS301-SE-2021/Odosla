@@ -39,7 +39,7 @@ public class ImporterController implements ImporterApi {
 
     @Autowired
     public ImporterController(ImporterServiceImpl importerService, RestTemplate restTemplate,
-                              HttpServletRequest httpServletRequest){
+                              HttpServletRequest httpServletRequest) {
         this.importerService = importerService;
         this.restTemplate = restTemplate;
         this.httpServletRequest = httpServletRequest;
