@@ -38,7 +38,8 @@ public class CartItem implements Serializable {
     private String itemType;
 
 
-    public CartItem(){ }
+    public CartItem() {
+    }
 
     public CartItem(String name, String productID, String barcode, UUID orderID, double price, int quantity, String description, String imageUrl) {
         this.name = name;
@@ -60,10 +61,10 @@ public class CartItem implements Serializable {
         this.quantity = quantity;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.brand=brand;
-        this.itemType=itemType;
-        this.size=size;
-        this.totalCost= totalCost;
+        this.brand = brand;
+        this.itemType = itemType;
+        this.size = size;
+        this.totalCost = totalCost;
         this.storeID = storeID;
     }
 

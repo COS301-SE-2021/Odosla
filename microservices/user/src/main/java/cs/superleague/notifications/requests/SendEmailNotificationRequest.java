@@ -15,24 +15,24 @@ public class SendEmailNotificationRequest {
 
     public SendEmailNotificationRequest(String message, Map<String, String> properties) {
         this.message = message;
-        if (properties == null){
+        if (properties == null) {
             this.type = null;
             this.subject = null;
             this.userType = null;
             this.userID = null;
-        }else{
-            if (properties.get("Type") == null){
+        } else {
+            if (properties.get("Type") == null) {
                 this.type = null;
-            }else{
+            } else {
                 this.type = properties.get("Type");
             }
-            if (properties.get("Subject") == null){
+            if (properties.get("Subject") == null) {
                 this.subject = null;
-            }else{
+            } else {
                 this.subject = properties.get("Subject");
             }
-            if (properties.get("UserType") != null){
-                switch (properties.get("UserType").toLowerCase()){
+            if (properties.get("UserType") != null) {
+                switch (properties.get("UserType").toLowerCase()) {
                     case "admin":
                         this.userType = UserType.ADMIN;
                         break;
@@ -49,12 +49,12 @@ public class SendEmailNotificationRequest {
                         this.userType = null;
                         break;
                 }
-            }else{
+            } else {
                 this.userType = null;
             }
             if (properties.get("UserID") != null && !properties.get("UserID").equals("")) {
                 this.userID = UUID.fromString(properties.get("UserID"));
-            }else{
+            } else {
                 this.userID = null;
             }
         }
