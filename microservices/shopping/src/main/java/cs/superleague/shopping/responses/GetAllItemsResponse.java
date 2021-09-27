@@ -13,6 +13,13 @@ public class GetAllItemsResponse {
     private Date timestamp;
     private String message;
 
+    public GetAllItemsResponse()
+    {
+        this.items = null;
+        this.timestamp= null;
+        this.message= null;
+    }
+
     public GetAllItemsResponse(List<Item> items, Date timestamp, String message)
     {
         this.items = items;

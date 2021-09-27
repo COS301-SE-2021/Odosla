@@ -254,6 +254,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetStoreByUUIDResponse"
 
+  /shopping/getProductByBarcode:
+    post:
+      summary: Endpoint for Get product by barcode use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getProductByBarcode
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetProductByBarcodeRequest"
+      responses:
+        "200":
+          description: Returns the associated product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetProductByBarcodeResponse"
+
 
 components:
 
@@ -263,13 +285,13 @@ components:
       description: "Generic schema for an item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -290,9 +312,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
-          description: generated token used to identify the caller of the endpoint
         storeID:
           type: string
 
@@ -300,13 +319,16 @@ components:
       description: This object is returned as output
       type: object
       properties:
-        errorMessage:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
         items:
           type: array
           items:
             $ref: "#/components/schemas/ItemObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+        storeID:
+          type: string
 
     shopping_AddShopperRequest:
       description: This object is expected as input
@@ -323,8 +345,7 @@ components:
       properties:
         success:
           type: boolean
-          description: generated token used to identify the caller of the endpoint
-        date:
+        timestamp:
           type: string
         message:
           type: string
@@ -388,9 +409,6 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        jwtToken:
-          type: string
-          description: generated token used to identify the caller of the endpoint
         storeID:
           type: string
 
@@ -398,13 +416,16 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        errorMessage:
-          type: string
-          description: Will contain a descriptive error message if response code is not 200, else will be empty
-        shoppers:
+        listOfShoppers:
           type: array
           items:
             $ref: "#/components/schemas/ShopperObject"
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
+          type: string
 
     StoreObject:
       description: "Generic schema for a store"
@@ -414,20 +435,45 @@ components:
           type: string
         storeBrand:
           type: string
-        isOpen:
-          type: boolean
         maxShoppers:
           type: integer
         maxOrders:
           type: integer
+        isOpen:
+          type: boolean
         openingTime:
           type: integer
         closingTime:
           type: integer
-        imageUrl:
+        imgUrl:
           type: string
         storeLocation:
           $ref: "#/components/schemas/GeoPointObject"
+        stock:
+          $ref: "#/components/schemas/CatalogueObject"
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+        currentOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        orderQueue:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
+    CatalogueObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
 
     shopping_GetStoresRequest:
       description: This object is expected as input
@@ -450,34 +496,34 @@ components:
       description: "Generic schema for an Order"
       type: object
       properties:
-        orderId:
+        orderID:
           type: string
-        userId:
+        userID:
           type: string
-        storeId:
+        storeID:
           type: string
-        shopperId:
+        shopperID:
           type: string
         createDate:
           type: string
         processDate:
           type: string
-        totalPrice:
+        totalCost:
           type: number
         status:
           type: string
+        discount:
+          type: number
+        deliveryAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        storeAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        requiresPharmacy:
+          type: boolean
         cartItems:
           type: array
           items:
             $ref: "#/components/schemas/CartItemObject"
-        discount:
-          type: number
-        deliveryAddress:
-          type: string
-        storeAddress:
-          type: string
-        requiresPharmacy:
-          type: boolean
 
     shopping_GetNextQueuedRequest:
       description: This object is expected as input
@@ -492,9 +538,9 @@ components:
       properties:
         message:
           type: string
-        success:
+        response:
           type: boolean
-        date:
+        timeStamp:
           type: string
         queueOfOrders:
           type: array
@@ -614,7 +660,7 @@ components:
       description: This object is expected as input
       type: object
       properties:
-        storeID:
+        StoreID:
           type: string
 
     shopping_GetStoreByUUIDResponse:
@@ -638,7 +684,7 @@ components:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -654,9 +700,29 @@ components:
           type: string
         itemType:
           type: string
-        orderId:
+        orderID:
           type: string
         totalCost:
           type: number
         cartItemNo:
           type: string
+
+    shopping_GetProductByBarcodeRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        productBarcode:
+          type: string
+        storeID:
+          type: string
+
+    shopping_GetProductByBarcodeResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        product:
+          $ref: "#/components/schemas/ItemObject"

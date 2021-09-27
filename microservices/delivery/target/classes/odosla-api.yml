@@ -281,22 +281,28 @@ components:
           type: string
         driverID:
           type: string
+        deliveryID:
+          type: string
+        totalRatings:
+          type: number
         rating:
           type: number
         onShift:
           type: boolean
-        currentAddress:
-          $ref: "#/components/schemas/GeoPointObject"
+        isCurrentlyDelivering:
+          type: boolean
         deliveriesCompleted:
           type: number
-        deliveryID:
-          type: string
+        numberOfRatings:
+          type: number
+        currentAddress:
+          $ref: "#/components/schemas/GeoPointObject"
 
     delivery_AddDeliveryDetailRequest:
       description: This object is expected as input
       type: object
       properties:
-        deliveryStatus:
+        status:
           type: string
         detail:
           type: string
@@ -401,7 +407,7 @@ components:
           type: string
         time:
           type: string
-        deliveryStatus:
+        status:
           type: string
         detail:
           type: string
@@ -548,7 +554,7 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        delivery:
+        deliveryEntity:
           $ref: "#/components/schemas/DeliveryObject"
         message:
           type: string

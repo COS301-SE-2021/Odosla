@@ -3,12 +3,13 @@ package cs.superleague.user.dataclass;
 import cs.superleague.payment.dataclass.GeoPoint;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table
-public class Driver extends User {
+public class Driver extends User implements Serializable {
 
     /* Attributes */
 

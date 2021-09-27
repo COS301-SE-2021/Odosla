@@ -1,7 +1,6 @@
 package cs.superleague.user.controller;
 import cs.superleague.api.UserApi;
 import cs.superleague.models.*;
-import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
@@ -152,7 +151,7 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
-            GetShoppingCartRequest request = new GetShoppingCartRequest(body.getCustomerID());
+            GetShoppingCartRequest request = new GetShoppingCartRequest(body.getUserID());
 
             GetShoppingCartResponse response = userService.getShoppingCart(request);
             try{
@@ -171,6 +170,32 @@ public class UserController implements UserApi {
         return new ResponseEntity<>(userGetShoppingCartResponse, status);
     }
 
+    @Override
+    public ResponseEntity<UserItemNotAvailableResponse> itemNotAvailable(UserItemNotAvailableRequest body) {
+        UserItemNotAvailableResponse userItemNotAvailableResponse = new UserItemNotAvailableResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ItemNotAvailableRequest request = new ItemNotAvailableRequest(UUID.fromString(body.getOrderID()), body.getCurrentProductBarcode(), body.getAlternativeProductBarcode());
+
+            ItemNotAvailableResponse response = userService.itemNotAvailable(request);
+            try{
+                userItemNotAvailableResponse.setMessage(response.getMessage());
+                userItemNotAvailableResponse.setSuccess(response.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+                userItemNotAvailableResponse.setMessage(e.getMessage());
+                userItemNotAvailableResponse.setSuccess(false);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            userItemNotAvailableResponse.setMessage(e.getMessage());
+            userItemNotAvailableResponse.setSuccess(false);
+        }
+        return new ResponseEntity<>(userItemNotAvailableResponse, status);
+    }
+
     //Populate ItemObject list from items returned by use case
     private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
 
@@ -186,8 +211,8 @@ public class UserController implements UserApi {
             currentItem.setName(responseItems.get(i).getName());
             currentItem.setDescription(responseItems.get(i).getDescription());
             currentItem.setBarcode(responseItems.get(i).getBarcode());
-            currentItem.setProductId(responseItems.get(i).getProductID());
-            currentItem.setStoreId(responseItems.get(i).getStoreID().toString());
+            currentItem.setProductID(responseItems.get(i).getProductID());
+            currentItem.setStoreID(responseItems.get(i).getStoreID().toString());
             currentItem.setPrice(BigDecimal.valueOf(responseItems.get(i).getPrice()));
             currentItem.setQuantity(responseItems.get(i).getQuantity());
             currentItem.setImageUrl(responseItems.get(i).getImageUrl());
@@ -287,7 +312,7 @@ public class UserController implements UserApi {
                 response.setMessage(loginResponse.getMessage());
                 response.setToken(loginResponse.getToken());
                 response.setSuccess(loginResponse.isSuccess());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(loginResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(loginResponse.getTimestamp()));
 
             }catch(Exception e){
                 e.printStackTrace();
@@ -311,7 +336,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(driverResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(driverResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(driverResponse.getTimestamp()));
                 response.setSuccess(driverResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -334,7 +359,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(customerResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(customerResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(customerResponse.getTimestamp()));
                 response.setSuccess(customerResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -357,7 +382,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(adminResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(adminResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(adminResponse.getTimestamp()));
                 response.setSuccess(adminResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -380,7 +405,7 @@ public class UserController implements UserApi {
 
             try{
                 response.setMessage(shopperResponse.getMessage());
-                response.setDate(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(shopperResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(shopperResponse.getTimestamp()));
                 response.setSuccess(shopperResponse.isSuccess());
             }catch(Exception e){
                 e.printStackTrace();
@@ -413,7 +438,7 @@ public class UserController implements UserApi {
 
             AccountVerifyResponse userResponse = userService.verifyAccount(request);
             try{
-                response.setDate(userResponse.getTimestamp().toString());
+                response.setTimestamp(userResponse.getTimestamp().toString());
                 response.setMessage(userResponse.getMessage());
                 response.setSuccess(userResponse.isSuccess());
                 response.setUserType(body.getUserType());
@@ -440,7 +465,7 @@ public class UserController implements UserApi {
 
             SetCurrentLocationResponse response = userService.setCurrentLocation(request);
             try{
-                setCurrentLocationResponse.setDate(response.getTimestamp().toString());
+                setCurrentLocationResponse.setTimestamp(response.getTimestamp().toString());
                 setCurrentLocationResponse.setMessage(response.getMessage());
                 setCurrentLocationResponse.setSuccess(response.isSuccess());
 
@@ -461,6 +486,7 @@ public class UserController implements UserApi {
         UserUpdateShopperShiftResponse response = new UserUpdateShopperShiftResponse();
         HttpStatus status = HttpStatus.OK;
         try {
+            System.out.println("store id from front end: "+ body.getStoreID());
             UpdateShopperShiftRequest request = new UpdateShopperShiftRequest(body.isOnShift(), UUID.fromString(body.getStoreID()));
             UpdateShopperShiftResponse response1 = userService.updateShopperShift(request);
             try {
@@ -494,7 +520,7 @@ public class UserController implements UserApi {
 
             GetCurrentUserResponse response = userService.getCurrentUser(request);
             try{
-                userGetCurrentUserResponse.setDate(response.getTimestamp().toString());
+                userGetCurrentUserResponse.setTimestamp(response.getTimestamp().toString());
                 userGetCurrentUserResponse.setMessage(response.getMessage());
                 userGetCurrentUserResponse.setSuccess(response.isSuccess());
                 if (response.getUser().getAccountType() == UserType.CUSTOMER){
@@ -539,6 +565,12 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetCustomerByEmailRequest request = new GetCustomerByEmailRequest(body.getEmail());
 
             GetCustomerByEmailResponse response = userService.getCustomerByEmail(request);
@@ -582,6 +614,40 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetProblemsWithOrderResponse> getOrdersWithProblems(UserGetProblemsWithOrderRequest body) {
+        UserGetProblemsWithOrderResponse getProblemsWithOrderResponse = new UserGetProblemsWithOrderResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetProblemsWithOrderRequest request = new GetProblemsWithOrderRequest(UUID.fromString(body.getOrderID()));
+
+            GetProblemsWithOrderResponse response = userService.getProblemsWithOrder(request);
+            try{
+                getProblemsWithOrderResponse.setProblem(response.isProblem());
+                getProblemsWithOrderResponse.setMessage(response.getMessage());
+                getProblemsWithOrderResponse.setAlternativeProductBarcode(response.getAlternativeProductBarcode());
+                getProblemsWithOrderResponse.setCurrentProductBarcode(response.getCurrentProductBarcode());
+
+            }catch(Exception e){
+                e.printStackTrace();
+                getProblemsWithOrderResponse.setProblem(false);
+                getProblemsWithOrderResponse.setMessage(e.getMessage());
+                getProblemsWithOrderResponse.setAlternativeProductBarcode("");
+                getProblemsWithOrderResponse.setCurrentProductBarcode("");
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            getProblemsWithOrderResponse.setProblem(false);
+            getProblemsWithOrderResponse.setMessage(e.getMessage());
+            getProblemsWithOrderResponse.setAlternativeProductBarcode("");
+            getProblemsWithOrderResponse.setCurrentProductBarcode("");
+        }
+
+        return new ResponseEntity<>(getProblemsWithOrderResponse, status);
     }
 
     @Override
@@ -801,7 +867,7 @@ public class UserController implements UserApi {
 
             ScanItemResponse response = userService.scanItem(request);
             try{
-                userScanItemResponse.setDate(response.getTimestamp().toString());
+                userScanItemResponse.setTimestamp(response.getTimestamp().toString());
                 userScanItemResponse.setMessage(response.getMessage());
                 userScanItemResponse.setSuccess(response.isSuccess());
 
@@ -822,6 +888,8 @@ public class UserController implements UserApi {
         UserCompletePackagingOrderResponse userCompletePackagingOrderResponse = new UserCompletePackagingOrderResponse();
         HttpStatus status = HttpStatus.OK;
 
+        System.out.println("complete packing controller order id"+ body.getOrderID());
+
         try{
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
@@ -834,7 +902,7 @@ public class UserController implements UserApi {
 
             CompletePackagingOrderResponse response = userService.completePackagingOrder(request);
             try{
-                userCompletePackagingOrderResponse.setDate(response.getTimestamp().toString());
+                userCompletePackagingOrderResponse.setTimestamp(response.getTimestamp().toString());
                 userCompletePackagingOrderResponse.setMessage(response.getMessage());
                 userCompletePackagingOrderResponse.setSuccess(response.isSuccess());
 
@@ -854,6 +922,8 @@ public class UserController implements UserApi {
 
         UserCompleteDeliveryResponse userCompleteDeliveryResponse = new UserCompleteDeliveryResponse();
         HttpStatus status = HttpStatus.OK;
+
+        System.out.println("_#_ " + body.getOrderID());
 
         try{
 
@@ -912,7 +982,16 @@ public class UserController implements UserApi {
         UserGetDriverByEmailResponse getDriverByEmailResponse=new UserGetDriverByEmailResponse();
         HttpStatus status = HttpStatus.OK;
 
+
+
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetDriverByEmailRequest request = new GetDriverByEmailRequest(body.getEmail());
 
             GetDriverByEmailResponse response = userService.getDriverByEmail(request);

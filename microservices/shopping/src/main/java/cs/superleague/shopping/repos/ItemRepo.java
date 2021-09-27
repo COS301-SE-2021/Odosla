@@ -9,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface ItemRepo extends JpaRepository<Item, UUID> {
+    Item findAllByBarcodeAndStoreID(String barcode, UUID storeID);
 }
 

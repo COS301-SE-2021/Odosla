@@ -10,7 +10,6 @@ import java.util.List;
 
 public class GetAllItemsResponse {
 
-    @JsonProperty
     private List<Item> items;
     @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;

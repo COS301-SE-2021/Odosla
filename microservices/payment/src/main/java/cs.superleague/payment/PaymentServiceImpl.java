@@ -17,6 +17,7 @@ import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -112,6 +113,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException {
 
+        System.out.println("submit order store id: "+ request.getStoreID());
+        System.out.println("__1");
         SubmitOrderResponse response = null;
         UUID orderID=UUID.randomUUID();
         AtomicReference<Double> totalCost= new AtomicReference<>((double) 0);
@@ -124,7 +127,7 @@ public class PaymentServiceImpl implements PaymentService {
         GetStoreByUUIDResponse shop=null;
         if (request!=null)
         {
-
+            System.out.println("__2");
             if(request.getListOfItems()==null){
                 invalidReq = true;
                 invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
@@ -168,14 +171,20 @@ public class PaymentServiceImpl implements PaymentService {
                 throw new InvalidRequestException(invalidMessage);
             }
 
+            System.out.println("__3");
+
             String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
             URI uri = new URI(stringUri);
 
+            System.out.println("__uri " + uri.toString());
+
             Map<String, Object> parts = new HashMap<String, Object>();
-            parts.put("storeID", request.getStoreID());
+            parts.put("StoreID", request.getStoreID().toString());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate
                     .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
+
+            System.out.println("__4");
 
             if (shop != null) {
                 if (shop.getStore().getStoreLocation() == null) {
@@ -188,16 +197,17 @@ public class PaymentServiceImpl implements PaymentService {
                     invalidMessage = ("Store is currently closed - could not create order");
                 }
             }
+            System.out.println("__5");
 
             if(invalidReq)
             {
                 throw new InvalidRequestException(invalidMessage);
             }
-
+            System.out.println("__6");
             CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail());
+            parts.put("email", currentUser.getEmail().toString());
 
             stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
             uri = new URI(stringUri);
@@ -208,6 +218,7 @@ public class PaymentServiceImpl implements PaymentService {
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
 
+            System.out.println("__7");
             assert customer != null;
 
             customerID = customer.getCustomerID();
@@ -224,6 +235,8 @@ public class PaymentServiceImpl implements PaymentService {
                     finalTotalCost.updateAndGet(v -> ((double) (v + itemPrice)));
                 }
             });
+
+            System.out.println("__8");
 
             /* Take off discount */
             finalTotalCost.updateAndGet(v -> ((double) (v - discount)));
@@ -242,6 +255,8 @@ public class PaymentServiceImpl implements PaymentService {
 
             GeoPoint customerLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
 
+            System.out.println("__9");
+
             Order alreadyExists = null;
             while (true) {
                 try {
@@ -250,6 +265,8 @@ public class PaymentServiceImpl implements PaymentService {
                     e.printStackTrace();
                 }
 
+                System.out.println("__9.1");
+
                 if (alreadyExists != null) {
                     orderID = UUID.randomUUID();
                 } else {
@@ -257,11 +274,13 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
 
+            System.out.println("__10");
+
             assert shop != null;
 
 
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
-
+            System.out.println("__11");
 //            System.out.println("Submit Order id: "+ orderID);
             Order o = new Order();
             o.setOrderID(orderID);
@@ -278,11 +297,13 @@ public class PaymentServiceImpl implements PaymentService {
             o.setStoreAddress(shop.getStore().getStoreLocation());
             o.setRequiresPharmacy(requiresPharmacy);
 
-
+            System.out.println("__12");
             if (o != null) {
-
+                System.out.println("__13");
                 if (shop.getStore().getOpen() == true) {
+                    System.out.println("__14");
                     if (orderRepo != null) {
+                        System.out.println("__x");
                         orderRepo.save(o);
                         System.out.println("-----------made it after order repo -----------");
                         //Setting total cost of each item
@@ -643,6 +664,7 @@ import java.util.List;50"
         String message;
         Order order;
 
+        System.out.println("get status request order id: "+ request.getOrderID());
         if(request == null){
             throw new InvalidRequestException("Invalid getStatusRequest received - could not get status.");
         }
@@ -1038,6 +1060,36 @@ import java.util.List;50"
         }
         else{
             throw new InvalidRequestException("The GetAllCartItemsRequest parameter is null - Could not retrieve items");
+        }
+        return response;
+    }
+
+    @Override
+    public GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException
+    {
+        GetOrderByUUIDResponse response = null;
+        if(request != null){
+
+            System.out.println("get order by uuid id: "+ request.getOrderID());
+            if(request.getOrderID()==null){
+                throw new InvalidRequestException("OrderID is null in GetOrderByUUIDRequest request - could not return order entity");
+            }
+
+            Order order =null;
+            try {
+                order = orderRepo.findById(request.getOrderID()).orElse(null);
+            }catch (NullPointerException e){
+                //Catching nullPointerException from mockito unit test, when(storeRepo.findById(mockito.any())) return null - which will return null pointer exception
+            }
+
+            if(order==null) {
+                throw new InvalidRequestException("Order with ID does not exist in repository - could not get Order entity");
+            }
+            System.out.println("found order id: "+ order.getOrderID());
+            response=new GetOrderByUUIDResponse(order,Calendar.getInstance().getTime(),"Order entity with corresponding id was returned");
+        }
+        else{
+            throw new InvalidRequestException("Order request is null - could not return order entity");
         }
         return response;
     }

@@ -3,6 +3,7 @@ package cs.superleague.recommendation;
 import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.responses.GetAllCartItemsResponse;
+import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Service("recommendationServiceImpl")
@@ -31,11 +34,6 @@ public class RecommendationServiceImpl implements RecommendationService{
     private String paymentHost;
     @Value("${paymentPort}")
     private String paymentPort;
-
-    @Value("${shoppingHost}")
-    private String shoppingHost;
-    @Value("${shoppingPort}")
-    private String shoppingPort;
 
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
@@ -48,7 +46,7 @@ public class RecommendationServiceImpl implements RecommendationService{
 
 
     @Override
-    public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException {
+    public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException {
         if (request == null){
             return  getRandomRecommendations("Null request object.");
         }
@@ -82,15 +80,21 @@ public class RecommendationServiceImpl implements RecommendationService{
                 if (frequency >= request.getItemIDs().size()){
 //                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
 
-                    Map<String, Object> parts = new HashMap<String, Object>();
+
+                    Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
-                    ResponseEntity<GetOrderResponse> responseEntity;
-                    try {
-                        responseEntity = restTemplate.postForEntity("http://" + paymentHost + ":" + paymentPort + "/payment/getOrder", parts, GetOrderResponse.class);
-                    }catch (ResourceAccessException e){
-                        return getRandomRecommendations(e.getMessage());
+
+                    System.out.println("parts id: " + orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+
+                    String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+                    URI uri = new URI(stringUri);
+                    ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                            uri, parts, GetOrderByUUIDResponse.class);
+
+                    Order order = null;
+                    if(responseEntity.getBody() != null) {
+                        order = responseEntity.getBody().getOrder();
                     }
-                    Order order = responseEntity.getBody().getOrder();
 
                     if(responseEntity == null || !responseEntity.hasBody() ||
                     responseEntity.getBody() == null || responseEntity.getBody().getOrder() == null){

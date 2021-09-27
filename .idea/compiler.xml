@@ -22,7 +22,7 @@
       <module name="analytics" target="8" />
       <module name="delivery" target="8" />
       <module name="importer" target="8" />
-      <module name="notifications" target="1.8" />
+      <module name="notifications" target="8" />
       <module name="notifications (1)" target="8" />
       <module name="payment" target="8" />
       <module name="recommendation" target="8" />
