@@ -281,7 +281,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public GetDeliveryDetailResponse getDeliveryDetail(GetDeliveryDetailRequest request) throws InvalidRequestException {
+    public GetDeliveryDetailResponse getDeliveryDetail(GetDeliveryDetailRequest request) throws InvalidRequestException, URISyntaxException {
         if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
@@ -290,8 +290,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://" + userHost + ":" + userPort + "/user/getAdminByEmail";
-
+        String stringUri = "http://" + userHost + ":" + userPort + "/user/getAdminByEmail";
+        URI uri = new URI(stringUri);
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
 
@@ -328,7 +328,7 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
+    public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException, URISyntaxException {
         if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
@@ -344,8 +344,8 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
-
+        String stringUri = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
+        URI uri = new URI(stringUri);
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
 
@@ -407,8 +407,8 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
-
+        String stringUri = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
+        URI uri = new URI(stringUri);
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("email", currentUser.getEmail());
 
