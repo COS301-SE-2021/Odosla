@@ -6,16 +6,15 @@ import java.util.Date;
 
 public class SaveCatalogueToRepoResponse {
 
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
     private Boolean isSuccess;
 
-    public SaveCatalogueToRepoResponse(Boolean isSuccess, Date timestamp, String message)
-    {
+    public SaveCatalogueToRepoResponse(Boolean isSuccess, Date timestamp, String message) {
         this.isSuccess = isSuccess;
-        this.timestamp= timestamp;
-        this.message= message;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
     public void setTimestamp(Date timestamp) {
