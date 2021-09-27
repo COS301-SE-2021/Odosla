@@ -8,7 +8,6 @@ import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoresResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,26 +20,26 @@ import java.util.Map;
 
 public class FinancialAnalyticsHelper {
 
-    private String shoppingHost;
-    private String shoppingPort;
+    private final String shoppingHost;
+    private final String shoppingPort;
 
     private final HashMap<String, Object> data;
     private final RestTemplate restTemplate;
 
     public FinancialAnalyticsHelper(HashMap<String, Object> data, RestTemplate restTemplate,
-                                    String shoppingHost, String shoppingPort){
-        this. data = data;
+                                    String shoppingHost, String shoppingPort) {
+        this.data = data;
         this.restTemplate = restTemplate;
         this.shoppingHost = shoppingHost;
         this.shoppingPort = shoppingPort;
     }
 
-    public byte[] createPDF() throws Exception{
+    public byte[] createPDF() throws Exception {
 
         Document document = new Document();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
-        try{
+        try {
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -79,13 +78,13 @@ public class FinancialAnalyticsHelper {
             cl = new PdfPCell(new Phrase("Price", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table.addCell(cl);
             Order[] topOrders;
-            topOrders =  (Order[]) data.get("topTenOrders");
+            topOrders = (Order[]) data.get("topTenOrders");
 
             Store store = null;
             List<Store> stores;
             ResponseEntity<GetStoresResponse> responseEntity;
 
-            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+            String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStores";
             URI uri = new URI(stringUri);
 
             Map<String, Object> parts = new HashMap<>();
@@ -93,29 +92,29 @@ public class FinancialAnalyticsHelper {
             responseEntity = restTemplate.postForEntity(uri, parts,
                     GetStoresResponse.class);
 
-            if(responseEntity == null || !responseEntity.hasBody()
-                    || responseEntity.getBody() == null){
+            if (responseEntity == null || !responseEntity.hasBody()
+                    || responseEntity.getBody() == null) {
                 throw new AnalyticsException("Could not retrieve stores");
             }
 
             stores = responseEntity.getBody().getStores();
 
 
-            if(topOrders != null){
+            if (topOrders != null) {
                 for (int i = 0; i < topOrders.length; i++) {
                     table.addCell(String.valueOf(i + 1));
 
-                    if(topOrders[0] != null) {
+                    if (topOrders[0] != null) {
 
-                        for (Store s: stores) {
-                            if(s.getStoreID() != null &&
-                                s.getStoreID().equals(topOrders[i].getStoreID())){
+                        for (Store s : stores) {
+                            if (s.getStoreID() != null &&
+                                    s.getStoreID().equals(topOrders[i].getStoreID())) {
                                 store = s;
                                 break;
                             }
                         }
 
-                        if(store != null) {
+                        if (store != null) {
                             table.addCell(String.valueOf(store.getStoreBrand()));
                             table.addCell(String.valueOf(topOrders[i].getTotalCost()));
                         }
@@ -129,7 +128,7 @@ public class FinancialAnalyticsHelper {
             table1.setWidths(new int[]{2, 5});
             table1.setWidthPercentage(100);
             table1.addCell(new Paragraph("Reporting Period", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
-            table1.addCell(data.get("startDate")+"   -   "+ data.get("endDate"));
+            table1.addCell(data.get("startDate") + "   -   " + data.get("endDate"));
             table1.addCell(new Paragraph("Total Number Of Orders", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
             table1.addCell(String.valueOf(data.get("totalOrders")));
             table1.addCell(new Paragraph("Total Price", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
@@ -147,7 +146,7 @@ public class FinancialAnalyticsHelper {
 
             System.out.println("Report Complete!");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
         return byteArrayOutputStream.toByteArray();
@@ -176,7 +175,7 @@ public class FinancialAnalyticsHelper {
             System.out.println("finished");
 
             return sb;
-        } catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             //throw new ReportException("Not able to create CSV file");
         } //lets us know if its successfully completed

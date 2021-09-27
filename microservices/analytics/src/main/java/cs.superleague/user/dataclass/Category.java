@@ -10,7 +10,7 @@ public class Category {
     @Id
     private final UUID categoryId;
 
-//    private final List<Tuple<Item, Integer>> listOfItems;
+    //    private final List<Tuple<Item, Integer>> listOfItems;
     private final String name;
     private final String imgUrl;
 
