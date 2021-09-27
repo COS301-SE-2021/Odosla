@@ -15,10 +15,10 @@ public class GetUsersResponse implements Serializable {
     private final boolean success;
     private final String message;
 
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
 
-    public GetUsersResponse(){
+    public GetUsersResponse() {
         this.users = null;
         this.success = false;
         this.message = null;

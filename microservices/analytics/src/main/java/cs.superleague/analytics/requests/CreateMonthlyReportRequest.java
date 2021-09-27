@@ -2,8 +2,6 @@ package cs.superleague.analytics.requests;
 
 import cs.superleague.analytics.dataclass.ReportType;
 
-import java.util.Calendar;
-
 public class CreateMonthlyReportRequest {
 
     private final ReportType reportType;
