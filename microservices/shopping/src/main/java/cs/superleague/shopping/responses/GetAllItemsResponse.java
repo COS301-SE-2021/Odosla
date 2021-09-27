@@ -9,15 +9,20 @@ import java.util.List;
 public class GetAllItemsResponse {
 
     private List<Item> items;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
 
-    public GetAllItemsResponse(List<Item> items, Date timestamp, String message)
-    {
+    public GetAllItemsResponse() {
+        this.items = null;
+        this.timestamp = null;
+        this.message = null;
+    }
+
+    public GetAllItemsResponse(List<Item> items, Date timestamp, String message) {
         this.items = items;
-        this.timestamp= timestamp;
-        this.message= message;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
     public void setTimestamp(Date timestamp) {

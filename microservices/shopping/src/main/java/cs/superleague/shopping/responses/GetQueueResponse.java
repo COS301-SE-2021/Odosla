@@ -6,16 +6,16 @@ import java.util.List;
 
 public class GetQueueResponse {
 
-    private boolean response;
-    private String message;
-    private List<Order> queueOfOrders;
+    private final boolean response;
+    private final String message;
+    private final List<Order> queueOfOrders;
 
 
     public GetQueueResponse(boolean response, String message, List<Order> queueOfOrders) {
 
         this.response = response;
         this.message = message;
-        this.queueOfOrders=queueOfOrders;
+        this.queueOfOrders = queueOfOrders;
 
     }
 

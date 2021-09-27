@@ -9,10 +9,10 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 public class PaymentApp implements CommandLineRunner {
 
 
-    public static void main(String[] args)
-    {
-        SpringApplication.run(PaymentApp.class,args);
+    public static void main(String[] args) {
+        SpringApplication.run(PaymentApp.class, args);
     }
+
     @Override
     public void run(String... args) throws Exception {
 

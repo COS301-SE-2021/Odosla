@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5c839d79-4a18-411e-b0a7-bb2c3706f90c" name="Default Changelist" comment="Employee app" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[C:\Users\kelly\.android\avd\Pixel_3a_API_30.avd]" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/../.." value="feature_frontend_employee" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1xlG40LZ7GiMAohVGpPXrEakahs" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/flutter_employee_app/assets" />
+    <property name="settings.editor.selected.configurable" value="flutter.settings" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets" />
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets\gifs" />
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets\delivery" />
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets\importer" />
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets\analytics" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets\shopping" />
+      <recent name="C:\Users\kelly\IdeaProjects\odosla_new\frontend\employee\flutter_employee_app\assets\importer" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main.dart" type="FlutterRunConfigurationType" factoryName="Flutter" temporary="true" nameIsGenerated="true">
+      <option name="additionalArgs" value="--no-sound-null-safety" />
+      <option name="filePath" value="$PROJECT_DIR$/flutter_employee_app/lib/main.dart" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Flutter.main.dart" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5c839d79-4a18-411e-b0a7-bb2c3706f90c" name="Default Changelist" comment="" />
+      <created>1630922067084</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1630922067084</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Adding some photos">
+      <created>1631745189489</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1631745189490</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Adding some photos">
+      <created>1631745197436</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1631745197436</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixing front end employee">
+      <created>1631745261386</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1631745261386</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Changing endpoints">
+      <created>1631814964470</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1631814964470</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fixed importer service">
+      <created>1631970269666</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1631970269666</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Admin app">
+      <created>1631972674438</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1631972674438</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fixed navigator">
+      <created>1631972698779</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1631972698779</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Shopping app">
+      <created>1631972741627</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1631972741627</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fixing some register and login functionality">
+      <created>1631972802317</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1631972802317</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Employee app">
+      <created>1632055387840</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055387840</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Employee app">
+      <created>1632055423579</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055423579</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Employee app">
+      <created>1632055431348</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055431348</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Employee app">
+      <created>1632055475859</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055475859</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Employee app">
+      <created>1632055487267</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055487267</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Employee app">
+      <created>1632055497334</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055497334</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Employee app">
+      <created>1632055513589</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1632055513589</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Adding some photos" />
+    <MESSAGE value="Fixing front end employee" />
+    <MESSAGE value="Changing endpoints" />
+    <MESSAGE value="Fixed importer service" />
+    <MESSAGE value="Admin app" />
+    <MESSAGE value="Fixed navigator" />
+    <MESSAGE value="Shopping app" />
+    <MESSAGE value="Fixing some register and login functionality" />
+    <MESSAGE value="Employee app" />
+    <option name="LAST_COMMIT_MESSAGE" value="Employee app" />
+  </component>
+</project>

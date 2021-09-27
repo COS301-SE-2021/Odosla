@@ -35,11 +35,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Value("${paymentPort}")
     private String paymentPort;
 
-    @Value("${shoppingHost}")
-    private String shoppingHost;
-    @Value("${shoppingPort}")
-    private String shoppingPort;
-
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
 
@@ -179,8 +174,11 @@ public class RecommendationServiceImpl implements RecommendationService {
         Random random = new Random();
         Map<String, Object> parts = new HashMap<>();
 
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getAllCartItems";
+        URI uri = new URI(stringUri);
+
         ResponseEntity<GetAllCartItemsResponse> responseEntity = restTemplate.postForEntity(
-                "http://" + paymentHost + ":" + paymentPort + "/payment/getAllCartItems",
+                uri,
                 parts, GetAllCartItemsResponse.class);
 
         if (responseEntity == null || !responseEntity.hasBody() || responseEntity.getBody() == null

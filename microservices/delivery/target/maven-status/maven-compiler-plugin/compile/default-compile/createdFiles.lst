@@ -1,6 +1,7 @@
 cs\superleague\delivery\requests\GetDeliveryStatusRequest.class
 cs\superleague\models\DeliveryDetailObject.class
 cs\superleague\models\DeliveryGetDeliveryStatusResponse.class
+cs\superleague\payment\responses\GetOrderByUUIDResponse.class
 cs\superleague\models\GeoPointObject.class
 cs\superleague\delivery\responses\RemoveDriverFromDeliveryResponse.class
 cs\superleague\delivery\responses\TrackDeliveryResponse.class
@@ -33,6 +34,7 @@ cs\superleague\models\DeliveryGetDeliveryByUUIDResponse.class
 cs\superleague\delivery\DeliveryServiceImpl.class
 cs\superleague\delivery\requests\RemoveDriverFromDeliveryRequest.class
 cs\superleague\delivery\exceptions\InvalidRequestException.class
+cs\superleague\payment\dataclass\CartItem.class
 cs\superleague\integration\security\CurrentUser.class
 cs\superleague\user\dataclass\Catalogue.class
 cs\superleague\shopping\dataclass\Store.class

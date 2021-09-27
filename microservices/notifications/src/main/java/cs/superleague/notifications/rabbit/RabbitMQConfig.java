@@ -30,7 +30,7 @@ public class RabbitMQConfig {
     // EXCHANGE
     //
     @Bean
-    Exchange PaymentExchange(){
+    Exchange PaymentExchange() {
         return ExchangeBuilder.directExchange("NotificationsEXCHANGE")
                 .durable(true)
                 .build();
@@ -49,7 +49,7 @@ public class RabbitMQConfig {
     // BINDING
     //
     @Bean
-    Binding SendDirectEmailBinding(){
+    Binding SendDirectEmailBinding() {
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
                 .bind(SendDirectEmailQueue())
@@ -62,7 +62,7 @@ public class RabbitMQConfig {
     // FACTORY
     //
     @Bean
-    ConnectionFactory connectionFactory(){
+    ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostName);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
@@ -74,7 +74,7 @@ public class RabbitMQConfig {
     // LISTENER
     //
     @Bean
-    MessageListenerContainer messageListenerContainer(){
+    MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
         simpleMessageListenerContainer.setQueues(SendDirectEmailQueue());                                               // <------- add all queues to listen to here

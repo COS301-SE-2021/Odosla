@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a1c9f324-1a9e-4a9d-9f3e-a9817a98fc5d" name="Default Changelist" comment="compiler file" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="feature_frontend_employee" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../microservices" />
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest_IntegrationTest_CreatOrderConstruction.ic" NAME="SubmitOrderIntegrationTest.IntegrationTest_CreatOrderConstruction Coverage Results" MODIFIED="1624006035288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/backend$SubmitOrderIntegrationTest.ic" NAME="SubmitOrderIntegrationTest Coverage Results" MODIFIED="1624012399576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.payment.integration.*</FILTER>
+      <FILTER>cs.superleague.payment.integration.SubmitOrderIntegrationTest</FILTER>
+      <FILTER>cs.superleague.payment.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/backend$Application.ic" NAME="Application Coverage Results" MODIFIED="1629073172435" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>cs.superleague.*</FILTER>
+    </SUITE>
+    <SUITE FILE_PATH="coverage/backend$allTests.ic" NAME="allTests Coverage Results" MODIFIED="1623967032024" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>

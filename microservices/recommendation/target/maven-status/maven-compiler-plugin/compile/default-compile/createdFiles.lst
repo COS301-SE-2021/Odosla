@@ -28,6 +28,7 @@ cs\superleague\payment\dataclass\Order.class
 cs\superleague\integration\security\CurrentUser.class
 cs\superleague\recommendation\rest\RestConfig.class
 cs\superleague\models\CartItemObject.class
+cs\superleague\recommendation\controller\RecommendationController.class
 cs\superleague\recommendation\rabbit\RecommendationListener.class
 cs\superleague\recommendation\requests\AddRecommendationRequest.class
 cs\superleague\payment\dataclass\OrderStatus.class

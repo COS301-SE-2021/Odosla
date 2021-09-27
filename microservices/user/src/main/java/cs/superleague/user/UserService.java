@@ -41,7 +41,7 @@ public interface UserService {
     CompleteDeliveryResponse completeDelivery(CompleteDeliveryRequest request) throws OrderDoesNotExist, InvalidRequestException, URISyntaxException;
     UpdateDriverShiftResponse updateDriverShift(UpdateDriverShiftRequest request) throws InvalidRequestException, DriverDoesNotExistException;
     RemoveFromCartResponse removeFromCart(RemoveFromCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
-    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, StoreDoesNotExistException;
+    UpdateShopperShiftResponse updateShopperShift(UpdateShopperShiftRequest request) throws InvalidRequestException, ShopperDoesNotExistException, StoreDoesNotExistException, StoreDoesNotExistException, URISyntaxException;
 
     /* Analytics user data*/
     GetAdminsResponse getAdmins(GetAdminsRequest request) throws Exception;
@@ -63,4 +63,7 @@ public interface UserService {
 
     void saveDriver(SaveDriverToRepoRequest request) throws InvalidRequestException;
     void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
+
+    ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist;
+    GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException;
 }

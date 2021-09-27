@@ -18,8 +18,8 @@ public class NotificationSendDirectEmailNotificationResponse   {
   @JsonProperty("responseMessage")
   private String responseMessage = null;
 
-  @JsonProperty("success")
-  private Boolean success = null;
+  @JsonProperty("isSuccess")
+  private Boolean isSuccess = null;
 
   public NotificationSendDirectEmailNotificationResponse responseMessage(String responseMessage) {
     this.responseMessage = responseMessage;
@@ -40,23 +40,23 @@ public class NotificationSendDirectEmailNotificationResponse   {
     this.responseMessage = responseMessage;
   }
 
-  public NotificationSendDirectEmailNotificationResponse success(Boolean success) {
-    this.success = success;
+  public NotificationSendDirectEmailNotificationResponse isSuccess(Boolean isSuccess) {
+    this.isSuccess = isSuccess;
     return this;
   }
 
   /**
-   * Get success
-   * @return success
+   * Get isSuccess
+   * @return isSuccess
   **/
   @ApiModelProperty(value = "")
   
-    public Boolean isSuccess() {
-    return success;
+    public Boolean isIsSuccess() {
+    return isSuccess;
   }
 
-  public void setSuccess(Boolean success) {
-    this.success = success;
+  public void setIsSuccess(Boolean isSuccess) {
+    this.isSuccess = isSuccess;
   }
 
 
@@ -70,12 +70,12 @@ public class NotificationSendDirectEmailNotificationResponse   {
     }
     NotificationSendDirectEmailNotificationResponse notificationSendDirectEmailNotificationResponse = (NotificationSendDirectEmailNotificationResponse) o;
     return Objects.equals(this.responseMessage, notificationSendDirectEmailNotificationResponse.responseMessage) &&
-        Objects.equals(this.success, notificationSendDirectEmailNotificationResponse.success);
+        Objects.equals(this.isSuccess, notificationSendDirectEmailNotificationResponse.isSuccess);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(responseMessage, success);
+    return Objects.hash(responseMessage, isSuccess);
   }
 
   @Override
@@ -84,7 +84,7 @@ public class NotificationSendDirectEmailNotificationResponse   {
     sb.append("class NotificationSendDirectEmailNotificationResponse {\n");
     
     sb.append("    responseMessage: ").append(toIndentedString(responseMessage)).append("\n");
-    sb.append("    success: ").append(toIndentedString(success)).append("\n");
+    sb.append("    isSuccess: ").append(toIndentedString(isSuccess)).append("\n");
     sb.append("}");
     return sb.toString();
   }

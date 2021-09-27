@@ -251,6 +251,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/delivery_GetDeliveryByUUIDResponse"
 
+  /delivery/getAdditionalStoresDeliveryCost:
+    post:
+      summary: Endpoint for retrieving additional stores to make orders from
+      tags:
+        - "Delivery"
+      description: Refer to summary
+      operationId: getAdditionalStoresDeliveryCost
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetAdditionalStoresDeliveryCostRequest"
+      responses:
+        "200":
+          description: Returns the stores that can be added to the delivery and the cost
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetAdditionalStoresDeliveryCostResponse"
+
 components:
 
   schemas:
@@ -281,22 +303,28 @@ components:
           type: string
         driverID:
           type: string
+        deliveryID:
+          type: string
+        totalRatings:
+          type: number
         rating:
           type: number
         onShift:
           type: boolean
-        currentAddress:
-          $ref: "#/components/schemas/GeoPointObject"
+        isCurrentlyDelivering:
+          type: boolean
         deliveriesCompleted:
           type: number
-        deliveryID:
-          type: string
+        numberOfRatings:
+          type: number
+        currentAddress:
+          $ref: "#/components/schemas/GeoPointObject"
 
     delivery_AddDeliveryDetailRequest:
       description: This object is expected as input
       type: object
       properties:
-        deliveryStatus:
+        status:
           type: string
         detail:
           type: string
@@ -401,7 +429,7 @@ components:
           type: string
         time:
           type: string
-        deliveryStatus:
+        status:
           type: string
         detail:
           type: string
@@ -548,9 +576,209 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        delivery:
+        deliveryEntity:
           $ref: "#/components/schemas/DeliveryObject"
         message:
           type: string
         timestamp:
+          type: string
+
+    StoreObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        storeBrand:
+          type: string
+        maxShoppers:
+          type: integer
+        maxOrders:
+          type: integer
+        isOpen:
+          type: boolean
+        openingTime:
+          type: integer
+        closingTime:
+          type: integer
+        imgUrl:
+          type: string
+        storeLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        stock:
+          $ref: "#/components/schemas/CatalogueObject"
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+        currentOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        orderQueue:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
+    OrderObject:
+      description: "Generic schema for an Order"
+      type: object
+      properties:
+        orderID:
+          type: string
+        userID:
+          type: string
+        storeID:
+          type: string
+        shopperID:
+          type: string
+        createDate:
+          type: string
+        processDate:
+          type: string
+        totalCost:
+          type: number
+        status:
+          type: string
+        discount:
+          type: number
+        deliveryAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        storeAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        requiresPharmacy:
+          type: boolean
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    ShopperObject:
+      description: "Generic schema for a shopper"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        shopperID:
+          type: string
+        storeID:
+          type: string
+        ordersCompleted:
+          type: integer
+        onShift:
+          type: boolean
+        isActive:
+          type: boolean
+
+    CatalogueObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+
+    ItemObject:
+      description: "Generic schema for an item"
+      type: object
+      properties:
+        productID:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+
+    CartItemObject:
+      description: "Generic schema for a cart item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        orderID:
+          type: string
+        totalCost:
+          type: number
+        cartItemNo:
+          type: string
+
+    delivery_GetAdditionalStoresDeliveryCostRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_GetAdditionalStoresDeliveryCostResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
+          nullable: true
+        additionalCost:
+          type: array
+          items:
+            type: number
+          nullable: true
+        message:
           type: string

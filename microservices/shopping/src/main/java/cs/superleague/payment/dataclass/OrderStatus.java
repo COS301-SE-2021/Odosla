@@ -6,6 +6,7 @@ public enum OrderStatus {
     PURCHASED,
     IN_QUEUE,
     PACKING,
+    PROBLEM,
     AWAITING_COLLECTION,
     ASSIGNED_DRIVER,
     DELIVERY_COLLECTED,
