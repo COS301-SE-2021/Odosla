@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table
-public class Driver extends User implements Serializable{
+public class Driver extends User implements Serializable {
 
     /* Attributes */
 

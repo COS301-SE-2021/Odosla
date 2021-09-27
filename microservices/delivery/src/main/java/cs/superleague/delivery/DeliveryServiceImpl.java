@@ -10,12 +10,12 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
+import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderByUUIDResponse;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.user.dataclass.Driver;
@@ -24,7 +24,6 @@ import cs.superleague.user.responses.GetAdminByEmailResponse;
 import cs.superleague.user.responses.GetCustomerByUUIDResponse;
 import cs.superleague.user.responses.GetDriverByEmailResponse;
 import cs.superleague.user.responses.GetDriverByUUIDResponse;
-import cs.superleague.integration.security.CurrentUser;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +38,10 @@ import java.util.*;
 
 @Service("deliveryServiceImpl")
 public class DeliveryServiceImpl implements DeliveryService {
+    private final DeliveryRepo deliveryRepo;
+    private final DeliveryDetailRepo deliveryDetailRepo;
+    private final RabbitTemplate rabbitTemplate;
+    private final RestTemplate restTemplate;
     @Value("${shoppingHost}")
     private String shoppingHost;
     @Value("${shoppingPort}")
@@ -51,10 +54,6 @@ public class DeliveryServiceImpl implements DeliveryService {
     private String userHost;
     @Value("${userPort}")
     private String userPort;
-    private final DeliveryRepo deliveryRepo;
-    private final DeliveryDetailRepo deliveryDetailRepo;
-    private final RabbitTemplate rabbitTemplate;
-    private final RestTemplate restTemplate;
 
     @Autowired
     public DeliveryServiceImpl(DeliveryRepo deliveryRepo, DeliveryDetailRepo deliveryDetailRepo,
@@ -67,13 +66,13 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public AddDeliveryDetailResponse addDeliveryDetail(AddDeliveryDetailRequest request) throws InvalidRequestException {
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null || request.getDetail() == null || request.getTimestamp() == null || request.getStatus() == null){
+        if (request.getDeliveryID() == null || request.getDetail() == null || request.getTimestamp() == null || request.getStatus() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
-        deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
+        deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery does not exist in database."));
         DeliveryDetail detail = new DeliveryDetail(request.getDeliveryID(), request.getTimestamp(), request.getStatus(), request.getDetail());
         deliveryDetailRepo.save(detail);
         return new AddDeliveryDetailResponse("Delivery details added successfully.", detail.getId());
@@ -81,17 +80,17 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public AssignDriverToDeliveryResponse assignDriverToDelivery(AssignDriverToDeliveryRequest request) throws InvalidRequestException, URISyntaxException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null){
+        if (request.getDeliveryID() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
         CurrentUser currentUser = new CurrentUser();
 
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()-> new InvalidRequestException("Delivery does not exist in the database."));
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery does not exist in the database."));
 
-        String uriString = "http://"+userHost+":"+userPort+"/user/getDriverByEmail";
+        String uriString = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
         URI uri = new URI(uriString);
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
@@ -102,18 +101,18 @@ public class DeliveryServiceImpl implements DeliveryService {
         System.out.println(currentUser.getEmail());
         System.out.println(responseEntity.getBody().getDriver());
 
-        if(responseEntity == null || !responseEntity.hasBody()
-        || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
+        if (responseEntity == null || !responseEntity.hasBody()
+                || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null) {
             throw new InvalidRequestException("Driver Repository could not be found.");
         }
 
         Driver driver = responseEntity.getBody().getDriver();
 
-        if (delivery.getDriverId() != null){
-            if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0){
-                if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+        if (delivery.getDriverId() != null) {
+            if (delivery.getDriverId().compareTo(driver.getDriverID()) == 0) {
+                if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null) {
                     return new AssignDriverToDeliveryResponse(true, "Driver was already assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
-                } else{
+                } else {
                     throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
                 }
             }
@@ -124,21 +123,21 @@ public class DeliveryServiceImpl implements DeliveryService {
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", delivery.getOrderID());
 
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        uriString = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
         uri = new URI(uriString);
 
         ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
                 orderRequest, GetOrderByUUIDResponse.class);
 
-        Order updateOrder= null;
+        Order updateOrder = null;
 
-        if(responseEntity.getBody() != null) {
+        if (responseEntity.getBody() != null) {
             updateOrder = responseEntityOrder.getBody().getOrder();
         }
 
 
-        if(updateOrder!=null){
-            if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null){
+        if (updateOrder != null) {
+            if (delivery.getPickUpLocation() != null && delivery.getDropOffLocation() != null) {
                 updateOrder.setDriverID(driver.getDriverID());
 
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
@@ -152,12 +151,12 @@ public class DeliveryServiceImpl implements DeliveryService {
                 responseEntityOrder = restTemplate.postForEntity(uri,
                         orderRequest, GetOrderByUUIDResponse.class);
 
-                if(responseEntityOrder == null || !responseEntityOrder.hasBody()
-                        || responseEntityOrder.getBody() == null){
+                if (responseEntityOrder == null || !responseEntityOrder.hasBody()
+                        || responseEntityOrder.getBody() == null) {
                     throw new InvalidRequestException("Invalid order.");
                 }
 
-                Order updateOrder2= responseEntityOrder.getBody().getOrder();
+                Order updateOrder2 = responseEntityOrder.getBody().getOrder();
                 updateOrder2.setStatus(OrderStatus.ASSIGNED_DRIVER);
 
                 saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder2);
@@ -167,26 +166,24 @@ public class DeliveryServiceImpl implements DeliveryService {
                 delivery.setDriverId(driver.getDriverID());
                 deliveryRepo.save(delivery);
                 return new AssignDriverToDeliveryResponse(true, "Driver successfully assigned to delivery.", delivery.getPickUpLocation(), delivery.getDropOffLocation(), driver.getDriverID());
-            } else{
+            } else {
                 throw new InvalidRequestException("No pick up or drop off location specified with delivery.");
             }
-        }
-        else
-        {
+        } else {
             throw new InvalidRequestException("Invalid order.");
         }
     }
 
     @Override
     public CreateDeliveryResponse createDelivery(CreateDeliveryRequest request) throws InvalidRequestException, URISyntaxException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getCustomerID() == null || request.getOrderID() == null || request.getStoreID() == null || request.getPlaceOfDelivery() == null){
+        if (request.getCustomerID() == null || request.getOrderID() == null || request.getStoreID() == null || request.getPlaceOfDelivery() == null) {
             throw new InvalidRequestException("Missing parameters.");
         }
 
-        String uriString = "http://"+userHost+":"+userPort+"/user/getCustomerByUUID";
+        String uriString = "http://" + userHost + ":" + userPort + "/user/getCustomerByUUID";
         URI uri = new URI(uriString);
         Map<String, Object> parts = new HashMap<>();
         parts.put("userID", request.getCustomerID());
@@ -194,12 +191,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetCustomerByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetCustomerByUUIDResponse.class);
 
-        if(responseEntity == null || !responseEntity.hasBody()
-        || responseEntity.getBody() == null || responseEntity.getBody().getCustomer() == null){
+        if (responseEntity == null || !responseEntity.hasBody()
+                || responseEntity.getBody() == null || responseEntity.getBody().getCustomer() == null) {
             throw new InvalidRequestException("Invalid customerID.");
         }
 
-        uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        uriString = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
         uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<>();
         orderRequest.put("orderID", request.getOrderID());
@@ -208,12 +205,12 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
                 orderRequest, GetOrderByUUIDResponse.class);
 
-        if(responseEntityOrder == null || !responseEntityOrder.hasBody()
-                || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null){
+        if (responseEntityOrder == null || !responseEntityOrder.hasBody()
+                || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null) {
             throw new InvalidRequestException("Invalid orderID.");
         }
 
-        uriString = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+        uriString = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStoreByUUID";
         uri = new URI(uriString);
         Map<String, Object> storeRequest = new HashMap<>();
         storeRequest.put("StoreID", request.getStoreID());
@@ -222,24 +219,24 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetStoreByUUIDResponse> responseEntityStore = restTemplate.postForEntity(uri,
                 storeRequest, GetStoreByUUIDResponse.class);
 
-        if(responseEntityStore == null || !responseEntityStore.hasBody()
-        || responseEntityStore.getBody() == null || responseEntityStore.getBody().getStore() == null){
+        if (responseEntityStore == null || !responseEntityStore.hasBody()
+                || responseEntityStore.getBody() == null || responseEntityStore.getBody().getStore() == null) {
             throw new InvalidRequestException("Invalid storeID.");
         }
 
         Store store = responseEntityStore.getBody().getStore();
 
         GeoPoint locationOfStore = store.getStoreLocation();
-        if (locationOfStore == null){
+        if (locationOfStore == null) {
             throw new InvalidRequestException("Store has no location set.");
         }
         //Adding delivery to database
         UUID deliveryID = UUID.randomUUID();
-        while(deliveryRepo.findById(deliveryID).isPresent()){
+        while (deliveryRepo.findById(deliveryID).isPresent()) {
             deliveryID = UUID.randomUUID();
         }
         boolean longAndLatCheck = checkLongAndLatIfValid(locationOfStore, request.getPlaceOfDelivery());
-        if(!longAndLatCheck){
+        if (!longAndLatCheck) {
             throw new InvalidRequestException("Invalid geoPoints.");
         }
         GetDeliveryCostRequest getDeliveryCostRequest = new GetDeliveryCostRequest(locationOfStore, request.getPlaceOfDelivery());
@@ -251,7 +248,7 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public GetDeliveriesResponse getDeliveries(GetDeliveriesRequest request) throws InvalidRequestException {
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request.");
         }
         return null;
@@ -259,24 +256,24 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public GetDeliveryCostResponse getDeliveryCost(GetDeliveryCostRequest request) throws InvalidRequestException {
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getDropOffLocation() == null || request.getPickUpLocation() == null){
+        if (request.getDropOffLocation() == null || request.getPickUpLocation() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
         boolean validGeoPoints = checkLongAndLatIfValid(request.getDropOffLocation(), request.getPickUpLocation());
-        if(!validGeoPoints){
+        if (!validGeoPoints) {
             throw new InvalidRequestException("Invalid Co-ordinates.");
         }
         double distance = getDistanceBetweenTwoPoints(request.getDropOffLocation(), request.getPickUpLocation());
         double cost;
-        if (distance < 20){
+        if (distance < 20) {
             //price of less than 20 km drive
             cost = 20.0;
-        }else if (distance < 40){
+        } else if (distance < 40) {
             cost = 35.0;
-        }else{
+        } else {
             cost = 50.0;
         }
         return new GetDeliveryCostResponse(cost);
@@ -284,15 +281,15 @@ public class DeliveryServiceImpl implements DeliveryService {
 
     @Override
     public GetDeliveryDetailResponse getDeliveryDetail(GetDeliveryDetailRequest request) throws InvalidRequestException {
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null){
+        if (request.getDeliveryID() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getAdminByEmail";
+        String uri = "http://" + userHost + ":" + userPort + "/user/getAdminByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
@@ -301,51 +298,52 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetAdminByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetAdminByEmailResponse.class);
 
-        if(responseEntity == null || !responseEntity.hasBody()
-                || responseEntity.getBody() == null || responseEntity.getBody().getAdmin() == null){
+        if (responseEntity == null || !responseEntity.hasBody()
+                || responseEntity.getBody() == null || responseEntity.getBody().getAdmin() == null) {
             throw new InvalidRequestException("User is not an admin.");
         }
 
         List<DeliveryDetail> details = deliveryDetailRepo.findAllByDeliveryID(request.getDeliveryID());
-        if (details == null){
+        if (details == null) {
             throw new InvalidRequestException("No details found for this delivery.");
         }
-        if (details.size() > 0){
-            return new GetDeliveryDetailResponse("Details successfully found.",details);
-        }else{
+        if (details.size() > 0) {
+            return new GetDeliveryDetailResponse("Details successfully found.", details);
+        } else {
             throw new InvalidRequestException("No details found for this delivery.");
         }
     }
 
     @Override
     public GetDeliveryStatusResponse getDeliveryStatus(GetDeliveryStatusRequest request) throws InvalidRequestException {
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getDeliveryID() == null){
+        if (request.getDeliveryID() == null) {
             throw new InvalidRequestException("No delivery Id specified.");
         }
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery not found in database."));
         return new GetDeliveryStatusResponse(delivery.getStatus(), "Delivery Found.");
     }
 
     @Override
     public GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException {
-        if (request==null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getCurrentLocation() == null){
+        if (request.getCurrentLocation() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
 
         System.out.println(request.getRangeOfDelivery());
         System.out.println("_REQ_");
-        System.out.println(request.getCurrentLocation().getAddress().toString());
+        System.out.println(request.getCurrentLocation().getAddress());
 
         double range = request.getRangeOfDelivery();
+
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByEmail";
+        String uri = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<>();
         parts.put("email", currentUser.getEmail());
@@ -356,62 +354,59 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         System.out.println("_responsex_ " + responseEntity.getBody() + " " + responseEntity.getBody().getDriver().toString());
 
-        if(responseEntity == null || !responseEntity.hasBody()
-                || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
+        if (responseEntity == null || !responseEntity.hasBody()
+                || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null) {
             throw new InvalidRequestException("Invalid user.");
         }
 
         Driver driver = responseEntity.getBody().getDriver();
 
-        if(driver!=null)
-        {
+        if (driver != null) {
             driver.setCurrentAddress(request.getCurrentLocation());
             SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
 
             System.out.println("_before rab_ " + saveDriverToRepoRequest.getDriver().toString());
 
             rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
-        }
-        else
-        {
+        } else {
             throw new InvalidRequestException("Driver not found in database.");
         }
 
         List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
-        if (deliveries == null){
+        if (deliveries == null) {
             return new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
         }
         Collections.shuffle(deliveries);
-        if (deliveries.size()>0){
-            for (Delivery d : deliveries){
+        if (deliveries.size() > 0) {
+            for (Delivery d : deliveries) {
                 double driverDistanceFromStore = getDistanceBetweenTwoPoints(d.getPickUpLocation(), request.getCurrentLocation());
-                if (driverDistanceFromStore > range || d.getDriverId()!=null || d.getStatus().compareTo(DeliveryStatus.WaitingForShoppers)!=0){
+                if (driverDistanceFromStore > range || d.getDriverId() != null || d.getStatus().compareTo(DeliveryStatus.WaitingForShoppers) != 0) {
                     continue;
-                }else{
+                } else {
                     return new GetNextOrderForDriverResponse("Driver can take the following delivery.", d);
                 }
             }
             return new GetNextOrderForDriverResponse("No available deliveries in the range specified.", null);
-        }else{
+        } else {
             return new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
         }
     }
 
     @Override
-    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException{
-        if (request == null){
+    public RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException, URISyntaxException {
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null){
+        if (request.getDeliveryID() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
-        if (delivery.getDriverId() == null){
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery not found in database."));
+        if (delivery.getDriverId() == null) {
             throw new InvalidRequestException("No driver is assigned to this delivery.");
         }
         CurrentUser currentUser = new CurrentUser();
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByEmail";
+        String uri = "http://" + userHost + ":" + userPort + "/user/getDriverByEmail";
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("email", currentUser.getEmail());
@@ -420,14 +415,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetDriverByEmailResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetDriverByEmailResponse.class);
 
-        if(responseEntity == null || !responseEntity.hasBody()
-                || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null){
+        if (responseEntity == null || !responseEntity.hasBody()
+                || responseEntity.getBody() == null || responseEntity.getBody().getDriver() == null) {
             throw new InvalidRequestException("Invalid user.");
         }
 
         Driver driver = responseEntity.getBody().getDriver();
 
-        if (delivery.getDriverId().compareTo(driver.getDriverID()) != 0){
+        if (delivery.getDriverId().compareTo(driver.getDriverID()) != 0) {
             throw new InvalidRequestException("Driver was not assigned to delivery.");
         }
         delivery.setDriverId(null);
@@ -439,21 +434,21 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException {
-        if(request == null){
+    public TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException, URISyntaxException {
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getDeliveryID() == null){
+        if (request.getDeliveryID() == null) {
             throw new InvalidRequestException("No delivery Id specified.");
         }
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery not found in database."));
-        if (delivery.getDriverId() == null){
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery not found in database."));
+        if (delivery.getDriverId() == null) {
             TrackDeliveryResponse response = new TrackDeliveryResponse(delivery.getPickUpLocation(), "No driver has been assigned to this delivery.");
             return response;
         }
 
-        String uri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
-
+        String stringUri = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
+        URI uri = new URI(stringUri);
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("userID", delivery.getDriverId());
 
@@ -461,14 +456,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetDriverByUUIDResponse> responseEntity = restTemplate.postForEntity(uri,
                 parts, GetDriverByUUIDResponse.class);
 
-        if(responseEntity == null || !responseEntity.hasBody()
-                || responseEntity.getBody() == null){
+        if (responseEntity == null || !responseEntity.hasBody()
+                || responseEntity.getBody() == null) {
             throw new InvalidRequestException("Invalid user.");
         }
 
         Driver driver = responseEntity.getBody().getDriver();
 
-        if (driver == null ||driver.getOnShift() == false){
+        if (driver == null || driver.getOnShift() == false) {
             delivery.setDriverId(null);
             deliveryRepo.save(delivery);
             TrackDeliveryResponse response = new TrackDeliveryResponse(delivery.getPickUpLocation(), "No driver has been assigned to this delivery.");
@@ -478,25 +473,25 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException{
-        if(request == null){
+    public UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, URISyntaxException {
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getDeliveryID() == null || request.getStatus() == null || request.getDetail() == null){
+        if (request.getDeliveryID() == null || request.getStatus() == null || request.getDetail() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
 
-        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
+        Delivery delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery does not exist in database."));
         AddDeliveryDetailRequest requestAdd = new AddDeliveryDetailRequest(request.getStatus(), request.getDetail(), request.getDeliveryID(), Calendar.getInstance());
         addDeliveryDetail(requestAdd);
         delivery.setStatus(request.getStatus());
         deliveryRepo.save(delivery);
-        if (request.getStatus() == DeliveryStatus.Delivered){
-            delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(()->new InvalidRequestException("Delivery does not exist in database."));
+        if (request.getStatus() == DeliveryStatus.Delivered) {
+            delivery = deliveryRepo.findById(request.getDeliveryID()).orElseThrow(() -> new InvalidRequestException("Delivery does not exist in database."));
             delivery.setCompleted(true);
 
-            String uri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
-
+            String stringUri = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
+            URI uri = new URI(stringUri);
             Map<String, Object> parts = new HashMap<>();
             parts.put("userID", delivery.getDriverId().toString());
 
@@ -505,24 +500,23 @@ public class DeliveryServiceImpl implements DeliveryService {
 
             Driver driver;
 
-            if(responseEntity == null || responseEntity.getStatusCode() != HttpStatus.OK
-            || !responseEntity.hasBody()
-                    || responseEntity.getBody() == null){
+            if (responseEntity == null || responseEntity.getStatusCode() != HttpStatus.OK
+                    || !responseEntity.hasBody()
+                    || responseEntity.getBody() == null) {
                 driver = null;
-            }else {
+            } else {
                 driver = responseEntity.getBody().getDriver();
             }
 
-            if(driver!=null)
-            {
-                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted()+1);
+            if (driver != null) {
+                driver.setDeliveriesCompleted(driver.getDeliveriesCompleted() + 1);
                 SaveDriverToRepoRequest saveDriverToRepoRequest = new SaveDriverToRepoRequest(driver);
                 rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_SaveDriverToRepo", saveDriverToRepoRequest);
             }
             deliveryRepo.save(delivery);
 
-            uri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
-
+            stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
+            uri = new URI(stringUri);
             Map<String, Object> orderRequest = new HashMap<String, Object>();
             orderRequest.put("orderID", delivery.getOrderID());
 
@@ -530,11 +524,11 @@ public class DeliveryServiceImpl implements DeliveryService {
                     orderRequest, GetOrderByUUIDResponse.class);
 
             Order order;
-            if(responseEntityOrder == null || !responseEntityOrder.hasBody()
+            if (responseEntityOrder == null || !responseEntityOrder.hasBody()
                     || responseEntityOrder.getBody() == null
-                    || responseEntityOrder.getStatusCode() != HttpStatus.OK){
+                    || responseEntityOrder.getStatusCode() != HttpStatus.OK) {
                 order = null;
-            }else{
+            } else {
                 order = responseEntityOrder.getBody().getOrder();
             }
 
@@ -548,26 +542,26 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     @Override
-    public GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException{
+    public GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException {
 
         Delivery delivery = null;
         String message = "Delivery with given ID successfully returned.";
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("GetDeliveryByUUID request is null - could not return delivery entity");
         }
 
-        if(request.getDeliveryID() == null){
-            throw  new InvalidRequestException("DeliveryID is null in GetDeliveryByUUID request - could not return delivery entity");
+        if (request.getDeliveryID() == null) {
+            throw new InvalidRequestException("DeliveryID is null in GetDeliveryByUUID request - could not return delivery entity");
         }
 
-        try{
+        try {
             delivery = deliveryRepo.findById(request.getDeliveryID()).orElse(null);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 
-        if(delivery == null){
+        if (delivery == null) {
             throw new DeliveryDoesNotExistException("Delivery with given ID does not exist in the repository - could not return delivery");
         }
 
@@ -575,17 +569,14 @@ public class DeliveryServiceImpl implements DeliveryService {
     }
 
     //Helpers
-    public boolean checkLongAndLatIfValid(GeoPoint point1, GeoPoint point2){
-        if(point1.getLongitude() < -180 || point1.getLongitude() > 180 ||
-           point2.getLongitude() < -180 || point2.getLongitude() > 180 ||
-           point1.getLatitude() < -90 || point1.getLatitude() > 90 ||
-           point2.getLatitude() < -90 || point2.getLatitude() > 90){
-            return false;
-        }
-        return true;
+    public boolean checkLongAndLatIfValid(GeoPoint point1, GeoPoint point2) {
+        return point1.getLongitude() >= -180 && point1.getLongitude() <= 180 &&
+                point2.getLongitude() >= -180 && point2.getLongitude() <= 180 &&
+                point1.getLatitude() >= -90 && point1.getLatitude() <= 90 &&
+                point2.getLatitude() >= -90 && point2.getLatitude() <= 90;
     }
 
-    public double getDistanceBetweenTwoPoints(GeoPoint point1, GeoPoint point2){
+    public double getDistanceBetweenTwoPoints(GeoPoint point1, GeoPoint point2) {
         double theta = point1.getLongitude() - point2.getLongitude();
         double distance = Math.sin(Math.toRadians(point1.getLatitude())) * Math.sin(Math.toRadians(point2.getLatitude())) + Math.cos(Math.toRadians(point1.getLatitude())) * Math.cos(Math.toRadians(point2.getLatitude())) * Math.cos(Math.toRadians(theta));
         distance = Math.acos(distance);
@@ -597,17 +588,15 @@ public class DeliveryServiceImpl implements DeliveryService {
     @Override
     public GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException, URISyntaxException {
 
-        if(request == null)
-        {
+        if (request == null) {
             throw new InvalidRequestException("Request object is null");
         }
 
-        if(request.getOrderID() == null)
-        {
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
         }
 
-        String uriString = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        String uriString = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
         URI uri = new URI(uriString);
         Map<String, Object> orderRequest = new HashMap<String, Object>();
         orderRequest.put("orderID", request.getOrderID());
@@ -616,27 +605,26 @@ public class DeliveryServiceImpl implements DeliveryService {
         ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
                 orderRequest, GetOrderByUUIDResponse.class);
 
-        if(responseEntityOrder == null || !responseEntityOrder.hasBody()
-                || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null){
+        if (responseEntityOrder == null || !responseEntityOrder.hasBody()
+                || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null) {
             throw new InvalidRequestException("Order does not exist");
         }
 
-        if(deliveryRepo==null) {
+        if (deliveryRepo == null) {
             return null;
         }
 
         List<Delivery> deliveries;
         Optional.of(deliveries = deliveryRepo.findAll()).orElse(null);
 
-        if(deliveries==null)
-        {
+        if (deliveries == null) {
             System.out.println("hi");
             return null;
         }
 
         for (Delivery delivery : deliveries) {
             if (delivery.getOrderID().compareTo(request.getOrderID()) == 0) {
-                uriString = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+                uriString = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
                 uri = new URI(uriString);
                 Map<String, Object> parts = new HashMap<>();
                 parts.put("userID", delivery.getDriverId());

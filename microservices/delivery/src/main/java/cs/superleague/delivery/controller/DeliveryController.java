@@ -111,7 +111,6 @@ public class DeliveryController implements DeliveryApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-//            System.out.printf(String.valueOf(body.getPlaceOfDelivery()));
             GeoPoint placeOfDelivery = new GeoPoint(body.getPlaceOfDelivery().getLatitude().doubleValue(), body.getPlaceOfDelivery().getLongitude().doubleValue(), body.getPlaceOfDelivery().getAddress());
             CreateDeliveryRequest request = new CreateDeliveryRequest(UUID.fromString(body.getOrderID()), UUID.fromString(body.getCustomerID()), UUID.fromString(body.getStoreID()), Calendar.getInstance(), placeOfDelivery);
             CreateDeliveryResponse createDeliveryResponse = deliveryService.createDelivery(request);
