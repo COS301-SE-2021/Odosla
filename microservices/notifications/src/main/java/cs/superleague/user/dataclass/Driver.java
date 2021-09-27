@@ -20,26 +20,26 @@ public class Driver extends User {
     private UUID deliveryID;
 
     @Column(name = "total_ratings")
-    private double totalRatings=0;
+    private double totalRatings = 0;
 
     @Column(name = "rating")
     private double rating;
 
-    private Boolean onShift=false;
-    private Boolean isCurrentlyDelivering=false;
+    private Boolean onShift = false;
+    private Boolean isCurrentlyDelivering = false;
 
     @Column(name = "deliveries_completed")
-    private int deliveriesCompleted=0;
+    private int deliveriesCompleted = 0;
 
     @Column(name = "number_of_ratings")
-    private int numberOfRatings=0;
+    private int numberOfRatings = 0;
 
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private GeoPoint currentAddress;
 
 
     public Driver(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID driverID) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
         this.driverID = driverID;
     }
 
@@ -48,7 +48,8 @@ public class Driver extends User {
         this.driverID = driverID;
     }
 
-    public Driver() {}
+    public Driver() {
+    }
 
     public Boolean getCurrentlyDelivering() {
         return isCurrentlyDelivering;

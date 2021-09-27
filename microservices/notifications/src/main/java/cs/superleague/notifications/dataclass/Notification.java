@@ -22,7 +22,8 @@ public class Notification {
 
     /* Constructor  */
 
-    public Notification(){}
+    public Notification() {
+    }
 
     public Notification(UUID notificationID, UUID userID, String payload, Calendar createdDateTime, Calendar readDateTime, NotificationType type) {
         this.notificationID = notificationID;
