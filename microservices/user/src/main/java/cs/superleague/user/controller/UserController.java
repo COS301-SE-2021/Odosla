@@ -1024,7 +1024,7 @@ public class UserController implements UserApi {
             e.printStackTrace();
             userGetDriverByUUIDResponse.setDriver(null);
             userGetDriverByUUIDResponse.setMessage(e.getMessage());
-            userGetDriverByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+            userGetDriverByUUIDResponse.setTimestamp(Calendar.getInstance().getTime().toString());
         }
         return new ResponseEntity<>(userGetDriverByUUIDResponse, status);
     }
