@@ -100,7 +100,7 @@ public class ShoppingController implements ShoppingApi {
             AddShopperResponse addShopperResponse = shoppingService.addShopper(req);
 
             try {
-                response.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(addShopperResponse.getTimestamp()));
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(addShopperResponse.getTimestamp()));
                 response.setMessage(addShopperResponse.getMessage());
                 response.setSuccess(addShopperResponse.isSuccess());
             } catch (Exception e) {
@@ -308,7 +308,7 @@ public class ShoppingController implements ShoppingApi {
 
         ShoppingGetProductByBarcodeResponse response = new ShoppingGetProductByBarcodeResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-        try{
+        try {
             GetProductByBarcodeRequest request = new GetProductByBarcodeRequest(body.getProductBarcode(), UUID.fromString(body.getStoreID()));
             GetProductByBarcodeResponse getProductByBarcodeResponse = shoppingService.getProductByBarcode(request);
             try {
@@ -328,13 +328,13 @@ public class ShoppingController implements ShoppingApi {
                 currentItem.setItemType(getProductByBarcodeResponse.getProduct().getItemType());
                 currentItem.setSize(getProductByBarcodeResponse.getProduct().getSize());
                 response.setProduct(currentItem);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 response.setSuccess(false);
                 response.setMessage(e.getMessage());
                 response.setProduct(null);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             response.setSuccess(false);
             response.setMessage(e.getMessage());

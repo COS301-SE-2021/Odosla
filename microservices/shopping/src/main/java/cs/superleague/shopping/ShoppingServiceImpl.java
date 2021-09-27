@@ -1501,14 +1501,14 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
     public GetProductByBarcodeResponse getProductByBarcode(GetProductByBarcodeRequest request) throws InvalidRequestException, ItemDoesNotExistException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getProductBarcode() == null || request.getStoreID() == null){
+        if (request.getProductBarcode() == null || request.getStoreID() == null) {
             throw new InvalidRequestException("Null parameters in request object.");
         }
         Item product = itemRepo.findAllByBarcodeAndStoreID(request.getProductBarcode(), request.getStoreID());
-        if (product == null){
+        if (product == null) {
             throw new ItemDoesNotExistException("The item requested does not exist in the database.");
         }
         GetProductByBarcodeResponse response = new GetProductByBarcodeResponse(true, "The item related to the barcode and store has been returned.", product);
