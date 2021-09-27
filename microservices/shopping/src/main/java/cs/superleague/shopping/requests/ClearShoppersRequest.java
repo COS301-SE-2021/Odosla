@@ -4,10 +4,13 @@ import java.util.UUID;
 
 public class ClearShoppersRequest {
 
-    /** attributes */
-    private UUID storeID;
+    /**
+     * attributes
+     */
+    private final UUID storeID;
 
-    /** constructor
+    /**
+     * constructor
      *
      * @param storeID the store which the shoppers need to be cleared from
      */
@@ -15,7 +18,9 @@ public class ClearShoppersRequest {
         this.storeID = storeID;
     }
 
-    /** getter */
+    /**
+     * getter
+     */
     public UUID getStoreID() {
         return storeID;
     }

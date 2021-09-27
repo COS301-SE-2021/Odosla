@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table (name = "store")
+@Table(name = "store")
 @DynamicUpdate
 public class Store implements Serializable {
 
@@ -27,16 +27,16 @@ public class Store implements Serializable {
     private int closingTime;
     private String imgUrl;
 
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private GeoPoint storeLocation;
 
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private Catalogue stock;
 
     @ManyToMany
     @JoinTable
     @LazyCollection(LazyCollectionOption.FALSE)
-    private List<Shopper> shoppers=null;
+    private List<Shopper> shoppers = null;
 
     @ManyToMany
     @JoinTable
@@ -48,7 +48,8 @@ public class Store implements Serializable {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Order> orderQueue;
 
-    public Store() { }
+    public Store() {
+    }
 
     public Store(UUID storeID, String storeBrand, Catalogue stock, int maxShoppers, List<Order> currentOrders, List<Order> orderQueue, int maxOrders, Boolean isOpen) {
         this.storeID = storeID;
@@ -70,19 +71,20 @@ public class Store implements Serializable {
         this.orderQueue = orderQueue;
         this.maxOrders = maxOrders;
         this.isOpen = isOpen;
-        this.imgUrl=imgUrl;
+        this.imgUrl = imgUrl;
     }
 
     public Store(UUID storeID, int openingTime, int closingTime, String storeBrand, int maxShoppers, int maxOrders, Boolean isOpen, String imgUrl) {
         this.storeID = storeID;
-        this.openingTime= openingTime;
-        this.closingTime= closingTime;
+        this.openingTime = openingTime;
+        this.closingTime = closingTime;
         this.storeBrand = storeBrand;
         this.maxShoppers = maxShoppers;
         this.maxOrders = maxOrders;
         this.isOpen = isOpen;
-        this.imgUrl= imgUrl;
+        this.imgUrl = imgUrl;
     }
+
     public UUID getStoreID() {
         return storeID;
     }
@@ -171,7 +173,7 @@ public class Store implements Serializable {
         return closingTime;
     }
 
-    public GeoPoint getStoreLocation(){
+    public GeoPoint getStoreLocation() {
         return storeLocation;
     }
 

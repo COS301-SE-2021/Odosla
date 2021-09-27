@@ -10,13 +10,13 @@ public class GetShoppersResponse {
 
     private final List<Shopper> listOfShoppers;
     private final boolean success;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timeStamp;
     private final String message;
 
-    public GetShoppersResponse(List<Shopper> listOfShoppers, boolean success, Date timeStamp,String message) {
+    public GetShoppersResponse(List<Shopper> listOfShoppers, boolean success, Date timeStamp, String message) {
         this.listOfShoppers = listOfShoppers;
-        this.timeStamp=timeStamp;
+        this.timeStamp = timeStamp;
         this.success = success;
         this.message = message;
     }

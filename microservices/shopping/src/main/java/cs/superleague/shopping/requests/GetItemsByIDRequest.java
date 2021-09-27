@@ -6,8 +6,7 @@ public class GetItemsByIDRequest {
 
     private List<String> itemIDs;
 
-    public GetItemsByIDRequest(List<String> itemIDs)
-    {
+    public GetItemsByIDRequest(List<String> itemIDs) {
         this.itemIDs = itemIDs;
     }
 

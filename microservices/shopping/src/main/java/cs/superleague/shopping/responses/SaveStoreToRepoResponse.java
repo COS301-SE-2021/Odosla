@@ -7,7 +7,7 @@ import java.util.Date;
 public class SaveStoreToRepoResponse {
 
     private final boolean success;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
@@ -17,7 +17,9 @@ public class SaveStoreToRepoResponse {
         this.message = message;
     }
 
-    /** getter */
+    /**
+     * getter
+     */
     public boolean isSuccess() {
         return success;
     }

@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class SaveOrderToRepoRequest implements Serializable {
 
-    private final Order order;
+    private Order order;
 
     public SaveOrderToRepoRequest(Order order) {
         this.order = order;
@@ -14,5 +14,9 @@ public class SaveOrderToRepoRequest implements Serializable {
 
     public Order getOrder() {
         return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

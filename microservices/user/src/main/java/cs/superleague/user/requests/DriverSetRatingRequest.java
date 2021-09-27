@@ -7,9 +7,9 @@ public class DriverSetRatingRequest {
     private UUID driverID;
     private double rating;
 
-    public DriverSetRatingRequest(UUID driverID, double rating){
-        this.driverID=driverID;
-        this.rating= rating;
+    public DriverSetRatingRequest(UUID driverID, double rating) {
+        this.driverID = driverID;
+        this.rating = rating;
     }
 
     public UUID getDriverID() {

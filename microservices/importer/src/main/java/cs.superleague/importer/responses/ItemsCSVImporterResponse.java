@@ -8,11 +8,10 @@ public class ItemsCSVImporterResponse {
     private Date timestamp;
     private String message;
 
-    public ItemsCSVImporterResponse(boolean success, Date timestamp, String message)
-    {
-        this.success=success;
-        this.timestamp=timestamp;
-        this.message=message;
+    public ItemsCSVImporterResponse(boolean success, Date timestamp, String message) {
+        this.success = success;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
     public boolean isSuccess() {

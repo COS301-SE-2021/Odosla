@@ -8,7 +8,7 @@ public class SaveItemToRepoRequest implements Serializable {
 
     private Item item;
 
-    public SaveItemToRepoRequest(Item item){
+    public SaveItemToRepoRequest(Item item) {
         this.item = item;
     }
 

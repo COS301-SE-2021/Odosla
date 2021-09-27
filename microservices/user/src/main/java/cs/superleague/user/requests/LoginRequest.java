@@ -9,10 +9,10 @@ public class LoginRequest {
     private UserType userType;
 
 
-    public LoginRequest(String email, String password,UserType userType) {
+    public LoginRequest(String email, String password, UserType userType) {
         this.email = email;
         this.password = password;
-        this.userType=userType;
+        this.userType = userType;
     }
 
     public UserType getUserType() {

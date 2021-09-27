@@ -1,4 +1,5 @@
 package cs.superleague.payment;
+
 import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -32,7 +33,7 @@ public interface PaymentService {
 
     VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws PaymentException, InterruptedException;
 
-    ReverseTransactionResponse  reverseTransaction(ReverseTransactionRequest request);
+    ReverseTransactionResponse reverseTransaction(ReverseTransactionRequest request);
 
 
     // INVOICE

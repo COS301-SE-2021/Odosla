@@ -2,7 +2,7 @@ package cs.superleague.importer.exceptions;
 
 import java.security.PrivilegedActionException;
 
-public class ImporterException extends Exception{
+public class ImporterException extends Exception {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

@@ -5,49 +5,43 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import cs.superleague.analytics.exceptions.AnalyticsException;
-import cs.superleague.user.dataclass.Driver;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoresResponse;
-import org.springframework.beans.factory.annotation.Value;
+import cs.superleague.user.dataclass.Driver;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.util.*;
+import java.net.URI;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MonthlyAnalyticsHelper {
 
-    private String shoppingHost;
-    private String shoppingPort;
+    private final String shoppingHost;
+    private final String shoppingPort;
+    private final RestTemplate restTemplate;
 
     private final HashMap<String, Object> data;
 
     public MonthlyAnalyticsHelper(HashMap<String, Object> data, String shoppingHost,
-                                  String shoppingPort){
+                                  String shoppingPort, RestTemplate restTemplate) {
 
-        this. data = data;
+        this.data = data;
         this.shoppingHost = shoppingHost;
         this.shoppingPort = shoppingPort;
+        this.restTemplate = restTemplate;
     }
 
-    public byte[] createPDF() throws Exception{
+    public byte[] createPDF() throws Exception {
 
         Document document = new Document();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
-        try{
-            String home = System.getProperty("user.home");
-            String file_name = home + "/Downloads/Odosla_UserReport.pdf";
-            PdfWriter.getInstance(document, new FileOutputStream(file_name));
+        try {
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -86,44 +80,44 @@ public class MonthlyAnalyticsHelper {
             cl = new PdfPCell(new Phrase("Price", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table3.addCell(cl);
             Order[] topOrders;
-            topOrders =  (Order[]) data.get("topTenOrders");
+            topOrders = (Order[]) data.get("topTenOrders");
 
             Store store = null;
             List<Store> stores;
             ResponseEntity<GetStoresResponse> responseEntity;
-            RestTemplate restTemplate = new RestTemplate();
-            String uri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+            String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStores";
+            URI uri = new URI(stringUri);
 
             Map<String, Object> parts = new HashMap<>();
 
             responseEntity = restTemplate.postForEntity(uri, parts,
                     GetStoresResponse.class);
-            if(responseEntity == null || !responseEntity.hasBody()
-                    || responseEntity.getBody() == null){
+            if (responseEntity == null || !responseEntity.hasBody()
+                    || responseEntity.getBody() == null) {
                 throw new AnalyticsException("Could not retrieve stores");
             }
 
             stores = responseEntity.getBody().getStores();
 
-            if(topOrders != null)
-            for (int i = 0; i < topOrders.length; i++) {
-                table3.addCell(String.valueOf(i + 1));
+            if (topOrders != null)
+                for (int i = 0; i < topOrders.length; i++) {
+                    table3.addCell(String.valueOf(i + 1));
 
-                if(topOrders[0] != null) {
-                    for (Store s: stores) {
-                        if(s.getStoreID() != null &&
-                                s.getStoreID().equals(topOrders[i].getStoreID())){
-                            store = s;
-                            break;
+                    if (topOrders[0] != null) {
+                        for (Store s : stores) {
+                            if (s.getStoreID() != null &&
+                                    s.getStoreID().equals(topOrders[i].getStoreID())) {
+                                store = s;
+                                break;
+                            }
+                        }
+
+                        if (store != null) {
+                            table3.addCell(String.valueOf(store.getStoreBrand()));
+                            table3.addCell(String.valueOf(topOrders[i].getTotalCost()));
                         }
                     }
-
-                    if(store != null) {
-                        table3.addCell(String.valueOf(store.getStoreBrand()));
-                        table3.addCell(String.valueOf(topOrders[i].getTotalCost()));
-                    }
                 }
-            }
 
             PdfPTable table = new PdfPTable(3);
 
@@ -139,17 +133,17 @@ public class MonthlyAnalyticsHelper {
             cell = new PdfPCell(new Phrase("Rating", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table.addCell(cell);
             Driver[] topDrivers;
-            topDrivers =  (Driver[]) data.get("top10Drivers");
+            topDrivers = (Driver[]) data.get("top10Drivers");
 
-            if(topDrivers != null)
-            for (int i = 0; i < topDrivers.length; i++) {
-                table.addCell(String.valueOf(i + 1));
+            if (topDrivers != null)
+                for (int i = 0; i < topDrivers.length; i++) {
+                    table.addCell(String.valueOf(i + 1));
 
-                if(topDrivers[0] != null) {
-                    table.addCell(String.valueOf(topDrivers[i].getEmail()));
-                    table.addCell(String.valueOf(topDrivers[i].getRating()));
+                    if (topDrivers[0] != null) {
+                        table.addCell(String.valueOf(topDrivers[i].getEmail()));
+                        table.addCell(String.valueOf(topDrivers[i].getRating()));
+                    }
                 }
-            }
 
             PdfPTable table1 = new PdfPTable(2);
 
@@ -157,7 +151,7 @@ public class MonthlyAnalyticsHelper {
             table1.setWidths(new int[]{2, 5});
             table1.setWidthPercentage(100);
             table1.addCell(new Paragraph("Reporting Period", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
-            table1.addCell(data.get("startDate")+"   -   "+ data.get("endDate"));
+            table1.addCell(data.get("startDate") + "   -   " + data.get("endDate"));
             table1.addCell(new Paragraph("Total Number Of Users", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
             table1.addCell(String.valueOf(data.get("totalNum_Users")));
             table1.addCell(new Paragraph("Total Number Of Admins", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
@@ -193,7 +187,7 @@ public class MonthlyAnalyticsHelper {
 
             System.out.println("Report Complete!");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
 
@@ -257,7 +251,7 @@ public class MonthlyAnalyticsHelper {
             System.out.println("finished");
 
             return sb;
-        } catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
