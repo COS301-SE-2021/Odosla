@@ -1,6 +1,7 @@
 package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
@@ -1624,5 +1625,83 @@ public class ShoppingServiceImpl implements ShoppingService {
         }
     }
 
+    @Override
+    public PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException {
+
+        CartItem newCartItem;
+        List<Item> items = new ArrayList<>();
+        List<Item> cheaperItems = new ArrayList<>();
+        List<CartItem> requestCartItems = new ArrayList<>();
+        String message = "Price check successfully completed";
+
+        if(request == null){
+            throw new InvalidRequestException("Request object can't be null - can't perform a price check");
+        }
+
+        if(request.getCartItems() == null){
+            throw new InvalidRequestException("CartItem list in parameter request can't be null - can't perform" +
+                    " a price check");
+        }
+
+        if(request.getCartItems().size() == 0){
+            message = "No items in CartItem List, could not perform a price check.";
+            return new PriceCheckResponse(requestCartItems, message, false);
+        }
+
+        items = itemRepo.findAll();
+
+        // stores all the cheaper items in a new list
+        for (Item item: items) {
+            for(CartItem cartItem: request.getCartItems()){
+                if(item.getBarcode().equals(cartItem.getBarcode()) &&
+                item.getPrice() < cartItem.getPrice()){
+                    cheaperItems.add(item);
+                }
+            }
+        }
+
+        // removes duplicate items with higher prices
+        for(Item item: cheaperItems){
+            for(Item i: cheaperItems){
+                if(item.getBarcode().equals(i.getBarcode()) &&
+                i.getPrice() >= item.getPrice()){
+                    cheaperItems.remove(i);
+                }
+            }
+        }
+
+        requestCartItems = request.getCartItems();
+
+        // removes expensive items from the cart items list
+        for(Item item: cheaperItems){
+            for(CartItem cartItem: request.getCartItems()){
+                if(cartItem.getBarcode().equals(item.getBarcode())){
+                    requestCartItems.remove(cartItem);
+                }
+            }
+        }
+
+        // inserts cheaper cart items in cartItem List
+        for(Item item: cheaperItems){
+            newCartItem = new CartItem();
+            newCartItem.setCartItemNo(UUID.randomUUID());
+            newCartItem.setBarcode(item.getBarcode());
+            newCartItem.setBrand(item.getBrand());
+            newCartItem.setItemType(item.getItemType());
+            newCartItem.setName(item.getName());
+            newCartItem.setDescription(item.getDescription());
+            newCartItem.setImageUrl(item.getImageUrl());
+            newCartItem.setPrice(item.getPrice());
+            newCartItem.setProductID(item.getProductID());
+            newCartItem.setQuantity(item.getQuantity());
+            newCartItem.setSize(item.getSize());
+            newCartItem.setStoreID(item.getStoreID());
+            newCartItem.setTotalCost(item.getPrice() * item.getQuantity());
+
+            requestCartItems.add(newCartItem);
+        }
+
+        return new PriceCheckResponse(requestCartItems, message, true);
+    }
 }
 

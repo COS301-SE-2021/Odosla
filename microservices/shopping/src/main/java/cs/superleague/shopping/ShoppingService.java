@@ -55,4 +55,5 @@ public interface ShoppingService {
 
     SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException;
 
+    PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException;
 }
