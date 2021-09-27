@@ -765,6 +765,9 @@ public class UserController implements UserApi {
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
         driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
+        if (driver.getCurrentAddress() != null){
+            driverObject.currentAddress(populateGeoPoint(driver.getCurrentAddress()));
+        }
         return driverObject;
     }
     public CustomerObject populateCustomer(Customer customer){
@@ -1024,7 +1027,7 @@ public class UserController implements UserApi {
             e.printStackTrace();
             userGetDriverByUUIDResponse.setDriver(null);
             userGetDriverByUUIDResponse.setMessage(e.getMessage());
-            userGetDriverByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+            userGetDriverByUUIDResponse.setTimestamp(Calendar.getInstance().getTime().toString());
         }
         return new ResponseEntity<>(userGetDriverByUUIDResponse, status);
     }

@@ -8,6 +8,7 @@ import cs.superleague.delivery.repos.DeliveryDetailRepo;
 import cs.superleague.delivery.repos.DeliveryRepo;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
+import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.models.*;
@@ -122,6 +123,25 @@ public class DeliveryController implements DeliveryApi {
             response.setMessage(e.getMessage());
             response.setDeliveryID(null);
             response.setIsSuccess(false);
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<DeliveryGetAdditionalStoresDeliveryCostResponse> getAdditionalStoresDeliveryCost(DeliveryGetAdditionalStoresDeliveryCostRequest body) {
+        DeliveryGetAdditionalStoresDeliveryCostResponse response = new DeliveryGetAdditionalStoresDeliveryCostResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetAdditionalStoresDeliveryCostRequest request = new GetAdditionalStoresDeliveryCostRequest(UUID.fromString(body.getDeliveryID()));
+            GetAdditionalStoresDeliveryCostResponse getAdditionalStoresDeliveryCostResponse = deliveryService.getAdditionalStoresDeliveryCost(request);
+            response.setAdditionalCost(populatePrices(getAdditionalStoresDeliveryCostResponse.getAdditionalCost()));
+            response.setStores(populateStores(getAdditionalStoresDeliveryCostResponse.getStores()));
+            response.setMessage(getAdditionalStoresDeliveryCostResponse.getMessage());
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setAdditionalCost(null);
+            response.setStores(null);
+            response.setMessage(e.getMessage());
         }
         return new ResponseEntity<>(response, httpStatus);
     }
@@ -374,6 +394,46 @@ public class DeliveryController implements DeliveryApi {
         locationObject.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         locationObject.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         return locationObject;
+    }
+    public List<BigDecimal> populatePrices(List<Double> additionalCosts){
+        List<BigDecimal> numberAdditionalCosts = new ArrayList<>();
+        for (double cost : additionalCosts){
+            numberAdditionalCosts.add(BigDecimal.valueOf(cost));
+        }
+        return numberAdditionalCosts;
+    }
+    private List<StoreObject> populateStores(List<Store> responseStores) throws NullPointerException{
+
+        List<StoreObject> responseBody = new ArrayList<>();
+
+        if(responseStores != null)
+            for(int i = 0; i < responseStores.size(); i++){
+
+                StoreObject currentStore = new StoreObject();
+
+                if(responseStores.get(i).getStoreID()!=null)
+                {
+                    currentStore.setStoreID(responseStores.get(i).getStoreID().toString());
+                }
+
+                currentStore.setStoreBrand(responseStores.get(i).getStoreBrand());
+                currentStore.setOpeningTime(responseStores.get(i).getOpeningTime());
+                currentStore.setClosingTime(responseStores.get(i).getClosingTime());
+                currentStore.setMaxOrders(responseStores.get(i).getMaxOrders());
+                currentStore.setMaxShoppers(responseStores.get(i).getMaxShoppers());
+                currentStore.setIsOpen(responseStores.get(i).getOpen());
+                currentStore.setImgUrl(responseStores.get(i).getImgUrl());
+
+                if(responseStores.get(i).getStoreLocation()!=null)
+                {
+                    currentStore.setStoreLocation(populateGeoPointObject(responseStores.get(i).getStoreLocation()));
+                }
+
+                responseBody.add(currentStore);
+
+            }
+
+        return responseBody;
     }
 
     @Override

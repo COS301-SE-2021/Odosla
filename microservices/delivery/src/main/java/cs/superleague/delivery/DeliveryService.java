@@ -1,5 +1,6 @@
 package cs.superleague.delivery;
 
+import cs.superleague.delivery.exceptions.DeliveryDoesNotExistException;
 import cs.superleague.delivery.exceptions.DeliveryException;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.requests.*;
@@ -34,4 +35,6 @@ public interface DeliveryService {
     GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException, URISyntaxException;
 
     GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException;
+
+    GetAdditionalStoresDeliveryCostResponse getAdditionalStoresDeliveryCost(GetAdditionalStoresDeliveryCostRequest request) throws InvalidRequestException, DeliveryDoesNotExistException, URISyntaxException;
 }
