@@ -6,6 +6,7 @@ public class GetCustomerByEmailResponse {
 
     final Customer customer;
     private final boolean success;
+
     public GetCustomerByEmailResponse(Customer customer, boolean success) {
         this.customer = customer;
         this.success = success;

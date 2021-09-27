@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class GetAdminByUUIDResponse {
     private final Admin admin;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
