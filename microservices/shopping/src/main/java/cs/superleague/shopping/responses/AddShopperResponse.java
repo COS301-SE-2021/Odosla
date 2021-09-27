@@ -5,17 +5,20 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 public class AddShopperResponse {
-    /** attributes */
+    /**
+     * attributes
+     */
     private final boolean success;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
-    /** constructor
+    /**
+     * constructor
      *
-     * @param success whether shopper was added or not
+     * @param success   whether shopper was added or not
      * @param timestamp timestamp the response was created
-     * @param message message associated response object
+     * @param message   message associated response object
      */
     public AddShopperResponse(boolean success, Date timestamp, String message) {
         this.success = success;
@@ -23,7 +26,9 @@ public class AddShopperResponse {
         this.message = message;
     }
 
-    /** getter */
+    /**
+     * getter
+     */
     public boolean isSuccess() {
         return success;
     }

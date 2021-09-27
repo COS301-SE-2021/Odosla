@@ -9,29 +9,33 @@ import java.util.UUID;
 
 public class SubmitOrderRequest {
 
-    /** attrbiutes */
-    private List<CartItem> listOfItems;
-    private Double discount;
-    private UUID storeID;
-    private OrderType orderType;
-    private Double longitude;
-    private Double latitude;
-    private String address;
+    /**
+     * attrbiutes
+     */
+    private final List<CartItem> listOfItems;
+    private final Double discount;
+    private final UUID storeID;
+    private final OrderType orderType;
+    private final Double longitude;
+    private final Double latitude;
+    private final String address;
 
-    /** constructor
+    /**
+     * constructor
+     *
      * @param listOfItems - list of items in the order of object type Item
-     * @param discount - the amount of the discount
-     * @param storeID - the store id of where the order will be placed
-     * @param orderType - the type of order it is, whether it is a cs.superleague.delivery or collection
+     * @param discount    - the amount of the discount
+     * @param storeID     - the store id of where the order will be placed
+     * @param orderType   - the type of order it is, whether it is a cs.superleague.delivery or collection
      */
     public SubmitOrderRequest(List<CartItem> listOfItems, Double discount, UUID storeID, OrderType orderType, Double longitude, Double latitude, String address) {
         this.listOfItems = listOfItems;
         this.discount = discount;
         this.storeID = storeID;
         this.orderType = orderType;
-        this.latitude=latitude;
-        this.longitude=longitude;
-        this.address=address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
     }
 
     /* getters */

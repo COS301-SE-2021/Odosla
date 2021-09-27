@@ -1,8 +1,11 @@
 cs\superleague\models\ItemObject.class
 cs\superleague\integration\security\JWTAuthFilter.class
+cs\superleague\payment\responses\GetAllCartItemsResponse.class
 cs\superleague\recommendation\requests\GetCartRecommendationRequest.class
+cs\superleague\payment\responses\GetOrderByUUIDResponse.class
 cs\superleague\recommendation\dataclass\Recommendation.class
 cs\superleague\models\RecommendationGetCartRecommendationResponse.class
+cs\superleague\shopping\responses\GetAllItemsResponse.class
 cs\superleague\recommendation\exceptions\RecommendationException.class
 cs\superleague\integration\dataclass\UserType.class
 cs\superleague\payment\responses\GetOrderResponse.class
@@ -17,12 +20,14 @@ cs\superleague\RecommendationApp.class
 cs\superleague\recommendation\requests\GetOrderRecommendationRequest.class
 cs\superleague\recommendation\repos\RecommendationRepo.class
 cs\superleague\recommendation\exceptions\InvalidRequestException.class
+cs\superleague\payment\dataclass\CartItem.class
 cs\superleague\recommendation\requests\RemoveRecommendationRequest.class
 cs\superleague\shopping\dataclass\Item.class
 cs\superleague\models\RecommendationGetCartRecommendationRequest.class
 cs\superleague\payment\dataclass\Order.class
 cs\superleague\integration\security\CurrentUser.class
 cs\superleague\recommendation\rest\RestConfig.class
+cs\superleague\models\CartItemObject.class
 cs\superleague\recommendation\controller\RecommendationController.class
 cs\superleague\recommendation\rabbit\RecommendationListener.class
 cs\superleague\recommendation\requests\AddRecommendationRequest.class

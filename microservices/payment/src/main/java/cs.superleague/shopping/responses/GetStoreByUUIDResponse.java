@@ -8,14 +8,14 @@ import java.util.Date;
 public class GetStoreByUUIDResponse {
 
     private final Store store;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
     public GetStoreByUUIDResponse() {
         this.store = null;
-        this.timestamp = null;
         this.message = null;
+        this.timestamp = null;
     }
 
     public GetStoreByUUIDResponse(Store store, Date timestamp, String message) {

@@ -5,9 +5,8 @@ import java.util.UUID;
 public class GetStoreOpenRequest {
     UUID storeID;
 
-    public GetStoreOpenRequest(UUID storeID)
-    {
-        this.storeID=storeID;
+    public GetStoreOpenRequest(UUID storeID) {
+        this.storeID = storeID;
     }
 
     public void setStoreID(UUID storeID) {

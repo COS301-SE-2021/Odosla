@@ -12,7 +12,7 @@ public class Transaction {
     private UUID transactionID;
     private Calendar date;
 
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private Order order;
 
     private float amount;

@@ -7,10 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
-public class User {
+public class User implements Serializable {
 
     /* Attributes */
     private String name;
@@ -21,21 +22,21 @@ public class User {
     private String password;
 
     @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
-    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private Date activationDate;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.m")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.m")
     private String activationCode;
     private String resetCode;
     private String resetExpiration;
 
-    @Column(name="account_type")
+    @Column(name = "account_type")
     @Enumerated(EnumType.STRING)
     private UserType accountType;
 
     /* Constructor  */
 
-    public User(String name, String surname,String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, UserType accountType) {
+    public User(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, UserType accountType) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -54,11 +55,11 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
-        this.activationCode=activationCode;
-        this.accountType=userType;
+        this.activationCode = activationCode;
+        this.accountType = userType;
     }
 
-    public User(){
+    public User() {
 
     }
 

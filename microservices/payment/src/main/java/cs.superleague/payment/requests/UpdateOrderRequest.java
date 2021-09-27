@@ -9,19 +9,25 @@ import java.util.List;
 import java.util.UUID;
 
 public class UpdateOrderRequest {
-    /** attrbiutes */
+    /**
+     * attrbiutes
+     */
     private UUID orderID;
     private List<CartItem> listOfItems;
     private Double discount;
     private OrderType orderType;
     private GeoPoint deliveryAddress;
 
-    public UpdateOrderRequest(){}
-    /** constructor
-     * @param orderID - unique order identifier
-     * @param listOfItems - list of items in the order of object type Item
-     * @param discount - the amount of the discount
-     * @param orderType - the type of order it is, whether it is a delivery or collection
+    public UpdateOrderRequest() {
+    }
+
+    /**
+     * constructor
+     *
+     * @param orderID         - unique order identifier
+     * @param listOfItems     - list of items in the order of object type Item
+     * @param discount        - the amount of the discount
+     * @param orderType       - the type of order it is, whether it is a delivery or collection
      * @param deliveryAddress - the GeoPoint address of where the order is to be shipped if order type is delivery
      */
     public UpdateOrderRequest(UUID orderID, List<CartItem> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
@@ -29,14 +35,14 @@ public class UpdateOrderRequest {
         this.listOfItems = listOfItems;
         this.discount = discount;
         this.orderType = orderType;
-        this.deliveryAddress=deliveryAddress;
+        this.deliveryAddress = deliveryAddress;
     }
 
     public UpdateOrderRequest(List<CartItem> listOfItems, Double discount, OrderType orderType, GeoPoint deliveryAddress) {
         this.listOfItems = listOfItems;
         this.discount = discount;
         this.orderType = orderType;
-        this.deliveryAddress=deliveryAddress;
+        this.deliveryAddress = deliveryAddress;
     }
 
     public UUID getOrderID() {

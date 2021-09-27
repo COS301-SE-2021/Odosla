@@ -6,9 +6,8 @@ public class GetItemsRequest {
 
     UUID storeID;
 
-    public GetItemsRequest(UUID storeID)
-    {
-        this.storeID= storeID;
+    public GetItemsRequest(UUID storeID) {
+        this.storeID = storeID;
     }
 
     public void setStoreID(UUID storeID) {

@@ -35,11 +35,6 @@ public class RecommendationServiceImpl implements RecommendationService{
     @Value("${paymentPort}")
     private String paymentPort;
 
-    @Value("${shoppingHost}")
-    private String shoppingHost;
-    @Value("${shoppingPort}")
-    private String shoppingPort;
-
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
 
@@ -83,11 +78,10 @@ public class RecommendationServiceImpl implements RecommendationService{
             List<Order> finalRecommendation = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
-//                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
-
 
                     Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+
                     String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
                     URI uri = new URI(stringUri);
                     ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
@@ -172,7 +166,7 @@ public class RecommendationServiceImpl implements RecommendationService{
 
     // Helper/s
 
-    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage){
+    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage) throws URISyntaxException {
 
         int count = 0;
         int randomInt = 0;
@@ -181,8 +175,11 @@ public class RecommendationServiceImpl implements RecommendationService{
         Random random = new Random();
         Map<String, Object> parts = new HashMap<>();
 
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getAllCartItems";
+        URI uri = new URI(stringUri);
+
         ResponseEntity<GetAllCartItemsResponse> responseEntity = restTemplate.postForEntity(
-                "http://" + paymentHost + ":" + paymentPort + "/payment/getAllCartItems",
+                uri,
                 parts, GetAllCartItemsResponse.class);
 
         if(responseEntity == null || !responseEntity.hasBody() || responseEntity.getBody() == null

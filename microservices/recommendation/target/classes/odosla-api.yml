@@ -39,13 +39,13 @@ components:
       description: "Generic schema for an item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -78,8 +78,41 @@ components:
         recommendations:
           type: array
           items:
-            $ref: "#/components/schemas/ItemObject"
+            $ref: "#/components/schemas/CartItemObject"
         isSuccess:
           type: boolean
         message:
+          type: string
+
+    CartItemObject:
+      description: "Generic schema for a cart item"
+      type: object
+      properties:
+        productID:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        orderID:
+          type: string
+        totalCost:
+          type: number
+        cartItemNo:
           type: string
