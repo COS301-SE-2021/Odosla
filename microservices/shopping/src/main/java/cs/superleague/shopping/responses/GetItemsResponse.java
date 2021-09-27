@@ -10,17 +10,16 @@ import java.util.UUID;
 public class GetItemsResponse {
 
     private List<Item> items;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
     private UUID storeID;
 
-    public GetItemsResponse(UUID storeID, List<Item> items, Date timestamp, String message)
-    {
+    public GetItemsResponse(UUID storeID, List<Item> items, Date timestamp, String message) {
         this.items = items;
-        this.timestamp= timestamp;
-        this.message= message;
-        this.storeID= storeID;
+        this.timestamp = timestamp;
+        this.message = message;
+        this.storeID = storeID;
     }
 
     public void setTimestamp(Date timestamp) {

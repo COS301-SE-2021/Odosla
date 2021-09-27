@@ -11,8 +11,7 @@ public class GetStoresResponse {
     private boolean response;
     private String message;
 
-    public GetStoresResponse(boolean response, String message,List<Store> stores)
-    {
+    public GetStoresResponse(boolean response, String message, List<Store> stores) {
         this.response = response;
         this.message = message;
         this.stores = stores;

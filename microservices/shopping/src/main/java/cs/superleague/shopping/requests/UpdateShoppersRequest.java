@@ -10,10 +10,9 @@ public class UpdateShoppersRequest {
     Store store;
     List<Shopper> newShoppers;
 
-    public UpdateShoppersRequest(Store store, List<Shopper> newShoppers)
-    {
-        this.store=store;
-        this.newShoppers= newShoppers;
+    public UpdateShoppersRequest(Store store, List<Shopper> newShoppers) {
+        this.store = store;
+        this.newShoppers = newShoppers;
     }
 
     public Store getStore() {

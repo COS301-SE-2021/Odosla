@@ -6,7 +6,7 @@ public class UpdateShoppersResponse {
 
     private boolean response;
     private String message;
-    private UUID storeID;
+    private final UUID storeID;
 
     public UpdateShoppersResponse(boolean response, String message, UUID storeID) {
         this.response = response;
