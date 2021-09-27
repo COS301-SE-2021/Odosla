@@ -6,9 +6,8 @@ public class GetCatalogueRequest {
 
     UUID storeID;
 
-    public GetCatalogueRequest(UUID storeID)
-    {
-        this.storeID= storeID;
+    public GetCatalogueRequest(UUID storeID) {
+        this.storeID = storeID;
     }
 
     /*

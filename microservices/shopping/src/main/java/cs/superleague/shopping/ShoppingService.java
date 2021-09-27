@@ -1,4 +1,5 @@
 package cs.superleague.shopping;
+
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
@@ -29,7 +30,7 @@ public interface ShoppingService {
 
     GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException, URISyntaxException;
+    AddShopperResponse addShopper(AddShopperRequest request) throws StoreDoesNotExistException, UserException, URISyntaxException;
 
     RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException, URISyntaxException;
 
