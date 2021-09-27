@@ -8,12 +8,11 @@ import java.util.Date;
 public class GetOrderByUUIDResponse {
 
     private final Order order;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
-    public GetOrderByUUIDResponse()
-    {
+    public GetOrderByUUIDResponse() {
         this.order = null;
         this.message = null;
         this.timestamp = null;

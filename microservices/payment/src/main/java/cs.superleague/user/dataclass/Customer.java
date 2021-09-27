@@ -6,18 +6,19 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table
-public class Customer extends User {
+public class Customer extends User implements Serializable {
 
     @Id
     private UUID customerID;
 
-    @OneToOne(cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private GeoPoint address;
 
     @OneToMany
@@ -28,10 +29,10 @@ public class Customer extends User {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> shoppingCart;
 
-    @OneToOne (cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private Preference preference;
 
-    @OneToOne (cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private Wallet wallet;
 
     public String getEmail() {
@@ -44,39 +45,39 @@ public class Customer extends User {
 
     private String email;
 
-    public Customer(){
+    public Customer() {
 
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID, GeoPoint address, List<GroceryList> groceryLists, List<Item> shoppingCart, Preference preference, Wallet wallet) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
         this.customerID = customerID;
         this.address = address;
         this.groceryLists = groceryLists;
         this.shoppingCart = shoppingCart;
         this.preference = preference;
         this.wallet = wallet;
-        this.email=email;
+        this.email = email;
 
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID customerID) {
         super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
         this.customerID = customerID;
-        this.email=email;
+        this.email = email;
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID customerID) {
         super(name, surname, email, phoneNumber, password, activationCode, accountType);
         this.customerID = customerID;
-        this.email=email;
+        this.email = email;
     }
 
     public Customer(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID customerID, GeoPoint address) {
         super(name, surname, email, phoneNumber, password, activationCode, accountType);
         this.customerID = customerID;
         this.address = address;
-        this.email=email;
+        this.email = email;
     }
 
     public GeoPoint getAddress() {
