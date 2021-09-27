@@ -26,11 +26,11 @@ public interface DeliveryService {
 
     GetNextOrderForDriverResponse getNextOrderForDriver(GetNextOrderForDriverRequest request) throws InvalidRequestException;
 
-    RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException;
+    RemoveDriverFromDeliveryResponse removeDriverFromDelivery(RemoveDriverFromDeliveryRequest request) throws InvalidRequestException, URISyntaxException;
 
-    TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException;
+    TrackDeliveryResponse trackDelivery(TrackDeliveryRequest request) throws InvalidRequestException, URISyntaxException;
 
-    UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException;
+    UpdateDeliveryStatusResponse updateDeliveryStatus(UpdateDeliveryStatusRequest request) throws InvalidRequestException, URISyntaxException;
 
     GetDeliveryDriverByOrderIDResponse getDeliveryDriverByOrderID(GetDeliveryDriverByOrderIDRequest request) throws InvalidRequestException, URISyntaxException;
 
