@@ -83,8 +83,6 @@ public class RecommendationServiceImpl implements RecommendationService{
             List<Order> finalRecommendation = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders){
                 if (frequency >= request.getItemIDs().size()){
-//                    Order order = orderRepo.findById(orderIDs.get(frequencyOfOrders.indexOf(frequency))).orElse(null);
-
 
                     Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
