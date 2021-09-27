@@ -1,6 +1,6 @@
 package cs.superleague.recommendation.exceptions;
 
-public class InvalidRequestException extends RecommendationException{
+public class InvalidRequestException extends RecommendationException {
     /**
      * Constructs a new exception with the specified detail message.  The
      * cause is not initialized, and may subsequently be initialized by

@@ -29,7 +29,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 @Service("recommendationServiceImpl")
-public class RecommendationServiceImpl implements RecommendationService{
+public class RecommendationServiceImpl implements RecommendationService {
     @Value("${paymentHost}")
     private String paymentHost;
     @Value("${paymentPort}")
@@ -47,82 +47,81 @@ public class RecommendationServiceImpl implements RecommendationService{
 
     @Override
     public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException {
-        if (request == null){
-            return  getRandomRecommendations("Null request object.");
+        if (request == null) {
+            return getRandomRecommendations("Null request object.");
         }
-        if (request.getItemIDs() == null){
+        if (request.getItemIDs() == null) {
             return getRandomRecommendations("Null item list.");
         }
-        if (request.getItemIDs().size() == 0){
+        if (request.getItemIDs().size() == 0) {
             return getRandomRecommendations("No items in item list.");
         }
-        if (recommendationRepo != null){
+        if (recommendationRepo != null) {
             List<UUID> orderIDs = new ArrayList<>();
             List<Integer> frequencyOfOrders = new ArrayList<>();
-            for (String productID : request.getItemIDs()){
+            for (String productID : request.getItemIDs()) {
                 List<Recommendation> recommendation = recommendationRepo.findRecommendationByProductID(productID);
-                if (recommendation != null){
-                    for (Recommendation orderID : recommendation){
-                        if (!orderIDs.contains(orderID.getOrderID())){
+                if (recommendation != null) {
+                    for (Recommendation orderID : recommendation) {
+                        if (!orderIDs.contains(orderID.getOrderID())) {
                             orderIDs.add(orderID.getOrderID());
                             frequencyOfOrders.add(1);
-                        }else{
+                        } else {
                             frequencyOfOrders.set(orderIDs.indexOf(orderID.getOrderID()), frequencyOfOrders.get(orderIDs.indexOf(orderID.getOrderID())) + 1);
                         }
                     }
                 }
             }
-            if (orderIDs.size() == 0){
+            if (orderIDs.size() == 0) {
                 return getRandomRecommendations("None of these items have been bought before.");
             }
             List<Order> finalRecommendation = new ArrayList<>();
-            for (Integer frequency : frequencyOfOrders){
-                if (frequency >= request.getItemIDs().size()){
+            for (Integer frequency : frequencyOfOrders) {
+                if (frequency >= request.getItemIDs().size()) {
 
                     Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
-
-                    String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+                    String stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
                     URI uri = new URI(stringUri);
                     ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
                             uri, parts, GetOrderByUUIDResponse.class);
 
                     Order order = null;
-                    if(responseEntity.getBody() != null) {
+                    if (responseEntity.getBody() != null) {
                         order = responseEntity.getBody().getOrder();
                     }
 
-                    if(responseEntity == null || !responseEntity.hasBody() ||
-                    responseEntity.getBody() == null || responseEntity.getBody().getOrder() == null){
+                    if (responseEntity == null || !responseEntity.hasBody() ||
+                            responseEntity.getBody() == null || responseEntity.getBody().getOrder() == null) {
                         return getRandomRecommendations("Could not Retrieve Orders");
                     }
 
-                    if (order != null){
+                    if (order != null) {
                         finalRecommendation.add(order);
                     }
                 }
             }
             List<CartItem> finalItemsRecommendation = new ArrayList<>();
-            for (Order orders : finalRecommendation){
-                for (CartItem item : orders.getCartItems()){
-                    if (request.getItemIDs().contains(item.getProductID())){
+            for (Order orders : finalRecommendation) {
+                for (CartItem item : orders.getCartItems()) {
+                    if (request.getItemIDs().contains(item.getProductID())) {
                         continue;
                     }
-                    if (finalItemsRecommendation.contains(item)){
+                    if (finalItemsRecommendation.contains(item)) {
                         continue;
                     }
                     finalItemsRecommendation.add(item);
-                    if (finalItemsRecommendation.size() == 3){
+                    if (finalItemsRecommendation.size() == 3) {
                         break;
                     }
                 }
             }
-            if (finalItemsRecommendation.size() == 0){
+            if (finalItemsRecommendation.size() == 0) {
                 return getRandomRecommendations("There are no orders that have all the requested items in them.");
             }
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
-        }else{
+        } else {
             return getRandomRecommendations("No recommendation repository found.");
         }
     }
@@ -134,15 +133,15 @@ public class RecommendationServiceImpl implements RecommendationService{
 
     @Override
     public void addRecommendation(AddRecommendationRequest request) throws InvalidRequestException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getOrderID() == null || request.getProductID() == null){
+        if (request.getOrderID() == null || request.getProductID() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
-        for (String productID : request.getProductID()){
+        for (String productID : request.getProductID()) {
             UUID recommendationID = UUID.randomUUID();
-            while (recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null){
+            while (recommendationRepo.findRecommendationByRecommendationID(recommendationID) != null) {
                 recommendationID = UUID.randomUUID();
             }
             Recommendation recommendation = new Recommendation(recommendationID, productID, request.getOrderID());
@@ -152,14 +151,14 @@ public class RecommendationServiceImpl implements RecommendationService{
 
     @Override
     public void removeRecommendation(RemoveRecommendationRequest request) throws InvalidRequestException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getOrderID() == null){
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
         List<Recommendation> recommendations = recommendationRepo.findRecommendationByOrderID(request.getOrderID());
-        for (Recommendation recommendation : recommendations){
+        for (Recommendation recommendation : recommendations) {
             recommendationRepo.delete(recommendation);
         }
     }
@@ -175,29 +174,29 @@ public class RecommendationServiceImpl implements RecommendationService{
         Random random = new Random();
         Map<String, Object> parts = new HashMap<>();
 
-        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getAllCartItems";
+        String stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getAllCartItems";
         URI uri = new URI(stringUri);
 
         ResponseEntity<GetAllCartItemsResponse> responseEntity = restTemplate.postForEntity(
                 uri,
                 parts, GetAllCartItemsResponse.class);
 
-        if(responseEntity == null || !responseEntity.hasBody() || responseEntity.getBody() == null
-            || responseEntity.getBody().getCartItems() == null){
+        if (responseEntity == null || !responseEntity.hasBody() || responseEntity.getBody() == null
+                || responseEntity.getBody().getCartItems() == null) {
             return new GetCartRecommendationResponse(new ArrayList<>(),
                     false, "Could not retrieve Items");
         }
 
         allItems = responseEntity.getBody().getCartItems();
 
-        if(allItems.size() < 3){
+        if (allItems.size() < 3) {
             count = allItems.size();
-        }else{
+        } else {
             count = 3;
         }
 
         System.out.println(count);
-        for(int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             randomInt = random.nextInt(allItems.size());
             randomItems.add(allItems.get(randomInt));
         }
