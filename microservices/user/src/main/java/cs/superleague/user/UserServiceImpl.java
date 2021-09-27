@@ -45,9 +45,7 @@ public class UserServiceImpl implements UserService {
     private final GroceryListRepo groceryListRepo;
     private final JwtUtil jwtUtil;
     private final RestTemplate restTemplate;
-    /* TO DO:
-    Complete packaging
-    Scan Item*/
+
     @Value("${paymentPort}")
     private String paymentPort;
     @Value("${paymentHost}")
@@ -64,8 +62,9 @@ public class UserServiceImpl implements UserService {
     private String notificationHost;
     @Value("${notificationsPort}")
     private String notificationPort;
+
     private CurrentUser currentUser;
-    //private final UserService userService;
+
     private final RabbitTemplate rabbit;
 
     @Autowired
@@ -117,8 +116,6 @@ public class UserServiceImpl implements UserService {
 
             Order orderEntity = null;
 
-            System.out.println("order id from request: " + request.getOrderID());
-
             Map<String, Object> parts = new HashMap<>();
             parts.put("orderID", request.getOrderID().toString());
             String stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
@@ -129,9 +126,6 @@ public class UserServiceImpl implements UserService {
             if (responseEntity.getBody() != null) {
                 orderEntity = responseEntity.getBody().getOrder();
             }
-
-            System.out.println("order entity id: " + orderEntity.getOrderID());
-            System.out.println("order entity shopper id: " + orderEntity.getShopperID());
 
             if (orderEntity == null) {
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
