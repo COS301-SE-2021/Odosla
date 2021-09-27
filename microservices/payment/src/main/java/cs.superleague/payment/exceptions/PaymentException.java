@@ -3,7 +3,7 @@ package cs.superleague.payment.exceptions;
 
 import java.security.PrivilegedActionException;
 
-public class PaymentException extends Exception{
+public class PaymentException extends Exception {
 
     /**
      * Constructs a new exception with {@code null} as its detail message.

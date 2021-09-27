@@ -26,7 +26,7 @@ public class Invoice {
     private List<CartItem> item;
     //private DeliveryDetail deliveryDetail;
 
-    public Invoice(){
+    public Invoice() {
 
     }
 

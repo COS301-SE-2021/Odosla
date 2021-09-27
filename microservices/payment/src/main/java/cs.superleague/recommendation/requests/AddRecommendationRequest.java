@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class AddRecommendationRequest implements Serializable {
+
     private UUID orderID;
     private List<String> productID;
 

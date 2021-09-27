@@ -8,7 +8,7 @@ public class AddToQueueResponse {
 
     private final boolean success;
     private final String message;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
 
     public AddToQueueResponse(boolean success, String message, Date timestamp) {

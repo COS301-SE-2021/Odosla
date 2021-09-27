@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
 
- @Repository
- public interface OrderRepo extends JpaRepository<Order, UUID> {
+@Repository
+public interface OrderRepo extends JpaRepository<Order, UUID> {
 
-   List<Order> findAll();
-   List<Order> findAllByUserID(UUID userID);
- }
+    List<Order> findAll();
+
+    List<Order> findAllByUserID(UUID userID);
+}
 

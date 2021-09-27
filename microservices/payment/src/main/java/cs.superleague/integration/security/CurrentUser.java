@@ -10,7 +10,7 @@ public class CurrentUser {
     private UserType userType;
     private String email;
 
-    public CurrentUser(){
+    public CurrentUser() {
         try {
             Map<String, Object> i = (Map<String, Object>) SecurityContextHolder.getContext().getAuthentication().getDetails();
             String type = (String) i.get("userType");
@@ -25,7 +25,7 @@ public class CurrentUser {
             } else if (type.equals("ADMIN")) {
                 userType = UserType.ADMIN;
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             userType = null;
             email = null;
         }

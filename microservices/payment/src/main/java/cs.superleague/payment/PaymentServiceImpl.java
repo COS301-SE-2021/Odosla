@@ -16,8 +16,6 @@ import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
-import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.requests.AddToFrontOfQueueRequest;
 import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
@@ -32,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
@@ -43,6 +40,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Service("paymentServiceImpl")
 public class PaymentServiceImpl implements PaymentService {
+    private final OrderRepo orderRepo;
+    private final InvoiceRepo invoiceRepo;
+    private final TransactionRepo transactionRepo;
+    private final RabbitTemplate rabbitTemplate;
+    private final RestTemplate restTemplate;
+    private final CartItemRepo cartItemRepo;
     @Value("${shoppingHost}")
     private String shoppingHost;
     @Value("${shoppingPort}")
@@ -51,13 +54,6 @@ public class PaymentServiceImpl implements PaymentService {
     private String userHost;
     @Value("${userPort}")
     private String userPort;
-
-    private final OrderRepo orderRepo;
-    private final InvoiceRepo invoiceRepo;
-    private final TransactionRepo transactionRepo;
-    private final RabbitTemplate rabbitTemplate;
-    private final RestTemplate restTemplate;
-    private final CartItemRepo cartItemRepo;
 
     @Autowired
     public PaymentServiceImpl(OrderRepo orderRepo, InvoiceRepo invoiceRepo, TransactionRepo transactionRepo, RabbitTemplate rabbitTemplate, RestTemplate restTemplate, CartItemRepo cartItemRepo) throws InvalidRequestException {
@@ -70,7 +66,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
 
-    /** What to do
+    /**
+     * What to do
      *
      * @param request is used to bring in:
      *                - userID - the cs.superleague.user ID creating the order
@@ -80,15 +77,15 @@ public class PaymentServiceImpl implements PaymentService {
      *                - OrderType - whether the order is for collection or cs.superleague.delivery
      *                - DeliveryAddress - this is the address the order will be delivered to, the address of cs.superleague.user
      *                - StoreAddress - address of store the order is created at
-     *
-     * SubmitOrder should do the following:
-     *               - Check the request object is not null and all corresponding parameters else throw InvalidRequestException
-     *               - Add up cost of items and subtract total for total order price
-     *               - If order with same ID already exists in database, then return object without success
-     *               - If the order is created successfully, then order gets added to order repository and success
-     *
-     * Request object (SubmitOrderRequest)
-     * {
+     *                <p>
+     *                SubmitOrder should do the following:
+     *                - Check the request object is not null and all corresponding parameters else throw InvalidRequestException
+     *                - Add up cost of items and subtract total for total order price
+     *                - If order with same ID already exists in database, then return object without success
+     *                - If the order is created successfully, then order gets added to order repository and success
+     *                <p>
+     *                Request object (SubmitOrderRequest)
+     *                {
      *                "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
      *                "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
      *                "discount": "30.50"
@@ -96,95 +93,68 @@ public class PaymentServiceImpl implements PaymentService {
      *                "orderType": "OrderType.DELIVERY"
      *                "DeliveryAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
      *                "StoreAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
-     * }
-     *
-     * Response object (SubmitOrderResponse)
-     * {
-     *    success: true // boolean
-     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
-     *    message: "Order created successfully"
-     *    order:  order / orderObject
-     *
-     * }
+     *                }
+     *                <p>
+     *                Response object (SubmitOrderResponse)
+     *                {
+     *                success: true // boolean
+     *                timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *                message: "Order created successfully"
+     *                order:  order / orderObject
+     *                <p>
+     *                }
      * @return
      * @throws PaymentException
      * @throws InvalidRequestException
      */
     @Override
     public SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException {
-
-        System.out.println("submit order store id: "+ request.getStoreID());
-        System.out.println("__1");
         SubmitOrderResponse response = null;
-        UUID orderID=UUID.randomUUID();
-        AtomicReference<Double> totalCost= new AtomicReference<>((double) 0);
+        UUID orderID = UUID.randomUUID();
+        AtomicReference<Double> totalCost = new AtomicReference<>((double) 0);
 
         boolean invalidReq = false;
         String invalidMessage = "";
 
-        UUID customerID=null;
+        UUID customerID = null;
 
-        GetStoreByUUIDResponse shop=null;
-        if (request!=null)
-        {
-            System.out.println("__2");
-            if(request.getListOfItems()==null){
+        GetStoreByUUIDResponse shop = null;
+        if (request != null) {
+            if (request.getListOfItems() == null) {
                 invalidReq = true;
                 invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
-            }
-
-            else if(request.getDiscount()==null){
+            } else if (request.getDiscount() == null) {
                 invalidReq = true;
                 invalidMessage = ("Discount cannot be null in request object - order unsuccessfully created.");
-            }
-
-            else if(request.getStoreID()==null){
+            } else if (request.getStoreID() == null) {
                 invalidReq = true;
                 invalidMessage = ("Store ID cannot be null in request object - order unsuccessfully created.");
-            }
-
-            else if(request.getOrderType()==null){
+            } else if (request.getOrderType() == null) {
                 invalidReq = true;
                 invalidMessage = ("Order type cannot be null in request object - order unsuccessfully created.");
-            }
-            else if(request.getLongitude()==null)
-            {
+            } else if (request.getLongitude() == null) {
                 invalidReq = true;
                 invalidMessage = ("Longitude cannot be null in request object - order unsuccessfully created.");
-
-            }
-            else if(request.getLatitude()==null)
-            {
+            } else if (request.getLatitude() == null) {
                 invalidReq = true;
                 invalidMessage = ("Latitude cannot be null in request object - order unsuccessfully created.");
-
-            }
-            else if(request.getAddress()==null)
-            {
+            } else if (request.getAddress() == null) {
                 invalidReq = true;
                 invalidMessage = ("Address cannot be null in request object - order unsuccessfully created.");
-
             }
 
-            if(invalidReq)
-            {
+            if (invalidReq) {
                 throw new InvalidRequestException(invalidMessage);
             }
 
-            System.out.println("__3");
-
-            String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
+            String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStoreByUUID";
             URI uri = new URI(stringUri);
-
-            System.out.println("__uri " + uri.toString());
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("StoreID", request.getStoreID().toString());
             ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate
                     .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
             shop = getStoreByUUIDResponseResponseEntity.getBody();
-
-            System.out.println("__4");
 
             if (shop != null) {
                 if (shop.getStore().getStoreLocation() == null) {
@@ -197,19 +167,16 @@ public class PaymentServiceImpl implements PaymentService {
                     invalidMessage = ("Store is currently closed - could not create order");
                 }
             }
-            System.out.println("__5");
 
-            if(invalidReq)
-            {
+            if (invalidReq) {
                 throw new InvalidRequestException(invalidMessage);
             }
-            System.out.println("__6");
             CurrentUser currentUser = new CurrentUser();
 
             parts = new HashMap<>();
-            parts.put("email", currentUser.getEmail().toString());
+            parts.put("email", currentUser.getEmail());
 
-            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+            stringUri = "http://" + userHost + ":" + userPort + "/user/getCustomerByEmail";
             uri = new URI(stringUri);
 
             ResponseEntity<GetCustomerByEmailResponse> useCaseResponseEntity = restTemplate.postForEntity(
@@ -218,7 +185,6 @@ public class PaymentServiceImpl implements PaymentService {
             GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
             Customer customer = getCustomerByEmailResponse.getCustomer();
 
-            System.out.println("__7");
             assert customer != null;
 
             customerID = customer.getCustomerID();
@@ -232,14 +198,12 @@ public class PaymentServiceImpl implements PaymentService {
                 int quantity = item.getQuantity();
                 double itemPrice = item.getPrice();
                 for (int j = 0; j < quantity; j++) {
-                    finalTotalCost.updateAndGet(v -> ((double) (v + itemPrice)));
+                    finalTotalCost.updateAndGet(v -> v + itemPrice);
                 }
             });
 
-            System.out.println("__8");
-
             /* Take off discount */
-            finalTotalCost.updateAndGet(v -> ((double) (v - discount)));
+            finalTotalCost.updateAndGet(v -> v - discount);
 
             //meant to use assign order request in shop - Mock Data
             UUID shopperID = null;
@@ -255,8 +219,6 @@ public class PaymentServiceImpl implements PaymentService {
 
             GeoPoint customerLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
 
-            System.out.println("__9");
-
             Order alreadyExists = null;
             while (true) {
                 try {
@@ -265,8 +227,6 @@ public class PaymentServiceImpl implements PaymentService {
                     e.printStackTrace();
                 }
 
-                System.out.println("__9.1");
-
                 if (alreadyExists != null) {
                     orderID = UUID.randomUUID();
                 } else {
@@ -274,14 +234,9 @@ public class PaymentServiceImpl implements PaymentService {
                 }
             }
 
-            System.out.println("__10");
-
             assert shop != null;
 
-
             //Order o = new Order(orderID, customerID, request.getStoreID(), shopperID, new Date(), null, totalC, orderType, OrderStatus.AWAITING_PAYMENT, request.getListOfItems(), request.getDiscount(), customerLocation, shop.getStore().getStoreLocation(), requiresPharmacy);
-            System.out.println("__11");
-//            System.out.println("Submit Order id: "+ orderID);
             Order o = new Order();
             o.setOrderID(orderID);
             o.setUserID(customerID);
@@ -297,24 +252,16 @@ public class PaymentServiceImpl implements PaymentService {
             o.setStoreAddress(shop.getStore().getStoreLocation());
             o.setRequiresPharmacy(requiresPharmacy);
 
-            System.out.println("__12");
             if (o != null) {
-                System.out.println("__13");
                 if (shop.getStore().getOpen() == true) {
-                    System.out.println("__14");
                     if (orderRepo != null) {
-                        System.out.println("__x");
                         orderRepo.save(o);
-                        System.out.println("-----------made it after order repo -----------");
                         //Setting total cost of each item
                         List<CartItem> cartItems = request.getListOfItems();
 
-                        System.out.println("Submit order cart size: " + cartItems.size());
-                        for(int k = 0; k < cartItems.size(); k++)
-                        {
+                        for (int k = 0; k < cartItems.size(); k++) {
                             UUID cartID = UUID.randomUUID();
-                            while(cartItemRepo.existsById(cartID))
-                            {
+                            while (cartItemRepo.existsById(cartID)) {
                                 cartID = UUID.randomUUID();
                             }
                             cartItems.get(k).setCartItemNo(cartID);
@@ -326,13 +273,13 @@ public class PaymentServiceImpl implements PaymentService {
 
                         o.setCartItems(cartItems);
 
-                        if(cartItemRepo!=null)
+                        if (cartItemRepo != null)
                             cartItemRepo.saveAll(cartItems);
 
                         orderRepo.save(o);
 
                         List<String> productIDs = new ArrayList<>();
-                        for (CartItem item : request.getListOfItems()){
+                        for (CartItem item : request.getListOfItems()) {
                             productIDs.add(item.getProductID());
                         }
 
@@ -354,48 +301,46 @@ public class PaymentServiceImpl implements PaymentService {
                         rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                     }).start();
 
-                    System.out.println("Order has been created");
                     response = new SubmitOrderResponse(o, true, Calendar.getInstance().getTime(), "Order successfully created.");
                 } else {
                     throw new InvalidRequestException("Store is currently closed - could not create order");
                 }
             }
-        }
-        else{
+        } else {
             throw new InvalidRequestException("Invalid submit order request received - order unsuccessfully created.");
         }
         return response;
     }
 
-    /** WHAT TO DO: cancelOrder
+    /**
+     * WHAT TO DO: cancelOrder
      *
      * @param //request is used to bring in:
-     *-   private UUID orderID // The order ID for the order that is to be cancelled
-     *
-     *
-     * cancelOrder should: This function allows for an order to be cancelled based on the status of the particular order
-     *   1.Check that the request object and the orderID are not null, if they are an invalidOrderRequest is thrown\
-     *   2. Check if the orderID passed in exists in the DB if it does not, the OrderDoesNotExistException is thrown
-     *   3. Checks the order status of the order
-     *   3.1 if the order status is AWAITING_PAYMENT or PURCHASED the order can easily be cancelled without
-     *       charging the customer.
-     *   3.2 Once an order has reached the COLLECT status the customer will be charged a fee to cancel the order
-     *   3.3 Lastly if the order has changed to "collected", either by the driver or the customer the order
-     *      can no longer be cancelled
-     *
-     * Request Object: (CancelOrderRequest)
-     * {
-     *    "orderID":"8b337604-b0f6-11eb-8529-0242ac130003"
-     * }
-     *
-     * Response object: (CancelOrderResponse)
-     * {
-     *    success: true // boolean
-     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
-     *    message: "Cannot cancel an order that has been delivered/collected."
-     *    orders:  //List<Orders>
-     * }
-     *
+     *                  -   private UUID orderID // The order ID for the order that is to be cancelled
+     *                  <p>
+     *                  <p>
+     *                  cancelOrder should: This function allows for an order to be cancelled based on the status of the particular order
+     *                  1.Check that the request object and the orderID are not null, if they are an invalidOrderRequest is thrown\
+     *                  2. Check if the orderID passed in exists in the DB if it does not, the OrderDoesNotExistException is thrown
+     *                  3. Checks the order status of the order
+     *                  3.1 if the order status is AWAITING_PAYMENT or PURCHASED the order can easily be cancelled without
+     *                  charging the customer.
+     *                  3.2 Once an order has reached the COLLECT status the customer will be charged a fee to cancel the order
+     *                  3.3 Lastly if the order has changed to "collected", either by the driver or the customer the order
+     *                  can no longer be cancelled
+     *                  <p>
+     *                  Request Object: (CancelOrderRequest)
+     *                  {
+     *                  "orderID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *                  }
+     *                  <p>
+     *                  Response object: (CancelOrderResponse)
+     *                  {
+     *                  success: true // boolean
+     *                  timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *                  message: "Cannot cancel an order that has been delivered/collected."
+     *                  orders:  //List<Orders>
+     *                  }
      * @return
      * @throws InvalidRequestException
      * @throws OrderDoesNotExist
@@ -417,7 +362,7 @@ public class PaymentServiceImpl implements PaymentService {
          * DELIVERED
          */
 
-        if(req != null){
+        if (req != null) {
 
             order = getOrder(new GetOrderRequest(req.getOrderID())).getOrder();
 
@@ -425,16 +370,16 @@ public class PaymentServiceImpl implements PaymentService {
 
             List<Order> orders = orderRepo.findAll();
 
-            if(order.getStatus() == OrderStatus.DELIVERED ||
+            if (order.getStatus() == OrderStatus.DELIVERED ||
                     order.getStatus() == OrderStatus.CUSTOMER_COLLECTED ||
-                    order.getStatus() == OrderStatus.DELIVERY_COLLECTED){
+                    order.getStatus() == OrderStatus.DELIVERY_COLLECTED) {
                 message = "Cannot cancel an order that has been delivered/collected.";
-                return new CancelOrderResponse(false,Calendar.getInstance().getTime(), message,orders);
+                return new CancelOrderResponse(false, Calendar.getInstance().getTime(), message, orders);
             }
 
             if (currentUser.getUserType() == UserType.CUSTOMER) {
-                if (order.getStatus().equals(OrderStatus.IN_QUEUE)){
-                    String stringURI = "http://"+shoppingHost+":"+shoppingPort+"/shopping/removeQueuedOrder";
+                if (order.getStatus().equals(OrderStatus.IN_QUEUE)) {
+                    String stringURI = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/removeQueuedOrder";
                     URI uri = new URI(stringURI);
 
                     Map<String, Object> parts = new HashMap<>();
@@ -447,20 +392,20 @@ public class PaymentServiceImpl implements PaymentService {
 
                 RemoveRecommendationRequest removeRecommendation = new RemoveRecommendationRequest(req.getOrderID());
                 rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_RemoveRecommendation", removeRecommendation);
-                if(order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED){
+                if (order.getStatus() != OrderStatus.AWAITING_PAYMENT || order.getStatus() != OrderStatus.PURCHASED) {
                     cancellationFee = 1000;
                     message = "Order successfully cancelled. Customer has been charged " + cancellationFee;
-                }else {
+                } else {
                     message = "Order has been successfully cancelled";
                 }
                 order.setStatus(OrderStatus.CANCELLED);
                 orderRepo.save(order);
 
-                response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
-            }else if (currentUser.getUserType() == UserType.SHOPPER){
+                response = new CancelOrderResponse(true, Calendar.getInstance().getTime(), message, orders);
+            } else if (currentUser.getUserType() == UserType.SHOPPER) {
                 cancellationFee = 1000;
                 message = "Order successfully cancelled. Shopper has been charged " + cancellationFee;
-                response= new CancelOrderResponse(true,Calendar.getInstance().getTime(), message,orders);
+                response = new CancelOrderResponse(true, Calendar.getInstance().getTime(), message, orders);
                 order.setStatus(OrderStatus.IN_QUEUE);
                 orderRepo.save(order);
                 AddToFrontOfQueueRequest addToFrontOfQueueRequest = new AddToFrontOfQueueRequest(order);
@@ -484,7 +429,6 @@ public class PaymentServiceImpl implements PaymentService {
 //            }
 
 
-
             // remove Order from DB.
 //            orderRepo.delete(order);
 
@@ -493,48 +437,47 @@ public class PaymentServiceImpl implements PaymentService {
 
             // refund customers order total - cancellation fee
 
-        }
-        else{
+        } else {
             throw new InvalidRequestException("request object cannot be null - couldn't cancel order");
         }
         return response;
     }
 
-    /** WHAT TO DO: updateOrder
+    /**
+     * WHAT TO DO: updateOrder
      *
      * @param request is used to bring in:
-     *            - userID - the user ID of person who placed the order
-     *            - orderID - the unique identifier of the order placed
-     *            - listOfItems - list of items in the order of object type Item
-     *            - discount - the amount of the discount
-     *            - orderType - the type of order it is, whether it is a delivery or collection
-     *            - deliveryAddress - the GeoPoint address of the store where order is going to be delivered to.
-     *
-     * updateOrder should:
-     *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
-     *            - check that the order id passed in exists in the database or not.
-     *            - if the order is found in the database use its status to determine whether it can be updated or not, then proceed accordingly
-     *              - e.g. if the order status say that the order has been delivered, the order cannot be updated.
-     *
-     * Request Object: (UpdateOrderRequest)
-     * {
-     *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
-     *            "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
-     *            "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
-     *            "discount": "30.
-import java.util.List;50"
-     *            "orderType": "OrderType.DELIVERY"
-     *            "deliveryAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
-     * }
-     *
-     * Response object: (UpdateOrderResponse)
-     * {
-     *    success: true // boolean
-     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
-     *    message: "Order successfully updated"
-     *    order:  // order object
-     * }
-     *
+     *                - userID - the user ID of person who placed the order
+     *                - orderID - the unique identifier of the order placed
+     *                - listOfItems - list of items in the order of object type Item
+     *                - discount - the amount of the discount
+     *                - orderType - the type of order it is, whether it is a delivery or collection
+     *                - deliveryAddress - the GeoPoint address of the store where order is going to be delivered to.
+     *                <p>
+     *                updateOrder should:
+     *                - check that the request object passed in is valid, and throw appropriate exceptions if it is not
+     *                - check that the order id passed in exists in the database or not.
+     *                - if the order is found in the database use its status to determine whether it can be updated or not, then proceed accordingly
+     *                - e.g. if the order status say that the order has been delivered, the order cannot be updated.
+     *                <p>
+     *                Request Object: (UpdateOrderRequest)
+     *                {
+     *                "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *                "userID":"8b337604-b0f6-11eb-8529-0242ac130003"
+     *                "listOfItems": {{"ProductID":"12345","name":"item1"...}, ...}
+     *                "discount": "30.
+     *                import java.util.List;50"
+     *                "orderType": "OrderType.DELIVERY"
+     *                "deliveryAddress": {"geoID":"3847593","latitude":"30.49","longitude":"24.34"}
+     *                }
+     *                <p>
+     *                Response object: (UpdateOrderResponse)
+     *                {
+     *                success: true // boolean
+     *                timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *                message: "Order successfully updated"
+     *                order:  // order object
+     *                }
      * @return
      * @throws InvalidRequestException
      * @throws OrderDoesNotExist
@@ -549,18 +492,17 @@ import java.util.List;50"
         double cost;
         Customer customer;
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
         }
 
-        if(request.getOrderID()==null)
-        {
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
         CurrentUser currentUser = new CurrentUser();
 
-        String stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+        String stringUri = "http://" + userHost + ":" + userPort + "/user/getCustomerByEmail";
         URI uri = new URI(stringUri);
 
         Map<String, Object> parts = new HashMap<String, Object>();
@@ -571,13 +513,13 @@ import java.util.List;50"
 
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
         customer = getCustomerByEmailResponse.getCustomer();
-        if(customer == null){
+        if (customer == null) {
             throw new InvalidRequestException("Incorrect email email given - customer does not exist");
         }
 
         GetOrderResponse getOrderResponse;
         getOrderResponse = getOrder(new GetOrderRequest(request.getOrderID()));
-        order= getOrderResponse.getOrder();
+        order = getOrderResponse.getOrder();
 
         if (!customer.getCustomerID().equals(order.getUserID())) {
             throw new NotAuthorisedException("Not Authorised to update an order you did not place.");
@@ -588,15 +530,13 @@ import java.util.List;50"
         // if the order has not yet been delivered, collected and process by the shoppers
 
         if (status != OrderStatus.AWAITING_COLLECTION &&
-                status!= OrderStatus.ASSIGNED_DRIVER &&
+                status != OrderStatus.ASSIGNED_DRIVER &&
                 status != OrderStatus.CUSTOMER_COLLECTED &&
                 status != OrderStatus.DELIVERY_COLLECTED &&
                 status != OrderStatus.DELIVERED &&
                 status != OrderStatus.PACKING) { // statuses which do not allow for the updating of an order
 
-            System.out.println("hello");
             if (request.getOrderType() != null) {
-                System.out.println(request.getOrderType());
                 order.setType(request.getOrderType());
             }
 
@@ -605,7 +545,6 @@ import java.util.List;50"
             }
 
             if (request.getListOfItems() != null) {
-                System.out.println("hello");
                 order.setCartItems(request.getListOfItems());
                 cost = getCost(order.getCartItems());
                 order.setTotalCost(cost - discount);
@@ -631,27 +570,23 @@ import java.util.List;50"
     }
 
     @Override
-    public GetOrderResponse getOrder(GetOrderRequest request) throws InvalidRequestException, OrderDoesNotExist{
+    public GetOrderResponse getOrder(GetOrderRequest request) throws InvalidRequestException, OrderDoesNotExist {
         String message = null;
         Order order;
 
 //        CurrentUser currentUser = new CurrentUser();
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Invalid order request received - cannot get order.");
         }
 
-        if(request.getOrderID() == null){
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("OrderID cannot be null in request object - cannot get order.");
         }
 
-        System.out.println("requests order id: " + request.getOrderID());
         order = orderRepo.findById(request.getOrderID()).orElse(null);
         //order.setOrderID(request.getOrderID());
-        System.out.println("order total cost: " +order.getTotalCost());
-        System.out.println("order create date: " +order.getCreateDate());
-        System.out.println("Order id from get Order: " + order.getOrderID());
-        if(order == null){
+        if (order == null) {
             throw new OrderDoesNotExist("Order doesn't exist in database - cannot get order.");
         }
 
@@ -660,25 +595,24 @@ import java.util.List;50"
     }
 
     @Override
-    public GetStatusResponse getStatus(GetStatusRequest request) throws PaymentException{
+    public GetStatusResponse getStatus(GetStatusRequest request) throws PaymentException {
         String message;
         Order order;
 
-        System.out.println("get status request order id: "+ request.getOrderID());
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Invalid getStatusRequest received - could not get status.");
         }
 
-        if(request.getOrderID() == null){
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("OrderID cannot be null in request object - could not get status.");
         }
 
         order = orderRepo.findById(request.getOrderID()).orElse(null);
-        if(order == null){
+        if (order == null) {
             throw new OrderDoesNotExist("Order doesn't exist in database - could not get status.");
         }
 
-        if(!(order.getStatus() instanceof OrderStatus)){
+        if (!(order.getStatus() instanceof OrderStatus)) {
             message = "Order does not have a valid Status";
             return new GetStatusResponse(null, false, new Date(), message);
         }
@@ -687,47 +621,47 @@ import java.util.List;50"
         return new GetStatusResponse(order.getStatus().name(), true, new Date(), message);
     }
 
-    /** WHAT TO DO: setStatus
+    /**
+     * WHAT TO DO: setStatus
      *
      * @param request is used to bring in:
-     *            - order - order whose status is to be updated
-     *            - orderStatus - the order status that we want the order to be changed to
-     *
-     * setStatus should:
-     *            - check that the request object passed in is valid, and throw appropriate exceptions if it is not
-     *            - it should then set the status of the order object passed in to that of the orderStatus passed in
-     *
-     * Request Object: (setStatusRequest)
-     * {
-     *
-     * }
-     *
-     * Response object: (setStatusResponse)
-     * {
-     *    success: true // boolean
-     *    timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
-     *    message: "Order status successfully set"
-     *    order:  // order object
-     *
-     * }
-     *
+     *                - order - order whose status is to be updated
+     *                - orderStatus - the order status that we want the order to be changed to
+     *                <p>
+     *                setStatus should:
+     *                - check that the request object passed in is valid, and throw appropriate exceptions if it is not
+     *                - it should then set the status of the order object passed in to that of the orderStatus passed in
+     *                <p>
+     *                Request Object: (setStatusRequest)
+     *                {
+     *                <p>
+     *                }
+     *                <p>
+     *                Response object: (setStatusResponse)
+     *                {
+     *                success: true // boolean
+     *                timestamp: Thu Dec 05 09:29:39 UTC 1996 // Date
+     *                message: "Order status successfully set"
+     *                order:  // order object
+     *                <p>
+     *                }
      * @return
      * @throws PaymentException
      */
     @Override
-    public SetStatusResponse setStatus(SetStatusRequest request) throws PaymentException{
+    public SetStatusResponse setStatus(SetStatusRequest request) throws PaymentException {
         Order order;
         String message = "Order status successfully set";
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Invalid request received - request cannot be null");
         }
 
-        if(request.getOrderStatus() == null){
+        if (request.getOrderStatus() == null) {
             throw new InvalidRequestException("Invalid request received - order status cannot be null");
         }
 
-        if(request.getOrder() == null){
+        if (request.getOrder() == null) {
             throw new InvalidRequestException("Invalid request received - order object cannot be null");
         }
 
@@ -741,15 +675,15 @@ import java.util.List;50"
 
     @Override
     public CreateTransactionResponse createTransaction(CreateTransactionRequest request) throws PaymentException, InterruptedException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Invalid request received - request cannot be null");
         }
-        if (request.getOrderID() == null){
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("Invalid request received - orderID cannot be null");
         }
         Thread.sleep(2000);
         Order order = orderRepo.findById(request.getOrderID()).orElse(null);
-        if (order == null){
+        if (order == null) {
             throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
         }
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.VERIFYING);
@@ -757,9 +691,9 @@ import java.util.List;50"
         VerifyPaymentRequest verifyPaymentRequest = new VerifyPaymentRequest(setStatusResponse.getOrder().getOrderID());
         VerifyPaymentResponse verifyPaymentResponse = verifyPayment(verifyPaymentRequest);
         CreateTransactionResponse createTransactionResponse;
-        if (verifyPaymentResponse.isSuccess()){
+        if (verifyPaymentResponse.isSuccess()) {
             createTransactionResponse = new CreateTransactionResponse(true, "Transaction successfully created.");
-        }else{
+        } else {
             createTransactionResponse = new CreateTransactionResponse(false, "Transaction not created.");
         }
         return createTransactionResponse;
@@ -767,24 +701,24 @@ import java.util.List;50"
 
     @Override
     public VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws PaymentException, InterruptedException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Invalid request received - request cannot be null");
         }
-        if (request.getOrderID() == null){
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("Invalid request received - orderID cannot be null");
         }
         Thread.sleep(3000);
         Order order = orderRepo.findById(request.getOrderID()).orElse(null);
-        if (order == null){
+        if (order == null) {
             throw new OrderDoesNotExist("Order doesn't exist in database - could not create transaction");
         }
         SetStatusRequest setStatusRequest = new SetStatusRequest(order, OrderStatus.PURCHASED);
         SetStatusResponse setStatusResponse = setStatus(setStatusRequest);
         Thread.sleep(2000);
         VerifyPaymentResponse verifyPaymentResponse;
-        if (setStatusResponse.getSuccess() == true){
+        if (setStatusResponse.getSuccess() == true) {
             verifyPaymentResponse = new VerifyPaymentResponse(true, "Payment Successfully verified.");
-        }else{
+        } else {
             verifyPaymentResponse = new VerifyPaymentResponse(false, "Payment was not verified.");
         }
         return verifyPaymentResponse;
@@ -798,22 +732,22 @@ import java.util.List;50"
     // INVOICE IMPLEMENTATION
 
     @Override
-    public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request)  throws InvalidRequestException{
+    public GenerateInvoiceResponse generateInvoice(GenerateInvoiceRequest request) throws InvalidRequestException {
         UUID invoiceID;
         UUID transactionID;
         Order order;
         Invoice invoice;
         Transaction transaction;
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Generate Invoice Request cannot be null - Invoice generation unsuccessful");
         }
 
-        if(request.getTransactionID() == null){
+        if (request.getTransactionID() == null) {
             throw new InvalidRequestException("Transaction ID cannot be null - Invoice generation unsuccessful");
         }
 
-        if(request.getCustomerID() == null){
+        if (request.getCustomerID() == null) {
             throw new InvalidRequestException("Customer ID cannot be null - Invoice generation unsuccessful");
         }
 
@@ -823,9 +757,9 @@ import java.util.List;50"
 
         Optional<Transaction> OptionalTransaction = transactionRepo.findById(transactionID);
 
-        if(OptionalTransaction == null || !OptionalTransaction.isPresent()) {
+        if (OptionalTransaction == null || !OptionalTransaction.isPresent()) {
             throw new InvalidRequestException("Invalid transactionID passed in - transaction does not exist.");
-        }else {
+        } else {
             transaction = OptionalTransaction.get();
         }
         order = transaction.getOrder();
@@ -843,19 +777,19 @@ import java.util.List;50"
     }
 
     @Override
-    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException{
+    public GetInvoiceResponse getInvoice(GetInvoiceRequest request) throws InvalidRequestException, NotAuthorisedException {
         UUID invoiceID;
         Invoice invoice;
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Get Invoice Request cannot be null - Invoice retrieval unsuccessful");
         }
 
-        if(request.getInvoiceID() == null){
+        if (request.getInvoiceID() == null) {
             throw new InvalidRequestException("Invoice ID cannot be null - Invoice retrieval unsuccessful.");
         }
 
-        if(request.getUserID() == null){
+        if (request.getUserID() == null) {
             throw new InvalidRequestException("User ID cannot be null - Invoice retrieval unsuccessful.");
         }
 
@@ -863,13 +797,13 @@ import java.util.List;50"
 
         Optional<Invoice> optionalInvoice = invoiceRepo.findById(invoiceID);
 
-        if(optionalInvoice == null || !optionalInvoice.isPresent()){
+        if (optionalInvoice == null || !optionalInvoice.isPresent()) {
             throw new InvalidRequestException("Invalid invoiceID passed in - invoice does not exist.");
-        }else{
+        } else {
             invoice = optionalInvoice.get();
         }
 
-        if(!invoice.getCustomerID().equals(request.getUserID())){
+        if (!invoice.getCustomerID().equals(request.getUserID())) {
             throw new NotAuthorisedException("Invalid customerID passed in - customer did not place this order.");
         }
 
@@ -884,14 +818,14 @@ import java.util.List;50"
     @Override
     public GetCustomersActiveOrdersResponse getCustomersActiveOrders(GetCustomersActiveOrdersRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException {
         GetCustomersActiveOrdersResponse response;
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Get Customers Active Orders Request cannot be null - Retrieval of Order unsuccessful");
         }
 
         CurrentUser currentUser = new CurrentUser();
         Customer customer = null;
 
-        String stringURI = "http://"+userHost+":"+userPort+"/user/getCustomerByEmail";
+        String stringURI = "http://" + userHost + ":" + userPort + "/user/getCustomerByEmail";
         URI uri = new URI(stringURI);
 
         Map<String, Object> parts = new HashMap<String, Object>();
@@ -903,13 +837,13 @@ import java.util.List;50"
         GetCustomerByEmailResponse getCustomerByEmailResponse = useCaseResponseEntity.getBody();
         customer = getCustomerByEmailResponse.getCustomer();
         List<Order> orders = orderRepo.findAllByUserID(customer.getCustomerID());
-        if (orders == null){
+        if (orders == null) {
             throw new OrderDoesNotExist("No Orders found for this user in the database.");
         }
-        for (Order o : orders){
-            if(o.getStatus().equals(OrderStatus.CUSTOMER_COLLECTED) || o.getStatus().equals(OrderStatus.DELIVERED)){
+        for (Order o : orders) {
+            if (o.getStatus().equals(OrderStatus.CUSTOMER_COLLECTED) || o.getStatus().equals(OrderStatus.DELIVERED)) {
                 continue;
-            }else{
+            } else {
                 response = new GetCustomersActiveOrdersResponse(o.getOrderID(), true, "Order successfully returned to customer.");
                 return response;
             }
@@ -920,52 +854,45 @@ import java.util.List;50"
 
     @Override
     public void saveOrderToRepo(SaveOrderToRepoRequest request) throws InvalidRequestException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getOrder() == null){
+        if (request.getOrder() == null) {
             throw new InvalidRequestException("Null parameters");
         }
 
-        System.out.println("check if order repo not null");
-        if(orderRepo!=null)
-        {
-            System.out.println("I made it here 2");
+        if (orderRepo != null) {
             Order order = request.getOrder();
-            System.out.println("request order id:" + request.getOrder().getOrderID());
             order.setOrderID(request.getOrder().getOrderID());
-            System.out.println("shoppers id: "+ order.getShopperID());
-            System.out.println("order id: " + order.getOrderID());
             orderRepo.save(order);
-            System.out.println("after safe");
         }
 
     }
 
     @Override
-    public GetItemsResponse getItems(GetItemsRequest request) throws PaymentException{
+    public GetItemsResponse getItems(GetItemsRequest request) throws PaymentException {
 
         String message = "Items successfully retrieved";
         Order order = null;
         Optional<Order> orderOptional = null;
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("GetItemsRequest is null - could not get Items");
         }
 
-        if(request.getOrderID() == null){
+        if (request.getOrderID() == null) {
             throw new InvalidRequestException("OrderID attribute is null - could not get Items");
         }
 
         orderOptional = orderRepo.findById(UUID.fromString(request.getOrderID()));
 
-        if(orderOptional == null || !orderOptional.isPresent()){
+        if (orderOptional == null || !orderOptional.isPresent()) {
             throw new OrderDoesNotExist("Order with given ID does not exist - could not get Items");
         }
 
         order = orderOptional.get();
 
-        if(order == null){
+        if (order == null) {
             message = "order is null";
             return new GetItemsResponse(null, false, new Date(), message);
         }
@@ -979,13 +906,13 @@ import java.util.List;50"
         String message = "Users successfully returned";
         List<Order> orders = new ArrayList<>();
 
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("GetOrders request is null - could not return orders");
         }
 
         orders.addAll(orderRepo.findAll());
 
-        if(orders.isEmpty()){
+        if (orders.isEmpty()) {
             message = "There no orders";
             return new GetOrdersResponse(orders, true, message, new Date());
         }
@@ -994,7 +921,7 @@ import java.util.List;50"
     }
 
     // Helper
-    private double getCost(List<CartItem> items){
+    private double getCost(List<CartItem> items) {
         double cost = 0;
 
         for (CartItem item : items) {
@@ -1016,7 +943,7 @@ import java.util.List;50"
             com.itextpdf.text.Font body = FontFactory.getFont(FontFactory.COURIER, 16);
             pdf.add(new Paragraph("This is an invoice from Odosla", header));
 
-            for (CartItem item: ITEM) {
+            for (CartItem item : ITEM) {
                 pdf.add(new Paragraph("Item: " + item.getName(), body));
                 pdf.add(new Paragraph("Barcode: " + item.getBarcode(), body));
                 pdf.add(new Paragraph("ItemID: " + item.getProductID(), body));
@@ -1039,56 +966,49 @@ import java.util.List;50"
 
     @Override
     public GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException {
-        GetAllCartItemsResponse response=null;
+        GetAllCartItemsResponse response = null;
 
-        if(request!=null){
+        if (request != null) {
 
             List<CartItem> items;
             try {
                 items = cartItemRepo.findAll();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new InvalidRequestException("No items exist in repository");
             }
 
-            if(items == null){
+            if (items == null) {
                 response = new GetAllCartItemsResponse(null, Calendar.getInstance().getTime(), "All items can't be retrieved");
-            }
-            else {
+            } else {
                 response = new GetAllCartItemsResponse(items, Calendar.getInstance().getTime(), "All items have been retrieved");
             }
-        }
-        else{
+        } else {
             throw new InvalidRequestException("The GetAllCartItemsRequest parameter is null - Could not retrieve items");
         }
         return response;
     }
 
     @Override
-    public GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException
-    {
+    public GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException {
         GetOrderByUUIDResponse response = null;
-        if(request != null){
+        if (request != null) {
 
-            System.out.println("get order by uuid id: "+ request.getOrderID());
-            if(request.getOrderID()==null){
+            if (request.getOrderID() == null) {
                 throw new InvalidRequestException("OrderID is null in GetOrderByUUIDRequest request - could not return order entity");
             }
 
-            Order order =null;
+            Order order = null;
             try {
                 order = orderRepo.findById(request.getOrderID()).orElse(null);
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 //Catching nullPointerException from mockito unit test, when(storeRepo.findById(mockito.any())) return null - which will return null pointer exception
             }
 
-            if(order==null) {
+            if (order == null) {
                 throw new InvalidRequestException("Order with ID does not exist in repository - could not get Order entity");
             }
-            System.out.println("found order id: "+ order.getOrderID());
-            response=new GetOrderByUUIDResponse(order,Calendar.getInstance().getTime(),"Order entity with corresponding id was returned");
-        }
-        else{
+            response = new GetOrderByUUIDResponse(order, Calendar.getInstance().getTime(), "Order entity with corresponding id was returned");
+        } else {
             throw new InvalidRequestException("Order request is null - could not return order entity");
         }
         return response;

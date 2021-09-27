@@ -21,11 +21,11 @@ public class Order implements Serializable {
     private UUID driverID;
 
     @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
-    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private Date createDate;
 
-    @DateTimeFormat (pattern = "yyyy-mm-dd HH:mm:ss")
-    @JsonFormat (pattern = "yyyy-mm-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private Date processDate;
 
     private Double totalCost;
@@ -38,17 +38,17 @@ public class Order implements Serializable {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToOne (cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private GeoPoint deliveryAddress;
 
-    @OneToOne (cascade={CascadeType.ALL})
+    @OneToOne(cascade = {CascadeType.ALL})
     private GeoPoint storeAddress;
 
-    @OneToMany (cascade = CascadeType.ALL)
-    @JoinColumn(name="orderid")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "orderid")
     private List<CartItem> cartItems;
 
-    public Order(){
+    public Order() {
 
     }
 
@@ -138,9 +138,13 @@ public class Order implements Serializable {
         this.createDate = createDate;
     }
 
-    public Date getProcessDate() {return processDate; }
+    public Date getProcessDate() {
+        return processDate;
+    }
 
-    public void setProcessDate(Date processDate){this.processDate = processDate; }
+    public void setProcessDate(Date processDate) {
+        this.processDate = processDate;
+    }
 
     public Double getTotalCost() {
         return totalCost;
