@@ -765,6 +765,9 @@ public class UserController implements UserApi {
         driverObject.setRating(BigDecimal.valueOf(driver.getRating()));
         driverObject.setOnShift(driver.getOnShift());
         driverObject.setDeliveriesCompleted(BigDecimal.valueOf(driver.getDeliveriesCompleted()));
+        if (driver.getCurrentAddress() != null){
+            driverObject.currentAddress(populateGeoPoint(driver.getCurrentAddress()));
+        }
         return driverObject;
     }
     public CustomerObject populateCustomer(Customer customer){
