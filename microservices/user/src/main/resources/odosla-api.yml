@@ -825,6 +825,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/user_ItemNotAvailableResponse"
 
+  /user/getOrdersWithProblems:
+    post:
+      summary: Endpoint for getting issues with an order
+      tags:
+        - "User"
+      description: Refer to summary
+      operationId: getOrdersWithProblems
+      requestBody:
+        description: The input body of the request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/user_GetProblemsWithOrderRequest"
+      responses:
+        "200":
+          description: Returns the problems with the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/user_GetProblemsWithOrderResponse"
+
 components:
 
   schemas:
@@ -1857,3 +1879,23 @@ components:
           type: string
         success:
           type: boolean
+
+    user_GetProblemsWithOrderRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    user_GetProblemsWithOrderResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        currentProductBarcode:
+          type: string
+        alternativeProductBarcode:
+          type: string
+        problem:
+          type: boolean
+        message:
+          type: string

@@ -1,5 +1,6 @@
 package cs.superleague.shopping;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.requests.*;
@@ -55,4 +56,5 @@ public interface ShoppingService {
 
     SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException;
 
+    GetProductByBarcodeResponse getProductByBarcode(GetProductByBarcodeRequest request) throws InvalidRequestException, ItemDoesNotExistException;
 }
