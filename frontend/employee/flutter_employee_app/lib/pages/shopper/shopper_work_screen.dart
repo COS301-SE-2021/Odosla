@@ -47,7 +47,6 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
 
   initState(){
     bool isUser = Provider.of<UserProvider>(context,listen: false).isUser();
-
     if (isUser){
       User user = Provider.of<UserProvider>(context,listen: false).user;
       _email=user.email;
@@ -68,14 +67,15 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
       }
       );
     }
-
-    // if(_onShift==true){
-    //   if(Provider.of<ShopProvider>(context,listen: false).store.imageUrl==""){
-    //     if(Provider.of<ShopProvider>(context,listen: false).store.id!=""){
-    //       _shoppingService.getStoreByID(context, Provider.of<ShopProvider>(context,listen: false).store.id);
-    //     }
-    //   }
-    // }
+    print("WHATT UP");
+    print(Provider.of<UserProvider>(context,listen: false).user.storeID);
+    if(_onShift==true){
+      if(Provider.of<ShopProvider>(context,listen: false).store.imageUrl==""){
+        if(Provider.of<ShopProvider>(context,listen: false).store.id!=""){
+          _shoppingService.getStoreByID(context, Provider.of<ShopProvider>(context,listen: false).store.id);
+        }
+      }
+    }
   }
 
   Widget _completePackingBTN()  {

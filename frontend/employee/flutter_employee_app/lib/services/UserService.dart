@@ -300,8 +300,9 @@ class UserService{
           shopper.setOrdersCompleted(responseData["user"]["ordersCompleted"].toString());
           shopper.setStoreID(responseData["user"]["storeID"].toString());
           shopper.setOnShift(responseData["user"]["onShift"]);
-          Provider.of<ShopProvider>(context,listen: false).store.id=(responseData["user"]["storeID"]);
 
+          Provider.of<ShopProvider>(context,listen: false).store.id=(responseData["user"]["storeID"]);
+          Provider.of<UserProvider>(context,listen: false).user=shopper;
           if(shopper.onShift==null){
             shopper.onShift=false;
           }else{

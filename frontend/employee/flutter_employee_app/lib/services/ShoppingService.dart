@@ -171,4 +171,46 @@ class ShoppingService {
 
   }
 
+  Future<Store> provideAlternative(BuildContext context,String storeID, String barcode) async {
+
+    final loginURL = Uri.parse(shoppingEndPoint+"shopping/getStoreByUUID");
+
+    Map<String,String> headers =new Map<String,String>();
+
+    String jwt="";
+
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+    headers =
+    {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt
+    };
+
+    print(storeID);
+    final data = {
+      "storeID":"$storeID"
+    };
+
+    final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+
+    if (response.statusCode==200) {
+      Map<String,dynamic> responseData = json.decode(response.body);
+      Store _store=Store.fromJson(responseData[""]);
+      Provider.of<ShopProvider>(context,listen: false).store=_store;
+
+      return _store;
+    }
+    else {
+      Store _store=Store("", "", 0, 0, true,"","","","");
+      return _store;
+    }
+
+  }
+
 }

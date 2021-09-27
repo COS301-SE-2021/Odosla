@@ -12,6 +12,33 @@ class BarcodeScanPage extends StatelessWidget {
   final String brand;
   BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected, required this.productImageURL, required this.productName, required this.brand}) : super(key: key);
 
+  Widget _buildLoginBtn() {
+    return GestureDetector(
+      onTap: () => {},
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: 'No items available?',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TextSpan(
+              text: 'Provide alternative',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -108,6 +135,7 @@ class BarcodeScanPage extends StatelessWidget {
               ),
             ),
           ),
+          Text("No items available?")
         ],
       ),
     ),
