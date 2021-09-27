@@ -109,7 +109,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             response = new GetCatalogueResponse(request.getStoreID(), storeEntity.getStock(), Calendar.getInstance().getTime(), "Catalogue entity from store was correctly returned");
 
         } else {
-            throw new InvalidRequestException("The request object for GetCatalaogueRequest is null - Could not get catalogue from shop");
+            throw new InvalidRequestException("The request object for GetCatalogueRequest is null - Could not get catalogue from shop");
         }
         return response;
     }
@@ -237,12 +237,10 @@ public class ShoppingServiceImpl implements ShoppingService {
                 throw new InvalidRequestException("Store ID parameter in request can't be null - can't get next queued");
             }
 
-            System.out.println("## storeid request" + request.getStoreID().toString());
             Store store;
 
             try {
                 store = storeRepo.findById(request.getStoreID()).orElse(null);
-                System.out.println("## storeid " + store.getStoreID().toString());
             } catch (Exception e) {
                 throw new StoreDoesNotExistException("Store with ID does not exist in repository - could not get next queued entity");
             }
@@ -253,54 +251,25 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             List<Order> orderQueue = store.getOrderQueue();
 
-            System.out.println("##1");
-
             if (orderQueue == null || orderQueue.isEmpty()) {
                 response = new GetNextQueuedResponse(Calendar.getInstance().getTime(), false, "The order queue of shop is empty", orderQueue, null);
                 return response;
             }
-            System.out.println("##2");
 
             Date oldestProcessedDate = orderQueue.get(0).getProcessDate();
             Order correspondingOrder = orderQueue.get(0);
 
-            System.out.println("##3");
             for (Order o : orderQueue) {
                 if (oldestProcessedDate.after(o.getProcessDate())) {
                     oldestProcessedDate = o.getProcessDate();
                     correspondingOrder = o;
                 }
             }
-            System.out.println("##4");
-
-            System.out.println("corresponding order id: " + correspondingOrder.getOrderID());
-
-//            Map<String, Object> parts = new HashMap<String, Object>();
-//            parts.put("orderID", correspondingOrder.getOrderID());
-//
-//            String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrder";
-//            URI uri = new URI(stringUri);
-//
-//
-//
-//            ResponseEntity<GetOrderResponse> getOrderResponseEntity = restTemplate
-//                    .postForEntity(uri, parts, GetOrderResponse.class);
-//            System.out.println("##pp");
-//
-//            GetOrderResponse getOrderResponse = getOrderResponseEntity.getBody();
-//
-//            Order updateOrder = getOrderResponse.getOrder();
 
             Order updateOrder = correspondingOrder;
 
-
-            System.out.println("update order id: " + updateOrder.getOrderID());
-
             if (updateOrder != null) {
-                System.out.println("Order is retrieved");
                 CurrentUser currentUser = new CurrentUser();
-
-
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("email", currentUser.getEmail());
 
@@ -314,17 +283,11 @@ public class ShoppingServiceImpl implements ShoppingService {
                 Shopper shopper = getShopperByEmailResponse.getShopper();
                 assert shopper != null;
 
-                System.out.println("Shopper is retrieved " + shopper.getName());
-
                 updateOrder.setShopperID(shopper.getShopperID());
                 updateOrder.setStatus(OrderStatus.PACKING);
 
-                System.out.println("New update order ID: " + updateOrder.getOrderID());
-                System.out.println("Order shopper ID: " + updateOrder.getShopperID());
-
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrder);
                 rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
-
 
             }
 
@@ -720,7 +683,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      */
 
     @Override
-    public AddShopperResponse addShopper(AddShopperRequest request) throws StoreDoesNotExistException, UserException {
+    public AddShopperResponse addShopper(AddShopperRequest request) throws StoreDoesNotExistException, UserException, URISyntaxException {
         AddShopperResponse response = null;
 
         if (request != null) {
@@ -754,7 +717,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", request.getShopperID().toString());
-            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://" + userHost + ":" + userPort + "/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+            String stringUri = "http://" + userHost + ":" + userPort + "/user/getShopperByUUID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
 
             GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
@@ -840,7 +805,7 @@ public class ShoppingServiceImpl implements ShoppingService {
      * @throws UserException
      */
     @Override
-    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException {
+    public RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException, URISyntaxException {
         RemoveShopperResponse response = null;
 
         if (request != null) {
@@ -877,7 +842,9 @@ public class ShoppingServiceImpl implements ShoppingService {
 
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("userID", request.getShopperID().toString());
-                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity("http://" + userHost + ":" + userPort + "/user/getShopperByUUID", parts, GetShopperByUUIDResponse.class);
+                String stringUri = "http://" + userHost + ":" + userPort + "/user/getShopperByUUID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
 
                 GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
 
@@ -1211,7 +1178,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         if (request != null) {
 
-            System.out.println("get queue request store id" + request.getStoreID());
             if (request.getStoreID() == null) {
                 throw new InvalidRequestException("Store ID parameter in request can't be null - can't get queue of orders");
             }
