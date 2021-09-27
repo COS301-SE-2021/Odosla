@@ -18,6 +18,7 @@ import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
+import cs.superleague.shopping.responses.GetStoresResponse;
 import cs.superleague.user.dataclass.Driver;
 import cs.superleague.user.requests.SaveDriverToRepoRequest;
 import cs.superleague.user.responses.GetAdminByEmailResponse;
@@ -574,6 +575,59 @@ public class DeliveryServiceImpl implements DeliveryService {
         return new GetDeliveryByUUIDResponse(delivery, new Date(), message);
     }
 
+    @Override
+    public GetAdditionalStoresDeliveryCostResponse getAdditionalStoresDeliveryCost(GetAdditionalStoresDeliveryCostRequest request) throws InvalidRequestException, DeliveryDoesNotExistException, URISyntaxException {
+        if(request == null){
+            throw new InvalidRequestException("GetDeliveryByUUID request is null - could not get additional stores.");
+        }
+
+        if(request.getDeliveryID() == null){
+            throw  new InvalidRequestException("DeliveryID is null in GetDeliveryByUUID request - could not get additional stores.");
+        }
+        Delivery delivery = null;
+        try{
+            delivery = deliveryRepo.findById(request.getDeliveryID()).orElse(null);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+        }
+        if (delivery == null){
+            throw new DeliveryDoesNotExistException("Delivery with given ID does not exist in the repository - could not get additional stores.");
+        }
+        Map<String, Object> parts = new HashMap<>();
+
+        String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
+        URI uri = new URI(stringUri);
+        ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
+                                        uri, parts, GetStoresResponse.class);
+
+        if(responseEntity == null || !responseEntity.hasBody()
+                                || responseEntity.getBody() == null){
+            throw new InvalidRequestException("No stores returned from shopper subsystem.");
+        }
+        List<Store> storeList = responseEntity.getBody().getStores();
+        List<Store> storesInRange = new ArrayList<>();
+        for (Store store : storeList){
+            if (getDistanceBetweenTwoPoints(store.getStoreLocation(), delivery.getPickUpLocation()) < 10){
+                storesInRange.add(store);
+            }
+        }
+        if (storesInRange.size() == 0){
+            GetAdditionalStoresDeliveryCostResponse response = new GetAdditionalStoresDeliveryCostResponse(null, null, "No stores within range of the selected store");
+            return response;
+        }
+        double currentRouteDistance = getDistanceBetweenTwoPoints(delivery.getPickUpLocation(), delivery.getDropOffLocation());
+        List<Double> additionalCost = new ArrayList<>();
+        for (Store store : storesInRange){
+            double newDistanceForStore = getDistanceBetweenTwoPoints(delivery.getPickUpLocation(), store.getStoreLocation());
+            newDistanceForStore = newDistanceForStore + getDistanceBetweenTwoPoints(store.getStoreLocation(), delivery.getDropOffLocation());
+            double addedDistance = newDistanceForStore - currentRouteDistance;
+            double addedCost = getAddedCostOfDistance(addedDistance);
+            additionalCost.add(addedCost);
+        }
+        GetAdditionalStoresDeliveryCostResponse response = new GetAdditionalStoresDeliveryCostResponse(storesInRange, additionalCost, "Returned the stores that can be added to the order.");
+        return response;
+    }
+
     //Helpers
     public boolean checkLongAndLatIfValid(GeoPoint point1, GeoPoint point2){
         if(point1.getLongitude() < -180 || point1.getLongitude() > 180 ||
@@ -592,6 +646,14 @@ public class DeliveryServiceImpl implements DeliveryService {
         distance = Math.toDegrees(distance);
         distance = distance * 60 * 1.1515 * 1.609344;
         return distance;
+    }
+
+    public double getAddedCostOfDistance(double addedDistance){
+        if (addedDistance < 2){
+            return 10.0;
+        } else{
+            return 20.0;
+        }
     }
 
     @Override
