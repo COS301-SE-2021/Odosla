@@ -8,6 +8,7 @@ import cs.superleague.shopping.dataclass.Catalogue;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.InvalidRequestException;
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.repos.CatalogueRepo;
@@ -1622,6 +1623,22 @@ public class ShoppingServiceImpl implements ShoppingService {
         else{
             throw new InvalidRequestException("Request object can't be null - can't save catalogue");
         }
+    }
+
+    @Override
+    public GetProductByBarcodeResponse getProductByBarcode(GetProductByBarcodeRequest request) throws InvalidRequestException, ItemDoesNotExistException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getProductBarcode() == null || request.getStoreID() == null){
+            throw new InvalidRequestException("Null parameters in request object.");
+        }
+        Item product = itemRepo.findAllByBarcodeAndStoreID(request.getProductBarcode(), request.getStoreID());
+        if (product == null){
+            throw new ItemDoesNotExistException("The item requested does not exist in the database.");
+        }
+        GetProductByBarcodeResponse response = new GetProductByBarcodeResponse(true, "The item related to the barcode and store has been returned.", product);
+        return response;
     }
 
 }
