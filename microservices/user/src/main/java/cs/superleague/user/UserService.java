@@ -65,4 +65,5 @@ public interface UserService {
     void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
 
     ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist;
+    GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException;
 }

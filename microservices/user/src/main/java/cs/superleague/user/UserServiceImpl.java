@@ -3202,4 +3202,45 @@ public class UserServiceImpl implements UserService{
         ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item issue has been made aware to customer.", true);
         return response;
     }
+
+    @Override
+    public GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        Order orderEntity=null;
+        Map<String, Object> parts = new HashMap<>();
+        String strOrderID = request.getOrderID().toString();
+        parts.put("orderID", strOrderID);
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        URI uri = new URI(stringUri);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                uri, parts, GetOrderByUUIDResponse.class);
+
+        if(responseEntity.getBody() != null) {
+            orderEntity = responseEntity.getBody().getOrder();
+        }
+        if (orderEntity == null){
+            throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+        }
+        if (orderEntity.getStatus().equals(OrderStatus.PROBLEM)){
+            List<OrdersWithProblems> problems = ordersWithProblemsRepo.findOrdersWithProblemsByOrderID(request.getOrderID());
+            if (problems.size() == 0){
+                orderEntity.setStatus(OrderStatus.PACKING);
+                SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(orderEntity);
+                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+                GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
+                return response;
+            }
+            OrdersWithProblems problem = problems.get(0);
+            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(problem.getCurrentProductBarcode(), problem.getAlternativeProductBarcode(), true, "Please resolve this problem.");
+            return response;
+        } else{
+            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
+            return response;
+        }
+    }
 }

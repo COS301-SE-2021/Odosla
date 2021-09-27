@@ -1,7 +1,6 @@
 package cs.superleague.user.controller;
 import cs.superleague.api.UserApi;
 import cs.superleague.models.*;
-import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
@@ -615,6 +614,40 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetProblemsWithOrderResponse> getOrdersWithProblems(UserGetProblemsWithOrderRequest body) {
+        UserGetProblemsWithOrderResponse getProblemsWithOrderResponse = new UserGetProblemsWithOrderResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetProblemsWithOrderRequest request = new GetProblemsWithOrderRequest(UUID.fromString(body.getOrderID()));
+
+            GetProblemsWithOrderResponse response = userService.getProblemsWithOrder(request);
+            try{
+                getProblemsWithOrderResponse.setProblem(response.isProblem());
+                getProblemsWithOrderResponse.setMessage(response.getMessage());
+                getProblemsWithOrderResponse.setAlternativeProductBarcode(response.getAlternativeProductBarcode());
+                getProblemsWithOrderResponse.setCurrentProductBarcode(response.getCurrentProductBarcode());
+
+            }catch(Exception e){
+                e.printStackTrace();
+                getProblemsWithOrderResponse.setProblem(false);
+                getProblemsWithOrderResponse.setMessage(e.getMessage());
+                getProblemsWithOrderResponse.setAlternativeProductBarcode("");
+                getProblemsWithOrderResponse.setCurrentProductBarcode("");
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            getProblemsWithOrderResponse.setProblem(false);
+            getProblemsWithOrderResponse.setMessage(e.getMessage());
+            getProblemsWithOrderResponse.setAlternativeProductBarcode("");
+            getProblemsWithOrderResponse.setCurrentProductBarcode("");
+        }
+
+        return new ResponseEntity<>(getProblemsWithOrderResponse, status);
     }
 
     @Override
