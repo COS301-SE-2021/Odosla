@@ -1,7 +1,6 @@
 package cs.superleague.user.controller;
 import cs.superleague.api.UserApi;
 import cs.superleague.models.*;
-import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
@@ -169,6 +168,32 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetShoppingCartResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserItemNotAvailableResponse> itemNotAvailable(UserItemNotAvailableRequest body) {
+        UserItemNotAvailableResponse userItemNotAvailableResponse = new UserItemNotAvailableResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            ItemNotAvailableRequest request = new ItemNotAvailableRequest(UUID.fromString(body.getOrderID()), body.getCurrentProductBarcode(), body.getAlternativeProductBarcode());
+
+            ItemNotAvailableResponse response = userService.itemNotAvailable(request);
+            try{
+                userItemNotAvailableResponse.setMessage(response.getMessage());
+                userItemNotAvailableResponse.setSuccess(response.isSuccess());
+            }catch(Exception e){
+                e.printStackTrace();
+                userItemNotAvailableResponse.setMessage(e.getMessage());
+                userItemNotAvailableResponse.setSuccess(false);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            userItemNotAvailableResponse.setMessage(e.getMessage());
+            userItemNotAvailableResponse.setSuccess(false);
+        }
+        return new ResponseEntity<>(userItemNotAvailableResponse, status);
     }
 
     //Populate ItemObject list from items returned by use case
@@ -589,6 +614,40 @@ public class UserController implements UserApi {
         }
 
         return new ResponseEntity<>(userGetGroceryListResponse, status);
+    }
+
+    @Override
+    public ResponseEntity<UserGetProblemsWithOrderResponse> getOrdersWithProblems(UserGetProblemsWithOrderRequest body) {
+        UserGetProblemsWithOrderResponse getProblemsWithOrderResponse = new UserGetProblemsWithOrderResponse();
+        HttpStatus status = HttpStatus.OK;
+
+        try{
+            GetProblemsWithOrderRequest request = new GetProblemsWithOrderRequest(UUID.fromString(body.getOrderID()));
+
+            GetProblemsWithOrderResponse response = userService.getProblemsWithOrder(request);
+            try{
+                getProblemsWithOrderResponse.setProblem(response.isProblem());
+                getProblemsWithOrderResponse.setMessage(response.getMessage());
+                getProblemsWithOrderResponse.setAlternativeProductBarcode(response.getAlternativeProductBarcode());
+                getProblemsWithOrderResponse.setCurrentProductBarcode(response.getCurrentProductBarcode());
+
+            }catch(Exception e){
+                e.printStackTrace();
+                getProblemsWithOrderResponse.setProblem(false);
+                getProblemsWithOrderResponse.setMessage(e.getMessage());
+                getProblemsWithOrderResponse.setAlternativeProductBarcode("");
+                getProblemsWithOrderResponse.setCurrentProductBarcode("");
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+            getProblemsWithOrderResponse.setProblem(false);
+            getProblemsWithOrderResponse.setMessage(e.getMessage());
+            getProblemsWithOrderResponse.setAlternativeProductBarcode("");
+            getProblemsWithOrderResponse.setCurrentProductBarcode("");
+        }
+
+        return new ResponseEntity<>(getProblemsWithOrderResponse, status);
     }
 
     @Override

@@ -304,6 +304,46 @@ public class ShoppingController implements ShoppingApi {
     }
 
     @Override
+    public ResponseEntity<ShoppingGetProductByBarcodeResponse> getProductByBarcode(ShoppingGetProductByBarcodeRequest body) {
+
+        ShoppingGetProductByBarcodeResponse response = new ShoppingGetProductByBarcodeResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            GetProductByBarcodeRequest request = new GetProductByBarcodeRequest(body.getProductBarcode(), UUID.fromString(body.getStoreID()));
+            GetProductByBarcodeResponse getProductByBarcodeResponse = shoppingService.getProductByBarcode(request);
+            try {
+                response.setMessage(getProductByBarcodeResponse.getMessage());
+                response.setSuccess(getProductByBarcodeResponse.isSuccess());
+                ItemObject currentItem = new ItemObject();
+
+                currentItem.setName(getProductByBarcodeResponse.getProduct().getName());
+                currentItem.setDescription(getProductByBarcodeResponse.getProduct().getDescription());
+                currentItem.setBarcode(getProductByBarcodeResponse.getProduct().getBarcode());
+                currentItem.setProductID(getProductByBarcodeResponse.getProduct().getProductID());
+                currentItem.setStoreID(getProductByBarcodeResponse.getProduct().getStoreID().toString());
+                currentItem.setPrice(BigDecimal.valueOf(getProductByBarcodeResponse.getProduct().getPrice()));
+                currentItem.setQuantity(getProductByBarcodeResponse.getProduct().getQuantity());
+                currentItem.setImageUrl(getProductByBarcodeResponse.getProduct().getImageUrl());
+                currentItem.setBrand(getProductByBarcodeResponse.getProduct().getBrand());
+                currentItem.setItemType(getProductByBarcodeResponse.getProduct().getItemType());
+                currentItem.setSize(getProductByBarcodeResponse.getProduct().getSize());
+                response.setProduct(currentItem);
+            }catch (Exception e){
+                e.printStackTrace();
+                response.setSuccess(false);
+                response.setMessage(e.getMessage());
+                response.setProduct(null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            response.setProduct(null);
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<ShoppingGetQueueResponse> getQueue(ShoppingGetQueueRequest body) {
         GetQueueRequest getQueueRequest;
 

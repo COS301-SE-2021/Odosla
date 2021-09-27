@@ -8,9 +8,11 @@ public enum OrderStatus implements Serializable {
     PURCHASED,
     IN_QUEUE,
     PACKING,
+    PROBLEM,
     AWAITING_COLLECTION,
     ASSIGNED_DRIVER,
     DELIVERY_COLLECTED,
     CUSTOMER_COLLECTED,
-    DELIVERED
+    DELIVERED,
+    CANCELLED
 }

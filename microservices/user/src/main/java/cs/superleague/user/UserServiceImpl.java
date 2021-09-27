@@ -11,10 +11,8 @@ import cs.superleague.user.repos.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
-import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
 import cs.superleague.payment.requests.SaveOrderRequest;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
@@ -24,12 +22,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -69,18 +63,20 @@ public class UserServiceImpl implements UserService{
     private final AdminRepo adminRepo;
     private final CustomerRepo customerRepo;
     private final GroceryListRepo groceryListRepo;
+    private final OrdersWithProblemsRepo ordersWithProblemsRepo;
     private CurrentUser currentUser;
     private final JwtUtil jwtUtil;
     //private final UserService userService;
     private RabbitTemplate rabbit;
     private final RestTemplate restTemplate;
     @Autowired
-    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, JwtUtil jwtUtil, RabbitTemplate rabbit, RestTemplate restTemplate){//, UserService userService) {
+    public UserServiceImpl(ShopperRepo shopperRepo, DriverRepo driverRepo, AdminRepo adminRepo, CustomerRepo customerRepo, GroceryListRepo groceryListRepo, OrdersWithProblemsRepo ordersWithProblemsRepo, JwtUtil jwtUtil, RabbitTemplate rabbit, RestTemplate restTemplate){//, UserService userService) {
         this.shopperRepo = shopperRepo;
         this.driverRepo=driverRepo;
         this.adminRepo=adminRepo;
         this.customerRepo=customerRepo;
         this.groceryListRepo=groceryListRepo;
+        this.ordersWithProblemsRepo = ordersWithProblemsRepo;
         this.jwtUtil = jwtUtil;
         this.rabbit=rabbit;
         this.restTemplate = restTemplate;
@@ -3156,5 +3152,95 @@ public class UserServiceImpl implements UserService{
             throw new InvalidRequestException("Null parameters.");
         }
         shopperRepo.save(request.getShopper());
+    }
+
+    @Override
+    public ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null || request.getAlternativeProductBarcode() == null || request.getCurrentProductBarcode() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        Order orderEntity=null;
+        Map<String, Object> parts = new HashMap<>();
+        String strOrderID = request.getOrderID().toString();
+        parts.put("orderID", strOrderID);
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        URI uri = new URI(stringUri);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                uri, parts, GetOrderByUUIDResponse.class);
+
+        if(responseEntity.getBody() != null) {
+            orderEntity = responseEntity.getBody().getOrder();
+        }
+        if (orderEntity == null){
+            throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+        }
+        List<OrdersWithProblems> problems = ordersWithProblemsRepo.findOrdersWithProblemsByOrderID(request.getOrderID());
+        for (OrdersWithProblems problem : problems){
+            if (problem.getCurrentProductBarcode().equals(request.getCurrentProductBarcode())){
+                ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item issue has already been reported.", false);
+                return response;
+            }
+        }
+        boolean itemInCartStill = false;
+        for (CartItem cartItem : orderEntity.getCartItems()){
+            if (cartItem.getBarcode() == request.getCurrentProductBarcode()){
+                itemInCartStill = true;
+            }
+        }
+        if (itemInCartStill == false){
+            ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item no longer in cart, the issue has been fixed.", false);
+            return response;
+        }
+        OrdersWithProblems problem = new OrdersWithProblems(request.getOrderID(), request.getCurrentProductBarcode(), request.getAlternativeProductBarcode());
+        ordersWithProblemsRepo.save(problem);
+        orderEntity.setStatus(OrderStatus.PROBLEM);
+        SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(orderEntity);
+        rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+        ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item issue has been made aware to customer.", true);
+        return response;
+    }
+
+    @Override
+    public GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getOrderID() == null){
+            throw new InvalidRequestException("Null parameters.");
+        }
+        Order orderEntity=null;
+        Map<String, Object> parts = new HashMap<>();
+        String strOrderID = request.getOrderID().toString();
+        parts.put("orderID", strOrderID);
+        String stringUri = "http://"+paymentHost+":"+paymentPort+"/payment/getOrderByUUID";
+        URI uri = new URI(stringUri);
+        ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+                uri, parts, GetOrderByUUIDResponse.class);
+
+        if(responseEntity.getBody() != null) {
+            orderEntity = responseEntity.getBody().getOrder();
+        }
+        if (orderEntity == null){
+            throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
+        }
+        if (orderEntity.getStatus().equals(OrderStatus.PROBLEM)){
+            List<OrdersWithProblems> problems = ordersWithProblemsRepo.findOrdersWithProblemsByOrderID(request.getOrderID());
+            if (problems.size() == 0){
+                orderEntity.setStatus(OrderStatus.PACKING);
+                SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(orderEntity);
+                rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+                GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
+                return response;
+            }
+            OrdersWithProblems problem = problems.get(0);
+            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(problem.getCurrentProductBarcode(), problem.getAlternativeProductBarcode(), true, "Please resolve this problem.");
+            return response;
+        } else{
+            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
+            return response;
+        }
     }
 }

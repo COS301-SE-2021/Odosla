@@ -254,6 +254,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetStoreByUUIDResponse"
 
+  /shopping/getProductByBarcode:
+    post:
+      summary: Endpoint for Get product by barcode use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getProductByBarcode
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetProductByBarcodeRequest"
+      responses:
+        "200":
+          description: Returns the associated product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetProductByBarcodeResponse"
+
 
 components:
 
@@ -684,3 +706,23 @@ components:
           type: number
         cartItemNo:
           type: string
+
+    shopping_GetProductByBarcodeRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        productBarcode:
+          type: string
+        storeID:
+          type: string
+
+    shopping_GetProductByBarcodeResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        product:
+          $ref: "#/components/schemas/ItemObject"
