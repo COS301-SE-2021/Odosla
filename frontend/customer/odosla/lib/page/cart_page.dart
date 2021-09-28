@@ -314,12 +314,12 @@ Widget buildRecommendationItem(CartItem cartItem, BuildContext context) {
       child: GestureDetector(
     onTap: () {
       Map<String, double> location = {
-        "lat": Provider.of<StoreProvider>(context).store.lat,
-        "long": Provider.of<StoreProvider>(context).store.long
+        "lat": Provider.of<StoreProvider>(context,listen: false).store.lat,
+        "long": Provider.of<StoreProvider>(context,listen: false).store.long
       };
       Navigator.of(context).push(MaterialPageRoute(
           builder: (BuildContext context) => ItemDetailPage(cartItem,
-              cartItem.storeID, location) //ProductPage(product: product),
+              Provider.of<CartProvider>(context,listen: false).currStore, location) //ProductPage(product: product),
           ));
     },
     child: Column(

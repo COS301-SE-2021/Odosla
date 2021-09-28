@@ -57,6 +57,8 @@ public class RecommendationController implements RecommendationApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
+            System.out.println("CONTROLLER IDS REQUEST: ");
+            System.out.println(body.getItemIDs());
             GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
             GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
@@ -114,8 +116,6 @@ public class RecommendationController implements RecommendationApi {
         List<CartItemObject> responseBody = new ArrayList<>();
 
         for (CartItem i : responseItems) {
-
-            System.out.println("s id " + i.getStoreID().toString());
 
             CartItemObject item = new CartItemObject();
             if (i.getCartItemNo() != null) {

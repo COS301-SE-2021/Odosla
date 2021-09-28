@@ -467,7 +467,9 @@ public class PaymentController implements PaymentApi {
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreID(i.getStoreID().toString());
+            if(i.getStoreID()!=null) {
+                item.setStoreID(i.getStoreID().toString());
+            }
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());

@@ -47,6 +47,8 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     @Override
     public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException {
+        System.out.println("IMPLEMENTATION IDS REQUEST: ");
+        System.out.println(request.getItemIDs());
         if (request == null) {
             return getRandomRecommendations("Null request object.");
         }
@@ -60,6 +62,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             List<UUID> orderIDs = new ArrayList<>();
             List<Integer> frequencyOfOrders = new ArrayList<>();
             for (String productID : request.getItemIDs()) {
+                System.out.println("FORLOOP:"+productID);
                 List<Recommendation> recommendation = recommendationRepo.findRecommendationByProductID(productID);
                 if (recommendation != null) {
                     for (Recommendation orderID : recommendation) {
@@ -78,6 +81,8 @@ public class RecommendationServiceImpl implements RecommendationService {
             List<Order> finalRecommendation = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders) {
                 if (frequency >= request.getItemIDs().size()) {
+                    System.out.println("WE ARE HERE 1");
+                    System.out.println(orderIDs.get(frequencyOfOrders.indexOf(frequency)));
 
                     Map<String, Object> parts = new HashMap<>();
                     parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
@@ -97,6 +102,10 @@ public class RecommendationServiceImpl implements RecommendationService {
                     }
 
                     if (order != null) {
+                        System.out.println("WE GOT THE ORDER:"+order.getOrderID());
+                        for(int i = 0; i < order.getCartItems().size();i++){
+                            System.out.println("ITEM "+i+" "+order.getCartItems().get(i).getProductID());
+                        }
                         finalRecommendation.add(order);
                     }
                 }
@@ -166,7 +175,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     // Helper/s
 
     private GetCartRecommendationResponse getRandomRecommendations(String errorMessage) throws URISyntaxException {
-
+        System.out.println("ERROR MESSAGE COMING INTO RANDOM: "+errorMessage);
         int count = 0;
         int randomInt = 0;
         List<CartItem> allItems;

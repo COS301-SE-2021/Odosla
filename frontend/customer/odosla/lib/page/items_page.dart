@@ -38,7 +38,7 @@ class _ItemsPageState extends State<ItemsPage> {
       OrderPage(Provider.of<CartProvider>(context).activeOrderID),
       AccountSettingsPage()
     ];
-
+    Provider.of<CartProvider>(context,listen: false).currStore=widget.storeID;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

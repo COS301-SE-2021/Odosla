@@ -44,10 +44,10 @@ class CartItem {
           imgUrl, brand, size, type);
 
   CartItem.fromJson(Map<String, dynamic> json)
-      : id = json['productId'],
+      : id = json['productID'],
         title = json['name'],
         barcode = json['barcode'],
-        storeID = json['storeId'],
+        storeID = json['storeID'],
         price = json['price'],
         quantity = json['quantity'],
         description = json['description'],
