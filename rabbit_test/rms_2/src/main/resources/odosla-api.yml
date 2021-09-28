@@ -1,0 +1,51 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description: The library service
+
+tags:
+  - name: "Rabbit"
+paths:
+
+  /rb2/message:
+    post:
+      summary: example
+      tags:
+        - "Rabbit"
+      description: Refer to summary
+      operationId: message
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/rb2_request"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/rb2_response"
+
+
+components:
+
+  schemas:
+
+    rb2_request:
+      description: ?.
+      type: object
+      properties:
+        message:
+          type: string
+
+    rb2_response:
+      description: ?!
+      type: object
+      properties:
+        message:
+          type: string

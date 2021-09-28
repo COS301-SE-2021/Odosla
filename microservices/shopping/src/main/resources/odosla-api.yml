@@ -1,0 +1,728 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description: The library service
+
+tags:
+  - name: "Shopping"
+
+paths:
+
+  /shopping/populateTables:
+    post:
+      summary: Endpoint populating tables
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: populateTables
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PopulateTablesRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PopulateTablesResponse"
+
+  /shopping/getItems:
+    post:
+      summary: Endpoint for Get Items use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetItemsRequest"
+      responses:
+        "200":
+          description: Returns items upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetItemsResponse"
+
+
+  /shopping/addShopper:
+    post:
+      summary: Endpoint for adding shopper to shopper list
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: addShopper
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_AddShopperRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_AddShopperResponse"
+
+
+  /shopping/getShoppers:
+    post:
+      summary: Endpoint for Get Shoppers use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getShoppers
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetShoppersRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetShoppersResponse"
+
+  /shopping/removeQueuedOrder:
+    post:
+      summary: Endpoint for removing a queued order.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: removeQueuedOrder
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_RemoveQueuedOrderRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_RemoveQueuedOrderResponse"
+
+  /shopping/getStores:
+    post:
+      summary: Endpoint for Get Stores use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetStoresRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetStoresResponse"
+
+  /shopping/getNextQueued:
+    post:
+      summary: Endpoint for getting next queue
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getNextQueued
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetNextQueuedRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetNextQueuedResponse"
+
+  /shopping/getQueue:
+    post:
+      summary: Endpoint for getting the order queue of a shop
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getQueue
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetQueueRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetQueueResponse"
+
+  /shopping/getAllItems:
+    post:
+      summary: Endpoint for Get All Items use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getAllItems
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetAllItemsRequest"
+      responses:
+        "200":
+          description: Returns items upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetAllItemsResponse"
+
+  /shopping/getItemsByID:
+    post:
+      summary: Endpoint for Get Items By ID use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getItemsByID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetItemsByIDRequest"
+      responses:
+        "200":
+          description: Returns items upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetItemsByIDResponse"
+
+  /shopping/getStoreByUUID:
+    post:
+      summary: Endpoint for Get Store By UUID use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getStoreByUUID
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetStoreByUUIDRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetStoreByUUIDResponse"
+
+  /shopping/getProductByBarcode:
+    post:
+      summary: Endpoint for Get product by barcode use case
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getProductByBarcode
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetProductByBarcodeRequest"
+      responses:
+        "200":
+          description: Returns the associated product
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetProductByBarcodeResponse"
+
+
+components:
+
+  schemas:
+
+    ItemObject:
+      description: "Generic schema for an item"
+      type: object
+      properties:
+        productID:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+
+    shopping_GetItemsRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetItemsResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+        storeID:
+          type: string
+
+    shopping_AddShopperRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        shopperID:
+          type: string
+        storeID:
+          type: string
+
+    shopping_AddShopperResponse:
+      description: This object is output
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    shopping_RemoveQueuedOrderRequest:
+      description: this object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+        storeID:
+          type: string
+
+    shopping_RemoveQueuedOrderResponse:
+      description: this object is output
+      type: object
+      properties:
+        isRemoved:
+          type: boolean
+        message:
+          type: string
+        orderID:
+          type: string
+
+    ShopperObject:
+      description: "Generic schema for a shopper"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        shopperID:
+          type: string
+        storeID:
+          type: string
+        ordersCompleted:
+          type: integer
+        onShift:
+          type: boolean
+        isActive:
+          type: boolean
+
+    shopping_GetShoppersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetShoppersResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        listOfShoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    StoreObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        storeBrand:
+          type: string
+        maxShoppers:
+          type: integer
+        maxOrders:
+          type: integer
+        isOpen:
+          type: boolean
+        openingTime:
+          type: integer
+        closingTime:
+          type: integer
+        imgUrl:
+          type: string
+        storeLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        stock:
+          $ref: "#/components/schemas/CatalogueObject"
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+        currentOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        orderQueue:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
+    CatalogueObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+
+    shopping_GetStoresRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_GetStoresResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
+
+    OrderObject:
+      description: "Generic schema for an Order"
+      type: object
+      properties:
+        orderID:
+          type: string
+        userID:
+          type: string
+        storeID:
+          type: string
+        shopperID:
+          type: string
+        createDate:
+          type: string
+        processDate:
+          type: string
+        totalCost:
+          type: number
+        status:
+          type: string
+        discount:
+          type: number
+        deliveryAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        storeAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        requiresPharmacy:
+          type: boolean
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    shopping_GetNextQueuedRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetNextQueuedResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        response:
+          type: boolean
+        timeStamp:
+          type: string
+        queueOfOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        newCurrentOrder:
+          $ref: "#/components/schemas/OrderObject"
+
+    shopping_GetQueueRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+
+    shopping_GetQueueResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        response:
+          type: boolean
+        message:
+          type: string
+        queueOfOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
+    shopping_PopulateTablesRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_PopulateTablesResponse:
+      description: This object is expected as output
+      type: object
+
+    GeoPointObject:
+      description: This is a geoPoint object
+      type: object
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
+    OrderItemsObject:
+      description: "Generic schema for an order item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        orderId:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        totalCost:
+          type: number
+
+    shopping_GetAllItemsRequest:
+      description: This object is expected as input
+      type: object
+
+    shopping_GetAllItemsResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    shopping_GetItemsByIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        itemIDs:
+          type: array
+          items:
+            type: string
+
+    shopping_GetItemsByIDResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        message:
+          type: string
+        timestamp:
+          type: string
+
+    shopping_GetStoreByUUIDRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        StoreID:
+          type: string
+
+    shopping_GetStoreByUUIDResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        timestamp:
+          type: string
+        message:
+          type: string
+        store:
+          $ref: "#/components/schemas/StoreObject"
+
+    CartItemObject:
+      description: "Generic schema for a cart item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        orderID:
+          type: string
+        totalCost:
+          type: number
+        cartItemNo:
+          type: string
+
+    shopping_GetProductByBarcodeRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        productBarcode:
+          type: string
+        storeID:
+          type: string
+
+    shopping_GetProductByBarcodeResponse:
+      description: This object is expected as input
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        product:
+          $ref: "#/components/schemas/ItemObject"
