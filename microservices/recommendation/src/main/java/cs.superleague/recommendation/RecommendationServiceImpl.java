@@ -119,6 +119,18 @@ public class RecommendationServiceImpl implements RecommendationService {
             if (finalItemsRecommendation.size() == 0) {
                 return getRandomRecommendations("There are no orders that have all the requested items in them.");
             }
+            while (finalItemsRecommendation.size() < 3){
+                GetCartRecommendationResponse getCartRecommendationResponse = getRandomRecommendations("");
+                for (CartItem item : getCartRecommendationResponse.getRecommendations()){
+                    if (finalItemsRecommendation.size() == 3){
+                        break;
+                    }
+                    if (finalItemsRecommendation.contains(item)){
+                        continue;
+                    }
+                    finalItemsRecommendation.add(item);
+                }
+            }
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
         } else {
@@ -198,6 +210,10 @@ public class RecommendationServiceImpl implements RecommendationService {
         System.out.println(count);
         for (int i = 0; i < count; i++) {
             randomInt = random.nextInt(allItems.size());
+            if (randomItems.contains(allItems.get(randomInt))){
+                i--;
+                continue;
+            }
             randomItems.add(allItems.get(randomInt));
         }
 
