@@ -1,0 +1,185 @@
+openapi: 3.0.0
+
+info:
+  version: 0.0.1
+  title: Library Service
+  description: The library service
+
+tags:
+  - name: "Analytics"
+
+paths:
+
+  /analytics/createUserReport:
+    post:
+      summary: Endpoint for creating user report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createUserReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateUserReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateUserReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+
+  /analytics/createFinancialReport:
+    post:
+      summary: Endpoint for creating user report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createFinancialReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateFinancialReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateFinancialReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+
+  /analytics/createMonthlyReport:
+    post:
+      summary: Endpoint for creating monthly report
+      tags:
+        - "Analytics"
+      description: Refer to summary
+      operationId: createMonthlyReport
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/analytics_CreateMonthlyReportRequest"
+      responses:
+        "200":
+          description: Returns whether Report was downloaded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/analytics_CreateMonthlyReportResponse"
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/plain:
+              schema:
+                type: string
+
+components:
+
+  schemas:
+
+    analytics_CreateUserReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateUserReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          nullable: true
+
+    analytics_CreateFinancialReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        startDate:
+          type: string
+        endDate:
+          type: string
+        reportType:
+          type: string
+
+    analytics_CreateFinancialReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          nullable: true
+
+    analytics_CreateMonthlyReportRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        reportType:
+          type: string
+
+    analytics_CreateMonthlyReportResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+          type: string
+        pdf:
+          type: string
+          format: byte
+          nullable: true
+        csv:
+          type: string
+          nullable: true

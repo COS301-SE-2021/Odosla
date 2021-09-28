@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/backend/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/analytics/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/analytics/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/delivery/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/delivery/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/importer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/importer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/notifications/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/notifications/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/payment/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/payment/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/recommendation/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/recommendation/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/shopping/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/shopping/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/user/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/user/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_2/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/rabbit_test/rms_2/src/main/resources" charset="UTF-8" />
   </component>
 </project>
