@@ -248,6 +248,8 @@ components:
           type: string
         storeID:
           type: string
+        driverID:
+          type: string
         shopperID:
           type: string
         createDate:

@@ -136,12 +136,6 @@ public class UserServiceImpl implements UserService {
                 orderEntity = responseEntity.getBody().getOrder();
             }
 
-            System.out.println("#BODY " + responseEntity.getBody().toString());
-            System.out.println("#BODY2 " + responseEntity.getBody());
-
-            System.out.println("order entity id: " + orderEntity.getOrderID());
-            System.out.println("order entity shopper id: " + orderEntity.getShopperID());
-
             if (orderEntity == null) {
                 throw new OrderDoesNotExist("Order with ID does not exist in repository - could not get Order entity");
             }
@@ -1532,7 +1526,7 @@ public class UserServiceImpl implements UserService {
      * @throws CustomerDoesNotExistException
      */
     @Override
-    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException {
+    public MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException, URISyntaxException {
         UUID userID;
         String name, message;
         Customer customer = null;
@@ -1568,8 +1562,10 @@ public class UserServiceImpl implements UserService {
         }
 
         Map<String, Object> parts = new HashMap<String, Object>();
+        String stringURI = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStores";
+        URI uri = new URI(stringURI);
 
-        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStores", parts, GetStoresResponse.class);
+        ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity(uri, parts, GetStoresResponse.class);
 
         GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
 
@@ -1861,7 +1857,9 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> parts = new HashMap<String, Object>();
 
         try {
-            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity("http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStores", parts, GetStoresResponse.class);
+            String stringURI = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStores";
+            URI uri = new URI(stringURI);
+            ResponseEntity<GetStoresResponse> getStoresResponseEntity = restTemplate.postForEntity(uri, parts, GetStoresResponse.class);
             GetStoresResponse getStoresResponse = getStoresResponseEntity.getBody();
             response = getStoresResponse;
         } catch (Exception e) {
@@ -2018,13 +2016,18 @@ public class UserServiceImpl implements UserService {
             order = responseEntity.getBody().getOrder();
         }
 
+        if (order == null){
+            throw new OrderDoesNotExist("Order does not exist in database");
+        }
+
         order.setStatus(OrderStatus.DELIVERED);
         //orderRepo.save(order);
         SaveOrderRequest saveOrderRequest = new SaveOrderRequest(order);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderRequest);
         /* Checking that order with same ID is now in DELIVERY_COLLECTED status */
         //Order currentOrder= orderRepo.findById(request.getOrderID()).orElse(null);
-
+        System.out.println("driverID" + order.getDriverID());
+        System.out.println("orderID" + order.getOrderID());
         Driver driver = driverRepo.findById(order.getDriverID()).orElse(null);
         if (driver != null) {
             int numDeliveries = 0;
@@ -2131,8 +2134,6 @@ public class UserServiceImpl implements UserService {
             if (getStoreByUUIDResponseEntity.getBody() != null) {
                 store = getStoreByUUIDResponseEntity.getBody().getStore();
             }
-
-            System.out.println("Store id from getStoreNByUUID: " + store.getStoreID());
 
             if (store == null) {
                 throw new StoreDoesNotExistException("Store is not saved in database.");
@@ -2281,8 +2282,9 @@ public class UserServiceImpl implements UserService {
 
         Map<String, String> properties = new HashMap<>();
         properties.put("Type", "RESETPASSWORD");
-        properties.put("Subject", "Odosla");
+        properties.put("Subject", "Odosla Password Reset");
         properties.put("UserType", userType);
+        properties.put("Email", request.getEmail());
 
         Customer customer = null;
 
