@@ -47,7 +47,7 @@ public interface UserService {
     GetCurrentUserResponse getCurrentUser(GetCurrentUserRequest request) throws InvalidRequestException;
 
     /* Customer  */
-    MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
+    MakeGroceryListResponse makeGroceryList(MakeGroceryListRequest request) throws InvalidRequestException, CustomerDoesNotExistException, URISyntaxException;
 
     GetShoppingCartResponse getShoppingCart(GetShoppingCartRequest request) throws InvalidRequestException, CustomerDoesNotExistException;
 
