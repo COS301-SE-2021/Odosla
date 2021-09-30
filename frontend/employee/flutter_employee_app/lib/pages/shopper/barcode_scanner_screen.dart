@@ -135,7 +135,14 @@ class BarcodeScanPage extends StatelessWidget {
               ),
             ),
           ),
-          Text("No items available?")
+          GestureDetector(
+            onTap: (){},
+            child: Container(
+                height: 30,
+                alignment: Alignment.bottomCenter,
+                child: Text("No items available?", textAlign: TextAlign.center, style: TextStyle(fontStyle: FontStyle.italic,  decoration: TextDecoration.underline, fontWeight: FontWeight.w600),)
+            ),
+          )
         ],
       ),
     ),

@@ -210,524 +210,545 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height*0.06),
-              Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*1.7,vertical: kSpacingUnit.w*1),
-                  clipBehavior: Clip.antiAlias,
-                  color:Theme.of(context).backgroundColor,
-                  shadowColor: Colors.grey,
-                  elevation: 5.0,
-                  child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
-                      child: Row(
-                        children: <Widget>[
-                          Container(
-                              height: MediaQuery.of(context).size.height*0.15,
-                              width: MediaQuery.of(context).size.width*0.43,
-                              alignment: Alignment.centerRight,
-                              child:Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height*0.06),
+                      Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*1.7,vertical: kSpacingUnit.w*1),
+                          clipBehavior: Clip.antiAlias,
+                          color:Theme.of(context).backgroundColor,
+                          shadowColor: Colors.grey,
+                          elevation: 5.0,
+                          child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
+                              child: Row(
                                 children: <Widget>[
                                   Container(
-                                    height: MediaQuery.of(context).size.height*0.06,
-                                    width: MediaQuery.of(context).size.width*0.3,
-                                    child: FittedBox(
-                                      fit: BoxFit.fitWidth,
+                                      height: MediaQuery.of(context).size.height*0.15,
+                                      width: MediaQuery.of(context).size.width*0.43,
+                                      alignment: Alignment.centerRight,
+                                      child:Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            height: MediaQuery.of(context).size.height*0.06,
+                                            width: MediaQuery.of(context).size.width*0.3,
+                                            child: FittedBox(
+                                              fit: BoxFit.fitWidth,
+                                              child: Text(
+                                                _name,
+                                                style: kTitleTextStyle.copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+                                          Text(
+                                            _email,
+                                            style: kTitleTextStyle.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: kSpacingUnit.w*1,
+                                            ),
+                                          ),
+                                          _onShift?RaisedButton(onPressed: () async {
+                                            _userService.setDriverShift(false,context).then((value) =>
+                                            {
+                                              if(_isDelivery){
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(content: Text(
+                                                    "Please complete trip before ending shift")))
+                                              }
+                                              else if(value==true){
+                                                setState((){
+                                                  _onShift=false;
+                                                  _isDelivery=false;
+                                                })
+                                              }
+                                              else{
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(content: Text(
+                                                      "Couldn't update shift")))
+                                                }
+                                            });
+                                          },
+                                            child: Text(
+                                                "END SHIFT",
+                                                style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900)
+                                            ),
+                                            color: Theme.of(context).backgroundColor,
+                                            splashColor: Colors.grey,
+                                            elevation: 5.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),
+                                            // color: Color(0xFFFA8940),
+                                          ):RaisedButton(
+                                            onPressed: () async {
+                                              _userService.setDriverShift(true,context).then((value) =>
+                                              {
+                                                if(value==true){
+                                                  setState((){
+                                                    _onShift=true;
+                                                  })
+                                                }
+                                                else{
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(content: Text(
+                                                      "Couldn't update shift")))
+                                                }
+                                              });
+                                              },
+                                            child: Text(
+                                              "START SHIFT",
+                                              style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900),
+                                            ),
+                                            color: Theme.of(context).backgroundColor,
+                                            splashColor: Colors.grey,
+                                            elevation: 5.0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            // color: Color(0xFFFA8940),
+                                          ),
+
+                                        ],
+                                      )
+                                  ),
+                                  Container(
+                                      height: MediaQuery.of(context).size.height*0.15,
+                                      width: MediaQuery.of(context).size.width*0.42,
+                                      child:Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            "DRIVER",
+                                            style: kTitleTextStyle.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: kSpacingUnit.w*2,
+                                            ),
+                                          ),
+                                          Container(
+                                            height: MediaQuery.of(context).size.height*0.08,
+                                            child:Image(
+                                              fit: BoxFit.fill,
+                                              image: _onShift?AssetImage('assets/gifs/deliveryTruck.gif'):AssetImage('assets/delivery/staticDeliveryTruck.png'),
+                                            ),
+                                          ),
+                                          SizedBox(height: 5,),
+                                          Text(
+                                            _onShift?"• On Shift":"• Not on shift",
+                                            style: kTitleTextStyle.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: kSpacingUnit.w*1.5,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      )
+                                  ),
+
+
+                                ],
+                              )
+                          ),
+                      ),
+                      SizedBox(height: 15,),
+                      Container(
+                        color: Colors.deepOrangeAccent,
+                        width: double.infinity,
+                        height: 50,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Current Delivery ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _isDelivery==false||_onShift==false?Container(
+                        height: 320.0,
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 80.0),
+                              child: Container(
+                                height: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height * 0.3,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.6,
+                                child: Image(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage("assets/gifs/deliveryGif.gif"),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                          :Column(
+                        children: [
+                          SizedBox(height: 25),
+                          Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
+
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
                                       child: Text(
-                                        _name,
+                                        "Status:",
                                         style: kTitleTextStyle.copyWith(
-                                          fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    Container(
+                                      child: Text(
+                                        _delivery.deliveryStatus,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+                                  ],
 
-                                  Text(
-                                    _email,
-                                    style: kTitleTextStyle.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: kSpacingUnit.w*1,
-                                    ),
-                                  ),
-                                  _onShift?RaisedButton(onPressed: () async {
-                                    _userService.setDriverShift(false,context).then((value) =>
-                                    {
-                                      if(_isDelivery){
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(content: Text(
-                                            "Please complete trip before ending shift")))
-                                      }
-                                      else if(value==true){
-                                        setState((){
-                                          _onShift=false;
-                                          _isDelivery=false;
-                                        })
-                                      }
-                                      else{
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(content: Text(
-                                              "Couldn't update shift")))
-                                        }
-                                    });
-                                  },
-                                    child: Text(
-                                        "END SHIFT",
-                                        style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900)
-                                    ),
-                                    color: Theme.of(context).backgroundColor,
-                                    splashColor: Colors.grey,
-                                    elevation: 5.0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                    ),
-                                    // color: Color(0xFFFA8940),
-                                  ):RaisedButton(
-                                    onPressed: () async {
-                                      _userService.setDriverShift(true,context).then((value) =>
-                                      {
-                                        if(value==true){
-                                          setState((){
-                                            _onShift=true;
-                                          })
-                                        }
-                                        else{
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(content: Text(
-                                              "Couldn't update shift")))
-                                        }
-                                      });
-                                      },
-                                    child: Text(
-                                      "START SHIFT",
-                                      style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900),
-                                    ),
-                                    color: Theme.of(context).backgroundColor,
-                                    splashColor: Colors.grey,
-                                    elevation: 5.0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    // color: Color(0xFFFA8940),
-                                  ),
-
-                                ],
+                                ),
                               )
                           ),
+                          SizedBox(height: 15),
                           Container(
-                              height: MediaQuery.of(context).size.height*0.15,
-                              width: MediaQuery.of(context).size.width*0.42,
-                              child:Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    "DRIVER",
-                                    style: kTitleTextStyle.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: kSpacingUnit.w*2,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
+
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "Customer's name: ",
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    height: MediaQuery.of(context).size.height*0.08,
-                                    child:Image(
-                                      fit: BoxFit.fill,
-                                      image: _onShift?AssetImage('assets/gifs/deliveryTruck.gif'):AssetImage('assets/delivery/staticDeliveryTruck.png'),
+                                    Container(
+                                      child: Text(
+                                        _customer.name +" "+_customer.surname,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Text(
-                                    _onShift?"• On Shift":"• Not on shift",
-                                    style: kTitleTextStyle.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: kSpacingUnit.w*1.5,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
+                                  ],
+
+                                ),
                               )
                           ),
+                          SizedBox(height: 15),
+                          Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
 
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "Customer's phone number: ",
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        _customer.phoneNumber,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+                                  ],
 
+                                ),
+                              )
+                          ),
+                          SizedBox(height: 15),
+                          Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "Store address: ",
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),
+                                      ),
+
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        _delivery.pickUpLocation.address,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
+                          SizedBox(height: 15),
+                          Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "Customer address: ",
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),
+                                      ),
+
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        _delivery.dropOffLocation.address,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
                         ],
-                      )
-                  ),
-              ),
-              SizedBox(height: 15,),
-              Container(
-                color: Colors.deepOrangeAccent,
-                width: double.infinity,
-                height: 50,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Current Delivery ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
-                  ],
-                ),
-              ),
-              _isDelivery==false||_onShift==false?Container(
-                height: 320.0,
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 80.0),
-                      child: Container(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height * 0.3,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width * 0.6,
-                        child: Image(
-                          fit: BoxFit.fill,
-                          image: AssetImage("assets/gifs/deliveryGif.gif"),
-                        ),
                       ),
-                    ),
-                  ],
-                ),
-              )
-                  :Column(
-                children: [
-                  SizedBox(height: 25),
-                  Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-                        child: Row(
+                      _onShift==false?Container():_isDelivery?SizedBox(height: 50):Container(),
 
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Status:",
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Text(
-                                _delivery.deliveryStatus,
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16
-                                ),
-                              ),
-                            ),
-                          ],
-
-                        ),
-                      )
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-                        child: Row(
-
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Customer's name: ",
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Text(
-                                _customer.name +" "+_customer.surname,
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16
-                                ),
-                              ),
-                            ),
-                          ],
-
-                        ),
-                      )
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-                        child: Row(
-
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Customer's phone number: ",
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Text(
-                                _customer.phoneNumber,
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16
-                                ),
-                              ),
-                            ),
-                          ],
-
-                        ),
-                      )
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-                        child: Row(
-
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Store address: ",
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14
-                                ),
-                              ),
-
-                            ),
-                            Container(
-                              child: Text(
-                                _delivery.pickUpLocation.address,
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                  ),
-                  SizedBox(height: 15),
-                  Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              child: Text(
-                                "Customer address: ",
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14
-                                ),
-                              ),
-
-                            ),
-                            Container(
-                              child: Text(
-                                _delivery.dropOffLocation.address,
-                                style: kTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                      SizedBox(height:13),
+                    ],
                   ),
                 ],
               ),
-              _onShift==false?Container():_isDelivery?SizedBox(height: 50):Container(),
-              _onShift?RaisedButton(onPressed: () async {
-                if(_isDelivery){
-                  //Provider.of<UtilityProvider>(context, listen: false).redo=true;
-                  if(_startedDelivery==false) {
-                    await _deliveryService.UpdateDeliveryStatus(
-                        deliveryID, "CollectingFromStore", context).then((
-                        value) =>
-                    {
-                      if(value == true){
-                        setState(() {
-                          _startedDelivery = true;
-                        }),
-                        Provider.of<UtilityProvider>(context, listen: false).redo=true,
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _popUpGoToMap(
-                                  context),
-                        )
+              Container(
+                padding: EdgeInsets.only(bottom: 30),
+                child: Column(
+                  children: [
+                    _onShift?RaisedButton(
+                      onPressed: () async {
+                        if(_isDelivery){
+                          //Provider.of<UtilityProvider>(context, listen: false).redo=true;
+                          if(_startedDelivery==false) {
+                            await _deliveryService.UpdateDeliveryStatus(
+                                deliveryID, "CollectingFromStore", context).then((
+                                value) =>
+                            {
+                              if(value == true){
+                                setState(() {
+                                  _startedDelivery = true;
+                                }),
+                                Provider.of<UtilityProvider>(context, listen: false).redo=true,
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _popUpGoToMap(
+                                          context),
+                                )
 
-                      }
-                      else{
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(
-                            "Couldn't start delivery")))
-                      }
-                    }
-                    );
-                  }
-                  else if(_collectedFromStore==false){
-                    await _deliveryService.UpdateDeliveryStatus(
-                        deliveryID, "CollectedByDriver", context).then((
-                        value) =>
-                    {
-                      if(value == true){
-                        setState(() {
-                          _collectedFromStore= true;
-                        }),
-                      }
-                      else{
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(
-                            "Couldn't update status of delivery")))
-                      }
-                    }
-                    );
+                              }
+                              else{
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(
+                                    "Couldn't start delivery")))
+                              }
+                            }
+                            );
+                          }
+                          else if(_collectedFromStore==false){
+                            await _deliveryService.UpdateDeliveryStatus(
+                                deliveryID, "CollectedByDriver", context).then((
+                                value) =>
+                            {
+                              if(value == true){
+                                setState(() {
+                                  _collectedFromStore= true;
+                                }),
+                              }
+                              else{
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(
+                                    "Couldn't update status of delivery")))
+                              }
+                            }
+                            );
 
-                  }
-                  else if(_startedDeliveringToCustomer==false){
-                    await _deliveryService.UpdateDeliveryStatus(
-                        deliveryID, "DeliveringToCustomer", context).then((
-                        value) =>
-                    {
-                      if(value == true){
-                        setState(() {
-                          _startedDeliveringToCustomer= true;
-                        }),
-                        Provider.of<UtilityProvider>(context, listen: false).redo=true,
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _popUpGoToMap(
-                                  context),
-                        )
+                          }
+                          else if(_startedDeliveringToCustomer==false){
+                            await _deliveryService.UpdateDeliveryStatus(
+                                deliveryID, "DeliveringToCustomer", context).then((
+                                value) =>
+                            {
+                              if(value == true){
+                                setState(() {
+                                  _startedDeliveringToCustomer= true;
+                                }),
+                                Provider.of<UtilityProvider>(context, listen: false).redo=true,
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _popUpGoToMap(
+                                          context),
+                                )
 
-                      }
-                      else{
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(
-                            "Couldn't update status of delivery")))
-                      }
-                    }
-                    );
-                  } else if(_collectedByCustomer==false){
-                    await _deliveryService.UpdateDeliveryStatus(
-                        deliveryID, "CollectedByCustomer", context).then((
-                        value) =>
-                    {
-                      if(value == true){
-                        setState(() {
-                          _collectedByCustomer= true;
-                        }),
-                      }
-                      else{
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(
-                            "Couldn't update status of delivery")))
-                      }
-                    }
-                    );
-                  }
-                  else if(_delivered==false){
-                    _deliveryService.UpdateDeliveryStatus(
-                        deliveryID, "Delivered", context).then((
-                        value) =>
-                    {
-                      if(value == true){
-                        setState(() {
-                          _isDelivery=false;
-                          _delivered=false;
-                          _collectedByCustomer=false;
-                          _startedDeliveringToCustomer=false;
-                          _collectedFromStore=false;
-                          _startedDelivery=false;
+                              }
+                              else{
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(
+                                    "Couldn't update status of delivery")))
+                              }
+                            }
+                            );
+                          } else if(_collectedByCustomer==false){
+                            await _deliveryService.UpdateDeliveryStatus(
+                                deliveryID, "CollectedByCustomer", context).then((
+                                value) =>
+                            {
+                              if(value == true){
+                                setState(() {
+                                  _collectedByCustomer= true;
+                                }),
+                              }
+                              else{
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(
+                                    "Couldn't update status of delivery")))
+                              }
+                            }
+                            );
+                          }
+                          else if(_delivered==false){
+                            _deliveryService.UpdateDeliveryStatus(
+                                deliveryID, "Delivered", context).then((
+                                value) =>
+                            {
+                              if(value == true){
+                                setState(() {
+                                  _isDelivery=false;
+                                  _delivered=false;
+                                  _collectedByCustomer=false;
+                                  _startedDeliveringToCustomer=false;
+                                  _collectedFromStore=false;
+                                  _startedDelivery=false;
 
-                        }),
-                    // Provider.of<UtilityProvider>(context,listen: false).redo=true,
-                    Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("",new GeoPoint(0, 0, ""),new GeoPoint(0, 0, ""),"","","","","",0,false),
-                }
-                      else{
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(
-                            "Couldn't update status of delivery")))
-                      }
-                    }
-                    );
-                  }
+                                }),
+                                // Provider.of<UtilityProvider>(context,listen: false).redo=true,
+                                Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("",new GeoPoint(0, 0, ""),new GeoPoint(0, 0, ""),"","","","","",0,false),
+                              }
+                              else{
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(
+                                    "Couldn't update status of delivery")))
+                              }
+                            }
+                            );
+                          }
 
-                }else {
-                  _deliveryService.getNextOrderForDriver(context)
-                      .then((value) =>
-                  {
-                    if(value != ""){
-                      setState(() {
-                        deliveryID = value;
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) =>
-                              _popUpSuccessfulFoundDeliveries(
-                                  context),
-                        );})
-                    } else
-                      {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text(
-                            "No deliveries")))
-                      }
-                  }
-                  );
-                }
-              },
-                padding: EdgeInsets.all(15.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                color: Theme.of(context).backgroundColor,
-                elevation: 5.0,
-                child: Text(
-                  _isDelivery==false?"Get Next Delivery":_startedDelivery==false?"Start delivery":_collectedFromStore==false?"Complete collection from store":_startedDeliveringToCustomer==false?"Start delivering to customer":_collectedByCustomer==false?"Customer collected delivery":"Complete delivery",
-                  style: TextStyle(
-                    color: Colors.deepOrangeAccent,
-                    letterSpacing: 1.5,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'OpenSans',
-                  ),
-                ),
-              ):Column(
-                children: [
-                  Text(
-                    "NOT ON SHIFT",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 20,
+                        }else {
+                          _deliveryService.getNextOrderForDriver(context)
+                              .then((value) =>
+                          {
+                            if(value != ""){
+                              setState(() {
+                                deliveryID = value;
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _popUpSuccessfulFoundDeliveries(
+                                          context),
+                                );})
+                            } else
+                              {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text(
+                                    "No deliveries")))
+                              }
+                          }
+                          );
+                        }},
+                      padding: EdgeInsets.all(15.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      color: Theme.of(context).backgroundColor,
+                      elevation: 5.0,
+                      child: Text(
+                        _isDelivery==false?"Get Next Delivery":_startedDelivery==false?"Start delivery":_collectedFromStore==false?"Collected from store":_startedDeliveringToCustomer==false?"Delivering to customer":_collectedByCustomer==false?"Customer collected":"Complete delivery",
+                        style: TextStyle(
+                          color: Colors.deepOrangeAccent,
+                          letterSpacing: 1.5,
+                          fontSize: 21.0,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'OpenSans',
+                        ),
+                      ),
+                    ):Column(
+                        children: [
+                          Text(
+                            "NOT ON SHIFT",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text("Start shift to get new orders",
+                            style: TextStyle(
+                              // color: Colors.deepOrangeAccent,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        ]
                     ),
-                    textAlign: TextAlign.center,
+                  ],
                 ),
-                  Text("Start shift to get new orders",
-                    style: TextStyle(
-                      // color: Colors.deepOrangeAccent,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.center,
-                  )
-              ]
               ),
-              SizedBox(height:13),
               // _isDelivery&&(_collectedFromStore==false)?RaisedButton(onPressed: (){
               //   Navigator.of(context).push(MaterialPageRoute(
               //       builder: (BuildContext context) => DriverHomeScreen(0) //ProductPage(product: product),

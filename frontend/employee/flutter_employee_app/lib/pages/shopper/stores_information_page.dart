@@ -184,22 +184,34 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
               children: [
                 Column(
                   children: [
-                    Padding(
-                      padding:
-                      const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                      child: Row(
-                        children: <Widget>[
-                          IconButton(icon: Icon(Icons.chevron_left), onPressed: () {
-                            MyNavigator.goToShopperHomePage(context);
-                          }),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      child: Image.asset(
-                        "assets/"+widget.store.imageUrl,
-                      ),
-                      height: MediaQuery.of(context).size.height*0.2,
+                    Stack(
+                      children: [
+                        ConstrainedBox(
+                            constraints: new BoxConstraints(
+                                minHeight: MediaQuery.of(context).size.height*0.2,
+                                maxHeight: MediaQuery.of(context).size.height*0.3,
+                                maxWidth: double.infinity,
+                                minWidth: double.infinity
+                            ),
+                            child: Image(fit: BoxFit.fitWidth,
+                              image:AssetImage(
+                                "assets/"+widget.store.imageUrl,
+                              ),
+                            )
+
+                        ),
+                        Padding(
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(icon: Icon(Icons.chevron_left), color: Colors.deepOrangeAccent, iconSize: 40, onPressed: () {
+                                MyNavigator.goToShopperHomePage(context);
+                              }),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       color: Colors.deepOrangeAccent,
@@ -239,11 +251,15 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(
-                                      widget.store.name,
-                                      style: kTitleTextStyle.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 19
+                                    child: Expanded(
+                                      child: Text(
+                                        widget.store.name,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 19
+                                        ),
+                                        textAlign: TextAlign.right,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
@@ -276,6 +292,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                                           fontWeight: FontWeight.w700,
                                           fontSize: 19
                                       ),
+
                                     ),
                                   ),
                                 ],
@@ -330,11 +347,15 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(
-                                      widget.store.address,
-                                      style: kTitleTextStyle.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 19
+                                    child: Expanded(
+                                      child: Text(
+                                        widget.store.address,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 19
+                                        ),
+                                        textAlign: TextAlign.right,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ),
@@ -360,12 +381,16 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                                     ),
                                   ),
                                   Container(
-                                    child: Text(
+                                    child: Expanded(
+                                        child:Text(
                                       "("+widget.store.storeLocationLatitude+","+widget.store.storeLocationLongitude+")",
                                       style: kTitleTextStyle.copyWith(
                                           fontWeight: FontWeight.w700,
                                           fontSize: 16
                                       ),
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.right,
+                                    )
                                     ),
                                   ),
                                 ],

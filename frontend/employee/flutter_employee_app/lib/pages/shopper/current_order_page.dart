@@ -259,8 +259,6 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
   @override
   Widget build(BuildContext context) {
     order=Provider.of<OrderProvider>(context).order;
-    print(order.orderID);
-    print(order);
     if(currentAmountPacked.length==0) {
       for (int i = 0; i < order.items.length; i++) {
         currentAmountPacked.add(0);
@@ -275,43 +273,59 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
         body: Container(
           padding: EdgeInsets.all(8),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Stack(
+              Column(
                 children: [
-                  Container(
-                      child: Image(fit: BoxFit.cover,
-                        image:AssetImage(
-                          "assets/"+widget.store.imageUrl,
-                        ),
-                      )
+                  Stack(
+                    children: [
+                      ConstrainedBox(
+                          constraints: new BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height*0.2,
+                              maxHeight: MediaQuery.of(context).size.height*0.3,
+                              maxWidth: double.infinity,
+                              minWidth: double.infinity
+                          ),
+                          child: Image(fit: BoxFit.fitWidth,
+                            image:AssetImage(
+                              "assets/"+widget.store.imageUrl,
+                            ),
+                          )
+
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(height:MediaQuery.of(context).size.height*0.03),
+                          Container(
+                              height: 30,
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) => ShopperHomeScreen(1)));
+                                },
+                                child: Icon(
+                                  Icons.chevron_left,
+                                  color: Colors.deepOrangeAccent,
+                                  size: 30,
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height*0.1,
-                      child: GestureDetector(
-                        onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => ShopperHomeScreen(1)));
-                        },
-                        child: Icon(
-                          Icons.chevron_left,
-                          color: Colors.deepOrangeAccent,
-                          size: 35,
-                        ),
-                      )
+                  Container(
+                    color: Colors.deepOrangeAccent,
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height*0.045,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Order Details ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
+                      ],
+                    ),
                   ),
                 ],
-              ),
-              Container(
-                color: Colors.deepOrangeAccent,
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height*0.045,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Order Details ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
-                  ],
-                ),
               ),
               Container(
                 height: MediaQuery.of(context).size.height*0.5,

@@ -32,7 +32,6 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
       future: _shoppingService.getAllOrdersInQueue(context, widget.store.id),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
-          print("HIII");
           List<Order> items = snapshot.data as List<Order>;
           return ListView.builder(
               itemCount: items.length,
@@ -213,61 +212,77 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
 
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height*0.95,
-        padding: EdgeInsets.all(10),
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Stack(
+            Column(
               children: [
-                Container(
-                    child: Image(fit: BoxFit.cover,
-                      image:AssetImage(
-                      "assets/"+widget.store.imageUrl,
-                    ),
-                    )
-                ),
-                Column(
+                Stack(
                   children: [
-                    SizedBox(height:MediaQuery.of(context).size.height*0.03),
-                    Container(
-                        height: 30,
-                        child: GestureDetector(
-                          onTap: (){
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (BuildContext context) => ShopperHomeScreen(0)));
-                          },
-                          child: Icon(
-                            Icons.chevron_left,
-                            color: Colors.black,
+                    ConstrainedBox(
+                        constraints: new BoxConstraints(
+                            minHeight: MediaQuery.of(context).size.height*0.2,
+                            maxHeight: MediaQuery.of(context).size.height*0.3,
+                            maxWidth: double.infinity,
+                            minWidth: double.infinity
+                        ),
+                        child: Image(fit: BoxFit.fitWidth,
+                          image:AssetImage(
+                            "assets/"+widget.store.imageUrl,
                           ),
                         )
+
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(height:MediaQuery.of(context).size.height*0.013),
+                        Container(
+                            height: 30,
+                            child: GestureDetector(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context) => ShopperHomeScreen(0)));
+                              },
+                              child: Icon(
+                                Icons.chevron_left,
+                                color: Colors.deepOrangeAccent,
+                                size: 35,
+                              ),
+                            )
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
                 Container(
-                    height: MediaQuery.of(context).size.height*0.5,
+                  color: Colors.deepOrangeAccent,
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height*0.06,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Current Orders ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
+
+                    ],
+                  ),
+
+                ),
+                Container(
+                    height: MediaQuery.of(context).size.height*0.4,
                     child: Column(
                       children: [
-                        Container(
-                          color: Colors.deepOrangeAccent,
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height*0.06,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Current Orders ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
-                            ],
-                          ),
-                        ),
                         Container(  height: MediaQuery.of(context).size.height*0.4, child: buildOrders()),
                       ],
                     )),
+              ],
+            ),
+
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+
                 _getNextOrderBTN(),
               ],
             )
