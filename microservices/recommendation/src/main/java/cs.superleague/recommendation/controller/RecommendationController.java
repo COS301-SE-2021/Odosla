@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -57,7 +58,7 @@ public class RecommendationController implements RecommendationApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
+            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs(), UUID.fromString(body.getStoreID()));
             GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
@@ -115,7 +116,7 @@ public class RecommendationController implements RecommendationApi {
 
         for (CartItem i : responseItems) {
 
-            System.out.println("s id " + i.getStoreID().toString());
+//            System.out.println("s id " + i.getStoreID().toString());
 
             CartItemObject item = new CartItemObject();
             if (i.getCartItemNo() != null) {

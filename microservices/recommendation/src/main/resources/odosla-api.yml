@@ -72,6 +72,8 @@ components:
           type: array
           items:
             type: string
+        storeID:
+          type: string
 
     recommendation_getCartRecommendationResponse:
       description: This object is returned as output
