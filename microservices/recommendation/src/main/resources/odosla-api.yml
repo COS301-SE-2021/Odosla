@@ -61,6 +61,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     recommendation_getCartRecommendationRequest:
       description: This object is expected as input
