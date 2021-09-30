@@ -6,6 +6,9 @@ import cs.superleague.notifications.responses.SendDirectEmailNotificationRespons
 import cs.superleague.payment.dataclass.*;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderByUUIDResponse;
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
+import cs.superleague.shopping.requests.SaveItemToRepoRequest;
+import cs.superleague.shopping.responses.GetItemsByIDResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -3047,7 +3050,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist {
+    public ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException {
         if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
@@ -3076,16 +3079,33 @@ public class UserServiceImpl implements UserService {
                 return response;
             }
         }
+        String productID = "";
         boolean itemInCartStill = false;
         for (CartItem cartItem : orderEntity.getCartItems()) {
-            if (cartItem.getBarcode() == request.getCurrentProductBarcode()) {
+            if (cartItem.getBarcode().equals(request.getCurrentProductBarcode())) {
                 itemInCartStill = true;
+                productID = cartItem.getProductID();
             }
         }
         if (itemInCartStill == false) {
             ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item no longer in cart, the issue has been fixed.", false);
             return response;
         }
+        parts = new HashMap<>();
+        List<String> itemProductID = new ArrayList<>();
+        itemProductID.add(productID);
+        parts.put("itemIDs", itemProductID);
+        stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItemsByID";
+        uri = new URI(stringUri);
+        ResponseEntity<GetItemsByIDResponse> itemResponse = restTemplate.postForEntity(uri, parts, GetItemsByIDResponse.class);
+        if (itemResponse == null || itemResponse.getBody() == null){
+            throw new ItemDoesNotExistException("Item not found in database.");
+        }
+        List<Item> singleItem = itemResponse.getBody().getItems();
+        Item item = singleItem.get(0);
+        item.setSoldOut(true);
+        SaveItemToRepoRequest saveItemToRepo = new SaveItemToRepoRequest(item);
+        rabbit.convertAndSend("ShoppingEXCHANGE", "RK_SaveItemToRepo", saveItemToRepo);
         OrdersWithProblems problem = new OrdersWithProblems(request.getOrderID(), request.getCurrentProductBarcode(), request.getAlternativeProductBarcode());
         ordersWithProblemsRepo.save(problem);
         orderEntity.setStatus(OrderStatus.PROBLEM);

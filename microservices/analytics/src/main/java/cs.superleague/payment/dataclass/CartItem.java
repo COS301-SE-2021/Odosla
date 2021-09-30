@@ -13,7 +13,7 @@ public class CartItem implements Serializable {
     @Id
     private UUID cartItemNo;
 
-    @JsonProperty("productId")
+    @JsonProperty("productID")
     private String productID;
 
 //    @ManyToOne
@@ -23,10 +23,10 @@ public class CartItem implements Serializable {
     private String name;
     private String barcode;
 
-    @JsonProperty("storeId")
+    @JsonProperty("storeID")
     private UUID storeID;
 
-    @JsonProperty("orderId")
+    @JsonProperty("orderID")
     private UUID orderID;
 
     private double price;

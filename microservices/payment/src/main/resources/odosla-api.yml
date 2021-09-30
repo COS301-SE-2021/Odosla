@@ -237,6 +237,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     OrderObject:
       description: "Generic schema for an Order"

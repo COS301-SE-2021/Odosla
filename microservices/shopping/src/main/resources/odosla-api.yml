@@ -307,6 +307,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     shopping_GetItemsRequest:
       description: This object is expected as input

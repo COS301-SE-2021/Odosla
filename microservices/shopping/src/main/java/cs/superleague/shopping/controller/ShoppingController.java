@@ -551,7 +551,7 @@ public class ShoppingController implements ShoppingApi {
             currentItem.setBrand(responseItems.get(i).getBrand());
             currentItem.setItemType(responseItems.get(i).getItemType());
             currentItem.setSize(responseItems.get(i).getSize());
-
+            currentItem.setSoldOut(responseItems.get(i).isSoldOut());
             responseBody.add(currentItem);
 
         }
@@ -738,7 +738,7 @@ public class ShoppingController implements ShoppingApi {
         try {
             GetItemsByIDResponse getItemsByIDResponse = shoppingService.getItemsByID(new GetItemsByIDRequest(body.getItemIDs()));
             try {
-
+                response.setMessage(getItemsByIDResponse.getMessage());
                 response.setItems(populateItems(getItemsByIDResponse.getItems()));
 
             } catch (Exception e) {

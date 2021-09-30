@@ -1,5 +1,6 @@
 package cs.superleague.user;
 
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.requests.*;
 import cs.superleague.user.responses.*;
@@ -99,7 +100,7 @@ public interface UserService {
 
     void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
 
-    ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist;
+    ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException;
 
     GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException;
 }
