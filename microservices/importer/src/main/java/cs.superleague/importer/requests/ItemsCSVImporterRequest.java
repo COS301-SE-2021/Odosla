@@ -4,9 +4,8 @@ public class ItemsCSVImporterRequest {
 
     private String file;
 
-    public ItemsCSVImporterRequest(String file)
-    {
-        this.file=file;
+    public ItemsCSVImporterRequest(String file) {
+        this.file = file;
     }
 
     public String getFile() {

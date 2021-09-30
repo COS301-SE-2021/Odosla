@@ -1,8 +1,8 @@
 package cs.superleague.notifications.responses;
 
 public class SendDirectEmailNotificationResponse {
-    private String responseMessage;
-    private boolean isSuccess;
+    private final String responseMessage;
+    private final boolean isSuccess;
 
     public SendDirectEmailNotificationResponse() {
         this.responseMessage = null;

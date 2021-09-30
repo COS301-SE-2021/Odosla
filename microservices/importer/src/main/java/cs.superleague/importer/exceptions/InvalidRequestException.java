@@ -1,6 +1,6 @@
 package cs.superleague.importer.exceptions;
 
-public class InvalidRequestException extends ImporterException{
+public class InvalidRequestException extends ImporterException {
 
     /**
      * Constructs a new exception with the specified detail message.  The

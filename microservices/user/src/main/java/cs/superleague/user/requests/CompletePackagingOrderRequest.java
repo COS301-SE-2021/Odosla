@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class CompletePackagingOrderRequest {
 
-    private UUID orderID;
-    private boolean getNext;
+    private final UUID orderID;
+    private final boolean getNext;
 
     public CompletePackagingOrderRequest(UUID orderID, boolean getNext) {
         this.orderID = orderID;

@@ -52,7 +52,7 @@ public class NotificationController implements NotificationApi {
     @Autowired
     public NotificationController(JavaMailSender javaMailSender, NotificationRepo notificationRepo,
                                   NotificationService notificationService, RestTemplate restTemplate,
-                                  HttpServletRequest httpServletRequest){
+                                  HttpServletRequest httpServletRequest) {
         this.javaMailSender = javaMailSender;
         this.notificationRepo = notificationRepo;
         this.notificationService = notificationService;
@@ -62,6 +62,7 @@ public class NotificationController implements NotificationApi {
 
 
     UUID adminID = UUID.fromString("b2cbc86b-ec77-456d-b293-62977d16188a");
+
     @Override
     public ResponseEntity<NotificationSendEmailNotificationResponse> sendEmailNotification(NotificationSendEmailNotificationRequest body) {
         //Mock data
@@ -70,7 +71,7 @@ public class NotificationController implements NotificationApi {
         //End of Mock data
         NotificationSendEmailNotificationResponse response = new NotificationSendEmailNotificationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -80,14 +81,14 @@ public class NotificationController implements NotificationApi {
 
             SendEmailNotificationRequest request = new SendEmailNotificationRequest(body.getMessage(), body.getProperties());
             SendEmailNotificationResponse sendEmailNotificationResponse = notificationService.sendEmailNotification(request);
-            try{
+            try {
                 response.setSuccess(sendEmailNotificationResponse.getSuccessMessage());
                 response.setResponseMessage(sendEmailNotificationResponse.getResponseMessage());
-            }catch (Exception e){
+            } catch (Exception e) {
                 response.setSuccess(false);
                 response.setResponseMessage(e.getMessage());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setSuccess(false);
             response.setResponseMessage(e.getMessage());
             e.printStackTrace();
@@ -97,21 +98,21 @@ public class NotificationController implements NotificationApi {
     }
 
     @Override
-    public ResponseEntity<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotification(NotificationSendDirectEmailNotificationRequest body){
+    public ResponseEntity<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotification(NotificationSendDirectEmailNotificationRequest body) {
         NotificationSendDirectEmailNotificationResponse response = new NotificationSendDirectEmailNotificationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
             SendDirectEmailNotificationRequest request = new SendDirectEmailNotificationRequest(body.getMessage(), body.getProperties());
             SendDirectEmailNotificationResponse sendDirectEmailNotificationResponse = notificationService.sendDirectEmailNotification(request);
-            try{
+            try {
                 response.setIsSuccess(sendDirectEmailNotificationResponse.isSuccess());
                 response.setResponseMessage(sendDirectEmailNotificationResponse.getResponseMessage());
-            }catch (Exception e){
+            } catch (Exception e) {
                 response.setIsSuccess(false);
                 response.setResponseMessage(e.getMessage());
                 e.printStackTrace();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setIsSuccess(false);
             response.setResponseMessage(e.getMessage());
             e.printStackTrace();

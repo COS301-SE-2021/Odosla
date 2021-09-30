@@ -237,6 +237,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     OrderObject:
       description: "Generic schema for an Order"
@@ -247,6 +249,8 @@ components:
         userID:
           type: string
         storeID:
+          type: string
+        driverID:
           type: string
         shopperID:
           type: string

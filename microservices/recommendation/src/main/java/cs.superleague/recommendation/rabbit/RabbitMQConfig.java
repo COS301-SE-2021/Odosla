@@ -30,7 +30,7 @@ public class RabbitMQConfig {
     // EXCHANGE
     //
     @Bean
-    Exchange RecommendationExchange(){
+    Exchange RecommendationExchange() {
         return ExchangeBuilder.directExchange("RecommendationEXCHANGE")
                 .durable(true)
                 .build();
@@ -53,7 +53,7 @@ public class RabbitMQConfig {
     // BINDING
     //
     @Bean
-    Binding bindingAddRecommendation(){
+    Binding bindingAddRecommendation() {
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
                 .bind(AddRecommendationQueue())
@@ -63,18 +63,19 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding bindingRemoveRecommendation(){
+    Binding bindingRemoveRecommendation() {
         return BindingBuilder
                 .bind(RemoveRecommendationQueue())
                 .to(RecommendationExchange())
                 .with("RK_RemoveRecommendation")
                 .noargs();
     }
+
     //
     // FACTORY
     //
     @Bean
-    ConnectionFactory connectionFactory(){
+    ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostName);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
@@ -86,7 +87,7 @@ public class RabbitMQConfig {
     // LISTENER
     //
     @Bean
-    MessageListenerContainer messageListenerContainer(){
+    MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
         simpleMessageListenerContainer.setQueues(AddRecommendationQueue(), RemoveRecommendationQueue());                                               // <------- add all queues to listen to here

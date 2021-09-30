@@ -21,8 +21,10 @@ public class Item {
     private String brand;
     private String size;
     private String itemType;
+    private boolean soldOut;
 
-    public Item(){ }
+    public Item() {
+    }
 
     public Item(String name, String productID, String barcode, UUID storeID, double price, int quantity, String description, String imageUrl) {
         this.name = name;
@@ -44,9 +46,9 @@ public class Item {
         this.quantity = quantity;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.brand=brand;
-        this.itemType=itemType;
-        this.size=size;
+        this.brand = brand;
+        this.itemType = itemType;
+        this.size = size;
     }
 
     public String getName() {
@@ -135,5 +137,13 @@ public class Item {
 
     public void setItemType(String itemType) {
         this.itemType = itemType;
+    }
+
+    public boolean isSoldOut() {
+        return soldOut;
+    }
+
+    public void setSoldOut(boolean soldOut) {
+        this.soldOut = soldOut;
     }
 }

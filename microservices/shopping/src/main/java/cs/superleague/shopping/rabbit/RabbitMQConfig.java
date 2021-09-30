@@ -30,7 +30,7 @@ public class RabbitMQConfig {
     // EXCHANGE
     //
     @Bean
-    Exchange ShoppingExchange(){
+    Exchange ShoppingExchange() {
         return ExchangeBuilder.directExchange("ShoppingEXCHANGE")
                 .durable(true)
                 .build();
@@ -55,19 +55,20 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Queue AddToFrontOfQueue(){
+    Queue AddToFrontOfQueue() {
         return new Queue("Q_AddToFrontOfQueue", true);
     }
 
     @Bean
-    Queue SaveCatalogueToRepoQueue(){
+    Queue SaveCatalogueToRepoQueue() {
         return new Queue("Q_SaveCatalogueToRepoQueue", true);
     }
+
     //
     // BINDING
     //
     @Bean
-    Binding bindingSaveStoreToRepo(){
+    Binding bindingSaveStoreToRepo() {
 
         return BindingBuilder
                 .bind(SaveStoreToRepoQueue())
@@ -77,7 +78,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding bindingSaveItemToRepo(){
+    Binding bindingSaveItemToRepo() {
 
         return BindingBuilder
                 .bind(SaveItemToRepoQueue())
@@ -87,7 +88,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding bindingAddToQueue(){
+    Binding bindingAddToQueue() {
 
         return BindingBuilder
                 .bind(AddToQueueQueue())
@@ -97,7 +98,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding bindingAddToFrontOfQueue(){
+    Binding bindingAddToFrontOfQueue() {
         return BindingBuilder
                 .bind(AddToQueueQueue())
                 .to(ShoppingExchange())
@@ -106,7 +107,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding bindingSaveCatalogueToRepo(){
+    Binding bindingSaveCatalogueToRepo() {
 
         return BindingBuilder
                 .bind(SaveCatalogueToRepoQueue())
@@ -119,7 +120,7 @@ public class RabbitMQConfig {
     // FACTORY
     //
     @Bean
-    ConnectionFactory connectionFactory(){
+    ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostName);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
@@ -130,7 +131,7 @@ public class RabbitMQConfig {
     // LISTENER
     //
     @Bean
-    MessageListenerContainer messageListenerContainer(){
+    MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
         simpleMessageListenerContainer.setQueues(SaveStoreToRepoQueue(), SaveItemToRepoQueue(), AddToQueueQueue(), AddToFrontOfQueue(), SaveCatalogueToRepoQueue());

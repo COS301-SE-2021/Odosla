@@ -1,7 +1,5 @@
 package cs.superleague.analytics.responses;
 
-import com.itextpdf.text.Document;
-
 import java.util.Date;
 
 public class CreateUserReportResponse {

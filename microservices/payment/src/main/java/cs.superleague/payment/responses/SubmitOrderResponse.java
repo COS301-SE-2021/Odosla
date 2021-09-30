@@ -6,17 +6,21 @@ import java.util.Date;
 
 public class SubmitOrderResponse {
 
-    /** attributes */
+    /**
+     * attributes
+     */
     private final boolean success;
     private final Date timestamp;
     private final String message;
     private final Order order;
 
-    /** constructor
-     * @param order - order object that haas been created
-     * @param success - success of response object, whether successful or not
+    /**
+     * constructor
+     *
+     * @param order     - order object that haas been created
+     * @param success   - success of response object, whether successful or not
      * @param timestamp - time that the system sends the response object
-     * @param message - message returned after response
+     * @param message   - message returned after response
      */
     public SubmitOrderResponse(Order order, Boolean success, Date timestamp, String message) {
         this.order = order;
@@ -26,7 +30,9 @@ public class SubmitOrderResponse {
     }
 
 
-    /** getters */
+    /**
+     * getters
+     */
     public Order getOrder() {
         return order;
     }

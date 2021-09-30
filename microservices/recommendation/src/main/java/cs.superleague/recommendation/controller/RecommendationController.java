@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -49,7 +50,7 @@ public class RecommendationController implements RecommendationApi {
     public ResponseEntity<RecommendationGetCartRecommendationResponse> getCartRecommendation(RecommendationGetCartRecommendationRequest body) {
         RecommendationGetCartRecommendationResponse response = new RecommendationGetCartRecommendationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -57,13 +58,13 @@ public class RecommendationController implements RecommendationApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
+            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs(), UUID.fromString(body.getStoreID()));
             GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
                 response.setIsSuccess(getCartRecommendationResponse.isSuccess());
                 response.setRecommendations(populateCartItems(getCartRecommendationResponse.getRecommendations()));
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 response.setMessage(e.getMessage());
                 response.setIsSuccess(false);
@@ -82,11 +83,11 @@ public class RecommendationController implements RecommendationApi {
     //////////////////////
 
     //Populate ItemObject list from items returned by use case
-    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
+    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException {
 
         List<ItemObject> responseBody = new ArrayList<>();
 
-        for(int i = 0; i < responseItems.size(); i++){
+        for (int i = 0; i < responseItems.size(); i++) {
 
             ItemObject currentItem = new ItemObject();
 
@@ -109,17 +110,16 @@ public class RecommendationController implements RecommendationApi {
         return responseBody;
     }
 
-    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException {
 
         List<CartItemObject> responseBody = new ArrayList<>();
 
-        for (CartItem i: responseItems){
+        for (CartItem i : responseItems) {
 
-            System.out.println("s id "  +i.getStoreID().toString());
+//            System.out.println("s id " + i.getStoreID().toString());
 
             CartItemObject item = new CartItemObject();
-            if(i.getCartItemNo()!=null)
-            {
+            if (i.getCartItemNo() != null) {
                 item.setCartItemNo(i.getCartItemNo().toString());
             }
             item.setProductID(i.getProductID());

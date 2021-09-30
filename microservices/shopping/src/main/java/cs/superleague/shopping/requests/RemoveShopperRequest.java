@@ -5,13 +5,14 @@ import java.util.UUID;
 public class RemoveShopperRequest {
 
     /* attributes */
-    private UUID shopperID;
-    private UUID storeID;
+    private final UUID shopperID;
+    private final UUID storeID;
 
-    /** constructor
+    /**
+     * constructor
      *
      * @param shopperID the shopper that needs to be removed from Store
-     * @param storeID the store which the shopper need to be removed from
+     * @param storeID   the store which the shopper need to be removed from
      */
     public RemoveShopperRequest(UUID shopperID, UUID storeID) {
         this.shopperID = shopperID;

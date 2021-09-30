@@ -35,78 +35,80 @@ public class JwtUtil {
     @Value("${env.CUSTOMER_AUTHORITY}")
     private String CUSTOMER_AUTHORITY = "ROLE_CUSTOMER";
 
-    public String extractEmail(String token){
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Date extractExpiration(String token){
-        return extractClaim(token,Claims::getExpiration);
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
 
-    public String extractUserType(String token){
-        final Claims claims=extractAllClaims(token);
+    public String extractUserType(String token) {
+        final Claims claims = extractAllClaims(token);
         return (String) claims.get("userType");
     }
-    public <T> T extractClaim(String token, Function<Claims,T> claimsResolver){
-        final Claims claims=extractAllClaims(token);
+
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    private Claims extractAllClaims(String token){
+
+    private Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY.getBytes(StandardCharsets.UTF_8)).parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired(String token){
+    private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateJWTTokenShopper(Shopper shopper){
+    public String generateJWTTokenShopper(Shopper shopper) {
 
-        Map<String,Object> claims=new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(SHOPPER_AUTHORITY);
-        claims.put("email",shopper.getEmail());
-        claims.put("userType","SHOPPER");
-        claims.put("authorities",grantedAuthorities.stream()
+        claims.put("email", shopper.getEmail());
+        claims.put("userType", "SHOPPER");
+        claims.put("authorities", grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,shopper.getShopperID(),shopper.getEmail(),grantedAuthorities);
+        return createToken(claims, shopper.getShopperID(), shopper.getEmail(), grantedAuthorities);
     }
 
-    public String generateJWTTokenDriver(Driver driver){
-        Map<String,Object> claims=new HashMap<>();
+    public String generateJWTTokenDriver(Driver driver) {
+        Map<String, Object> claims = new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(DRIVER_AUTHORITY);
-        claims.put("email",driver.getEmail());
-        claims.put("userType","DRIVER");
-        claims.put("authorities",grantedAuthorities.stream()
+        claims.put("email", driver.getEmail());
+        claims.put("userType", "DRIVER");
+        claims.put("authorities", grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,driver.getDriverID(),driver.getEmail(),grantedAuthorities);
+        return createToken(claims, driver.getDriverID(), driver.getEmail(), grantedAuthorities);
     }
 
-    public String generateJWTTokenAdmin(Admin admin){
-        Map<String,Object> claims=new HashMap<>();
+    public String generateJWTTokenAdmin(Admin admin) {
+        Map<String, Object> claims = new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(ADMIN_AUTHORITY);
-        claims.put("userType","ADMIN");
-        claims.put("email",admin.getEmail());
-        claims.put("authorities",grantedAuthorities.stream()
+        claims.put("userType", "ADMIN");
+        claims.put("email", admin.getEmail());
+        claims.put("authorities", grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,admin.getAdminID(),admin.getEmail(),grantedAuthorities);
+        return createToken(claims, admin.getAdminID(), admin.getEmail(), grantedAuthorities);
     }
 
-    public String generateJWTTokenCustomer(Customer customer){
-        Map<String,Object> claims=new HashMap<>();
+    public String generateJWTTokenCustomer(Customer customer) {
+        Map<String, Object> claims = new HashMap<>();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(CUSTOMER_AUTHORITY);
-        claims.put("userType","CUSTOMER");
-        claims.put("email",customer.getEmail());
-        claims.put("authorities",grantedAuthorities.stream()
+        claims.put("userType", "CUSTOMER");
+        claims.put("email", customer.getEmail());
+        claims.put("authorities", grantedAuthorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
-        return createToken(claims,customer.getCustomerID(),customer.getEmail(),grantedAuthorities);
+        return createToken(claims, customer.getCustomerID(), customer.getEmail(), grantedAuthorities);
     }
 
     private String createToken(Map<String, Object> claims, UUID userID, String email, List<GrantedAuthority> grantedAuthorities) {
-        return BEARER+Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())
-                .setIssuedAt(new Date(Calendar.getInstance().getTimeInMillis())).setExpiration(new Date(Calendar.getInstance().getTimeInMillis()+1000*60*60*10))
+        return BEARER + Jwts.builder().setClaims(claims).setSubject(email).setId(userID.toString())
+                .setIssuedAt(new Date(Calendar.getInstance().getTimeInMillis())).setExpiration(new Date(Calendar.getInstance().getTimeInMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY.getBytes(StandardCharsets.UTF_8)).compact();
     }
 

@@ -11,6 +11,8 @@ import cs.superleague.models.DeliveryAssignDriverToDeliveryRequest;
 import cs.superleague.models.DeliveryAssignDriverToDeliveryResponse;
 import cs.superleague.models.DeliveryCreateDeliveryRequest;
 import cs.superleague.models.DeliveryCreateDeliveryResponse;
+import cs.superleague.models.DeliveryGetAdditionalStoresDeliveryCostRequest;
+import cs.superleague.models.DeliveryGetAdditionalStoresDeliveryCostResponse;
 import cs.superleague.models.DeliveryGetDeliveryByUUIDRequest;
 import cs.superleague.models.DeliveryGetDeliveryByUUIDResponse;
 import cs.superleague.models.DeliveryGetDeliveryDetailRequest;
@@ -77,6 +79,17 @@ public interface DeliveryApi {
         consumes = { "application/json" },
         method = RequestMethod.POST)
     ResponseEntity<DeliveryCreateDeliveryResponse> createDelivery(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody DeliveryCreateDeliveryRequest body
+);
+
+
+    @ApiOperation(value = "Endpoint for retrieving additional stores to make orders from", nickname = "getAdditionalStoresDeliveryCost", notes = "Refer to summary", response = DeliveryGetAdditionalStoresDeliveryCostResponse.class, tags={ "Delivery", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Returns the stores that can be added to the delivery and the cost", response = DeliveryGetAdditionalStoresDeliveryCostResponse.class) })
+    @RequestMapping(value = "/delivery/getAdditionalStoresDeliveryCost",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<DeliveryGetAdditionalStoresDeliveryCostResponse> getAdditionalStoresDeliveryCost(@ApiParam(value = "The input body required by this request" ,required=true )  @Valid @RequestBody DeliveryGetAdditionalStoresDeliveryCostRequest body
 );
 
 

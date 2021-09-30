@@ -8,16 +8,15 @@ import java.util.List;
 
 public class SaveItemToRepoResponse {
 
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
     private Boolean isSuccess;
 
-    public SaveItemToRepoResponse(Boolean isSuccess, Date timestamp, String message)
-    {
+    public SaveItemToRepoResponse(Boolean isSuccess, Date timestamp, String message) {
         this.isSuccess = isSuccess;
-        this.timestamp= timestamp;
-        this.message= message;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
     public void setTimestamp(Date timestamp) {

@@ -24,10 +24,10 @@ public class UserListener implements MessageListener {
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
             Object o = in.readObject();
-            if (o instanceof SaveDriverToRepoRequest){
+            if (o instanceof SaveDriverToRepoRequest) {
                 SaveDriverToRepoRequest saveDriverToRepoRequest = (SaveDriverToRepoRequest) o;
                 userService.saveDriver(saveDriverToRepoRequest);
-            } else if (o instanceof SaveShopperToRepoRequest){
+            } else if (o instanceof SaveShopperToRepoRequest) {
                 SaveShopperToRepoRequest saveShopperToRepoRequest = (SaveShopperToRepoRequest) o;
                 userService.saveShopper(saveShopperToRepoRequest);
             }

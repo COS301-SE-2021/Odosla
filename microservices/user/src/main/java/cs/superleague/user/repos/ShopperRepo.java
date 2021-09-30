@@ -15,10 +15,10 @@ import java.util.UUID;
 @Repository
 public interface ShopperRepo extends JpaRepository<Shopper, UUID> {
 
-  List<Shopper> findAll();
+    List<Shopper> findAll();
 
-  Optional<Shopper> findByEmail(String email);
+    Optional<Shopper> findByEmail(String email);
 
-  Optional<Shopper> findById(UUID shopperID);
+    Optional<Shopper> findById(UUID shopperID);
 }
 
