@@ -2,6 +2,7 @@ package cs.superleague.user.controller;
 
 import cs.superleague.api.UserApi;
 import cs.superleague.models.*;
+import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.user.UserServiceImpl;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.repos.*;
@@ -629,23 +630,23 @@ public class UserController implements UserApi {
             try {
                 getProblemsWithOrderResponse.setProblem(response.isProblem());
                 getProblemsWithOrderResponse.setMessage(response.getMessage());
-                getProblemsWithOrderResponse.setAlternativeProductBarcode(response.getAlternativeProductBarcode());
-                getProblemsWithOrderResponse.setCurrentProductBarcode(response.getCurrentProductBarcode());
+                getProblemsWithOrderResponse.setCurrentProductWithProblem(populateCartItem(response.getCurrentProductWithProblem()));
+                getProblemsWithOrderResponse.setAlternativeProduct(populateCartItem(response.getAlternativeProduct()));
 
             } catch (Exception e) {
                 e.printStackTrace();
                 getProblemsWithOrderResponse.setProblem(false);
                 getProblemsWithOrderResponse.setMessage(e.getMessage());
-                getProblemsWithOrderResponse.setAlternativeProductBarcode("");
-                getProblemsWithOrderResponse.setCurrentProductBarcode("");
+                getProblemsWithOrderResponse.setCurrentProductWithProblem(null);
+                getProblemsWithOrderResponse.setAlternativeProduct(null);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             getProblemsWithOrderResponse.setProblem(false);
             getProblemsWithOrderResponse.setMessage(e.getMessage());
-            getProblemsWithOrderResponse.setAlternativeProductBarcode("");
-            getProblemsWithOrderResponse.setCurrentProductBarcode("");
+            getProblemsWithOrderResponse.setCurrentProductWithProblem(null);
+            getProblemsWithOrderResponse.setAlternativeProduct(null);
         }
 
         return new ResponseEntity<>(getProblemsWithOrderResponse, status);
@@ -1359,5 +1360,25 @@ public class UserController implements UserApi {
         geoPointObject.setLatitude(BigDecimal.valueOf(geoPoint.getLatitude()));
         geoPointObject.setLongitude(BigDecimal.valueOf(geoPoint.getLongitude()));
         return geoPointObject;
+    }
+    private CartItemObject populateCartItem(CartItem cartItem) throws NullPointerException {
+        CartItemObject item = new CartItemObject();
+        if (cartItem.getCartItemNo() != null) {
+            item.setCartItemNo(cartItem.getCartItemNo().toString());
+        }
+        item.setProductId(cartItem.getProductID());
+        item.setBarcode(cartItem.getBarcode());
+        item.setQuantity(cartItem.getQuantity());
+        item.setName(cartItem.getName());
+        item.setStoreID(cartItem.getStoreID().toString());
+        item.setPrice(BigDecimal.valueOf(cartItem.getPrice()));
+        item.setImageUrl(cartItem.getImageUrl());
+        item.setBrand(cartItem.getBrand());
+        item.setSize(cartItem.getSize());
+        item.setItemType(cartItem.getItemType());
+        item.setDescription(cartItem.getDescription());
+        if (cartItem.getOrderID() != null)
+            item.setOrderID(cartItem.getOrderID().toString());
+        return item;
     }
 }
