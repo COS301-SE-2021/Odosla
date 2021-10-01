@@ -170,7 +170,7 @@ public class PaymentController implements PaymentApi {
             System.out.println("Cart items list size : " + cartItemObjects.size());
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
-                    UUID.fromString(body.getStoreID()), orderType, body.getLongitude().doubleValue(),
+                    UUID.randomUUID(), orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             System.out.println("AFTER THE CALL");
@@ -409,6 +409,7 @@ public class PaymentController implements PaymentApi {
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
+            if(i.getStoreID() != null)
             item.setStoreID(UUID.fromString(i.getStoreID()));
             if (i.getPrice() != null)
                 price = i.getPrice().doubleValue();
@@ -533,5 +534,91 @@ public class PaymentController implements PaymentApi {
         }
 
         return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentFixOrderProblemResponse> fixOrderProblem(PaymentFixOrderProblemRequest body) {
+
+        //creating response object and default return status:
+        PaymentFixOrderProblemResponse response = new PaymentFixOrderProblemResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        FixOrderProblemResponse fixOrderProblemResponse = null;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            FixOrderProblemRequest request = new FixOrderProblemRequest(
+                    populateCartItem(body.getCartItem()), populateCartItemList(body.getCartItems()));
+
+            fixOrderProblemResponse = paymentService.fixOrderProblem(request);
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+        try {
+
+            assert fixOrderProblemResponse != null;
+            response.setMessage(fixOrderProblemResponse.getMessage());
+            response.setSuccess(fixOrderProblemResponse.isSuccess());
+            response.setTimestamp(fixOrderProblemResponse.getTimestamp().toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    private List<CartItem> populateCartItemList(List<CartItemObject> responseItems) throws NullPointerException {
+
+        List<CartItem> responseBody = new ArrayList<>();
+
+        for (CartItemObject i : responseItems) {
+
+            CartItem item = new CartItem();
+
+            item.setProductID(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setPrice(i.getPrice().doubleValue());
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
+
+        }
+
+        return responseBody;
+    }
+
+    private CartItem populateCartItem(CartItemObject responseItems) throws NullPointerException {
+
+        CartItem item = new CartItem();
+
+        if(responseItems.getCartItemNo() != null){
+            item.setCartItemNo(UUID.fromString(responseItems.getCartItemNo()));
+        }
+
+        item.setOrderID(UUID.fromString(responseItems.getOrderID()));
+        item.setProductID(responseItems.getProductID());
+        item.setBarcode(responseItems.getBarcode());
+        item.setQuantity(responseItems.getQuantity());
+        item.setName(responseItems.getName());
+        item.setPrice(responseItems.getPrice().doubleValue());
+        item.setImageUrl(responseItems.getImageUrl());
+        item.setBrand(responseItems.getBrand());
+        item.setSize(responseItems.getSize());
+        item.setItemType(responseItems.getItemType());
+        item.setDescription(responseItems.getDescription());
+
+        return item;
     }
 }

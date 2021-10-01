@@ -1013,4 +1013,61 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return response;
     }
+
+    @Override
+    public FixOrderProblemResponse fixOrderProblem(FixOrderProblemRequest request) throws InvalidRequestException {
+
+        Order order;
+        CartItem cartItem;
+        List<CartItem> cartItems;
+        String message = "Order successfully fixed";
+
+        if (request == null) {
+            throw new InvalidRequestException("FixOrderProblem request is null - could not fix order problem");
+        }
+
+        if (request.getCartItem() == null) {
+            throw new InvalidRequestException("CartItem is null in fixOrderProblem request - could not fix order problem");
+        }
+
+        if (request.getCartItems() == null) {
+            throw new InvalidRequestException("CartItems is null in fixOrderProblem request - could not fix order problem");
+        }
+
+        if (request.getCartItem().getCartItemNo() == null) {
+            throw new InvalidRequestException("CartItemNo is null in fixOrderProblem request - could not fix order");
+        }
+
+        cartItem = cartItemRepo.findById(request.getCartItem().getCartItemNo()).orElse(null);
+
+        if (cartItem == null) {
+            message = "Could not find the cart item to replace";
+            return new FixOrderProblemResponse(false, message, new Date());
+        }
+
+        cartItemRepo.delete(cartItem);
+
+        for (CartItem c : request.getCartItems()) {
+            c.setTotalCost(c.getPrice() * c.getQuantity());
+            c.setStoreID(cartItem.getStoreID());
+            c.setCartItemNo(UUID.randomUUID());
+            c.setOrderID(cartItem.getOrderID());
+        }
+
+        order = orderRepo.findById(cartItem.getOrderID()).orElse(null);
+
+        if (order == null) {
+            message = "Could not find the order the cartItem belongs to";
+            return new FixOrderProblemResponse(false, message, new Date());
+        }
+
+        cartItems = order.getCartItems();
+        cartItems.addAll(request.getCartItems());
+
+        order.setCartItems(cartItems);
+
+        orderRepo.save(order);
+
+        return new FixOrderProblemResponse(true, message, new Date());
+    }
 }
