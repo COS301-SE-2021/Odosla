@@ -58,4 +58,6 @@ public interface ShoppingService {
     SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException;
 
     GetProductByBarcodeResponse getProductByBarcode(GetProductByBarcodeRequest request) throws InvalidRequestException, ItemDoesNotExistException;
+    PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException;
+    PriceCheckAllAvailableStoresResponse priceCheckAllAvailableStores(PriceCheckAllAvailableStoresRequest request) throws InvalidRequestException;
 }
