@@ -59,4 +59,5 @@ public interface ShoppingService {
 
     GetProductByBarcodeResponse getProductByBarcode(GetProductByBarcodeRequest request) throws InvalidRequestException, ItemDoesNotExistException;
     PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException;
+    PriceCheckAllAvailableStoresResponse priceCheckAllAvailableStores(PriceCheckAllAvailableStoresRequest request) throws InvalidRequestException;
 }

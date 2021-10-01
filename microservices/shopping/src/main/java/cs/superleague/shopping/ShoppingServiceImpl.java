@@ -1,6 +1,8 @@
 package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
+import cs.superleague.payment.dataclass.CartItem;
+import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
@@ -1458,7 +1460,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
-        Store store = null;
+        Store store;
         try {
             store = storeRepo.findById(request.getOrder().getStoreID()).orElse(null);
         } catch (Exception e) {
@@ -1511,8 +1513,182 @@ public class ShoppingServiceImpl implements ShoppingService {
         if (product == null) {
             throw new ItemDoesNotExistException("The item requested does not exist in the database.");
         }
-        GetProductByBarcodeResponse response = new GetProductByBarcodeResponse(true, "The item related to the barcode and store has been returned.", product);
-        return response;
+        return new GetProductByBarcodeResponse(true, "The item related to the barcode and store has been returned.", product);
+    }
+
+    @Override
+    public PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException {
+
+        List<Item> items;
+        List<Item> cheaperItems = new ArrayList<>();
+        List<CartItem> requestCartItems = new ArrayList<>();
+        String message = "Price check successfully completed";
+
+        if (request == null) {
+            throw new InvalidRequestException("Request object can't be null - can't perform a price check");
+        }
+
+        if (request.getCartItems() == null) {
+            throw new InvalidRequestException("CartItem list in parameter request can't be null - can't perform" +
+                    " a price check");
+        }
+
+        if (request.getCartItems().size() == 0) {
+            message = "No items in CartItem List, could not perform a price check.";
+            return new PriceCheckResponse(requestCartItems, message, false);
+        }
+
+        items = itemRepo.findAll();
+
+        // stores all the cheaper items in a new list
+        for (Item item : items) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (item.getBarcode().equals(cartItem.getBarcode()) &&
+                        item.getPrice() < cartItem.getPrice()) {
+                    cheaperItems.add(item);
+                }
+            }
+        }
+
+        // removes duplicate items with higher prices
+        List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
+        for (Item item : cheaperItemsCopy) {
+            cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
+                    i.getPrice() >= item.getPrice());
+        }
+
+        requestCartItems = request.getCartItems();
+
+        // removes expensive items from the cart items list
+        for (Item item : cheaperItems) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (cartItem.getBarcode().equals(item.getBarcode())) {
+                    requestCartItems.remove(cartItem);
+                }
+            }
+        }
+
+        // inserts cheaper cart items in cartItem List
+        for (Item item : cheaperItems) {
+            requestCartItems.add(createCartItem(item));
+        }
+
+        return new PriceCheckResponse(requestCartItems, message, true);
+    }
+
+    @Override
+    public PriceCheckAllAvailableStoresResponse priceCheckAllAvailableStores(PriceCheckAllAvailableStoresRequest request) throws InvalidRequestException {
+
+        Store store;
+        UUID storeID;
+        double distance;
+        List<Item> items;
+        GeoPoint storeLocation;
+        List<Item> cheaperItems = new ArrayList<>();
+        List<CartItem> requestCartItems = new ArrayList<>();
+        String message = "Price check available stores successfully completed";
+
+        if (request == null) {
+            throw new InvalidRequestException("Request object can't be null - can't perform a price check");
+        }
+
+        if (request.getCartItems() == null) {
+            throw new InvalidRequestException("CartItem list in parameter request can't be null - can't perform" +
+                    " a price check");
+        }
+
+        if (request.getCartItems().size() == 0) {
+            message = "No items in CartItem List, could not perform a price check.";
+            return new PriceCheckAllAvailableStoresResponse(requestCartItems, message, false);
+        }
+
+        storeID = request.getCartItems().get(0).getStoreID();
+        store = storeRepo.findById(storeID).orElse(null);
+
+        if (store == null) {
+            throw new InvalidRequestException("CartItems do not contain a valid storeID, can't perform a " +
+                    "price Check");
+        }
+
+        storeLocation = store.getStoreLocation();
+
+        items = itemRepo.findAll();
+
+        // stores all the cheaper items from close by stores in a new list
+        for (Item item : items) {
+            storeID = item.getStoreID();
+            store = storeRepo.findById(storeID).orElse(null);
+
+            //disregards an item that may not have storeid
+            if (store == null) {
+                continue;
+            }
+
+            distance = getDistance(storeLocation, store.getStoreLocation());
+
+            if (distance < 10)
+                for (CartItem cartItem : request.getCartItems()) {
+                    if (item.getBarcode().equals(cartItem.getBarcode()) &&
+                            item.getPrice() < cartItem.getPrice()) {
+                        cheaperItems.add(item);
+                    }
+                }
+        }
+
+        // removes duplicate items with higher prices
+        List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
+        for (Item item : cheaperItemsCopy) {
+            cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
+                    i.getPrice() >= item.getPrice());
+        }
+
+        requestCartItems = request.getCartItems();
+
+        // removes expensive items from the cart items list
+        for (Item item : cheaperItems) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (cartItem.getBarcode().equals(item.getBarcode())) {
+                    requestCartItems.remove(cartItem);
+                }
+            }
+        }
+
+        // inserts cheaper cart items in cartItem List
+        for (Item item : cheaperItems) {
+            requestCartItems.add(createCartItem(item));
+        }
+
+        return new PriceCheckAllAvailableStoresResponse(requestCartItems, message, true);
+    }
+
+    // Helper
+    private double getDistance(GeoPoint point1, GeoPoint point2) {
+        double theta = point1.getLongitude() - point2.getLongitude();
+        double distance = Math.sin(Math.toRadians(point1.getLatitude())) * Math.sin(Math.toRadians(point2.getLatitude())) + Math.cos(Math.toRadians(point1.getLatitude())) * Math.cos(Math.toRadians(point2.getLatitude())) * Math.cos(Math.toRadians(theta));
+        distance = Math.acos(distance);
+        distance = Math.toDegrees(distance);
+        distance = distance * 60 * 1.1515 * 1.609344;
+        return distance;
+    }
+
+    private CartItem createCartItem(Item item){
+        CartItem newCartItem = new CartItem();
+
+        newCartItem.setCartItemNo(UUID.randomUUID());
+        newCartItem.setBarcode(item.getBarcode());
+        newCartItem.setBrand(item.getBrand());
+        newCartItem.setItemType(item.getItemType());
+        newCartItem.setName(item.getName());
+        newCartItem.setDescription(item.getDescription());
+        newCartItem.setImageUrl(item.getImageUrl());
+        newCartItem.setPrice(item.getPrice());
+        newCartItem.setProductID(item.getProductID());
+        newCartItem.setQuantity(item.getQuantity());
+        newCartItem.setSize(item.getSize());
+        newCartItem.setStoreID(item.getStoreID());
+        newCartItem.setTotalCost(item.getPrice() * item.getQuantity());
+
+        return newCartItem;
     }
 
 }
