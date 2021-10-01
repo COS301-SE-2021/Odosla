@@ -9,6 +9,7 @@ import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.shopping.requests.SaveItemToRepoRequest;
 import cs.superleague.shopping.responses.GetItemsByIDResponse;
+import cs.superleague.shopping.responses.GetProductByBarcodeResponse;
 import cs.superleague.user.dataclass.*;
 import cs.superleague.user.exceptions.*;
 import cs.superleague.user.repos.*;
@@ -3054,7 +3055,7 @@ public class UserServiceImpl implements UserService {
         if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getOrderID() == null || request.getAlternativeProductBarcode() == null || request.getCurrentProductBarcode() == null) {
+        if (request.getOrderID() == null || request.getCurrentProductBarcode() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
         Order orderEntity = null;
@@ -3116,7 +3117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException {
+    public GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException, ItemDoesNotExistException {
         if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
@@ -3144,14 +3145,43 @@ public class UserServiceImpl implements UserService {
                 orderEntity.setStatus(OrderStatus.PACKING);
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(orderEntity);
                 rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
-                GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
+                GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(null, null, false, "There are no problems with the order.");
                 return response;
             }
             OrdersWithProblems problem = problems.get(0);
-            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(problem.getCurrentProductBarcode(), problem.getAlternativeProductBarcode(), true, "Please resolve this problem.");
+            UUID storeID = orderEntity.getStoreID();
+            String currentProductBarcode = problem.getCurrentProductBarcode();
+            String alternativeProductBarcode = problem.getAlternativeProductBarcode();
+            parts = new HashMap<>();
+            parts.put("productBarcode", currentProductBarcode);
+            parts.put("storeID", storeID);
+            stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getProductByBarcode";
+            uri = new URI(stringUri);
+            ResponseEntity<GetProductByBarcodeResponse> itemResponse = restTemplate.postForEntity(uri, parts, GetProductByBarcodeResponse.class);
+            if (itemResponse == null || itemResponse.getBody() == null || itemResponse.getBody().getProduct() == null){
+                throw new ItemDoesNotExistException("Item not found in the database.");
+            }
+            Item currentItem = itemResponse.getBody().getProduct();
+            CartItem currentCartItem = new CartItem(currentItem.getName(), currentItem.getProductID(), currentItem.getBarcode(), orderEntity.getOrderID(), currentItem.getPrice(), 1, currentItem.getDescription(), currentItem.getImageUrl(), currentItem.getBrand(), currentItem.getSize(), currentItem.getItemType(), currentItem.getPrice(), currentItem.getStoreID());
+            if (alternativeProductBarcode == null){
+                GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(currentCartItem, null, true, "Please resolve this problem, there has been no alternative offered by the shopper.");
+                return response;
+            }
+            parts = new HashMap<>();
+            parts.put("productBarcode", alternativeProductBarcode);
+            parts.put("storeID", storeID);
+            stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getProductByBarcode";
+            uri = new URI(stringUri);
+            itemResponse = restTemplate.postForEntity(uri, parts, GetProductByBarcodeResponse.class);
+            if (itemResponse == null || itemResponse.getBody() == null || itemResponse.getBody().getProduct() == null){
+                throw new ItemDoesNotExistException("Item not found in the database.");
+            }
+            Item alternativeItem = itemResponse.getBody().getProduct();
+            CartItem alternativeCartItem = new CartItem(alternativeItem.getName(), alternativeItem.getProductID(), alternativeItem.getBarcode(), orderEntity.getOrderID(), alternativeItem.getPrice(), 1, alternativeItem.getDescription(), alternativeItem.getImageUrl(), alternativeItem.getBrand(), alternativeItem.getSize(), alternativeItem.getItemType(), alternativeItem.getPrice(), alternativeItem.getStoreID());
+            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(currentCartItem, alternativeCartItem, true, "Please resolve this problem.");
             return response;
         } else {
-            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
+            GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(null, null, false, "There are no problems with the order.");
             return response;
         }
     }
