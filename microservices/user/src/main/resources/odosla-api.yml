@@ -1893,11 +1893,44 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        currentProductBarcode:
-          type: string
-        alternativeProductBarcode:
-          type: string
+        currentProductWithProblem:
+          $ref: "#/components/schemas/CartItemObject"
+        alternativeProduct:
+          $ref: "#/components/schemas/CartItemObject"
         problem:
           type: boolean
         message:
+          type: string
+
+    CartItemObject:
+      description: "Generic schema for a cart item"
+      type: object
+      properties:
+        productId:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        orderID:
+          type: string
+        totalCost:
+          type: number
+        cartItemNo:
           type: string
