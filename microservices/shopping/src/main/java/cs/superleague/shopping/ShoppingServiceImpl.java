@@ -1554,10 +1554,10 @@ public class ShoppingServiceImpl implements ShoppingService {
         List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
         for (Item item : cheaperItemsCopy) {
             cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
-                    i.getPrice() >= item.getPrice());
+                    i.getPrice() > item.getPrice());
         }
 
-        requestCartItems = request.getCartItems();
+        requestCartItems.addAll(request.getCartItems());
 
         // removes expensive items from the cart items list
         for (Item item : cheaperItems) {
@@ -1621,28 +1621,36 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             //disregards an item that may not have storeid
             if (store == null) {
+                System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 continue;
-            }
+            }else {
 
-            distance = getDistance(storeLocation, store.getStoreLocation());
+                distance = getDistance(storeLocation, store.getStoreLocation());
 
-            if (distance < 10)
-                for (CartItem cartItem : request.getCartItems()) {
-                    if (item.getBarcode().equals(cartItem.getBarcode()) &&
-                            item.getPrice() < cartItem.getPrice()) {
-                        cheaperItems.add(item);
+                if (distance < 10) {
+                    for (CartItem cartItem : request.getCartItems()) {
+                        if (item.getBarcode().equals(cartItem.getBarcode()) &&
+                                item.getPrice() < cartItem.getPrice()) {
+                            System.out.println(item.getPrice() + " :item\n");
+                            System.out.println(cartItem.getPrice() + " :cartItem\n");
+                            cheaperItems.add(item);
+                        }
                     }
+                }else{
+                    System.out.println(storeID + " :storeID\n");
+                    System.out.println(distance + " :distance\n");
                 }
+            }
         }
 
         // removes duplicate items with higher prices
         List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
         for (Item item : cheaperItemsCopy) {
             cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
-                    i.getPrice() >= item.getPrice());
+                    i.getPrice() > item.getPrice());
         }
 
-        requestCartItems = request.getCartItems();
+        requestCartItems.addAll(request.getCartItems());
 
         // removes expensive items from the cart items list
         for (Item item : cheaperItems) {

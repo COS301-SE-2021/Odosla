@@ -276,6 +276,49 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetProductByBarcodeResponse"
 
+  /shopping/priceCheck:
+    post:
+      summary: Endpoint price Check
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: priceCheck
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PriceCheckRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PriceCheckResponse"
+
+  /shopping/priceCheckAllAvailableStores:
+    post:
+      summary: Endpoint price Check
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: priceCheckAllAvailableStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PriceCheckAllAvailableStoresRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PriceCheckAllAvailableStoresResponse"
 
 components:
 
@@ -728,3 +771,47 @@ components:
           type: string
         product:
           $ref: "#/components/schemas/ItemObject"
+
+    shopping_PriceCheckRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    shopping_PriceCheckResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        success:
+          type: boolean
+        message:
+          type: string
+
+    shopping_PriceCheckAllAvailableStoresRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    shopping_PriceCheckAllAvailableStoresResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        success:
+          type: boolean
+        message:
+          type: string

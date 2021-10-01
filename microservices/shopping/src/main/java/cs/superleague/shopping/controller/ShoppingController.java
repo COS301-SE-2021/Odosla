@@ -782,6 +782,59 @@ public class ShoppingController implements ShoppingApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingPriceCheckResponse> priceCheck(ShoppingPriceCheckRequest body) {
+
+        //creating response object and default return status:
+        ShoppingPriceCheckResponse response = new ShoppingPriceCheckResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            PriceCheckRequest req = new PriceCheckRequest(populateCartItemList(body.getCartItems()));
+            PriceCheckResponse priceCheckResponse = shoppingService.priceCheck(req);
+
+            try {
+                response.setMessage(priceCheckResponse.getMessage());
+                response.setSuccess(priceCheckResponse.getSuccess());
+                response.setCartItems(populateCartItems(priceCheckResponse.getCartItems()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<ShoppingPriceCheckAllAvailableStoresResponse> priceCheckAllAvailableStores(
+            ShoppingPriceCheckAllAvailableStoresRequest body) {
+
+        //creating response object and default return status:
+        ShoppingPriceCheckAllAvailableStoresResponse response = new ShoppingPriceCheckAllAvailableStoresResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            PriceCheckAllAvailableStoresRequest req = new PriceCheckAllAvailableStoresRequest(populateCartItemList(body.getCartItems()));
+            PriceCheckAllAvailableStoresResponse priceCheckResponse = shoppingService.priceCheckAllAvailableStores(req);
+
+            try {
+                response.setMessage(priceCheckResponse.getMessage());
+                response.setSuccess(priceCheckResponse.getSuccess());
+                response.setCartItems(populateCartItems(priceCheckResponse.getCartItems()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     private StoreObject populateStore(Store responseStore) throws NullPointerException {
 
         StoreObject responseBody = new StoreObject();
@@ -821,6 +874,35 @@ public class ShoppingController implements ShoppingApi {
             item.setName(i.getName());
             item.setStoreID(i.getStoreID().toString());
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
+
+        }
+
+        return responseBody;
+    }
+
+    private List<CartItem> populateCartItemList(List<CartItemObject> responseItems) throws NullPointerException {
+
+        List<CartItem> responseBody = new ArrayList<>();
+
+        for (CartItemObject i : responseItems) {
+
+            CartItem item = new CartItem();
+            if (i.getCartItemNo() != null) {
+                item.setCartItemNo(UUID.fromString(i.getCartItemNo()));
+            }
+            item.setProductID(i.getProductId());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setStoreID(UUID.fromString(i.getStoreID()));
+            item.setPrice(i.getPrice().doubleValue());
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());
             item.setSize(i.getSize());
