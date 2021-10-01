@@ -1621,7 +1621,6 @@ public class ShoppingServiceImpl implements ShoppingService {
 
             //disregards an item that may not have storeid
             if (store == null) {
-                System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
                 continue;
             }else {
 
@@ -1631,14 +1630,9 @@ public class ShoppingServiceImpl implements ShoppingService {
                     for (CartItem cartItem : request.getCartItems()) {
                         if (item.getBarcode().equals(cartItem.getBarcode()) &&
                                 item.getPrice() < cartItem.getPrice()) {
-                            System.out.println(item.getPrice() + " :item\n");
-                            System.out.println(cartItem.getPrice() + " :cartItem\n");
                             cheaperItems.add(item);
                         }
                     }
-                }else{
-                    System.out.println(storeID + " :storeID\n");
-                    System.out.println(distance + " :distance\n");
                 }
             }
         }
