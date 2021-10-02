@@ -1,6 +1,6 @@
 
 import 'dart:async';
-
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +34,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
   bool _completedOne = false;
   bool _completedTwo = false;
   bool _completedThree = false;
+  GeoPoint _drivingTo= GeoPoint(0,0,"");
   bool _done=false;
 
 
@@ -274,6 +275,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
             }
           }else {
             t.cancel();
+            if(_delivery.deliveryStatus=="DeliveringToCustomer" || (_isOne) || (_isTwo && _completedOne) || (_isThree && _completedTwo))
             showDialog(
               context: context,
               builder: (BuildContext context) =>
@@ -364,7 +366,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
                 _delivery.pickUpLocationTwo.longitude);
             pickUp=_delivery.pickUpLocationThree;
           }
-
+          _drivingTo=pickUp;
           DEST_LOCATION = LatLng(pickUp.latitude, pickUp.longitude);
 
         } else if (_delivery.deliveryStatus == "DeliveringToCustomer") {
@@ -380,6 +382,7 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
               pickUp.longitude);
           DEST_LOCATION = LatLng(_delivery.dropOffLocation.latitude,
               _delivery.dropOffLocation.longitude);
+          _drivingTo=_delivery.dropOffLocation;
         }
       });
       setInitialLocation();
@@ -388,105 +391,135 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
       });
     }
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Stack(
+          buildMap(context),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              buildMap(context),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                    clipBehavior: Clip.antiAlias,
-                    color:Theme.of(context).backgroundColor,
-                    shadowColor: Colors.grey,
-                    elevation: 5.0,
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 1.0,vertical: 20.0),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                height: MediaQuery.of(context).size.height*0.15,
-                                width: MediaQuery.of(context).size.width*0.43,
-                                alignment: Alignment.centerRight,
-                                child:Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      height: MediaQuery.of(context).size.height*0.06,
-                                      width: MediaQuery.of(context).size.width*0.3,
-                                      child: FittedBox(
-                                        fit: BoxFit.fitWidth,
+              SizedBox(height: 19,),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _delivery.deliveryStatus=="CollectingFromStore"||_delivery.deliveryStatus=="DeliveringToCustomer"?Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      margin: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+                      clipBehavior: Clip.antiAlias,
+                      color:Theme.of(context).backgroundColor,
+                      shadowColor: Colors.grey,
+                      elevation: 5.0,
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 1.0,vertical: 10.0),
+                          child: Row(
+                            children: <Widget>[
+                              Container(
+                                  height: MediaQuery.of(context).size.height*0.14,
+                                  width: MediaQuery.of(context).size.width*0.9,
+                                  child:Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                        _delivery.deliveryStatus=="CollectingFromStore"?Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 15.0),
+                                        child: new LinearPercentIndicator(
+                                          animation: true,
+                                          lineHeight: 20.0,
+                                          animationDuration: 2000,
+                                          percent: (_completedThree?3:_completedTwo?2:_completedOne?1:0)/(_isThree?3:_isTwo?2:1),
+                                          center: Text((_completedThree?"3":_completedTwo?"2":_completedOne?"1":"0")+(_isThree?"/3":_isTwo?"/2":"/1")),
+                                          linearStrokeCap: LinearStrokeCap.roundAll,
+                                          progressColor: Colors.greenAccent,
+                                        ),
+                                      ):Container(),
+                                      Expanded(
                                         child: Text(
                                           "Currently driving to:",
                                           style: kTitleTextStyle.copyWith(
                                             fontWeight: FontWeight.w500,
                                           ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    ),
-                                      RaisedButton(
-                                      onPressed: () async {
-                                      },
-                                      child: Text(
-                                        "START SHIFT",
-                                        style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900),
+                                      Expanded(
+                                        child: Text(
+                                            _drivingTo.address,
+                                            style: kTitleTextStyle.copyWith(
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                      color: Theme.of(context).backgroundColor,
-                                      splashColor: Colors.grey,
-                                      elevation: 5.0,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      // color: Color(0xFFFA8940),
-                                    ),
+                                      _delivery.deliveryStatus=="CollectingFromStore"?RaisedButton(
+                                        onPressed: () {
+                                          bool completed= Provider.of<DeliveryProvider>(context, listen: false).collected();
+                                          if(completed==true){
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  _popUpSuccessfulEndLocation(
+                                                      context),
+                                            );
+                                          }
+                                        },
+                                        child: Text(
+                                          "Collected",
+                                          style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900),
+                                        ),
+                                        color: Theme.of(context).backgroundColor,
+                                        splashColor: Colors.grey,
+                                        elevation: 5.0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                        // color: Color(0xFFFA8940),
+                                      ):Container(),
 
-                                  ],
-                                )
-                            ),
-                            // Container(
-                            //     height: MediaQuery.of(context).size.height*0.15,
-                            //     width: MediaQuery.of(context).size.width*0.42,
-                            //     child:Column(
-                            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            //       children: <Widget>[
-                            //         Text(
-                            //           "DRIVER",
-                            //           style: kTitleTextStyle.copyWith(
-                            //             fontWeight: FontWeight.w500,
-                            //             fontSize: kSpacingUnit.w*2,
-                            //           ),
-                            //         ),
-                            //         Container(
-                            //           height: MediaQuery.of(context).size.height*0.08,
-                            //           child:Image(
-                            //             fit: BoxFit.fill,
-                            //             image: _onShift?AssetImage('assets/gifs/deliveryTruck.gif'):AssetImage('assets/delivery/staticDeliveryTruck.png'),
-                            //           ),
-                            //         ),
-                            //         SizedBox(height: 5,),
-                            //         Text(
-                            //           _onShift?"• On Shift":"• Not on shift",
-                            //           style: kTitleTextStyle.copyWith(
-                            //             fontWeight: FontWeight.w500,
-                            //             fontSize: kSpacingUnit.w*1.5,
-                            //           ),
-                            //           textAlign: TextAlign.center,
-                            //         ),
-                            //       ],
-                            //     )
-                            // ),
+                                    ],
+                                  )
+                              ),
+                              // Container(
+                              //     height: MediaQuery.of(context).size.height*0.15,
+                              //     width: MediaQuery.of(context).size.width*0.42,
+                              //     child:Column(
+                              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //       children: <Widget>[
+                              //         Text(
+                              //           "DRIVER",
+                              //           style: kTitleTextStyle.copyWith(
+                              //             fontWeight: FontWeight.w500,
+                              //             fontSize: kSpacingUnit.w*2,
+                              //           ),
+                              //         ),
+                              //         Container(
+                              //           height: MediaQuery.of(context).size.height*0.08,
+                              //           child:Image(
+                              //             fit: BoxFit.fill,
+                              //             image: _onShift?AssetImage('assets/gifs/deliveryTruck.gif'):AssetImage('assets/delivery/staticDeliveryTruck.png'),
+                              //           ),
+                              //         ),
+                              //         SizedBox(height: 5,),
+                              //         Text(
+                              //           _onShift?"• On Shift":"• Not on shift",
+                              //           style: kTitleTextStyle.copyWith(
+                              //             fontWeight: FontWeight.w500,
+                              //             fontSize: kSpacingUnit.w*1.5,
+                              //           ),
+                              //           textAlign: TextAlign.center,
+                              //         ),
+                              //       ],
+                              //     )
+                              // ),
 
 
-                          ],
-                        )
-                    ),
-                  ),
-                ],
+                            ],
+                          )
+                      ),
+                    ):Container(),
+                  ],
+                ),
               ),
             ],
           ),

@@ -53,30 +53,43 @@ class DeliveryProvider with ChangeNotifier{
 
   set completedTwo(bool s){_completedTwo=s;notifyListeners();}
 
-  GeoPoint finishFirst(){
+  bool collected(){
+    if (_completedOne==false){
+      return this.finishFirst();
+    }
+    else if(_completedTwo==false){
+      return this.finishSecond();
+    }
+    else if(_completedThree==false){
+      return this.finishThird();
+    }
+    return false;
+  }
+
+  bool finishFirst(){
     if (this._isOneDelivery){
       _completedOne=true;
       _completed = true;
-      return GeoPoint(0.0, 0.0, "");
+      return true;
     } else{
       _completedOne=true;
-      return this.delivery.pickUpLocationTwo;
+      return false;
     }
   }
 
-  GeoPoint finishSecond(){
+  bool finishSecond(){
     if(this._isTwoDeliveries){
       _completedTwo=true;
       _completed=true;
-      return GeoPoint(0.0, 0.0, "");
+      return true;
     }else{
       _completedTwo=true;
-      return this.delivery.pickUpLocationThree;
+      return false;
     }
   }
 
-  GeoPoint finishThird(){
+  bool finishThird(){
       _completed=true;
-      return GeoPoint(0.0, 0.0, "");
+      return true;
   }
 }

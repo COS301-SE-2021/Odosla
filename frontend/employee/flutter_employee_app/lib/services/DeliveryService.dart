@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Customer.dart';
 import 'package:flutter_employee_app/models/Delivery.dart';
+import 'package:flutter_employee_app/models/GeoPoint.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/utilities/settings.dart';
 import 'package:get_it/get_it.dart';
@@ -109,6 +110,8 @@ class DeliveryService{
          print(responseData["driverID"]);
          Provider.of<DeliveryProvider>(context,listen: false).delivery.driverID=responseData["driverID"];
          return true;
+       }else if ((responseData["isAssigned"] == false)){
+         Provider.of<DeliveryProvider>(context,listen: false).delivery= new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false,new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""));
        }
      }
      return false;
