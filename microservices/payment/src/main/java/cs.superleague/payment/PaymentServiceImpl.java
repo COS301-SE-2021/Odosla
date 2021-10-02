@@ -441,7 +441,7 @@ public class PaymentServiceImpl implements PaymentService {
                         parts.put("storeID", orderOne.getStoreID().toString());
                         parts.put("timeOfDelivery", null);
                         parts.put("placeOfDelivery", orderOne.getDeliveryAddress());
-                        String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/completePackingOrderForDelivery";
+                        String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/createDelivery";
                         URI uri2 = new URI(strURL);
 
                         ResponseEntity<CreateDeliveryResponse> createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
