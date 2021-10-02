@@ -141,6 +141,12 @@ class ApiService {
               "jwtToken": Provider.of<StatusProvider>(context, listen: false)
                   .jwt, //getCurrentUser
               "listOfItems": itemsList,
+              "storeIDOne":
+                  Provider.of<CartProvider>(context, listen: false).storeIDOne,
+              "storeIDTwo":
+                  Provider.of<CartProvider>(context, listen: false).storeIDTwo,
+              "storeIDThree": Provider.of<CartProvider>(context, listen: false)
+                  .storeIDThree,
               "discount": 0,
               "storeID": "$storeID",
               "orderType": "DELIVERY",
