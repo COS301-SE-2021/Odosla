@@ -172,9 +172,21 @@ public class PaymentController implements PaymentApi {
             List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
             System.out.println("BEFORE THE CALL");
             System.out.println("Cart items list size : " + cartItemObjects.size());
+            UUID storeOneID = null;
+            if (body.getStoreIDOne() != ""){
+                storeOneID = UUID.fromString(body.getStoreIDOne());
+            }
+            UUID storeTwoID = null;
+            if (body.getStoreIDTwo() != ""){
+                storeTwoID = UUID.fromString(body.getStoreIDTwo());
+            }
+            UUID storeThreeID = null;
+            if (body.getStoreIDTwo() != ""){
+                storeThreeID = UUID.fromString(body.getStoreIDThree());
+            }
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
-                    UUID.fromString(body.getStoreIDOne()), UUID.fromString(body.getStoreIDTwo()), UUID.fromString(body.getStoreIDThree()), orderType, body.getLongitude().doubleValue(),
+                    storeOneID, storeTwoID, storeThreeID, orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             System.out.println("AFTER THE CALL");
