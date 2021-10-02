@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -378,6 +379,12 @@ public class DeliveryController implements DeliveryApi {
         DeliveryGetDeliveryByUUIDResponse response = new DeliveryGetDeliveryByUUIDResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetDeliveryByUUIDRequest getDeliveryByUUIDRequest = new GetDeliveryByUUIDRequest(UUID.fromString(body.getDeliveryID()));
             GetDeliveryByUUIDResponse getDeliveryByUUIDResponse = deliveryService.getDeliveryByUUID(getDeliveryByUUIDRequest);
 
@@ -434,7 +441,7 @@ public class DeliveryController implements DeliveryApi {
 
             response.setDeliveryEntity(deliveryObject);
             response.setMessage(getDeliveryByUUIDResponse.getMessage());
-            response.setTimestamp(getDeliveryByUUIDResponse.getTimestamp().toString());
+            response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getDeliveryByUUIDResponse.getTimestamp()));
 
         }catch (Exception e){
             e.printStackTrace();

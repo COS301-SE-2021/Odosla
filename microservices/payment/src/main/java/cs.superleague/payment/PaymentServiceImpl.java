@@ -378,6 +378,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (orderOne != null) {
                 if (shopOne.getStore().getOpen() == true) {
+                    UUID deliveryID = null;
                     if (orderRepo != null) {
                         orderRepo.save(orderOne);
                         if (request.getStoreIDTwo() != null){
@@ -447,6 +448,9 @@ public class PaymentServiceImpl implements PaymentService {
                         ResponseEntity<CreateDeliveryResponse> createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
                         CreateDeliveryResponse createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
 
+                        if (createDeliveryResponse != null) {
+                            deliveryID = createDeliveryResponse.getDeliveryID();
+                        }
                         if (request.getStoreIDTwo() != null){
                             orderRepo.save(orderTwo);
                             parts = new HashMap<>();
@@ -480,6 +484,8 @@ public class PaymentServiceImpl implements PaymentService {
                         rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
                     UUID finalOrderOneID = orderOneID;
+                    UUID finalOrderTwoID = orderTwoID;
+                    UUID finalOrderThreeID = orderThreeID;
                     if (request.getStoreIDTwo() == null){
                         orderTwo = null;
                     }
@@ -489,9 +495,23 @@ public class PaymentServiceImpl implements PaymentService {
                     Order finalOrderTwo = orderTwo;
                     Order finalOrderThree = orderThree;
                     new Thread(() -> {
-                        CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderOneID);
+                        CreateTransactionRequest createTransactionRequest1 = new CreateTransactionRequest(finalOrderOneID);
+                        CreateTransactionRequest createTransactionRequest2 = null;
+                        CreateTransactionRequest createTransactionRequest3 = null;
+                        if (request.getStoreIDTwo() != null){
+                            createTransactionRequest2 = new CreateTransactionRequest(finalOrderTwoID);
+                        }
+                        if (request.getStoreIDThree() != null){
+                            createTransactionRequest3 = new CreateTransactionRequest(finalOrderThreeID);
+                        }
                         try {
-                            CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                            CreateTransactionResponse createTransactionResponse1 = createTransaction(createTransactionRequest1);
+                            if (request.getStoreIDTwo() != null){
+                                CreateTransactionResponse createTransactionResponse2 = createTransaction(createTransactionRequest2);
+                            }
+                            if (request.getStoreIDThree() != null){
+                                CreateTransactionResponse createTransactionResponse3 = createTransaction(createTransactionRequest3);
+                            }
                         } catch (PaymentException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
@@ -509,7 +529,7 @@ public class PaymentServiceImpl implements PaymentService {
                             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                         }
                     }).start();
-                    response = new SubmitOrderResponse(orderOne, orderTwo, orderThree, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                    response = new SubmitOrderResponse(orderOne, orderTwo, orderThree, true, Calendar.getInstance().getTime(), "Order successfully created.", deliveryID);
                 } else {
                     throw new InvalidRequestException("Store is currently closed - could not create order");
                 }
