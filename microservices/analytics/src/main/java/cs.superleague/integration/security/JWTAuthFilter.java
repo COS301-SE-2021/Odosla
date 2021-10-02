@@ -41,13 +41,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 } else {
                     SecurityContextHolder.clearContext();
                 }
-            }else {
+            } else {
                 SecurityContextHolder.clearContext();
             }
             chain.doFilter(request, response);
         } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
             return;
         }
     }
@@ -55,7 +55,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private Claims validateToken(HttpServletRequest request) {
         System.out.println("HEADERTIDDIES: " + HEADER);
         System.out.println("PREFIXTIDDIES: " + PREFIX);
-        System.out.println("SECRETTIDDIES: " +SECRET);
+        System.out.println("SECRETTIDDIES: " + SECRET);
         String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
         return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
     }
@@ -68,13 +68,13 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private void setUpSpringAuthentication(Claims claims) {
         @SuppressWarnings("unchecked")
         List<String> authorities = (List) claims.get("authorities");
-        String userType= (String) claims.get("userType");
+        String userType = (String) claims.get("userType");
         String email = (String) claims.get("email");
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-        HashMap<String, Object> info=new HashMap<String, Object>();
-        info.put("userType",userType);
-        info.put("email",email);
+        HashMap<String, Object> info = new HashMap<String, Object>();
+        info.put("userType", userType);
+        info.put("email", email);
         auth.setDetails(info);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -82,9 +82,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
         String authenticationHeader = request.getHeader(HEADER);
-        if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
-            return false;
-        return true;
+        return authenticationHeader != null && authenticationHeader.startsWith(PREFIX);
     }
 
 }

@@ -29,6 +29,6 @@ public class UpdateShopperDetailsResponse {
         this.message = message;
         this.success = success;
         this.timestamp = timestamp;
-        this.jwtToken=jwtToken;
+        this.jwtToken = jwtToken;
     }
 }

@@ -9,29 +9,39 @@ import java.util.UUID;
 
 public class SubmitOrderRequest {
 
-    /** attrbiutes */
-    private List<CartItem> listOfItems;
-    private Double discount;
-    private UUID storeID;
-    private OrderType orderType;
-    private Double longitude;
-    private Double latitude;
-    private String address;
-
-    /** constructor
-     * @param listOfItems - list of items in the order of object type Item
-     * @param discount - the amount of the discount
-     * @param storeID - the store id of where the order will be placed
-     * @param orderType - the type of order it is, whether it is a cs.superleague.delivery or collection
+    /**
+     * attrbiutes
      */
-    public SubmitOrderRequest(List<CartItem> listOfItems, Double discount, UUID storeID, OrderType orderType, Double longitude, Double latitude, String address) {
+    private final List<CartItem> listOfItems;
+    private final Double discount;
+    private final UUID storeIDOne;
+    private final UUID storeIDTwo;
+    private final UUID storeIDThree;
+    private final OrderType orderType;
+    private final Double longitude;
+    private final Double latitude;
+    private final String address;
+
+    /**
+     * constructor
+     *
+     * @param listOfItems - list of items in the order of object type Item
+     * @param discount    - the amount of the discount
+     * @param storeIDOne  - the store id of the first store where the order will be placed
+     * @param storeIDTwo  - the store id of the second store where the order will be placed
+     * @param storeIDThree- the store id of the third store where the order will be placed
+     * @param orderType   - the type of order it is, whether it is a cs.superleague.delivery or collection
+     */
+    public SubmitOrderRequest(List<CartItem> listOfItems, Double discount, UUID storeIDOne, UUID storeIDTwo, UUID storeIDThree, OrderType orderType, Double longitude, Double latitude, String address) {
         this.listOfItems = listOfItems;
         this.discount = discount;
-        this.storeID = storeID;
+        this.storeIDOne = storeIDOne;
+        this.storeIDTwo = storeIDTwo;
+        this.storeIDThree = storeIDThree;
         this.orderType = orderType;
-        this.latitude=latitude;
-        this.longitude=longitude;
-        this.address=address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
     }
 
     /* getters */
@@ -45,8 +55,16 @@ public class SubmitOrderRequest {
         return discount;
     }
 
-    public UUID getStoreID() {
-        return storeID;
+    public UUID getStoreIDOne() {
+        return storeIDOne;
+    }
+
+    public UUID getStoreIDTwo() {
+        return storeIDTwo;
+    }
+
+    public UUID getStoreIDThree() {
+        return storeIDThree;
     }
 
     public OrderType getOrderType() {

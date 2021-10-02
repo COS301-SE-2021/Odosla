@@ -9,7 +9,7 @@ public class UpdateDriverDetailsRequest {
     private String email;
     private String password;
     private String phoneNumber;
-    private String currentPassword;
+    private final String currentPassword;
 
     public UpdateDriverDetailsRequest(String name, String surname, String email, String password, String phoneNumber, String currentPassword) {
         this.name = name;

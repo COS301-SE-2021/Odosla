@@ -39,13 +39,13 @@ components:
       description: "Generic schema for an item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -61,6 +61,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     recommendation_getCartRecommendationRequest:
       description: This object is expected as input
@@ -70,6 +72,8 @@ components:
           type: array
           items:
             type: string
+        storeID:
+          type: string
 
     recommendation_getCartRecommendationResponse:
       description: This object is returned as output
@@ -88,13 +92,13 @@ components:
       description: "Generic schema for a cart item"
       type: object
       properties:
-        productId:
+        productID:
           type: string
         name:
           type: string
         barcode:
           type: string
-        storeId:
+        storeID:
           type: string
         price:
           type: number
@@ -110,7 +114,7 @@ components:
           type: string
         itemType:
           type: string
-        orderId:
+        orderID:
           type: string
         totalCost:
           type: number

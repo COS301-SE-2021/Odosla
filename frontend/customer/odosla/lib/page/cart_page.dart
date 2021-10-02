@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:odosla/model/cart_item.dart';
 import 'package:odosla/page/wallet_page.dart';
 import 'package:odosla/provider/cart_provider.dart';
-import 'package:odosla/provider/recommendations_provider.dart';
 import 'package:odosla/provider/wallet_provider.dart';
 import 'package:odosla/services/UserService.dart';
 import 'package:odosla/services/api_service.dart';

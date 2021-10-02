@@ -10,16 +10,15 @@ public class GetCatalogueResponse {
 
     Catalogue catalogue;
     String message;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     Date timestamp;
     UUID storeID;
 
-    public GetCatalogueResponse(UUID storeID, Catalogue catalogue, Date timestamp, String message)
-    {
-        this.catalogue= catalogue;
+    public GetCatalogueResponse(UUID storeID, Catalogue catalogue, Date timestamp, String message) {
+        this.catalogue = catalogue;
         this.message = message;
         this.timestamp = timestamp;
-        this.storeID=storeID;
+        this.storeID = storeID;
     }
 
     /*

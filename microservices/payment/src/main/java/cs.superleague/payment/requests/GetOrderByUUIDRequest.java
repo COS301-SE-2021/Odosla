@@ -4,10 +4,9 @@ import java.util.UUID;
 
 public class GetOrderByUUIDRequest {
 
-    private UUID orderID;
+    private final UUID orderID;
 
-    public GetOrderByUUIDRequest(UUID orderID)
-    {
+    public GetOrderByUUIDRequest(UUID orderID) {
         this.orderID = orderID;
     }
 

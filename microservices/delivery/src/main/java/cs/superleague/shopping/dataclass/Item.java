@@ -21,6 +21,7 @@ public class Item {
     private String brand;
     private String size;
     private String itemType;
+    private boolean soldOut;
 
     public Item(){ }
 
@@ -135,5 +136,13 @@ public class Item {
 
     public void setItemType(String itemType) {
         this.itemType = itemType;
+    }
+
+    public boolean isSoldOut() {
+        return soldOut;
+    }
+
+    public void setSoldOut(boolean soldOut) {
+        this.soldOut = soldOut;
     }
 }

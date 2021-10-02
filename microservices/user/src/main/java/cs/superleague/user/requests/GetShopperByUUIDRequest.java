@@ -3,7 +3,7 @@ package cs.superleague.user.requests;
 import java.util.UUID;
 
 public class GetShopperByUUIDRequest {
-    private UUID userID;
+    private final UUID userID;
 
     public GetShopperByUUIDRequest(UUID userID) {
         this.userID = userID;

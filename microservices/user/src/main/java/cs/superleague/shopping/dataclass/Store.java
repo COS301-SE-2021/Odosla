@@ -2,10 +2,10 @@ package cs.superleague.shopping.dataclass;
 
 import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.user.dataclass.Shopper;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import cs.superleague.user.dataclass.Shopper;
 
 import javax.persistence.*;
 import java.util.List;
@@ -156,20 +156,20 @@ public class Store {
         isOpen = open;
     }
 
-    public int getOpeningTime() {
-        return openingTime;
-    }
-
     public void setOpeningTime(int openingTime) {
         this.openingTime = openingTime;
     }
 
-    public int getClosingTime() {
-        return closingTime;
+    public int getOpeningTime() {
+        return openingTime;
     }
 
     public void setClosingTime(int closingTime) {
         this.closingTime = closingTime;
+    }
+
+    public int getClosingTime() {
+        return closingTime;
     }
 
     public GeoPoint getStoreLocation() {

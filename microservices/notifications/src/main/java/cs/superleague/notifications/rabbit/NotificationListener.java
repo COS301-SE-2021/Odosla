@@ -26,7 +26,7 @@ public class NotificationListener implements MessageListener {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
             Object o = in.readObject();
 
-            if(o instanceof SendDirectEmailNotificationRequest) {
+            if (o instanceof SendDirectEmailNotificationRequest) {
                 request = (SendDirectEmailNotificationRequest) o;
                 notificationService.sendDirectEmailNotification(request);
             }

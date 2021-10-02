@@ -8,7 +8,7 @@ public class SaveCatalogueToRepoRequest implements Serializable {
 
     private Catalogue catalogue;
 
-    public SaveCatalogueToRepoRequest(Catalogue catalogue){
+    public SaveCatalogueToRepoRequest(Catalogue catalogue) {
         this.catalogue = catalogue;
     }
 

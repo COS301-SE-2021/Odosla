@@ -1,4 +1,5 @@
 package cs.superleague.payment;
+
 import cs.superleague.payment.exceptions.InvalidRequestException;
 import cs.superleague.payment.exceptions.NotAuthorisedException;
 import cs.superleague.payment.exceptions.OrderDoesNotExist;
@@ -6,13 +7,14 @@ import cs.superleague.payment.exceptions.PaymentException;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 
 public interface PaymentService {
 
     // ORDER
 
-    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException;
+    SubmitOrderResponse submitOrder(SubmitOrderRequest request) throws PaymentException, InterruptedException, URISyntaxException, UnsupportedEncodingException;
 
     CancelOrderResponse cancelOrder(CancelOrderRequest req) throws InvalidRequestException, OrderDoesNotExist, NotAuthorisedException, URISyntaxException;
 
@@ -32,7 +34,7 @@ public interface PaymentService {
 
     VerifyPaymentResponse verifyPayment(VerifyPaymentRequest request) throws PaymentException, InterruptedException;
 
-    ReverseTransactionResponse  reverseTransaction(ReverseTransactionRequest request);
+    ReverseTransactionResponse reverseTransaction(ReverseTransactionRequest request);
 
 
     // INVOICE
@@ -52,4 +54,6 @@ public interface PaymentService {
     GetAllCartItemsResponse getAllCartItems(GetAllCartItemsRequest request) throws InvalidRequestException;
 
     GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException;
+
+    FixOrderProblemResponse fixOrderProblem(FixOrderProblemRequest request) throws InvalidRequestException, URISyntaxException;
 }

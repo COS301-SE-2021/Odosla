@@ -1,6 +1,6 @@
 package cs.superleague.delivery.exceptions;
 
-public class InvalidRequestException extends DeliveryException{
+public class InvalidRequestException extends DeliveryException {
     /**
      * Constructs a new exception with the specified detail message.  The
      * cause is not initialized, and may subsequently be initialized by

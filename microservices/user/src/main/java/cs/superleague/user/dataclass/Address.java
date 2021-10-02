@@ -1,4 +1,5 @@
 package cs.superleague.user.dataclass;
+
 import cs.superleague.payment.dataclass.GeoPoint;
 
 public class Address {

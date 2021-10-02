@@ -15,7 +15,7 @@ public class Admin extends User {
 
 
     public Admin(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID adminID) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
         this.adminID = adminID;
     }
 

@@ -6,17 +6,20 @@ import java.util.Date;
 
 public class ClearShoppersResponse {
 
-    /** attributes */
+    /**
+     * attributes
+     */
     private final boolean success;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
-    /** constructor
+    /**
+     * constructor
      *
-     * @param success - whether all shoppers were successfully cleared
+     * @param success   - whether all shoppers were successfully cleared
      * @param timestamp - timestamp the response was created
-     * @param message - message associated with response
+     * @param message   - message associated with response
      */
     public ClearShoppersResponse(boolean success, Date timestamp, String message) {
         this.success = success;
@@ -24,7 +27,9 @@ public class ClearShoppersResponse {
         this.message = message;
     }
 
-    /** getter */
+    /**
+     * getter
+     */
     public boolean isSuccess() {
         return success;
     }

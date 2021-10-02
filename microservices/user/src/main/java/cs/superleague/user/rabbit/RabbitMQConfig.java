@@ -30,7 +30,7 @@ public class RabbitMQConfig {
     // EXCHANGE
     //
     @Bean
-    Exchange UserExchange(){
+    Exchange UserExchange() {
         return ExchangeBuilder.directExchange("UserEXCHANGE")
                 .durable(true)
                 .build();
@@ -49,11 +49,16 @@ public class RabbitMQConfig {
         return new Queue("Q_SaveShopperToRepo", true);
     }
 
+    @Bean
+    Queue RemoveProblemFromRepoQueue() {
+        return new Queue("Q_RemoveProblemFromRepo", true);
+    }
+
     //
     // BINDING
     //
     @Bean
-    Binding SaveDriverToRepoBinding(){
+    Binding SaveDriverToRepoBinding() {
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
                 .bind(SaveDriverToRepoQueue())
@@ -63,7 +68,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    Binding SaveShopperToRepoBinding(){
+    Binding SaveShopperToRepoBinding() {
         //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
         return BindingBuilder
                 .bind(SaveDriverToRepoQueue())
@@ -72,11 +77,21 @@ public class RabbitMQConfig {
                 .noargs();
     }
 
+    @Bean
+    Binding RemoveProblemFromRepoBinding() {
+        //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
+        return BindingBuilder
+                .bind(RemoveProblemFromRepoQueue())
+                .to(UserExchange())
+                .with("RK_RemoveProblemFromRepo")
+                .noargs();
+    }
+
     //
     // FACTORY
     //
     @Bean
-    ConnectionFactory connectionFactory(){
+    ConnectionFactory connectionFactory() {
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(hostName);
         cachingConnectionFactory.setUsername(username);
         cachingConnectionFactory.setPassword(password);
@@ -88,10 +103,10 @@ public class RabbitMQConfig {
     // LISTENER
     //
     @Bean
-    MessageListenerContainer messageListenerContainer(){
+    MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue(), RemoveProblemFromRepoQueue());                                               // <------- add all queues to listen to here
         simpleMessageListenerContainer.setMessageListener(new UserListener(userService));
         return simpleMessageListenerContainer;
     }

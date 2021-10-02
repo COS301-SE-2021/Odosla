@@ -79,7 +79,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
             new AntPathRequestMatcher("/shopping/populateTables"),
             //remove later
             new AntPathRequestMatcher("/notification/sendDirectEmailNotification"),
-            new AntPathRequestMatcher("/user/getDriverByUUID")
+            new AntPathRequestMatcher("/user/getDriverByUUID"),
+            new AntPathRequestMatcher("/delivery/createDelivery"),
+            new AntPathRequestMatcher("/delivery/completePackingOrderForDelivery")
     );
 
     @Override

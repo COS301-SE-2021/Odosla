@@ -1,6 +1,5 @@
 package cs.superleague.user.dataclass;
 
-import cs.superleague.user.dataclass.Category;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 

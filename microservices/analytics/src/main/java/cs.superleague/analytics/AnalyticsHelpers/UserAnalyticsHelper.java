@@ -8,9 +8,6 @@ import cs.superleague.analytics.exceptions.AnalyticsException;
 import cs.superleague.user.dataclass.Driver;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -18,16 +15,16 @@ public class UserAnalyticsHelper {
 
     private final HashMap<String, Object> data;
 
-    public UserAnalyticsHelper(HashMap<String, Object> data){
-        this. data = data;
+    public UserAnalyticsHelper(HashMap<String, Object> data) {
+        this.data = data;
     }
 
-    public byte[] createPDF() throws Exception{
+    public byte[] createPDF() throws Exception {
 
         Document document = new Document();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         PdfWriter.getInstance(document, byteArrayOutputStream);
-        try{
+        try {
             document.open();
 
             Paragraph Title = new Paragraph("Odosla", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
@@ -66,12 +63,12 @@ public class UserAnalyticsHelper {
             cl = new PdfPCell(new Phrase("Rating", FontFactory.getFont(FontFactory.TIMES, 12, Font.BOLD)));
             table.addCell(cl);
             Driver[] topDrivers;
-            topDrivers =  (Driver[]) data.get("top10Drivers");
+            topDrivers = (Driver[]) data.get("top10Drivers");
 
             for (int i = 0; i < topDrivers.length; i++) {
                 table.addCell(String.valueOf(i + 1));
 
-                if(topDrivers[0] != null) {
+                if (topDrivers[0] != null) {
                     table.addCell(String.valueOf(topDrivers[i].getEmail()));
                     table.addCell(String.valueOf(topDrivers[i].getRating()));
                 }
@@ -83,7 +80,7 @@ public class UserAnalyticsHelper {
             table1.setWidths(new int[]{2, 5});
             table1.setWidthPercentage(100);
             table1.addCell(new Paragraph("Reporting Period", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
-            table1.addCell(data.get("startDate")+"   -   "+ data.get("endDate"));
+            table1.addCell(data.get("startDate") + "   -   " + data.get("endDate"));
             table1.addCell(new Paragraph("Total Number Of Users", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
             table1.addCell(String.valueOf(data.get("totalNum_Users")));
             table1.addCell(new Paragraph("Total Number Of Admins", FontFactory.getFont(FontFactory.TIMES, 13, Font.BOLD)));
@@ -109,7 +106,7 @@ public class UserAnalyticsHelper {
 
             System.out.println("Report Complete!");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new AnalyticsException("Problem with creating PDF ", e);
         }
         byte[] pdfBytes = byteArrayOutputStream.toByteArray();
@@ -157,7 +154,7 @@ public class UserAnalyticsHelper {
             System.out.println("finished");
 
             return sb;
-        } catch ( Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

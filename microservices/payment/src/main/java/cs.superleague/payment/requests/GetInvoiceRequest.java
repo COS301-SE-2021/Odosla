@@ -5,7 +5,9 @@ import java.util.UUID;
 
 public class GetInvoiceRequest {
 
-    /** ATTRIBUTES */
+    /**
+     * ATTRIBUTES
+     */
     private final UUID invoiceID;
     private final UUID userID;
 

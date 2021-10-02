@@ -5,11 +5,7 @@ import cs.superleague.user.dataclass.Driver;
 import java.io.Serializable;
 
 public class SaveDriverToRepoRequest implements Serializable {
-    private final Driver driver;
-
-    public SaveDriverToRepoRequest() {
-        this.driver = null;
-    }
+    private Driver driver;
 
     public SaveDriverToRepoRequest(Driver driver) {
         this.driver = driver;
@@ -17,5 +13,9 @@ public class SaveDriverToRepoRequest implements Serializable {
 
     public Driver getDriver() {
         return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
     }
 }

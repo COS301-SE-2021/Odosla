@@ -4,18 +4,23 @@ import java.util.UUID;
 
 public class CancelOrderRequest {
 
-    /** attributes */
+    /**
+     * attributes
+     */
     private UUID orderID;
 
-    /** constructor
+    /**
+     * constructor
      *
      * @param orderID - orderId that needs to be cancelled
      */
-    public CancelOrderRequest(UUID orderID){
+    public CancelOrderRequest(UUID orderID) {
         this.orderID = orderID;
     }
 
-    /** getters */
+    /**
+     * getters
+     */
     public UUID getOrderID() {
         return orderID;
     }
