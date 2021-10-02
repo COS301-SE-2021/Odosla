@@ -3058,7 +3058,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException {
+    public ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException, CustomerDoesNotExistException {
+
+        Customer customer;
+        GetCustomerByUUIDRequest getCustomerByUUIDRequest;
+        GetCustomerByUUIDResponse getCustomerByUUIDResponse;
+
         if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
@@ -3095,9 +3100,9 @@ public class UserServiceImpl implements UserService {
                 productID = cartItem.getProductID();
             }
         }
-        if (itemInCartStill == false) {
-            ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item no longer in cart, the issue has been fixed.", false);
-            return response;
+
+        if (!itemInCartStill) {
+            return new ItemNotAvailableResponse("Item no longer in cart, the issue has been fixed.", false);
         }
         parts = new HashMap<>();
         List<String> itemProductID = new ArrayList<>();
@@ -3109,6 +3114,7 @@ public class UserServiceImpl implements UserService {
         if (itemResponse == null || itemResponse.getBody() == null){
             throw new ItemDoesNotExistException("Item not found in database.");
         }
+
         List<Item> singleItem = itemResponse.getBody().getItems();
         Item item = singleItem.get(0);
         item.setSoldOut(true);
@@ -3119,8 +3125,29 @@ public class UserServiceImpl implements UserService {
         orderEntity.setStatus(OrderStatus.PROBLEM);
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(orderEntity);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
-        ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item issue has been made aware to customer.", true);
-        return response;
+
+        getCustomerByUUIDRequest = new GetCustomerByUUIDRequest(orderEntity.getUserID());
+
+        getCustomerByUUIDResponse = getCustomerByUUID(getCustomerByUUIDRequest);
+
+        if(getCustomerByUUIDResponse == null || getCustomerByUUIDResponse.getCustomer() == null){
+            throw new CustomerDoesNotExistException("Customer with given userID does not exist");
+        }
+
+        customer = getCustomerByUUIDResponse.getCustomer();
+
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("Subject", "Order updates");
+        properties.put("Email", customer.getEmail());
+
+        parts = new HashMap<>();
+        parts.put("message", "Dear " + customer.getName() + "\n\n" + "Your attention is required in the "
+        + "Odosla app, please login to interact accordingly. \n\n" + "Regards\n" +
+                "The Odosla Team\n");
+        parts.put("properties", properties);
+        ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://" + notificationHost + ":" + notificationPort + "/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
+
+        return new ItemNotAvailableResponse("Item issue has been made aware to customer.", true);
     }
 
     @Override
