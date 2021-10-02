@@ -872,7 +872,8 @@ public class ShoppingController implements ShoppingApi {
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
-            ItemIsInStockRequest req = new ItemIsInStockRequest(body.getBarcode(), UUID.fromString(body.getStoreID()));
+            ItemIsInStockRequest req = new ItemIsInStockRequest(body.getBarcode(),
+                    UUID.fromString(body.getStoreID()), body.isOutOfStock());
             ItemIsInStockResponse itemIsInStockResponse = shoppingService.itemIsInStock(req);
 
             try {

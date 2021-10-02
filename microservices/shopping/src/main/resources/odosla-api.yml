@@ -894,6 +894,8 @@ components:
           type: string
         storeID:
           type: string
+        outOfStock:
+          type: boolean
 
     shopping_ItemIsInStockResponse:
       description: This object is returned as output

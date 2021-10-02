@@ -1737,7 +1737,7 @@ public class ShoppingServiceImpl implements ShoppingService {
 
         List<Item> items;
         boolean success = false;
-        String message = "Item updated to in stock";
+        String message = "Item updated to";
 
         if (request == null) {
             throw new InvalidRequestException("Null ItemIsInStock request object");
@@ -1761,7 +1761,15 @@ public class ShoppingServiceImpl implements ShoppingService {
         for (Item item : items) {
             if (item.getBarcode().equals(request.getBarcode()) && item.getStoreID()
                     .equals(request.getStoreID())) {
-                item.setSoldOut(false);
+
+                if(request.isOutOfStock()){
+                    message = message + " out of stock";
+                    item.setSoldOut(true);
+                }else {
+                    message = message + " in stock";
+                    item.setSoldOut(false);
+                }
+
                 itemRepo.save(item);
                 success = true;
                 break;
