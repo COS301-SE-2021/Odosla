@@ -13,10 +13,12 @@ import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.responses.GetItemsByIDResponse;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,7 +53,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
 
     @Override
-    public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException {
+    public GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException, ItemDoesNotExistException {
         if (request == null) {
             throw new InvalidRequestException("No request object specified, need storeID to make recommendations.");
         }
@@ -59,10 +61,10 @@ public class RecommendationServiceImpl implements RecommendationService {
             throw new InvalidRequestException("Need StoreID to make recommendations.");
         }
         if (request.getItemIDs() == null) {
-            return getRandomRecommendations("Null item list.", request.getStoreID());
+            return getRandomRecommendations("Null item list.", request.getStoreID(), new ArrayList<>());
         }
         if (request.getItemIDs().size() == 0) {
-            return getRandomRecommendations("No items in item list.", request.getStoreID());
+            return getRandomRecommendations("No items in item list.", request.getStoreID(), new ArrayList<>());
         }
         if (recommendationRepo != null) {
             List<UUID> orderIDs = new ArrayList<>();
@@ -81,54 +83,94 @@ public class RecommendationServiceImpl implements RecommendationService {
                 }
             }
             if (orderIDs.size() == 0) {
-                return getRandomRecommendations("None of these items have been bought before.", request.getStoreID());
+                return getRandomRecommendations("None of these items have been bought before.", request.getStoreID(), request.getItemIDs());
             }
             List<Order> finalRecommendation = new ArrayList<>();
+            List<String> productsToRecommend = new ArrayList<>();
+            List<Integer> frequencyOfItems = new ArrayList<>();
             for (Integer frequency : frequencyOfOrders) {
                 if (frequency >= request.getItemIDs().size() / 2) {
-
-                    Map<String, Object> parts = new HashMap<>();
-                    parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
-                    String stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
-                    URI uri = new URI(stringUri);
-                    ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
-                            uri, parts, GetOrderByUUIDResponse.class);
-
-                    Order order = null;
-                    if (responseEntity.getBody() != null) {
-                        order = responseEntity.getBody().getOrder();
-                    }
-
-                    if (responseEntity == null || !responseEntity.hasBody() ||
-                            responseEntity.getBody() == null || responseEntity.getBody().getOrder() == null) {
-                        return getRandomRecommendations("Could not Retrieve Orders", request.getStoreID());
-                    }
-
-                    if (order != null) {
-                        finalRecommendation.add(order);
+//
+//                    Map<String, Object> parts = new HashMap<>();
+//                    parts.put("orderID", orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+//                    String stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
+//                    URI uri = new URI(stringUri);
+//                    ResponseEntity<GetOrderByUUIDResponse> responseEntity = restTemplate.postForEntity(
+//                            uri, parts, GetOrderByUUIDResponse.class);
+//
+//                    Order order = null;
+//                    if (responseEntity.getBody() != null) {
+//                        order = responseEntity.getBody().getOrder();
+//                    }
+//
+//                    if (responseEntity == null || !responseEntity.hasBody() ||
+//                            responseEntity.getBody() == null || responseEntity.getBody().getOrder() == null) {
+//                        return getRandomRecommendations("Could not Retrieve Orders", request.getStoreID(), request.getItemIDs());
+//                    }
+//
+//                    if (order != null) {
+//                        finalRecommendation.add(order);
+//                    }
+                    List<Recommendation> recommendationList = recommendationRepo.findRecommendationByOrderID(orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+                    for (Recommendation recommendation : recommendationList){
+                        if (productsToRecommend.contains(recommendation.getProductID())){
+                            frequencyOfItems.set(productsToRecommend.indexOf(recommendation.getProductID()), (frequencyOfItems.get(productsToRecommend.indexOf(recommendation.getProductID())) + 1));
+                        } else{
+                            frequencyOfItems.add(1);
+                            productsToRecommend.add(recommendation.getProductID());
+                        }
                     }
                 }
             }
             List<CartItem> finalItemsRecommendation = new ArrayList<>();
-            for (Order orders : finalRecommendation) {
-                for (CartItem item : orders.getCartItems()) {
-                    if (request.getItemIDs().contains(item.getProductID())) {
-                        continue;
-                    }
-                    if (finalItemsRecommendation.contains(item)) {
-                        continue;
-                    }
-                    finalItemsRecommendation.add(item);
-                    if (finalItemsRecommendation.size() == 3) {
-                        break;
-                    }
+//            for (Order orders : finalRecommendation) {
+//                for (CartItem item : orders.getCartItems()) {
+//                    if (request.getItemIDs().contains(item.getProductID())) {
+//                        continue;
+//                    }
+//                    if (finalItemsRecommendation.contains(item)) {
+//                        continue;
+//                    }
+//                    if (item.getStoreID().compareTo(request.getStoreID()) != 0){
+//                        continue;
+//                    }
+//                    finalItemsRecommendation.add(item);
+//                    if (finalItemsRecommendation.size() == 3) {
+//                        break;
+//                    }
+//                }
+//            }
+            int highestFrequency = Collections.max(frequencyOfItems);
+            List<String> bestRecommendations = new ArrayList<>();
+            for (Integer frequency : frequencyOfItems){
+                if (frequency == null){
+                    continue;
+                }
+                if (frequency == highestFrequency){
+                    bestRecommendations.add(productsToRecommend.get(frequencyOfItems.indexOf(frequency)));
+                    frequencyOfItems.set(frequencyOfItems.indexOf(frequency), null);
+                }
+            }
+            Map<String, Object> parts = new HashMap<>();
+            parts.put("itemIDs", bestRecommendations);
+            String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItemsByID";
+            URI uri = new URI(stringUri);
+            ResponseEntity<GetItemsByIDResponse> itemResponse = restTemplate.postForEntity(uri, parts, GetItemsByIDResponse.class);
+            if (itemResponse == null || itemResponse.getBody() == null){
+                throw new ItemDoesNotExistException("Item not found in database.");
+            }
+            List<Item> finalItems = itemResponse.getBody().getItems();
+            for (Item item : finalItems){
+                if (item.getStoreID().compareTo(request.getStoreID()) == 0){
+                    CartItem cartItem = new CartItem(item.getName(), item.getProductID(), item.getBarcode(), null, item.getPrice(), 1, item.getDescription(), item.getImageUrl(), item.getBrand(), item.getSize(), item.getItemType(), item.getPrice(), item.getStoreID());
+                    finalItemsRecommendation.add(cartItem);
                 }
             }
             if (finalItemsRecommendation.size() == 0) {
-                return getRandomRecommendations("There are no orders that have all the requested items in them.", request.getStoreID());
+                return getRandomRecommendations("There are no orders that have all the requested items in them.", request.getStoreID(), request.getItemIDs());
             }
             while (finalItemsRecommendation.size() < 3){
-                GetCartRecommendationResponse getCartRecommendationResponse = getRandomRecommendations("", request.getStoreID());
+                GetCartRecommendationResponse getCartRecommendationResponse = getRandomRecommendations("", request.getStoreID(), request.getItemIDs());
                 for (CartItem item : getCartRecommendationResponse.getRecommendations()){
                     if (finalItemsRecommendation.size() == 3){
                         break;
@@ -142,7 +184,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
         } else {
-            return getRandomRecommendations("No recommendation repository found.", request.getStoreID());
+            return getRandomRecommendations("No recommendation repository found.", request.getStoreID(), request.getItemIDs());
         }
     }
 
@@ -185,21 +227,13 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     // Helper/s
 
-    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage, UUID storeID) throws URISyntaxException {
+    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage, UUID storeID, List<String> productIDs) throws URISyntaxException {
 
         int count = 0;
         int randomInt = 0;
         List<CartItem> allItems;
         List<CartItem> randomItems = new ArrayList<>();
         Random random = new Random();
-//        Map<String, Object> parts = new HashMap<>();
-
-//        String stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getAllCartItems";
-//        URI uri = new URI(stringUri);
-//
-//        ResponseEntity<GetAllCartItemsResponse> responseEntity = restTemplate.postForEntity(
-//                uri,
-//                parts, GetAllCartItemsResponse.class);
         String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItems";
         URI uri = new URI(stringUri);
         Map<String, Object> parts = new HashMap<>();
@@ -215,10 +249,8 @@ public class RecommendationServiceImpl implements RecommendationService {
                     false, "Could not retrieve Items");
         }
 
-//        allItems = responseEntity.getBody().getCartItems();
         allItems = new ArrayList<>();
         for (Item item : responseEntity.getBody().getItems()){
-            //String name, String productID, String barcode, UUID orderID, double price, int quantity, String description, String imageUrl, String brand, String size, String itemType, Double totalCost, UUID storeID
             CartItem cartItem = new CartItem(item.getName(), item.getProductID(), item.getBarcode(), null, item.getPrice(), 1, item.getDescription(), item.getImageUrl(), item.getBrand(), item.getSize(), item.getItemType(), item.getPrice(), item.getStoreID());
             allItems.add(cartItem);
         }
@@ -231,7 +263,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         System.out.println(count);
         for (int i = 0; i < count; i++) {
             randomInt = random.nextInt(allItems.size());
-            if (randomItems.contains(allItems.get(randomInt))){
+            if (randomItems.contains(allItems.get(randomInt)) || productIDs.contains((allItems.get(randomInt).getProductID())) || !allItems.get(randomInt).getStoreID().equals(storeID)){
                 i--;
                 continue;
             }

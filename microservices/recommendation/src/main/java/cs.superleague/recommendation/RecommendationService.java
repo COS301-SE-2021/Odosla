@@ -8,11 +8,12 @@ import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 
 import java.net.URISyntaxException;
 
 public interface RecommendationService {
-    GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException;
+    GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException, ItemDoesNotExistException;
 
     GetOrderRecommendationResponse getOrderRecommendation(GetOrderRecommendationRequest request);
 
