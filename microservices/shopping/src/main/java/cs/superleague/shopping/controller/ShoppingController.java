@@ -17,11 +17,8 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.shopping.requests.GetShoppersRequest;
-import cs.superleague.shopping.responses.GetItemsResponse;
-import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -39,7 +36,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -729,6 +728,36 @@ public class ShoppingController implements ShoppingApi {
     }
 
     @Override
+    public ResponseEntity<ShoppingGetCloseEnoughStoresResponse> getCloseEnoughStores(ShoppingGetCloseEnoughStoresRequest body) {
+        ShoppingGetCloseEnoughStoresResponse response = new ShoppingGetCloseEnoughStoresResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            GeoPoint customersLocation = new GeoPoint();
+            customersLocation.setAddress(body.getCustomerLocation().getAddress());
+            customersLocation.setLongitude(body.getCustomerLocation().getLongitude().doubleValue());
+            customersLocation.setLatitude(body.getCustomerLocation().getLatitude().doubleValue());
+            GetCloseEnoughStoresRequest request = new GetCloseEnoughStoresRequest(UUID.fromString(body.getStoreID()), customersLocation);
+            GetCloseEnoughStoresResponse getCloseEnoughStoresResponse = shoppingService.getCloseEnoughStores(request);
+
+            try {
+
+                response.setCloseStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
+                response.setMessage(getCloseEnoughStoresResponse.getMessage());
+                response.setAdditionalDeliveryCosts(populateDoubles(getCloseEnoughStoresResponse.getAdditionalDeliveryCosts()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException | StoreDoesNotExistException e) {
+
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<ShoppingGetItemsByIDResponse> getItemsByID(ShoppingGetItemsByIDRequest body) {
 
         //creating response object and default return status:
@@ -835,6 +864,32 @@ public class ShoppingController implements ShoppingApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingItemIsInStockResponse> itemIsInStock(
+            ShoppingItemIsInStockRequest body) {
+
+        ShoppingItemIsInStockResponse response = new ShoppingItemIsInStockResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            ItemIsInStockRequest req = new ItemIsInStockRequest(body.getBarcode(),
+                    UUID.fromString(body.getStoreID()), body.isOutOfStock());
+            ItemIsInStockResponse itemIsInStockResponse = shoppingService.itemIsInStock(req);
+
+            try {
+                response.setMessage(itemIsInStockResponse.getMessage());
+                response.setSuccess(itemIsInStockResponse.isSuccess());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     private StoreObject populateStore(Store responseStore) throws NullPointerException {
 
         StoreObject responseBody = new StoreObject();
@@ -914,5 +969,13 @@ public class ShoppingController implements ShoppingApi {
         }
 
         return responseBody;
+    }
+
+    public List<Number> populateDoubles(List<Double> doubles) {
+        List<Number> numbers = new ArrayList<>();
+        for (double dbl : doubles) {
+            numbers.add(BigDecimal.valueOf(dbl));
+        }
+        return numbers;
     }
 }

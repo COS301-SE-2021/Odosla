@@ -339,7 +339,11 @@ components:
             $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
-        storeID:
+        storeIDOne:
+          type: string
+        storeIDTwo:
+          type: string
+        storeIDThree:
           type: string
         orderType:
           type: string
@@ -354,7 +358,11 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        order:
+        orderOne:
+          $ref: "#/components/schemas/OrderObject"
+        orderTwo:
+          $ref: "#/components/schemas/OrderObject"
+        orderThree:
           $ref: "#/components/schemas/OrderObject"
         message:
           type: string

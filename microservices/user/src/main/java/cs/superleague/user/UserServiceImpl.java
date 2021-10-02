@@ -1,6 +1,6 @@
 package cs.superleague.user;
 
-import cs.superleague.delivery.responses.CreateDeliveryResponse;
+import cs.superleague.delivery.responses.CompletePackingOrderForDeliveryResponse;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
@@ -181,16 +181,12 @@ public class UserServiceImpl implements UserService {
 
                 parts = new HashMap<>();
                 parts.put("orderID", orderEntity.getOrderID().toString());
-                parts.put("customerID", orderEntity.getUserID().toString());
-                parts.put("storeID", orderEntity.getStoreID().toString());
-                parts.put("timeOfDelivery", null);
-                parts.put("placeOfDelivery", orderEntity.getDeliveryAddress());
 
-                String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/createDelivery";
+                String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/completePackingOrderForDelivery";
                 URI uri2 = new URI(strURL);
 
-                ResponseEntity<CreateDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
-                CreateDeliveryResponse createDeliveryResponse = useCaseResponseEntity.getBody();
+                ResponseEntity<CompletePackingOrderForDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity(uri2, parts, CompletePackingOrderForDeliveryResponse.class);
+                CompletePackingOrderForDeliveryResponse completePackingOrderForDeliveryResponse = useCaseResponseEntity.getBody();
             }
 
             response = new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(), "Order entity with corresponding ID is ready for collection");
