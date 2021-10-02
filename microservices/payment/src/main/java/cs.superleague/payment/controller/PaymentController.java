@@ -12,7 +12,6 @@ import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -410,8 +409,8 @@ public class PaymentController implements PaymentApi {
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            if(i.getStoreID() != null)
-            item.setStoreID(UUID.fromString(i.getStoreID()));
+            if (i.getStoreID() != null)
+                item.setStoreID(UUID.fromString(i.getStoreID()));
             if (i.getPrice() != null)
                 price = i.getPrice().doubleValue();
             item.setPrice(price);
@@ -604,7 +603,7 @@ public class PaymentController implements PaymentApi {
 
         CartItem item = new CartItem();
 
-        if(responseItems.getCartItemNo() != null){
+        if (responseItems.getCartItemNo() != null) {
             item.setCartItemNo(UUID.fromString(responseItems.getCartItemNo()));
         }
 

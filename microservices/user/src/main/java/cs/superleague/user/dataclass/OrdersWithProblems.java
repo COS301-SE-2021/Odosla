@@ -6,7 +6,8 @@ import java.util.UUID;
 @Entity
 @Table
 public class OrdersWithProblems {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int problemID;
     private UUID orderID;
     private String currentProductBarcode;
