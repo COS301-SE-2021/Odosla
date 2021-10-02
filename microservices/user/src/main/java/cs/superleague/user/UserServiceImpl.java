@@ -3186,11 +3186,12 @@ public class UserServiceImpl implements UserService{
         }
         boolean itemInCartStill = false;
         for (CartItem cartItem : orderEntity.getCartItems()){
-            if (cartItem.getBarcode() == request.getCurrentProductBarcode()){
+            if (Objects.equals(cartItem.getBarcode(), request.getCurrentProductBarcode())){
                 itemInCartStill = true;
             }
+            System.out.println(cartItem.getBarcode());
         }
-        if (itemInCartStill == false){
+        if (!itemInCartStill){
             ItemNotAvailableResponse response = new ItemNotAvailableResponse("Item no longer in cart, the issue has been fixed.", false);
             return response;
         }
@@ -3242,5 +3243,35 @@ public class UserServiceImpl implements UserService{
             GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse("", "", false, "There are no problems with the order.");
             return response;
         }
+    }
+
+    @Override
+    public void removeProblemFromRepo(RemoveProblemFromRepoRequest request) throws InvalidRequestException {
+
+        List<OrdersWithProblems> ordersWithProblems;
+        OrdersWithProblems orderWithProblems = null;
+
+        if(request == null){
+            throw new InvalidRequestException("Null request object");
+        }
+
+        if(request.getOrderID() == null || request.getBardcode() == null){
+            throw new InvalidRequestException("Null parameters");
+        }
+
+        ordersWithProblems = ordersWithProblemsRepo.findOrdersWithProblemsByOrderID(request.getOrderID());
+
+        for(OrdersWithProblems o: ordersWithProblems){
+            if(o.getCurrentProductBarcode().equals(request.getBardcode())){
+                orderWithProblems = o;
+                break;
+            }
+        }
+
+        if(orderWithProblems == null){
+          throw new InvalidRequestException("ordersWithProblems that has matching barcode with the request object barcode does not exist");
+        }
+
+        ordersWithProblemsRepo.delete(orderWithProblems);
     }
 }

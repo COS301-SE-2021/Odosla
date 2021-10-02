@@ -28,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -556,7 +557,7 @@ public class PaymentController implements PaymentApi {
                     populateCartItem(body.getCartItem()), populateCartItemList(body.getCartItems()));
 
             fixOrderProblemResponse = paymentService.fixOrderProblem(request);
-        } catch (InvalidRequestException e) {
+        } catch (InvalidRequestException | URISyntaxException e) {
             e.printStackTrace();
         }
         try {

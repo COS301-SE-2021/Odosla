@@ -21,6 +21,7 @@ import cs.superleague.shopping.requests.AddToQueueRequest;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Customer;
+import cs.superleague.user.requests.RemoveProblemFromRepoRequest;
 import cs.superleague.user.responses.GetCustomerByEmailResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1015,7 +1016,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public FixOrderProblemResponse fixOrderProblem(FixOrderProblemRequest request) throws InvalidRequestException {
+    public FixOrderProblemResponse fixOrderProblem(FixOrderProblemRequest request) throws InvalidRequestException, URISyntaxException {
 
         Order order;
         CartItem cartItem;
@@ -1067,6 +1068,11 @@ public class PaymentServiceImpl implements PaymentService {
         order.setCartItems(cartItems);
 
         orderRepo.save(order);
+
+        RemoveProblemFromRepoRequest removeProblemFromRepoRequest = new RemoveProblemFromRepoRequest(
+                order.getOrderID(), cartItem.getBarcode());
+        rabbitTemplate.convertAndSend("UserEXCHANGE", "RK_RemoveProblemFromRepo",
+                removeProblemFromRepoRequest);
 
         return new FixOrderProblemResponse(true, message, new Date());
     }
