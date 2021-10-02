@@ -1,7 +1,9 @@
 package cs.superleague.payment;
 
 import com.itextpdf.text.*;
+import cs.superleague.delivery.dataclass.Delivery;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
+import cs.superleague.delivery.responses.GetDeliveryByUUIDResponse;
 import cs.superleague.integration.dataclass.UserType;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.dataclass.*;
@@ -439,7 +441,7 @@ public class PaymentServiceImpl implements PaymentService {
                         parts.put("storeID", orderOne.getStoreID().toString());
                         parts.put("timeOfDelivery", null);
                         parts.put("placeOfDelivery", orderOne.getDeliveryAddress());
-                        String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/completePackingOrderForDelivery";
+                        String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/createDelivery";
                         URI uri2 = new URI(strURL);
 
                         ResponseEntity<CreateDeliveryResponse> createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
@@ -1282,5 +1284,60 @@ public class PaymentServiceImpl implements PaymentService {
                 removeProblemFromRepoRequest);
 
         return new FixOrderProblemResponse(true, message, new Date());
+    }
+
+    @Override
+    public GetStatusOfMultipleOrdersResponse getStatusOfMultipleOrders(GetStatusOfMultipleOrdersRequest request) throws InvalidRequestException, URISyntaxException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getDeliveryID() == null){
+            throw new InvalidRequestException("Null deliveryID, cannot get status.");
+        }
+        String stringUri = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/getDeliveryByUUID";
+        URI uri = new URI(stringUri);
+
+        Map<String, Object> parts = new HashMap<String, Object>();
+        parts.put("deliveryID", request.getDeliveryID().toString());
+        ResponseEntity<GetDeliveryByUUIDResponse> getDeliveryByUUIDResponseResponseEntity = restTemplate
+                .postForEntity(uri, parts, GetDeliveryByUUIDResponse.class);
+        if (getDeliveryByUUIDResponseResponseEntity == null || getDeliveryByUUIDResponseResponseEntity.getBody() == null || getDeliveryByUUIDResponseResponseEntity.getBody().getDelivery() == null){
+            throw new InvalidRequestException("Delivery does not exist.");
+        }
+        Delivery delivery = getDeliveryByUUIDResponseResponseEntity.getBody().getDelivery();
+        Order orderOne = orderRepo.findById(delivery.getOrderIDOne()).orElse(null);
+        Order orderTwo = orderRepo.findById(delivery.getOrderIDTwo()).orElse(null);
+        Order orderThree = orderRepo.findById(delivery.getOrderIDThree()).orElse(null);
+        if (orderOne == null){
+            throw new InvalidRequestException("No order added to this delivery.");
+        }
+        if (orderTwo == null && orderThree == null){
+            return new GetStatusOfMultipleOrdersResponse(orderOne.getStatus().name(), true, new Date(), "Order status returned.");
+        }
+        if (orderThree == null){
+            OrderStatus orderOneStatus = orderOne.getStatus();
+            OrderStatus orderTwoStatus = orderTwo.getStatus();
+            if (orderOneStatus.ordinal() < orderTwoStatus.ordinal()){
+                return new GetStatusOfMultipleOrdersResponse(orderOneStatus.name(), true, new Date(), "Order status returned.");
+            } else{
+                return new GetStatusOfMultipleOrdersResponse(orderTwoStatus.name(), true, new Date(), "Order status returned.");
+            }
+        }
+        OrderStatus orderOneStatus = orderOne.getStatus();
+        OrderStatus orderTwoStatus = orderTwo.getStatus();
+        OrderStatus orderThreeStatus = orderThree.getStatus();
+        if (orderOneStatus.ordinal() < orderTwoStatus.ordinal()){
+            if (orderOneStatus.ordinal() < orderThreeStatus.ordinal()){
+                return new GetStatusOfMultipleOrdersResponse(orderOneStatus.name(), true, new Date(), "Order status returned.");
+            } else {
+                return new GetStatusOfMultipleOrdersResponse(orderThreeStatus.name(), true, new Date(), "Order status returned.");
+            }
+        } else{
+            if (orderTwoStatus.ordinal() < orderThreeStatus.ordinal()){
+                return new GetStatusOfMultipleOrdersResponse(orderTwoStatus.name(), true, new Date(), "Order status returned.");
+            } else {
+                return new GetStatusOfMultipleOrdersResponse(orderThreeStatus.name(), true, new Date(), "Order status returned.");
+            }
+        }
     }
 }

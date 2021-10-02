@@ -149,6 +149,34 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
+    public ResponseEntity<PaymentGetStatusOfMultipleOrdersResponse> getStatusOfMultipleOrders(PaymentGetStatusOfMultipleOrdersRequest body) {
+        PaymentGetStatusOfMultipleOrdersResponse response = new PaymentGetStatusOfMultipleOrdersResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            GetStatusOfMultipleOrdersRequest getStatusRequest = new GetStatusOfMultipleOrdersRequest(UUID.fromString(body.getDeliveryID()));
+            GetStatusOfMultipleOrdersResponse getStatusResponse = paymentService.getStatusOfMultipleOrders(getStatusRequest);
+            try {
+                response.setMessage(getStatusResponse.getMessage());
+                response.setStatus(getStatusResponse.getStatus());
+                response.setSuccess(getStatusResponse.isSuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
+            } catch (Exception e) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();

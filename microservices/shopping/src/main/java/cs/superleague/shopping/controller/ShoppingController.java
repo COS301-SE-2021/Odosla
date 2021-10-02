@@ -414,7 +414,36 @@ public class ShoppingController implements ShoppingApi {
         item28 = new Item("Bar one", "w3456757896", "6001068595808", storeUUID2, 10.99, 1, "Thick milk chocolate with nougat and caramel centre.", "item/barOne.png", "Nestle", "55g", "Chocolate");
         item29 = new Item("Baked Beans", "w897321657", "6009522300586", storeUUID2, 14.99, 1, "Our iconic KOO Baked Beans in a rich tomato sauce, is extremely versatile and convenient.", "item/kooBeans.png", "Koo", "410g", "Canned");
         item30 = new Item("Noodle's beef", "w45387609564", "6001306002457", storeUUID2, 28.99, 1, "A convenient and easy meal to prepare, it can be used as a main meal ingredient or simply be enjoyed on its' own.", "item/kellogNoodles.png", "Kelloggs", "70g", "Pantry");
-
+        item1.setSoldOut(false);
+        item2.setSoldOut(false);
+        item3.setSoldOut(false);
+        item4.setSoldOut(false);
+        item5.setSoldOut(false);
+        item6.setSoldOut(false);
+        item7.setSoldOut(false);
+        item8.setSoldOut(false);
+        item9.setSoldOut(false);
+        item10.setSoldOut(false);
+        item11.setSoldOut(false);
+        item12.setSoldOut(false);
+        item13.setSoldOut(false);
+        item14.setSoldOut(false);
+        item15.setSoldOut(false);
+        item16.setSoldOut(false);
+        item17.setSoldOut(false);
+        item18.setSoldOut(false);
+        item19.setSoldOut(false);
+        item20.setSoldOut(false);
+        item21.setSoldOut(false);
+        item22.setSoldOut(false);
+        item23.setSoldOut(false);
+        item24.setSoldOut(false);
+        item25.setSoldOut(false);
+        item26.setSoldOut(false);
+        item27.setSoldOut(false);
+        item28.setSoldOut(false);
+        item29.setSoldOut(false);
+        item30.setSoldOut(false);
 
         itemRepo.save(item1);
         itemRepo.save(item2);
