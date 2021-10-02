@@ -484,6 +484,8 @@ public class PaymentServiceImpl implements PaymentService {
                         rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
                     UUID finalOrderOneID = orderOneID;
+                    UUID finalOrderTwoID = orderTwoID;
+                    UUID finalOrderThreeID = orderThreeID;
                     if (request.getStoreIDTwo() == null){
                         orderTwo = null;
                     }
@@ -493,9 +495,23 @@ public class PaymentServiceImpl implements PaymentService {
                     Order finalOrderTwo = orderTwo;
                     Order finalOrderThree = orderThree;
                     new Thread(() -> {
-                        CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderOneID);
+                        CreateTransactionRequest createTransactionRequest1 = new CreateTransactionRequest(finalOrderOneID);
+                        CreateTransactionRequest createTransactionRequest2 = null;
+                        CreateTransactionRequest createTransactionRequest3 = null;
+                        if (request.getStoreIDTwo() != null){
+                            createTransactionRequest2 = new CreateTransactionRequest(finalOrderTwoID);
+                        }
+                        if (request.getStoreIDThree() != null){
+                            createTransactionRequest3 = new CreateTransactionRequest(finalOrderThreeID);
+                        }
                         try {
-                            CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                            CreateTransactionResponse createTransactionResponse1 = createTransaction(createTransactionRequest1);
+                            if (request.getStoreIDTwo() != null){
+                                CreateTransactionResponse createTransactionResponse2 = createTransaction(createTransactionRequest2);
+                            }
+                            if (request.getStoreIDThree() != null){
+                                CreateTransactionResponse createTransactionResponse3 = createTransaction(createTransactionRequest3);
+                            }
                         } catch (PaymentException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
