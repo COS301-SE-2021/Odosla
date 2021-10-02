@@ -16,5 +16,5 @@ public interface RecommendationRepo extends JpaRepository<Recommendation, UUID> 
 
     Recommendation findRecommendationByRecommendationID(UUID recommendationID);
 
-    List<Recommendation> findRecommendationByOrderID(UUID orderID);
+    List<Recommendation> findRecommendationsByOrderID(UUID orderID);
 }

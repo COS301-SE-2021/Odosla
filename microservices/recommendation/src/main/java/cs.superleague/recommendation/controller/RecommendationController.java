@@ -1,12 +1,11 @@
 package cs.superleague.recommendation.controller;
 
 import cs.superleague.api.RecommendationApi;
-import cs.superleague.models.CartItemObject;
-import cs.superleague.models.ItemObject;
-import cs.superleague.models.RecommendationGetCartRecommendationRequest;
-import cs.superleague.models.RecommendationGetCartRecommendationResponse;
+import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.recommendation.RecommendationService;
+import cs.superleague.recommendation.requests.GenerateRecommendationTableRequest;
+import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
@@ -140,5 +139,38 @@ public class RecommendationController implements RecommendationApi {
         }
 
         return responseBody;
+    }
+
+    @Override
+    public ResponseEntity<RecommendationGenerateRecommendationTableResponse> generateRecommendationTable(RecommendationGenerateRecommendationTableRequest body) {
+        RecommendationGenerateRecommendationTableResponse response = new RecommendationGenerateRecommendationTableResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            GenerateRecommendationTableRequest request = new GenerateRecommendationTableRequest();
+            GenerateRecommendationTableResponse generateRecommendationTableResponse = recommendationService.generateRecommendationTable(request);
+            try {
+                response.setMessage(generateRecommendationTableResponse.getMessage());
+                response.setIsSuccess(generateRecommendationTableResponse.isSuccess());
+                response.setRecommendationTable(generateRecommendationTableResponse.getRecommendationTable());
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setMessage(e.getMessage());
+                response.setIsSuccess(false);
+                response.setRecommendationTable(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setIsSuccess(false);
+            response.setRecommendationTable(null);
+        }
+        return new ResponseEntity<>(response, httpStatus);
     }
 }
