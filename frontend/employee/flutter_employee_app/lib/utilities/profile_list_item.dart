@@ -7,10 +7,9 @@ import 'constants.dart';
 class ProfileListItem extends StatelessWidget {
   final IconData icon;
   final String text;
-  final bool hasNavigation=true;
+  final bool hasNavigation = true;
 
-  ProfileListItem(
-      this.icon, this.text);
+  ProfileListItem(this.icon, this.text);
 
   @override
   Widget build(BuildContext context) {

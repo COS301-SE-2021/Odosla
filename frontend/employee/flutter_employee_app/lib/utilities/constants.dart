@@ -26,8 +26,6 @@ final kBoxDecorationStyle = BoxDecoration(
   ],
 );
 
-
-
 const kSpacingUnit = 10;
 
 const kDarkPrimaryColor = Color(0xFF212121);
@@ -60,13 +58,13 @@ final kDarkTheme = ThemeData(
   backgroundColor: kDarkSecondaryColor,
   accentColor: kAccentColor,
   iconTheme: ThemeData.dark().iconTheme.copyWith(
-    color: kLightSecondaryColor,
-  ),
+        color: kLightSecondaryColor,
+      ),
   textTheme: ThemeData.dark().textTheme.apply(
-    fontFamily: 'SFProText',
-    bodyColor: kLightSecondaryColor,
-    displayColor: kLightSecondaryColor,
-  ),
+        fontFamily: 'SFProText',
+        bodyColor: kLightSecondaryColor,
+        displayColor: kLightSecondaryColor,
+      ),
 );
 
 final kLightTheme = ThemeData(
@@ -77,13 +75,13 @@ final kLightTheme = ThemeData(
   backgroundColor: kLightSecondaryColor,
   accentColor: kAccentColor,
   iconTheme: ThemeData.light().iconTheme.copyWith(
-    color: kDarkSecondaryColor,
-  ),
+        color: kDarkSecondaryColor,
+      ),
   textTheme: ThemeData.light().textTheme.apply(
-    fontFamily: 'SFProText',
-    bodyColor: kDarkSecondaryColor,
-    displayColor: kDarkSecondaryColor,
-  ),
+        fontFamily: 'SFProText',
+        bodyColor: kDarkSecondaryColor,
+        displayColor: kDarkSecondaryColor,
+      ),
 );
 
 const mainColor = const Color(0xFFFB777A);
@@ -105,7 +103,6 @@ class ColorConstants {
   static const cblackColor = Color(0xFF313131);
   static const corangeColor = Color(0xffdd601e);
 }
-
 
 class Constants {
   static List<Icon> iconList = [

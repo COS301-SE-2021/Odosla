@@ -1,5 +1,4 @@
-class Odosla{
-
+class Odosla {
   static const String name = "Odosla";
   static const String store = "Online Store\n For Everyone";
   static const String wt1 = "WELCOME";

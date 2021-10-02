@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Store.dart';
 
 class MyNavigator {
-
   static void goToHome(BuildContext context) {
     Navigator.pushNamed(context, "/home");
   }
@@ -52,13 +50,11 @@ class MyNavigator {
     Navigator.pushNamed(context, "/currentOrderPage");
   }
 
-  static void goToStoreInfoScreen(BuildContext context, Store item){
+  static void goToStoreInfoScreen(BuildContext context, Store item) {
     Navigator.pushNamed(context, "/storeInfoScreen");
   }
 
-  static void goToAdminHomePage(BuildContext context){
+  static void goToAdminHomePage(BuildContext context) {
     Navigator.pushNamed(context, "/adminHomePage");
   }
-
-
 }

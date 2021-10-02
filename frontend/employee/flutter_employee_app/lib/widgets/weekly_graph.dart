@@ -1,12 +1,15 @@
-
 import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
-class WeeklyGraphWidget extends StatelessWidget{
+
+class WeeklyGraphWidget extends StatelessWidget {
   final DateTime fromDate;
   final DateTime toDate;
 
-  const WeeklyGraphWidget({Key? key, required this.fromDate, required this.toDate}) : super(key: key);
+  const WeeklyGraphWidget(
+      {Key? key, required this.fromDate, required this.toDate})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final date1 = toDate.subtract(Duration(days: 30));
@@ -20,7 +23,7 @@ class WeeklyGraphWidget extends StatelessWidget{
       bezierChartScale: BezierChartScale.CUSTOM,
       selectedValue: 1,
       xAxisCustomValues: [5, 5, 10, 15, 20, 25, 30],
-      series:  [
+      series: [
         BezierLine(
           label: "june",
           lineColor: ColorConstants.korangeColor,
@@ -44,12 +47,9 @@ class WeeklyGraphWidget extends StatelessWidget{
         verticalIndicatorFixedPosition: false,
         pinchZoom: true,
         bubbleIndicatorColor: ColorConstants.gblackColor,
-        bubbleIndicatorLabelStyle:
-        TextStyle(color: ColorConstants.kwhiteColor),
-        bubbleIndicatorTitleStyle:
-        TextStyle(color: ColorConstants.kwhiteColor),
-        bubbleIndicatorValueStyle:
-        TextStyle(color: ColorConstants.kwhiteColor),
+        bubbleIndicatorLabelStyle: TextStyle(color: ColorConstants.kwhiteColor),
+        bubbleIndicatorTitleStyle: TextStyle(color: ColorConstants.kwhiteColor),
+        bubbleIndicatorValueStyle: TextStyle(color: ColorConstants.kwhiteColor),
         footerHeight: 40,
         showVerticalIndicator: true,
         displayYAxis: false,
@@ -72,5 +72,4 @@ class WeeklyGraphWidget extends StatelessWidget{
       ),
     );
   }
-
 }

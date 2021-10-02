@@ -5,21 +5,22 @@ import 'package:flutter_employee_app/models/Order.dart';
 import 'package:flutter_employee_app/models/Store.dart';
 
 bool validateStructure(String value) {
-  String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+  String pattern =
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
   RegExp regExp = new RegExp(pattern);
   return regExp.hasMatch(value);
 }
+
 bool validatePasswordMatches(String value, String previousPassword) {
-  if(value==(previousPassword)){
+  if (value == (previousPassword)) {
     return true;
-  }
-  else{
+  } else {
     return false;
   }
 }
 
 bool validatePhoneNumber(String value) {
-  if(value==""){
+  if (value == "") {
     return true;
   }
   String pattern = r'[0-9]{10}';
@@ -35,6 +36,7 @@ List<Store> StoresFromJson(Map<String, dynamic> j) {
 
   return list;
 }
+
 List<GeoPoint> GeoPointsFromJson(Map<String, dynamic> j) {
   List<GeoPoint> list;
   list = (json.decode(json.encode(j['pickUpLocations'])) as List)
