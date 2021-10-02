@@ -1,3 +1,4 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/driver/edit_page_driver.dart';
 import 'package:flutter_employee_app/pages/wallet_page.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_employee_app/utilities/profile_list_item.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 
 import '../contact_us_page.dart';
 
@@ -18,25 +18,23 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
-
   final UserService _userService = GetIt.I.get();
-  String _name="name";
-  String _surname="surname";
-  String _email="email@gmail.com";
-  String _numberOfDeliveriesCompleted="0";
-  String _rating="0";
+  String _name = "name";
+  String _surname = "surname";
+  String _email = "email@gmail.com";
+  String _numberOfDeliveriesCompleted = "0";
+  String _rating = "0";
 
   void initState() {
-    _userService.getCurrentUser(context).then((value) =>
-    {
-      setState(() {
-        _name = value!.name;
-        _surname = value.surname;
-        _email = value.email;
-        _rating=value.rating;
-        _numberOfDeliveriesCompleted=value.deliveriesCompleted;
-      })
-    });
+    _userService.getCurrentUser(context).then((value) => {
+          setState(() {
+            _name = value!.name;
+            _surname = value.surname;
+            _email = value.email;
+            _rating = value.rating;
+            _numberOfDeliveriesCompleted = value.deliveriesCompleted;
+          })
+        });
   }
 
   @override
@@ -54,7 +52,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           Container(
             height: kSpacingUnit.w * 11,
             width: kSpacingUnit.w * 11,
-            margin: EdgeInsets.only(top: kSpacingUnit.w * 3,left: kSpacingUnit.w*1),
+            margin: EdgeInsets.only(
+                top: kSpacingUnit.w * 3, left: kSpacingUnit.w * 1),
             child: Stack(
               children: <Widget>[
                 CircleAvatar(
@@ -86,7 +85,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           ),
           SizedBox(height: kSpacingUnit.w * 2),
           Text(
-            _name+" "+_surname,
+            _name + " " + _surname,
             style: kTitleTextStyle,
           ),
           SizedBox(height: kSpacingUnit.w * 0.5),
@@ -105,9 +104,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         return AnimatedCrossFade(
           duration: Duration(milliseconds: 200),
           crossFadeState:
-          ThemeProvider.of(context)!.brightness == Brightness.dark
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+              ThemeProvider.of(context)!.brightness == Brightness.dark
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
           firstChild: GestureDetector(
             onTap: () =>
                 ThemeSwitcher.of(context)!.changeTheme(theme: kLightTheme),
@@ -151,7 +150,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                   child: ListView(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*4,vertical: kSpacingUnit.w*0.5),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: kSpacingUnit.w * 4,
+                            vertical: kSpacingUnit.w * 0.5),
                         decoration: new BoxDecoration(
                           boxShadow: [
                             new BoxShadow(
@@ -161,83 +162,80 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                           ],
                         ),
                         child: Card(
-                            margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*0.2,vertical: kSpacingUnit.w*0.1),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: kSpacingUnit.w * 0.2,
+                                vertical: kSpacingUnit.w * 0.1),
                             clipBehavior: Clip.antiAlias,
                             color: Theme.of(context).backgroundColor,
                             elevation: 5.0,
                             child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 20.0),
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
-                                        child:Column(
-                                          children: <Widget>[
-                                            Text(
-                                              "Deliveries Completed",
-                                              style: kTitleTextStyle.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: kSpacingUnit.w*1.7,
-                                              ),textAlign: TextAlign.center,
-                                            ),
-                                            SizedBox(height:kSpacingUnit.w*2),
-                                            Text(
-                                              _numberOfDeliveriesCompleted,
-                                              style: kTitleTextStyle.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: kSpacingUnit.w*3,
-                                              ),
-                                            ),
-
-                                          ],
-                                        )
-                                    ),
+                                        child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          "Deliveries Completed",
+                                          style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: kSpacingUnit.w * 1.7,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: kSpacingUnit.w * 2),
+                                        Text(
+                                          _numberOfDeliveriesCompleted,
+                                          style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: kSpacingUnit.w * 3,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                                     Expanded(
-                                        child:Column(
-                                          children: <Widget>[
-                                            Text(
-                                              "Rating",
-                                              style: kTitleTextStyle.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: kSpacingUnit.w*1.7,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            SizedBox(height:kSpacingUnit.w*2),
-                                            Text(
-                                              _rating,
-                                              style: kTitleTextStyle.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: kSpacingUnit.w*3,
-                                              ),
-                                            ),
-
-                                          ],
-                                        )
-                                    ),
+                                        child: Column(
+                                      children: <Widget>[
+                                        Text(
+                                          "Rating",
+                                          style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: kSpacingUnit.w * 1.7,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        SizedBox(height: kSpacingUnit.w * 2),
+                                        Text(
+                                          _rating,
+                                          style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: kSpacingUnit.w * 3,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                                   ],
-                                )
-                            )
-                        ),
+                                ))),
                       ),
-                      SizedBox(height: kSpacingUnit.w*2),
+                      SizedBox(height: kSpacingUnit.w * 2),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => WalletPage()));
                         },
-                        child: ProfileListItem(
-                            LineAwesomeIcons.wallet,
-                            'Wallet'
-                        ),
+                        child:
+                            ProfileListItem(LineAwesomeIcons.wallet, 'Wallet'),
                       ),
                       // ProfileListItem(
                       //   LineAwesomeIcons.history,
                       //   'Purchase History',
                       // ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => ContactPage()));
+                              builder: (BuildContext context) =>
+                                  ContactPage()));
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.question_circle,
@@ -245,11 +243,12 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => EditDriverProfilePage()));
+                              builder: (BuildContext context) =>
+                                  EditDriverProfilePage()));
                         },
-                        child:ProfileListItem(
+                        child: ProfileListItem(
                           LineAwesomeIcons.cog,
                           'Settings',
                         ),

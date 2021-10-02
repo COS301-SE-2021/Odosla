@@ -3,8 +3,6 @@ import 'package:flutter_employee_app/utilities/Odosla.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_employee_app/widgets/walkthrough.dart';
 
-
-
 class IntroShopperScreen extends StatefulWidget {
   @override
   IntroShopperScreenState createState() {
@@ -81,8 +79,9 @@ class IntroShopperScreenState extends State<IntroShopperScreen> {
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0)),
-                  onPressed: () =>
-                  lastPage ? null : MyNavigator.goToShopperHomePage(context),
+                  onPressed: () => lastPage
+                      ? null
+                      : MyNavigator.goToShopperHomePage(context),
                 ),
                 FlatButton(
                   child: Text(lastPage ? Odosla.gotIt : Odosla.next,
@@ -93,8 +92,8 @@ class IntroShopperScreenState extends State<IntroShopperScreen> {
                   onPressed: () => lastPage
                       ? MyNavigator.goToShopperHomePage(context)
                       : controller.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn),
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn),
                 ),
               ],
             ),

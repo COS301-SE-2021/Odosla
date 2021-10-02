@@ -1,12 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/utilities/functions.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
-import 'package:flutter/services.dart';
-import 'package:loading_overlay/loading_overlay.dart';
 import 'package:get_it/get_it.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,7 +14,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final UserService _userService = GetIt.I.get();
 
   bool _rememberMe = false;
@@ -27,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   int itemCount = 3;
   int selected = 1;
   bool _isInAsyncCall = false;
-  bool _showPassword=false;
+  bool _showPassword = false;
 
   final List<String> _pictures = <String>[
     "assets/shopper.png",
@@ -48,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
   ];
 
   FixedExtentScrollController _scrollController =
-  FixedExtentScrollController(initialItem: 1);
+      FixedExtentScrollController(initialItem: 1);
 
   Widget _buildEmailTF() {
     return Column(
@@ -69,8 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            onChanged: (value) =>
-            {
+            onChanged: (value) => {
               setState(() {
                 _isValidEmail = EmailValidator.validate(value);
                 _email = value;
@@ -89,18 +87,19 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         SizedBox(height: 5.0),
-        _isValidEmail?Container():
-        Container(
-          alignment: Alignment.centerLeft,
-          height: 16.0,
-          child: Text(
-            _isValidEmail ? "" : "Email is not valid",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-          ),
-        ),
+        _isValidEmail
+            ? Container()
+            : Container(
+                alignment: Alignment.centerLeft,
+                height: 16.0,
+                child: Text(
+                  _isValidEmail ? "" : "Email is not valid",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'OpenSans',
+                  ),
+                ),
+              ),
       ],
     );
   }
@@ -119,24 +118,22 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
-            obscureText: _showPassword?false:true,
+            obscureText: _showPassword ? false : true,
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            onChanged: (value) =>
-            {
+            onChanged: (value) => {
               setState(() {
                 _isValidPassword = validateStructure(value);
                 _password = value;
               }),
             },
             decoration: InputDecoration(
-              suffixIcon:
-              IconButton(
-                  onPressed: (){
+              suffixIcon: IconButton(
+                  onPressed: () {
                     setState(() {
-                      _showPassword=!_showPassword;
+                      _showPassword = !_showPassword;
                     });
                   },
                   icon: Icon(
@@ -155,18 +152,19 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
         SizedBox(height: 5.0),
-        _isValidPassword?Container():
-        Container(
-          alignment: Alignment.centerLeft,
-          height: 16.0,
-          child: Text(
-            _isValidPassword ? "" : "Password is not valid",
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-          ),
-        ),
+        _isValidPassword
+            ? Container()
+            : Container(
+                alignment: Alignment.centerLeft,
+                height: 16.0,
+                child: Text(
+                  _isValidPassword ? "" : "Password is not valid",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'OpenSans',
+                  ),
+                ),
+              ),
       ],
     );
   }
@@ -220,29 +218,31 @@ class _LoginScreenState extends State<LoginScreen> {
         elevation: 5.0,
         onPressed: () {
           setState(() async {
-            if(_isValidEmail && _isValidPassword){
+            if (_isValidEmail && _isValidPassword) {
               setState(() {
                 _isInAsyncCall = true;
               });
-              await _userService.loginUser(_email, _password, _typeOfUser[selected],context).then(
-                  (success) async {
-                    if(success){
-                      await _userService.getCurrentUser(context);
-                      selected==0?MyNavigator.goToShopperHomePage(context): selected==1?MyNavigator.goToDriverHomePage(context):MyNavigator.goToAdminHomePage(context);
-                    }
-                    setState(() {
-                      _isInAsyncCall = false;
-                    });
-                  }
-
-              );
-
-            } else{
-              var text="";
-              if(!_isValidEmail){
-                text+="Please enter a valid email";
-              }else if(!_isValidPassword){
-                text+="Please enter a valid password";
+              await _userService
+                  .loginUser(_email, _password, _typeOfUser[selected], context)
+                  .then((success) async {
+                if (success) {
+                  await _userService.getCurrentUser(context);
+                  selected == 0
+                      ? MyNavigator.goToShopperHomePage(context)
+                      : selected == 1
+                          ? MyNavigator.goToDriverHomePage(context)
+                          : MyNavigator.goToAdminHomePage(context);
+                }
+                setState(() {
+                  _isInAsyncCall = false;
+                });
+              });
+            } else {
+              var text = "";
+              if (!_isValidEmail) {
+                text += "Please enter a valid email";
+              } else if (!_isValidPassword) {
+                text += "Please enter a valid password";
               }
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(text)));
@@ -306,9 +306,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Text(
           "Odosla",
           style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0),
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24.0),
         )
       ],
     );
@@ -324,7 +322,8 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 100.0,
               child: RotatedBox(
                   quarterTurns: -1,
-                  child: ListWheelScrollView(itemExtent: itemWidth,
+                  child: ListWheelScrollView(
+                    itemExtent: itemWidth,
                     onSelectedItemChanged: (x) {
                       setState(() {
                         selected = x;
@@ -333,53 +332,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _scrollController,
                     children: List.generate(
                         itemCount,
-                            (x) =>
-                            RotatedBox(
-                                quarterTurns: 1,
-                                child: AnimatedContainer(
-                                  duration: Duration(milliseconds: 400),
-                                  width: x == selected ? 190 : 140,
-                                  height: x == selected ? 190 : 140,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      scale: 2,
-                                      image: new AssetImage(_pictures[x]),
-
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(15.0)),
-
-                                  ),
-                                )
-                            )
-                    ),
-                  )
-              )
-          ),
+                        (x) => RotatedBox(
+                            quarterTurns: 1,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 400),
+                              width: x == selected ? 190 : 140,
+                              height: x == selected ? 190 : 140,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  scale: 2,
+                                  image: new AssetImage(_pictures[x]),
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15.0)),
+                              ),
+                            ))),
+                  ))),
           Container(
               alignment: Alignment.centerLeft,
               height: 64.0,
               child: Column(
-
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Center(
                       child: Text(
-                        _listOfRoles[selected],
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 48.0
-
-                        ),
-                      )
-                  )
+                    _listOfRoles[selected],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 48.0),
+                  ))
                 ],
-              )
-          )
+              ))
         ]);
   }
-
 
   Widget _buildSignupBtn() {
     return GestureDetector(
@@ -388,7 +374,9 @@ class _LoginScreenState extends State<LoginScreen> {
         text: TextSpan(
           children: [
             TextSpan(
-              text: selected!=2?'Don\'t have a ' + _listOfRoles[selected] + ' Account? ':"",
+              text: selected != 2
+                  ? 'Don\'t have a ' + _listOfRoles[selected] + ' Account? '
+                  : "",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 15.0,
@@ -412,15 +400,13 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-      AnnotatedRegion<SystemUiOverlayStyle>(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
             children: <Widget>[
-
               Container(
                 height: double.infinity,
                 width: double.infinity,
@@ -439,44 +425,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               LoadingOverlay(
-                child:Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 60.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 17.0),
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
+                child: Container(
+                  height: double.infinity,
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 40.0,
+                      vertical: 60.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(height: 17.0),
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'OpenSans',
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 5.0),
-                      _decisionWheel(),
-                      // _buildDifferentUserSignIns(),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
-                      _buildSignInWithText(),
-                      _buildSignupBtn(),
-                    ],
+                        SizedBox(height: 5.0),
+                        _decisionWheel(),
+                        // _buildDifferentUserSignIns(),
+                        _buildEmailTF(),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        _buildPasswordTF(),
+                        _buildForgotPasswordBtn(),
+                        _buildRememberMeCheckbox(),
+                        _buildLoginBtn(),
+                        _buildSignInWithText(),
+                        _buildSignupBtn(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
                 isLoading: _isInAsyncCall,
                 // demo of some additional parameters
                 opacity: 0.5,
@@ -491,6 +477,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-
 }

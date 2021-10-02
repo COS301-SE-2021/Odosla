@@ -3,8 +3,6 @@ import 'package:flutter_employee_app/utilities/Odosla.dart';
 import 'package:flutter_employee_app/utilities/my_navigator.dart';
 import 'package:flutter_employee_app/widgets/walkthrough.dart';
 
-
-
 class IntroDriverScreen extends StatefulWidget {
   @override
   IntroDriverScreenState createState() {
@@ -82,7 +80,7 @@ class IntroDriverScreenState extends State<IntroDriverScreen> {
                           fontWeight: FontWeight.bold,
                           fontSize: 16.0)),
                   onPressed: () =>
-                  lastPage ? null : MyNavigator.goToDriverHomePage(context),
+                      lastPage ? null : MyNavigator.goToDriverHomePage(context),
                 ),
                 FlatButton(
                   child: Text(lastPage ? Odosla.gotIt : Odosla.next,
@@ -93,8 +91,8 @@ class IntroDriverScreenState extends State<IntroDriverScreen> {
                   onPressed: () => lastPage
                       ? MyNavigator.goToDriverHomePage(context)
                       : controller.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeIn),
+                          duration: Duration(milliseconds: 300),
+                          curve: Curves.easeIn),
                 ),
               ],
             ),

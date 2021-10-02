@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -8,7 +6,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPasswordScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,10 +73,10 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
                         onTap: () {},
                         child: Center(
                             child: Text(
-                              'RESET PASSWORD',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, color: Colors.white),
-                            ))),
+                          'RESET PASSWORD',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.white),
+                        ))),
                   ),
                 ),
               ],
@@ -89,7 +86,6 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               // InkWell(
               //   onTap: () {
               //        Navigator.push(
@@ -111,5 +107,4 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
       ),
     );
   }
-  
 }
