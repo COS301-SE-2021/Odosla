@@ -378,6 +378,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (orderOne != null) {
                 if (shopOne.getStore().getOpen() == true) {
+                    UUID deliveryID = null;
                     if (orderRepo != null) {
                         orderRepo.save(orderOne);
                         if (request.getStoreIDTwo() != null){
@@ -447,6 +448,9 @@ public class PaymentServiceImpl implements PaymentService {
                         ResponseEntity<CreateDeliveryResponse> createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
                         CreateDeliveryResponse createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
 
+                        if (createDeliveryResponse != null) {
+                            deliveryID = createDeliveryResponse.getDeliveryID();
+                        }
                         if (request.getStoreIDTwo() != null){
                             orderRepo.save(orderTwo);
                             parts = new HashMap<>();
@@ -509,7 +513,7 @@ public class PaymentServiceImpl implements PaymentService {
                             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                         }
                     }).start();
-                    response = new SubmitOrderResponse(orderOne, orderTwo, orderThree, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                    response = new SubmitOrderResponse(orderOne, orderTwo, orderThree, true, Calendar.getInstance().getTime(), "Order successfully created.", deliveryID);
                 } else {
                     throw new InvalidRequestException("Store is currently closed - could not create order");
                 }

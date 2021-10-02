@@ -229,6 +229,7 @@ public class PaymentController implements PaymentApi {
                 }
                 response.setSuccess(submitOrderResponse.isSuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
+                response.setDeliveryID(submitOrderResponse.getDeliveryID().toString());
             } catch (Exception e) {
 
             }

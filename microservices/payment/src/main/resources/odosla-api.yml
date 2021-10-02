@@ -393,6 +393,8 @@ components:
           type: boolean
         timestamp:
           type: string
+        deliveryID:
+          type: string
 
     payment_GetStatusRequest:
       description: This object is expected as input
