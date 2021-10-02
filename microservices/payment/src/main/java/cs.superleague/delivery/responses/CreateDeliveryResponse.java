@@ -8,6 +8,8 @@ public class CreateDeliveryResponse {
     private UUID deliveryID;
     private double costOfDelivery;
 
+
+
     public CreateDeliveryResponse(boolean isSuccess, String message, UUID deliveryID) {
         this.isSuccess = isSuccess;
         this.message = message;
@@ -23,6 +25,9 @@ public class CreateDeliveryResponse {
     }
 
     public CreateDeliveryResponse() {
+        this.isSuccess = false;
+        this.message = null;
+        this.deliveryID = null;
     }
 
     public boolean isSuccess() {

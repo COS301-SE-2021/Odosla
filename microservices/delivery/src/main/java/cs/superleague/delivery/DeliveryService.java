@@ -5,6 +5,7 @@ import cs.superleague.delivery.exceptions.DeliveryException;
 import cs.superleague.delivery.exceptions.InvalidRequestException;
 import cs.superleague.delivery.requests.*;
 import cs.superleague.delivery.responses.*;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
 
 import java.net.URISyntaxException;
 
@@ -37,4 +38,8 @@ public interface DeliveryService {
     GetDeliveryByUUIDResponse getDeliveryByUUID(GetDeliveryByUUIDRequest request) throws DeliveryException;
 
     GetAdditionalStoresDeliveryCostResponse getAdditionalStoresDeliveryCost(GetAdditionalStoresDeliveryCostRequest request) throws InvalidRequestException, DeliveryDoesNotExistException, URISyntaxException;
+
+    AddOrderToDeliveryResponse addOrderToDelivery(AddOrderToDeliveryRequest request) throws InvalidRequestException, URISyntaxException, DeliveryDoesNotExistException, OrderDoesNotExist;
+
+    CompletePackingOrderForDeliveryResponse completePackingOrderForDelivery(CompletePackingOrderForDeliveryRequest request) throws InvalidRequestException, DeliveryDoesNotExistException;
 }

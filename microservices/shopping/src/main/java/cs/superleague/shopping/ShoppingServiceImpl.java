@@ -1693,5 +1693,48 @@ public class ShoppingServiceImpl implements ShoppingService {
         return newCartItem;
     }
 
+    @Override
+    public GetCloseEnoughStoresResponse getCloseEnoughStores(GetCloseEnoughStoresRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getStoreID() == null || request.getCustomerLocation() == null){
+            throw new InvalidRequestException("Null parameters cannot find nearby stores.");
+        }
+        Store mainOrderStore = storeRepo.findById(request.getStoreID()).orElse(null);
+        if (mainOrderStore == null){
+            throw new StoreDoesNotExistException("Store with the inputted storeID does not exist.");
+        }
+        List<Store> storeList = storeRepo.findAll();
+        if (storeList == null){
+            throw new StoreDoesNotExistException("No stores found in the repository.");
+        }
+        List<Store> storesInRange = new ArrayList<>();
+        for (Store store : storeList){
+            if (getDistance(store.getStoreLocation(), mainOrderStore.getStoreLocation()) < 10){
+                storesInRange.add(store);
+            }
+        }
+        if (storesInRange.size() == 0){
+            GetCloseEnoughStoresResponse response = new GetCloseEnoughStoresResponse(null, null, "No stores within range of the selected store");
+            return response;
+        }
+        double currentRouteDistance = getDistance(mainOrderStore.getStoreLocation(), request.getCustomerLocation());
+        List<Double> additionalCost = new ArrayList<>();
+        for (Store store : storesInRange){
+            double newDistanceForStore = getDistance(mainOrderStore.getStoreLocation(), store.getStoreLocation());
+            newDistanceForStore = newDistanceForStore + getDistance(store.getStoreLocation(), request.getCustomerLocation());
+            double addedDistance = newDistanceForStore - currentRouteDistance;
+            double addedCost = getAddedCostOfDistance(addedDistance);
+            additionalCost.add(storesInRange.indexOf(store), addedCost);
+        }
+        GetCloseEnoughStoresResponse response = new GetCloseEnoughStoresResponse(storesInRange, additionalCost, "Returned the stores that can be added to the order.");
+        return response;
+    }
+    public double getAddedCostOfDistance(double addedDistance){
+        double addedCost = addedDistance * 2.0;
+        return addedCost;
+    }
+
 }
 
