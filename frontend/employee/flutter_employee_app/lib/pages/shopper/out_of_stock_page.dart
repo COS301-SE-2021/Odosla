@@ -18,29 +18,29 @@ class ItemsPage extends StatefulWidget {
 }
 
 class _ItemsPageState extends State<ItemsPage> {
-  final ShoppingService _shoppingService=GetIt.I.get();
+  final ShoppingService _shoppingService = GetIt.I.get();
 
   final String storeID;
   final String storeName;
   final Map<String, double> location;
 
-  var dropdownValue="ALL";
+  var dropdownValue = "ALL";
+
   _ItemsPageState(this.storeID, this.storeName, this.location);
 
-  Widget _popUpShowFilter(BuildContext context){
+  Widget _popUpShowFilter(BuildContext context) {
     return Container(
       child: DropdownButton<String>(
         value: dropdownValue,
-        items: <String>[
-          'ALL',
-          'SOLD OUT',
-          'IN STOCK'
-        ].map<DropdownMenuItem<String>>((String value) {
+        items: <String>['ALL', 'SOLD OUT', 'IN STOCK']
+            .map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: SizedBox(
                 width: 90,
-                child: Text(value,style:TextStyle(fontWeight: FontWeight.w600),textAlign: TextAlign.end)),
+                child: Text(value,
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.end)),
           );
         }).toList(),
         onChanged: (value) {
@@ -55,8 +55,8 @@ class _ItemsPageState extends State<ItemsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-        appBar:AppBar(
+        backgroundColor: Theme.of(context).backgroundColor,
+        appBar: AppBar(
           title: Text(
             storeName,
             style: TextStyle(),
@@ -71,17 +71,19 @@ class _ItemsPageState extends State<ItemsPage> {
           ),
           actions: [
             _popUpShowFilter(context),
-
           ],
         ),
-      body: buildItems(context)
-    );
+        body: buildItems(context));
   }
 
   Widget buildItems(BuildContext context) {
     final double spacing = 12;
     return FutureBuilder(
-      future: dropdownValue=="ALL"?_shoppingService.getItems(storeID,context):dropdownValue=="SOLD OUT"?_shoppingService.getItemsSoldOut(storeID,context):_shoppingService.getItemsInStock(storeID,context),
+      future: dropdownValue == "ALL"
+          ? _shoppingService.getItems(storeID, context)
+          : dropdownValue == "SOLD OUT"
+              ? _shoppingService.getItemsSoldOut(storeID, context)
+              : _shoppingService.getItemsInStock(storeID, context),
       builder: (BuildContext context, snapshot) {
         //let's check if we got a response or not
         debugPrint(snapshot.data.toString() + "__");
@@ -107,16 +109,17 @@ class _ItemsPageState extends State<ItemsPage> {
               ),
               itemCount: items.length,
               itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ItemDetailPage(
-                          items[index],
-                          storeID,
-                          location,false) //ProductPage(product: product),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => ItemDetailPage(
+                              items[index],
+                              storeID,
+                              location,
+                              false) //ProductPage(product: product),
+                          ));
+                    },
+                    child: buildItem(items[index]),
                   ));
-                },
-                child: buildItem(items[index]),
-              ));
         }
         debugPrint("_2");
         return Center(
@@ -127,65 +130,66 @@ class _ItemsPageState extends State<ItemsPage> {
   }
 
   Widget buildItem(CartItem product) => Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).primaryColor,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Theme.of(context).backgroundColor, width: 2),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            //constraints: BoxConstraints(
-            //  maxHeight: 100,
-            //),
-            child: Center(
-              child: Image.asset(
-                'assets/' + product.imgUrl,
-              ), //product.imgUrl),
-            ),
-          ),
-          SizedBox(height: 40),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Expanded(
-                  child: Text(
-                    product.title,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    softWrap: false,
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal, fontSize: 16),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(12),
+          border:
+              Border.all(color: Theme.of(context).backgroundColor, width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
-                  product.brand,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey[600],
-                      fontSize: 12),
+                //constraints: BoxConstraints(
+                //  maxHeight: 100,
+                //),
+                child: Center(
+                  child: Image.asset(
+                    'assets/' + product.imgUrl,
+                  ), //product.imgUrl),
                 ),
               ),
-              Text(
-                'R' + product.price.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              SizedBox(height: 40),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    child: Expanded(
+                      child: Text(
+                        product.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        softWrap: false,
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      product.brand,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey[600],
+                          fontSize: 12),
+                    ),
+                  ),
+                  Text(
+                    'R' + product.price.toString(),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
