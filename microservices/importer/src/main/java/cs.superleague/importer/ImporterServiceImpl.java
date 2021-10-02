@@ -89,7 +89,8 @@ public class ImporterServiceImpl implements ImporterService{
                                 for (Item value : itemList) {
                                     if (value != null) {
                                         if (value.getProductID().equals(currentWord)) {
-                                            throw new InvalidRequestException("Item already exists");
+                                            item = value;
+                                            break;
                                         }
                                     }
 

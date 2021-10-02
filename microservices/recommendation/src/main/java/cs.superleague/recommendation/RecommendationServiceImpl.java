@@ -9,14 +9,13 @@ import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
 import cs.superleague.recommendation.repos.RecommendationRepo;
-import cs.superleague.recommendation.requests.AddRecommendationRequest;
-import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
-import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
-import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.recommendation.requests.*;
+import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
 import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 import cs.superleague.shopping.dataclass.Item;
+import cs.superleague.shopping.responses.GetItemsByIDResponse;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -177,7 +176,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         if (request.getOrderID() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
-        List<Recommendation> recommendations = recommendationRepo.findRecommendationByOrderID(request.getOrderID());
+        List<Recommendation> recommendations = recommendationRepo.findRecommendationsByOrderID(request.getOrderID());
         for (Recommendation recommendation : recommendations) {
             recommendationRepo.delete(recommendation);
         }
@@ -240,6 +239,83 @@ public class RecommendationServiceImpl implements RecommendationService {
 
         errorMessage = "Random recommendations returned because " + errorMessage;
         return new GetCartRecommendationResponse(randomItems, false, errorMessage);
+    }
+
+    @Override
+    public GenerateRecommendationTableResponse generateRecommendationTable(GenerateRecommendationTableRequest request) throws InvalidRequestException, URISyntaxException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        else{
+            List<Recommendation> recommendations = recommendationRepo.findAll();
+            List<UUID> orderIDs = new ArrayList<>();
+            List<List<String>> recommendationTable = new ArrayList<List<String>>();
+            int sizeOfTable = 0;
+            int index=0;
+
+            if(recommendations!=null){
+
+                for(int k = 0; k < recommendations.size(); k++)
+                {
+                    if(k == 0){
+                        sizeOfTable++;
+                        orderIDs.add(recommendations.get(k).getOrderID());
+                    }
+                    else{
+                        boolean found = false;
+                        for (UUID orderID : orderIDs) {
+                            if (orderID.equals(recommendations.get(k).getOrderID())) {
+                                found = true;
+                                break;
+                            }
+                        }
+
+                        if(!found){
+                            sizeOfTable++;
+                            orderIDs.add(recommendations.get(k).getOrderID());
+                        }
+                    }
+                }
+
+                for(int i = 0; i < sizeOfTable; i++)  {
+                    recommendationTable.add(new ArrayList<String>());
+                }
+
+                for(int k = 0; k < sizeOfTable; k++){
+                    List<Recommendation> orderIDRecommendations = recommendationRepo.findRecommendationsByOrderID(orderIDs.get(k));
+                    List<String> productIDs = new ArrayList<>();
+
+                    for (Recommendation orderIDRecommendation : orderIDRecommendations) {
+                        productIDs.add(orderIDRecommendation.getProductID());
+                    }
+
+                    Map<String, Object> parts = new HashMap<>();
+                    parts.put("itemIDs", productIDs);
+                    String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItemsByID";
+                    URI uri = new URI(stringUri);
+                    ResponseEntity<GetItemsByIDResponse> responseEntity = restTemplate.postForEntity(
+                            uri, parts, GetItemsByIDResponse.class);
+
+                    List<Item> items = null;
+                    if (responseEntity.getBody() != null) {
+                        items = responseEntity.getBody().getItems();
+                    }
+
+                    if (items != null){
+                        for (Item item : items) {
+                            recommendationTable.get(k).add(item.getName());
+                        }
+                    }
+
+                }
+
+                return new GenerateRecommendationTableResponse(true, "Table created successfully", recommendationTable);
+
+            }else{
+                throw new InvalidRequestException("No recommendations in the table");
+            }
+
+        }
     }
 
 }
