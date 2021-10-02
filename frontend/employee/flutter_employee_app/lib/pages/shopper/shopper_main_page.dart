@@ -1,17 +1,12 @@
-
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Order.dart';
-import 'package:flutter_employee_app/models/Store.dart';
-import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
 import 'package:flutter_employee_app/pages/shopper/list_of_stores_screen.dart';
-import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
+import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
 
 class ShopperHomeScreen extends StatefulWidget {
-  int index=1;
-
+  int index = 1;
 
   ShopperHomeScreen(this.index);
 
@@ -20,10 +15,8 @@ class ShopperHomeScreen extends StatefulWidget {
 }
 
 class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
-
   int bottomSelectedIndex = 1;
-  Order? currentOrder=null;
-
+  Order? currentOrder = null;
 
   PageController pageController = PageController(
     initialPage: 1,
@@ -47,12 +40,11 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
   @override
   void initState() {
     super.initState();
-    bottomSelectedIndex=widget.index;
+    bottomSelectedIndex = widget.index;
     pageController = PageController(
       initialPage: bottomSelectedIndex,
       keepPage: true,
     );
-
   }
 
   void pageChanged(int index) {
@@ -64,7 +56,8 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
   void bottomTapped(int index) {
     setState(() {
       bottomSelectedIndex = index;
-      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+      pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
@@ -82,10 +75,9 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
           bottomTapped(index);
         },
         items: <Widget>[
-
-          Icon(Icons.store,size:20),
-          Icon(Icons.work,size: 20),
-          Icon(Icons.account_circle,size:20),
+          Icon(Icons.store, size: 20),
+          Icon(Icons.work, size: 20),
+          Icon(Icons.account_circle, size: 20),
         ],
         animationDuration: Duration(
           milliseconds: 200,
@@ -95,10 +87,3 @@ class _ShopperHomeScreenState extends State<ShopperHomeScreen> {
     );
   }
 }
-
-
-
-
-
-
-

@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Store.dart';
 import 'package:flutter_employee_app/pages/shopper/stores_information_page.dart';
@@ -14,11 +11,10 @@ class StorePage extends StatefulWidget {
 }
 
 class _StorePageState extends State<StorePage> {
-  final ShoppingService _shoppingService=GetIt.I.get();
+  final ShoppingService _shoppingService = GetIt.I.get();
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
@@ -28,8 +24,7 @@ class _StorePageState extends State<StorePage> {
           centerTitle: true,
           backgroundColor: Theme.of(context).primaryColor,
         ),
-        body: buildStores()
-        );
+        body: buildStores());
   }
 
   Widget buildStores() {
@@ -40,7 +35,6 @@ class _StorePageState extends State<StorePage> {
     return FutureBuilder(
       future: _shoppingService.getStores(context),
       builder: (BuildContext context, snapshot) {
-
         if (snapshot.hasData) {
           //Now let's make a list of articles
           List<Store> items = snapshot.data as List<Store>;
@@ -56,38 +50,41 @@ class _StorePageState extends State<StorePage> {
               ),
               itemCount: items.length,
               itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  if (isOpen(
-                      items[index].openTime, items[index].closeTime)) {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (BuildContext context) => StoreInfoScreen(context, store: items[index])//ProductPage(product: product),
-                    ));
-                  } else {
-                    Alert(
-                      context: context,
-                      title: items[index].name + " is closed",
-                      desc: "The store opens again at " +
-                          items[index].openTime.toString() +
-                          ":00.",
-                      buttons: [
-                        DialogButton(
-                          color: Colors.deepOrange,
-                          child: Text(
-                            "OK",
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 20),
-                          ),
-                          onPressed: () => Navigator.pop(context),
-                          width: 120,
-                        )
-                      ],
-                    ).show();
-                  }
-                },
-                child: Container(
-                  child: buildStore(items[index]),
-                ),
-              ));
+                    onTap: () {
+                      if (isOpen(
+                          items[index].openTime, items[index].closeTime)) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) => StoreInfoScreen(
+                                context,
+                                store: items[
+                                    index]) //ProductPage(product: product),
+                            ));
+                      } else {
+                        Alert(
+                          context: context,
+                          title: items[index].name + " is closed",
+                          desc: "The store opens again at " +
+                              items[index].openTime.toString() +
+                              ":00.",
+                          buttons: [
+                            DialogButton(
+                              color: Colors.deepOrange,
+                              child: Text(
+                                "OK",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              width: 120,
+                            )
+                          ],
+                        ).show();
+                      }
+                    },
+                    child: Container(
+                      child: buildStore(items[index]),
+                    ),
+                  ));
         }
         return Center(
           child: CircularProgressIndicator(),
@@ -97,51 +94,51 @@ class _StorePageState extends State<StorePage> {
   }
 
   Widget buildStore(Store product) => Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).primaryColor,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color:Theme.of(context).primaryColor, width: 2),
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            //constraints: BoxConstraints(
-            //  maxHeight: 100,
-            //),
-            child: Center(
-              child: Image.asset(
-                "assets/"+product.imageUrl,
-              ), //product.imgUrl),
-            ),
-          ),
-          SizedBox(height: 10),
-          Container(
-            child: Container(
-              alignment: Alignment.topLeft,
-              child: Text(
-                product.name,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                softWrap: false,
-                style:
-                TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              isOpenWidget(product.openTime, product.closeTime),
-              openingWidget(product, product.openTime, product.closeTime),
+              Expanded(
+                //constraints: BoxConstraints(
+                //  maxHeight: 100,
+                //),
+                child: Center(
+                  child: Image.asset(
+                    "assets/" + product.imageUrl,
+                  ), //product.imgUrl),
+                ),
+              ),
+              SizedBox(height: 10),
+              Container(
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    product.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    softWrap: false,
+                    style:
+                        TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  isOpenWidget(product.openTime, product.closeTime),
+                  openingWidget(product, product.openTime, product.closeTime),
+                ],
+              )
             ],
-          )
-        ],
-      ),
-    ),
-  );
+          ),
+        ),
+      );
 
   bool isOpen(int openTime, int closeTime) {
     var now = DateTime.now();

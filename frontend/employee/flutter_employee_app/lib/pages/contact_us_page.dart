@@ -13,59 +13,97 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Column(
         children: [
           SizedBox(height: 35),
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.pop(context);
             },
             child: Container(
               alignment: Alignment.centerLeft,
-              child:Icon(Icons.chevron_left,size: 40,),
+              child: Icon(
+                Icons.chevron_left,
+                size: 40,
+              ),
             ),
           ),
           Container(
-            height: MediaQuery.of(context).size.height*0.8,
+            height: MediaQuery.of(context).size.height * 0.8,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 25,),
+                SizedBox(
+                  height: 25,
+                ),
                 Container(
-                  height: MediaQuery.of(context).size.height*0.2,
-                  child:Image(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: Image(
                     fit: BoxFit.fill,
                     image: AssetImage("assets/gifs/customerService.gif"),
                   ),
                 ),
                 Container(
-                    height: MediaQuery.of(context).size.height*0.08,
+                    height: MediaQuery.of(context).size.height * 0.08,
                     alignment: Alignment.center,
                     width: double.infinity,
                     color: Colors.deepOrangeAccent,
-                    child: Text("HELP AND SUPPORT",style: TextStyle(fontWeight: FontWeight.w900,fontSize: 35,color: Colors.white),textAlign: TextAlign.center,)),
-                SizedBox(height: 10,),
-                Container(
-                  width:double.infinity,
-                  child: Text("HAVING PROBLEMS?", style:TextStyle(fontWeight: FontWeight.w500,fontSize: 22),textAlign: TextAlign.center,)
+                    child: Text(
+                      "HELP AND SUPPORT",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 35,
+                          color: Colors.white),
+                      textAlign: TextAlign.center,
+                    )),
+                SizedBox(
+                  height: 10,
                 ),
                 Container(
-                  child: Text("Contact the developers of this app through the social media links and contact details below",textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.w300,fontSize: 18)),
-                ),
-                SizedBox(height: 12,),
+                    width: double.infinity,
+                    child: Text(
+                      "HAVING PROBLEMS?",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                      textAlign: TextAlign.center,
+                    )),
                 Container(
-                  child: Text("Name: SUPER LEAGUE",textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.w700,fontSize: 20)),
+                  child: Text(
+                      "Contact the developers of this app through the social media links and contact details below",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w300, fontSize: 18)),
                 ),
-                SizedBox(height: 12,),
+                SizedBox(
+                  height: 12,
+                ),
                 Container(
-                  child: Text("Email: superleague301@gmail.com",textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.w700,fontSize: 15)),
+                  child: Text("Name: SUPER LEAGUE",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
                 ),
-                SizedBox(height: 5,),
+                SizedBox(
+                  height: 12,
+                ),
                 Container(
-                  child: Text("Contact number: 0737111738",textAlign: TextAlign.center,style:TextStyle(fontWeight: FontWeight.w700,fontSize: 15)),
+                  child: Text("Email: superleague301@gmail.com",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                 ),
-                SizedBox(height: 12,),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  child: Text("Contact number: 0737111738",
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 12,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -81,11 +119,12 @@ class _ContactPageState extends State<ContactPage> {
 
                         OpenMailAppResult result =
                             await OpenMailApp.composeNewEmailInMailApp(
-                            nativePickerTitle: 'Select email app to compose',
-                            emailContent: email);
+                                nativePickerTitle:
+                                    'Select email app to compose',
+                                emailContent: email);
                         if (!result.didOpen && !result.canOpen) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text("No mail apps")));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("No mail apps")));
                         } else if (!result.didOpen && result.canOpen) {
                           showDialog(
                             context: context,
@@ -97,21 +136,23 @@ class _ContactPageState extends State<ContactPage> {
                         }
                       },
                       child: Container(
-                        height: MediaQuery.of(context).size.height*0.1,
-                        child:Image(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Image(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/mail.png"),
                         ),
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(
+                      width: 10,
+                    ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         openwhatsapp();
                       },
                       child: Container(
-                        height: MediaQuery.of(context).size.height*0.1,
-                        child:Image(
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Image(
                           fit: BoxFit.fill,
                           image: AssetImage("assets/phone.png"),
                         ),
@@ -127,32 +168,28 @@ class _ContactPageState extends State<ContactPage> {
     );
   }
 
-  openwhatsapp() async{
-    var whatsapp ="+27737111379";
-    var whatsappURl_android = "whatsapp://send?phone="+whatsapp+"&text=Help and Support Odosla";
-    var whatappURL_ios ="https://wa.me/$whatsapp?text=${Uri.parse("Help and Support Odosla")}";
-    if(Platform.isIOS){
+  openwhatsapp() async {
+    var whatsapp = "+27737111379";
+    var whatsappURl_android =
+        "whatsapp://send?phone=" + whatsapp + "&text=Help and Support Odosla";
+    var whatappURL_ios =
+        "https://wa.me/$whatsapp?text=${Uri.parse("Help and Support Odosla")}";
+    if (Platform.isIOS) {
       // for iOS phone only
-      if( await canLaunch(whatappURL_ios)){
+      if (await canLaunch(whatappURL_ios)) {
         await launch(whatappURL_ios, forceSafariVC: false);
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: new Text("whatsapp no installed")));
-
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
       }
-
-    }else{
+    } else {
       // android , web
-      if( await canLaunch(whatsappURl_android)){
+      if (await canLaunch(whatsappURl_android)) {
         await launch(whatsappURl_android);
-      }else{
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: new Text("whatsapp no installed")));
-
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: new Text("whatsapp no installed")));
       }
-
-
     }
-
   }
 }

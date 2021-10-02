@@ -1,3 +1,4 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/User.dart';
 import 'package:flutter_employee_app/pages/contact_us_page.dart';
@@ -11,7 +12,6 @@ import 'package:flutter_employee_app/utilities/profile_list_item.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:provider/provider.dart';
 
 class ShopperProfileScreen extends StatefulWidget {
@@ -20,34 +20,32 @@ class ShopperProfileScreen extends StatefulWidget {
 }
 
 class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
-
   final UserService _userService = GetIt.I.get();
-  String _name="";
-  String _surname="";
-  String _email="";
-  String _numberOfOrderCompleted="0";
+  String _name = "";
+  String _surname = "";
+  String _email = "";
+  String _numberOfOrderCompleted = "0";
 
   void initState() {
-    bool isUser = Provider.of<UserProvider>(context,listen: false).isUser();
-    if (isUser){
-      User user = Provider.of<UserProvider>(context,listen: false).user;
+    bool isUser = Provider.of<UserProvider>(context, listen: false).isUser();
+    if (isUser) {
+      User user = Provider.of<UserProvider>(context, listen: false).user;
       _name = user.name;
-      _surname=user.surname;
-      _email=user.email;
-      _numberOfOrderCompleted=user.ordersCompleted;
-    }else {
-      _userService.getCurrentUser(context).then((value) =>
-      {
-        setState(() {
-          _name = value!.name;
-          _surname = value.surname;
-          _email = value.email;
-          _numberOfOrderCompleted = value.getOrdersCompleted();
-          if (_numberOfOrderCompleted == null) {
-            _numberOfOrderCompleted = "0";
-          }
-        })
-      });
+      _surname = user.surname;
+      _email = user.email;
+      _numberOfOrderCompleted = user.ordersCompleted;
+    } else {
+      _userService.getCurrentUser(context).then((value) => {
+            setState(() {
+              _name = value!.name;
+              _surname = value.surname;
+              _email = value.email;
+              _numberOfOrderCompleted = value.getOrdersCompleted();
+              if (_numberOfOrderCompleted == null) {
+                _numberOfOrderCompleted = "0";
+              }
+            })
+          });
     }
   }
 
@@ -66,7 +64,8 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
           Container(
             height: kSpacingUnit.w * 11,
             width: kSpacingUnit.w * 11,
-            margin: EdgeInsets.only(top: kSpacingUnit.w * 3,left: kSpacingUnit.w*1),
+            margin: EdgeInsets.only(
+                top: kSpacingUnit.w * 3, left: kSpacingUnit.w * 1),
             child: Stack(
               children: <Widget>[
                 CircleAvatar(
@@ -98,7 +97,7 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
           ),
           SizedBox(height: kSpacingUnit.w * 2),
           Text(
-            _name+" "+_surname,
+            _name + " " + _surname,
             style: kTitleTextStyle,
           ),
           SizedBox(height: kSpacingUnit.w * 0.5),
@@ -117,9 +116,9 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
         return AnimatedCrossFade(
           duration: Duration(milliseconds: 200),
           crossFadeState:
-          ThemeProvider.of(context)!.brightness == Brightness.dark
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+              ThemeProvider.of(context)!.brightness == Brightness.dark
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
           firstChild: GestureDetector(
             onTap: () =>
                 ThemeSwitcher.of(context)!.changeTheme(theme: kLightTheme),
@@ -163,7 +162,9 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                   child: ListView(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*4,vertical: kSpacingUnit.w*0.1),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: kSpacingUnit.w * 4,
+                            vertical: kSpacingUnit.w * 0.1),
                         decoration: new BoxDecoration(
                           boxShadow: [
                             new BoxShadow(
@@ -173,62 +174,57 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                           ],
                         ),
                         child: Card(
-                            margin: EdgeInsets.symmetric(horizontal: kSpacingUnit.w*0.2,vertical: kSpacingUnit.w*0.06),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: kSpacingUnit.w * 0.2,
+                                vertical: kSpacingUnit.w * 0.06),
                             clipBehavior: Clip.antiAlias,
                             color: Theme.of(context).backgroundColor,
                             shadowColor: Colors.grey,
                             elevation: 5.0,
                             child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5.0,vertical: 20.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 20.0),
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
-                                        child:Column(
-                                          children: <Widget>[
-                                            Text(
-                                                "Number of Orders Completed",
-                                                style: kTitleTextStyle.copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: kSpacingUnit.w*2,
-                                                )
-                                            ),
-                                            SizedBox(height:kSpacingUnit.w*2),
-                                            Text(
-                                              _numberOfOrderCompleted,
-                                              style: kTitleTextStyle.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                                fontSize: kSpacingUnit.w*3,
-                                              ),
-                                            ),
-
-                                          ],
-                                        )
-                                    ),
-
+                                        child: Column(
+                                      children: <Widget>[
+                                        Text("Number of Orders Completed",
+                                            style: kTitleTextStyle.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: kSpacingUnit.w * 2,
+                                            )),
+                                        SizedBox(height: kSpacingUnit.w * 2),
+                                        Text(
+                                          _numberOfOrderCompleted,
+                                          style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: kSpacingUnit.w * 3,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                                   ],
-                                )
-                            )
-                        ),
+                                ))),
                       ),
-                      SizedBox(height: kSpacingUnit.w*2),
+                      SizedBox(height: kSpacingUnit.w * 2),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (BuildContext context) => WalletPage()));
                         },
-                        child: ProfileListItem(
-                            LineAwesomeIcons.wallet,
-                            'Wallet'
-                        ),
+                        child:
+                            ProfileListItem(LineAwesomeIcons.wallet, 'Wallet'),
                       ),
                       // ProfileListItem(
                       //   LineAwesomeIcons.history,
                       //   'Purchase History',
                       // ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => ContactPage()));
+                              builder: (BuildContext context) =>
+                                  ContactPage()));
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.question_circle,
@@ -236,11 +232,12 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => EditProfilePage()));
+                              builder: (BuildContext context) =>
+                                  EditProfilePage()));
                         },
-                        child:ProfileListItem(
+                        child: ProfileListItem(
                           LineAwesomeIcons.cog,
                           'Settings',
                         ),
@@ -252,7 +249,6 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.alternate_sign_out,
-
                           'Logout',
                         ),
                       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_form.dart';
 import 'package:flutter_credit_card/credit_card_model.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:provider/provider.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({Key? key}) : super(key: key);
@@ -33,8 +32,7 @@ class _WalletPageState extends State<WalletPage> {
           fit: StackFit.expand,
           children: [
             Padding(
-                padding: const EdgeInsets.all(12),
-                child: buildPage(context)),
+                padding: const EdgeInsets.all(12), child: buildPage(context)),
             Positioned(
                 top: 5,
                 left: 5,
