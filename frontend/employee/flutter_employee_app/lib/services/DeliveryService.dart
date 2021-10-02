@@ -11,200 +11,207 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import 'UserService.dart';
-class DeliveryService{
 
-   final UserService _userService=GetIt.I.get();
+class DeliveryService {
+  final UserService _userService = GetIt.I.get();
 
-   Future<String> getNextOrderForDriver(BuildContext context) async {
+  Future<String> getNextOrderForDriver(BuildContext context) async {
+    final loginURL =
+        Uri.parse(deliveryEndPoint + "delivery/getNextOrderForDriver");
 
-     final loginURL = Uri.parse(deliveryEndPoint+"delivery/getNextOrderForDriver");
+    Map<String, String> headers = new Map<String, String>();
+    String jwt = "";
 
-     Map<String,String> headers =new Map<String,String>();
-     String jwt="";
+    await _userService.getJWTAsString(context).then((value) => {jwt = value!});
 
-     await _userService.getJWTAsString(context).then((value) => {
-       jwt=value!
-     });
+    print(jwt);
 
-     print(jwt);
+    headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization": jwt,
+    };
 
-     headers =
-     {
-       "Accept": "application/json",
-       "content-type": "application/json",
-       "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS",
-       "Authorization":jwt,
-     };
+    final data = {
+      "rangeOfDelivery": 1000,
+      "currentLocation": {
+        "latitude": -25.748931,
+        "longitude": 28.243325,
+        "address": "Urban Quarters"
+      }
+    };
 
-     final data = {
-       "rangeOfDelivery":1000,
-       "currentLocation":{
-         "latitude":-25.748931,
-         "longitude": 28.243325,
-          "address":"Urban Quarters"
+    final response =
+        await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print("RESPONSE DATA");
+      print(responseData);
+      if (responseData["message"] ==
+          "Driver can take the following delivery.") {
+        Delivery delivery = Delivery.fromJson(responseData["delivery"]);
+        Provider.of<DeliveryProvider>(context, listen: false).delivery =
+            delivery;
+        if (responseData["delivery"]["pickUpLocationTwo"] != null &&
+            responseData["delivery"]["pickUpLocationTwo"] == null) {
+          Provider.of<DeliveryProvider>(context, listen: false)
+              .isTwoDeliveries = true;
+        } else if (responseData["delivery"]["pickUpLocationThree"] != null) {
+          Provider.of<DeliveryProvider>(context, listen: false)
+              .isThreeDeliveries = true;
         }
-     };
+        this.getCustomer(delivery.customerID, context);
+        return responseData["delivery"]["deliveryID"];
+      }
+      return "";
+    }
+    return "";
+  }
 
-     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
-     print(response.body);
+  Future<bool> assignDriverToDelivery(
+      String deliveryID, BuildContext context) async {
+    final loginURL =
+        Uri.parse(deliveryEndPoint + "delivery/assignDriverToDelivery");
 
-     if (response.statusCode==200) {
-       Map<String,dynamic> responseData = json.decode(response.body);
-       print("RESPONSE DATA");
-       print(responseData);
-       if (responseData["message"] == "Driver can take the following delivery.") {
-         Delivery delivery=Delivery.fromJson(responseData["delivery"]);
-         Provider.of<DeliveryProvider>(context,listen: false).delivery=delivery;
-         if(responseData["delivery"]["pickUpLocationTwo"]!=null && responseData["delivery"]["pickUpLocationTwo"]==null) {
-           Provider
-               .of<DeliveryProvider>(context, listen: false)
-               .isTwoDeliveries=true;
-         }
-         else if(responseData["delivery"]["pickUpLocationThree"]!=null) {
-           Provider
-               .of<DeliveryProvider>(context, listen: false)
-               .isThreeDeliveries=true;
-         }
-         this.getCustomer(delivery.customerID, context);
-         return responseData["delivery"]["deliveryID"];
-         }
-         return "";
-       }
-     return "";
-     }
+    Map<String, String> headers = new Map<String, String>();
 
-   Future<bool> assignDriverToDelivery(String deliveryID, BuildContext context) async {
+    String jwt = "";
+    await _userService.getJWTAsString(context).then((value) => {jwt = value!});
 
-     final loginURL = Uri.parse(deliveryEndPoint+"delivery/assignDriverToDelivery");
+    print(jwt);
 
-     Map<String,String> headers =new Map<String,String>();
+    headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization": jwt,
+    };
 
-     String jwt="";
-     await _userService.getJWTAsString(context).then((value) => {
-       jwt=value!
-     });
+    final data = {
+      "deliveryID": "$deliveryID",
+    };
 
-     print(jwt);
+    final response =
+        await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    print(response.body);
 
-     headers =
-     {
-       "Accept": "application/json",
-       "content-type": "application/json",
-       "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS",
-       "Authorization":jwt,
-     };
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      if (responseData["isAssigned"] == true) {
+        print("driver id get returned");
+        print(responseData["driverID"]);
+        Provider.of<DeliveryProvider>(context, listen: false)
+            .delivery
+            .driverID = responseData["driverID"];
+        return true;
+      } else if ((responseData["isAssigned"] == false)) {
+        Provider.of<DeliveryProvider>(context, listen: false).delivery =
+            new Delivery(
+                "",
+                new GeoPoint(0.0, 0.0, ""),
+                new GeoPoint(0.0, 0.0, ""),
+                "",
+                "",
+                "",
+                "",
+                "",
+                0.0,
+                false,
+                new GeoPoint(0.0, 0.0, ""),
+                new GeoPoint(0.0, 0.0, ""));
+      }
+    }
+    return false;
+  }
 
-     final data = {
-       "deliveryID":"$deliveryID",
-     };
+  Future<bool> UpdateDeliveryStatus(
+      String deliveryID, String status, BuildContext context) async {
+    final loginURL =
+        Uri.parse(deliveryEndPoint + "delivery/updateDeliveryStatus");
 
-     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
-     print(response.body);
+    Map<String, String> headers = new Map<String, String>();
 
-     if (response.statusCode==200) {
-       Map<String,dynamic> responseData = json.decode(response.body);
-       if (responseData["isAssigned"] == true) {
-         print("driver id get returned");
-         print(responseData["driverID"]);
-         Provider.of<DeliveryProvider>(context,listen: false).delivery.driverID=responseData["driverID"];
-         return true;
-       }else if ((responseData["isAssigned"] == false)){
-         Provider.of<DeliveryProvider>(context,listen: false).delivery= new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false,new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""));
-       }
-     }
-     return false;
-   }
+    String jwt = "";
+    await _userService.getJWTAsString(context).then((value) => {jwt = value!});
 
-   Future<bool> UpdateDeliveryStatus(String deliveryID, String status,BuildContext context) async {
+    print(jwt);
 
-     final loginURL = Uri.parse(deliveryEndPoint+"delivery/updateDeliveryStatus");
+    headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization": jwt,
+    };
+    deliveryID = Provider.of<DeliveryProvider>(context, listen: false)
+        .delivery
+        .deliveryID;
+    final data = {
+      "status": status,
+      "deliveryID": "$deliveryID",
+      "detail": "Driver is on way to collect delivery from store"
+    };
 
-     Map<String,String> headers =new Map<String,String>();
+    final response =
+        await http.post(loginURL, headers: headers, body: jsonEncode(data));
 
-     String jwt="";
-     await _userService.getJWTAsString(context).then((value) => {
-       jwt=value!
-     });
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print(responseData["message"]);
+      if (responseData["message"] == "Successful status update.") {
+        Provider.of<DeliveryProvider>(context, listen: false)
+            .delivery
+            .deliveryStatus = status;
+        return true;
+      } else
+        return false;
+    } else {
+      return false;
+    }
+  }
 
-     print(jwt);
+  Future<bool> getCustomer(String customerID, BuildContext context) async {
+    final loginURL = Uri.parse(userEndPoint + "user/getCustomerByUUID");
 
-     headers =
-     {
-       "Accept": "application/json",
-       "content-type": "application/json",
-       "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS",
-       "Authorization":jwt,
-     };
-     deliveryID=Provider
-         .of<DeliveryProvider>(context, listen: false)
-         .delivery.deliveryID;
-     final data = {
-       "status":status,
-       "deliveryID":"$deliveryID",
-       "detail":"Driver is on way to collect delivery from store"
-     };
+    Map<String, String> headers = new Map<String, String>();
 
-     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    String jwt = "";
 
-     if (response.statusCode==200) {
-       Map<String,dynamic> responseData = json.decode(response.body);
-       print(responseData["message"]);
-       if(responseData["message"]=="Successful status update.") {
-         Provider
-             .of<DeliveryProvider>(context, listen: false)
-             .delivery
-             .deliveryStatus = status;
-         return true;
-       }
-       else return false;
-     }else{
-       return false;
-     }
-   }
+    await _userService.getJWTAsString(context).then((value) => {jwt = value!});
 
-   Future<bool> getCustomer(String customerID, BuildContext context) async {
+    print(jwt);
 
-     final loginURL = Uri.parse(userEndPoint+"user/getCustomerByUUID");
+    headers = {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization": jwt,
+    };
 
-     Map<String,String> headers =new Map<String,String>();
+    final data = {"userID": "$customerID"};
 
-     String jwt="";
-
-     await _userService.getJWTAsString(context).then((value) => {
-       jwt=value!
-     });
-
-     print(jwt);
-
-     headers =
-     {
-       "Accept": "application/json",
-       "content-type": "application/json",
-       "Access-Control-Allow-Origin": "*",
-       "Access-Control-Allow-Methods": "POST, OPTIONS",
-       "Authorization":jwt,
-     };
-
-     final data = {
-       "userID":"$customerID"
-     };
-
-     final response = await http.post(loginURL, headers: headers, body: jsonEncode(data));
-     print(response.body);
-     if (response.statusCode==200) {
-       Map<String,dynamic> responseData = json.decode(response.body);
-       print(responseData["message"]);
-       if(responseData["message"].contains("Customer entity with corresponding user id was returned")) {
-         Customer customer=Customer.fromJson(responseData["customer"]);
-         Provider.of<DeliveryProvider>(context,listen: false).customer=customer;
-         return true;
-       }
-       else return false;
-     }else{
-       return false;
-     }
-   }
+    final response =
+        await http.post(loginURL, headers: headers, body: jsonEncode(data));
+    print(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = json.decode(response.body);
+      print(responseData["message"]);
+      if (responseData["message"].contains(
+          "Customer entity with corresponding user id was returned")) {
+        Customer customer = Customer.fromJson(responseData["customer"]);
+        Provider.of<DeliveryProvider>(context, listen: false).customer =
+            customer;
+        return true;
+      } else
+        return false;
+    } else {
+      return false;
+    }
+  }
 }
