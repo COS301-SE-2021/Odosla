@@ -213,4 +213,50 @@ class ShoppingService {
 
   }
 
+  Future<List<CartItem>> getItems(String storeID,BuildContext context) async {
+    String sId = storeID;
+    String jwt="";
+
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+    final response = await http.post(Uri.parse(shoppingEndPoint + 'shopping/getItems'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":jwt,
+        },
+        body: jsonEncode({"storeID": storeID}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint("2:::" + map.entries.toString());
+      List<CartItem> list = cartItemsFromJson(map);
+      debugPrint("1:::" + list.toString());
+      return list; //CartItem.fromJson(map)
+    } else {
+      List<CartItem> list = List.empty();
+      debugPrint(storeID);
+      debugPrint("___ err " + response.statusCode.toString());
+      return list; //CartItem.fromJson(map)
+
+    }
+  }
+
+  List<CartItem> cartItemsFromJson(Map<String, dynamic> j) {
+    List<CartItem> list;
+
+    //Iterable i = json.decode(j['items']);
+    debugPrint("x-1");
+    list = (json.decode(json.encode(j['items'])) as List)
+        .map((i) => CartItem.fromJson(i))
+        .toList();
+    debugPrint("x-2");
+
+    return list;
+  }
+
 }

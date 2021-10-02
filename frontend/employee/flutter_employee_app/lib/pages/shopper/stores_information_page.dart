@@ -91,42 +91,77 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
  Widget _endShiftBTN() {
    return Column(
      children: [
-       Container(
-         width: MediaQuery.of(context).size.width*0.6,
-         padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 30),
-         child: RaisedButton(
-           elevation: 5.0,
-           onPressed: () async {
-             Provider.of<ShopProvider>(context,listen: false).store=widget.store;
-             Navigator.of(context).push(MaterialPageRoute(
-             builder: (BuildContext context) =>
-             GetNewOrderScreen(context, store: widget
-                 .store) //ProductPage(product: product),
-             ));
-           },
-           padding: EdgeInsets.all(5.0),
-           shape: RoundedRectangleBorder(
-             borderRadius: BorderRadius.circular(10.0),
-           ),
-           color: Colors.deepOrangeAccent,
-           textColor: Color(0xFFCB4E2C),
-           child: Text(
-             'Current Orders',
-             style: TextStyle(
-               color: Colors.white,
-               letterSpacing: 1.5,
-               fontSize: 18.0,
-               fontWeight: FontWeight.bold,
-               fontFamily: 'OpenSans',
+       Padding(
+         padding: const EdgeInsets.symmetric(horizontal: 40.0),
+         child: Row(
+           children: [
+             Expanded(
+               child: RaisedButton(
+                 elevation: 15.0,
+                 onPressed: () async {
+                   Provider.of<ShopProvider>(context,listen: false).store=widget.store;
+                   Navigator.of(context).push(MaterialPageRoute(
+                   builder: (BuildContext context) =>
+                   GetNewOrderScreen(context, store: widget
+                       .store) //ProductPage(product: product),
+                   ));
+                 },
+                 padding: EdgeInsets.all(5.0),
+                 shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(10.0),
+                 ),
+                 color: Colors.deepOrangeAccent,
+                 textColor: Color(0xFFCB4E2C),
+                 child: Text(
+                   'Current Orders',
+                   style: TextStyle(
+                     color: Colors.white,
+                     letterSpacing: 1.5,
+                     fontSize: 15.0,
+                     fontWeight: FontWeight.bold,
+                     fontFamily: 'OpenSans',
+                   ),
+                 ),
+               ),
              ),
-           ),
+             SizedBox(width: 12,),
+             Expanded(
+               child: RaisedButton(
+                 elevation: 15.0,
+                 onPressed: () async {
+                   Provider.of<ShopProvider>(context,listen: false).store=widget.store;
+                   Navigator.of(context).push(MaterialPageRoute(
+                       builder: (BuildContext context) =>
+                           GetNewOrderScreen(context, store: widget
+                               .store) //ProductPage(product: product),
+                   ));
+                 },
+                 padding: EdgeInsets.symmetric(vertical: 5.0),
+                 shape: RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(10.0),
+                 ),
+                 color: Colors.deepOrangeAccent,
+                 textColor: Color(0xFFCB4E2C),
+                 child: Text(
+                   'Out of Stock',
+                   style: TextStyle(
+                     color: Colors.white,
+                     letterSpacing: 1.5,
+                     fontSize: 15.0,
+                     fontWeight: FontWeight.bold,
+                     fontFamily: 'OpenSans',
+                   ),
+                 ),
+               ),
+             ),
+           ],
          ),
        ),
        Container(
          width: double.infinity,
          padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 40),
          child: RaisedButton(
-           elevation: 5.0,
+           elevation: 15.0,
            onPressed: () async {
              await _userService.setShopperShift(false, widget.store.id, context).then((value) =>
              {
