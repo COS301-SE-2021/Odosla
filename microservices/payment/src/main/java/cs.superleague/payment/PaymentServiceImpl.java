@@ -1319,15 +1319,24 @@ public class PaymentServiceImpl implements PaymentService {
 
         Map<String, Object> parts = new HashMap<String, Object>();
         parts.put("deliveryID", request.getDeliveryID().toString());
-        ResponseEntity<GetDeliveryByUUIDResponse> getDeliveryByUUIDResponseResponseEntity = restTemplate
-                .postForEntity(uri, parts, GetDeliveryByUUIDResponse.class);
-        if (getDeliveryByUUIDResponseResponseEntity == null || getDeliveryByUUIDResponseResponseEntity.getBody() == null || getDeliveryByUUIDResponseResponseEntity.getBody().getDelivery() == null){
+        ResponseEntity<GetDeliveryByUUIDResponse> getDeliveryByUUIDResponseResponseEntity = restTemplate.postForEntity(uri, parts, GetDeliveryByUUIDResponse.class);
+        if (getDeliveryByUUIDResponseResponseEntity == null || getDeliveryByUUIDResponseResponseEntity.getBody() == null){
             throw new InvalidRequestException("Delivery does not exist.");
         }
+        System.out.println(getDeliveryByUUIDResponseResponseEntity.getBody().getMessage() + "Get delivery by UUID message");
         Delivery delivery = getDeliveryByUUIDResponseResponseEntity.getBody().getDelivery();
+        if (delivery == null){
+            throw new InvalidRequestException("Null delivery.");
+        }
         Order orderOne = orderRepo.findById(delivery.getOrderIDOne()).orElse(null);
-        Order orderTwo = orderRepo.findById(delivery.getOrderIDTwo()).orElse(null);
-        Order orderThree = orderRepo.findById(delivery.getOrderIDThree()).orElse(null);
+        Order orderTwo = null;
+        Order orderThree = null;
+        if (delivery.getOrderIDTwo() != null){
+            orderTwo = orderRepo.findById(delivery.getOrderIDTwo()).orElse(null);
+        }
+        if (delivery.getOrderIDThree() != null){
+            orderThree = orderRepo.findById(delivery.getOrderIDThree()).orElse(null);
+        }
         if (orderOne == null){
             throw new InvalidRequestException("No order added to this delivery.");
         }

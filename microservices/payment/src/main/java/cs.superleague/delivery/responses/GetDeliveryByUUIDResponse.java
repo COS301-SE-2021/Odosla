@@ -1,14 +1,16 @@
 package cs.superleague.delivery.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import cs.superleague.delivery.dataclass.Delivery;
 
 import java.util.Date;
 
 public class GetDeliveryByUUIDResponse {
 
+    @JsonProperty("deliveryEntity")
     private final Delivery deliveryEntity;
-    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private final Date timestamp;
     private final String message;
 
