@@ -1,4 +1,3 @@
-import 'package:bezier_chart/bezier_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
 import 'package:flutter_employee_app/widgets/graph_card_widget.dart';

@@ -1,3 +1,4 @@
+import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/User.dart';
 import 'package:flutter_employee_app/pages/admin/edit_pade_admin.dart';
@@ -9,11 +10,9 @@ import 'package:flutter_employee_app/utilities/profile_list_item.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:provider/provider.dart';
 
 import '../contact_us_page.dart';
-
 
 class AdminProfileScreen extends StatefulWidget {
   @override
@@ -21,28 +20,26 @@ class AdminProfileScreen extends StatefulWidget {
 }
 
 class _AdminProfileScreenState extends State<AdminProfileScreen> {
-
   final UserService _userService = GetIt.I.get();
-  String _name="";
-  String _surname="";
-  String _email="";
+  String _name = "";
+  String _surname = "";
+  String _email = "";
 
   initState() {
-    bool isUser = Provider.of<UserProvider>(context,listen: false).isUser();
-    if (isUser){
-      User user = Provider.of<UserProvider>(context,listen: false).user;
+    bool isUser = Provider.of<UserProvider>(context, listen: false).isUser();
+    if (isUser) {
+      User user = Provider.of<UserProvider>(context, listen: false).user;
       _name = user.name;
-      _surname=user.surname;
-      _email=user.email;
-    }else {
-      _userService.getCurrentUser(context).then((value) =>
-      {
-        setState(() {
-          _name = value!.name;
-          _surname = value.surname;
-          _email = value.email;
-        })
-      });
+      _surname = user.surname;
+      _email = user.email;
+    } else {
+      _userService.getCurrentUser(context).then((value) => {
+            setState(() {
+              _name = value!.name;
+              _surname = value.surname;
+              _email = value.email;
+            })
+          });
     }
   }
 
@@ -61,7 +58,8 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           Container(
             height: kSpacingUnit.w * 11,
             width: kSpacingUnit.w * 11,
-            margin: EdgeInsets.only(top: kSpacingUnit.w * 3,left: kSpacingUnit.w*1),
+            margin: EdgeInsets.only(
+                top: kSpacingUnit.w * 3, left: kSpacingUnit.w * 1),
             child: Stack(
               children: <Widget>[
                 CircleAvatar(
@@ -93,7 +91,7 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
           ),
           SizedBox(height: kSpacingUnit.w * 2),
           Text(
-            _name+" "+_surname,
+            _name + " " + _surname,
             style: kTitleTextStyle,
           ),
           SizedBox(height: kSpacingUnit.w * 0.5),
@@ -112,9 +110,9 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
         return AnimatedCrossFade(
           duration: Duration(milliseconds: 200),
           crossFadeState:
-          ThemeProvider.of(context)!.brightness == Brightness.dark
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+              ThemeProvider.of(context)!.brightness == Brightness.dark
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
           firstChild: GestureDetector(
             onTap: () =>
                 ThemeSwitcher.of(context)!.changeTheme(theme: kLightTheme),
@@ -157,11 +155,12 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                 Expanded(
                   child: ListView(
                     children: <Widget>[
-                      SizedBox(height: kSpacingUnit.w*2),
+                      SizedBox(height: kSpacingUnit.w * 2),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => ContactPage()));
+                              builder: (BuildContext context) =>
+                                  ContactPage()));
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.question_circle,
@@ -169,11 +168,12 @@ class _AdminProfileScreenState extends State<AdminProfileScreen> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => EditAdminProfilePage()));
+                              builder: (BuildContext context) =>
+                                  EditAdminProfilePage()));
                         },
-                        child:ProfileListItem(
+                        child: ProfileListItem(
                           LineAwesomeIcons.cog,
                           'Settings',
                         ),

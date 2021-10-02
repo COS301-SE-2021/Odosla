@@ -1,4 +1,3 @@
-
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/admin/analytics_page.dart';
@@ -7,8 +6,8 @@ import 'admin_profile_screen.dart';
 import 'importer_page.dart';
 
 class AdminHomeScreen extends StatefulWidget {
+  int index = 1;
 
-  int index=1;
   AdminHomeScreen(this.index);
 
   @override
@@ -16,7 +15,6 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
-
   int bottomSelectedIndex = 1;
 
   PageController pageController = PageController(
@@ -41,7 +39,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   @override
   void initState() {
     super.initState();
-    bottomSelectedIndex=widget.index;
+    bottomSelectedIndex = widget.index;
     pageController = PageController(
       initialPage: bottomSelectedIndex,
       keepPage: true,
@@ -57,7 +55,8 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   void bottomTapped(int index) {
     setState(() {
       bottomSelectedIndex = index;
-      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+      pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
@@ -67,7 +66,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       body: buildPageView(),
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.deepOrangeAccent,
-        backgroundColor: bottomSelectedIndex==2?Theme.of(context).primaryColor:Color(0xFFC78760),
+        backgroundColor: bottomSelectedIndex == 2
+            ? Theme.of(context).primaryColor
+            : Color(0xFFC78760),
         buttonBackgroundColor: Colors.deepOrangeAccent,
         height: 50,
         onTap: (index) {
@@ -75,9 +76,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         },
         index: bottomSelectedIndex,
         items: <Widget>[
-          Icon(Icons.add,size:20),
-          Icon(Icons.analytics,size: 20),
-          Icon(Icons.account_circle,size:20),
+          Icon(Icons.add, size: 20),
+          Icon(Icons.analytics, size: 20),
+          Icon(Icons.account_circle, size: 20),
         ],
         animationDuration: Duration(
           milliseconds: 200,
@@ -87,10 +88,3 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     );
   }
 }
-
-
-
-
-
-
-

@@ -1,27 +1,12 @@
-
-
-import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_employee_app/models/Delivery.dart';
-import 'package:flutter_employee_app/models/GeoPoint.dart';
-import 'package:flutter_employee_app/models/Order.dart';
-import 'package:flutter_employee_app/models/Store.dart';
 import 'package:flutter_employee_app/pages/driver/driver_map.dart';
-import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
-import 'package:flutter_employee_app/pages/shopper/list_of_stores_screen.dart';
-import 'package:flutter_employee_app/pages/shopper/shopper_work_screen.dart';
-import 'package:flutter_employee_app/pages/shopper/shopper_profile_screen.dart';
-import 'package:flutter_employee_app/provider/UtilityProvider.dart';
-import 'package:flutter_employee_app/provider/delivery_provider.dart';
-import 'package:provider/provider.dart';
 
 import 'driver_profile_screen.dart';
 import 'driver_work_screen.dart';
 
 class DriverHomeScreen extends StatefulWidget {
-  int index=1;
-
+  int index = 1;
 
   DriverHomeScreen(this.index);
 
@@ -30,7 +15,6 @@ class DriverHomeScreen extends StatefulWidget {
 }
 
 class _DriverHomeScreenState extends State<DriverHomeScreen> {
-
   int bottomSelectedIndex = 1;
 
   PageController pageController = PageController(
@@ -55,7 +39,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   @override
   void initState() {
     super.initState();
-    bottomSelectedIndex=widget.index;
+    bottomSelectedIndex = widget.index;
     pageController = PageController(
       initialPage: bottomSelectedIndex,
       keepPage: true,
@@ -64,7 +48,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
 
   void pageChanged(int index) {
     setState(() {
-
       bottomSelectedIndex = index;
     });
   }
@@ -72,7 +55,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
   void bottomTapped(int index) {
     setState(() {
       bottomSelectedIndex = index;
-      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+      pageController.animateToPage(index,
+          duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
 
@@ -90,9 +74,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
         },
         index: bottomSelectedIndex,
         items: <Widget>[
-          Icon(Icons.map,size:20),
-          Icon(Icons.work,size: 20),
-          Icon(Icons.account_circle,size:20),
+          Icon(Icons.map, size: 20),
+          Icon(Icons.work, size: 20),
+          Icon(Icons.account_circle, size: 20),
         ],
         animationDuration: Duration(
           milliseconds: 200,
@@ -102,10 +86,3 @@ class _DriverHomeScreenState extends State<DriverHomeScreen> {
     );
   }
 }
-
-
-
-
-
-
-
