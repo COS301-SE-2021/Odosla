@@ -31,6 +31,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/recommendation_getCartRecommendationResponse"
 
+  /recommendation/generateRecommendationTable:
+    post:
+      summary: Endpoint for creating recommendation table
+      tags:
+        - "recommendation"
+      description: Refer to summary
+      operationId: generateRecommendationTable
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/recommendation_generateRecommendationTableRequest"
+      responses:
+        "200":
+          description: Returns the recommender table
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/recommendation_generateRecommendationTableResponse"
+
 components:
 
   schemas:
@@ -119,4 +141,23 @@ components:
         totalCost:
           type: number
         cartItemNo:
+          type: string
+
+    recommendation_generateRecommendationTableRequest:
+      description: This object is expected as input
+      type: object
+
+    recommendation_generateRecommendationTableResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        recommendationTable:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+        isSuccess:
+          type: boolean
+        message:
           type: string
