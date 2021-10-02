@@ -1236,10 +1236,6 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidRequestException("CartItem is null in fixOrderProblem request - could not fix order problem");
         }
 
-        if (request.getCartItems() == null) {
-            throw new InvalidRequestException("CartItems is null in fixOrderProblem request - could not fix order problem");
-        }
-
         if (request.getCartItem().getCartItemNo() == null) {
             throw new InvalidRequestException("CartItemNo is null in fixOrderProblem request - could not fix order");
         }
@@ -1253,6 +1249,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         cartItemRepo.delete(cartItem);
 
+        if (request.getCartItems() != null)
         for (CartItem c : request.getCartItems()) {
             c.setTotalCost(c.getPrice() * c.getQuantity());
             c.setStoreID(cartItem.getStoreID());
@@ -1268,7 +1265,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         cartItems = order.getCartItems();
-        cartItems.addAll(request.getCartItems());
+
+        if(cartItems.contains(cartItem))
+            cartItems.remove(cartItem);
+
+        if (request.getCartItems() != null)
+            cartItems.addAll(request.getCartItems());
 
         order.setCartItems(cartItems);
 

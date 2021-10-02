@@ -589,7 +589,7 @@ public class PaymentController implements PaymentApi {
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
             FixOrderProblemRequest request = new FixOrderProblemRequest(
-                    populateCartItem(body.getCartItem()), populateCartItemList(body.getCartItems()));
+                    populateCartItem(body.getCartItem()), assignCartItems(body.getCartItems()));
 
             fixOrderProblemResponse = paymentService.fixOrderProblem(request);
         } catch (InvalidRequestException | URISyntaxException e) {
