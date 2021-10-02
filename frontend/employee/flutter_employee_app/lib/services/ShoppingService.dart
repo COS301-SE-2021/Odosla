@@ -150,9 +150,9 @@ class ShoppingService {
     }
   }
 
-  Future<Store> provideAlternative(
-      BuildContext context, String storeID, String barcode) async {
-    final loginURL = Uri.parse(shoppingEndPoint + "shopping/getStoreByUUID");
+  Future<Store> itemIsInStock(
+      BuildContext context, String storeID,String barcode, bool outOfStock) async {
+    final loginURL = Uri.parse(shoppingEndPoint + "shopping/itemIsInStock");
 
     Map<String, String> headers = new Map<String, String>();
 
@@ -169,7 +169,11 @@ class ShoppingService {
     };
 
     print(storeID);
-    final data = {"storeID": "$storeID"};
+    final data = {
+      "storeID" : "$storeID",
+      "barcode": "$barcode",
+      "outOfStock": outOfStock
+    };
 
     final response =
         await http.post(loginURL, headers: headers, body: jsonEncode(data));
@@ -187,9 +191,7 @@ class ShoppingService {
   }
 
   Future<List<CartItem>> getItems(String storeID, BuildContext context) async {
-    String sId = storeID;
     String jwt = "";
-
     await _userService.getJWTAsString(context).then((value) => {jwt = value!});
     final response =
         await http.post(Uri.parse(shoppingEndPoint + 'shopping/getItems'),
@@ -220,7 +222,6 @@ class ShoppingService {
 
   Future<List<CartItem>> getItemsSoldOut(
       String storeID, BuildContext context) async {
-    String sId = storeID;
     String jwt = "";
 
     await _userService.getJWTAsString(context).then((value) => {jwt = value!});
@@ -253,7 +254,7 @@ class ShoppingService {
 
   Future<List<CartItem>> getItemsInStock(
       String storeID, BuildContext context) async {
-    String sId = storeID;
+
     String jwt = "";
 
     await _userService.getJWTAsString(context).then((value) => {jwt = value!});
