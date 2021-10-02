@@ -55,6 +55,16 @@ class DeliveryService{
        if (responseData["message"] == "Driver can take the following delivery.") {
          Delivery delivery=Delivery.fromJson(responseData["delivery"]);
          Provider.of<DeliveryProvider>(context,listen: false).delivery=delivery;
+         if(responseData["delivery"]["pickUpLocationTwo"]!=null && responseData["delivery"]["pickUpLocationTwo"]==null) {
+           Provider
+               .of<DeliveryProvider>(context, listen: false)
+               .isTwoDeliveries=true;
+         }
+         else if(responseData["delivery"]["pickUpLocationThree"]!=null) {
+           Provider
+               .of<DeliveryProvider>(context, listen: false)
+               .isThreeDeliveries=true;
+         }
          this.getCustomer(delivery.customerID, context);
          return responseData["delivery"]["deliveryID"];
          }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_employee_app/models/GeoPoint.dart';
 import 'package:flutter_employee_app/models/Order.dart';
 import 'package:flutter_employee_app/models/Store.dart';
 
@@ -30,6 +31,14 @@ List<Store> StoresFromJson(Map<String, dynamic> j) {
   List<Store> list;
   list = (json.decode(json.encode(j['stores'])) as List)
       .map((i) => Store.fromJson(i))
+      .toList();
+
+  return list;
+}
+List<GeoPoint> GeoPointsFromJson(Map<String, dynamic> j) {
+  List<GeoPoint> list;
+  list = (json.decode(json.encode(j['pickUpLocations'])) as List)
+      .map((i) => GeoPoint.fromJson(i))
       .toList();
 
   return list;

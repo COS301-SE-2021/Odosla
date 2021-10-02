@@ -44,6 +44,9 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
   Widget _popUpSuccessfulFoundDeliveries(BuildContext context){
 
     Delivery _delivery=Provider.of<DeliveryProvider>(context).delivery;
+    bool _isOne=Provider.of<DeliveryProvider>(context).isOneDelivery;
+    bool _isTwo=Provider.of<DeliveryProvider>(context).isTwoDeliveries;
+    bool _isThree=Provider.of<DeliveryProvider>(context).isThreeDeliveries;
 
     return new AlertDialog(
       title: const Text('FOUND A DELIVERY',textAlign: TextAlign.center),
@@ -51,7 +54,11 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text("There is a delivery from \n"+_delivery.pickUpLocation.address+" \n to \n"+_delivery.dropOffLocation.address+"\n Accept it?",
+          Text("There is a delivery from \n"+_delivery.pickUpLocationOne.address+" \n to \n"+_delivery.dropOffLocation.address+"\n Accept it?",
+              textAlign: TextAlign.center
+          ),
+          _isOne?Container():Text("There are "+(_isTwo?"2":"3")+" stores to collect from", textAlign: TextAlign.center),
+          Text("\n Accept it?",
               textAlign: TextAlign.center
           ),
         ],
@@ -80,7 +87,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
         ),
         new FlatButton(
           onPressed: () async {
-            Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
+            Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false,new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""));
             Navigator.pop(context, false);
           },
           child: const Text('Decline'),
@@ -187,7 +194,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
         _startedDelivery=false;
         _collectedFromStore=false;
         _startedDeliveringToCustomer=false;
-        Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
+        Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false,new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""));
       });
     }
     setState(() {
@@ -205,6 +212,9 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
         orientation: Orientation.portrait);
     Delivery _delivery=Provider.of<DeliveryProvider>(context,listen: false).delivery;
     Customer _customer=Provider.of<DeliveryProvider>(context,listen: false).customer;
+    bool _isOne=Provider.of<DeliveryProvider>(context).isOneDelivery;
+    bool _isTwo=Provider.of<DeliveryProvider>(context).isTwoDeliveries;
+    bool _isThree=Provider.of<DeliveryProvider>(context).isThreeDeliveries;
     return Scaffold(
       body: LoadingOverlay(
         child: Container(
@@ -501,21 +511,20 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Container(
                                       child: Text(
-                                        "Store address: ",
+                                        _isOne?"Store's pickup address: ":"First Store's address: ",
                                         style: kTitleTextStyle.copyWith(
                                             fontWeight: FontWeight.w400,
                                             fontSize: 14
                                         ),
                                       ),
-
                                     ),
                                     Container(
                                       child: Text(
-                                        _delivery.pickUpLocation.address,
+                                        _delivery.pickUpLocationOne.address,
                                         style: kTitleTextStyle.copyWith(
                                             fontWeight: FontWeight.w700,
                                             fontSize: 16
@@ -527,6 +536,64 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                               )
                           ),
                           SizedBox(height: 15),
+                          _isOne?Container():Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "Second store's address: ",
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        _delivery.pickUpLocationTwo.address,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
+                          _isOne?Container():SizedBox(height: 15),
+                          _isTwo?Container():Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: Text(
+                                        "Third store's address: ",
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        _delivery.pickUpLocationThree.address,
+                                        style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                          ),
+                          _isTwo?Container():SizedBox(height: 15),
                           Container(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 0,horizontal: 16),
@@ -572,7 +639,6 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                     _onShift?RaisedButton(
                       onPressed: () async {
                         if(_isDelivery){
-                          //Provider.of<UtilityProvider>(context, listen: false).redo=true;
                           if(_startedDelivery==false) {
                             await _deliveryService.UpdateDeliveryStatus(
                                 deliveryID, "CollectingFromStore", context).then((
@@ -677,7 +743,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
 
                                 }),
                                 // Provider.of<UtilityProvider>(context,listen: false).redo=true,
-                                Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("",new GeoPoint(0, 0, ""),new GeoPoint(0, 0, ""),"","","","","",0,false),
+                                Provider.of<DeliveryProvider>(context,listen: false).delivery=Delivery("",new GeoPoint(0.0, 0.0, ""),new GeoPoint(0, 0, ""),"","","","","",0,false,new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, "")),
                               }
                               else{
                                 ScaffoldMessenger.of(context)
@@ -717,7 +783,7 @@ class  _DriverWorkScreenState extends State<DriverWorkScreen> {
                       color: Theme.of(context).backgroundColor,
                       elevation: 5.0,
                       child: Text(
-                        _isDelivery==false?"Get Next Delivery":_startedDelivery==false?"Start delivery":_collectedFromStore==false?"Collected from store":_startedDeliveringToCustomer==false?"Delivering to customer":_collectedByCustomer==false?"Customer collected":"Complete delivery",
+                        _isDelivery==false?"Get Next Delivery":_startedDelivery==false?"Start delivery":_collectedFromStore==false?"Collected from all stores":_startedDeliveringToCustomer==false?"Delivering to customer":_collectedByCustomer==false?"Customer collected":"Complete delivery",
                         style: TextStyle(
                           color: Colors.deepOrangeAccent,
                           letterSpacing: 1.5,

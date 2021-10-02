@@ -24,10 +24,18 @@ class DriverMapScreen extends StatefulWidget {
 
 class  _DriverMapScreenState extends State<DriverMapScreen> {
 
-  bool _done=false;
+
   UserService _userService=GetIt.I.get();
   bool _updatingOnline=true;
-  Delivery _delivery=new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false);
+  Delivery _delivery=new Delivery("", new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""), "","", "", "", "", 0.0, false,new GeoPoint(0.0, 0.0, ""),new GeoPoint(0.0, 0.0, ""));
+  bool _isOne = false;
+  bool _isTwo = false;
+  bool _isThree = false;
+  bool _completedOne = false;
+  bool _completedTwo = false;
+  bool _completedThree = false;
+  bool _done=false;
+
 
   static const double CAMERA_ZOOM = 15;
   static const double CAMERA_TILT = 80;
@@ -296,9 +304,9 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
       );
     }
     return Padding(
-      padding: const EdgeInsets.all(9.0),
+      padding: const EdgeInsets.fromLTRB(9, 25, 9, 9),
       child: SizedBox(
-          height: MediaQuery.of(context).size.height-140,
+          height: MediaQuery.of(context).size.height-90,
           width: MediaQuery.of(context).size.width,
           child: GoogleMap(
               myLocationEnabled: true,
@@ -328,12 +336,48 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
         _delivery = Provider
             .of<DeliveryProvider>(context, listen: false)
             .delivery;
+        _isOne=Provider
+            .of<DeliveryProvider>(context, listen: false)
+            .isOneDelivery;
+        _isTwo=Provider
+            .of<DeliveryProvider>(context, listen: false)
+            .isTwoDeliveries;
+        _isThree=Provider
+            .of<DeliveryProvider>(context, listen: false)
+            .isThreeDeliveries;
+        _completedOne=Provider
+            .of<DeliveryProvider>(context, listen: false)
+            .completedOne;
+        _completedTwo=Provider
+            .of<DeliveryProvider>(context, listen: false)
+            .completedTwo;
         if (_delivery.deliveryStatus == "CollectingFromStore") {
-          DEST_LOCATION = LatLng(_delivery.pickUpLocation.latitude,
-              _delivery.pickUpLocation.longitude);
+          GeoPoint pickUp=new GeoPoint(0, 0, "");
+          if(_completedOne=false) {
+            pickUp=_delivery.pickUpLocationOne;
+          } else if (_isOne==false && _completedTwo==false){
+            SOURCE_LOCATION = LatLng(_delivery.pickUpLocationOne.latitude,
+                _delivery.pickUpLocationOne.longitude);
+            pickUp=_delivery.pickUpLocationTwo;
+          }else if (_isTwo==false && _completedThree==false){
+            SOURCE_LOCATION = LatLng(_delivery.pickUpLocationTwo.latitude,
+                _delivery.pickUpLocationTwo.longitude);
+            pickUp=_delivery.pickUpLocationThree;
+          }
+
+          DEST_LOCATION = LatLng(pickUp.latitude, pickUp.longitude);
+
         } else if (_delivery.deliveryStatus == "DeliveringToCustomer") {
-          SOURCE_LOCATION = LatLng(_delivery.pickUpLocation.latitude,
-              _delivery.pickUpLocation.longitude);
+          GeoPoint pickUp=new GeoPoint(0, 0, "");
+          if(_isOne){
+            pickUp = _delivery.pickUpLocationOne;
+          } else if(_isTwo){
+            pickUp = _delivery.pickUpLocationTwo;
+          } else if (_isThree){
+            pickUp = _delivery.pickUpLocationThree;
+          }
+          SOURCE_LOCATION = LatLng(pickUp.latitude,
+              pickUp.longitude);
           DEST_LOCATION = LatLng(_delivery.dropOffLocation.latitude,
               _delivery.dropOffLocation.longitude);
         }
@@ -345,64 +389,106 @@ class  _DriverMapScreenState extends State<DriverMapScreen> {
     }
     return Scaffold(
       body: Column(
-
         children: [
           Stack(
             children: [
               buildMap(context),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+                    clipBehavior: Clip.antiAlias,
+                    color:Theme.of(context).backgroundColor,
+                    shadowColor: Colors.grey,
+                    elevation: 5.0,
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 1.0,vertical: 20.0),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                                height: MediaQuery.of(context).size.height*0.15,
+                                width: MediaQuery.of(context).size.width*0.43,
+                                alignment: Alignment.centerRight,
+                                child:Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                      height: MediaQuery.of(context).size.height*0.06,
+                                      width: MediaQuery.of(context).size.width*0.3,
+                                      child: FittedBox(
+                                        fit: BoxFit.fitWidth,
+                                        child: Text(
+                                          "Currently driving to:",
+                                          style: kTitleTextStyle.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                      RaisedButton(
+                                      onPressed: () async {
+                                      },
+                                      child: Text(
+                                        "START SHIFT",
+                                        style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.w900),
+                                      ),
+                                      color: Theme.of(context).backgroundColor,
+                                      splashColor: Colors.grey,
+                                      elevation: 5.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                      ),
+                                      // color: Color(0xFFFA8940),
+                                    ),
 
+                                  ],
+                                )
+                            ),
+                            // Container(
+                            //     height: MediaQuery.of(context).size.height*0.15,
+                            //     width: MediaQuery.of(context).size.width*0.42,
+                            //     child:Column(
+                            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //       children: <Widget>[
+                            //         Text(
+                            //           "DRIVER",
+                            //           style: kTitleTextStyle.copyWith(
+                            //             fontWeight: FontWeight.w500,
+                            //             fontSize: kSpacingUnit.w*2,
+                            //           ),
+                            //         ),
+                            //         Container(
+                            //           height: MediaQuery.of(context).size.height*0.08,
+                            //           child:Image(
+                            //             fit: BoxFit.fill,
+                            //             image: _onShift?AssetImage('assets/gifs/deliveryTruck.gif'):AssetImage('assets/delivery/staticDeliveryTruck.png'),
+                            //           ),
+                            //         ),
+                            //         SizedBox(height: 5,),
+                            //         Text(
+                            //           _onShift?"• On Shift":"• Not on shift",
+                            //           style: kTitleTextStyle.copyWith(
+                            //             fontWeight: FontWeight.w500,
+                            //             fontSize: kSpacingUnit.w*1.5,
+                            //           ),
+                            //           textAlign: TextAlign.center,
+                            //         ),
+                            //       ],
+                            //     )
+                            // ),
+
+
+                          ],
+                        )
+                    ),
+                  ),
+                ],
+              ),
             ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                    "Status (updating on customer app):          ",
-                    textAlign: TextAlign.left,
-                    style: kTitleTextStyle.copyWith(
-                        fontWeight: FontWeight.w600
-                    ),
-                ),
-                Text(
-                    _updatingOnline.toString(),
-                    textAlign: TextAlign.right,
-                    style: kTitleTextStyle.copyWith(
-                        fontWeight: FontWeight.w600
-                    ),
-                )
-              ],
-            ),
-          ),
-          SizedBox(height:5),
-          Padding(
-            padding: const EdgeInsets.only(left: 6),
-            child: Row(
-              children:[
-                Text(
-                  "Currently driving to: ",
-                  textAlign: TextAlign.left,
-                  style: kTitleTextStyle.copyWith(
-                    fontWeight: FontWeight.w600
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right:20.0),
-                    child: Text(
-                      _delivery.deliveryStatus=="CollectingFromStore"?_delivery.pickUpLocation.address:_delivery.deliveryStatus=="DeliveringToCustomer"?_delivery.dropOffLocation.address:"",
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: kTitleTextStyle.copyWith(
-                        fontWeight: FontWeight.w600
-                      )
-                    ),
-                  ),
-                )
-              ]
-            ),
           ),
         ],
       ),
