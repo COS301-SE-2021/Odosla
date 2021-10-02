@@ -210,27 +210,28 @@ class _OrderPage extends State<OrderPage> {
   Widget buildPage(BuildContext context) {
     if (Provider.of<CartProvider>(context).activeOrder)
       return Container(
+          height: MediaQuery.of(context).size.height,
           child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-            Center(
-                child: Text(
-              'My Order',
-              style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
-            )),
-            Expanded(
-                child: Column(
+                Center(
+                    child: Text(
+                  'My Order',
+                  style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+                )),
+                //Expanded(
+                Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                  buildProgressBar(context),
-                  SizedBox(height: 10),
-                  buildEmployeeInfo(context),
-                  buildMap(context),
-                  SizedBox(height: 70),
-                ])),
-          ]));
+                      buildProgressBar(context),
+                      SizedBox(height: 10),
+                      buildEmployeeInfo(context),
+                      buildMap(context),
+                      SizedBox(height: 70),
+                    ]),
+              ]));
     else
       return Container(
           child: Column(
@@ -280,7 +281,7 @@ class _OrderPage extends State<OrderPage> {
                           if (!snapshot.hasError) {
                             String s =
                                 Provider.of<StatusProvider>(context).status;
-                            return Text(s,
+                            return Text(s.toString(),
                                 style: TextStyle(
                                     fontSize: 27,
                                     fontWeight: FontWeight.normal));

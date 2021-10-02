@@ -142,22 +142,24 @@ class ApiService {
                   .jwt, //getCurrentUser
               "listOfItems": itemsList,
               "discount": 0,
-              "storeId": "$storeID",
+              "storeID": "$storeID",
               "orderType": "DELIVERY",
               "latitude": -25.763428, //get lat
               "longitude": 28.260879, //get long
-              "deliveryAddress": "23 Sigard Street, Pretoria" //get address
+              "address": "23 Sigard Street, Pretoria" //get address
             }));
 
     if (response.statusCode == 200) {
       debugPrint("submitted order");
       Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
       Provider.of<CartProvider>(context, listen: false).activeOrder = true;
       Provider.of<CartProvider>(context, listen: false).activeOrderID =
-          map["orderId"];
+          map["order"]["orderID"];
       Provider.of<CartProvider>(context, listen: false).clearItems();
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => OrderPage(map['orderId'])));
+          builder: (BuildContext context) =>
+              OrderPage(map["order"]['orderID'])));
       debugPrint(map.toString());
     } else {
       List<Store> list = List.empty();
@@ -174,7 +176,7 @@ class ApiService {
 
   Future<String> getStatus(BuildContext context, String orderID) async {
     final oid = orderID;
-    debugPrint("id: " + oid);
+    debugPrint("id: " + "$oid");
     final response =
         await http.post(Uri.parse(paymentEndpoint + '/payment/getStatus'),
             headers: {
@@ -189,9 +191,11 @@ class ApiService {
               "orderID": "$oid",
             }));
 
+    debugPrint("_AS_D_ASD");
     if (response.statusCode == 200) {
       debugPrint("fetched status");
       Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
       String result = statusFromJson(context, map);
       debugPrint(result);
       Provider.of<StatusProvider>(context, listen: false).status = result;
@@ -449,7 +453,10 @@ class ApiService {
           "Authorization":
               Provider.of<StatusProvider>(context, listen: false).jwt
         },
-        body: jsonEncode({"itemIDs": itemsList}));
+        body: jsonEncode({
+          "itemsIDs": itemsList,
+          "storeID": Provider.of<CartProvider>(context, listen: false).store
+        }));
     print(response.body);
     print("JWT");
     print(Provider.of<StatusProvider>(context, listen: false).jwt);

@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
-
 class CartItem {
   final String id;
   final String title;
@@ -44,10 +41,10 @@ class CartItem {
           imgUrl, brand, size, type);
 
   CartItem.fromJson(Map<String, dynamic> json)
-      : id = json['productId'],
+      : id = json['productID'],
         title = json['name'],
         barcode = json['barcode'],
-        storeID = json['storeId'],
+        storeID = json['storeID'],
         price = json['price'],
         quantity = json['quantity'],
         description = json['description'],
@@ -57,10 +54,10 @@ class CartItem {
         type = json['itemType'];
 
   Map<String, dynamic> toJson() => {
-        'productId': id,
+        'productID': id,
         'name': title,
         'barcode': barcode,
-        'storeId': storeID,
+        'storeID': storeID,
         'price': price,
         'quantity': quantity,
         'description': description,

@@ -31,12 +31,12 @@ class _WalletPageState extends State<WalletPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
+          fit: StackFit.expand,
           children: [
             Padding(
-                padding: const EdgeInsets.all(12),
-                child: Expanded(
-                  child: buildPage(context),
-                )),
+              padding: const EdgeInsets.all(12),
+              child: buildPage(context),
+            ),
             Positioned(
                 top: 5,
                 left: 5,

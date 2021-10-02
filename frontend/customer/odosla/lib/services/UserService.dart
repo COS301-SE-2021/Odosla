@@ -33,9 +33,11 @@ class UserService {
 
     print(data);
 
-    final response =
-        await http.post(loginURL, headers: headers, body: jsonEncode(data)).timeout(Duration(seconds: 15), onTimeout: () {
-          return (http.Response('TimeOut', 500));});
+    final response = await http
+        .post(loginURL, headers: headers, body: jsonEncode(data))
+        .timeout(Duration(seconds: 15), onTimeout: () {
+      return (http.Response('TimeOut', 500));
+    });
 
     print(response.body);
     if (response.statusCode == 200) {
@@ -55,9 +57,9 @@ class UserService {
             SnackBar(content: Text("Please verify account before logging in")));
         return false;
       }
-    }else if(response.statusCode==500){
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Request timed out")));
+    } else if (response.statusCode == 500) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Request timed out")));
       return false;
     }
     ScaffoldMessenger.of(context)
@@ -173,95 +175,95 @@ class UserService {
     }
   }
 
-  Future<bool> updateCustomerDetails(String name, String surname, String email, String phoneNumber, String currentPassword, String newPassword, BuildContext context) async{
-
-    final url = Uri.parse(userEndpoint+"user/updateCustomerDetails");
-
-    Map<String,String> headers =new Map<String,String>();
-
-    String jwt=Provider.of<JWTProvider>(context,listen: false).jwt;
-    while (jwt==""){
-      await getJWTAsString(context).then((value) =>
-      jwt=value!,
-      );
-    }
-    print(jwt);
-
-    headers =
-    {
-      "Accept": "application/json",
-      "content-type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Authorization":jwt
-    };
-    var data;
-    if(newPassword=="noChange"){
-      data = {
-        "name":name,
-        "surname":surname,
-        "email":email,
-        "phoneNumber":phoneNumber,
-        "password":null,
-        "currentPassword":null
-      };
-    }else if(name=="noChange"){
-      data = {
-        "name":null,
-        "surname":null,
-        "email":null,
-        "phoneNumber":null,
-        "password":newPassword,
-        "currentPassword":currentPassword
-      };
-    }else{
-      data = {
-        "name":null,
-        "surname":null,
-        "email":null,
-        "phoneNumber":null,
-        "password":null,
-        "currentPassword":null,
-      };
-    }
-
-
-    print(data);
-
-
-    final response = await http.post(url, headers: headers, body: jsonEncode(data));
-    print(response.body);
-    if (response.statusCode==200) {
-      Map<String,dynamic> responseData = json.decode(response.body);
-
-      if (responseData["success"] == true) {
-        String token=responseData["jwtToken"];
-        if(token!=null) {
-          await Future.wait([
-            _storage.write(key: "jwt", value: token),
-          ]);
-          Provider
-              .of<JWTProvider>(context, listen: false)
-              .jwt = responseData["jwtToken"];
-        }
-        return true;
-
-      } else if(responseData["message"]!=null && responseData["message"].contains("Email is already taken")){
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Email already taken")));
-        return false;
-      }else if(responseData["message"]!=null && responseData["message"].contains("Incorrect password")){
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Incorrect password")));
-        return false;
-      } else if(responseData["message"]!=null && responseData["message"].contains("Null values submitted - Nothing updated")){
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("No new changes")));
-        return false;
-      }
-    }
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text("Error with logging in")));
-    return false;
-  }
+  // Future<bool> updateCustomerDetails(String name, String surname, String email, String phoneNumber, String currentPassword, String newPassword, BuildContext context) async{
+  //
+  //   final url = Uri.parse(userEndpoint+"user/updateCustomerDetails");
+  //
+  //   Map<String,String> headers =new Map<String,String>();
+  //
+  //   String jwt=Provider.of<JWTProvider>(context,listen: false).jwt;
+  //   while (jwt==""){
+  //     await getJWTAsString(context).then((value) =>
+  //     jwt=value!,
+  //     );
+  //   }
+  //   print(jwt);
+  //
+  //   headers =
+  //   {
+  //     "Accept": "application/json",
+  //     "content-type": "application/json",
+  //     "Access-Control-Allow-Origin": "*",
+  //     "Access-Control-Allow-Methods": "POST, OPTIONS",
+  //     "Authorization":jwt
+  //   };
+  //   var data;
+  //   if(newPassword=="noChange"){
+  //     data = {
+  //       "name":name,
+  //       "surname":surname,
+  //       "email":email,
+  //       "phoneNumber":phoneNumber,
+  //       "password":null,
+  //       "currentPassword":null
+  //     };
+  //   }else if(name=="noChange"){
+  //     data = {
+  //       "name":null,
+  //       "surname":null,
+  //       "email":null,
+  //       "phoneNumber":null,
+  //       "password":newPassword,
+  //       "currentPassword":currentPassword
+  //     };
+  //   }else{
+  //     data = {
+  //       "name":null,
+  //       "surname":null,
+  //       "email":null,
+  //       "phoneNumber":null,
+  //       "password":null,
+  //       "currentPassword":null,
+  //     };
+  //   }
+  //
+  //
+  //   print(data);
+  //
+  //
+  //   final response = await http.post(url, headers: headers, body: jsonEncode(data));
+  //   print(response.body);
+  //   if (response.statusCode==200) {
+  //     Map<String,dynamic> responseData = json.decode(response.body);
+  //
+  //     if (responseData["success"] == true) {
+  //       String token=responseData["jwtToken"];
+  //       if(token!=null) {
+  //         await Future.wait([
+  //           _storage.write(key: "jwt", value: token),
+  //         ]);
+  //         Provider
+  //             .of<JWTProvider>(context, listen: false)
+  //             .jwt = responseData["jwtToken"];
+  //       }
+  //       return true;
+  //
+  //     } else if(responseData["message"]!=null && responseData["message"].contains("Email is already taken")){
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(SnackBar(content: Text("Email already taken")));
+  //       return false;
+  //     }else if(responseData["message"]!=null && responseData["message"].contains("Incorrect password")){
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(SnackBar(content: Text("Incorrect password")));
+  //       return false;
+  //     } else if(responseData["message"]!=null && responseData["message"].contains("Null values submitted - Nothing updated")){
+  //       ScaffoldMessenger.of(context)
+  //           .showSnackBar(SnackBar(content: Text("No new changes")));
+  //       return false;
+  //     }
+  //   }
+  //   ScaffoldMessenger.of(context)
+  //       .showSnackBar(SnackBar(content: Text("Error with logging in")));
+  //   return false;
+  // }
 }
