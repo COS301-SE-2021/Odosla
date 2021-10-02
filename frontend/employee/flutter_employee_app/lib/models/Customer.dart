@@ -1,5 +1,4 @@
-class Customer{
-
+class Customer {
   String name;
   String surname;
   String email;
@@ -9,10 +8,10 @@ class Customer{
   Customer(
       this.name, this.surname, this.email, this.userType, this.phoneNumber);
 
-  Customer.fromJson(Map<String, dynamic> json):
-        name = json['name'],
-        surname=json["surname"],
-        email=json["email"],
-        userType=json["userType"],
-        phoneNumber=json["phoneNumber"];
+  Customer.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        surname = json["surname"],
+        email = json["email"],
+        userType = json["userType"],
+        phoneNumber = json["phoneNumber"];
 }

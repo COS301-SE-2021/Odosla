@@ -16,35 +16,34 @@ class CartItem {
   final bool soldOut;
 
   const CartItem(
-    this.id,
-    this.title,
-    this.barcode,
-    this.storeID,
-    this.price,
-    this.quantity,
-    this.description,
-    this.imgUrl,
-    this.brand,
-    this.size,
-    this.type,
-      this.soldOut
-  );
+      this.id,
+      this.title,
+      this.barcode,
+      this.storeID,
+      this.price,
+      this.quantity,
+      this.description,
+      this.imgUrl,
+      this.brand,
+      this.size,
+      this.type,
+      this.soldOut);
+
   CartItem copy(
-    String id,
-    String title,
-    String barcode,
-    String storeID,
-    double price,
-    int quantity,
-    String description,
-    String imgUrl,
-    String brand,
-    String size,
-    String type,
-      bool soldOut
-  ) =>
+          String id,
+          String title,
+          String barcode,
+          String storeID,
+          double price,
+          int quantity,
+          String description,
+          String imgUrl,
+          String brand,
+          String size,
+          String type,
+          bool soldOut) =>
       CartItem(id, title, barcode, storeID, price, quantity, description,
-          imgUrl, brand, size, type,soldOut);
+          imgUrl, brand, size, type, soldOut);
 
   CartItem.fromJson(Map<String, dynamic> json)
       : id = json['productID'],
@@ -58,7 +57,7 @@ class CartItem {
         brand = json['brand'],
         size = json['size'],
         type = json['itemType'],
-        soldOut=json['soldOut'];
+        soldOut = json['soldOut'];
 
   Map<String, dynamic> toJson() => {
         'productId': id,
