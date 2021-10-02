@@ -8,7 +8,7 @@ public class UpdateDriverDetailsResponse {
     private final String message;
     private final boolean success;
     private final Date timestamp;
-    private  final String jwtToken;
+    private final String jwtToken;
 
     public UpdateDriverDetailsResponse(String message, boolean success, Date timestamp, String jwtToken) {
         this.message = message;

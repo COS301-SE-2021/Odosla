@@ -1,4 +1,5 @@
 package cs.superleague.user.requests;
+
 import cs.superleague.payment.dataclass.GeoPoint;
 
 public class UpdateCustomerDetailsRequest {

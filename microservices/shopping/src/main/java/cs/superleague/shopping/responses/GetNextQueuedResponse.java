@@ -8,19 +8,19 @@ import java.util.List;
 
 public class GetNextQueuedResponse {
 
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timeStamp;
     private final boolean response;
     private final String message;
     private final List<Order> queueOfOrders;
     private final Order newCurrentOrder;
 
-    public GetNextQueuedResponse(Date timeStamp, boolean response, String message, List<Order> queueOfOrders,Order newCurrentOrder) {
+    public GetNextQueuedResponse(Date timeStamp, boolean response, String message, List<Order> queueOfOrders, Order newCurrentOrder) {
         this.timeStamp = timeStamp;
         this.response = response;
         this.message = message;
-        this.queueOfOrders=queueOfOrders;
-        this.newCurrentOrder=newCurrentOrder;
+        this.queueOfOrders = queueOfOrders;
+        this.newCurrentOrder = newCurrentOrder;
     }
 
     public Date getTimeStamp() {

@@ -15,7 +15,6 @@ public class RegisterShopperRequest {
     private String password;
 
 
-
     public RegisterShopperRequest(String name, String surname, String email, String phoneNumber, String password) {
         this.name = name;
         this.surname = surname;

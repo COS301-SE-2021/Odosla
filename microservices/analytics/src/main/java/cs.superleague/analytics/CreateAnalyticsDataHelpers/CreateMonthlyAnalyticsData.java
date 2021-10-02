@@ -41,8 +41,8 @@ public class CreateMonthlyAnalyticsData {
     private int driversOnShift;
     private int totalOrderCompleted;
     private double ratingSum;
-    private Driver [] topDrivers;
-    private Order [] topOrders;
+    private Driver[] topDrivers;
+    private Order[] topOrders;
 
     private final Calendar startDate;
     private final Calendar endDate;
@@ -77,40 +77,40 @@ public class CreateMonthlyAnalyticsData {
         this.startDate = Calendar.getInstance();
         this.startDate.add(Calendar.DATE, -30);
 
-        String stringUri = "http://"+userHost+":"+userPort+"/user/getAdmins";
+        String stringUri = "http://" + userHost + ":" + userPort + "/user/getAdmins";
         URI uri = new URI(stringUri);
 
-        try{
+        try {
             Map<String, Object> parts = new HashMap<>();
 
             adminResponseEntity = restTemplate.postForEntity(uri, parts,
                     GetAdminsResponse.class);
 
-            stringUri = "http://"+userHost+":"+userPort+"/user/getCustomers";
+            stringUri = "http://" + userHost + ":" + userPort + "/user/getCustomers";
             uri = new URI(stringUri);
 
             customerResponseEntity = restTemplate.postForEntity(uri, parts,
                     GetCustomersResponse.class);
 
-            stringUri = "http://"+userHost+":"+userPort+"/user/getDrivers";
+            stringUri = "http://" + userHost + ":" + userPort + "/user/getDrivers";
             uri = new URI(stringUri);
 
             driverResponseEntity = restTemplate.postForEntity(uri, parts,
                     GetDriversResponse.class);
 
-            stringUri = "http://"+userHost+":"+userPort+"/user/getShoppers";
+            stringUri = "http://" + userHost + ":" + userPort + "/user/getShoppers";
             uri = new URI(stringUri);
 
             shopperResponseEntity = restTemplate.postForEntity(uri, parts,
                     GetShoppersResponse.class);
 
-            stringUri = "http://"+ paymentHost + ":" + paymentPort +"/payment/getOrders";
+            stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrders";
             uri = new URI(stringUri);
 
             responseEntityOrder = restTemplate.postForEntity(uri, parts,
                     GetOrdersResponse.class);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -119,7 +119,7 @@ public class CreateMonthlyAnalyticsData {
 
         HashMap<String, Object> data = new HashMap<>();
 
-        if(generateMonthlyStatisticsData()) {
+        if (generateMonthlyStatisticsData()) {
             data.put("totalNum_Users", totalUsers);
             data.put("totalNum_Admins", totalAdmins);
             data.put("totalNum_Customers", totalCustomers);
@@ -143,20 +143,20 @@ public class CreateMonthlyAnalyticsData {
 
     private boolean generateMonthlyStatisticsData() throws InvalidRequestException {
 
-        if(responseEntityOrder == null){
+        if (responseEntityOrder == null) {
             return false;
         }
 
         GetOrdersResponse getOrdersResponse = responseEntityOrder.getBody();
 
-        if(getOrdersResponse != null){
+        if (getOrdersResponse != null) {
             orders.addAll(getOrdersResponse.getOrders());
-        }else{
+        } else {
             return false;
         }
 
-        if(adminResponseEntity == null || customerResponseEntity == null
-                || driverResponseEntity == null || shopperResponseEntity == null){
+        if (adminResponseEntity == null || customerResponseEntity == null
+                || driverResponseEntity == null || shopperResponseEntity == null) {
             return false;
         }
 
@@ -165,27 +165,27 @@ public class CreateMonthlyAnalyticsData {
         GetDriversResponse driversResponse = driverResponseEntity.getBody();
         GetShoppersResponse shoppersResponse = shopperResponseEntity.getBody();
 
-        if(adminsResponse == null || customersResponse == null || driversResponse == null
-                || shoppersResponse == null){
+        if (adminsResponse == null || customersResponse == null || driversResponse == null
+                || shoppersResponse == null) {
             return false;
         }
 
-        if(adminsResponse.getUsers() != null)
+        if (adminsResponse.getUsers() != null)
             users.addAll(adminsResponse.getUsers());
 
-        if(customersResponse.getUsers() != null)
+        if (customersResponse.getUsers() != null)
             users.addAll(customersResponse.getUsers());
 
-        if(driversResponse.getUsers() != null)
+        if (driversResponse.getUsers() != null)
             users.addAll(driversResponse.getUsers());
 
-        if(shoppersResponse.getUsers() != null)
+        if (shoppersResponse.getUsers() != null)
             users.addAll(shoppersResponse.getUsers());
 
         for (Order order : this.orders) {
 
-            if(startDate.getTimeInMillis() <= order.getCreateDate().getTime()
-                && endDate.getTimeInMillis() >= order.getCreateDate().getTime()) {
+            if (startDate.getTimeInMillis() <= order.getCreateDate().getTime()
+                    && endDate.getTimeInMillis() >= order.getCreateDate().getTime()) {
 
                 if (!userIds.contains(order.getUserID())) {
                     userIds.add(order.getUserID());
@@ -200,70 +200,70 @@ public class CreateMonthlyAnalyticsData {
         for (User user : this.users) {
             userType = user.getAccountType();
 
-            if(startDate == null || endDate == null){
+            if (startDate == null || endDate == null) {
                 throw new InvalidRequestException("Start Date and End Date cannot be null");
             }
 
-            if(user.getActivationDate() != null)
-            if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
-                    && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {
-                if (userType == UserType.CUSTOMER) {
-                    totalCustomers += 1;
-                } else if (userType == UserType.SHOPPER) {
+            if (user.getActivationDate() != null)
+                if (startDate.getTimeInMillis() <= user.getActivationDate().getTime()
+                        && endDate.getTimeInMillis() >= user.getActivationDate().getTime()) {
+                    if (userType == UserType.CUSTOMER) {
+                        totalCustomers += 1;
+                    } else if (userType == UserType.SHOPPER) {
 
-                    if (user instanceof Shopper) {
-                        totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
-                    }
-
-                    totalShoppers += 1;
-                } else if (userType == UserType.ADMIN) {
-                    totalAdmins += 1;
-                } else if (userType == UserType.DRIVER) {
-
-                    if (user instanceof Driver) {
-                        if (((Driver) user).getOnShift()) {
-                            driversOnShift += 1;
+                        if (user instanceof Shopper) {
+                            totalOrderCompleted += ((Shopper) user).getOrdersCompleted();
                         }
 
-                        drivers.add((Driver) user);
-                        ratingSum += ((Driver) user).getRating();
+                        totalShoppers += 1;
+                    } else if (userType == UserType.ADMIN) {
+                        totalAdmins += 1;
+                    } else if (userType == UserType.DRIVER) {
+
+                        if (user instanceof Driver) {
+                            if (((Driver) user).getOnShift()) {
+                                driversOnShift += 1;
+                            }
+
+                            drivers.add((Driver) user);
+                            ratingSum += ((Driver) user).getRating();
+                        }
+                        totalDrivers += 1;
                     }
-                    totalDrivers += 1;
+
+                    totalUsers += 1;
+
                 }
-
-                totalUsers += 1;
-
-            }
         }
 
-        if(totalDrivers > 0) {
+        if (totalDrivers > 0) {
             ratingSum = ratingSum / totalDrivers;
         }
 
         getTopDrivers(drivers);
 
-        if(totalOrders != 0) {
+        if (totalOrders != 0) {
             averageOrderNumPerUser = userIds.size() / (double) totalOrders;
-            averageOrderNumPerUser = (double)Math.round(averageOrderNumPerUser * 100d) / 100d;
-        }else{
+            averageOrderNumPerUser = (double) Math.round(averageOrderNumPerUser * 100d) / 100d;
+        } else {
             averageOrderNumPerUser = 0;
         }
 
-        if(orders.size() != 0) {
+        if (orders.size() != 0) {
             averagePriceOfOrders = totalPrice / (double) orders.size();
-            averagePriceOfOrders = (double)Math.round(averagePriceOfOrders * 100d) / 100d;
-        }else{
+            averagePriceOfOrders = (double) Math.round(averagePriceOfOrders * 100d) / 100d;
+        } else {
             averagePriceOfOrders = 0;
         }
 
-        totalPrice = (double)Math.round(totalPrice * 100d) / 100d;
+        totalPrice = (double) Math.round(totalPrice * 100d) / 100d;
 
         getTopOrdersByPrice(orders);
 
         return true;
     }
 
-    private void getTopOrdersByPrice(List<Order> orders){
+    private void getTopOrdersByPrice(List<Order> orders) {
 
         int size = Math.min(orders.size(), 10);
 
@@ -271,12 +271,12 @@ public class CreateMonthlyAnalyticsData {
 
         orders.sort(Comparator.comparing(Order::getTotalCost).reversed());
 
-        for(int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             topOrders[i] = orders.get(i);
         }
     }
 
-    private void getTopDrivers(List<Driver> drivers){
+    private void getTopDrivers(List<Driver> drivers) {
 
         int size = Math.min(drivers.size(), 10);
 
@@ -284,7 +284,7 @@ public class CreateMonthlyAnalyticsData {
 
         drivers.sort(Comparator.comparing(Driver::getRating).reversed());
 
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             topDrivers[i] = drivers.get(i);
         }
     }

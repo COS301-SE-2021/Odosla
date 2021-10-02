@@ -22,7 +22,7 @@ public class Shopper extends User {
     private UUID storeID;
 
     @Column(name = "orders_completed")
-    private int ordersCompleted=0;
+    private int ordersCompleted = 0;
 
     @Column(name = "name")
     private String name;
@@ -33,7 +33,7 @@ public class Shopper extends User {
     @Column(name = "email")
     private String email;
 
-    private Boolean onShift=false;
+    private Boolean onShift = false;
 
     public String getName() {
         return name;
@@ -115,30 +115,30 @@ public class Shopper extends User {
         isActive = active;
     }
 
-    @Column(name="phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name="activation_date")
+    @Column(name = "activation_date")
     @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private Date activationDate;
 
-    @Column(name="activation_code")
+    @Column(name = "activation_code")
     private String activationCode;
 
-    @Column(name="reset_code")
+    @Column(name = "reset_code")
     private String resetCode;
 
-    @Column(name="reset_expiration")
+    @Column(name = "reset_expiration")
     private String resetExpiration;
 
-    @Column(name="is_active")
+    @Column(name = "is_active")
     private boolean isActive;
 
-    @Column(name="account_type")
+    @Column(name = "account_type")
     //@Enumerated(EnumType.STRING)
     private UserType accountType;
 
@@ -148,31 +148,31 @@ public class Shopper extends User {
     }
 
     public Shopper(String name, String surname, String email, String phoneNumber, String password, Date activationDate, String activationCode, String resetCode, String resetExpiration, boolean isActive, UserType accountType, UUID shopperID) {
-        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration,accountType);
-        this.name=name;
-        this.surname=surname;
+        super(name, surname, email, phoneNumber, password, activationDate, activationCode, resetCode, resetExpiration, accountType);
+        this.name = name;
+        this.surname = surname;
         this.shopperID = shopperID;
-        this.email= email;
-        this.phoneNumber= phoneNumber;
-        this.password= password;
-        this.activationDate= activationDate;
-        this.activationCode=activationCode;
-        this.resetCode=resetCode;
-        this.resetExpiration=resetExpiration;
-        this.accountType=accountType;
-        this.isActive=isActive;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.activationDate = activationDate;
+        this.activationCode = activationCode;
+        this.resetCode = resetCode;
+        this.resetExpiration = resetExpiration;
+        this.accountType = accountType;
+        this.isActive = isActive;
     }
 
     public Shopper(String name, String surname, String email, String phoneNumber, String password, String activationCode, UserType accountType, UUID shopperID) {
         super(name, surname, email, phoneNumber, password, activationCode, accountType);
-        this.name=name;
-        this.surname=surname;
+        this.name = name;
+        this.surname = surname;
         this.shopperID = shopperID;
-        this.email= email;
-        this.phoneNumber= phoneNumber;
-        this.password= password;
-        this.activationCode=activationCode;
-        this.accountType=accountType;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.activationCode = activationCode;
+        this.accountType = accountType;
     }
 
     public UUID getShopperID() {

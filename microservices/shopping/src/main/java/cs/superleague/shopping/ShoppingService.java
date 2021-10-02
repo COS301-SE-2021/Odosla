@@ -1,4 +1,5 @@
 package cs.superleague.shopping;
+
 import cs.superleague.shopping.exceptions.InvalidRequestException;
 import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.shopping.exceptions.StoreClosedException;
@@ -30,9 +31,9 @@ public interface ShoppingService {
 
     GetShoppersResponse getShoppers(GetShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
-    AddShopperResponse addShopper(AddShopperRequest request) throws cs.superleague.user.exceptions.InvalidRequestException, StoreDoesNotExistException, UserException;
+    AddShopperResponse addShopper(AddShopperRequest request) throws StoreDoesNotExistException, UserException, URISyntaxException;
 
-    RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException;
+    RemoveShopperResponse removeShopper(RemoveShopperRequest request) throws InvalidRequestException, StoreDoesNotExistException, UserException, URISyntaxException;
 
     ClearShoppersResponse clearShoppers(ClearShoppersRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
@@ -57,4 +58,6 @@ public interface ShoppingService {
     SaveCatalogueToRepoResponse saveCatalogueToRepo(SaveCatalogueToRepoRequest request) throws InvalidRequestException;
 
     GetProductByBarcodeResponse getProductByBarcode(GetProductByBarcodeRequest request) throws InvalidRequestException, ItemDoesNotExistException;
+    PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException;
+    PriceCheckAllAvailableStoresResponse priceCheckAllAvailableStores(PriceCheckAllAvailableStoresRequest request) throws InvalidRequestException;
 }

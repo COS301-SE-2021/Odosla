@@ -5,20 +5,23 @@ import java.util.UUID;
 public class AddShopperRequest {
 
     /* attributes */
-    private UUID shopperID;
-    private UUID storeID;
+    private final UUID shopperID;
+    private final UUID storeID;
 
-    /** constructor
+    /**
+     * constructor
      *
      * @param shopperID the shoppersID to add the the Store
-     * @param storeID the store ID of the store the shopper should be added to
+     * @param storeID   the store ID of the store the shopper should be added to
      */
-    public AddShopperRequest(UUID shopperID,UUID storeID) {
+    public AddShopperRequest(UUID shopperID, UUID storeID) {
         this.shopperID = shopperID;
-        this.storeID=storeID;
+        this.storeID = storeID;
     }
 
-    /** getters */
+    /**
+     * getters
+     */
     public UUID getShopperID() {
         return shopperID;
     }

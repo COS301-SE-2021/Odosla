@@ -7,20 +7,21 @@ public class SendDirectEmailNotificationRequest implements Serializable {
     private final String message;
     private final String subject;
     private final String email;
+
     public SendDirectEmailNotificationRequest(String message, Map<String, String> properties) {
         this.message = message;
-        if (properties == null){
+        if (properties == null) {
             this.subject = null;
             this.email = null;
-        }else{
-            if(properties.get("Subject") == null){
+        } else {
+            if (properties.get("Subject") == null) {
                 this.subject = null;
-            }else{
+            } else {
                 this.subject = properties.get("Subject");
             }
-            if (properties.get("Email") == null){
+            if (properties.get("Email") == null) {
                 this.email = null;
-            }else{
+            } else {
                 this.email = properties.get("Email");
             }
         }

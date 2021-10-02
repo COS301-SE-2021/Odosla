@@ -9,22 +9,20 @@ import java.util.List;
 public class GetAllCartItemsResponse {
 
     private List<CartItem> cartItems;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private Date timestamp;
     private String message;
 
-    public GetAllCartItemsResponse()
-    {
+    public GetAllCartItemsResponse() {
         this.cartItems = null;
-        this.timestamp= null;
-        this.message= null;
+        this.timestamp = null;
+        this.message = null;
     }
 
-    public GetAllCartItemsResponse(List<CartItem> cartItems, Date timestamp, String message)
-    {
+    public GetAllCartItemsResponse(List<CartItem> cartItems, Date timestamp, String message) {
         this.cartItems = cartItems;
-        this.timestamp= timestamp;
-        this.message= message;
+        this.timestamp = timestamp;
+        this.message = message;
     }
 
     public void setTimestamp(Date timestamp) {

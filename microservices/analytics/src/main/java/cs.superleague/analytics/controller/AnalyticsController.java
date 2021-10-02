@@ -38,7 +38,7 @@ public class AnalyticsController implements AnalyticsApi {
 
     @Autowired
     public AnalyticsController(AnalyticsServiceImpl analyticsService, HttpServletRequest httpServletRequest,
-                               RestTemplate restTemplate){
+                               RestTemplate restTemplate) {
 
         this.analyticsService = analyticsService;
         this.httpServletRequest = httpServletRequest;
@@ -51,7 +51,7 @@ public class AnalyticsController implements AnalyticsApi {
         AnalyticsCreateUserReportResponse response = new AnalyticsCreateUserReportResponse();
         HttpStatus status = HttpStatus.OK;
 
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -70,14 +70,14 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setMessage(createUserReportResponse.getMessage());
                 response.setSuccess(createUserReportResponse.isSuccess());
                 response.setTimestamp(createUserReportResponse.getTimestamp().toString());
-                if(createUserReportResponse.getStringBuilder() != null)
-                response.setCsv(createUserReportResponse.getStringBuilder());
+                if (createUserReportResponse.getStringBuilder() != null)
+                    response.setCsv(createUserReportResponse.getStringBuilder());
                 response.setPdf(createUserReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -92,7 +92,7 @@ public class AnalyticsController implements AnalyticsApi {
         AnalyticsCreateFinancialReportResponse response = new AnalyticsCreateFinancialReportResponse();
         HttpStatus status = HttpStatus.OK;
 
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -111,14 +111,14 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setMessage(createFinancialReportResponse.getMessage());
                 response.setSuccess(createFinancialReportResponse.isSuccess());
                 response.setTimestamp(createFinancialReportResponse.getTimestamp().toString());
-                if(createFinancialReportResponse.getStringBuilder() != null)
+                if (createFinancialReportResponse.getStringBuilder() != null)
                     response.setCsv(createFinancialReportResponse.getStringBuilder());
                 response.setPdf(createFinancialReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -134,7 +134,7 @@ public class AnalyticsController implements AnalyticsApi {
         AnalyticsCreateMonthlyReportResponse response = new AnalyticsCreateMonthlyReportResponse();
         HttpStatus status = HttpStatus.OK;
 
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -149,14 +149,14 @@ public class AnalyticsController implements AnalyticsApi {
                 response.setMessage(createMonthlyReportResponse.getMessage());
                 response.setSuccess(createMonthlyReportResponse.isSuccess());
                 response.setTimestamp(createMonthlyReportResponse.getTimestamp().toString());
-                if(createMonthlyReportResponse.getStringBuilder()!= null)
-                response.setCsv(createMonthlyReportResponse.getStringBuilder());
+                if (createMonthlyReportResponse.getStringBuilder() != null)
+                    response.setCsv(createMonthlyReportResponse.getStringBuilder());
                 response.setPdf(createMonthlyReportResponse.getDocument());
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

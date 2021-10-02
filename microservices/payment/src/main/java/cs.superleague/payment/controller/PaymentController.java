@@ -8,6 +8,7 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.repos.CartItemRepo;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
@@ -48,15 +49,18 @@ public class PaymentController implements PaymentApi {
 
     HttpServletRequest httpServletRequest;
 
+    CartItemRepo cartItemRepo;
+
     @Autowired
     public PaymentController(PaymentServiceImpl paymentService, OrderRepo orderRepo,
                              RabbitTemplate rabbitTemplate, RestTemplate restTemplate,
-                             HttpServletRequest httpServletRequest) {
+                             HttpServletRequest httpServletRequest, CartItemRepo cartItemRepo) {
         this.paymentService = paymentService;
         this.orderRepo = orderRepo;
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
         this.httpServletRequest = httpServletRequest;
+        this.cartItemRepo = cartItemRepo;
     }
 
     @Override
@@ -264,6 +268,18 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<PaymentGetOrdersResponse> getOrders(PaymentGetOrdersRequest body) {
+//        Order orderToSave = new Order();
+//        orderToSave.setOrderID(UUID.fromString("ddcf088b-ed95-44d4-912e-3348e91491a6"));
+//        CartItem cartItem = new CartItem();
+//        cartItem.setProductID("012345");
+//        cartItem.setBarcode("012345");
+//        cartItem.setCartItemNo(UUID.randomUUID());
+//        cartItem.setOrderID(UUID.fromString("ddcf088b-ed95-44d4-912e-3348e91491a6"));
+//        List<CartItem> carts = new ArrayList<>();
+//        carts.add(cartItem);
+//        orderToSave.setCartItems(carts);
+//        orderRepo.save(orderToSave);
+//        cartItemRepo.save(cartItem);
         PaymentGetOrdersResponse response = new PaymentGetOrdersResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
@@ -386,6 +402,8 @@ public class PaymentController implements PaymentApi {
             orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
         if (order.getStoreAddress() != null)
             orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+        if (order.getDriverID() != null)
+            orderObject.setDriverID(order.getDriverID().toString());
         orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
         return orderObject;
     }
@@ -433,7 +451,6 @@ public class PaymentController implements PaymentApi {
             return null;
         }
 
-        System.out.println("length of itemobjectlist: " + itemObjectList.size());
 
         for (ItemObject i : itemObjectList) {
             CartItemObject item = new CartItemObject();
@@ -468,14 +485,16 @@ public class PaymentController implements PaymentApi {
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreID(i.getStoreID().toString());
+            if (i.getStoreID() != null)
+                item.setStoreID(i.getStoreID().toString());
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());
             item.setSize(i.getSize());
             item.setItemType(i.getItemType());
             item.setDescription(i.getDescription());
-
+            if (i.getOrderID() != null)
+                item.setOrderID(i.getOrderID().toString());
             responseBody.add(item);
 
         }
@@ -528,7 +547,6 @@ public class PaymentController implements PaymentApi {
         try {
 
             response.setOrder(populateOrder(getOrderByUUIDResponse.getOrder()));
-
         } catch (Exception e) {
             e.printStackTrace();
         }

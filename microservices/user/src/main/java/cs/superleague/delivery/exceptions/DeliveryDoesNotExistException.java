@@ -1,6 +1,6 @@
 package cs.superleague.delivery.exceptions;
 
-public class DeliveryDoesNotExistException extends DeliveryException{
+public class DeliveryDoesNotExistException extends DeliveryException {
     /**
      * Constructs a new exception with the specified detail message.  The
      * cause is not initialized, and may subsequently be initialized by
