@@ -414,7 +414,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Driver not found in database.");
         }
 
-        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
+        List<Delivery> deliveries = deliveryRepo.findAllByDriverIDIsNull();
         if (deliveries == null) {
             return new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
         }
