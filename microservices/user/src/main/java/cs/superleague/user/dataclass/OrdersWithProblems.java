@@ -8,7 +8,7 @@ import java.util.UUID;
 public class OrdersWithProblems {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String problemID;
+    private int problemID;
     private UUID orderID;
     private String currentProductBarcode;
     private String alternativeProductBarcode;
@@ -22,11 +22,11 @@ public class OrdersWithProblems {
     public OrdersWithProblems() {
     }
 
-    public String getProblemID() {
+    public int getProblemID() {
         return problemID;
     }
 
-    public void setProblemID(String problemID) {
+    public void setProblemID(int problemID) {
         this.problemID = problemID;
     }
 

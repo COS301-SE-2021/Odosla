@@ -49,6 +49,11 @@ public class RabbitMQConfig {
         return new Queue("Q_SaveShopperToRepo", true);
     }
 
+    @Bean
+    Queue RemoveProblemFromRepoQueue() {
+        return new Queue("Q_RemoveProblemFromRepo", true);
+    }
+
     //
     // BINDING
     //
@@ -72,6 +77,16 @@ public class RabbitMQConfig {
                 .noargs();
     }
 
+    @Bean
+    Binding RemoveProblemFromRepoBinding() {
+        //return new Binding("CatQueue", Binding.DestinationType.QUEUE, "CatExchange", "CATKEY", null);
+        return BindingBuilder
+                .bind(RemoveProblemFromRepoQueue())
+                .to(UserExchange())
+                .with("RK_RemoveProblemFromRepo")
+                .noargs();
+    }
+
     //
     // FACTORY
     //
@@ -91,7 +106,7 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue(), RemoveProblemFromRepoQueue());                                               // <------- add all queues to listen to here
         simpleMessageListenerContainer.setMessageListener(new UserListener(userService));
         return simpleMessageListenerContainer;
     }

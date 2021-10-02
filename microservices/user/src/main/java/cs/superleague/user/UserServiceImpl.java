@@ -1,9 +1,15 @@
 package cs.superleague.user;
 
+import cs.superleague.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.integration.security.JwtUtil;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
-import cs.superleague.payment.dataclass.*;
+import cs.superleague.payment.dataclass.CartItem;
+import cs.superleague.payment.dataclass.GeoPoint;
+import cs.superleague.payment.dataclass.Order;
+import cs.superleague.payment.dataclass.OrderStatus;
+import cs.superleague.payment.exceptions.OrderDoesNotExist;
+import cs.superleague.payment.requests.SaveOrderRequest;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
 import cs.superleague.payment.responses.GetOrderByUUIDResponse;
 import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
@@ -23,6 +29,11 @@ import cs.superleague.shopping.dataclass.Store;
 import cs.superleague.shopping.exceptions.StoreDoesNotExistException;
 import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import cs.superleague.shopping.responses.GetStoresResponse;
+import cs.superleague.user.dataclass.*;
+import cs.superleague.user.exceptions.*;
+import cs.superleague.user.repos.*;
+import cs.superleague.user.requests.*;
+import cs.superleague.user.responses.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -3184,5 +3195,35 @@ public class UserServiceImpl implements UserService {
             GetProblemsWithOrderResponse response = new GetProblemsWithOrderResponse(null, null, false, "There are no problems with the order.");
             return response;
         }
+    }
+
+    @Override
+    public void removeProblemFromRepo(RemoveProblemFromRepoRequest request) throws InvalidRequestException {
+
+        List<OrdersWithProblems> ordersWithProblems;
+        OrdersWithProblems orderWithProblems = null;
+
+        if (request == null) {
+            throw new InvalidRequestException("Null request object");
+        }
+
+        if (request.getOrderID() == null || request.getBardcode() == null) {
+            throw new InvalidRequestException("Null parameters");
+        }
+
+        ordersWithProblems = ordersWithProblemsRepo.findOrdersWithProblemsByOrderID(request.getOrderID());
+
+        for (OrdersWithProblems o : ordersWithProblems) {
+            if (o.getCurrentProductBarcode().equals(request.getBardcode())) {
+                orderWithProblems = o;
+                break;
+            }
+        }
+
+        if (orderWithProblems == null) {
+            throw new InvalidRequestException("ordersWithProblems that has matching barcode with the request object barcode does not exist");
+        }
+
+        ordersWithProblemsRepo.delete(orderWithProblems);
     }
 }

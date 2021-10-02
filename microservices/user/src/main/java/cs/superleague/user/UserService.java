@@ -103,4 +103,6 @@ public interface UserService {
     ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException;
 
     GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException, ItemDoesNotExistException;
+
+    void removeProblemFromRepo(RemoveProblemFromRepoRequest request) throws InvalidRequestException;
 }

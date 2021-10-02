@@ -207,6 +207,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetOrderByUUIDResponse"
+
+  /payment/fixOrderProblem:
+    post:
+      summary: Endpoint for fixing the order problem
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: fixOrderProblem
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_FixOrderProblemRequest"
+      responses:
+        "200":
+          description: Returns the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_FixOrderProblemResponse"
 components:
 
   schemas:
@@ -512,6 +534,28 @@ components:
       properties:
         order:
           $ref: "#/components/schemas/OrderObject"
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    payment_FixOrderProblemRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItem:
+          $ref: "#/components/schemas/CartItemObject"
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    payment_FixOrderProblemResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
         timestamp:
           type: string
         message:
