@@ -482,6 +482,51 @@ class UserService{
     return false;
   }
 
+  Future<bool> itemNotAvailable(String orderID, String currentBarcode, String alternativeBarcode, BuildContext context) async {
+
+    final url = Uri.parse(userEndPoint+"user/itemNotAvailable");
+
+    Map<String,String> headers =new Map<String,String>();
+
+    String jwt="";
+
+    await this.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+
+    print(jwt);
+
+    headers =
+    {
+      "Accept": "application/json",
+      "content-type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Authorization":jwt,
+    };
+    print(orderID);
+    final data = {
+      "orderID" : "$orderID",
+      "alternativeProductBarcode" : "$alternativeBarcode",
+      "currentProductBarcode" : "$currentBarcode"
+    };
+
+    print(data);
+
+    final response = await http.post(url, headers: headers, body: jsonEncode(data));
+
+    if (response.statusCode==200) {
+      Map<String,dynamic> responseData = json.decode(response.body);
+      print(responseData);
+
+      if (responseData["success"] == true) {
+        Provider.of<OrderProvider>(context,listen: false).order.items.removeWhere((element) => element.barcode==currentBarcode);
+        return true;
+      }
+    }
+    return false;
+  }
+
   Future<bool> updateDriverLocation(double latitude, double longitude, BuildContext context) async {
 
     final url = Uri.parse(userEndPoint+"user/setCurrentLocation");

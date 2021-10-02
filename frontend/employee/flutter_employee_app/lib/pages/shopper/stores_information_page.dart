@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Store.dart';
 import 'package:flutter_employee_app/pages/shopper/get_new_order.dart';
+import 'package:flutter_employee_app/pages/shopper/out_of_stock_page.dart';
 import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
 import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
@@ -132,8 +133,10 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                    Provider.of<ShopProvider>(context,listen: false).store=widget.store;
                    Navigator.of(context).push(MaterialPageRoute(
                        builder: (BuildContext context) =>
-                           GetNewOrderScreen(context, store: widget
-                               .store) //ProductPage(product: product),
+                           ItemsPage(widget.store.id,widget.store.name,{
+                           'lat': double.parse( widget.store.storeLocationLatitude),
+                           'long': double.parse(widget.store.storeLocationLongitude)
+                           }) //ProductPage(product: product),
                    ));
                  },
                  padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -210,10 +213,24 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
      }
    }
     return Scaffold(
+        appBar: AppBar(
+            title: Text(
+              widget.store.name,
+              style: TextStyle(),
+            ),
+            centerTitle: true,
+            toolbarHeight: 32,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.pop(context),
+            ),
+        ),
         body: ListView(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height*0.9,
+              height: MediaQuery.of(context).size.height*0.83,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -235,17 +252,17 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                             )
 
                         ),
-                        Padding(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                          child: Row(
-                            children: <Widget>[
-                              IconButton(icon: Icon(Icons.chevron_left), color: Colors.deepOrangeAccent, iconSize: 40, onPressed: () {
-                                MyNavigator.goToShopperHomePage(context);
-                              }),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding:
+                        //   const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                        //   child: Row(
+                        //     children: <Widget>[
+                        //       IconButton(icon: Icon(Icons.chevron_left), color: Colors.deepOrangeAccent, iconSize: 40, onPressed: () {
+                        //         MyNavigator.goToShopperHomePage(context);
+                        //       }),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                     Container(

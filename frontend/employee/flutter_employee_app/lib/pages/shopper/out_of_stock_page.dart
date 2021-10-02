@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/cart_item.dart';
+import 'package:flutter_employee_app/services/ShoppingService.dart';
+import 'package:get_it/get_it.dart';
+
+import 'item_detail_page.dart';
 
 class ItemsPage extends StatefulWidget {
   final String storeID;
@@ -13,38 +18,70 @@ class ItemsPage extends StatefulWidget {
 }
 
 class _ItemsPageState extends State<ItemsPage> {
+  final ShoppingService _shoppingService=GetIt.I.get();
 
   final String storeID;
   final String storeName;
   final Map<String, double> location;
 
+  var dropdownValue="ALL";
   _ItemsPageState(this.storeID, this.storeName, this.location);
+
+  Widget _popUpShowFilter(BuildContext context){
+    return Container(
+      child: DropdownButton<String>(
+        value: dropdownValue,
+        items: <String>[
+          'ALL',
+          'SOLD OUT',
+          'IN STOCK'
+        ].map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: SizedBox(
+                width: 90,
+                child: Text(value,style:TextStyle(fontWeight: FontWeight.w600),textAlign: TextAlign.end)),
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            dropdownValue = value!;
+          });
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text(
-          storeName + " Out of Stock Items",
-          style: TextStyle(color: Colors.black),
+      backgroundColor: Theme.of(context).backgroundColor,
+        appBar:AppBar(
+          title: Text(
+            storeName,
+            style: TextStyle(),
+          ),
+          centerTitle: true,
+          toolbarHeight: 32,
+          backgroundColor: Theme.of(context).primaryColor,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context),
+          ),
+          actions: [
+            _popUpShowFilter(context),
+
+          ],
         ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: buildItem(context)
+      body: buildItems(context)
     );
   }
 
   Widget buildItems(BuildContext context) {
     final double spacing = 12;
     return FutureBuilder(
-      future: apiService.getItems(storeID,context),
+      future: dropdownValue=="ALL"?_shoppingService.getItems(storeID,context):dropdownValue=="SOLD OUT"?_shoppingService.getItemsSoldOut(storeID,context):_shoppingService.getItemsInStock(storeID,context),
       builder: (BuildContext context, snapshot) {
         //let's check if we got a response or not
         debugPrint(snapshot.data.toString() + "__");
@@ -75,7 +112,7 @@ class _ItemsPageState extends State<ItemsPage> {
                       builder: (BuildContext context) => ItemDetailPage(
                           items[index],
                           storeID,
-                          location) //ProductPage(product: product),
+                          location,false) //ProductPage(product: product),
                   ));
                 },
                 child: buildItem(items[index]),
@@ -91,9 +128,9 @@ class _ItemsPageState extends State<ItemsPage> {
 
   Widget buildItem(CartItem product) => Container(
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.deepOrange, width: 2),
+      border: Border.all(color: Theme.of(context).backgroundColor, width: 2),
     ),
     child: Padding(
       padding: const EdgeInsets.all(16),

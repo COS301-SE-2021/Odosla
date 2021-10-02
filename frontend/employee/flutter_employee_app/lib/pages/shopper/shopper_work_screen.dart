@@ -207,7 +207,7 @@ class  _ShopperWorkScreenState extends State<ShopperWorkScreen> {
               }else {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BarcodeScanPage(context, barcodeExpected: barcode,productImageURL: img,productName: text,brand: brand,)),
+                  MaterialPageRoute(builder: (context) => BarcodeScanPage(context, barcodeExpected: barcode,productImageURL: img,productName: text,brand: brand, store: Provider.of<ShopProvider>(context,listen: false).store,)),
                 ).then((value) => {
                   if(value==true){
                     setState(() {

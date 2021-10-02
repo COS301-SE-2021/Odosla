@@ -210,84 +210,103 @@ class _GetNewOrderScreenState extends State<GetNewOrderScreen> {
       counter=0;
     });
 
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              children: [
-                Stack(
-                  children: [
-                    ConstrainedBox(
-                        constraints: new BoxConstraints(
-                            minHeight: MediaQuery.of(context).size.height*0.2,
-                            maxHeight: MediaQuery.of(context).size.height*0.3,
-                            maxWidth: double.infinity,
-                            minWidth: double.infinity
-                        ),
-                        child: Image(fit: BoxFit.fitWidth,
-                          image:AssetImage(
-                            "assets/"+widget.store.imageUrl,
-                          ),
-                        )
 
-                    ),
-                    Column(
+    return Scaffold(
+        appBar:AppBar(
+          title: Text(
+            widget.store.name,
+            style: TextStyle(),
+          ),
+          centerTitle: true,
+          toolbarHeight: 32,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Stack(
                       children: [
-                        SizedBox(height:MediaQuery.of(context).size.height*0.013),
-                        Container(
-                            height: 30,
-                            child: GestureDetector(
-                              onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (BuildContext context) => ShopperHomeScreen(0)));
-                              },
-                              child: Icon(
-                                Icons.chevron_left,
-                                color: Colors.deepOrangeAccent,
-                                size: 35,
+                        ConstrainedBox(
+                            constraints: new BoxConstraints(
+                                minHeight: MediaQuery.of(context).size.height*0.2,
+                                maxHeight: MediaQuery.of(context).size.height*0.3,
+                                maxWidth: double.infinity,
+                                minWidth: double.infinity
+                            ),
+                            child: Image(fit: BoxFit.fitWidth,
+                              image:AssetImage(
+                                "assets/"+widget.store.imageUrl,
                               ),
                             )
+
                         ),
+                        // Column(
+                        //   children: [
+                        //     SizedBox(height:MediaQuery.of(context).size.height*0.013),
+                        //     Container(
+                        //         height: 30,
+                        //         child: GestureDetector(
+                        //           onTap: (){
+                        //             Navigator.of(context).push(MaterialPageRoute(
+                        //                 builder: (BuildContext context) => ShopperHomeScreen(0)));
+                        //           },
+                        //           child: Icon(
+                        //             Icons.chevron_left,
+                        //             color: Colors.deepOrangeAccent,
+                        //             size: 35,
+                        //           ),
+                        //         )
+                        //     ),
+                        //   ],
+                        // ),
                       ],
                     ),
+                    Container(
+                      color: Colors.deepOrangeAccent,
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height*0.06,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Current Orders ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
+
+                        ],
+                      ),
+
+                    ),
+                    Container(
+                        height: MediaQuery.of(context).size.height*0.44,
+                        child: Column(
+                          children: [
+                            Container(  height: MediaQuery.of(context).size.height*0.44, child: buildOrders()),
+                          ],
+                        )),
                   ],
                 ),
-                Container(
-                  color: Colors.deepOrangeAccent,
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height*0.06,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Current Orders ",style: TextStyle(fontWeight: FontWeight.w700,fontSize: 27, color: Colors.white),textAlign: TextAlign.center,),
 
-                    ],
-                  ),
 
-                ),
-                Container(
-                    height: MediaQuery.of(context).size.height*0.4,
-                    child: Column(
-                      children: [
-                        Container(  height: MediaQuery.of(context).size.height*0.4, child: buildOrders()),
-                      ],
-                    )),
               ],
             ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
 
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-
-                _getNextOrderBTN(),
-              ],
-            )
-          ],
-        ),
+              _getNextOrderBTN(),
+            ],
+          )
+        ],
       )
     );
   }

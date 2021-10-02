@@ -116,7 +116,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
               }else {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BarcodeScanPage(context, barcodeExpected: barcode,productImageURL: img,productName: text,brand: brand,)),
+                  MaterialPageRoute(builder: (context) => BarcodeScanPage(context, barcodeExpected: barcode,productImageURL: img,productName: text,brand: brand,store: widget.store,)),
                 ).then((value) => {
                   if(value==true){
                     setState(() {

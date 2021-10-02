@@ -43,7 +43,7 @@ var routes = <String, WidgetBuilder>{
   "/activateShopperAccount":(BuildContext context) =>ActivateShopperAccountScreen(),
   "/shopperHomePage":(BuildContext context) =>ShopperHomeScreen(1),
   "/driverHomePage":(BuildContext context) =>DriverHomeScreen(1),
-  "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(context,barcodeExpected: '', brand: '', productName: '', productImageURL: '',),
+  "/barcodeScanner":(BuildContext context) =>BarcodeScanPage(context,barcodeExpected: '', brand: '', productName: '', productImageURL: '',store: Provider.of<ShopProvider>(context,listen: false).store,),
   "/currentOrderPage":(BuildContext context)=>CurrentOrderScreen(context,store: Store("", "", 0, 0, true,"","","","")),
   "/adminHomePage":(BuildContext context)=>AdminHomeScreen(1),
 };

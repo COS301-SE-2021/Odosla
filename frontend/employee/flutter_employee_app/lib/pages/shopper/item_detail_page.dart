@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:odosla/model/cart_item.dart';
-import 'package:provider/provider.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:flutter_employee_app/models/cart_item.dart';
 
 class ItemDetailPage extends StatefulWidget {
   final CartItem item;
   final String storeID;
   final Map<String, double> location;
-  const ItemDetailPage(this.item, this.storeID, this.location
-      //Key key,
-      ); // : super(key: key);
+  final bool _isAlternative;
+
+  const ItemDetailPage(this.item, this.storeID, this.location,
+      this._isAlternative); // : super(key: key);
 
   @override
   _ItemDetailPage createState() => _ItemDetailPage(storeID, location);
@@ -22,22 +21,6 @@ class _ItemDetailPage extends State<ItemDetailPage> {
   final Map<String, double> location;
 
   _ItemDetailPage(this.storeID, this.location);
-
-  void add() {
-    if (_count < 9) {
-      setState(() {
-        _count++;
-      });
-    }
-  }
-
-  void sub() {
-    if (_count > 1) {
-      setState(() {
-        _count--;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +64,11 @@ class _ItemDetailPage extends State<ItemDetailPage> {
           style: TextStyle(
               color: Colors.black54, fontStyle: FontStyle.italic, fontSize: 18),
         ),
+        Text(
+          widget.item.soldOut ? "SOLD OUT" : "IN STOCK", //item.size,
+          style: TextStyle(
+              color: Colors.black54, fontStyle: FontStyle.italic, fontSize: 18),
+        ),
         Expanded(
           child: Container(
             margin: EdgeInsets.symmetric(vertical: 30),
@@ -90,6 +78,17 @@ class _ItemDetailPage extends State<ItemDetailPage> {
             ),
           ),
         ),
+        Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text(
+                'Barcode: ' + widget.item.barcode,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+              ),
+              SizedBox(
+                width: 35,
+              ),
+            ])),
         createDetails(),
         SizedBox(height: 20),
         Container(
@@ -97,67 +96,36 @@ class _ItemDetailPage extends State<ItemDetailPage> {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Text(
                 'R' + widget.item.price.toStringAsFixed(2),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
               ),
               SizedBox(
                 width: 35,
               ),
-              createQuantity(),
             ])),
+        Container(
+          child: Text("Update details of item to:"),
+        ),
         SizedBox(
-          height: 30,
+          height: 20,
         ),
         Container(
             height: 50,
             width: 250,
             child: ElevatedButton(
                 onPressed: () => {
-                      if (storeID ==
-                              Provider.of<CartProvider>(context, listen: false)
-                                  .store ||
-                          Provider.of<CartProvider>(context, listen: false)
-                                  .items
-                                  .length ==
-                              0 ||
-                          Provider.of<CartProvider>(context, listen: false)
-                                  .store ==
-                              "")
-                        {
-                          debugPrint("!!"),
-                          Provider.of<CartProvider>(context, listen: false)
-                              .addItem(widget.item, _count),
-
-                          Provider.of<CartProvider>(context, listen: false)
-                              .store = storeID,
-                          Provider.of<CartProvider>(context, listen: false)
-                              .activeStoreLocation = location,
-                          debugPrint("COUNT: " + _count.toString()),
-                          Navigator.pop(context),
-                        }
-                      else
-                        {
-                          Alert(
-                            context: context,
-                            title: "Error:",
-                            desc:
-                                "You can only order items from one store at a time, please review your cart.",
-                            buttons: [
-                              DialogButton(
-                                color: Colors.deepOrange,
-                                child: Text(
-                                  "OK",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                                onPressed: () => Navigator.pop(context),
-                                width: 120,
-                              )
-                            ],
-                          ).show()
-                        }
+                      if (widget._isAlternative)
+                        {}
+                      else if (widget.item.soldOut == true)
+                        {}
+                      else if (widget.item.soldOut == false)
+                        {}
                     },
                 child: Text(
-                  "Add to Cart",
+                  widget._isAlternative
+                      ? "Offer alternative"
+                      : widget.item.soldOut
+                          ? "In Stock"
+                          : "Out of stock",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -211,29 +179,4 @@ class _ItemDetailPage extends State<ItemDetailPage> {
           ],
         ),
       );
-
-  Widget createQuantity() {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            border: Border.all(color: Colors.black54)),
-        child: Row(
-          children: [
-            MaterialButton(
-                onPressed: () => sub(),
-                minWidth: 50,
-                child: Text('-',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 26))),
-            Text(_count.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28)),
-            MaterialButton(
-                onPressed: () => add(),
-                minWidth: 50,
-                child: Text('+',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 26))),
-          ],
-        ));
-  }
 }

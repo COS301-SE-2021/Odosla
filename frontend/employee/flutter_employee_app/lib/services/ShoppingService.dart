@@ -2,9 +2,9 @@ import 'dart:convert';
 //import 'dart:js_util';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_employee_app/models/CartItem.dart';
 import 'package:flutter_employee_app/models/Order.dart';
 import 'package:flutter_employee_app/models/Store.dart';
+import 'package:flutter_employee_app/models/cart_item.dart';
 import 'package:flutter_employee_app/provider/order_provider.dart';
 import 'package:flutter_employee_app/provider/shop_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
@@ -246,6 +246,72 @@ class ShoppingService {
     }
   }
 
+  Future<List<CartItem>> getItemsSoldOut(String storeID,BuildContext context) async {
+    String sId = storeID;
+    String jwt="";
+
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+    final response = await http.post(Uri.parse(shoppingEndPoint + 'shopping/getItems'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":jwt,
+        },
+        body: jsonEncode({"storeID": storeID}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint("2:::" + map.entries.toString());
+      List<CartItem> list =  soldOutCartItemsFromJson(map);
+      debugPrint("1:::" + list.toString());
+      return list; //CartItem.fromJson(map)
+    } else {
+      List<CartItem> list = List.empty();
+      debugPrint(storeID);
+      debugPrint("___ err " + response.statusCode.toString());
+      return list; //CartItem.fromJson(map)
+
+    }
+  }
+
+  Future<List<CartItem>> getItemsInStock(String storeID,BuildContext context) async {
+    String sId = storeID;
+    String jwt="";
+
+    await _userService.getJWTAsString(context).then((value) => {
+      jwt=value!
+    });
+    final response = await http.post(Uri.parse(shoppingEndPoint + 'shopping/getItems'),
+        headers: {
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Authorization":jwt,
+        },
+        body: jsonEncode({"storeID": storeID}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint("2:::" + map.entries.toString());
+      List<CartItem> list =  inStockCartItemsFromJson(map);
+      debugPrint("1:::" + list.toString());
+      return list; //CartItem.fromJson(map)
+    } else {
+      List<CartItem> list = List.empty();
+      debugPrint(storeID);
+      debugPrint("___ err " + response.statusCode.toString());
+      return list; //CartItem.fromJson(map)
+
+    }
+  }
+
   List<CartItem> cartItemsFromJson(Map<String, dynamic> j) {
     List<CartItem> list;
 
@@ -259,4 +325,22 @@ class ShoppingService {
     return list;
   }
 
+  List<CartItem> soldOutCartItemsFromJson(Map<String, dynamic> j) {
+    List<CartItem> list;
+    list = (json.decode(json.encode(j['items'])) as List)
+        .map((i) => CartItem.fromJson(i))
+        .toList();
+    list.removeWhere((element) => element.soldOut==false);
+    return list;
+  }
+
+  List<CartItem> inStockCartItemsFromJson(Map<String, dynamic> j) {
+    List<CartItem> list;
+
+    list = (json.decode(json.encode(j['items'])) as List)
+        .map((i) => CartItem.fromJson(i))
+        .toList();
+    list.removeWhere((element) => element.soldOut==true);
+    return list;
+  }
 }

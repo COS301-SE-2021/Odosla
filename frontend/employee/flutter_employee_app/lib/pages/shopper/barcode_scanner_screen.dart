@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_employee_app/models/Store.dart';
+import 'package:flutter_employee_app/pages/shopper/alternative_product_page.dart';
 
 class BarcodeScanPage extends StatelessWidget {
   String barcode = 'Unknown barcode';
@@ -10,35 +12,80 @@ class BarcodeScanPage extends StatelessWidget {
   final String productImageURL;
   final String productName;
   final String brand;
-  BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected, required this.productImageURL, required this.productName, required this.brand}) : super(key: key);
+  final Store store;
+  BarcodeScanPage(BuildContext context, {Key? key, required this.barcodeExpected, required this.productImageURL, required this.productName, required this.brand, required this.store}) : super(key: key);
 
-  Widget _buildLoginBtn() {
-    return GestureDetector(
-      onTap: () => {},
-      child: RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: 'No items available?',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.0,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            TextSpan(
-              text: 'Provide alternative',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+  Widget _popUpItemNotAvailable(BuildContext context){
+    return new AlertDialog(
+      title: const Text('OUT OF STOCK'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Would you like to offer an alternative? ",
+              textAlign: TextAlign.center
+          ),
+        ],
       ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () async {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  _offerAlternative(
+                      context),
+            );
+            Navigator.pop(context, false);
+          },
+          child: const Text('Go to map'),
+        ),
+        new FlatButton(
+          onPressed: () async {
+            //send request still
+            Navigator.pop(context, false);
+          },
+          child: Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        ),
+      ],
     );
   }
+
+  Widget _offerAlternative(BuildContext context){
+    return new AlertDialog(
+      title: const Text('Alternative'),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Would you prefer to select an item from the page or scan its barcode? ",
+              textAlign: TextAlign.center
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () async {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => AlternativeItemsPage(store.id, store.name,
+                    {"lat": double.parse(store.storeLocationLatitude),"long":double.parse(store.storeLocationLongitude)})));
+          },
+          child: const Text('Items page'),
+        ),
+        new FlatButton(
+          onPressed: () async {
+            //send request still
+            Navigator.pop(context, false);
+          },
+          child: const Text('Barcode scanner'),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
@@ -136,7 +183,14 @@ class BarcodeScanPage extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: (){},
+            onTap: (){
+              showDialog(
+                context: context,
+                builder: (BuildContext context) =>
+                    _popUpItemNotAvailable(
+                        context),
+              );
+            },
             child: Container(
                 height: 30,
                 alignment: Alignment.bottomCenter,

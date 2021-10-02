@@ -20,14 +20,13 @@ class _StorePageState extends State<StorePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           title: Text(
             "STORES",
-            style: TextStyle(color: Colors.black),
           ),
           centerTitle: true,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Theme.of(context).primaryColor,
         ),
         body: buildStores()
         );
@@ -99,9 +98,9 @@ class _StorePageState extends State<StorePage> {
 
   Widget buildStore(Store product) => Container(
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(12),
-      border: Border.all(color: Colors.white, width: 2),
+      border: Border.all(color:Theme.of(context).primaryColor, width: 2),
     ),
     child: Padding(
       padding: const EdgeInsets.all(16),
