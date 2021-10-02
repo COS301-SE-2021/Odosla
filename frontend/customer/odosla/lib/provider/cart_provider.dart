@@ -47,6 +47,13 @@ class CartProvider with ChangeNotifier {
     _items = value;
   }
 
+  bool atMax() {
+    if (_storeIDThree == "") return false;
+    if (_storeIDTwo == "") return false;
+    if (_storeIDOne == "") return false;
+    return true;
+  }
+
   void addItem(CartItem item, int q) {
     if (items.containsKey(item.id)) {
       items.update(

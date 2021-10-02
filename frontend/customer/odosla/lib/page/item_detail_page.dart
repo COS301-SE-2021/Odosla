@@ -113,21 +113,22 @@ class _ItemDetailPage extends State<ItemDetailPage> {
             width: 250,
             child: ElevatedButton(
                 onPressed: () => {
-                      if (storeID ==
-                              Provider.of<CartProvider>(context, listen: false)
-                                  .store ||
-                          Provider.of<CartProvider>(context, listen: false)
-                                  .items
-                                  .length ==
-                              0 ||
-                          Provider.of<CartProvider>(context, listen: false)
-                                  .store ==
-                              "")
+                      // if (storeID ==
+                      //         Provider.of<CartProvider>(context, listen: false)
+                      //             .store ||
+                      //     Provider.of<CartProvider>(context, listen: false)
+                      //             .items
+                      //             .length ==
+                      //         0 ||
+                      //     Provider.of<CartProvider>(context, listen: false)
+                      //             .store ==
+                      //         "")
+                      if (!Provider.of<CartProvider>(context, listen: false)
+                          .atMax())
                         {
                           debugPrint("!!"),
                           Provider.of<CartProvider>(context, listen: false)
                               .addItem(widget.item, _count),
-
                           Provider.of<CartProvider>(context, listen: false)
                               .store = storeID,
                           Provider.of<CartProvider>(context, listen: false)
@@ -141,7 +142,7 @@ class _ItemDetailPage extends State<ItemDetailPage> {
                             context: context,
                             title: "Error:",
                             desc:
-                                "You can only order items from one store at a time, please review your cart.",
+                                "You can only order items from a maximum of three stores at a time, please review your cart.",
                             buttons: [
                               DialogButton(
                                 color: Colors.deepOrange,
