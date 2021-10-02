@@ -342,6 +342,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetCloseEnoughStoresResponse"
 
+  /shopping/itemIsInStock:
+    post:
+      summary: Endpoint for setting an item to in stock
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: itemIsInStock
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_ItemIsInStockRequest"
+      responses:
+        "200":
+          description: Returns close enough stores for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_ItemIsInStockResponse"
+
 components:
 
   schemas:
@@ -863,3 +885,21 @@ components:
               $ref: "#/components/schemas/StoreObject"
         message:
           type: string
+
+    shopping_ItemIsInStockRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        barcode:
+          type: string
+        storeID:
+          type: string
+
+    shopping_ItemIsInStockResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
