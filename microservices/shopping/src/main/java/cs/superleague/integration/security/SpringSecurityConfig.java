@@ -58,7 +58,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final RequestMatcher CUSTOMER_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("delivery/getDeliveryStatus"),
             new AntPathRequestMatcher("delivery/trackDelivery"),
-            new AntPathRequestMatcher("delivery/getDeliveryDriverByOrderId")
+            new AntPathRequestMatcher("delivery/getDeliveryDriverByOrderId"),
+            new AntPathRequestMatcher("/shopping/getCloseEnoughStores")
     );
 
     private final RequestMatcher ADMIN_URLS = new OrRequestMatcher(

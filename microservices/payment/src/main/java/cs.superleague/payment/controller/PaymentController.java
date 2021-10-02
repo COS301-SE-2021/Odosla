@@ -174,14 +174,20 @@ public class PaymentController implements PaymentApi {
             System.out.println("Cart items list size : " + cartItemObjects.size());
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
-                    UUID.randomUUID(), orderType, body.getLongitude().doubleValue(),
+                    UUID.fromString(body.getStoreIDOne()), UUID.fromString(body.getStoreIDTwo()), UUID.fromString(body.getStoreIDThree()), orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             System.out.println("AFTER THE CALL");
             try {
                 response.setMessage(submitOrderResponse.getMessage());
-                response.setOrder(populateOrder(submitOrderResponse.getOrder()));
-                response.setSuccess(submitOrderResponse.getsuccess());
+                response.setOrderOne(populateOrder(submitOrderResponse.getOrderOne()));
+                if (submitOrderResponse.getOrderTwo() != null){
+                    response.setOrderTwo(populateOrder(submitOrderResponse.getOrderTwo()));
+                }
+                if (submitOrderResponse.getOrderThree() != null){
+                    response.setOrderThree(populateOrder(submitOrderResponse.getOrderThree()));
+                }
+                response.setSuccess(submitOrderResponse.isSuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
             } catch (Exception e) {
 

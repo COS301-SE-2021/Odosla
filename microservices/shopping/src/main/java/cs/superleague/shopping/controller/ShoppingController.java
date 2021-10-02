@@ -729,6 +729,36 @@ public class ShoppingController implements ShoppingApi {
     }
 
     @Override
+    public ResponseEntity<ShoppingGetCloseEnoughStoresResponse> getCloseEnoughStores(ShoppingGetCloseEnoughStoresRequest body) {
+        ShoppingGetCloseEnoughStoresResponse response = new ShoppingGetCloseEnoughStoresResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            GeoPoint customersLocation = new GeoPoint();
+            customersLocation.setAddress(body.getCustomerLocation().getAddress());
+            customersLocation.setLongitude(body.getCustomerLocation().getLongitude().doubleValue());
+            customersLocation.setLatitude(body.getCustomerLocation().getLatitude().doubleValue());
+            GetCloseEnoughStoresRequest request = new GetCloseEnoughStoresRequest(UUID.fromString(body.getStoreID()), customersLocation);
+            GetCloseEnoughStoresResponse getCloseEnoughStoresResponse = shoppingService.getCloseEnoughStores(request);
+
+            try {
+
+                response.setCloseStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
+                response.setMessage(getCloseEnoughStoresResponse.getMessage());
+                response.setAdditionalDeliveryCosts(populateDoubles(getCloseEnoughStoresResponse.getAdditionalDeliveryCosts()));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException | StoreDoesNotExistException e) {
+
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<ShoppingGetItemsByIDResponse> getItemsByID(ShoppingGetItemsByIDRequest body) {
 
         //creating response object and default return status:
@@ -914,5 +944,12 @@ public class ShoppingController implements ShoppingApi {
         }
 
         return responseBody;
+    }
+    public List<Number> populateDoubles(List<Double> doubles){
+        List<Number> numbers = new ArrayList<>();
+        for (double dbl : doubles){
+            numbers.add(BigDecimal.valueOf(dbl));
+        }
+        return numbers;
     }
 }
