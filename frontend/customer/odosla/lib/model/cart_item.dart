@@ -71,4 +71,33 @@ class CartItem {
         'itemType': type,
         'soldOut': soldOut,
       };
+
+  Map<String, dynamic> toJsonTwo() => {
+    'productId': id,
+    'name': title,
+    'barcode': barcode,
+    'storeID': storeID,
+    'price': price,
+    'quantity': quantity,
+    'description': description,
+    'imageUrl': imgUrl,
+    'brand': brand,
+    'size': size,
+    'itemType': type,
+    'soldOut': soldOut,
+  };
+
+  CartItem.fromJsonTwo(Map<String, dynamic> json)
+      : id = json['productId'],
+        title = json['name'],
+        barcode = json['barcode'],
+        storeID = json['storeID'],
+        price = json['price'],
+        quantity = json['quantity'],
+        description = json['description'],
+        imgUrl = json['imageUrl'],
+        brand = json['brand'],
+        size = json['size'],
+        type = json['itemType'],
+        soldOut = json['soldOut'];
 }

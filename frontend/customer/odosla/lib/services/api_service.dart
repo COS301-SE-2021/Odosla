@@ -26,7 +26,7 @@ class ApiService {
 
     //localhost:8080/shopping/getItems
     final response =
-        await http.post(Uri.parse(shoppingEndpoint + '/shopping/getItems'),
+        await http.post(Uri.parse(shoppingEndpoint + 'shopping/getItems'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -81,7 +81,7 @@ class ApiService {
 
   Future<List<Store>> getStores(BuildContext context) async {
     final response =
-        await http.post(Uri.parse(shoppingEndpoint + '/shopping/getStores'),
+        await http.post(Uri.parse(shoppingEndpoint + 'shopping/getStores'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -121,7 +121,7 @@ class ApiService {
 
   Future<List<Store>> getNearbyStores(BuildContext context) async {
     final response = await http.post(
-        Uri.parse(shoppingEndpoint + '/shopping/getCloseEnoughStores'),
+        Uri.parse(shoppingEndpoint + 'shopping/getCloseEnoughStores'),
         headers: {
           "Authorization":
               Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -158,7 +158,7 @@ class ApiService {
         Provider.of<CartProvider>(context, listen: false).storeIDOne);
     debugPrint(itemsList.toString());
     final response =
-        await http.post(Uri.parse(paymentEndpoint + '/payment/submitOrder'),
+        await http.post(Uri.parse(paymentEndpoint + 'payment/submitOrder'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -276,7 +276,7 @@ class ApiService {
     final oid = orderID;
     debugPrint("id: " + "$oid");
     final response = await http.post(
-        Uri.parse(paymentEndpoint + '/payment/getStatusOfMultipleOrders'),
+        Uri.parse(paymentEndpoint + 'payment/getStatusOfMultipleOrders'),
         headers: {
           "Authorization":
               Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -336,7 +336,7 @@ class ApiService {
 
   void allocateDriver(BuildContext context, String id) async {
     final response = await http.post(
-        Uri.parse(deliveryEndpoint + '/delivery/getDeliveryDriverByOrderId'),
+        Uri.parse(deliveryEndpoint + 'delivery/getDeliveryDriverByOrderId'),
         headers: {
           "Authorization":
               Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -390,7 +390,7 @@ class ApiService {
       BuildContext context, String jwt) async {
     debugPrint(jwt);
     final response =
-        await http.post(Uri.parse(userEndpoint + '/user/getGroceryLists'),
+        await http.post(Uri.parse(userEndpoint + 'user/getGroceryLists'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -422,7 +422,7 @@ class ApiService {
   rateDriver(BuildContext context, String driverID, int rating) async {
     debugPrint("__" + driverID);
     final response =
-        await http.post(Uri.parse(userEndpoint + '/user/driverSetRating'),
+        await http.post(Uri.parse(userEndpoint + 'user/driverSetRating'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -452,7 +452,7 @@ class ApiService {
 
   void setGroceryLists(BuildContext context, String jwt) async {
     final response =
-        await http.post(Uri.parse(userEndpoint + '/user/makeGroceryList'),
+        await http.post(Uri.parse(userEndpoint + 'user/makeGroceryList'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -480,7 +480,7 @@ class ApiService {
 
   void updateDriverLocation(BuildContext context, String deliveryID) async {
     final response =
-        await http.post(Uri.parse(deliveryEndpoint + '/delivery/trackDelivery'),
+        await http.post(Uri.parse(deliveryEndpoint + 'delivery/trackDelivery'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -507,7 +507,7 @@ class ApiService {
   }
 
   Future<User?> getCurrentUser(BuildContext context) async {
-    final loginURL = Uri.parse(userEndpoint + "/user/getCurrentUser");
+    final loginURL = Uri.parse(userEndpoint + "user/getCurrentUser");
 
     Map<String, String> headers = new Map<String, String>();
 
@@ -542,7 +542,7 @@ class ApiService {
 
     final response = await http.post(
         Uri.parse(
-            recommendationEndpoint + '/recommendation/getCartRecommendation'),
+            recommendationEndpoint + 'recommendation/getCartRecommendation'),
         headers: {
           "Accept": "application/json",
           "content-type": "application/json",
@@ -576,5 +576,126 @@ class ApiService {
       debugPrint("__ err " + response.statusCode.toString());
       return list;
     }
+  }
+
+  Future<CartItem?> priceCheck(List<CartItem> items, BuildContext context) async {
+    debugPrint(items.toString());
+
+    List<dynamic> itemsList = itemListToJsonTwo(items);
+    final response =
+    await http.post(Uri.parse(shoppingEndpoint + 'shopping/priceCheck'),
+        headers: {
+          "Authorization":
+          Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({
+          "cartItems": itemsList, //get address
+        }));
+
+    print("RESPONSE for all stores: ");
+    print(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(response.body);
+      List<CartItem> list = cartItemsFromJsonTwo(map);
+      if(list.length==1 && items.length==1){
+        if(list.elementAt(0).storeID==items.elementAt(0).storeID){
+          return null;
+        }
+      }
+      return list.first;
+    } else {
+      return null;
+    }
+  }
+
+  List<Map<String, dynamic>> itemListToJsonTwo(List<CartItem> items) {
+    List<Map<String, dynamic>> list =
+    (items.map((item) => item.toJsonTwo())).toList();
+    return list;
+  }
+
+  List<CartItem> cartItemsFromJsonTwo(Map<String, dynamic> j) {
+    List<CartItem> list;
+
+    //Iterable i = json.decode(j['items']);
+    debugPrint("x-1");
+    list = (json.decode(json.encode(j['cartItems'])) as List)
+        .map((i) => CartItem.fromJsonTwo(i))
+        .toList();
+    debugPrint("x-2");
+
+    return list;
+  }
+
+  Future<Store?> getStoreByUUID(String storeID,BuildContext context) async {
+    print("IN FUNCTION");
+
+    final response =
+        await http.post(Uri.parse(shoppingEndpoint + 'shopping/getStoreByUUID'),
+        headers: {
+          "Authorization":
+          Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({
+          "StoreID": "$storeID", //get address
+        }));
+
+        print("$storeID");
+
+    print("RESPONSE for get Store By UUID ");
+    print(response.body);
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(response.body);
+      Store store = Store.fromJson(map["store"]);
+      return store;
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<CartItem>> priceCheckNearby(List<CartItem> items, BuildContext context) async {
+    debugPrint(items.toString());
+    final storeID = items.first.storeID;
+    String pi = items.first.id;
+    List<dynamic> itemsList = itemListToJson(items);
+    UserService _userService = GetIt.I.get();
+    debugPrint('_-_ s1 ' +
+        Provider.of<CartProvider>(context, listen: false).storeIDOne);
+    debugPrint(itemsList.toString());
+    print(Provider.of<StatusProvider>(context, listen: false).jwt);
+    final response =
+    await http.post(Uri.parse(paymentEndpoint + '/shopping/priceCheckAllAvailableStores'),
+        headers: {
+          "Authorization":
+          Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({
+          "cartItems": itemsList, //get address
+        }));
+
+    print("RESPONSE for all stores: ");
+    print(response.body);
+    if (response.statusCode == 200) {
+      debugPrint("price check");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      return items;
+    } else {
+      List<Store> list = List.empty();
+      debugPrint("error " + response.statusCode.toString());
+      debugPrint(response.body.toString());
+    }
+    return items;
   }
 }

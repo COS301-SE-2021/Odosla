@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:odosla/model/cart_item.dart';
+import 'package:odosla/model/store.dart';
 import 'package:odosla/provider/cart_provider.dart';
+import 'package:odosla/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -8,6 +10,7 @@ class ItemDetailPage extends StatefulWidget {
   final CartItem item;
   final String storeID;
   final Map<String, double> location;
+
   const ItemDetailPage(this.item, this.storeID, this.location
       //Key key,
       ); // : super(key: key);
@@ -18,6 +21,157 @@ class ItemDetailPage extends StatefulWidget {
 
 class _ItemDetailPage extends State<ItemDetailPage> {
   int _count = 1;
+
+  Widget _popUpPriceCheck(BuildContext context) {
+    ApiService apiService = ApiService();
+    return new AlertDialog(
+      title: Column(
+        children: [
+          // Container(
+          //     child: IconButton(onPressed: (){}, icon: Icon(Icons.cancel)),
+          //   alignment: Alignment.topRight,
+          // ),
+          const Text(
+            'PRICE CHECK',
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Finding a cheaper price for " + widget.item.title,
+              textAlign: TextAlign.center),
+        ],
+      ),
+      actionsPadding: EdgeInsets.only(right: 30),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () async {
+            List<CartItem> items = <CartItem>[];
+            items.add(widget.item);
+            await apiService.priceCheck(items, context).then((value) async => {
+                  if (value != null && value.price != null)
+                    {
+                      await apiService
+                          .getStoreByUUID(value.storeID, context)
+                          .then((val) => {
+                                Navigator.pop(context, false),
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _popUpPriceCheckResults(context, true,
+                                          val!, value.price, value),
+                                )
+                              })
+                    }
+                  else
+                    {
+                      Navigator.pop(context, false),
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _popUpPriceCheckResults(
+                                context,
+                                false,
+                                Store("", "", 0, 0, false, "", 0, 0),
+                                0,
+                                widget.item),
+                      )
+                    }
+                });
+          },
+          child: const Text('PRICE CHECK'),
+        ),
+        new FlatButton(
+          onPressed: () async {
+            Navigator.pop(context, false);
+          },
+          child: Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _popUpPriceCheckResults(BuildContext context, bool found, Store store,
+      double cheaperPrice, CartItem item) {
+    ApiService apiService = ApiService();
+    return new AlertDialog(
+      title: Column(
+        children: [
+          Text(
+            found ? 'FOUND A CHEAPER PRICE' : 'NO RESULTS FOUND',
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+              found
+                  ? ('The cheapest price for this product is available at ' +
+                      store.name)
+                  : 'The cheapest price for this product is at current store',
+              textAlign: TextAlign.center),
+          found
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("\nProduct: "),
+                    Text("\n" + widget.item.title)
+                  ],
+                )
+              : Container(),
+          found
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Current price: "),
+                    Text("R" + widget.item.price.toString()),
+                  ],
+                )
+              : Container(),
+          found
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(store.name + "'s price: "),
+                    Text("R" + cheaperPrice.toString()),
+                  ],
+                )
+              : Container(),
+        ],
+      ),
+      actionsPadding: EdgeInsets.only(right: 30),
+      actions: <Widget>[
+        found
+            ? new FlatButton(
+                onPressed: () async {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ItemDetailPage(item,
+                          store.id, {"lat": store.lat, "long": store.long})));
+                },
+                child: const Text('SEE ITEM'),
+              )
+            : Container(),
+        new FlatButton(
+          onPressed: () async {
+            Navigator.pop(context, false);
+          },
+          child: Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        )
+      ],
+    );
+  }
 
   final String storeID;
   final Map<String, double> location;
@@ -57,7 +211,39 @@ class _ItemDetailPage extends State<ItemDetailPage> {
                 child: IconButton(
                   icon: Icon(Icons.arrow_back_ios, color: Colors.black),
                   onPressed: () => Navigator.pop(context),
-                ))
+                )),
+            Positioned(
+                top: 19,
+                right: 41,
+                child: GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          _popUpPriceCheck(context),
+                    );
+                  },
+                  child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Price Check",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            decoration: (TextDecoration.underline)),
+                      )),
+                )),
+            Positioned(
+              top: 2,
+              right: 3,
+              child: IconButton(
+                icon: Icon(
+                  Icons.monetization_on_rounded,
+                  color: Colors.black,
+                  size: 30,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
           ],
         ),
       ),
