@@ -56,4 +56,6 @@ public interface PaymentService {
     GetOrderByUUIDResponse getOrderByUUID(GetOrderByUUIDRequest request) throws InvalidRequestException;
 
     FixOrderProblemResponse fixOrderProblem(FixOrderProblemRequest request) throws InvalidRequestException, URISyntaxException;
+
+    GetStatusOfMultipleOrdersResponse getStatusOfMultipleOrders(GetStatusOfMultipleOrdersRequest request) throws InvalidRequestException, URISyntaxException;
 }

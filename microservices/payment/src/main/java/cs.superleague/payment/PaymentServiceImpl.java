@@ -1,7 +1,10 @@
 package cs.superleague.payment;
 
 import com.itextpdf.text.*;
+import cs.superleague.delivery.dataclass.Delivery;
+import cs.superleague.delivery.responses.AddOrderToDeliveryResponse;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
+import cs.superleague.delivery.responses.GetDeliveryByUUIDResponse;
 import cs.superleague.integration.dataclass.UserType;
 import cs.superleague.integration.security.CurrentUser;
 import cs.superleague.payment.dataclass.*;
@@ -357,7 +360,7 @@ public class PaymentServiceImpl implements PaymentService {
                 orderTwo.setRequiresPharmacy(requiresPharmacy);
             }
             Order orderThree = new Order();
-            if (request.getStoreIDTwo() != null){
+            if (request.getStoreIDThree() != null){
                 orderThree.setOrderID(orderThreeID);
                 orderThree.setUserID(customerID);
                 orderThree.setStoreID(request.getStoreIDThree());
@@ -376,6 +379,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             if (orderOne != null) {
                 if (shopOne.getStore().getOpen() == true) {
+                    UUID deliveryID = null;
                     if (orderRepo != null) {
                         orderRepo.save(orderOne);
                         if (request.getStoreIDTwo() != null){
@@ -418,13 +422,16 @@ public class PaymentServiceImpl implements PaymentService {
                                 orderThreeCartItems.add(cartItems.get(k));
                             }
                         }
+                        orderOneCost = Math.ceil(orderOneCost*100.0)/100.0;
                         orderOne.setTotalCost(orderOneCost);
                         orderOne.setCartItems(orderOneCartItems);
                         if (request.getStoreIDTwo() != null){
+                            orderTwoCost = Math.ceil(orderTwoCost*100.0)/100.0;
                             orderTwo.setTotalCost(orderTwoCost);
                             orderTwo.setCartItems(orderTwoCartItems);
                         }
                         if (request.getStoreIDThree() != null){
+                            orderThreeCost = Math.ceil(orderThreeCost*100.0)/100.0;
                             orderThree.setTotalCost(orderThreeCost);
                             orderThree.setCartItems(orderThreeCartItems);
                         }
@@ -439,35 +446,34 @@ public class PaymentServiceImpl implements PaymentService {
                         parts.put("storeID", orderOne.getStoreID().toString());
                         parts.put("timeOfDelivery", null);
                         parts.put("placeOfDelivery", orderOne.getDeliveryAddress());
-                        String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/completePackingOrderForDelivery";
+                        String strURL = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/createDelivery";
                         URI uri2 = new URI(strURL);
 
                         ResponseEntity<CreateDeliveryResponse> createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
                         CreateDeliveryResponse createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
 
+                        if (createDeliveryResponse != null) {
+                            deliveryID = createDeliveryResponse.getDeliveryID();
+                        }
                         if (request.getStoreIDTwo() != null){
                             orderRepo.save(orderTwo);
                             parts = new HashMap<>();
                             parts.put("orderID", orderTwo.getOrderID().toString());
-                            parts.put("customerID", orderTwo.getUserID().toString());
-                            parts.put("storeID", orderTwo.getStoreID().toString());
-                            parts.put("timeOfDelivery", null);
-                            parts.put("placeOfDelivery", orderTwo.getDeliveryAddress());
-
-                            createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
-                            createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
+                            parts.put("deliveryID", deliveryID.toString());
+                            String stringURI3 = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/addOrderToDelivery";
+                            URI uri3 = new URI(stringURI3);
+                            ResponseEntity<AddOrderToDeliveryResponse> addOrderToDeliveryResponseResponseEntity = restTemplate.postForEntity(uri3, parts, AddOrderToDeliveryResponse.class);
+                            AddOrderToDeliveryResponse addOrderToDeliveryResponse = addOrderToDeliveryResponseResponseEntity.getBody();
                         }
                         if (request.getStoreIDThree() != null){
                             orderRepo.save(orderThree);
                             parts = new HashMap<>();
                             parts.put("orderID", orderThree.getOrderID().toString());
-                            parts.put("customerID", orderThree.getUserID().toString());
-                            parts.put("storeID", orderThree.getStoreID().toString());
-                            parts.put("timeOfDelivery", null);
-                            parts.put("placeOfDelivery", orderThree.getDeliveryAddress());
-
-                            createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
-                            createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
+                            parts.put("deliveryID", deliveryID.toString());
+                            String stringURI3 = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/addOrderToDelivery";
+                            URI uri3 = new URI(stringURI3);
+                            ResponseEntity<AddOrderToDeliveryResponse> addOrderToDeliveryResponseResponseEntity = restTemplate.postForEntity(uri3, parts, AddOrderToDeliveryResponse.class);
+                            AddOrderToDeliveryResponse addOrderToDeliveryResponse = addOrderToDeliveryResponseResponseEntity.getBody();
                         }
                         List<String> productIDs = new ArrayList<>();
                         for (CartItem item : request.getListOfItems()) {
@@ -478,6 +484,8 @@ public class PaymentServiceImpl implements PaymentService {
                         rabbitTemplate.convertAndSend("RecommendationEXCHANGE", "RK_AddRecommendation", addRecommendationRequest);
                     }
                     UUID finalOrderOneID = orderOneID;
+                    UUID finalOrderTwoID = orderTwoID;
+                    UUID finalOrderThreeID = orderThreeID;
                     if (request.getStoreIDTwo() == null){
                         orderTwo = null;
                     }
@@ -487,9 +495,23 @@ public class PaymentServiceImpl implements PaymentService {
                     Order finalOrderTwo = orderTwo;
                     Order finalOrderThree = orderThree;
                     new Thread(() -> {
-                        CreateTransactionRequest createTransactionRequest = new CreateTransactionRequest(finalOrderOneID);
+                        CreateTransactionRequest createTransactionRequest1 = new CreateTransactionRequest(finalOrderOneID);
+                        CreateTransactionRequest createTransactionRequest2 = null;
+                        CreateTransactionRequest createTransactionRequest3 = null;
+                        if (request.getStoreIDTwo() != null){
+                            createTransactionRequest2 = new CreateTransactionRequest(finalOrderTwoID);
+                        }
+                        if (request.getStoreIDThree() != null){
+                            createTransactionRequest3 = new CreateTransactionRequest(finalOrderThreeID);
+                        }
                         try {
-                            CreateTransactionResponse createTransactionResponse = createTransaction(createTransactionRequest);
+                            CreateTransactionResponse createTransactionResponse1 = createTransaction(createTransactionRequest1);
+                            if (request.getStoreIDTwo() != null){
+                                CreateTransactionResponse createTransactionResponse2 = createTransaction(createTransactionRequest2);
+                            }
+                            if (request.getStoreIDThree() != null){
+                                CreateTransactionResponse createTransactionResponse3 = createTransaction(createTransactionRequest3);
+                            }
                         } catch (PaymentException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
@@ -507,7 +529,7 @@ public class PaymentServiceImpl implements PaymentService {
                             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_AddToQueue", addToQueueRequest);
                         }
                     }).start();
-                    response = new SubmitOrderResponse(orderOne, orderTwo, orderThree, true, Calendar.getInstance().getTime(), "Order successfully created.");
+                    response = new SubmitOrderResponse(orderOne, orderTwo, orderThree, true, Calendar.getInstance().getTime(), "Order successfully created.", deliveryID);
                 } else {
                     throw new InvalidRequestException("Store is currently closed - could not create order");
                 }
@@ -1236,10 +1258,6 @@ public class PaymentServiceImpl implements PaymentService {
             throw new InvalidRequestException("CartItem is null in fixOrderProblem request - could not fix order problem");
         }
 
-        if (request.getCartItems() == null) {
-            throw new InvalidRequestException("CartItems is null in fixOrderProblem request - could not fix order problem");
-        }
-
         if (request.getCartItem().getCartItemNo() == null) {
             throw new InvalidRequestException("CartItemNo is null in fixOrderProblem request - could not fix order");
         }
@@ -1253,6 +1271,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         cartItemRepo.delete(cartItem);
 
+        if (request.getCartItems() != null)
         for (CartItem c : request.getCartItems()) {
             c.setTotalCost(c.getPrice() * c.getQuantity());
             c.setStoreID(cartItem.getStoreID());
@@ -1268,7 +1287,12 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         cartItems = order.getCartItems();
-        cartItems.addAll(request.getCartItems());
+
+        if(cartItems.contains(cartItem))
+            cartItems.remove(cartItem);
+
+        if (request.getCartItems() != null)
+            cartItems.addAll(request.getCartItems());
 
         order.setCartItems(cartItems);
 
@@ -1280,5 +1304,75 @@ public class PaymentServiceImpl implements PaymentService {
                 removeProblemFromRepoRequest);
 
         return new FixOrderProblemResponse(true, message, new Date());
+    }
+
+    @Override
+    public GetStatusOfMultipleOrdersResponse getStatusOfMultipleOrders(GetStatusOfMultipleOrdersRequest request) throws InvalidRequestException, URISyntaxException {
+        if (request == null){
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getDeliveryID() == null){
+            throw new InvalidRequestException("Null deliveryID, cannot get status.");
+        }
+        String stringUri = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/getDeliveryByUUID";
+        URI uri = new URI(stringUri);
+
+        Map<String, Object> parts = new HashMap<String, Object>();
+        parts.put("deliveryID", request.getDeliveryID().toString());
+        ResponseEntity<GetDeliveryByUUIDResponse> getDeliveryByUUIDResponseResponseEntity = restTemplate.postForEntity(uri, parts, GetDeliveryByUUIDResponse.class);
+        if (getDeliveryByUUIDResponseResponseEntity == null || getDeliveryByUUIDResponseResponseEntity.getBody() == null){
+            throw new InvalidRequestException("Delivery does not exist.");
+        }
+        System.out.println(getDeliveryByUUIDResponseResponseEntity.getBody().getMessage() + "Get delivery by UUID message");
+        Delivery delivery = getDeliveryByUUIDResponseResponseEntity.getBody().getDelivery();
+        if (delivery == null){
+            throw new InvalidRequestException("Null delivery.");
+        }
+        Order orderOne = orderRepo.findById(delivery.getOrderIDOne()).orElse(null);
+        Order orderTwo = null;
+        Order orderThree = null;
+        if (delivery.getOrderIDTwo() != null){
+            orderTwo = orderRepo.findById(delivery.getOrderIDTwo()).orElse(null);
+        }
+        if (delivery.getOrderIDThree() != null){
+            orderThree = orderRepo.findById(delivery.getOrderIDThree()).orElse(null);
+        }
+        if (orderOne == null){
+            throw new InvalidRequestException("No order added to this delivery.");
+        }
+        if (orderTwo == null && orderThree == null){
+            return new GetStatusOfMultipleOrdersResponse(orderOne.getStatus().name(), true, new Date(), "Order status returned.");
+        }
+        if (orderThree == null){
+            OrderStatus orderOneStatus = orderOne.getStatus();
+            OrderStatus orderTwoStatus = orderTwo.getStatus();
+            if (orderOneStatus.equals(OrderStatus.ASSIGNED_DRIVER) || orderTwoStatus.equals(OrderStatus.ASSIGNED_DRIVER)){
+                return new GetStatusOfMultipleOrdersResponse(OrderStatus.ASSIGNED_DRIVER.name(), true, new Date(), "Order status returned.");
+            }
+            if (orderOneStatus.ordinal() < orderTwoStatus.ordinal()){
+                return new GetStatusOfMultipleOrdersResponse(orderOneStatus.name(), true, new Date(), "Order status returned.");
+            } else{
+                return new GetStatusOfMultipleOrdersResponse(orderTwoStatus.name(), true, new Date(), "Order status returned.");
+            }
+        }
+        OrderStatus orderOneStatus = orderOne.getStatus();
+        OrderStatus orderTwoStatus = orderTwo.getStatus();
+        OrderStatus orderThreeStatus = orderThree.getStatus();
+        if (orderOneStatus.equals(OrderStatus.ASSIGNED_DRIVER) || orderTwoStatus.equals(OrderStatus.ASSIGNED_DRIVER) || orderThreeStatus.equals(OrderStatus.ASSIGNED_DRIVER)){
+            return new GetStatusOfMultipleOrdersResponse(OrderStatus.ASSIGNED_DRIVER.name(), true, new Date(), "Order status returned.");
+        }
+        if (orderOneStatus.ordinal() < orderTwoStatus.ordinal()){
+            if (orderOneStatus.ordinal() < orderThreeStatus.ordinal()){
+                return new GetStatusOfMultipleOrdersResponse(orderOneStatus.name(), true, new Date(), "Order status returned.");
+            } else {
+                return new GetStatusOfMultipleOrdersResponse(orderThreeStatus.name(), true, new Date(), "Order status returned.");
+            }
+        } else{
+            if (orderTwoStatus.ordinal() < orderThreeStatus.ordinal()){
+                return new GetStatusOfMultipleOrdersResponse(orderTwoStatus.name(), true, new Date(), "Order status returned.");
+            } else {
+                return new GetStatusOfMultipleOrdersResponse(orderThreeStatus.name(), true, new Date(), "Order status returned.");
+            }
+        }
     }
 }

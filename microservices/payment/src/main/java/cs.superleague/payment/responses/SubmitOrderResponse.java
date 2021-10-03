@@ -3,6 +3,7 @@ package cs.superleague.payment.responses;
 import cs.superleague.payment.dataclass.Order;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class SubmitOrderResponse {
 
@@ -15,6 +16,7 @@ public class SubmitOrderResponse {
     private final Order orderOne;
     private final Order orderTwo;
     private final Order orderThree;
+    private final UUID deliveryID;
     /**
      * constructor
      *
@@ -25,13 +27,14 @@ public class SubmitOrderResponse {
      * @param timestamp - time that the system sends the response object
      * @param message   - message returned after response
      */
-    public SubmitOrderResponse(Order orderOne, Order orderTwo, Order orderThree, Boolean success, Date timestamp, String message) {
+    public SubmitOrderResponse(Order orderOne, Order orderTwo, Order orderThree, Boolean success, Date timestamp, String message, UUID deliveryID) {
         this.orderOne = orderOne;
         this.orderTwo = orderTwo;
         this.orderThree = orderThree;
         this.success = success;
         this.timestamp = timestamp;
         this.message = message;
+        this.deliveryID = deliveryID;
     }
 
 
@@ -60,5 +63,9 @@ public class SubmitOrderResponse {
 
     public String getMessage() {
         return message;
+    }
+
+    public UUID getDeliveryID() {
+        return deliveryID;
     }
 }

@@ -17,11 +17,8 @@ import cs.superleague.shopping.repos.ItemRepo;
 import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.shopping.requests.GetShoppersRequest;
-import cs.superleague.shopping.responses.GetItemsResponse;
-import cs.superleague.shopping.responses.RemoveQueuedOrderResponse;
 import cs.superleague.user.dataclass.Shopper;
+import cs.superleague.user.exceptions.UserDoesNotExistException;
 import cs.superleague.user.exceptions.UserException;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -39,7 +36,9 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -377,7 +376,7 @@ public class ShoppingController implements ShoppingApi {
 
 
         UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
-        UUID storeUUID2 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f");
+        UUID storeUUID2 = UUID.fromString("236f41d0-874f-41ce-9ed7-5b71e1d3c807");
         UUID storeUUID3 = UUID.fromString("f29c3a2b-0f5e-45ef-b06b-7e564e70a7af");
         UUID storeUUID4 = UUID.fromString("ac0d5977-dca2-43b8-b5c7-d098cae44b1d");
         UUID storeUUID5 = UUID.fromString("701be3e1-c23c-4409-a851-9cae63861881");
@@ -415,7 +414,36 @@ public class ShoppingController implements ShoppingApi {
         item28 = new Item("Bar one", "w3456757896", "6001068595808", storeUUID2, 10.99, 1, "Thick milk chocolate with nougat and caramel centre.", "item/barOne.png", "Nestle", "55g", "Chocolate");
         item29 = new Item("Baked Beans", "w897321657", "6009522300586", storeUUID2, 14.99, 1, "Our iconic KOO Baked Beans in a rich tomato sauce, is extremely versatile and convenient.", "item/kooBeans.png", "Koo", "410g", "Canned");
         item30 = new Item("Noodle's beef", "w45387609564", "6001306002457", storeUUID2, 28.99, 1, "A convenient and easy meal to prepare, it can be used as a main meal ingredient or simply be enjoyed on its' own.", "item/kellogNoodles.png", "Kelloggs", "70g", "Pantry");
-
+        item1.setSoldOut(false);
+        item2.setSoldOut(false);
+        item3.setSoldOut(false);
+        item4.setSoldOut(false);
+        item5.setSoldOut(false);
+        item6.setSoldOut(false);
+        item7.setSoldOut(false);
+        item8.setSoldOut(false);
+        item9.setSoldOut(false);
+        item10.setSoldOut(false);
+        item11.setSoldOut(false);
+        item12.setSoldOut(false);
+        item13.setSoldOut(false);
+        item14.setSoldOut(false);
+        item15.setSoldOut(false);
+        item16.setSoldOut(false);
+        item17.setSoldOut(false);
+        item18.setSoldOut(false);
+        item19.setSoldOut(false);
+        item20.setSoldOut(false);
+        item21.setSoldOut(false);
+        item22.setSoldOut(false);
+        item23.setSoldOut(false);
+        item24.setSoldOut(false);
+        item25.setSoldOut(false);
+        item26.setSoldOut(false);
+        item27.setSoldOut(false);
+        item28.setSoldOut(false);
+        item29.setSoldOut(false);
+        item30.setSoldOut(false);
 
         itemRepo.save(item1);
         itemRepo.save(item2);
@@ -735,15 +763,15 @@ public class ShoppingController implements ShoppingApi {
 
         try {
             GeoPoint customersLocation = new GeoPoint();
-            customersLocation.setAddress(body.getCustomerLocation().getAddress());
-            customersLocation.setLongitude(body.getCustomerLocation().getLongitude().doubleValue());
-            customersLocation.setLatitude(body.getCustomerLocation().getLatitude().doubleValue());
+            customersLocation.setAddress(body.getCustomersAddress());
+            customersLocation.setLongitude(body.getCustomersLongitude().doubleValue());
+            customersLocation.setLatitude(body.getCustomersLatitude().doubleValue());
             GetCloseEnoughStoresRequest request = new GetCloseEnoughStoresRequest(UUID.fromString(body.getStoreID()), customersLocation);
             GetCloseEnoughStoresResponse getCloseEnoughStoresResponse = shoppingService.getCloseEnoughStores(request);
 
             try {
 
-                response.setCloseStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
+                response.setStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
                 response.setMessage(getCloseEnoughStoresResponse.getMessage());
                 response.setAdditionalDeliveryCosts(populateDoubles(getCloseEnoughStoresResponse.getAdditionalDeliveryCosts()));
 
@@ -865,6 +893,77 @@ public class ShoppingController implements ShoppingApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingItemIsInStockResponse> itemIsInStock(
+            ShoppingItemIsInStockRequest body) {
+
+        ShoppingItemIsInStockResponse response = new ShoppingItemIsInStockResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            ItemIsInStockRequest req = new ItemIsInStockRequest(body.getBarcode(),
+                    UUID.fromString(body.getStoreID()), body.isOutOfStock());
+            ItemIsInStockResponse itemIsInStockResponse = shoppingService.itemIsInStock(req);
+
+            try {
+                response.setMessage(itemIsInStockResponse.getMessage());
+                response.setSuccess(itemIsInStockResponse.isSuccess());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<ShoppingCalculateOverallDistanceResponse> calculateOverallDistance(
+            ShoppingCalculateOverallDistanceRequest body) {
+
+        ShoppingCalculateOverallDistanceResponse response = new ShoppingCalculateOverallDistanceResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+
+            UUID store2ID = null;
+            UUID store3ID = null;
+
+            if(body.getStore2ID() != null){
+                store2ID = UUID.fromString(body.getStore2ID());
+            }
+
+            if(body.getStore3ID() != null){
+                store3ID = UUID.fromString(body.getStore3ID());
+            }
+
+            GeoPoint customersLocation = new GeoPoint();
+            customersLocation.setAddress(body.getCustomerLocation().getAddress());
+            customersLocation.setLongitude(body.getCustomerLocation().getLongitude().doubleValue());
+            customersLocation.setLatitude(body.getCustomerLocation().getLatitude().doubleValue());
+
+            CalculateOverallDistanceRequest req = new CalculateOverallDistanceRequest(
+                    UUID.fromString(body.getStore1ID()), store2ID, store3ID, customersLocation);
+            CalculateOverallDistanceResponse calculateOverallDistanceResponse = shoppingService
+                    .calculateOverallDistance(req);
+
+            try {
+                response.setMessage(calculateOverallDistanceResponse.getMessage());
+                response.setDistance(BigDecimal.valueOf(calculateOverallDistanceResponse.getDistance()));
+                response.setSuccess(calculateOverallDistanceResponse.isSuccess());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     private StoreObject populateStore(Store responseStore) throws NullPointerException {
 
         StoreObject responseBody = new StoreObject();
@@ -945,9 +1044,10 @@ public class ShoppingController implements ShoppingApi {
 
         return responseBody;
     }
-    public List<Number> populateDoubles(List<Double> doubles){
+
+    public List<Number> populateDoubles(List<Double> doubles) {
         List<Number> numbers = new ArrayList<>();
-        for (double dbl : doubles){
+        for (double dbl : doubles) {
             numbers.add(BigDecimal.valueOf(dbl));
         }
         return numbers;

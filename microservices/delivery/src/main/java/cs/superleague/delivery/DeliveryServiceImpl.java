@@ -136,13 +136,40 @@ public class DeliveryServiceImpl implements DeliveryService {
 
         ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
                 orderRequest, GetOrderByUUIDResponse.class);
+        Map<String, Object> orderRequestTwo = new HashMap<>();
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrderTwo = null;
+        Map<String, Object> orderRequestThree = new HashMap<>();
+        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrderThree = null;
+        if (delivery.getOrderIDTwo() != null){
+            orderRequestTwo.put("orderID", delivery.getOrderIDTwo());
+            uriString = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
+            uri = new URI(uriString);
+
+            responseEntityOrderTwo = restTemplate.postForEntity(uri,
+                    orderRequest, GetOrderByUUIDResponse.class);
+        }
+        if (delivery.getOrderIDThree() != null){
+            orderRequestThree.put("orderID", delivery.getOrderIDThree());
+            uriString = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
+            uri = new URI(uriString);
+
+            responseEntityOrderThree = restTemplate.postForEntity(uri,
+                    orderRequest, GetOrderByUUIDResponse.class);
+        }
 
         Order updateOrder = null;
+        Order updateOrderTwo = null;
+        Order updateOrderThree = null;
 
         if (responseEntity.getBody() != null) {
             updateOrder = responseEntityOrder.getBody().getOrder();
         }
-
+        if (responseEntityOrderTwo != null && responseEntityOrderTwo.getBody() != null){
+            updateOrderTwo = responseEntityOrderTwo.getBody().getOrder();
+        }
+        if (responseEntityOrderThree != null && responseEntityOrderThree.getBody() != null){
+            updateOrderThree = responseEntityOrderThree.getBody().getOrder();
+        }
 
         if (updateOrder != null) {
             if (delivery.getPickUpLocationOne() != null && delivery.getDropOffLocation() != null) {
@@ -152,6 +179,22 @@ public class DeliveryServiceImpl implements DeliveryService {
 
                 rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
+                if (delivery.getOrderIDTwo() != null){
+                    updateOrderTwo.setDriverID(driver.getDriverID());
+                    updateOrderTwo.setStatus(OrderStatus.ASSIGNED_DRIVER);
+                    saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrderTwo);
+
+                    rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+
+                }
+                if (delivery.getOrderIDThree() != null){
+                    updateOrderThree.setDriverID(driver.getDriverID());
+                    updateOrderThree.setStatus(OrderStatus.ASSIGNED_DRIVER);
+                    saveOrderToRepoRequest = new SaveOrderToRepoRequest(updateOrderThree);
+
+                    rabbitTemplate.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
+
+                }
                 //updateOrder.setStatus(OrderStatus.ASSIGNED_DRIVER);
 
                 orderRequest.put("orderID", delivery.getOrderIDOne());
@@ -414,7 +457,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             throw new InvalidRequestException("Driver not found in database.");
         }
 
-        List<Delivery> deliveries = deliveryRepo.findAllByDriverIdIsNull();
+        List<Delivery> deliveries = deliveryRepo.findAllByDriverIDIsNull();
         if (deliveries == null) {
             return new GetNextOrderForDriverResponse("No available deliveries in the database.", null);
         }
@@ -757,20 +800,18 @@ public class DeliveryServiceImpl implements DeliveryService {
                 return response;
             }
         }
-//        List<GeoPoint> pickUpLocations = delivery.getPickUpLocation();
-//        pickUpLocations.add(orderEntity.getStoreAddress());
-//        delivery.setPickUpLocation(pickUpLocations);
-//        orders.add(orderEntity);
-//        delivery.setOrders(orders);
         if (delivery.getOrderIDOne() == null){
             delivery.setOrderIDOne(request.getOrderID());
             delivery.setPickUpLocationOne(orderEntity.getStoreAddress());
+            delivery.setStoreOneID(orderEntity.getStoreID());
         } else if (delivery.getOrderIDTwo() == null){
             delivery.setOrderIDTwo(request.getOrderID());
             delivery.setPickUpLocationTwo(orderEntity.getStoreAddress());
+            delivery.setStoreTwoID(orderEntity.getStoreID());
         } else {
             delivery.setOrderIDThree(request.getOrderID());
             delivery.setPickUpLocationThree(orderEntity.getStoreAddress());
+            delivery.setStoreThreeID(orderEntity.getStoreID());
         }
         deliveryRepo.save(delivery);
         AddOrderToDeliveryResponse response = new AddOrderToDeliveryResponse("Order with orderID "+ orderEntity.getOrderID() +" has been successfully added to the delivery.", true);
@@ -785,29 +826,55 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request.getOrderID() == null){
             throw new InvalidRequestException("Null orderID in request.");
         }
+        boolean deliveryIDOne = true;
+        boolean deliveryIDTwo = false;
+        boolean deliveryIDThree = false;
         Delivery delivery = deliveryRepo.findDeliveryByOrderIDOne(request.getOrderID());
         if (delivery == null){
+            deliveryIDTwo = true;
+            deliveryIDOne = false;
             delivery = deliveryRepo.findDeliveryByOrderIDTwo(request.getOrderID());
             if (delivery == null){
+                deliveryIDTwo = false;
+                deliveryIDThree = true;
                 delivery = deliveryRepo.findDeliveryByOrderIDThree(request.getOrderID());
             }
         }
         if (delivery == null){
             throw new DeliveryDoesNotExistException("No delivery's found with the orderID specified.");
         }
-        if (delivery.getOrderIDTwo() == null && delivery.getOrderIDTwo() == null){
+        if (delivery.getOrderIDTwo() == null && delivery.getOrderIDThree() == null && deliveryIDOne == true){
             delivery.setOrderOnePacked(true);
             delivery.setOrderTwoPacked(true);
             delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
             return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
         }
-        if (delivery.getOrderIDThree() == null){
+        if (delivery.getOrderIDThree() == null && deliveryIDTwo == true){
             delivery.setOrderTwoPacked(true);
             delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
             return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
         }
-        delivery.setOrderThreePacked(true);
-        return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
+        if (deliveryIDThree == true){
+            delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
+        }
+        if (deliveryIDOne == true){
+            delivery.setOrderOnePacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "First Order packed, waiting for others.");
+        } else if (deliveryIDTwo == true){
+            delivery.setOrderTwoPacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "Second Order packed, waiting for others.");
+        } else {
+            delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "Third Order packed, waiting for others.");
+        }
+
     }
 
     //Helpers
@@ -842,21 +909,6 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request.getOrderID() == null) {
             throw new InvalidRequestException("Order ID is null. Cannot get Driver.");
         }
-
-        String uriString = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
-        URI uri = new URI(uriString);
-        Map<String, Object> orderRequest = new HashMap<String, Object>();
-        orderRequest.put("orderID", request.getOrderID());
-
-
-        ResponseEntity<GetOrderByUUIDResponse> responseEntityOrder = restTemplate.postForEntity(uri,
-                orderRequest, GetOrderByUUIDResponse.class);
-
-        if (responseEntityOrder == null || !responseEntityOrder.hasBody()
-                || responseEntityOrder.getBody() == null || responseEntityOrder.getBody().getOrder() == null) {
-            throw new InvalidRequestException("Order does not exist");
-        }
-
         if (deliveryRepo == null) {
             return null;
         }
@@ -870,9 +922,9 @@ public class DeliveryServiceImpl implements DeliveryService {
         }
 
         for (Delivery delivery : deliveries) {
-            if ((delivery.getOrderIDOne() != null && delivery.getOrderIDOne().compareTo(request.getOrderID()) == 0) || (delivery.getOrderIDTwo() != null && delivery.getOrderIDTwo().compareTo(request.getOrderID()) == 0) || (delivery.getOrderIDThree() != null && delivery.getOrderIDThree().compareTo(request.getOrderID()) == 0)) {
-                uriString = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
-                uri = new URI(uriString);
+            if (delivery.getDeliveryID().compareTo(request.getOrderID()) == 0) {
+                String uriString = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
+                URI uri = new URI(uriString);
                 Map<String, Object> parts = new HashMap<>();
                 parts.put("userID", delivery.getDriverID());
 

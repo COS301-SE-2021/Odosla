@@ -1622,7 +1622,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             //disregards an item that may not have storeid
             if (store == null) {
                 continue;
-            }else {
+            } else {
 
                 distance = getDistance(storeLocation, store.getStoreLocation());
 
@@ -1673,7 +1673,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         return distance;
     }
 
-    private CartItem createCartItem(Item item){
+    private CartItem createCartItem(Item item) {
         CartItem newCartItem = new CartItem();
 
         newCartItem.setCartItemNo(UUID.randomUUID());
@@ -1695,33 +1695,33 @@ public class ShoppingServiceImpl implements ShoppingService {
 
     @Override
     public GetCloseEnoughStoresResponse getCloseEnoughStores(GetCloseEnoughStoresRequest request) throws InvalidRequestException, StoreDoesNotExistException {
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getStoreID() == null || request.getCustomerLocation() == null){
+        if (request.getStoreID() == null || request.getCustomerLocation() == null) {
             throw new InvalidRequestException("Null parameters cannot find nearby stores.");
         }
         Store mainOrderStore = storeRepo.findById(request.getStoreID()).orElse(null);
-        if (mainOrderStore == null){
+        if (mainOrderStore == null) {
             throw new StoreDoesNotExistException("Store with the inputted storeID does not exist.");
         }
         List<Store> storeList = storeRepo.findAll();
-        if (storeList == null){
+        if (storeList == null) {
             throw new StoreDoesNotExistException("No stores found in the repository.");
         }
         List<Store> storesInRange = new ArrayList<>();
-        for (Store store : storeList){
-            if (getDistance(store.getStoreLocation(), mainOrderStore.getStoreLocation()) < 10){
+        for (Store store : storeList) {
+            if (getDistance(store.getStoreLocation(), mainOrderStore.getStoreLocation()) < 10) {
                 storesInRange.add(store);
             }
         }
-        if (storesInRange.size() == 0){
+        if (storesInRange.size() == 0) {
             GetCloseEnoughStoresResponse response = new GetCloseEnoughStoresResponse(null, null, "No stores within range of the selected store");
             return response;
         }
         double currentRouteDistance = getDistance(mainOrderStore.getStoreLocation(), request.getCustomerLocation());
         List<Double> additionalCost = new ArrayList<>();
-        for (Store store : storesInRange){
+        for (Store store : storesInRange) {
             double newDistanceForStore = getDistance(mainOrderStore.getStoreLocation(), store.getStoreLocation());
             newDistanceForStore = newDistanceForStore + getDistance(store.getStoreLocation(), request.getCustomerLocation());
             double addedDistance = newDistanceForStore - currentRouteDistance;
@@ -1731,7 +1731,119 @@ public class ShoppingServiceImpl implements ShoppingService {
         GetCloseEnoughStoresResponse response = new GetCloseEnoughStoresResponse(storesInRange, additionalCost, "Returned the stores that can be added to the order.");
         return response;
     }
-    public double getAddedCostOfDistance(double addedDistance){
+
+    @Override
+    public ItemIsInStockResponse itemIsInStock(ItemIsInStockRequest request) throws InvalidRequestException {
+
+        List<Item> items;
+        boolean success = false;
+        String message = "Item updated to";
+
+        if (request == null) {
+            throw new InvalidRequestException("Null ItemIsInStock request object");
+        }
+
+        if (request.getBarcode() == null) {
+            throw new InvalidRequestException("Barcode in request object is null");
+        }
+
+        if (request.getStoreID() == null) {
+            throw new InvalidRequestException("StoreID in request object is null");
+        }
+
+        items = itemRepo.findAll();
+
+        if (items == null || items.size() == 0) {
+            message = "There are no items in the database";
+            return new ItemIsInStockResponse(message, success);
+        }
+
+        for (Item item : items) {
+            if (item.getBarcode().equals(request.getBarcode()) && item.getStoreID()
+                    .equals(request.getStoreID())) {
+
+                if(request.isOutOfStock()){
+                    message = message + " out of stock";
+                    item.setSoldOut(true);
+                }else {
+                    message = message + " in stock";
+                    item.setSoldOut(false);
+                }
+
+                itemRepo.save(item);
+                success = true;
+                break;
+            }
+        }
+
+        if (!success) {
+            message = "Item with given barcode and storeID could not be found";
+            return new ItemIsInStockResponse(message, false);
+        }
+
+        return new ItemIsInStockResponse(message, true);
+    }
+
+    @Override
+    public CalculateOverallDistanceResponse calculateOverallDistance(CalculateOverallDistanceRequest request) throws InvalidRequestException {
+
+        Store store;
+        double distance = 0;
+        List<Store> stores = new ArrayList<>();
+        String message = "Overall distance successfully calculated";
+
+        if(request == null){
+            throw new InvalidRequestException("OverallDistance request object is null");
+        }
+
+        if(request.getStore1ID() == null){
+            throw new InvalidRequestException("Store1 ID in OverallDistance request object is null");
+        }
+
+        if(request.getCustomerLocation() == null){
+            throw new InvalidRequestException("GeoPoint in OverallDistance request object is null");
+        }
+
+        store = storeRepo.findById(request.getStore1ID()).orElse(null);
+
+        if(store == null){
+            message = "Store1 ID does not exist in the database";
+            return new CalculateOverallDistanceResponse(0, message, false);
+        }
+
+        stores.add(store);
+
+        if(request.getStore2ID() != null){
+            store = storeRepo.findById(request.getStore2ID()).orElse(null);
+
+            if(store != null){
+                stores.add(store);
+            }
+        }
+
+        if(request.getStore3ID() != null){
+            store = storeRepo.findById(request.getStore3ID()).orElse(null);
+
+            if(store != null){
+                stores.add(store);
+            }
+        }
+
+        for(int i = 0; i < stores.size(); i++){
+            // calculates the geopoint
+            if(i == stores.size() - 1){
+                distance += getDistance(stores.get(i).getStoreLocation(), request.getCustomerLocation());
+            }else if(i < stores.size()){
+                distance += getDistance(stores.get(i).getStoreLocation(), stores.get(i + 1).getStoreLocation());
+            }
+        }
+
+        distance *= 2;
+
+        return new CalculateOverallDistanceResponse(distance, message, true);
+    }
+
+    public double getAddedCostOfDistance(double addedDistance) {
         double addedCost = addedDistance * 2.0;
         return addedCost;
     }

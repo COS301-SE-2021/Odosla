@@ -100,7 +100,7 @@ public interface UserService {
 
     void saveShopper(SaveShopperToRepoRequest request) throws InvalidRequestException;
 
-    ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException;
+    ItemNotAvailableResponse itemNotAvailable(ItemNotAvailableRequest request) throws InvalidRequestException, URISyntaxException, OrderDoesNotExist, ItemDoesNotExistException, CustomerDoesNotExistException;
 
     GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException, ItemDoesNotExistException;
 

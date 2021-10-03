@@ -342,6 +342,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetCloseEnoughStoresResponse"
 
+  /shopping/itemIsInStock:
+    post:
+      summary: Endpoint for setting an item to in stock
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: itemIsInStock
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_ItemIsInStockRequest"
+      responses:
+        "200":
+          description: Returns close enough stores for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_ItemIsInStockResponse"
+
+  /shopping/calculateOverallDistance:
+    post:
+      summary: Endpoint for calculating the overall distance.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: calculateOverallDistance
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_CalculateOverallDistanceRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_CalculateOverallDistanceResponse"
+
 components:
 
   schemas:
@@ -844,14 +888,18 @@ components:
       properties:
         storeID:
           type: string
-        customerLocation:
-          $ref: "#/components/schemas/GeoPointObject"
+        customersAddress:
+          type: string
+        customersLongitude:
+          type: number
+        customersLatitude:
+          type: number
 
     shopping_GetCloseEnoughStoresResponse:
       description: This object is returned as output
       type: object
       properties:
-        closeStores:
+        stores:
           type: array
           properties:
             items:
@@ -860,6 +908,50 @@ components:
           type: array
           properties:
             items:
-              $ref: "#/components/schemas/StoreObject"
+              type: number
         message:
           type: string
+
+    shopping_ItemIsInStockRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        barcode:
+          type: string
+        storeID:
+          type: string
+        outOfStock:
+          type: boolean
+
+    shopping_ItemIsInStockResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+
+    shopping_CalculateOverallDistanceRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        store1ID:
+          type: string
+        store2ID:
+          type: string
+        store3ID:
+          type: string
+        customerLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+
+    shopping_CalculateOverallDistanceResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        distance:
+          type: number

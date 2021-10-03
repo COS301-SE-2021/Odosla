@@ -229,6 +229,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_FixOrderProblemResponse"
+
+  /payment/getStatusOfMultipleOrders:
+    post:
+      summary: Endpoint for getting the status of an order
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getStatusOfMultipleOrders
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetStatusOfMultipleOrdersRequest"
+      responses:
+        "200":
+          description: Returns the status of an order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetStatusOfMultipleOrdersResponse"
 components:
 
   schemas:
@@ -370,6 +392,8 @@ components:
         success:
           type: boolean
         timestamp:
+          type: string
+        deliveryID:
           type: string
 
     payment_GetStatusRequest:
@@ -568,3 +592,23 @@ components:
           type: string
         message:
           type: string
+
+    payment_GetStatusOfMultipleOrdersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    payment_GetStatusOfMultipleOrdersResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        status:
+          type: string
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+            type: string

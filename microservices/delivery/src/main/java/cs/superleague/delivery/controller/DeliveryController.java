@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -62,6 +63,29 @@ public class DeliveryController implements DeliveryApi {
             AddDeliveryDetailResponse addDeliveryDetailResponse = deliveryService.addDeliveryDetail(request);
             response.setMessage(addDeliveryDetailResponse.getMessage());
             response.setId(addDeliveryDetailResponse.getId());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<DeliveryAddOrderToDeliveryResponse> addOrderToDelivery(DeliveryAddOrderToDeliveryRequest body) {
+        DeliveryAddOrderToDeliveryResponse response = new DeliveryAddOrderToDeliveryResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            AddOrderToDeliveryRequest request = new AddOrderToDeliveryRequest(UUID.fromString(body.getDeliveryID()), UUID.fromString(body.getOrderID()));
+            AddOrderToDeliveryResponse addOrderToDeliveryResponse = deliveryService.addOrderToDelivery(request);
+            response.setMessage(addOrderToDeliveryResponse.getMessage());
+            response.setSuccess(addOrderToDeliveryResponse.isSuccess());
 
         }catch (Exception e){
             e.printStackTrace();
@@ -237,67 +261,70 @@ public class DeliveryController implements DeliveryApi {
                 request = new GetNextOrderForDriverRequest(driversCurrentLocation, body.getRangeOfDelivery().doubleValue());
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = deliveryService.getNextOrderForDriver(request);
+            if (getNextOrderForDriverResponse.getDelivery() == null){
+                response.setDelivery(null);
+                response.setMessage(getNextOrderForDriverResponse.getMessage());
+            }else {
+                System.out.println("ASD 1");
 
-            System.out.println("ASD 1");
+                DeliveryObject deliveryObject = new DeliveryObject();
 
-            DeliveryObject deliveryObject = new DeliveryObject();
-            
 
-            System.out.println("ASD delv id " + getNextOrderForDriverResponse.getDelivery().toString());
-            deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());
+                System.out.println("ASD delv id " + getNextOrderForDriverResponse.getDelivery().toString());
+                deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());
 
-            System.out.println("ASD 1");
+                System.out.println("ASD 1");
 
-            GeoPointObject dropOffLocation=new GeoPointObject();
-            dropOffLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getAddress());
-            dropOffLocation.setLatitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getLatitude()));
-            dropOffLocation.setLongitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getLongitude()));
+                GeoPointObject dropOffLocation = new GeoPointObject();
+                dropOffLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getAddress());
+                dropOffLocation.setLatitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getLatitude()));
+                dropOffLocation.setLongitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getLongitude()));
 //            GeoPointObject pickUpLocation = new GeoPointObject();
 //            pickUpLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getPickUpLocation().getAddress());
 //            pickUpLocation.setLatitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getPickUpLocation().getLatitude()));
 //            pickUpLocation.setLongitude(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getPickUpLocation().getLongitude()));
 
-            deliveryObject.setDropOffLocation(dropOffLocation);
-            if (getNextOrderForDriverResponse.getDelivery().getPickUpLocationOne() != null) {
-                deliveryObject.setPickUpLocationOne(populateGeoPointObject(getNextOrderForDriverResponse.getDelivery().getPickUpLocationOne()));
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getPickUpLocationTwo() != null){
-                deliveryObject.setPickUpLocationTwo(populateGeoPointObject(getNextOrderForDriverResponse.getDelivery().getPickUpLocationTwo()));
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getPickUpLocationThree() != null){
-                deliveryObject.setPickUpLocationThree(populateGeoPointObject(getNextOrderForDriverResponse.getDelivery().getPickUpLocationThree()));
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getOrderIDOne() != null){
-                deliveryObject.setOrderIDOne(getNextOrderForDriverResponse.getDelivery().getOrderIDOne().toString());
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getOrderIDTwo() != null){
-                deliveryObject.setOrderIDTwo(getNextOrderForDriverResponse.getDelivery().getOrderIDTwo().toString());
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getOrderIDThree() != null){
-                deliveryObject.setOrderIDOne(getNextOrderForDriverResponse.getDelivery().getOrderIDThree().toString());
-            }
-            deliveryObject.setCustomerID(getNextOrderForDriverResponse.getDelivery().getCustomerID().toString());
-            if (getNextOrderForDriverResponse.getDelivery().getStoreOneID() != null){
-                deliveryObject.setStoreOneID(getNextOrderForDriverResponse.getDelivery().getStoreOneID().toString());
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getStoreTwoID() != null){
-                deliveryObject.setStoreTwoID(getNextOrderForDriverResponse.getDelivery().getStoreTwoID().toString());
-            }
-            if (getNextOrderForDriverResponse.getDelivery().getStoreThreeID() != null){
-                deliveryObject.setStoreThreeID(getNextOrderForDriverResponse.getDelivery().getStoreThreeID().toString());
-            }
-            if(getNextOrderForDriverResponse.getDelivery().getDriverID()!=null)
-            {
-                deliveryObject.setDriverID(getNextOrderForDriverResponse.getDelivery().getDriverID().toString());
-            }
+                deliveryObject.setDropOffLocation(dropOffLocation);
+                if (getNextOrderForDriverResponse.getDelivery().getPickUpLocationOne() != null) {
+                    deliveryObject.setPickUpLocationOne(populateGeoPointObject(getNextOrderForDriverResponse.getDelivery().getPickUpLocationOne()));
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getPickUpLocationTwo() != null) {
+                    deliveryObject.setPickUpLocationTwo(populateGeoPointObject(getNextOrderForDriverResponse.getDelivery().getPickUpLocationTwo()));
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getPickUpLocationThree() != null) {
+                    deliveryObject.setPickUpLocationThree(populateGeoPointObject(getNextOrderForDriverResponse.getDelivery().getPickUpLocationThree()));
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getOrderIDOne() != null) {
+                    deliveryObject.setOrderIDOne(getNextOrderForDriverResponse.getDelivery().getOrderIDOne().toString());
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getOrderIDTwo() != null) {
+                    deliveryObject.setOrderIDTwo(getNextOrderForDriverResponse.getDelivery().getOrderIDTwo().toString());
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getOrderIDThree() != null) {
+                    deliveryObject.setOrderIDOne(getNextOrderForDriverResponse.getDelivery().getOrderIDThree().toString());
+                }
+                deliveryObject.setCustomerID(getNextOrderForDriverResponse.getDelivery().getCustomerID().toString());
+                if (getNextOrderForDriverResponse.getDelivery().getStoreOneID() != null) {
+                    deliveryObject.setStoreOneID(getNextOrderForDriverResponse.getDelivery().getStoreOneID().toString());
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getStoreTwoID() != null) {
+                    deliveryObject.setStoreTwoID(getNextOrderForDriverResponse.getDelivery().getStoreTwoID().toString());
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getStoreThreeID() != null) {
+                    deliveryObject.setStoreThreeID(getNextOrderForDriverResponse.getDelivery().getStoreThreeID().toString());
+                }
+                if (getNextOrderForDriverResponse.getDelivery().getDriverID() != null) {
+                    deliveryObject.setDriverID(getNextOrderForDriverResponse.getDelivery().getDriverID().toString());
+                }
 
-            deliveryObject.setStatus(getNextOrderForDriverResponse.getDelivery().getStatus().toString());
-            deliveryObject.setCost(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getCost()));
-            deliveryObject.setCompleted(getNextOrderForDriverResponse.getDelivery().isCompleted());
-            deliveryObject.setDeliveryDetail(populateDeliveryDetails(getNextOrderForDriverResponse.getDelivery().getDeliveryDetail()));
+                deliveryObject.setStatus(getNextOrderForDriverResponse.getDelivery().getStatus().toString());
+                deliveryObject.setCost(BigDecimal.valueOf(getNextOrderForDriverResponse.getDelivery().getCost()));
+                deliveryObject.setCompleted(getNextOrderForDriverResponse.getDelivery().isCompleted());
+                deliveryObject.setDeliveryDetail(populateDeliveryDetails(getNextOrderForDriverResponse.getDelivery().getDeliveryDetail()));
 
-            response.setDelivery(deliveryObject);
-            response.setMessage(getNextOrderForDriverResponse.getMessage());
+                response.setDelivery(deliveryObject);
+                response.setMessage(getNextOrderForDriverResponse.getMessage());
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -378,6 +405,12 @@ public class DeliveryController implements DeliveryApi {
         DeliveryGetDeliveryByUUIDResponse response = new DeliveryGetDeliveryByUUIDResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetDeliveryByUUIDRequest getDeliveryByUUIDRequest = new GetDeliveryByUUIDRequest(UUID.fromString(body.getDeliveryID()));
             GetDeliveryByUUIDResponse getDeliveryByUUIDResponse = deliveryService.getDeliveryByUUID(getDeliveryByUUIDRequest);
 
@@ -434,7 +467,7 @@ public class DeliveryController implements DeliveryApi {
 
             response.setDeliveryEntity(deliveryObject);
             response.setMessage(getDeliveryByUUIDResponse.getMessage());
-            response.setTimestamp(getDeliveryByUUIDResponse.getTimestamp().toString());
+            response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getDeliveryByUUIDResponse.getTimestamp()));
 
         }catch (Exception e){
             e.printStackTrace();
