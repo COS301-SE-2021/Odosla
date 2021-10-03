@@ -113,7 +113,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 //                    if (order != null) {
 //                        finalRecommendation.add(order);
 //                    }
-                    List<Recommendation> recommendationList = recommendationRepo.findRecommendationByOrderID(orderIDs.get(frequencyOfOrders.indexOf(frequency)));
+                    List<Recommendation> recommendationList = recommendationRepo.findRecommendationsByOrderID(orderIDs.get(frequencyOfOrders.indexOf(frequency)));
                     for (Recommendation recommendation : recommendationList){
                         if (productsToRecommend.contains(recommendation.getProductID())){
                             frequencyOfItems.set(productsToRecommend.indexOf(recommendation.getProductID()), (frequencyOfItems.get(productsToRecommend.indexOf(recommendation.getProductID())) + 1));
