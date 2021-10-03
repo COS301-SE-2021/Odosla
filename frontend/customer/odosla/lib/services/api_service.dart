@@ -119,13 +119,43 @@ class ApiService {
     return list;
   }
 
+  Future<List<Store>> getNearbyStores(BuildContext context) async {
+    final response = await http.post(
+        Uri.parse(shoppingEndpoint + '/shopping/getCloseEnoughStores'),
+        headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
+      List<Store> list = StoresFromJson(map);
+      debugPrint(list.toString());
+      return list; //CartItem.fromJson(map)
+    } else {
+      List<Store> list = List.empty();
+      debugPrint("___ err " + response.statusCode.toString());
+      debugPrint(
+          Provider.of<StatusProvider>(context, listen: false).jwt + " <- jwt");
+      return list; //CartItem.fromJson(map)
+    }
+  }
+
   void submitOrder(List<CartItem> items, BuildContext context) async {
     debugPrint(items.toString());
     final storeID = items.first.storeID;
     String pi = items.first.id;
     List<dynamic> itemsList = itemListToJson(items);
     UserService _userService = GetIt.I.get();
-    debugPrint('_-_');
+    debugPrint('_-_ s1 ' +
+        Provider.of<CartProvider>(context, listen: false).storeIDOne);
     debugPrint(itemsList.toString());
     final response =
         await http.post(Uri.parse(paymentEndpoint + '/payment/submitOrder'),
@@ -161,11 +191,11 @@ class ApiService {
       debugPrint(map.entries.toString());
       Provider.of<CartProvider>(context, listen: false).activeOrder = true;
       Provider.of<CartProvider>(context, listen: false).activeOrderID =
-          map["order"]["orderID"];
+          map["deliveryID"];
+      debugPrint("deliv id " + map["deliveryID"]);
       Provider.of<CartProvider>(context, listen: false).clearItems();
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) =>
-              OrderPage(map["order"]['orderID'])));
+          builder: (BuildContext context) => OrderPage(map["deliveryID"])));
       debugPrint(map.toString());
     } else {
       List<Store> list = List.empty();
@@ -180,22 +210,84 @@ class ApiService {
     return list;
   }
 
+  // Future<String> getStatus(BuildContext context, String orderID) async {
+  //   final oid = orderID;
+  //   debugPrint("id: " + "$oid");
+  //   final response =
+  //       await http.post(Uri.parse(paymentEndpoint + '/payment/getStatus'),
+  //           headers: {
+  //             "Authorization":
+  //                 Provider.of<StatusProvider>(context, listen: false).jwt,
+  //             "Accept": "application/json",
+  //             "content-type": "application/json",
+  //             "Access-Control-Allow-Origin": "*",
+  //             "Access-Control-Allow-Methods": "POST, OPTIONS",
+  //           },
+  //           body: jsonEncode({
+  //             "orderID": "$oid",
+  //           }));
+  //
+  //   debugPrint("_AS_D_ASD");
+  //   if (response.statusCode == 200) {
+  //     debugPrint("fetched status");
+  //     Map<String, dynamic> map = jsonDecode(response.body);
+  //     debugPrint(map.entries.toString());
+  //     String result = statusFromJson(context, map);
+  //     debugPrint(result);
+  //     Provider.of<StatusProvider>(context, listen: false).status = result;
+  //
+  //     if (result == "ASSIGNED_DRIVER") {
+  //       allocateDriver(context, orderID);
+  //     } else if (result == "DELIVERED") {
+  //       Provider.of<DriverProvider>(context, listen: false).allocated = false;
+  //       Provider.of<CartProvider>(context, listen: false).activeOrder = false;
+  //       Navigator.of(context).push(
+  //           MaterialPageRoute(builder: (BuildContext context) => StorePage()));
+  //       showDialog(
+  //           context: context,
+  //           builder: (context) => RatingDialog(
+  //                 // your app's name?
+  //                 title: 'Order Delivered!',
+  //                 // encourage your user to leave a high rating?
+  //                 message: 'Rate your driver.',
+  //                 // your app's logo?
+  //                 submitButton: 'Thanks!',
+  //                 onCancelled: () => print('cancelled'),
+  //                 onSubmitted: (response) {
+  //                   rateDriver(
+  //                       context,
+  //                       Provider.of<DriverProvider>(context, listen: false).id,
+  //                       response.rating);
+  //                 },
+  //               ));
+  //       //Provider.of<StatusProvider>(context).status = "PENDING";
+  //     }
+  //
+  //     return result;
+  //   } else {
+  //     List<Store> list = List.empty();
+  //     debugPrint("error " + response.statusCode.toString());
+  //     debugPrint(response.body.toString());
+  //     return "error getting status";
+  //   }
+  // }
+
   Future<String> getStatus(BuildContext context, String orderID) async {
     final oid = orderID;
     debugPrint("id: " + "$oid");
-    final response =
-        await http.post(Uri.parse(paymentEndpoint + '/payment/getStatus'),
-            headers: {
-              "Authorization":
-                  Provider.of<StatusProvider>(context, listen: false).jwt,
-              "Accept": "application/json",
-              "content-type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "POST, OPTIONS",
-            },
-            body: jsonEncode({
-              "orderID": "$oid",
-            }));
+    final response = await http.post(
+        Uri.parse(paymentEndpoint + '/payment/getStatusOfMultipleOrders'),
+        headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({
+          "deliveryID": "$oid",
+        }));
 
     debugPrint("_AS_D_ASD");
     if (response.statusCode == 200) {
@@ -461,7 +553,12 @@ class ApiService {
         },
         body: jsonEncode({
           "itemsIDs": itemsList,
-          "storeID": Provider.of<CartProvider>(context, listen: false).store
+          "storeOneID":
+              Provider.of<CartProvider>(context, listen: false).storeIDOne,
+          "storeTwoID":
+              Provider.of<CartProvider>(context, listen: false).storeIDTwo,
+          "storeThreeID":
+              Provider.of<CartProvider>(context, listen: false).storeIDThree
         }));
     print(response.body);
     print("JWT");

@@ -21,6 +21,7 @@ class CartProvider with ChangeNotifier {
 
   set activeStoreLocation(Map<String, double> location) {
     _activeStoreLocation = location;
+    notifyListeners();
   }
 
   CartProvider() {
@@ -59,48 +60,56 @@ class CartProvider with ChangeNotifier {
       items.update(
         item.id,
         (cartItem) => cartItem.copy(
-          item.id,
-          item.title,
-          item.barcode,
-          item.storeID,
-          item.price,
-          cartItem.quantity + q,
-          item.description,
-          item.imgUrl,
-          item.brand,
-          item.size,
-          item.type,
-        ),
+            item.id,
+            item.title,
+            item.barcode,
+            item.storeID,
+            item.price,
+            cartItem.quantity + q,
+            item.description,
+            item.imgUrl,
+            item.brand,
+            item.size,
+            item.type,
+            item.soldOut),
       );
     } else {
       items.putIfAbsent(
         item.id,
         () => item.copy(
-          item.id,
-          item.title,
-          item.barcode,
-          item.storeID,
-          item.price,
-          q,
-          item.description,
-          item.imgUrl,
-          item.brand,
-          item.size,
-          item.type,
-        ),
+            item.id,
+            item.title,
+            item.barcode,
+            item.storeID,
+            item.price,
+            q,
+            item.description,
+            item.imgUrl,
+            item.brand,
+            item.size,
+            item.type,
+            item.soldOut),
       );
 
-      List list = _items.entries.map((e) => e.value.storeID).toList();
-      if (list.contains(item.storeID)) {
+      debugPrint("###item storeid  " + item.storeID);
+      if (item.storeID == _storeIDOne ||
+          item.storeID == _storeIDTwo ||
+          item.storeID == _storeIDThree) {
       } else {
         if (_storeIDOne == "") {
+          debugPrint("##HERE");
           _storeIDOne = item.storeID;
         } else if (_storeIDTwo == "") {
           _storeIDTwo = item.storeID;
         } else if (_storeIDThree == "") {
           _storeIDThree = item.storeID;
         }
+        notifyListeners();
       }
+
+      debugPrint(" sid1 " + _storeIDOne);
+      debugPrint(" sid2 " + _storeIDTwo);
+      debugPrint(" sid3 " + _storeIDThree);
 
       _ids.add(item.id);
     }
@@ -139,18 +148,18 @@ class CartProvider with ChangeNotifier {
         items.update(
           item.id,
           (cartItem) => cartItem.copy(
-            item.id,
-            item.title,
-            item.barcode,
-            item.storeID,
-            item.price,
-            cartItem.quantity - 1,
-            item.description,
-            item.imgUrl,
-            item.brand,
-            item.size,
-            item.type,
-          ),
+              item.id,
+              item.title,
+              item.barcode,
+              item.storeID,
+              item.price,
+              cartItem.quantity - 1,
+              item.description,
+              item.imgUrl,
+              item.brand,
+              item.size,
+              item.type,
+              item.soldOut),
         );
     } else {
       //?
@@ -186,13 +195,16 @@ class CartProvider with ChangeNotifier {
 
   set storeIDThree(String value) {
     _storeIDThree = value;
+    notifyListeners();
   }
 
   set storeIDTwo(String value) {
     _storeIDTwo = value;
+    notifyListeners();
   }
 
   set storeIDOne(String value) {
     _storeIDOne = value;
+    notifyListeners();
   }
 }

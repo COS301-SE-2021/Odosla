@@ -10,6 +10,7 @@ import 'package:odosla/provider/cart_provider.dart';
 import 'package:odosla/services/api_service.dart';
 import 'package:odosla/widget/cart_bar_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ItemsPage extends StatefulWidget {
@@ -109,7 +110,9 @@ class _ItemsPageState extends State<ItemsPage> {
                 childAspectRatio: 4 / 4,
               ),
               itemCount: items.length,
-              itemBuilder: (context, index) => GestureDetector(
+              itemBuilder: (context, index) {
+                if (!items[index].soldOut)
+                  return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) => ItemDetailPage(
@@ -119,7 +122,32 @@ class _ItemsPageState extends State<ItemsPage> {
                           ));
                     },
                     child: buildItem(items[index]),
-                  ));
+                  );
+                else {
+                  return GestureDetector(
+                    onTap: () {
+                      Alert(
+                        context: context,
+                        title: items[index].title + " is out of stock",
+                        desc: "Check again soon!",
+                        buttons: [
+                          DialogButton(
+                            color: Colors.deepOrange,
+                            child: Text(
+                              "OK",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            width: 120,
+                          )
+                        ],
+                      ).show();
+                    },
+                    child: buildItem(items[index]),
+                  );
+                }
+              });
         }
         debugPrint("_2");
         return Center(
@@ -129,66 +157,71 @@ class _ItemsPageState extends State<ItemsPage> {
     );
   }
 
-  Widget buildItem(CartItem product) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.deepOrange, width: 2),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                //constraints: BoxConstraints(
-                //  maxHeight: 100,
-                //),
-                child: Center(
-                  child: Image.asset(
-                    'assets/' + product.imgUrl,
-                  ), //product.imgUrl),
-                ),
+  Widget buildItem(CartItem product) {
+    Color c = Colors.white;
+    if (product.soldOut) c = Colors.grey;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: c,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.deepOrange, width: 2),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              //constraints: BoxConstraints(
+              //  maxHeight: 100,
+              //),
+              child: Center(
+                child: Image.asset(
+                  'assets/' + product.imgUrl,
+                ), //product.imgUrl),
               ),
-              SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    child: Expanded(
-                      child: Text(
-                        product.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        softWrap: false,
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
+            ),
+            SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Expanded(
                     child: Text(
-                      product.brand,
+                      product.title,
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      softWrap: false,
                       style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey[600],
-                          fontSize: 12),
+                          fontWeight: FontWeight.normal, fontSize: 16),
                     ),
                   ),
-                  Text(
-                    'R' + product.price.toString(),
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    product.brand,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.grey[600],
+                        fontSize: 12),
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Text(
+                  'R' + product.price.toString(),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ],
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }
