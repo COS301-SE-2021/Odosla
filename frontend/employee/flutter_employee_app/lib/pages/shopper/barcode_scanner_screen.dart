@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_employee_app/models/Store.dart';
-import 'package:flutter_employee_app/pages/shopper/alternative_product_page.dart';
+import 'package:flutter_employee_app/provider/order_provider.dart';
+import 'package:flutter_employee_app/services/ShoppingService.dart';
+import 'package:flutter_employee_app/services/UserService.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
+
+import 'out_of_stock_page.dart';
 
 class BarcodeScanPage extends StatelessWidget {
   String barcode = 'Unknown barcode';
@@ -12,6 +18,8 @@ class BarcodeScanPage extends StatelessWidget {
   final String productName;
   final String brand;
   final Store store;
+  final ShoppingService _shoppingService = GetIt.I.get();
+  final UserService _userService = GetIt.I.get();
 
   BarcodeScanPage(BuildContext context,
       {Key? key,
@@ -24,7 +32,7 @@ class BarcodeScanPage extends StatelessWidget {
 
   Widget _popUpItemNotAvailable(BuildContext context) {
     return new AlertDialog(
-      title: const Text('OUT OF STOCK'),
+      title: const Text('OUT OF STOCK',textAlign: TextAlign.center,),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,18 +43,32 @@ class BarcodeScanPage extends StatelessWidget {
       ),
       actions: <Widget>[
         new FlatButton(
+
           onPressed: () async {
+            Navigator.pop(context, false);
             showDialog(
               context: context,
               builder: (BuildContext context) => _offerAlternative(context),
             );
-            Navigator.pop(context, false);
+
           },
-          child: const Text('Go to map'),
+          child: const Text('Alternative'),
         ),
         new FlatButton(
           onPressed: () async {
-            //send request still
+            await _userService.itemNotAvailable(Provider.of<OrderProvider>(context,
+                listen: false)
+                .order.orderID, barcodeExpected, "", context).then((value) =>
+                {
+                  if(value==true){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Item's unavailability reported to customer")))
+                  } else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Could not update unavailability of item")))
+                  }
+                }
+            );
             Navigator.pop(context, false);
           },
           child: Icon(
@@ -60,7 +82,7 @@ class BarcodeScanPage extends StatelessWidget {
 
   Widget _offerAlternative(BuildContext context) {
     return new AlertDialog(
-      title: const Text('Alternative'),
+      title: const Text('Alternative',textAlign: TextAlign.center,),
       content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,12 +95,12 @@ class BarcodeScanPage extends StatelessWidget {
       actions: <Widget>[
         new FlatButton(
           onPressed: () async {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    AlternativeItemsPage(store.id, store.name, {
+                    ItemsPage(store.id, store.name, {
                       "lat": double.parse(store.storeLocationLatitude),
                       "long": double.parse(store.storeLocationLongitude)
-                    })));
+                    },true,barcodeExpected)));
           },
           child: const Text('Items page'),
         ),
@@ -202,7 +224,7 @@ class BarcodeScanPage extends StatelessWidget {
                     height: 30,
                     alignment: Alignment.bottomCenter,
                     child: Text(
-                      "No items available?",
+                      "ITEM OUT OF STOCK?",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontStyle: FontStyle.italic,

@@ -98,6 +98,45 @@ class DeliveryProvider with ChangeNotifier {
     return false;
   }
 
+  void reset(){
+     _isOneDelivery = false;
+     _isTwoDeliveries = false;
+     _isThreeDeliveries = false;
+
+     _completedOne = false;
+     _completedTwo = false;
+     _completedThree = false;
+     _completed = false;
+
+     _delivery = new Delivery(
+         "",
+         new GeoPoint(0.0, 0.0, ""),
+         new GeoPoint(0.0, 0.0, ""),
+         "",
+         "",
+         "",
+         "",
+         "",
+         0.0,
+         false,
+         new GeoPoint(0.0, 0.0, ""),
+         new GeoPoint(0.0, 0.0, ""));
+
+     _customer = new Customer("", "", "", "", "");
+  }
+
+  void printer(){
+    print("IN DELIVERY PROVIDER");
+    print("COMPLETED ONE: "+completedOne.toString());
+    print("COMPLETED TWO: "+completedTwo.toString());
+    print("COMPLETED THREE: "+_completedThree.toString());
+    print("/nIS ONE DELIVERY"+_isOneDelivery.toString());
+    print("IS TWO DELIVERY"+_isTwoDeliveries.toString());
+    print("IS THREE DELIVERY"+_isThreeDeliveries.toString());
+    print("Delivery location one address and lat and long: "+_delivery.pickUpLocationOne.address+" "+_delivery.pickUpLocationOne.latitude.toString()+" "+_delivery.pickUpLocationOne.longitude.toString());
+    print("Delivery location second address and lat and long: "+_delivery.pickUpLocationTwo.address+" "+_delivery.pickUpLocationTwo.latitude.toString()+" "+_delivery.pickUpLocationTwo.longitude.toString());
+    print("Delivery location three address and lat and long: "+_delivery.pickUpLocationThree.address+" "+_delivery.pickUpLocationThree.latitude.toString()+" "+_delivery.pickUpLocationThree.longitude.toString());
+  }
   bool finishFirst() {
     if (this._isOneDelivery) {
       _completedOne = true;

@@ -2,6 +2,7 @@ import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/User.dart';
 import 'package:flutter_employee_app/pages/contact_us_page.dart';
+import 'package:flutter_employee_app/pages/login_registration/login_screen.dart';
 import 'package:flutter_employee_app/pages/shopper/edit_profile_page.dart';
 import 'package:flutter_employee_app/pages/wallet_page.dart';
 import 'package:flutter_employee_app/provider/user_provider.dart';
@@ -245,7 +246,9 @@ class _ShopperProfileScreenState extends State<ShopperProfileScreen> {
                       GestureDetector(
                         onTap: () async {
                           await _userService.deleteStorage(context);
-                          MyNavigator.goToLogin(context);
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  LoginScreen()));
                         },
                         child: ProfileListItem(
                           LineAwesomeIcons.alternate_sign_out,

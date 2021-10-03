@@ -72,7 +72,7 @@ class _StorePageState extends State<StorePage> {
                               child: Text(
                                 "OK",
                                 style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
+                                     fontSize: 20),
                               ),
                               onPressed: () => Navigator.pop(context),
                               width: 120,

@@ -1,6 +1,7 @@
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/pages/driver/edit_page_driver.dart';
+import 'package:flutter_employee_app/pages/login_registration/login_screen.dart';
 import 'package:flutter_employee_app/pages/wallet_page.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
@@ -256,7 +257,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                       GestureDetector(
                         onTap: () async {
                           await _userService.deleteStorage(context);
-                          MyNavigator.goToLogin(context);
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  LoginScreen()));
                           /* implement dleting from storage */
                         },
                         child: ProfileListItem(

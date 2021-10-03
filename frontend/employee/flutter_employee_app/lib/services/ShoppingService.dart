@@ -150,7 +150,7 @@ class ShoppingService {
     }
   }
 
-  Future<Store> itemIsInStock(
+  Future<bool> itemIsInStock(
       BuildContext context, String storeID,String barcode, bool outOfStock) async {
     final loginURL = Uri.parse(shoppingEndPoint + "shopping/itemIsInStock");
 
@@ -178,15 +178,16 @@ class ShoppingService {
     final response =
         await http.post(loginURL, headers: headers, body: jsonEncode(data));
 
+    print("STATTUSSS request:");
+    print(data);
+    print("STATTUSSS response:");
+    print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = json.decode(response.body);
-      Store _store = Store.fromJson(responseData[""]);
-      Provider.of<ShopProvider>(context, listen: false).store = _store;
 
-      return _store;
+      return true;
     } else {
-      Store _store = Store("", "", 0, 0, true, "", "", "", "");
-      return _store;
+      return false;
     }
   }
 

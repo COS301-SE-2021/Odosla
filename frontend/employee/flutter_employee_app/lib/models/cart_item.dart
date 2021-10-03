@@ -13,9 +13,10 @@ class CartItem {
   final String brand;
   final String size;
   final String type;
-  final bool soldOut;
+  bool soldOut;
+  int currentAmountPacked=0;
 
-  const CartItem(
+  CartItem(
       this.id,
       this.title,
       this.barcode,

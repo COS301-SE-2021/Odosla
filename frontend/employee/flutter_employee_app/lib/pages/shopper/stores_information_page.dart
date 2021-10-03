@@ -51,9 +51,13 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                       .then((value) => {
                             if (value == true)
                               {
+
                                 Provider.of<ShopProvider>(context,
                                         listen: false)
                                     .store = widget.store,
+                                setState((){
+                                  _onShift=!_onShift;
+                                }),
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         GetNewOrderScreen(context,
@@ -142,7 +146,7 @@ class _StoreInfoScreenState extends State<StoreInfoScreen> {
                                   widget.store.storeLocationLatitude),
                               'long': double.parse(
                                   widget.store.storeLocationLongitude)
-                            }) //ProductPage(product: product),
+                            },false,"") //ProductPage(product: product),
                         ));
                   },
                   padding: EdgeInsets.symmetric(vertical: 5.0),

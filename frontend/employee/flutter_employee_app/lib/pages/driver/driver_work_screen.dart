@@ -51,11 +51,9 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-              "There is a delivery from \n" +
                   _delivery.pickUpLocationOne.address +
                   " \n to \n" +
-                  _delivery.dropOffLocation.address +
-                  "\n Accept it?",
+                  _delivery.dropOffLocation.address+"\n",
               textAlign: TextAlign.center),
           _isOne
               ? Container()
@@ -225,6 +223,8 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("WORK screen");
+    Provider.of<DeliveryProvider>(context).printer();
     ScreenUtil.init(
         BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width,
@@ -591,7 +591,7 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 0, horizontal: 16),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Container(
                                         child: Text(
@@ -623,7 +623,7 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
                                             vertical: 0, horizontal: 16),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Container(
                                               child: Text(
@@ -648,7 +648,7 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
                                 _isOne ? Container() : SizedBox(height: 15),
                                 _isTwo
                                     ? Container()
-                                    : Container(
+                                    :_isThree? Container(
                                         child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 0, horizontal: 16),
@@ -675,7 +675,7 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
                                             ),
                                           ],
                                         ),
-                                      )),
+                                      )):Container(),
                                 _isTwo ? Container() : SizedBox(height: 15),
                                 Container(
                                     child: Padding(
@@ -841,27 +841,10 @@ class _DriverWorkScreenState extends State<DriverWorkScreen> {
                                                   _collectedFromStore = false;
                                                   _startedDelivery = false;
                                                 }),
-                                                // Provider.of<UtilityProvider>(context,listen: false).redo=true,
+
                                                 Provider.of<DeliveryProvider>(
-                                                            context,
-                                                            listen: false)
-                                                        .delivery =
-                                                    Delivery(
-                                                        "",
-                                                        new GeoPoint(
-                                                            0.0, 0.0, ""),
-                                                        new GeoPoint(0, 0, ""),
-                                                        "",
-                                                        "",
-                                                        "",
-                                                        "",
-                                                        "",
-                                                        0,
-                                                        false,
-                                                        new GeoPoint(
-                                                            0.0, 0.0, ""),
-                                                        new GeoPoint(
-                                                            0.0, 0.0, "")),
+                                                    context,
+                                                    listen: false).reset()
                                               }
                                             else
                                               {

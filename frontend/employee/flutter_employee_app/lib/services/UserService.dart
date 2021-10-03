@@ -487,6 +487,8 @@ class UserService {
     final response =
         await http.post(url, headers: headers, body: jsonEncode(data));
 
+    print("WHAT UP");
+    print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = json.decode(response.body);
       print(responseData);
@@ -497,6 +499,9 @@ class UserService {
             .items
             .removeWhere((element) => element.barcode == currentBarcode);
         return true;
+      }else if(responseData["message"].toString().contains("already been reported")){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Issue has already been reported")));
       }
     }
     return false;
@@ -509,8 +514,6 @@ class UserService {
     Map<String, String> headers = new Map<String, String>();
     String jwt = "";
     await this.getJWTAsString(context).then((value) => {jwt = value!});
-
-    print(jwt);
 
     headers = {
       "Accept": "application/json",
@@ -531,9 +534,10 @@ class UserService {
     final response =
         await http.post(url, headers: headers, body: jsonEncode(data));
 
+    print("UPDATE LOCATION: ");
+    print(response.body);
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = json.decode(response.body);
-      print(responseData);
       if (responseData["success"] == true) {
         return true;
       }

@@ -1,29 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_employee_app/models/Store.dart';
 import 'package:flutter_employee_app/models/cart_item.dart';
+import 'package:flutter_employee_app/pages/shopper/current_order_page.dart';
+import 'package:flutter_employee_app/pages/shopper/list_of_stores_screen.dart';
+import 'package:flutter_employee_app/pages/shopper/out_of_stock_page.dart';
+import 'package:flutter_employee_app/provider/order_provider.dart';
+import 'package:flutter_employee_app/provider/shop_provider.dart';
+import 'package:flutter_employee_app/services/ShoppingService.dart';
+import 'package:flutter_employee_app/services/UserService.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class ItemDetailPage extends StatefulWidget {
-  final CartItem item;
+
+   CartItem item;
   final String storeID;
   final Map<String, double> location;
   final bool _isAlternative;
+  final String currentBarcode;
 
-  const ItemDetailPage(this.item, this.storeID, this.location,
-      this._isAlternative); // : super(key: key);
+   ItemDetailPage(this.item, this.storeID, this.location,
+      this._isAlternative, this.currentBarcode); // : super(key: key);
 
   @override
-  _ItemDetailPage createState() => _ItemDetailPage(storeID, location);
+  _ItemDetailPage createState() => _ItemDetailPage(storeID, location, item);
 }
 
 class _ItemDetailPage extends State<ItemDetailPage> {
   int _count = 1;
 
+  final ShoppingService _shoppingService = GetIt.I.get();
+  final UserService _userService = GetIt.I.get();
   final String storeID;
   final Map<String, double> location;
+  CartItem item;
 
-  _ItemDetailPage(this.storeID, this.location);
+  _ItemDetailPage(this.storeID, this.location, this.item);
+
+  @override
+  void initState() {
+    item=widget.item;
+  }
 
   @override
   Widget build(BuildContext context) {
+    Store store=Provider.of<ShopProvider>(context, listen: false).store;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -38,7 +59,9 @@ class _ItemDetailPage extends State<ItemDetailPage> {
                 left: 5,
                 child: IconButton(
                   icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () =>  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          ItemsPage(widget.storeID,store.name,location,widget._isAlternative,widget.currentBarcode)))
                 ))
           ],
         ),
@@ -114,11 +137,34 @@ class _ItemDetailPage extends State<ItemDetailPage> {
             child: ElevatedButton(
                 onPressed: () => {
                       if (widget._isAlternative)
-                        {}
-                      else if (widget.item.soldOut == true)
-                        {}
-                      else if (widget.item.soldOut == false)
-                        {}
+                        {
+                          _userService.itemNotAvailable(Provider.of<OrderProvider>(context, listen: false).order.orderID, widget.currentBarcode, widget.item.barcode, context).then((value) =>
+                          {
+                            if(value==true){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Customer notified"))),
+
+                                Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                CurrentOrderScreen(context, store: Provider.of<ShopProvider>(context, listen: false).store)))
+                            }
+                          }
+                          )
+                        }
+                      else
+                        {
+                          _shoppingService.itemIsInStock(context, widget.storeID, widget.item.barcode, !widget.item.soldOut).then((value) =>
+                          {
+                            if(value==true){
+                              setState(() {
+                                 item.soldOut=!widget.item.soldOut;
+                                }
+                              )
+                            }
+                          }
+
+                          )}
+
                     },
                 child: Text(
                   widget._isAlternative

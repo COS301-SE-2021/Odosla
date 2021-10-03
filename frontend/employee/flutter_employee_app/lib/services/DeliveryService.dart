@@ -53,16 +53,38 @@ class DeliveryService {
       print(responseData);
       if (responseData["message"] ==
           "Driver can take the following delivery.") {
+
         Delivery delivery = Delivery.fromJson(responseData["delivery"]);
+        print("HERE");
+        if(responseData["delivery"]["pickUpLocationTwo"] != null){
+          delivery.pickUpLocationTwo=GeoPoint.fromJson(responseData["delivery"]["pickUpLocationTwo"]);
+          print("HERE2");
+        }
+        print("HERE3");
+        if(responseData["delivery"]["pickUpLocationThree"] != null){
+          delivery.pickUpLocationThree=GeoPoint.fromJson(responseData["delivery"]["pickUpLocationThree"]);
+          print("HERE4");
+        }
         Provider.of<DeliveryProvider>(context, listen: false).delivery =
             delivery;
         if (responseData["delivery"]["pickUpLocationTwo"] != null &&
-            responseData["delivery"]["pickUpLocationTwo"] == null) {
+            responseData["delivery"]["pickUpLocationThree"] == null) {
+          print("HERE5");
           Provider.of<DeliveryProvider>(context, listen: false)
               .isTwoDeliveries = true;
+          Provider.of<DeliveryProvider>(context, listen: false)
+              .isOneDelivery = false;
         } else if (responseData["delivery"]["pickUpLocationThree"] != null) {
+          print("HERE6");
           Provider.of<DeliveryProvider>(context, listen: false)
               .isThreeDeliveries = true;
+          Provider.of<DeliveryProvider>(context, listen: false)
+              .isTwoDeliveries = false;
+          Provider.of<DeliveryProvider>(context, listen: false)
+              .isOneDelivery = false;
+        }else{
+          Provider.of<DeliveryProvider>(context, listen: false)
+              .isOneDelivery = true;
         }
         this.getCustomer(delivery.customerID, context);
         return responseData["delivery"]["deliveryID"];

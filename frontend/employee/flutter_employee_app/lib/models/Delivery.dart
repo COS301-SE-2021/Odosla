@@ -9,7 +9,7 @@ class Delivery {
   String orderID = "";
   String customerID = "";
   String driverID = "";
-  String storeID = "";
+  String storeOneID = "";
   String deliveryStatus = "";
   double cost = 0.0;
   bool completed = false;
@@ -25,7 +25,7 @@ class Delivery {
       this.orderID,
       this.customerID,
       this.driverID,
-      this.storeID,
+      this.storeOneID,
       this.deliveryStatus,
       this.cost,
       this.completed,
@@ -37,12 +37,10 @@ class Delivery {
         pickUpLocationOne = GeoPoint.fromJson(json["pickUpLocationOne"]),
         dropOffLocation = GeoPoint.fromJson(json["dropOffLocation"]),
         orderID = json["orderID"],
-        customerID = json["customerId"],
-        storeID = json["storeId"],
+        customerID = json["customerID"],
+        storeOneID = json["storeOneId"],
         deliveryStatus = json["status"],
         driverID = json["driverId"].toString(),
         cost = json["cost"],
-        completed = json["completed"],
-        pickUpLocationTwo = GeoPoint.fromJson(json["pickUpLocationOne"]),
-        pickUpLocationThree = GeoPoint.fromJson(json["pickUpLocationThree"]);
+        completed = json["completed"];
 }

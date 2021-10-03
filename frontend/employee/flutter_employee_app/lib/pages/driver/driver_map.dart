@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/Delivery.dart';
 import 'package:flutter_employee_app/models/GeoPoint.dart';
+import 'package:flutter_employee_app/pages/driver/driver_main_screen.dart';
 import 'package:flutter_employee_app/provider/delivery_provider.dart';
 import 'package:flutter_employee_app/services/UserService.dart';
 import 'package:flutter_employee_app/utilities/constants.dart';
@@ -21,7 +22,6 @@ class DriverMapScreen extends StatefulWidget {
 
 class _DriverMapScreenState extends State<DriverMapScreen> {
   UserService _userService = GetIt.I.get();
-  bool _updatingOnline = true;
   Delivery _delivery = new Delivery(
       "",
       new GeoPoint(0.0, 0.0, ""),
@@ -80,7 +80,7 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
   @override
   void initState() {
     super.initState();
-
+    _done =false;
     // create an instance of Location
     //location = new Location();
     polylinePoints = PolylinePoints();
@@ -256,29 +256,8 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
               i += 3;
               j++;
               if (j == 1) {
-                _userService
-                    .updateDriverLocation(currentLocation.latitude,
-                        currentLocation.longitude, context)
-                    .then((value) => {
-                          if (value == true)
-                            {
-                              if (mounted)
-                                {
-                                  setState(() {
-                                    _updatingOnline = true;
-                                  })
-                                }
-                            }
-                          else
-                            {
-                              if (mounted)
-                                {
-                                  setState(() {
-                                    _updatingOnline = false;
-                                  })
-                                }
-                            }
-                        });
+                _userService.updateDriverLocation(currentLocation.latitude,
+                    currentLocation.longitude, context).then((value) => {});
                 j = 0;
               }
             } else {
@@ -305,6 +284,8 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
         tilt: CAMERA_TILT,
         bearing: CAMERA_BEARING,
         target: SOURCE_LOCATION);
+
+    print("IN BUILD MAP: SOURCE LOCATION:"+SOURCE_LOCATION.latitude.toString()+" "+SOURCE_LOCATION.longitude.toString());
 
     if (currentLocation != null) {
       initialCameraPosition = CameraPosition(
@@ -340,7 +321,11 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
   @override
   Widget build(BuildContext context) {
     if (_done == false) {
+      print("___!!!!!!__");
+      print("IN DONE");
+      Provider.of<DeliveryProvider>(context, listen: false).printer();
       setState(() {
+
         _delivery =
             Provider.of<DeliveryProvider>(context, listen: false).delivery;
         _isOne =
@@ -349,23 +334,28 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
             .isTwoDeliveries;
         _isThree = Provider.of<DeliveryProvider>(context, listen: false)
             .isThreeDeliveries;
+
         _completedOne =
             Provider.of<DeliveryProvider>(context, listen: false).completedOne;
         _completedTwo =
             Provider.of<DeliveryProvider>(context, listen: false).completedTwo;
+
         if (_delivery.deliveryStatus == "CollectingFromStore") {
           GeoPoint pickUp = new GeoPoint(0, 0, "");
-          if (_completedOne = false) {
+          if (_completedOne == false) {
             pickUp = _delivery.pickUpLocationOne;
+            print("___1__");
           } else if (_isOne == false && _completedTwo == false) {
             SOURCE_LOCATION = LatLng(_delivery.pickUpLocationOne.latitude,
                 _delivery.pickUpLocationOne.longitude);
             pickUp = _delivery.pickUpLocationTwo;
-          } else if (_isTwo == false && _completedThree == false) {
+            print("___2__");
+          } else if (_isTwo == false && _isOne && _completedThree == false) {
             SOURCE_LOCATION = LatLng(_delivery.pickUpLocationTwo.latitude,
                 _delivery.pickUpLocationTwo.longitude);
             pickUp = _delivery.pickUpLocationThree;
           }
+          print("___3__");
           _drivingTo = pickUp;
           DEST_LOCATION = LatLng(pickUp.latitude, pickUp.longitude);
         } else if (_delivery.deliveryStatus == "DeliveringToCustomer") {
@@ -385,9 +375,11 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
       });
       setInitialLocation();
       setState(() {
+        print("___4__");
         _done = true;
       });
     }
+
     return Scaffold(
       body: Stack(
         children: [
@@ -421,15 +413,23 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
                                 child: Row(
                                   children: <Widget>[
                                     Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.14,
+                                        height: _delivery.deliveryStatus ==
+                                                "CollectingFromStore"
+                                            ? MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.14
+                                            : MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.05,
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.9,
+                                        alignment: Alignment.center,
                                         child: Column(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
                                             _delivery.deliveryStatus ==
                                                     "CollectingFromStore"
@@ -474,14 +474,12 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
                                                     ),
                                                   )
                                                 : Container(),
-                                            Expanded(
-                                              child: Text(
-                                                "Currently driving to:",
-                                                style: kTitleTextStyle.copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
+                                            Text(
+                                              "Currently driving to:",
+                                              style: kTitleTextStyle.copyWith(
+                                                fontWeight: FontWeight.w500,
                                               ),
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                             Expanded(
                                               child: Text(
@@ -502,6 +500,16 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
                                                                   listen: false)
                                                           .collected();
                                                       if (completed == true) {
+                                                        setState(() {
+                                                          _done = false;
+                                                          if(_isTwo){
+                                                            print("WE GET HERE XXX");
+                                                            _completedTwo=true;
+                                                          }
+                                                          if(_isThree){
+                                                            _completedThree=true;
+                                                          }
+                                                        });
                                                         showDialog(
                                                           context: context,
                                                           builder: (BuildContext
@@ -509,6 +517,13 @@ class _DriverMapScreenState extends State<DriverMapScreen> {
                                                               _popUpSuccessfulEndLocation(
                                                                   context),
                                                         );
+                                                      } else {
+                                                        setState(() {
+                                                          _done = false;
+                                                        });
+                                                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                                            builder: (BuildContext context) =>
+                                                                DriverHomeScreen(0)));
                                                       }
                                                     },
                                                     child: Text(

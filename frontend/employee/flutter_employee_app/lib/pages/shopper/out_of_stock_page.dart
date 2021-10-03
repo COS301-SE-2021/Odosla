@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_employee_app/models/cart_item.dart';
+import 'package:flutter_employee_app/pages/shopper/shopper_main_page.dart';
 import 'package:flutter_employee_app/services/ShoppingService.dart';
 import 'package:get_it/get_it.dart';
 
 import 'item_detail_page.dart';
+import 'list_of_stores_screen.dart';
 
 class ItemsPage extends StatefulWidget {
+
   final String storeID;
   final String storeName;
   final Map<String, double> location;
-
-  const ItemsPage(this.storeID, this.storeName, this.location);
+  final bool _isAlternative;
+  final String currentBarcode;
+  const ItemsPage(this.storeID, this.storeName, this.location, this._isAlternative, this.currentBarcode);
 
   @override
   _ItemsPageState createState() =>
@@ -67,7 +71,9 @@ class _ItemsPageState extends State<ItemsPage> {
           elevation: 0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    ShopperHomeScreen(0))),
           ),
           actions: [
             _popUpShowFilter(context),
@@ -115,7 +121,10 @@ class _ItemsPageState extends State<ItemsPage> {
                               items[index],
                               storeID,
                               location,
-                              false) //ProductPage(product: product),
+                              widget._isAlternative,
+                              widget.currentBarcode
+
+                          ) //ProductPage(product: product),
                           ));
                     },
                     child: buildItem(items[index]),
