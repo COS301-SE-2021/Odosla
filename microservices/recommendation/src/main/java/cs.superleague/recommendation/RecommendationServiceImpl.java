@@ -59,14 +59,22 @@ public class RecommendationServiceImpl implements RecommendationService {
         if (request == null) {
             throw new InvalidRequestException("No request object specified, need storeID to make recommendations.");
         }
-        if (request.getStoreID() == null){
+        if (request.getStoreOneID() == null){
             throw new InvalidRequestException("Need StoreID to make recommendations.");
         }
         if (request.getItemIDs() == null) {
-            return getRandomRecommendations("Null item list.", request.getStoreID(), new ArrayList<>());
+            return getRandomRecommendations("Null item list.", request.getStoreOneID(), new ArrayList<>());
         }
         if (request.getItemIDs().size() == 0) {
-            return getRandomRecommendations("No items in item list.", request.getStoreID(), new ArrayList<>());
+            return getRandomRecommendations("No items in item list.", request.getStoreOneID(), new ArrayList<>());
+        }
+        UUID storeTwoID = request.getStoreTwoID();
+        UUID storeThreeID = request.getStoreThreeID();
+        if (request.getStoreTwoID() == null){
+            storeTwoID = request.getStoreOneID();
+        }
+        if (request.getStoreThreeID() == null){
+            storeThreeID = request.getStoreOneID();
         }
         if (recommendationRepo != null) {
             List<UUID> orderIDs = new ArrayList<>();
@@ -85,7 +93,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                 }
             }
             if (orderIDs.size() == 0) {
-                return getRandomRecommendations("None of these items have been bought before.", request.getStoreID(), request.getItemIDs());
+                return getRandomRecommendations("None of these items have been bought before.", request.getStoreOneID(), request.getItemIDs());
             }
             List<Order> finalRecommendation = new ArrayList<>();
             List<String> productsToRecommend = new ArrayList<>();
@@ -163,16 +171,16 @@ public class RecommendationServiceImpl implements RecommendationService {
             }
             List<Item> finalItems = itemResponse.getBody().getItems();
             for (Item item : finalItems){
-                if (item.getStoreID().compareTo(request.getStoreID()) == 0){
+                if (item.getStoreID().compareTo(request.getStoreOneID()) == 0 || item.getStoreID().compareTo(storeTwoID) == 0 || item.getStoreID().compareTo(storeThreeID) == 0){
                     CartItem cartItem = new CartItem(item.getName(), item.getProductID(), item.getBarcode(), null, item.getPrice(), 1, item.getDescription(), item.getImageUrl(), item.getBrand(), item.getSize(), item.getItemType(), item.getPrice(), item.getStoreID());
                     finalItemsRecommendation.add(cartItem);
                 }
             }
             if (finalItemsRecommendation.size() == 0) {
-                return getRandomRecommendations("There are no orders that have all the requested items in them.", request.getStoreID(), request.getItemIDs());
+                return getRandomRecommendations("There are no orders that have all the requested items in them.", request.getStoreOneID(), request.getItemIDs());
             }
             while (finalItemsRecommendation.size() < 3){
-                GetCartRecommendationResponse getCartRecommendationResponse = getRandomRecommendations("", request.getStoreID(), request.getItemIDs());
+                GetCartRecommendationResponse getCartRecommendationResponse = getRandomRecommendations("", request.getStoreOneID(), request.getItemIDs());
                 for (CartItem item : getCartRecommendationResponse.getRecommendations()){
                     if (finalItemsRecommendation.size() == 3){
                         break;
@@ -186,7 +194,7 @@ public class RecommendationServiceImpl implements RecommendationService {
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
         } else {
-            return getRandomRecommendations("No recommendation repository found.", request.getStoreID(), request.getItemIDs());
+            return getRandomRecommendations("No recommendation repository found.", request.getStoreOneID(), request.getItemIDs());
         }
     }
 
@@ -229,7 +237,7 @@ public class RecommendationServiceImpl implements RecommendationService {
 
     // Helper/s
 
-    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage, UUID storeID, List<String> productIDs) throws URISyntaxException {
+    private GetCartRecommendationResponse getRandomRecommendations(String errorMessage, UUID storeOneID, List<String> productIDs) throws URISyntaxException {
 
         int count = 0;
         int randomInt = 0;
@@ -239,7 +247,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItems";
         URI uri = new URI(stringUri);
         Map<String, Object> parts = new HashMap<>();
-        parts.put("storeID", storeID.toString());
+        parts.put("storeID", storeOneID.toString());
 
         ResponseEntity<GetItemsResponse> responseEntity = restTemplate.postForEntity(
                 uri,
@@ -265,7 +273,7 @@ public class RecommendationServiceImpl implements RecommendationService {
         System.out.println(count);
         for (int i = 0; i < count; i++) {
             randomInt = random.nextInt(allItems.size());
-            if (randomItems.contains(allItems.get(randomInt)) || productIDs.contains((allItems.get(randomInt).getProductID())) || !allItems.get(randomInt).getStoreID().equals(storeID)){
+            if (randomItems.contains(allItems.get(randomInt)) || productIDs.contains((allItems.get(randomInt).getProductID())) || !(allItems.get(randomInt).getStoreID().equals(storeOneID))){
                 i--;
                 continue;
             }

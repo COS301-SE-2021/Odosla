@@ -94,7 +94,11 @@ components:
           type: array
           items:
             type: string
-        storeID:
+        storeOneID:
+          type: string
+        storeTwoID:
+          type: string
+        storeThreeID:
           type: string
 
     recommendation_getCartRecommendationResponse:
