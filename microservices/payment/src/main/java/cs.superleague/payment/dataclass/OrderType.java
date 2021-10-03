@@ -1,6 +1,8 @@
 package cs.superleague.payment.dataclass;
 
-public enum OrderType {
+import java.io.Serializable;
+
+public enum OrderType implements Serializable {
     DELIVERY,
     COLLECTION
 }

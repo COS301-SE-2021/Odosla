@@ -540,6 +540,12 @@ public class UserController implements UserApi {
         HttpStatus status = HttpStatus.OK;
 
         try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetCustomerByEmailRequest request = new GetCustomerByEmailRequest(body.getEmail());
 
             GetCustomerByEmailResponse response = userService.getCustomerByEmail(request);
@@ -622,7 +628,7 @@ public class UserController implements UserApi {
         } catch (Exception e){
             userGetShopperByUUIDResponse.setShopperEntity(null);
             userGetShopperByUUIDResponse.setMessage(e.getMessage());
-            userGetShopperByUUIDResponse.setTimestamp(Calendar.getInstance().toString());
+            userGetShopperByUUIDResponse.setTimestamp(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(Calendar.getInstance().toString()));
         }
         return new ResponseEntity<>(userGetShopperByUUIDResponse, status);
     }
@@ -826,6 +832,8 @@ public class UserController implements UserApi {
         UserCompletePackagingOrderResponse userCompletePackagingOrderResponse = new UserCompletePackagingOrderResponse();
         HttpStatus status = HttpStatus.OK;
 
+        System.out.println("complete packing controller order id"+ body.getOrderID());
+
         try{
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
@@ -858,6 +866,8 @@ public class UserController implements UserApi {
 
         UserCompleteDeliveryResponse userCompleteDeliveryResponse = new UserCompleteDeliveryResponse();
         HttpStatus status = HttpStatus.OK;
+
+        System.out.println("_#_ " + body.getOrderID());
 
         try{
 
@@ -916,7 +926,16 @@ public class UserController implements UserApi {
         UserGetDriverByEmailResponse getDriverByEmailResponse=new UserGetDriverByEmailResponse();
         HttpStatus status = HttpStatus.OK;
 
+
+
         try{
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
             GetDriverByEmailRequest request = new GetDriverByEmailRequest(body.getEmail());
 
             GetDriverByEmailResponse response = userService.getDriverByEmail(request);

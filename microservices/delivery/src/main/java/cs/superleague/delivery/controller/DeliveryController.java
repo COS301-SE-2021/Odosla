@@ -191,8 +191,14 @@ public class DeliveryController implements DeliveryApi {
             }
             GetNextOrderForDriverResponse getNextOrderForDriverResponse = deliveryService.getNextOrderForDriver(request);
 
+            System.out.println("ASD 1");
+
             DeliveryObject deliveryObject = new DeliveryObject();
+
+            System.out.println("ASD delv id " + getNextOrderForDriverResponse.getDelivery().toString());
             deliveryObject.setDeliveryID(getNextOrderForDriverResponse.getDelivery().getDeliveryID().toString());
+
+            System.out.println("ASD 1");
 
             GeoPointObject dropOffLocation=new GeoPointObject();
             dropOffLocation.setAddress(getNextOrderForDriverResponse.getDelivery().getDropOffLocation().getAddress());

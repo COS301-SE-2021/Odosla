@@ -35,11 +35,6 @@ public class RecommendationServiceImpl implements RecommendationService{
     @Value("${paymentPort}")
     private String paymentPort;
 
-    @Value("${shoppingHost}")
-    private String shoppingHost;
-    @Value("${shoppingPort}")
-    private String shoppingPort;
-
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
 

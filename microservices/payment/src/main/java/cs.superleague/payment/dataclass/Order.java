@@ -1,17 +1,13 @@
 package cs.superleague.payment.dataclass;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import cs.superleague.shopping.dataclass.Item;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.*;
 
 @Entity
 @Table(name = "orderTable")
