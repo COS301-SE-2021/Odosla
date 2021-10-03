@@ -359,7 +359,7 @@ public class PaymentServiceImpl implements PaymentService {
                 orderTwo.setRequiresPharmacy(requiresPharmacy);
             }
             Order orderThree = new Order();
-            if (request.getStoreIDTwo() != null){
+            if (request.getStoreIDThree() != null){
                 orderThree.setOrderID(orderThreeID);
                 orderThree.setUserID(customerID);
                 orderThree.setStoreID(request.getStoreIDThree());
