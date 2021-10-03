@@ -295,6 +295,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/delivery_CompletePackingOrderForDeliveryResponse"
 
+  /delivery/addOrderToDelivery:
+    post:
+      summary: Endpoint for adding an additional order to a delivery
+      tags:
+        - "Delivery"
+      description: Refer to summary
+      operationId: addOrderToDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_AddOrderToDeliveryRequest"
+      responses:
+        "200":
+          description: Returns if the order was added to the delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_AddOrderToDeliveryResponse"
+
 components:
 
   schemas:
@@ -841,3 +863,21 @@ components:
           type: boolean
         message:
           type: string
+
+    delivery_AddOrderToDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+        orderID:
+          type: string
+
+    delivery_AddOrderToDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean

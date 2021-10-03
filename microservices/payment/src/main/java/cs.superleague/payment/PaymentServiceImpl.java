@@ -2,6 +2,7 @@ package cs.superleague.payment;
 
 import com.itextpdf.text.*;
 import cs.superleague.delivery.dataclass.Delivery;
+import cs.superleague.delivery.responses.AddOrderToDeliveryResponse;
 import cs.superleague.delivery.responses.CreateDeliveryResponse;
 import cs.superleague.delivery.responses.GetDeliveryByUUIDResponse;
 import cs.superleague.integration.dataclass.UserType;
@@ -455,25 +456,21 @@ public class PaymentServiceImpl implements PaymentService {
                             orderRepo.save(orderTwo);
                             parts = new HashMap<>();
                             parts.put("orderID", orderTwo.getOrderID().toString());
-                            parts.put("customerID", orderTwo.getUserID().toString());
-                            parts.put("storeID", orderTwo.getStoreID().toString());
-                            parts.put("timeOfDelivery", null);
-                            parts.put("placeOfDelivery", orderTwo.getDeliveryAddress());
-
-                            createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
-                            createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
+                            parts.put("deliveryID", deliveryID.toString());
+                            String stringURI3 = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/addOrderToDelivery";
+                            URI uri3 = new URI(stringURI3);
+                            ResponseEntity<AddOrderToDeliveryResponse> addOrderToDeliveryResponseResponseEntity = restTemplate.postForEntity(uri3, parts, AddOrderToDeliveryResponse.class);
+                            AddOrderToDeliveryResponse addOrderToDeliveryResponse = addOrderToDeliveryResponseResponseEntity.getBody();
                         }
                         if (request.getStoreIDThree() != null){
                             orderRepo.save(orderThree);
                             parts = new HashMap<>();
                             parts.put("orderID", orderThree.getOrderID().toString());
-                            parts.put("customerID", orderThree.getUserID().toString());
-                            parts.put("storeID", orderThree.getStoreID().toString());
-                            parts.put("timeOfDelivery", null);
-                            parts.put("placeOfDelivery", orderThree.getDeliveryAddress());
-
-                            createDeliveryResponseResponseEntity = restTemplate.postForEntity(uri2, parts, CreateDeliveryResponse.class);
-                            createDeliveryResponse = createDeliveryResponseResponseEntity.getBody();
+                            parts.put("deliveryID", deliveryID.toString());
+                            String stringURI3 = "http://" + deliveryHost + ":" + deliveryPort + "/delivery/addOrderToDelivery";
+                            URI uri3 = new URI(stringURI3);
+                            ResponseEntity<AddOrderToDeliveryResponse> addOrderToDeliveryResponseResponseEntity = restTemplate.postForEntity(uri3, parts, AddOrderToDeliveryResponse.class);
+                            AddOrderToDeliveryResponse addOrderToDeliveryResponse = addOrderToDeliveryResponseResponseEntity.getBody();
                         }
                         List<String> productIDs = new ArrayList<>();
                         for (CartItem item : request.getListOfItems()) {
@@ -1355,6 +1352,9 @@ public class PaymentServiceImpl implements PaymentService {
         OrderStatus orderOneStatus = orderOne.getStatus();
         OrderStatus orderTwoStatus = orderTwo.getStatus();
         OrderStatus orderThreeStatus = orderThree.getStatus();
+        if (orderOneStatus.equals(OrderStatus.ASSIGNED_DRIVER) || orderTwoStatus.equals(OrderStatus.ASSIGNED_DRIVER) || orderThreeStatus.equals(OrderStatus.ASSIGNED_DRIVER)){
+            return new GetStatusOfMultipleOrdersResponse(OrderStatus.ASSIGNED_DRIVER.name(), true, new Date(), "Order status returned.");
+        }
         if (orderOneStatus.ordinal() < orderTwoStatus.ordinal()){
             if (orderOneStatus.ordinal() < orderThreeStatus.ordinal()){
                 return new GetStatusOfMultipleOrdersResponse(orderOneStatus.name(), true, new Date(), "Order status returned.");

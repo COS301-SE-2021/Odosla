@@ -72,6 +72,29 @@ public class DeliveryController implements DeliveryApi {
     }
 
     @Override
+    public ResponseEntity<DeliveryAddOrderToDeliveryResponse> addOrderToDelivery(DeliveryAddOrderToDeliveryRequest body) {
+        DeliveryAddOrderToDeliveryResponse response = new DeliveryAddOrderToDeliveryResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try{
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            AddOrderToDeliveryRequest request = new AddOrderToDeliveryRequest(UUID.fromString(body.getDeliveryID()), UUID.fromString(body.getOrderID()));
+            AddOrderToDeliveryResponse addOrderToDeliveryResponse = deliveryService.addOrderToDelivery(request);
+            response.setMessage(addOrderToDeliveryResponse.getMessage());
+            response.setSuccess(addOrderToDeliveryResponse.isSuccess());
+
+        }catch (Exception e){
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<DeliveryAssignDriverToDeliveryResponse> assignDriverToDelivery(DeliveryAssignDriverToDeliveryRequest body) {
         DeliveryAssignDriverToDeliveryResponse response = new DeliveryAssignDriverToDeliveryResponse();
         HttpStatus httpStatus = HttpStatus.OK;

@@ -888,14 +888,18 @@ components:
       properties:
         storeID:
           type: string
-        customerLocation:
-          $ref: "#/components/schemas/GeoPointObject"
+        customersAddress:
+          type: string
+        customersLongitude:
+          type: number
+        customersLatitude:
+          type: number
 
     shopping_GetCloseEnoughStoresResponse:
       description: This object is returned as output
       type: object
       properties:
-        closeStores:
+        stores:
           type: array
           properties:
             items:
@@ -904,7 +908,7 @@ components:
           type: array
           properties:
             items:
-              $ref: "#/components/schemas/StoreObject"
+              type: number
         message:
           type: string
 

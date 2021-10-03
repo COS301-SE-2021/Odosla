@@ -763,15 +763,15 @@ public class ShoppingController implements ShoppingApi {
 
         try {
             GeoPoint customersLocation = new GeoPoint();
-            customersLocation.setAddress(body.getCustomerLocation().getAddress());
-            customersLocation.setLongitude(body.getCustomerLocation().getLongitude().doubleValue());
-            customersLocation.setLatitude(body.getCustomerLocation().getLatitude().doubleValue());
+            customersLocation.setAddress(body.getCustomersAddress());
+            customersLocation.setLongitude(body.getCustomersLongitude().doubleValue());
+            customersLocation.setLatitude(body.getCustomersLatitude().doubleValue());
             GetCloseEnoughStoresRequest request = new GetCloseEnoughStoresRequest(UUID.fromString(body.getStoreID()), customersLocation);
             GetCloseEnoughStoresResponse getCloseEnoughStoresResponse = shoppingService.getCloseEnoughStores(request);
 
             try {
 
-                response.setCloseStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
+                response.setStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
                 response.setMessage(getCloseEnoughStoresResponse.getMessage());
                 response.setAdditionalDeliveryCosts(populateDoubles(getCloseEnoughStoresResponse.getAdditionalDeliveryCosts()));
 
