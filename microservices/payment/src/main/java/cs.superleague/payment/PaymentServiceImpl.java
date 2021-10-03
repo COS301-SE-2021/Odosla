@@ -1375,4 +1375,205 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
     }
+
+    @Override
+    public ReviewPaymentResponse reviewPayment(ReviewPaymentRequest request) throws InvalidRequestException, URISyntaxException {
+        ReviewPaymentResponse response = null;
+        double totalCost = 0.0;
+
+        boolean invalidReq = false;
+        String invalidMessage = "";
+
+        UUID customerID = null;
+
+        GetStoreByUUIDResponse shopOne = null;
+        GetStoreByUUIDResponse shopTwo = null;
+        GetStoreByUUIDResponse shopThree = null;
+        if (request != null) {
+            if (request.getListOfItems() == null) {
+                invalidReq = true;
+                invalidMessage = ("List of items cannot be null in request object - order unsuccessfully created.");
+            } else if (request.getDiscount() == null) {
+                invalidReq = true;
+                invalidMessage = ("Discount cannot be null in request object - order unsuccessfully created.");
+            } else if (request.getStoreIDOne() == null) {
+                invalidReq = true;
+                invalidMessage = ("Store ID cannot be null in request object - order unsuccessfully created.");
+            } else if (request.getOrderType() == null) {
+                invalidReq = true;
+                invalidMessage = ("Order type cannot be null in request object - order unsuccessfully created.");
+            } else if (request.getLongitude() == null) {
+                invalidReq = true;
+                invalidMessage = ("Longitude cannot be null in request object - order unsuccessfully created.");
+            } else if (request.getLatitude() == null) {
+                invalidReq = true;
+                invalidMessage = ("Latitude cannot be null in request object - order unsuccessfully created.");
+            } else if (request.getAddress() == null) {
+                invalidReq = true;
+                invalidMessage = ("Address cannot be null in request object - order unsuccessfully created.");
+            }
+
+            if (invalidReq) {
+                throw new InvalidRequestException(invalidMessage);
+            }
+            double distance = 0.0;
+
+            String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStoreByUUID";
+            URI uri = new URI(stringUri);
+
+            Map<String, Object> parts = new HashMap<String, Object>();
+            parts.put("StoreID", request.getStoreIDOne().toString());
+            ResponseEntity<GetStoreByUUIDResponse> getStoreByUUIDResponseResponseEntity = restTemplate
+                    .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
+            shopOne = getStoreByUUIDResponseResponseEntity.getBody();
+
+            if (shopOne != null) {
+                if (shopOne.getStore().getStoreLocation() == null) {
+                    invalidReq = true;
+                    invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                }
+
+                if (!shopOne.getStore().getOpen()) {
+                    invalidReq = true;
+                    invalidMessage = ("Store is currently closed - could not create order");
+                }
+            }
+            GeoPoint lastStop = shopOne.getStore().getStoreLocation();
+
+            if (invalidReq) {
+                throw new InvalidRequestException(invalidMessage);
+            }
+            if (request.getStoreIDTwo() != null){
+                stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStoreByUUID";
+                uri = new URI(stringUri);
+
+                parts = new HashMap<String, Object>();
+                parts.put("StoreID", request.getStoreIDTwo().toString());
+                getStoreByUUIDResponseResponseEntity = restTemplate
+                        .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
+                shopTwo = getStoreByUUIDResponseResponseEntity.getBody();
+                distance = distance + getDistance(shopOne.getStore().getStoreLocation(), shopTwo.getStore().getStoreLocation());
+                lastStop = shopTwo.getStore().getStoreLocation();
+                if (shopTwo != null) {
+                    if (shopTwo.getStore().getStoreLocation() == null) {
+                        invalidReq = true;
+                        invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                    }
+
+                    if (!shopTwo.getStore().getOpen()) {
+                        invalidReq = true;
+                        invalidMessage = ("Store is currently closed - could not create order");
+                    }
+                }
+
+                if (invalidReq) {
+                    throw new InvalidRequestException(invalidMessage);
+                }
+            }
+            if (request.getStoreIDThree() != null){
+                stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getStoreByUUID";
+                uri = new URI(stringUri);
+
+                parts = new HashMap<String, Object>();
+                parts.put("StoreID", request.getStoreIDThree().toString());
+                getStoreByUUIDResponseResponseEntity = restTemplate
+                        .postForEntity(uri, parts, GetStoreByUUIDResponse.class);
+                shopThree = getStoreByUUIDResponseResponseEntity.getBody();
+                distance = distance + getDistance(shopTwo.getStore().getStoreLocation(), shopThree.getStore().getStoreLocation());
+                lastStop = shopThree.getStore().getStoreLocation();
+                if (shopThree != null) {
+                    if (shopThree.getStore().getStoreLocation() == null) {
+                        invalidReq = true;
+                        invalidMessage = ("Store Address GeoPoint cannot be null in request object - order unsuccessfully created.");
+                    }
+
+                    if (!shopThree.getStore().getOpen()) {
+                        invalidReq = true;
+                        invalidMessage = ("Store is currently closed - could not create order");
+                    }
+                }
+
+                if (invalidReq) {
+                    throw new InvalidRequestException(invalidMessage);
+                }
+            }
+             if (shopOne.getStore().getOpen() == true) {
+                List<CartItem> cartItems = request.getListOfItems();
+                double orderOneCost = 0.0;
+                double orderTwoCost = 0.0;
+                double orderThreeCost = 0.0;
+                int numberOfItemsInOrderOne = 0;
+                int numberOfItemsInOrderTwo = 0;
+                int numberOfItemsInOrderThree = 0;
+                double packingCostOfOrderOne = 0.75;
+                double packingCostOfOrderTwo = 0.75;
+                double packingCostOfOrderThree = 0.75;
+                for (int k = 0; k < cartItems.size(); k++) {
+                    if (cartItems.get(k).getStoreID().compareTo(request.getStoreIDOne()) == 0){
+                        cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
+                        orderOneCost = cartItems.get(k).getTotalCost() + orderOneCost;
+                        numberOfItemsInOrderOne = numberOfItemsInOrderOne + cartItems.get(k).getQuantity();
+                        if (numberOfItemsInOrderOne >= 4){
+                            numberOfItemsInOrderOne = numberOfItemsInOrderOne - 4;
+                            packingCostOfOrderOne = packingCostOfOrderOne + 0.75;
+                        }
+                    } else if (cartItems.get(k).getStoreID().compareTo(request.getStoreIDTwo()) == 0){
+                        cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
+                        orderTwoCost = cartItems.get(k).getTotalCost() + orderTwoCost;
+                        numberOfItemsInOrderTwo = numberOfItemsInOrderTwo + cartItems.get(k).getQuantity();
+                        if (numberOfItemsInOrderTwo >= 4){
+                            numberOfItemsInOrderTwo = numberOfItemsInOrderTwo - 4;
+                            packingCostOfOrderTwo = packingCostOfOrderTwo + 0.75;
+                        }
+                    } else if (cartItems.get(k).getStoreID().compareTo(request.getStoreIDThree()) == 0){
+                        cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
+                        orderThreeCost = cartItems.get(k).getTotalCost() + orderThreeCost;
+                        numberOfItemsInOrderThree = numberOfItemsInOrderThree + cartItems.get(k).getQuantity();
+                        if (numberOfItemsInOrderThree >= 4){
+                            numberOfItemsInOrderThree = numberOfItemsInOrderThree - 4;
+                            packingCostOfOrderThree = packingCostOfOrderThree + 0.75;
+                        }
+                    }
+                }
+                if (numberOfItemsInOrderTwo == 0){
+                    packingCostOfOrderTwo = 0;
+                }
+                if (numberOfItemsInOrderThree == 0){
+                    packingCostOfOrderThree = 0;
+                }
+                orderOneCost = Math.ceil(orderOneCost*100.0)/100.0;
+                if (request.getStoreIDTwo() != null){
+                    orderTwoCost = Math.ceil(orderTwoCost*100.0)/100.0;
+                }
+                if (request.getStoreIDThree() != null){
+                    orderThreeCost = Math.ceil(orderThreeCost*100.0)/100.0;
+                }
+                 GeoPoint customerLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
+                 distance = distance + getDistance(lastStop,customerLocation);
+                 double costOfDelivery = getAddedCostOfDistance(distance);
+                 costOfDelivery = Math.ceil(costOfDelivery*100.0)/100.0;
+                 totalCost = costOfDelivery + orderOneCost + orderTwoCost + orderThreeCost + packingCostOfOrderOne + packingCostOfOrderTwo + packingCostOfOrderThree;
+                response = new ReviewPaymentResponse(costOfDelivery, orderOneCost, orderTwoCost, orderThreeCost, packingCostOfOrderOne, packingCostOfOrderTwo, packingCostOfOrderThree, totalCost);
+                } else {
+                    throw new InvalidRequestException("Store is currently closed - could not create order");
+            }
+        } else {
+            throw new InvalidRequestException("Invalid submit order request received - order unsuccessfully created.");
+        }
+        return response;
+    }
+    public double getAddedCostOfDistance(double addedDistance) {
+        double addedCost = addedDistance * 2.0;
+        return addedCost;
+    }
+
+    private double getDistance(GeoPoint point1, GeoPoint point2) {
+        double theta = point1.getLongitude() - point2.getLongitude();
+        double distance = Math.sin(Math.toRadians(point1.getLatitude())) * Math.sin(Math.toRadians(point2.getLatitude())) + Math.cos(Math.toRadians(point1.getLatitude())) * Math.cos(Math.toRadians(point2.getLatitude())) * Math.cos(Math.toRadians(theta));
+        distance = Math.acos(distance);
+        distance = Math.toDegrees(distance);
+        distance = distance * 60 * 1.1515 * 1.609344;
+        return distance;
+    }
+
 }
