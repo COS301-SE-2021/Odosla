@@ -83,7 +83,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/payment/submitOrder"),
             new AntPathRequestMatcher("/payment/getOrderByUUID"),
             new AntPathRequestMatcher("/payment/getAllCartItems"),
-            new AntPathRequestMatcher("/payment/getStatusOfMultipleOrders")
+            new AntPathRequestMatcher("/payment/getStatusOfMultipleOrders"),
+            new AntPathRequestMatcher("/payment/reviewPayment")
     );
 
     @Override

@@ -901,14 +901,12 @@ components:
       properties:
         stores:
           type: array
-          properties:
-            items:
-              $ref: "#/components/schemas/StoreObject"
+          items:
+            $ref: "#/components/schemas/StoreObject"
         additionalDeliveryCosts:
           type: array
-          properties:
-            items:
-              type: number
+          items:
+            type: number
         message:
           type: string
 

@@ -58,8 +58,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final RequestMatcher CUSTOMER_URLS = new OrRequestMatcher(
             new AntPathRequestMatcher("delivery/getDeliveryStatus"),
             new AntPathRequestMatcher("delivery/trackDelivery"),
-            new AntPathRequestMatcher("delivery/getDeliveryDriverByOrderId"),
-            new AntPathRequestMatcher("/shopping/getCloseEnoughStores")
+            new AntPathRequestMatcher("delivery/getDeliveryDriverByOrderId")
     );
 
     private final RequestMatcher ADMIN_URLS = new OrRequestMatcher(
@@ -85,7 +84,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/shopping/getStoreByUUID"),
             new AntPathRequestMatcher("/shopping/removeQueuedOrder"),
             new AntPathRequestMatcher("/shopping/getProductByBarcode"),
-            new AntPathRequestMatcher("/shopping/getItems")
+            new AntPathRequestMatcher("/shopping/getItems"),
+            new AntPathRequestMatcher("/shopping/getCloseEnoughStores"),
+            new AntPathRequestMatcher("/shopping/priceCheck"),
+            new AntPathRequestMatcher("/shopping/priceCheckAllAvailableStores")
     );
 
     @Override

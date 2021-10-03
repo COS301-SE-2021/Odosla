@@ -177,6 +177,62 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
+    public ResponseEntity<PaymentReviewPaymentResponse> reviewPayment(PaymentReviewPaymentRequest body) {
+        PaymentReviewPaymentResponse response = new PaymentReviewPaymentResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        OrderType orderType = null;
+        if (body.getOrderType().equals("DELIVERY")) {
+            orderType = OrderType.DELIVERY;
+        } else if (body.getOrderType().equals("COLLECTION")) {
+            orderType = OrderType.COLLECTION;
+        }
+
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
+            UUID storeOneID = null;
+            if (body.getStoreIDOne() != ""){
+                storeOneID = UUID.fromString(body.getStoreIDOne());
+            }
+            UUID storeTwoID = null;
+            if (body.getStoreIDTwo() != ""){
+                storeTwoID = UUID.fromString(body.getStoreIDTwo());
+            }
+            UUID storeThreeID = null;
+            if (body.getStoreIDThree() != ""){
+                storeThreeID = UUID.fromString(body.getStoreIDThree());
+            }
+            ReviewPaymentRequest reviewPaymentRequest = new ReviewPaymentRequest(
+                    assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
+                    storeOneID, storeTwoID, storeThreeID, orderType, body.getLongitude().doubleValue(),
+                    body.getLatitude().doubleValue(), body.getAddress());
+            ReviewPaymentResponse reviewPaymentResponse = paymentService.reviewPayment(reviewPaymentRequest);
+            try {
+                response.setCostOfDelivery(BigDecimal.valueOf(reviewPaymentResponse.getCostOfDelivery()));
+                response.setCostOfOrderOne(BigDecimal.valueOf(reviewPaymentResponse.getCostOfOrderOne()));
+                response.setCostOfOrderTwo(BigDecimal.valueOf(reviewPaymentResponse.getCostOfOrderTwo()));
+                response.setCostOfOrderThree(BigDecimal.valueOf(reviewPaymentResponse.getCostOfOrderThree()));
+                response.setPackingCostOfOrderOne(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderOne()));
+                response.setPackingCostOfOrderTwo(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderTwo()));
+                response.setPackingCostOfOrderThree(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderThree()));
+            } catch (Exception e) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();

@@ -18,8 +18,6 @@ import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
 import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.exceptions.UserException;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -106,13 +104,7 @@ public class ShoppingController implements ShoppingApi {
                 e.printStackTrace();
             }
 
-        } catch (cs.superleague.user.exceptions.InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (UserDoesNotExistException e) {
-            e.printStackTrace();
         } catch (StoreDoesNotExistException e) {
-            e.printStackTrace();
-        } catch (UserException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -762,6 +754,12 @@ public class ShoppingController implements ShoppingApi {
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+            System.out.println("hello");
             GeoPoint customersLocation = new GeoPoint();
             customersLocation.setAddress(body.getCustomersAddress());
             customersLocation.setLongitude(body.getCustomersLongitude().doubleValue());
@@ -774,13 +772,12 @@ public class ShoppingController implements ShoppingApi {
                 response.setStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
                 response.setMessage(getCloseEnoughStoresResponse.getMessage());
                 response.setAdditionalDeliveryCosts(populateDoubles(getCloseEnoughStoresResponse.getAdditionalDeliveryCosts()));
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         } catch (InvalidRequestException | StoreDoesNotExistException e) {
-
+            e.printStackTrace();
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -1045,8 +1042,8 @@ public class ShoppingController implements ShoppingApi {
         return responseBody;
     }
 
-    public List<Number> populateDoubles(List<Double> doubles) {
-        List<Number> numbers = new ArrayList<>();
+    public List<BigDecimal> populateDoubles(List<Double> doubles) {
+        List<BigDecimal> numbers = new ArrayList<>();
         for (double dbl : doubles) {
             numbers.add(BigDecimal.valueOf(dbl));
         }

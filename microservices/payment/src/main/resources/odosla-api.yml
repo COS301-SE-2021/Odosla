@@ -251,6 +251,28 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetStatusOfMultipleOrdersResponse"
+
+  /payment/reviewPayment:
+    post:
+      summary: Endpoint for getting a review of an order being placed
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: reviewPayment
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_ReviewPaymentRequest"
+      responses:
+        "200":
+          description: Returns the status of an order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_ReviewPaymentResponse"
 components:
 
   schemas:
@@ -612,3 +634,47 @@ components:
           type: string
         timestamp:
             type: string
+
+    payment_ReviewPaymentRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        listOfItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        discount:
+          type: number
+        storeIDOne:
+          type: string
+        storeIDTwo:
+          type: string
+        storeIDThree:
+          type: string
+        orderType:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
+    payment_ReviewPaymentResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        costOfDelivery:
+          type: number
+        costOfOrderOne:
+          type: number
+        costOfOrderTwo:
+          type: number
+        costOfOrderThree:
+          type: number
+        packingCostOfOrderOne:
+          type: number
+        packingCostOfOrderTwo:
+          type: number
+        packingCostOfOrderThree:
+          type: number
