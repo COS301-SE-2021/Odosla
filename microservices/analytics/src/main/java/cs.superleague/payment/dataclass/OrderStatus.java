@@ -1,6 +1,8 @@
 package cs.superleague.payment.dataclass;
 
-public enum OrderStatus {
+import java.io.Serializable;
+
+public enum OrderStatus implements Serializable {
     AWAITING_PAYMENT,
     VERIFYING,
     PURCHASED,
