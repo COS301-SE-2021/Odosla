@@ -91,7 +91,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/user/getDriverByUUID"),
             //remove later
             new AntPathRequestMatcher("/user/itemNotAvailable"),
-            new AntPathRequestMatcher("/user/getOrdersWithProblems")
+            new AntPathRequestMatcher("/user/getOrdersWithProblems"),
+            new AntPathRequestMatcher("/user/driverSetRating")
     );
 
     @Override

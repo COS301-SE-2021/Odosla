@@ -57,7 +57,15 @@ public class RecommendationController implements RecommendationApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs(), UUID.fromString(body.getStoreID()));
+            UUID storeTwoID = null;
+            UUID storeThreeID = null;
+            if (body.getStoreTwoID() == ""){
+                storeTwoID = UUID.fromString(body.getStoreTwoID());
+            }
+            if (body.getStoreThreeID() == ""){
+                storeThreeID = UUID.fromString(body.getStoreThreeID());
+            }
+            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs(), UUID.fromString(body.getStoreOneID()), storeTwoID, storeThreeID);
             GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());

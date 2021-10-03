@@ -13,6 +13,12 @@ public class GetItemsByIDResponse {
     private Date timestamp;
     private String message;
 
+    public GetItemsByIDResponse() {
+        this.items = null;
+        this.timestamp = null;
+        this.message = null;
+    }
+
     public GetItemsByIDResponse(List<Item> items, Date timestamp, String message) {
         this.items = items;
         this.timestamp = timestamp;
