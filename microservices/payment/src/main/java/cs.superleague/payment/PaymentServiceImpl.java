@@ -422,13 +422,16 @@ public class PaymentServiceImpl implements PaymentService {
                                 orderThreeCartItems.add(cartItems.get(k));
                             }
                         }
+                        orderOneCost = Math.ceil(orderOneCost*100.0)/100.0;
                         orderOne.setTotalCost(orderOneCost);
                         orderOne.setCartItems(orderOneCartItems);
                         if (request.getStoreIDTwo() != null){
+                            orderTwoCost = Math.ceil(orderTwoCost*100.0)/100.0;
                             orderTwo.setTotalCost(orderTwoCost);
                             orderTwo.setCartItems(orderTwoCartItems);
                         }
                         if (request.getStoreIDThree() != null){
+                            orderThreeCost = Math.ceil(orderThreeCost*100.0)/100.0;
                             orderThree.setTotalCost(orderThreeCost);
                             orderThree.setCartItems(orderThreeCartItems);
                         }
@@ -1343,6 +1346,9 @@ public class PaymentServiceImpl implements PaymentService {
         if (orderThree == null){
             OrderStatus orderOneStatus = orderOne.getStatus();
             OrderStatus orderTwoStatus = orderTwo.getStatus();
+            if (orderOneStatus.equals(OrderStatus.ASSIGNED_DRIVER) || orderTwoStatus.equals(OrderStatus.ASSIGNED_DRIVER)){
+                return new GetStatusOfMultipleOrdersResponse(OrderStatus.ASSIGNED_DRIVER.name(), true, new Date(), "Order status returned.");
+            }
             if (orderOneStatus.ordinal() < orderTwoStatus.ordinal()){
                 return new GetStatusOfMultipleOrdersResponse(orderOneStatus.name(), true, new Date(), "Order status returned.");
             } else{
