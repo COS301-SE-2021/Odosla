@@ -17,4 +17,6 @@ public interface NotificationService {
     SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException, URISyntaxException;
 
     SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException, URISyntaxException;
+
+    SendPDFEmailResponse sendPDFEmail(SendPDFEmailRequest request) throws InvalidRequestException;
 }

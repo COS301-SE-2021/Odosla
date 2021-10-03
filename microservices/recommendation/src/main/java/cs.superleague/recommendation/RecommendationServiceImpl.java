@@ -1,10 +1,11 @@
 package cs.superleague.recommendation;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import cs.superleague.notifications.responses.SendPDFEmailResponse;
 import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.responses.GetAllCartItemsResponse;
-import cs.superleague.payment.responses.GetOrderByUUIDResponse;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
@@ -13,10 +14,10 @@ import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.recommendation.responses.GenerateRecommendationTablePDFResponse;
 import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.recommendation.requests.*;
 import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
-import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 import cs.superleague.shopping.dataclass.Item;
@@ -26,12 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.List;
 
 @Service("recommendationServiceImpl")
 public class RecommendationServiceImpl implements RecommendationService {
@@ -43,6 +45,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     private String shoppingHost;
     @Value("${shoppingPort}")
     private String shoppingPort;
+    @Value("${notificationsHost}")
+    private String notificationHost;
+    @Value("${notificationsPort}")
+    private String notificationPort;
 
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
@@ -348,7 +354,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                         for (Item item : items) {
                             recommendationTable.get(k).add(item.getName());
                         }
-                    }
+                    }else System.out.println("hello");
 
                 }
 
@@ -359,6 +365,74 @@ public class RecommendationServiceImpl implements RecommendationService {
             }
 
         }
+    }
+
+    @Override
+    public GenerateRecommendationTablePDFResponse generateRecommendationTablePDF(
+            GenerateRecommendationTablePDFRequest request) throws InvalidRequestException, URISyntaxException, DocumentException {
+
+        if(request == null){
+            throw new InvalidRequestException("GenerateRecommendationTablePDF Request object is null");
+        }
+
+        if(request.getEmail() == null){
+            throw new InvalidRequestException("Email in GenerateRecommendationTablePDF Request object is null");
+        }
+
+        PdfPTable table = null;
+        Document document = new Document();
+        List<List<String>> recommendationTable;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
+
+        GenerateRecommendationTableResponse response = generateRecommendationTable(new
+                GenerateRecommendationTableRequest());
+
+        recommendationTable = response.getRecommendationTable();
+
+        document.open();
+        Paragraph title = new Paragraph("Odosla - Recommendation Table", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
+        document.add(title);
+        document.add(new Paragraph(" "));
+
+        for (List<String> strings : recommendationTable) {
+            if(strings.size() == 0){
+                table = new PdfPTable(1);
+            }else
+            table = new PdfPTable(strings.size());
+
+            for (int j = 0; j < strings.size(); j++) {
+                table.addCell(strings.get(j));
+            }
+        }
+
+        document.add(table);
+        document.close();
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("Subject", "Recommendation Table");
+        properties.put("userID", request.getEmail());
+        properties.put("userType", "CUSTOMER");
+        properties.put("PDF", document);
+        properties.put("message", "Recommendation Table");
+
+//        Map<String, Object> parts = new HashMap<>();
+//        parts.put("message", "Please use the following activation code to activate your account " + activationCode);
+//        parts.put("properties", properties);
+        ResponseEntity<SendPDFEmailResponse> responseEntity =
+                restTemplate.postForEntity("http://" + notificationHost + ":" + notificationPort +
+                        "/notification/sendPDFEmail", properties, SendPDFEmailResponse.class);
+        // send direct email
+
+        if(responseEntity == null || responseEntity.getBody() == null){
+            return new GenerateRecommendationTablePDFResponse(false, "Error sending email - Notification Error");
+        }
+
+        if(!responseEntity.getBody().isSuccess()){
+            return new GenerateRecommendationTablePDFResponse(false, "Could not send email");
+        }
+
+        return new GenerateRecommendationTablePDFResponse(true, "Email with PDF successfully sent");
     }
 
 }

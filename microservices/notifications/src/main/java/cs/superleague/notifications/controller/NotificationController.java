@@ -2,17 +2,15 @@ package cs.superleague.notifications.controller;
 
 import cs.superleague.api.NotificationApi;
 //import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.NotificationSendDirectEmailNotificationRequest;
-import cs.superleague.models.NotificationSendDirectEmailNotificationResponse;
+import cs.superleague.models.*;
 //import cs.superleague.models.NotificationSendEmailNotificationRequest;
 //import cs.superleague.models.NotificationSendEmailNotificationResponse;
-import cs.superleague.models.NotificationSendEmailNotificationRequest;
-import cs.superleague.models.NotificationSendEmailNotificationResponse;
 import cs.superleague.notifications.NotificationService;
 import cs.superleague.notifications.repos.NotificationRepo;
 import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
 //import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notifications.requests.SendEmailNotificationRequest;
+import cs.superleague.notifications.requests.SendPDFEmailRequest;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 //import cs.superleague.user.dataclass.Admin;
 //import cs.superleague.user.dataclass.UserType;
@@ -21,6 +19,7 @@ import cs.superleague.notifications.responses.SendDirectEmailNotificationRespons
 //import cs.superleague.user.repos.DriverRepo;
 //import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.notifications.responses.SendEmailNotificationResponse;
+import cs.superleague.notifications.responses.SendPDFEmailResponse;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -107,6 +106,36 @@ public class NotificationController implements NotificationApi {
             try {
                 response.setIsSuccess(sendDirectEmailNotificationResponse.isSuccess());
                 response.setResponseMessage(sendDirectEmailNotificationResponse.getResponseMessage());
+            } catch (Exception e) {
+                response.setIsSuccess(false);
+                response.setResponseMessage(e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            response.setIsSuccess(false);
+            response.setResponseMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<NotificationSendPDFEmailResponse> sendPDFEmail(NotificationSendPDFEmailRequest body) {
+        NotificationSendPDFEmailResponse response = new NotificationSendPDFEmailResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            SendPDFEmailRequest request = new SendPDFEmailRequest(body.getEmail(), body.getPDF());
+            SendPDFEmailResponse sendPDFEmailResponse = notificationService.sendPDFEmail(request);
+            try {
+                response.setIsSuccess(sendPDFEmailResponse.isSuccess());
+                response.setResponseMessage(sendPDFEmailResponse.getMessage());
             } catch (Exception e) {
                 response.setIsSuccess(false);
                 response.setResponseMessage(e.getMessage());

@@ -1,8 +1,10 @@
 package cs.superleague.recommendation;
 
+import com.itextpdf.text.DocumentException;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
 import cs.superleague.recommendation.requests.*;
+import cs.superleague.recommendation.responses.GenerateRecommendationTablePDFResponse;
 import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
@@ -20,4 +22,7 @@ public interface RecommendationService {
     void removeRecommendation(RemoveRecommendationRequest request) throws InvalidRequestException;
 
     GenerateRecommendationTableResponse generateRecommendationTable(GenerateRecommendationTableRequest request) throws InvalidRequestException, URISyntaxException;
+
+    GenerateRecommendationTablePDFResponse generateRecommendationTablePDF(GenerateRecommendationTablePDFRequest
+                                                                          request) throws InvalidRequestException, URISyntaxException, DocumentException;
 }

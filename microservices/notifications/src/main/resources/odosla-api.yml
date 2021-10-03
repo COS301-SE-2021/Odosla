@@ -55,6 +55,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/notification_SendDirectEmailNotificationResponse"
 
+  /notification/sendPDFEmail:
+    post:
+      summary: Endpoint for sending a PDF email notification
+      tags:
+        - "notification"
+      description: Refer to summary
+      operationId: sendPDFEmail
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/notification_SendPDFEmailRequest"
+      responses:
+        "200":
+          description: Returns whether the email was sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notification_SendPDFEmailResponse"
+
 components:
 
   schemas:
@@ -103,5 +125,24 @@ components:
         responseMessage:
           type: string
           description: Will contain a descriptive error message if response code is not 200, else will be empty
+        isSuccess:
+          type: boolean
+
+    notification_SendPDFEmailRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+        PDF:
+          type: string
+          format: byte
+
+    notification_SendPDFEmailResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        responseMessage:
+          type: string
         isSuccess:
           type: boolean
