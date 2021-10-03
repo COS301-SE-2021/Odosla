@@ -319,6 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
           behavior: HitTestBehavior.translucent,
           onTap: () => FocusScope.of(context).unfocus(),
           child: Stack(
+            fit: StackFit.expand,
             children: <Widget>[
               Container(
                 height: double.infinity,
@@ -338,8 +339,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               LoadingOverlay(
-                child: Expanded(
-                    child: Container(
+                child: Container(
                   height: double.infinity,
                   child: SingleChildScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
@@ -364,7 +364,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                )),
+                ),
                 isLoading: _isInAsyncCall,
                 // demo of some additional parameters
                 opacity: 0.5,

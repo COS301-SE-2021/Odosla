@@ -33,9 +33,11 @@ class UserService {
 
     print(data);
 
-    final response =
-        await http.post(loginURL, headers: headers, body: jsonEncode(data)).timeout(Duration(seconds: 15), onTimeout: () {
-          return (http.Response('TimeOut', 500));});
+    final response = await http
+        .post(loginURL, headers: headers, body: jsonEncode(data))
+        .timeout(Duration(seconds: 15), onTimeout: () {
+      return (http.Response('TimeOut', 500));
+    });
 
     print(response.body);
     if (response.statusCode == 200) {
@@ -55,9 +57,9 @@ class UserService {
             SnackBar(content: Text("Please verify account before logging in")));
         return false;
       }
-    }else if(response.statusCode==500){
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Request timed out")));
+    } else if (response.statusCode == 500) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Request timed out")));
       return false;
     }
     ScaffoldMessenger.of(context)

@@ -21,12 +21,12 @@ import 'package:rating_dialog/rating_dialog.dart';
 import 'UserService.dart';
 
 class ApiService {
-
   Future<List<CartItem>> getItems(BuildContext context, String storeID) async {
     String sId = storeID;
 
+    //localhost:8080/shopping/getItems
     final response =
-        await http.post(Uri.parse(shoppingEndpoint + 'shopping/getItems'),
+        await http.post(Uri.parse(shoppingEndpoint + '/shopping/getItems'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -36,8 +36,7 @@ class ApiService {
               "Access-Control-Allow-Methods": "POST, OPTIONS",
             },
             body: jsonEncode({"storeID": storeID}));
-    print("ITEMS");
-    print(response);
+
     if (response.statusCode == 200) {
       debugPrint("code _ 200");
       Map<String, dynamic> map = jsonDecode(response.body);
@@ -69,6 +68,8 @@ class ApiService {
 
   List<CartItem> recommendarCartItemsFromJson(Map<String, dynamic> j) {
     List<CartItem> list;
+
+    //Iterable i = json.decode(j['items']);
     debugPrint("x-1");
     list = (json.decode(json.encode(j['recommendations'])) as List)
         .map((i) => CartItem.fromJson(i))
@@ -80,7 +81,7 @@ class ApiService {
 
   Future<List<Store>> getStores(BuildContext context) async {
     final response =
-        await http.post(Uri.parse(shoppingEndpoint + 'shopping/getStores'),
+        await http.post(Uri.parse(shoppingEndpoint + '/shopping/getStores'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -118,16 +119,46 @@ class ApiService {
     return list;
   }
 
+  Future<List<Store>> getNearbyStores(BuildContext context) async {
+    final response = await http.post(
+        Uri.parse(shoppingEndpoint + '/shopping/getCloseEnoughStores'),
+        headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({}));
+
+    if (response.statusCode == 200) {
+      debugPrint("code _ 200");
+      Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
+      List<Store> list = StoresFromJson(map);
+      debugPrint(list.toString());
+      return list; //CartItem.fromJson(map)
+    } else {
+      List<Store> list = List.empty();
+      debugPrint("___ err " + response.statusCode.toString());
+      debugPrint(
+          Provider.of<StatusProvider>(context, listen: false).jwt + " <- jwt");
+      return list; //CartItem.fromJson(map)
+    }
+  }
+
   void submitOrder(List<CartItem> items, BuildContext context) async {
     debugPrint(items.toString());
     final storeID = items.first.storeID;
     String pi = items.first.id;
     List<dynamic> itemsList = itemListToJson(items);
     UserService _userService = GetIt.I.get();
-    debugPrint('_-_');
+    debugPrint('_-_ s1 ' +
+        Provider.of<CartProvider>(context, listen: false).storeIDOne);
     debugPrint(itemsList.toString());
     final response =
-        await http.post(Uri.parse(paymentEndpoint + 'payment/submitOrder'),
+        await http.post(Uri.parse(paymentEndpoint + '/payment/submitOrder'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -140,23 +171,31 @@ class ApiService {
               "jwtToken": Provider.of<StatusProvider>(context, listen: false)
                   .jwt, //getCurrentUser
               "listOfItems": itemsList,
+              "storeIDOne":
+                  Provider.of<CartProvider>(context, listen: false).storeIDOne,
+              "storeIDTwo":
+                  Provider.of<CartProvider>(context, listen: false).storeIDTwo,
+              "storeIDThree": Provider.of<CartProvider>(context, listen: false)
+                  .storeIDThree,
               "discount": 0,
-              "storeId": "$storeID",
+              "storeID": "$storeID",
               "orderType": "DELIVERY",
               "latitude": -25.763428, //get lat
               "longitude": 28.260879, //get long
-              "deliveryAddress": "23 Sigard Street, Pretoria" //get address
+              "address": "23 Sigard Street, Pretoria" //get address
             }));
 
     if (response.statusCode == 200) {
       debugPrint("submitted order");
       Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
       Provider.of<CartProvider>(context, listen: false).activeOrder = true;
       Provider.of<CartProvider>(context, listen: false).activeOrderID =
-          map["orderId"];
+          map["deliveryID"];
+      debugPrint("deliv id " + map["deliveryID"]);
       Provider.of<CartProvider>(context, listen: false).clearItems();
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => OrderPage(map['orderId'])));
+          builder: (BuildContext context) => OrderPage(map["deliveryID"])));
       debugPrint(map.toString());
     } else {
       List<Store> list = List.empty();
@@ -171,26 +210,90 @@ class ApiService {
     return list;
   }
 
+  // Future<String> getStatus(BuildContext context, String orderID) async {
+  //   final oid = orderID;
+  //   debugPrint("id: " + "$oid");
+  //   final response =
+  //       await http.post(Uri.parse(paymentEndpoint + '/payment/getStatus'),
+  //           headers: {
+  //             "Authorization":
+  //                 Provider.of<StatusProvider>(context, listen: false).jwt,
+  //             "Accept": "application/json",
+  //             "content-type": "application/json",
+  //             "Access-Control-Allow-Origin": "*",
+  //             "Access-Control-Allow-Methods": "POST, OPTIONS",
+  //           },
+  //           body: jsonEncode({
+  //             "orderID": "$oid",
+  //           }));
+  //
+  //   debugPrint("_AS_D_ASD");
+  //   if (response.statusCode == 200) {
+  //     debugPrint("fetched status");
+  //     Map<String, dynamic> map = jsonDecode(response.body);
+  //     debugPrint(map.entries.toString());
+  //     String result = statusFromJson(context, map);
+  //     debugPrint(result);
+  //     Provider.of<StatusProvider>(context, listen: false).status = result;
+  //
+  //     if (result == "ASSIGNED_DRIVER") {
+  //       allocateDriver(context, orderID);
+  //     } else if (result == "DELIVERED") {
+  //       Provider.of<DriverProvider>(context, listen: false).allocated = false;
+  //       Provider.of<CartProvider>(context, listen: false).activeOrder = false;
+  //       Navigator.of(context).push(
+  //           MaterialPageRoute(builder: (BuildContext context) => StorePage()));
+  //       showDialog(
+  //           context: context,
+  //           builder: (context) => RatingDialog(
+  //                 // your app's name?
+  //                 title: 'Order Delivered!',
+  //                 // encourage your user to leave a high rating?
+  //                 message: 'Rate your driver.',
+  //                 // your app's logo?
+  //                 submitButton: 'Thanks!',
+  //                 onCancelled: () => print('cancelled'),
+  //                 onSubmitted: (response) {
+  //                   rateDriver(
+  //                       context,
+  //                       Provider.of<DriverProvider>(context, listen: false).id,
+  //                       response.rating);
+  //                 },
+  //               ));
+  //       //Provider.of<StatusProvider>(context).status = "PENDING";
+  //     }
+  //
+  //     return result;
+  //   } else {
+  //     List<Store> list = List.empty();
+  //     debugPrint("error " + response.statusCode.toString());
+  //     debugPrint(response.body.toString());
+  //     return "error getting status";
+  //   }
+  // }
+
   Future<String> getStatus(BuildContext context, String orderID) async {
     final oid = orderID;
-    debugPrint("id: " + oid);
-    final response =
-        await http.post(Uri.parse(paymentEndpoint + 'payment/getStatus'),
-            headers: {
-              "Authorization":
-                  Provider.of<StatusProvider>(context, listen: false).jwt,
-              "Accept": "application/json",
-              "content-type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "POST, OPTIONS",
-            },
-            body: jsonEncode({
-              "orderID": "$oid",
-            }));
+    debugPrint("id: " + "$oid");
+    final response = await http.post(
+        Uri.parse(paymentEndpoint + '/payment/getStatusOfMultipleOrders'),
+        headers: {
+          "Authorization":
+              Provider.of<StatusProvider>(context, listen: false).jwt,
+          "Accept": "application/json",
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+        },
+        body: jsonEncode({
+          "deliveryID": "$oid",
+        }));
 
+    debugPrint("_AS_D_ASD");
     if (response.statusCode == 200) {
       debugPrint("fetched status");
       Map<String, dynamic> map = jsonDecode(response.body);
+      debugPrint(map.entries.toString());
       String result = statusFromJson(context, map);
       debugPrint(result);
       Provider.of<StatusProvider>(context, listen: false).status = result;
@@ -233,7 +336,7 @@ class ApiService {
 
   void allocateDriver(BuildContext context, String id) async {
     final response = await http.post(
-        Uri.parse(deliveryEndpoint + 'delivery/getDeliveryDriverByOrderId'),
+        Uri.parse(deliveryEndpoint + '/delivery/getDeliveryDriverByOrderId'),
         headers: {
           "Authorization":
               Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -287,7 +390,7 @@ class ApiService {
       BuildContext context, String jwt) async {
     debugPrint(jwt);
     final response =
-        await http.post(Uri.parse(userEndpoint + 'user/getGroceryLists'),
+        await http.post(Uri.parse(userEndpoint + '/user/getGroceryLists'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -319,7 +422,7 @@ class ApiService {
   rateDriver(BuildContext context, String driverID, int rating) async {
     debugPrint("__" + driverID);
     final response =
-        await http.post(Uri.parse(userEndpoint + 'user/driverSetRating'),
+        await http.post(Uri.parse(userEndpoint + '/user/driverSetRating'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -349,7 +452,7 @@ class ApiService {
 
   void setGroceryLists(BuildContext context, String jwt) async {
     final response =
-        await http.post(Uri.parse(userEndpoint + 'user/makeGroceryList'),
+        await http.post(Uri.parse(userEndpoint + '/user/makeGroceryList'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -377,7 +480,7 @@ class ApiService {
 
   void updateDriverLocation(BuildContext context, String deliveryID) async {
     final response =
-        await http.post(Uri.parse(deliveryEndpoint + 'delivery/trackDelivery'),
+        await http.post(Uri.parse(deliveryEndpoint + '/delivery/trackDelivery'),
             headers: {
               "Authorization":
                   Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -404,7 +507,7 @@ class ApiService {
   }
 
   Future<User?> getCurrentUser(BuildContext context) async {
-    final loginURL = Uri.parse(userEndpoint + "user/getCurrentUser");
+    final loginURL = Uri.parse(userEndpoint + "/user/getCurrentUser");
 
     Map<String, String> headers = new Map<String, String>();
 
@@ -435,13 +538,11 @@ class ApiService {
   Future<List<CartItem>> getCartRecommendations(
       List<String> arrayOfItemIDs, BuildContext context) async {
     List<dynamic> itemsList = arrayOfItemIDs;
-    print("RECOMMENDATION BEFORE:");
-    print(arrayOfItemIDs);
     UserService userService = GetIt.I.get();
 
     final response = await http.post(
         Uri.parse(
-            recommendationEndpoint + 'recommendation/getCartRecommendation'),
+            recommendationEndpoint + '/recommendation/getCartRecommendation'),
         headers: {
           "Accept": "application/json",
           "content-type": "application/json",
@@ -450,7 +551,15 @@ class ApiService {
           "Authorization":
               Provider.of<StatusProvider>(context, listen: false).jwt
         },
-        body: jsonEncode({"itemIDs": itemsList}));
+        body: jsonEncode({
+          "itemsIDs": itemsList,
+          "storeOneID":
+              Provider.of<CartProvider>(context, listen: false).storeIDOne,
+          "storeTwoID":
+              Provider.of<CartProvider>(context, listen: false).storeIDTwo,
+          "storeThreeID":
+              Provider.of<CartProvider>(context, listen: false).storeIDThree
+        }));
     print(response.body);
     print("JWT");
     print(Provider.of<StatusProvider>(context, listen: false).jwt);

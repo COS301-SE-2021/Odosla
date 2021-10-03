@@ -60,7 +60,7 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
           )),
           buildHeader(context),
           buildSettings(context),
-          SizedBox(height: 70),
+          SizedBox(height: 30),
         ]));
   }
 
@@ -83,14 +83,13 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
                 child: Column(
               children: [
                 SizedBox(
-                  height: 25,
+                  height: 10,
                 ),
                 Icon(
                   Icons.person_sharp,
                   size: 200,
                   color: Colors.deepOrange,
                 ),
-                SizedBox(height: 5),
                 Text(u.name, style: TextStyle(fontSize: 28)),
                 Text(
                   u.email,
@@ -178,6 +177,16 @@ class _AccountSettingsPage extends State<AccountSettingsPage> {
           ],
         ),
         SizedBox(height: 40),
+        ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all(Colors.deepOrangeAccent)),
+            onPressed: () => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => LoginScreen()))
+                },
+            child: Text("Help & Support", style: TextStyle(fontSize: 18))),
+        SizedBox(height: 10),
         ElevatedButton(
             style: ButtonStyle(
                 backgroundColor:

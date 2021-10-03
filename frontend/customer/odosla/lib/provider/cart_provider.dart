@@ -10,13 +10,18 @@ class CartProvider with ChangeNotifier {
   String _activeOrderID = "";
   Map<String, double> _activeStoreLocation = {"lat": 0, "long": 0};
   var _ids = <String>[];
-
+  String _storeIDOne = "";
+  String _storeIDTwo = "";
+  String _storeIDThree = "";
   ApiService api = ApiService();
+
+  String get storeIDOne => _storeIDOne;
 
   Map<String, double> get activeStoreLocation => _activeStoreLocation;
 
   set activeStoreLocation(Map<String, double> location) {
     _activeStoreLocation = location;
+    notifyListeners();
   }
 
   CartProvider() {
@@ -43,6 +48,13 @@ class CartProvider with ChangeNotifier {
     _items = value;
   }
 
+  bool atMax() {
+    if (_storeIDThree == "") return false;
+    if (_storeIDTwo == "") return false;
+    if (_storeIDOne == "") return false;
+    return true;
+  }
+
   void addItem(CartItem item, int q) {
     if (items.containsKey(item.id)) {
       items.update(
@@ -58,7 +70,8 @@ class CartProvider with ChangeNotifier {
             item.imgUrl,
             item.brand,
             item.size,
-            item.type),
+            item.type,
+            item.soldOut),
       );
     } else {
       items.putIfAbsent(
@@ -74,8 +87,30 @@ class CartProvider with ChangeNotifier {
             item.imgUrl,
             item.brand,
             item.size,
-            item.type),
+            item.type,
+            item.soldOut),
       );
+
+      debugPrint("###item storeid  " + item.storeID);
+      if (item.storeID == _storeIDOne ||
+          item.storeID == _storeIDTwo ||
+          item.storeID == _storeIDThree) {
+      } else {
+        if (_storeIDOne == "") {
+          debugPrint("##HERE");
+          _storeIDOne = item.storeID;
+        } else if (_storeIDTwo == "") {
+          _storeIDTwo = item.storeID;
+        } else if (_storeIDThree == "") {
+          _storeIDThree = item.storeID;
+        }
+        notifyListeners();
+      }
+
+      debugPrint(" sid1 " + _storeIDOne);
+      debugPrint(" sid2 " + _storeIDTwo);
+      debugPrint(" sid3 " + _storeIDThree);
+
       _ids.add(item.id);
     }
 
@@ -88,6 +123,9 @@ class CartProvider with ChangeNotifier {
     calcTotal();
     notifyListeners();
     _ids = <String>[];
+    _storeIDOne = "";
+    _storeIDTwo = "";
+    _storeIDThree = "";
   }
 
   void decrementItem(CartItem item) {
@@ -95,6 +133,17 @@ class CartProvider with ChangeNotifier {
       if (item.quantity == 1) {
         items.remove(item.id);
         _ids.remove(item.id);
+
+        List list = _items.entries.map((e) => e.value.storeID).toList();
+        if (!list.contains(_storeIDOne)) {
+          _storeIDOne = "";
+        }
+        if (!list.contains(_storeIDTwo)) {
+          _storeIDTwo = "";
+        }
+        if (!list.contains(_storeIDThree)) {
+          _storeIDThree = "";
+        }
       } else
         items.update(
           item.id,
@@ -109,7 +158,8 @@ class CartProvider with ChangeNotifier {
               item.imgUrl,
               item.brand,
               item.size,
-              item.type),
+              item.type,
+              item.soldOut),
         );
     } else {
       //?
@@ -138,4 +188,23 @@ class CartProvider with ChangeNotifier {
   }
 
   List<String> get ids => _ids;
+
+  String get storeIDTwo => _storeIDTwo;
+
+  String get storeIDThree => _storeIDThree;
+
+  set storeIDThree(String value) {
+    _storeIDThree = value;
+    notifyListeners();
+  }
+
+  set storeIDTwo(String value) {
+    _storeIDTwo = value;
+    notifyListeners();
+  }
+
+  set storeIDOne(String value) {
+    _storeIDOne = value;
+    notifyListeners();
+  }
 }
