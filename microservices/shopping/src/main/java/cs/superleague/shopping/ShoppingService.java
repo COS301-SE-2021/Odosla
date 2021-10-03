@@ -66,4 +66,6 @@ public interface ShoppingService {
     GetCloseEnoughStoresResponse getCloseEnoughStores(GetCloseEnoughStoresRequest request) throws InvalidRequestException, StoreDoesNotExistException;
 
     ItemIsInStockResponse itemIsInStock(ItemIsInStockRequest request) throws InvalidRequestException;
+
+    CalculateOverallDistanceResponse calculateOverallDistance(CalculateOverallDistanceRequest request) throws InvalidRequestException;
 }

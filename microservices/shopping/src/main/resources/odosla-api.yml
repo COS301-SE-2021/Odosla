@@ -364,6 +364,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_ItemIsInStockResponse"
 
+  /shopping/calculateOverallDistance:
+    post:
+      summary: Endpoint for calculating the overall distance.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: calculateOverallDistance
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_CalculateOverallDistanceRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_CalculateOverallDistanceResponse"
+
 components:
 
   schemas:
@@ -905,3 +927,27 @@ components:
           type: string
         success:
           type: boolean
+
+    shopping_CalculateOverallDistanceRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        store1ID:
+          type: string
+        store2ID:
+          type: string
+        store3ID:
+          type: string
+        customerLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+
+    shopping_CalculateOverallDistanceResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        distance:
+          type: number

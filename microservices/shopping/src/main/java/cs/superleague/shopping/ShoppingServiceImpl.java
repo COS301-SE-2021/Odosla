@@ -1784,6 +1784,65 @@ public class ShoppingServiceImpl implements ShoppingService {
         return new ItemIsInStockResponse(message, true);
     }
 
+    @Override
+    public CalculateOverallDistanceResponse calculateOverallDistance(CalculateOverallDistanceRequest request) throws InvalidRequestException {
+
+        Store store;
+        double distance = 0;
+        List<Store> stores = new ArrayList<>();
+        String message = "Overall distance successfully calculated";
+
+        if(request == null){
+            throw new InvalidRequestException("OverallDistance request object is null");
+        }
+
+        if(request.getStore1ID() == null){
+            throw new InvalidRequestException("Store1 ID in OverallDistance request object is null");
+        }
+
+        if(request.getCustomerLocation() == null){
+            throw new InvalidRequestException("GeoPoint in OverallDistance request object is null");
+        }
+
+        store = storeRepo.findById(request.getStore1ID()).orElse(null);
+
+        if(store == null){
+            message = "Store1 ID does not exist in the database";
+            return new CalculateOverallDistanceResponse(0, message, false);
+        }
+
+        stores.add(store);
+
+        if(request.getStore2ID() != null){
+            store = storeRepo.findById(request.getStore2ID()).orElse(null);
+
+            if(store != null){
+                stores.add(store);
+            }
+        }
+
+        if(request.getStore3ID() != null){
+            store = storeRepo.findById(request.getStore3ID()).orElse(null);
+
+            if(store != null){
+                stores.add(store);
+            }
+        }
+
+        for(int i = 0; i < stores.size(); i++){
+            // calculates the geopoint
+            if(i == stores.size() - 1){
+                distance += getDistance(stores.get(i).getStoreLocation(), request.getCustomerLocation());
+            }else if(i < stores.size()){
+                distance += getDistance(stores.get(i).getStoreLocation(), stores.get(i + 1).getStoreLocation());
+            }
+        }
+
+        distance *= 2;
+
+        return new CalculateOverallDistanceResponse(distance, message, true);
+    }
+
     public double getAddedCostOfDistance(double addedDistance) {
         double addedCost = addedDistance * 2.0;
         return addedCost;

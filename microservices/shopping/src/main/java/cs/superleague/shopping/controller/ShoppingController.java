@@ -919,6 +919,51 @@ public class ShoppingController implements ShoppingApi {
         return new ResponseEntity<>(response, httpStatus);
     }
 
+    @Override
+    public ResponseEntity<ShoppingCalculateOverallDistanceResponse> calculateOverallDistance(
+            ShoppingCalculateOverallDistanceRequest body) {
+
+        ShoppingCalculateOverallDistanceResponse response = new ShoppingCalculateOverallDistanceResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+
+            UUID store2ID = null;
+            UUID store3ID = null;
+
+            if(body.getStore2ID() != null){
+                store2ID = UUID.fromString(body.getStore2ID());
+            }
+
+            if(body.getStore3ID() != null){
+                store3ID = UUID.fromString(body.getStore3ID());
+            }
+
+            GeoPoint customersLocation = new GeoPoint();
+            customersLocation.setAddress(body.getCustomerLocation().getAddress());
+            customersLocation.setLongitude(body.getCustomerLocation().getLongitude().doubleValue());
+            customersLocation.setLatitude(body.getCustomerLocation().getLatitude().doubleValue());
+
+            CalculateOverallDistanceRequest req = new CalculateOverallDistanceRequest(
+                    UUID.fromString(body.getStore1ID()), store2ID, store3ID, customersLocation);
+            CalculateOverallDistanceResponse calculateOverallDistanceResponse = shoppingService
+                    .calculateOverallDistance(req);
+
+            try {
+                response.setMessage(calculateOverallDistanceResponse.getMessage());
+                response.setDistance(BigDecimal.valueOf(calculateOverallDistanceResponse.getDistance()));
+                response.setSuccess(calculateOverallDistanceResponse.isSuccess());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (InvalidRequestException e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
     private StoreObject populateStore(Store responseStore) throws NullPointerException {
 
         StoreObject responseBody = new StoreObject();
