@@ -376,7 +376,7 @@ public class ShoppingController implements ShoppingApi {
 
 
         UUID storeUUID1 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f7a27f");
-        UUID storeUUID2 = UUID.fromString("0fb0a357-63b9-41d2-8631-d11c67f5627f");
+        UUID storeUUID2 = UUID.fromString("236f41d0-874f-41ce-9ed7-5b71e1d3c807");
         UUID storeUUID3 = UUID.fromString("f29c3a2b-0f5e-45ef-b06b-7e564e70a7af");
         UUID storeUUID4 = UUID.fromString("ac0d5977-dca2-43b8-b5c7-d098cae44b1d");
         UUID storeUUID5 = UUID.fromString("701be3e1-c23c-4409-a851-9cae63861881");

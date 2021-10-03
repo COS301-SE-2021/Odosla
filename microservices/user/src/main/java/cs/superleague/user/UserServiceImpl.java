@@ -187,6 +187,7 @@ public class UserServiceImpl implements UserService {
 
                 ResponseEntity<CompletePackingOrderForDeliveryResponse> useCaseResponseEntity = restTemplate.postForEntity(uri2, parts, CompletePackingOrderForDeliveryResponse.class);
                 CompletePackingOrderForDeliveryResponse completePackingOrderForDeliveryResponse = useCaseResponseEntity.getBody();
+                System.out.println(completePackingOrderForDeliveryResponse.getMessage() + " Complete Packing order delivery response");
             }
 
             response = new CompletePackagingOrderResponse(true, Calendar.getInstance().getTime(), "Order entity with corresponding ID is ready for collection");

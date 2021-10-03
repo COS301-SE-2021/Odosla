@@ -209,7 +209,7 @@ public class PaymentController implements PaymentApi {
                 storeTwoID = UUID.fromString(body.getStoreIDTwo());
             }
             UUID storeThreeID = null;
-            if (body.getStoreIDTwo() != ""){
+            if (body.getStoreIDThree() != ""){
                 storeThreeID = UUID.fromString(body.getStoreIDThree());
             }
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(

@@ -785,29 +785,55 @@ public class DeliveryServiceImpl implements DeliveryService {
         if (request.getOrderID() == null){
             throw new InvalidRequestException("Null orderID in request.");
         }
+        boolean deliveryIDOne = true;
+        boolean deliveryIDTwo = false;
+        boolean deliveryIDThree = false;
         Delivery delivery = deliveryRepo.findDeliveryByOrderIDOne(request.getOrderID());
         if (delivery == null){
+            deliveryIDTwo = true;
+            deliveryIDOne = false;
             delivery = deliveryRepo.findDeliveryByOrderIDTwo(request.getOrderID());
             if (delivery == null){
+                deliveryIDTwo = false;
+                deliveryIDThree = true;
                 delivery = deliveryRepo.findDeliveryByOrderIDThree(request.getOrderID());
             }
         }
         if (delivery == null){
             throw new DeliveryDoesNotExistException("No delivery's found with the orderID specified.");
         }
-        if (delivery.getOrderIDTwo() == null && delivery.getOrderIDTwo() == null){
+        if (delivery.getOrderIDTwo() == null && delivery.getOrderIDThree() == null && deliveryIDOne == true){
             delivery.setOrderOnePacked(true);
             delivery.setOrderTwoPacked(true);
             delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
             return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
         }
-        if (delivery.getOrderIDThree() == null){
+        if (delivery.getOrderIDThree() == null && deliveryIDTwo == true){
             delivery.setOrderTwoPacked(true);
             delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
             return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
         }
-        delivery.setOrderThreePacked(true);
-        return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
+        if (deliveryIDThree == true){
+            delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "Delivery is now ready for collection.");
+        }
+        if (deliveryIDOne == true){
+            delivery.setOrderOnePacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "First Order packed, waiting for others.");
+        } else if (deliveryIDTwo == true){
+            delivery.setOrderTwoPacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "Second Order packed, waiting for others.");
+        } else {
+            delivery.setOrderThreePacked(true);
+            deliveryRepo.save(delivery);
+            return new CompletePackingOrderForDeliveryResponse(true, "Third Order packed, waiting for others.");
+        }
+
     }
 
     //Helpers
