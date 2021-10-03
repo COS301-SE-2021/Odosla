@@ -678,3 +678,5 @@ components:
           type: number
         packingCostOfOrderThree:
           type: number
+        totalCost:
+          type: number

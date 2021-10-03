@@ -386,6 +386,28 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_CalculateOverallDistanceResponse"
 
+  /shopping/priceCheckWithDelivery:
+    post:
+      summary: Endpoint for price checking items with delivery cost included.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: priceCheckWithDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PriceCheckWithDeliveryRequest"
+      responses:
+        "200":
+          description: Returns the new order if it's better or now
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PriceCheckWithDeliveryResponse"
+
 components:
 
   schemas:
@@ -953,3 +975,41 @@ components:
           type: boolean
         distance:
           type: number
+
+    shopping_PriceCheckWithDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        storeIDOne:
+          type: string
+        storeIDTwo:
+          type: string
+        storeIDThree:
+          type: string
+        address:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+
+    shopping_PriceCheckWithDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        cheaperItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        storeOneID:
+          type: string
+        storeTwoID:
+          type: string
+        storeThreeID:
+          type: string
+        newOrder:
+          type: boolean

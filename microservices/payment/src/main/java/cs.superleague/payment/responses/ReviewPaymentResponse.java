@@ -8,8 +8,9 @@ public class ReviewPaymentResponse {
     private double packingCostOfOrderOne;
     private double packingCostOfOrderTwo;
     private double packingCostOfOrderThree;
+    private double totalCost;
 
-    public ReviewPaymentResponse(double costOfDelivery, double costOfOrderOne, double costOfOrderTwo, double costOfOrderThree, double packingCostOfOrderOne, double packingCostOfOrderTwo, double packingCostOfOrderThree) {
+    public ReviewPaymentResponse(double costOfDelivery, double costOfOrderOne, double costOfOrderTwo, double costOfOrderThree, double packingCostOfOrderOne, double packingCostOfOrderTwo, double packingCostOfOrderThree, double totalCost) {
         this.costOfDelivery = costOfDelivery;
         this.costOfOrderOne = costOfOrderOne;
         this.costOfOrderTwo = costOfOrderTwo;
@@ -17,6 +18,15 @@ public class ReviewPaymentResponse {
         this.packingCostOfOrderOne = packingCostOfOrderOne;
         this.packingCostOfOrderTwo = packingCostOfOrderTwo;
         this.packingCostOfOrderThree = packingCostOfOrderThree;
+        this.totalCost = totalCost;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(double totalCost) {
+        this.totalCost = totalCost;
     }
 
     public double getCostOfDelivery() {

@@ -891,6 +891,55 @@ public class ShoppingController implements ShoppingApi {
     }
 
     @Override
+    public ResponseEntity<ShoppingPriceCheckWithDeliveryResponse> priceCheckWithDelivery(ShoppingPriceCheckWithDeliveryRequest body) {
+        //creating response object and default return status:
+        ShoppingPriceCheckWithDeliveryResponse response = new ShoppingPriceCheckWithDeliveryResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            UUID storeIDOne = null;
+            UUID storeIDTwo = null;
+            UUID storeIDThree = null;
+            if (body.getStoreIDOne() != ""){
+                storeIDOne = UUID.fromString(body.getStoreIDOne());
+            }
+            if (body.getStoreIDTwo() != ""){
+                storeIDTwo = UUID.fromString(body.getStoreIDTwo());
+            }
+            if (body.getStoreIDThree() != ""){
+                storeIDThree = UUID.fromString(body.getStoreIDThree());
+            }
+            PriceCheckWithDeliveryRequest req = new PriceCheckWithDeliveryRequest(populateCartItemList(body.getCartItems()), storeIDOne, storeIDTwo, storeIDThree, body.getAddress(), body.getLongitude().doubleValue(), body.getLatitude().doubleValue());
+            PriceCheckWithDeliveryResponse priceCheckWithDeliveryResponse = shoppingService.priceCheckWithDelivery(req);
+
+            try {
+                if (priceCheckWithDeliveryResponse.getCheaperItems() != null){
+                    response.setCheaperItems(populateCartItems(priceCheckWithDeliveryResponse.getCheaperItems()));
+                }
+                response.setNewOrder(priceCheckWithDeliveryResponse.isNewOrder());
+                if (priceCheckWithDeliveryResponse.getStoreOneID() != null) {
+                    response.setStoreOneID(priceCheckWithDeliveryResponse.getStoreOneID().toString());
+                }
+                if (priceCheckWithDeliveryResponse.getStoreTwoID() != null) {
+                    response.setStoreTwoID(priceCheckWithDeliveryResponse.getStoreTwoID().toString());
+                }
+                if (priceCheckWithDeliveryResponse.getStoreThreeID() != null) {
+                    response.setStoreThreeID(priceCheckWithDeliveryResponse.getStoreThreeID().toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setNewOrder(false);
+            }
+
+        } catch (InvalidRequestException | StoreDoesNotExistException e) {
+            e.printStackTrace();
+            response.setNewOrder(false);
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<ShoppingItemIsInStockResponse> itemIsInStock(
             ShoppingItemIsInStockRequest body) {
 

@@ -1379,7 +1379,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public ReviewPaymentResponse reviewPayment(ReviewPaymentRequest request) throws InvalidRequestException, URISyntaxException {
         ReviewPaymentResponse response = null;
-        AtomicReference<Double> totalCost = new AtomicReference<>((double) 0);
+        double totalCost = 0.0;
 
         boolean invalidReq = false;
         String invalidMessage = "";
@@ -1512,25 +1512,25 @@ public class PaymentServiceImpl implements PaymentService {
                     if (cartItems.get(k).getStoreID().compareTo(request.getStoreIDOne()) == 0){
                         cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
                         orderOneCost = cartItems.get(k).getTotalCost() + orderOneCost;
-                        numberOfItemsInOrderOne++;
-                        if (numberOfItemsInOrderOne == 4){
-                            numberOfItemsInOrderOne = 0;
+                        numberOfItemsInOrderOne = numberOfItemsInOrderOne + cartItems.get(k).getQuantity();
+                        if (numberOfItemsInOrderOne >= 4){
+                            numberOfItemsInOrderOne = numberOfItemsInOrderOne - 4;
                             packingCostOfOrderOne = packingCostOfOrderOne + 0.75;
                         }
                     } else if (cartItems.get(k).getStoreID().compareTo(request.getStoreIDTwo()) == 0){
                         cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
                         orderTwoCost = cartItems.get(k).getTotalCost() + orderTwoCost;
-                        numberOfItemsInOrderTwo++;
-                        if (numberOfItemsInOrderTwo == 4){
-                            numberOfItemsInOrderTwo = 0;
+                        numberOfItemsInOrderTwo = numberOfItemsInOrderTwo + cartItems.get(k).getQuantity();
+                        if (numberOfItemsInOrderTwo >= 4){
+                            numberOfItemsInOrderTwo = numberOfItemsInOrderTwo - 4;
                             packingCostOfOrderTwo = packingCostOfOrderTwo + 0.75;
                         }
                     } else if (cartItems.get(k).getStoreID().compareTo(request.getStoreIDThree()) == 0){
                         cartItems.get(k).setTotalCost(cartItems.get(k).getPrice() * cartItems.get(k).getQuantity());
                         orderThreeCost = cartItems.get(k).getTotalCost() + orderThreeCost;
-                        numberOfItemsInOrderThree++;
-                        if (numberOfItemsInOrderThree == 4){
-                            numberOfItemsInOrderThree = 0;
+                        numberOfItemsInOrderThree = numberOfItemsInOrderThree + cartItems.get(k).getQuantity();
+                        if (numberOfItemsInOrderThree >= 4){
+                            numberOfItemsInOrderThree = numberOfItemsInOrderThree - 4;
                             packingCostOfOrderThree = packingCostOfOrderThree + 0.75;
                         }
                     }
@@ -1551,7 +1551,9 @@ public class PaymentServiceImpl implements PaymentService {
                  GeoPoint customerLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
                  distance = distance + getDistance(lastStop,customerLocation);
                  double costOfDelivery = getAddedCostOfDistance(distance);
-                response = new ReviewPaymentResponse(costOfDelivery, orderOneCost, orderTwoCost, orderThreeCost, packingCostOfOrderOne, packingCostOfOrderTwo, packingCostOfOrderThree);
+                 costOfDelivery = Math.ceil(costOfDelivery*100.0)/100.0;
+                 totalCost = costOfDelivery + orderOneCost + orderTwoCost + orderThreeCost + packingCostOfOrderOne + packingCostOfOrderTwo + packingCostOfOrderThree;
+                response = new ReviewPaymentResponse(costOfDelivery, orderOneCost, orderTwoCost, orderThreeCost, packingCostOfOrderOne, packingCostOfOrderTwo, packingCostOfOrderThree, totalCost);
                 } else {
                     throw new InvalidRequestException("Store is currently closed - could not create order");
             }

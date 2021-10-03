@@ -222,6 +222,7 @@ public class PaymentController implements PaymentApi {
                 response.setPackingCostOfOrderOne(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderOne()));
                 response.setPackingCostOfOrderTwo(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderTwo()));
                 response.setPackingCostOfOrderThree(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderThree()));
+                response.setTotalCost(BigDecimal.valueOf(reviewPaymentResponse.getTotalCost()));
             } catch (Exception e) {
 
             }
