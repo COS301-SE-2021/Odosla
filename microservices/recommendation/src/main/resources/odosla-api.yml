@@ -168,6 +168,8 @@ components:
           type: number
         cartItemNo:
           type: string
+        soldOut:
+          type: boolean
 
     recommendation_generateRecommendationTableRequest:
       description: This object is expected as input

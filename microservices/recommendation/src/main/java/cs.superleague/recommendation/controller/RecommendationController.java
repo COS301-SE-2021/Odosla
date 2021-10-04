@@ -147,7 +147,7 @@ public class RecommendationController implements RecommendationApi {
             item.setSize(i.getSize());
             item.setItemType(i.getItemType());
             item.setDescription(i.getDescription());
-
+            item.setSoldOut(false);
             responseBody.add(item);
 
         }

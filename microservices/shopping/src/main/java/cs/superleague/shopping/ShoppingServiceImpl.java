@@ -1882,6 +1882,7 @@ public class ShoppingServiceImpl implements ShoppingService {
             for (CartItem cartItem : request.getCartItems()) {
                 if (item.getBarcode().equals(cartItem.getBarcode()) &&
                         item.getPrice() < cartItem.getPrice()) {
+                    item.setQuantity(cartItem.getQuantity());
                     cheaperItems.add(item);
                     moneySaved = moneySaved + ((cartItem.getPrice() - item.getPrice()) * cartItem.getQuantity());
                     if (firstStoreIDFound.compareTo(cartItem.getStoreID()) == 0){
@@ -1975,8 +1976,8 @@ public class ShoppingServiceImpl implements ShoppingService {
         for (Item item : cheaperItems) {
             requestCartItems.add(createCartItem(item));
         }
-        if (storeOneNumberOfItems > storeThreeNumberOfItems) {
-            if (storeOneNumberOfItems > storeTwoNumberOfItems) {
+        if (storeOneNumberOfItems >= storeThreeNumberOfItems) {
+            if (storeOneNumberOfItems >= storeTwoNumberOfItems) {
                 for (Item item : items) {
                     for (CartItem cartItem : requestCartItems) {
                         if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(firstStoreIDFound) == 0) {
@@ -1984,7 +1985,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                         }
                     }
                 }
-            } else if (storeTwoNumberOfItems > storeOneNumberOfItems) {
+            } else if (storeTwoNumberOfItems >= storeOneNumberOfItems) {
                 for (Item item : items) {
                     for (CartItem cartItem : requestCartItems) {
                         if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(secondStoreIDFound) == 0) {
@@ -1994,7 +1995,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
             }
         } else {
-            if (storeTwoNumberOfItems > storeThreeNumberOfItems){
+            if (storeTwoNumberOfItems >= storeThreeNumberOfItems){
                 for (Item item : items) {
                     for (CartItem cartItem : requestCartItems) {
                         if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(secondStoreIDFound) == 0) {
