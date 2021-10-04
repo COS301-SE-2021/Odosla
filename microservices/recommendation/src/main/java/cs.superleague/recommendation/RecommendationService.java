@@ -1,22 +1,28 @@
 package cs.superleague.recommendation;
 
+import com.itextpdf.text.DocumentException;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
-import cs.superleague.recommendation.requests.AddRecommendationRequest;
-import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
-import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
-import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.recommendation.requests.*;
+import cs.superleague.recommendation.responses.GenerateRecommendationTablePDFResponse;
+import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
+import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 
 import java.net.URISyntaxException;
 
 public interface RecommendationService {
-    GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException;
+    GetCartRecommendationResponse getCartRecommendation(GetCartRecommendationRequest request) throws InvalidRequestException, RecommendationRepoException, URISyntaxException, ItemDoesNotExistException;
 
     GetOrderRecommendationResponse getOrderRecommendation(GetOrderRecommendationRequest request);
 
     void addRecommendation(AddRecommendationRequest request) throws InvalidRequestException;
 
     void removeRecommendation(RemoveRecommendationRequest request) throws InvalidRequestException;
+
+    GenerateRecommendationTableResponse generateRecommendationTable(GenerateRecommendationTableRequest request) throws InvalidRequestException, URISyntaxException;
+
+    GenerateRecommendationTablePDFResponse generateRecommendationTablePDF(GenerateRecommendationTablePDFRequest
+                                                                          request) throws InvalidRequestException, URISyntaxException, DocumentException;
 }

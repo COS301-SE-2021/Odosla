@@ -71,32 +71,30 @@ public class ImporterServiceImpl implements ImporterService{
                         switch (counter){
                             case 0:
 
-//                                Map<String, Object> parts = new HashMap<String, Object>();
-//
-//                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems";
-//                                URI uri = new URI(stringUri);
-//
-//                                ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
-//                                        uri, parts, GetAllItemsResponse.class);
-//
-//                                if(responseEntity == null || !responseEntity.hasBody()){
-//                                    throw new InvalidRequestException("Could not retrieve Items");
-//                                }
-//
-//                                GetAllItemsResponse getAllItemsResponse = responseEntity.getBody();
-//                                List<Item> itemList = getAllItemsResponse.getItems();
-//
-//                                for(int j=0; j< itemList.size(); j++)
-//                                {
-//                                    if(itemList.get(j)!=null)
-//                                    {
-//                                        if(itemList.get(j).getProductID().equals(currentWord))
-//                                        {
-//                                            throw new InvalidRequestException("Item already exists");
-//                                        }
-//                                    }
-//
-//                                }
+                                Map<String, Object> parts = new HashMap<String, Object>();
+
+                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getAllItems";
+                                URI uri = new URI(stringUri);
+
+                                ResponseEntity<GetAllItemsResponse> responseEntity = restTemplate.postForEntity(
+                                        uri, parts, GetAllItemsResponse.class);
+
+                                if(responseEntity == null || !responseEntity.hasBody()){
+                                    throw new InvalidRequestException("Could not retrieve Items");
+                                }
+
+                                GetAllItemsResponse getAllItemsResponse = responseEntity.getBody();
+                                List<Item> itemList = getAllItemsResponse.getItems();
+
+                                for (Item value : itemList) {
+                                    if (value != null) {
+                                        if (value.getProductID().equals(currentWord)) {
+                                            item = value;
+                                            break;
+                                        }
+                                    }
+
+                                }
 
                                 item.setProductID(currentWord);
                                 counter++;
@@ -242,67 +240,6 @@ public class ImporterServiceImpl implements ImporterService{
                     {
                         switch (counter){
                             case 0:
-
-//                                int position = 6;
-//
-//
-//                                int pos = f.indexOf(";");
-//                                while(--position > 0 && pos != -1){
-//                                    pos = f.indexOf(";", pos + 1);
-//                                }
-//
-//                                // extract store brand from CSV file
-//                                storeBrand = f.substring(pos).substring(1);
-//                                storeBrand = storeBrand.split(";")[0];
-//
-//                                pos = f.indexOf(";", pos + 1);
-//
-//                                // extract latitude value from CSV file
-//                                latitude = Double.parseDouble(f.substring(pos).substring(1).split(";")[0]
-//                                        .replaceAll(",", "."));
-//
-//                                pos = f.indexOf(";", pos + 1);
-//
-//                                // extract longitude value from CSV file
-//                                longitude = Double.parseDouble(f.substring(pos).substring(1).split(";")[0]
-//                                        .replaceAll(",", "."));
-//
-//                                pos = f.indexOf(";", pos + 1);
-//
-//                                // extract address value from CSV file
-//                                storeAddress = f.substring(pos).substring(1);
-//                                pos = storeAddress.indexOf("\n");
-//
-//
-//                                if(pos != -1) {
-//                                    f = storeAddress.substring(pos);
-//                                    storeAddress = storeAddress.split("\n")[0];
-//                                }
-//
-//                                Map<String, Object> parts = new HashMap<>();
-//
-//                                String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStores";
-//                                URI uri = new URI(stringUri);
-//
-//                                ResponseEntity<GetStoresResponse> responseEntity = restTemplate.postForEntity(
-//                                        uri, parts, GetStoresResponse.class);
-//
-//                                if(responseEntity == null || !responseEntity.hasBody()
-//                                || responseEntity.getBody() == null){
-//                                    return new StoreCSVImporterResponse(false, new Date(), "Could not retrieve stores");
-//                                }
-//
-//                                List<Store> storeList = responseEntity.getBody().getStores();
-//
-//                                for (Store s: storeList) {
-//                                    if (s.getStoreBrand().equals(storeBrand) &&
-//                                            s.getStoreLocation().getAddress().equals(storeAddress) &&
-//                                            s.getStoreLocation().getLatitude() == latitude &&
-//                                            s.getStoreLocation().getLongitude() == longitude) {
-//                                        return new StoreCSVImporterResponse(false, new Date(), "Store already exists");
-//                                    }
-//                                }
-
                                 store.setStoreID(UUID.fromString(currentWord));
                                 counter++;
                                 currentWord = "";

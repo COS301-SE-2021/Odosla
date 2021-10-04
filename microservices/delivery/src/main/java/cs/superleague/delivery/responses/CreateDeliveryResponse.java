@@ -6,6 +6,7 @@ public class CreateDeliveryResponse {
     private boolean isSuccess;
     private String message;
     private UUID deliveryID;
+    private double costOfDelivery;
 
     public CreateDeliveryResponse(boolean isSuccess, String message, UUID deliveryID) {
         this.isSuccess = isSuccess;

@@ -9,18 +9,17 @@ public class GetStoreOpenResponse {
 
     Boolean isOpen = false;
     String message;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     Date timestamp;
     int openingTime;
     int closingTime;
     UUID storeID;
 
-    public GetStoreOpenResponse(UUID storeID, Boolean isOpen, Date timestamp, String message)
-    {
-        this.isOpen= isOpen;
-        this.timestamp=timestamp;
-        this.message=message;
-        this.storeID=storeID;
+    public GetStoreOpenResponse(UUID storeID, Boolean isOpen, Date timestamp, String message) {
+        this.isOpen = isOpen;
+        this.timestamp = timestamp;
+        this.message = message;
+        this.storeID = storeID;
     }
 
     public UUID getStoreID() {
@@ -39,9 +38,8 @@ public class GetStoreOpenResponse {
         return isOpen;
     }
 
-    public void setMessage(String message)
-    {
-        this.message=message;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getMessage() {

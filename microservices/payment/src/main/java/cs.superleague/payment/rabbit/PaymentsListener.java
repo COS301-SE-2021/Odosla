@@ -25,8 +25,7 @@ public class PaymentsListener implements MessageListener {
         try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
             Object o = in.readObject();
-            if(o instanceof SaveOrderToRepoRequest)
-            {
+            if (o instanceof SaveOrderToRepoRequest) {
                 System.out.println("i made it here 1");
                 SaveOrderToRepoRequest request = (SaveOrderToRepoRequest) o;
                 SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(request.getOrder());

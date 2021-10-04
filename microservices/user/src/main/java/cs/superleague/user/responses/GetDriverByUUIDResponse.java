@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class GetDriverByUUIDResponse {
     private final Driver driver;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 

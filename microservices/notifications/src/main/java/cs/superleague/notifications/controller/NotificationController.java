@@ -2,17 +2,15 @@ package cs.superleague.notifications.controller;
 
 import cs.superleague.api.NotificationApi;
 //import cs.superleague.integration.ServiceSelector;
-import cs.superleague.models.NotificationSendDirectEmailNotificationRequest;
-import cs.superleague.models.NotificationSendDirectEmailNotificationResponse;
+import cs.superleague.models.*;
 //import cs.superleague.models.NotificationSendEmailNotificationRequest;
 //import cs.superleague.models.NotificationSendEmailNotificationResponse;
-import cs.superleague.models.NotificationSendEmailNotificationRequest;
-import cs.superleague.models.NotificationSendEmailNotificationResponse;
 import cs.superleague.notifications.NotificationService;
 import cs.superleague.notifications.repos.NotificationRepo;
 import cs.superleague.notifications.requests.SendDirectEmailNotificationRequest;
 //import cs.superleague.notification.requests.SendEmailNotificationRequest;
 import cs.superleague.notifications.requests.SendEmailNotificationRequest;
+import cs.superleague.notifications.requests.SendPDFEmailRequest;
 import cs.superleague.notifications.responses.SendDirectEmailNotificationResponse;
 //import cs.superleague.user.dataclass.Admin;
 //import cs.superleague.user.dataclass.UserType;
@@ -21,6 +19,7 @@ import cs.superleague.notifications.responses.SendDirectEmailNotificationRespons
 //import cs.superleague.user.repos.DriverRepo;
 //import cs.superleague.user.repos.ShopperRepo;
 import cs.superleague.notifications.responses.SendEmailNotificationResponse;
+import cs.superleague.notifications.responses.SendPDFEmailResponse;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -52,7 +51,7 @@ public class NotificationController implements NotificationApi {
     @Autowired
     public NotificationController(JavaMailSender javaMailSender, NotificationRepo notificationRepo,
                                   NotificationService notificationService, RestTemplate restTemplate,
-                                  HttpServletRequest httpServletRequest){
+                                  HttpServletRequest httpServletRequest) {
         this.javaMailSender = javaMailSender;
         this.notificationRepo = notificationRepo;
         this.notificationService = notificationService;
@@ -62,6 +61,7 @@ public class NotificationController implements NotificationApi {
 
 
     UUID adminID = UUID.fromString("b2cbc86b-ec77-456d-b293-62977d16188a");
+
     @Override
     public ResponseEntity<NotificationSendEmailNotificationResponse> sendEmailNotification(NotificationSendEmailNotificationRequest body) {
         //Mock data
@@ -70,7 +70,7 @@ public class NotificationController implements NotificationApi {
         //End of Mock data
         NotificationSendEmailNotificationResponse response = new NotificationSendEmailNotificationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -80,14 +80,14 @@ public class NotificationController implements NotificationApi {
 
             SendEmailNotificationRequest request = new SendEmailNotificationRequest(body.getMessage(), body.getProperties());
             SendEmailNotificationResponse sendEmailNotificationResponse = notificationService.sendEmailNotification(request);
-            try{
+            try {
                 response.setSuccess(sendEmailNotificationResponse.getSuccessMessage());
                 response.setResponseMessage(sendEmailNotificationResponse.getResponseMessage());
-            }catch (Exception e){
+            } catch (Exception e) {
                 response.setSuccess(false);
                 response.setResponseMessage(e.getMessage());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setSuccess(false);
             response.setResponseMessage(e.getMessage());
             e.printStackTrace();
@@ -97,23 +97,53 @@ public class NotificationController implements NotificationApi {
     }
 
     @Override
-    public ResponseEntity<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotification(NotificationSendDirectEmailNotificationRequest body){
+    public ResponseEntity<NotificationSendDirectEmailNotificationResponse> sendDirectEmailNotification(NotificationSendDirectEmailNotificationRequest body) {
         NotificationSendDirectEmailNotificationResponse response = new NotificationSendDirectEmailNotificationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
             SendDirectEmailNotificationRequest request = new SendDirectEmailNotificationRequest(body.getMessage(), body.getProperties());
             SendDirectEmailNotificationResponse sendDirectEmailNotificationResponse = notificationService.sendDirectEmailNotification(request);
-            try{
+            try {
                 response.setIsSuccess(sendDirectEmailNotificationResponse.isSuccess());
                 response.setResponseMessage(sendDirectEmailNotificationResponse.getResponseMessage());
-            }catch (Exception e){
+            } catch (Exception e) {
                 response.setIsSuccess(false);
                 response.setResponseMessage(e.getMessage());
                 e.printStackTrace();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setIsSuccess(false);
             response.setResponseMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<NotificationSendPDFEmailResponse> sendPDFEmail(NotificationSendPDFEmailRequest body) {
+        NotificationSendPDFEmailResponse response = new NotificationSendPDFEmailResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            SendPDFEmailRequest request = new SendPDFEmailRequest(body.getEmail(), body.getPDF());
+            SendPDFEmailResponse sendPDFEmailResponse = notificationService.sendPDFEmail(request);
+            try {
+                response.setSuccess(sendPDFEmailResponse.isSuccess());
+                response.setMessage(sendPDFEmailResponse.getMessage());
+            } catch (Exception e) {
+                response.setSuccess(false);
+                response.setMessage(e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
             e.printStackTrace();
         }
         return new ResponseEntity<>(response, httpStatus);

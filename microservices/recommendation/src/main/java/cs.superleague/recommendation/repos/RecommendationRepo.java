@@ -13,6 +13,8 @@ import java.util.UUID;
 @Repository
 public interface RecommendationRepo extends JpaRepository<Recommendation, UUID> {
     List<Recommendation> findRecommendationByProductID(String productID);
+
     Recommendation findRecommendationByRecommendationID(UUID recommendationID);
-    List<Recommendation> findRecommendationByOrderID(UUID orderID);
+
+    List<Recommendation> findRecommendationsByOrderID(UUID orderID);
 }

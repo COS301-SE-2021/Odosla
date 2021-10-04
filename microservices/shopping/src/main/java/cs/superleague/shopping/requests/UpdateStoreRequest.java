@@ -6,9 +6,8 @@ public class UpdateStoreRequest {
 
     private Store store;
 
-    public UpdateStoreRequest(Store store)
-    {
-        this.store= store;
+    public UpdateStoreRequest(Store store) {
+        this.store = store;
     }
 
     public Store getStore() {

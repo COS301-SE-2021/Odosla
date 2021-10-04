@@ -6,17 +6,20 @@ import java.util.Date;
 
 public class RemoveShopperResponse {
 
-    /** attributes */
+    /**
+     * attributes
+     */
     private final boolean success;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "E MMM dd HH:mm:ss z yyyy")
     private final Date timestamp;
     private final String message;
 
-    /** constructor
+    /**
+     * constructor
      *
-     * @param success - whether shopper was succesfully removed from list or not
+     * @param success   - whether shopper was succesfully removed from list or not
      * @param timestamp - time the response was created
-     * @param message - message associated with response
+     * @param message   - message associated with response
      */
     public RemoveShopperResponse(boolean success, Date timestamp, String message) {
         this.success = success;

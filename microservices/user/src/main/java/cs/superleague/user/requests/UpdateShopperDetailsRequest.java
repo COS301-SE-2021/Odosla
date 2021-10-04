@@ -9,7 +9,7 @@ public class UpdateShopperDetailsRequest {
     private String password;
     private String currentPassword;
 
-    public UpdateShopperDetailsRequest( String name, String surname, String email, String phoneNumber, String password,String currentPassword) {
+    public UpdateShopperDetailsRequest(String name, String surname, String email, String phoneNumber, String password, String currentPassword) {
         this.name = name;
         this.surname = surname;
         this.email = email;

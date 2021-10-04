@@ -18,10 +18,11 @@ public class Catalogue {
     @LazyCollection(LazyCollectionOption.FALSE)
     private List<Item> items;
 
-    public Catalogue() { }
+    public Catalogue() {
+    }
 
     public Catalogue(UUID storeID, List<Item> items) {
-        this.storeID=storeID;
+        this.storeID = storeID;
         this.items = items;
     }
 

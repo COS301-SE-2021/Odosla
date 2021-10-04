@@ -8,9 +8,8 @@ public class SaveStoreToRepoRequest implements Serializable {
 
     private Store store;
 
-    public SaveStoreToRepoRequest(Store store)
-    {
-        this.store=store;
+    public SaveStoreToRepoRequest(Store store) {
+        this.store = store;
     }
 
     public Store getStore() {

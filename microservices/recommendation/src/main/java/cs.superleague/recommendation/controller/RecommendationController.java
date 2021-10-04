@@ -1,12 +1,13 @@
 package cs.superleague.recommendation.controller;
 
 import cs.superleague.api.RecommendationApi;
-import cs.superleague.models.CartItemObject;
-import cs.superleague.models.ItemObject;
-import cs.superleague.models.RecommendationGetCartRecommendationRequest;
-import cs.superleague.models.RecommendationGetCartRecommendationResponse;
+import cs.superleague.models.*;
 import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.recommendation.RecommendationService;
+import cs.superleague.recommendation.requests.GenerateRecommendationTablePDFRequest;
+import cs.superleague.recommendation.requests.GenerateRecommendationTableRequest;
+import cs.superleague.recommendation.responses.GenerateRecommendationTablePDFResponse;
+import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
 import cs.superleague.shopping.dataclass.Item;
 import cs.superleague.recommendation.repos.RecommendationRepo;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin
 @RestController
@@ -49,7 +51,7 @@ public class RecommendationController implements RecommendationApi {
     public ResponseEntity<RecommendationGetCartRecommendationResponse> getCartRecommendation(RecommendationGetCartRecommendationRequest body) {
         RecommendationGetCartRecommendationResponse response = new RecommendationGetCartRecommendationResponse();
         HttpStatus httpStatus = HttpStatus.OK;
-        try{
+        try {
 
             Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
             List<Header> headers = new ArrayList<>();
@@ -57,13 +59,25 @@ public class RecommendationController implements RecommendationApi {
             CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
             restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
 
-            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs());
+            UUID storeOneID = null;
+            UUID storeTwoID = null;
+            UUID storeThreeID = null;
+            if (body.getStoreOneID() != ""){
+                storeOneID = UUID.fromString(body.getStoreOneID());
+            }
+            if (body.getStoreTwoID() != ""){
+                storeTwoID = UUID.fromString(body.getStoreTwoID());
+            }
+            if (body.getStoreThreeID() != ""){
+                storeThreeID = UUID.fromString(body.getStoreThreeID());
+            }
+            GetCartRecommendationRequest request = new GetCartRecommendationRequest(body.getItemIDs(), storeOneID, storeTwoID, storeThreeID);
             GetCartRecommendationResponse getCartRecommendationResponse = recommendationService.getCartRecommendation(request);
             try {
                 response.setMessage(getCartRecommendationResponse.getMessage());
                 response.setIsSuccess(getCartRecommendationResponse.isSuccess());
                 response.setRecommendations(populateCartItems(getCartRecommendationResponse.getRecommendations()));
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 response.setMessage(e.getMessage());
                 response.setIsSuccess(false);
@@ -82,11 +96,11 @@ public class RecommendationController implements RecommendationApi {
     //////////////////////
 
     //Populate ItemObject list from items returned by use case
-    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException{
+    private List<ItemObject> populateItems(List<Item> responseItems) throws NullPointerException {
 
         List<ItemObject> responseBody = new ArrayList<>();
 
-        for(int i = 0; i < responseItems.size(); i++){
+        for (int i = 0; i < responseItems.size(); i++) {
 
             ItemObject currentItem = new ItemObject();
 
@@ -109,17 +123,16 @@ public class RecommendationController implements RecommendationApi {
         return responseBody;
     }
 
-    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException{
+    private List<CartItemObject> populateCartItems(List<CartItem> responseItems) throws NullPointerException {
 
         List<CartItemObject> responseBody = new ArrayList<>();
 
-        for (CartItem i: responseItems){
+        for (CartItem i : responseItems) {
 
-            System.out.println("s id "  +i.getStoreID().toString());
+//            System.out.println("s id " + i.getStoreID().toString());
 
             CartItemObject item = new CartItemObject();
-            if(i.getCartItemNo()!=null)
-            {
+            if (i.getCartItemNo() != null) {
                 item.setCartItemNo(i.getCartItemNo().toString());
             }
             item.setProductID(i.getProductID());
@@ -134,11 +147,80 @@ public class RecommendationController implements RecommendationApi {
             item.setSize(i.getSize());
             item.setItemType(i.getItemType());
             item.setDescription(i.getDescription());
-
+            item.setSoldOut(false);
             responseBody.add(item);
 
         }
 
         return responseBody;
+    }
+
+    @Override
+    public ResponseEntity<RecommendationGenerateRecommendationTableResponse> generateRecommendationTable(RecommendationGenerateRecommendationTableRequest body) {
+        RecommendationGenerateRecommendationTableResponse response = new RecommendationGenerateRecommendationTableResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            GenerateRecommendationTableRequest request = new GenerateRecommendationTableRequest();
+            GenerateRecommendationTableResponse generateRecommendationTableResponse = recommendationService.generateRecommendationTable(request);
+            try {
+                response.setMessage(generateRecommendationTableResponse.getMessage());
+                response.setIsSuccess(generateRecommendationTableResponse.isSuccess());
+                response.setRecommendationTable(generateRecommendationTableResponse.getRecommendationTable());
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setMessage(e.getMessage());
+                response.setIsSuccess(false);
+                response.setRecommendationTable(null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setIsSuccess(false);
+            response.setRecommendationTable(null);
+        }
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<RecommendationGenerateRecommendationTablePDFResponse> generateRecommendationTablePDF(
+            RecommendationGenerateRecommendationTablePDFRequest body) {
+
+        RecommendationGenerateRecommendationTablePDFResponse response = new
+                RecommendationGenerateRecommendationTablePDFResponse();
+
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            GenerateRecommendationTablePDFRequest request = new GenerateRecommendationTablePDFRequest(
+                    body.getEmail());
+            GenerateRecommendationTablePDFResponse generateRecommendationTableResponse =
+                    recommendationService.generateRecommendationTablePDF(request);
+            try {
+                response.setMessage(generateRecommendationTableResponse.getMessage());
+                response.setIsSuccess(generateRecommendationTableResponse.isSuccess());
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setMessage(e.getMessage());
+                response.setIsSuccess(false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setMessage(e.getMessage());
+            response.setIsSuccess(false);
+        }
+        return new ResponseEntity<>(response, httpStatus);
     }
 }

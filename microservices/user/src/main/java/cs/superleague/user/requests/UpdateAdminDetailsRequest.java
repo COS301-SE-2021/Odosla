@@ -9,7 +9,7 @@ public class UpdateAdminDetailsRequest {
     private String email;
     private String phoneNumber;
     private String password;
-    private String currentPassword;
+    private final String currentPassword;
 
     public UpdateAdminDetailsRequest(String name, String surname, String email, String phoneNumber, String password, String currentPassword) {
         this.name = name;

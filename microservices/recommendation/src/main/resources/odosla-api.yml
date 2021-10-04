@@ -31,6 +31,50 @@ paths:
               schema:
                 $ref: "#/components/schemas/recommendation_getCartRecommendationResponse"
 
+  /recommendation/generateRecommendationTable:
+    post:
+      summary: Endpoint for creating recommendation table
+      tags:
+        - "recommendation"
+      description: Refer to summary
+      operationId: generateRecommendationTable
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/recommendation_generateRecommendationTableRequest"
+      responses:
+        "200":
+          description: Returns the recommender table
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/recommendation_generateRecommendationTableResponse"
+
+  /recommendation/generateRecommendationTablePDF:
+    post:
+      summary: Endpoint for creating recommendation table PDF
+      tags:
+        - "recommendation"
+      description: Refer to summary
+      operationId: generateRecommendationTablePDF
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/recommendation_generateRecommendationTablePDFRequest"
+      responses:
+        "200":
+          description: Returns the recommender table
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/recommendation_generateRecommendationTablePDFResponse"
+
 components:
 
   schemas:
@@ -61,6 +105,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     recommendation_getCartRecommendationRequest:
       description: This object is expected as input
@@ -70,6 +116,12 @@ components:
           type: array
           items:
             type: string
+        storeOneID:
+          type: string
+        storeTwoID:
+          type: string
+        storeThreeID:
+          type: string
 
     recommendation_getCartRecommendationResponse:
       description: This object is returned as output
@@ -115,4 +167,41 @@ components:
         totalCost:
           type: number
         cartItemNo:
+          type: string
+        soldOut:
+          type: boolean
+
+    recommendation_generateRecommendationTableRequest:
+      description: This object is expected as input
+      type: object
+
+    recommendation_generateRecommendationTableResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        recommendationTable:
+          type: array
+          items:
+            type: array
+            items:
+              type: string
+        isSuccess:
+          type: boolean
+        message:
+          type: string
+
+    recommendation_generateRecommendationTablePDFRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        email:
+          type: string
+
+    recommendation_generateRecommendationTablePDFResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        isSuccess:
+          type: boolean
+        message:
           type: string

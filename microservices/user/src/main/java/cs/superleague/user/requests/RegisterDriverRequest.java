@@ -13,7 +13,7 @@ public class RegisterDriverRequest {
     private String phoneNumber;
     private String password;
 
-    public RegisterDriverRequest(String name, String surname,String email, String phoneNumber, String password) {
+    public RegisterDriverRequest(String name, String surname, String email, String phoneNumber, String password) {
         this.name = name;
         this.surname = surname;
         this.email = email;

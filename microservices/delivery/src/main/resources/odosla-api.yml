@@ -251,6 +251,72 @@ paths:
               schema:
                 $ref: "#/components/schemas/delivery_GetDeliveryByUUIDResponse"
 
+  /delivery/getAdditionalStoresDeliveryCost:
+    post:
+      summary: Endpoint for retrieving additional stores to make orders from
+      tags:
+        - "Delivery"
+      description: Refer to summary
+      operationId: getAdditionalStoresDeliveryCost
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_GetAdditionalStoresDeliveryCostRequest"
+      responses:
+        "200":
+          description: Returns the stores that can be added to the delivery and the cost
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_GetAdditionalStoresDeliveryCostResponse"
+
+  /delivery/completePackingOrderForDelivery:
+    post:
+      summary: Endpoint for completing the packing order for a delivery
+      tags:
+        - "Delivery"
+      description: Refer to summary
+      operationId: completePackingOrderForDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_CompletePackingOrderForDeliveryRequest"
+      responses:
+        "200":
+          description: Returns whether the delivery has been successfully set to ready for pick up
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_CompletePackingOrderForDeliveryResponse"
+
+  /delivery/addOrderToDelivery:
+    post:
+      summary: Endpoint for adding an additional order to a delivery
+      tags:
+        - "Delivery"
+      description: Refer to summary
+      operationId: addOrderToDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/delivery_AddOrderToDeliveryRequest"
+      responses:
+        "200":
+          description: Returns if the order was added to the delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/delivery_AddOrderToDeliveryResponse"
+
 components:
 
   schemas:
@@ -335,8 +401,11 @@ components:
           type: boolean
         message:
           type: string
-        pickUpLocation:
-          $ref: "#/components/schemas/GeoPointObject"
+        pickUpLocations:
+          type: array
+          properties:
+            items:
+              $ref: "#/components/schemas/GeoPointObject"
         dropOffLocation:
           $ref: "#/components/schemas/GeoPointObject"
         driverID:
@@ -502,17 +571,31 @@ components:
       properties:
         deliveryID:
           type: string
-        pickUpLocation:
+        pickUpLocationOne:
+          $ref: "#/components/schemas/GeoPointObject"
+        pickUpLocationTwo:
+          $ref: "#/components/schemas/GeoPointObject"
+        pickUpLocationThree:
           $ref: "#/components/schemas/GeoPointObject"
         dropOffLocation:
           $ref: "#/components/schemas/GeoPointObject"
-        orderID:
+        orderIDOne:
           type: string
-        customerId:
+        orderIDTwo:
           type: string
-        storeId:
+          nullable: true
+        orderIDThree:
           type: string
-        driverId:
+          nullable: true
+        customerID:
+          type: string
+        storeOneID:
+          type: string
+        storeTwoID:
+          type: string
+        storeThreeID:
+          type: string
+        driverID:
           type: string
         status:
           type: string
@@ -560,3 +643,241 @@ components:
           type: string
         timestamp:
           type: string
+
+    StoreObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        storeBrand:
+          type: string
+        maxShoppers:
+          type: integer
+        maxOrders:
+          type: integer
+        isOpen:
+          type: boolean
+        openingTime:
+          type: integer
+        closingTime:
+          type: integer
+        imgUrl:
+          type: string
+        storeLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+        stock:
+          $ref: "#/components/schemas/CatalogueObject"
+        shoppers:
+          type: array
+          items:
+            $ref: "#/components/schemas/ShopperObject"
+        currentOrders:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+        orderQueue:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderObject"
+
+    OrderObject:
+      description: "Generic schema for an Order"
+      type: object
+      properties:
+        orderID:
+          type: string
+        userID:
+          type: string
+        storeID:
+          type: string
+        shopperID:
+          type: string
+        createDate:
+          type: string
+        processDate:
+          type: string
+        totalCost:
+          type: number
+        status:
+          type: string
+        discount:
+          type: number
+        deliveryAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        storeAddress:
+          $ref: "#/components/schemas/GeoPointObject"
+        requiresPharmacy:
+          type: boolean
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        driverID:
+          type: string
+
+    ShopperObject:
+      description: "Generic schema for a shopper"
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        password:
+          type: string
+        activationDate:
+          type: string
+        activationCode:
+          type: string
+        resetCode:
+          type: string
+        resetExpiration:
+          type: string
+        accountType:
+          type: string
+        shopperID:
+          type: string
+        storeID:
+          type: string
+        ordersCompleted:
+          type: integer
+        onShift:
+          type: boolean
+        isActive:
+          type: boolean
+
+    CatalogueObject:
+      description: "Generic schema for a store"
+      type: object
+      properties:
+        storeID:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+
+    ItemObject:
+      description: "Generic schema for an item"
+      type: object
+      properties:
+        productID:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        soldOut:
+          type: boolean
+
+    CartItemObject:
+      description: "Generic schema for a cart item"
+      type: object
+      properties:
+        productID:
+          type: string
+        name:
+          type: string
+        barcode:
+          type: string
+        storeID:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        description:
+          type: string
+        imageUrl:
+          type: string
+        brand:
+          type: string
+        size:
+          type: string
+        itemType:
+          type: string
+        orderID:
+          type: string
+        totalCost:
+          type: number
+        cartItemNo:
+          type: string
+
+    delivery_GetAdditionalStoresDeliveryCostRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    delivery_GetAdditionalStoresDeliveryCostResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
+          nullable: true
+        additionalCost:
+          type: array
+          items:
+            type: number
+          nullable: true
+        message:
+          type: string
+
+    delivery_CompletePackingOrderForDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        orderID:
+          type: string
+
+    delivery_CompletePackingOrderForDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    delivery_AddOrderToDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+        orderID:
+          type: string
+
+    delivery_AddOrderToDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean

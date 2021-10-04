@@ -46,7 +46,7 @@ public class NotificationServiceImpl implements NotificationService {
     private String userPort;
 
     @Autowired
-    public NotificationServiceImpl(JavaMailSender javaMailSender, NotificationRepo notificationRepo, RestTemplate restTemplate){
+    public NotificationServiceImpl(JavaMailSender javaMailSender, NotificationRepo notificationRepo, RestTemplate restTemplate) {
         this.javaMailSender = javaMailSender;
         this.notificationRepo = notificationRepo;
         this.restTemplate = restTemplate;
@@ -54,20 +54,20 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public CreateNotificationResponse createNotification(CreateNotificationRequest request) throws InvalidRequestException, URISyntaxException {
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getPayLoad() == null || request.getCreatedDateTime() == null || request.getProperties() == null){
+        if (request.getPayLoad() == null || request.getCreatedDateTime() == null || request.getProperties() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
-        if (request.getPayLoad().equals("") || request.getCreatedDateTime().equals("") || request.getProperties().equals("")){
+        if (request.getPayLoad().equals("") || request.getCreatedDateTime().equals("") || request.getProperties().equals("")) {
             throw new InvalidRequestException("Empty parameters.");
         }
         NotificationType notificationType = null;
-        if(request.getProperties().get("NotificationType") == null){
+        if (request.getProperties().get("NotificationType") == null) {
             throw new InvalidRequestException("Null notification type.");
         }
-        switch (request.getProperties().get("NotificationType").toLowerCase()){
+        switch (request.getProperties().get("NotificationType").toLowerCase()) {
             case "delivery":
                 notificationType = NotificationType.DELIVERY;
                 break;
@@ -87,15 +87,15 @@ public class NotificationServiceImpl implements NotificationService {
                 notificationType = NotificationType.RESETPASSWORD;
                 break;
         }
-        if (notificationType == null){
+        if (notificationType == null) {
             throw new InvalidRequestException("Invalid notification type.");
         }
-        if (request.getProperties().get("UserID") == null || request.getProperties().get("UserID").equals("")){
+        if (request.getProperties().get("UserID") == null || request.getProperties().get("UserID").equals("")) {
             throw new InvalidRequestException("Null UserID.");
         }
         UserType userType = null;
-        if (request.getProperties().get("UserType") != null){
-            switch (request.getProperties().get("UserType").toLowerCase()){
+        if (request.getProperties().get("UserType") != null) {
+            switch (request.getProperties().get("UserType").toLowerCase()) {
                 case "admin":
                     userType = UserType.ADMIN;
                     break;
@@ -112,13 +112,13 @@ public class NotificationServiceImpl implements NotificationService {
                     userType = null;
                     break;
             }
-        }else{
+        } else {
             userType = null;
         }
-        if (userType == null){
+        if (userType == null) {
             throw new InvalidRequestException("Invalid UserType.");
         }
-        if (userType == UserType.ADMIN){
+        if (userType == UserType.ADMIN) {
             Admin admin = null;
             try {
                 Map<String, Object> parts = new HashMap<String, Object>();
@@ -127,13 +127,13 @@ public class NotificationServiceImpl implements NotificationService {
                 URI uri = new URI(stringUri);
                 ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetAdminByUUIDResponse.class);
                 admin = useCaseResponseEntity.getBody().getAdmin();
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
-            if (admin == null){
+            if (admin == null) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
-        } else if (userType == UserType.CUSTOMER){
+        } else if (userType == UserType.CUSTOMER) {
             Customer customer = null;
             try {
                 Map<String, Object> parts = new HashMap<String, Object>();
@@ -142,28 +142,28 @@ public class NotificationServiceImpl implements NotificationService {
                 URI uri = new URI(stringUri);
                 ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetCustomerByUUIDResponse.class);
                 customer = useCaseResponseEntity.getBody().getCustomer();
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
-            if (customer == null){
+            if (customer == null) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
-        } else if (userType == UserType.DRIVER){
+        } else if (userType == UserType.DRIVER) {
             Driver driver = null;
-            try{
+            try {
                 Map<String, Object> parts = new HashMap<String, Object>();
                 parts.put("userID", request.getProperties().get("UserID"));
-                String stringUri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+                String stringUri = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
                 URI uri = new URI(stringUri);
                 ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class);
                 driver = useCaseResponseEntity.getBody().getDriver();
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
-            if (driver == null){
+            if (driver == null) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
-        } else if (userType == UserType.SHOPPER){
+        } else if (userType == UserType.SHOPPER) {
             Shopper shopper = null;
             try {
                 Map<String, Object> parts = new HashMap<String, Object>();
@@ -172,16 +172,16 @@ public class NotificationServiceImpl implements NotificationService {
                 URI uri = new URI(stringUri);
                 ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
                 shopper = useCaseResponseEntity.getBody().getShopper();
-            }catch (Exception e){
-            throw new InvalidRequestException("User does not exist in database.");
-        }
-            if (shopper == null){
+            } catch (Exception e) {
+                throw new InvalidRequestException("User does not exist in database.");
+            }
+            if (shopper == null) {
                 throw new InvalidRequestException("User does not exist in database.");
             }
         }
 
         UUID notificationID = UUID.randomUUID();
-        while(notificationRepo.findById(notificationID).isPresent()){
+        while (notificationRepo.findById(notificationID).isPresent()) {
             notificationID = UUID.randomUUID();
         }
         Notification notification = new Notification(
@@ -204,18 +204,18 @@ public class NotificationServiceImpl implements NotificationService {
     public SendDirectEmailNotificationResponse sendDirectEmailNotification(SendDirectEmailNotificationRequest request) throws InvalidRequestException {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getSubject() == null || request.getSubject().equals("") || request.getMessage() == null || request.getMessage().equals("") || request.getEmail() == null || request.getEmail().equals("")){
+        if (request.getSubject() == null || request.getSubject().equals("") || request.getMessage() == null || request.getMessage().equals("") || request.getEmail() == null || request.getEmail().equals("")) {
             throw new InvalidRequestException("Empty parameters.");
         }
         Matcher matcher = pattern.matcher(request.getEmail());
-        if (!matcher.matches()){
+        if (!matcher.matches()) {
             throw new InvalidRequestException("Invalid recipient email address.");
         }
         sendEmail(request.getEmail(), request.getSubject(), request.getMessage());
-        SendDirectEmailNotificationResponse response = new SendDirectEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",request.getEmail(), request.getSubject(), request.getMessage()));
+        SendDirectEmailNotificationResponse response = new SendDirectEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s", request.getEmail(), request.getSubject(), request.getMessage()));
         return response;
     }
 
@@ -223,27 +223,27 @@ public class NotificationServiceImpl implements NotificationService {
     public SendEmailNotificationResponse sendEmailNotification(SendEmailNotificationRequest request) throws InvalidRequestException, URISyntaxException {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
-        if(request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if(request.getUserID() == null || request.getUserID().equals("")){
+        if (request.getUserID() == null || request.getUserID().equals("")) {
             throw new InvalidRequestException("Null userID.");
         }
-        if (request.getUserType() == null){
+        if (request.getUserType() == null) {
             throw new InvalidRequestException("Invalid UserType.");
         }
         String email = getEmail(request.getUserType(), request.getUserID());
-        if (email == ""){
+        if (email == "") {
             throw new InvalidRequestException("User not found in database.");
         }
-        if (email == null){
+        if (email == null) {
             throw new InvalidRequestException("Null recipient email address.");
         }
         Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches()){
+        if (!matcher.matches()) {
             throw new InvalidRequestException("Invalid recipient email address.");
         }
-        if(request.getSubject() == null || request.getSubject().equals("") || request.getMessage() == null || request.getMessage().equals("")){
+        if (request.getSubject() == null || request.getSubject().equals("") || request.getMessage() == null || request.getMessage().equals("")) {
             throw new InvalidRequestException("Empty parameters.");
         }
         Map<String, String> properties = new HashMap<>();
@@ -255,40 +255,73 @@ public class NotificationServiceImpl implements NotificationService {
         CreateNotificationRequest request1 = new CreateNotificationRequest(request.getMessage(), Calendar.getInstance(), properties);
         createNotification(request1);
         sendEmail(email, request.getSubject(), request.getMessage());
-        return new SendEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s",email, request.getSubject(), request.getMessage()));
+        return new SendEmailNotificationResponse(true, String.format("Email sent to %s - Subject: %s - Content: %s", email, request.getSubject(), request.getMessage()));
     }
 
     @Override
     public SendPDFEmailNotificationResponse sendPDFEmailNotification(SendPDFEmailNotificationRequest request) throws InvalidRequestException, URISyntaxException {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
-        if (request == null){
+        if (request == null) {
             throw new InvalidRequestException("Null request object.");
         }
-        if (request.getPDF() == null || request.getUserID() == null || request.getMessage() == null || request.getSubject() == null || request.getUserType() == null){
+        if (request.getPDF() == null || request.getUserID() == null || request.getMessage() == null || request.getSubject() == null || request.getUserType() == null) {
             throw new InvalidRequestException("Null parameters.");
         }
         String email = getEmail(request.getUserType(), request.getUserID());
-        if (email == ""){
+        if (email == "") {
             throw new InvalidRequestException("User not found in database.");
         }
-        if (email == null){
+        if (email == null) {
             throw new InvalidRequestException("Null recipient email address.");
         }
         Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches()){
+        if (!matcher.matches()) {
             throw new InvalidRequestException("Invalid recipient email address.");
         }
-        if(request.getSubject().equals("") || request.getMessage().equals("")){
+        if (request.getSubject().equals("") || request.getMessage().equals("")) {
             throw new InvalidRequestException("Empty parameters.");
         }
         SendPDFEmailNotificationResponse response;
-        try{
+        try {
             sendEmailWithPDF(email, request.getSubject(), request.getMessage(), request.getPDF());
             response = new SendPDFEmailNotificationResponse(true, "Email sent successfully");
-        }catch(Exception e){
-             response = new SendPDFEmailNotificationResponse(false, e.getMessage());
+        } catch (Exception e) {
+            response = new SendPDFEmailNotificationResponse(false, e.getMessage());
         }
+        return response;
+    }
+
+    @Override
+    public SendPDFEmailResponse sendPDFEmail(SendPDFEmailRequest request) throws InvalidRequestException {
+
+        String email = request.getEmail();
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+
+
+        if (request == null) {
+            throw new InvalidRequestException("Null request object.");
+        }
+
+        if (request.getPDF() == null || request.getEmail() == null) {
+            throw new InvalidRequestException("Null parameters.");
+        }
+
+        Matcher matcher = pattern.matcher(email);
+        SendPDFEmailResponse response;
+
+        if (!matcher.matches()) {
+            throw new InvalidRequestException("Invalid recipient email address.");
+        }
+
+        try {
+            sendEmailWithPDF(email, "Recommendation Table", "Recommendation Table", request.getPDF());
+            response = new SendPDFEmailResponse(true, "Email sent successfully");
+        } catch (Exception e) {
+            response = new SendPDFEmailResponse(false, e.getMessage());
+        }
+
         return response;
     }
 
@@ -302,7 +335,7 @@ public class NotificationServiceImpl implements NotificationService {
         javaMailSender.send(msg);
     }
 
-    public void sendEmailWithPDF(String email, String subject, String body, byte[] pdf){
+    public void sendEmailWithPDF(String email, String subject, String body, byte[] pdf) {
 
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
@@ -336,77 +369,77 @@ public class NotificationServiceImpl implements NotificationService {
 
             //send off the email
             javaMailSender.send(mimeMessage);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     public String getEmail(UserType userType, UUID userID) throws URISyntaxException {
         String email = "";
-        if (userType == UserType.ADMIN){
+        if (userType == UserType.ADMIN) {
             //Admin admin = adminRepo.findById(request.getUserID()).orElse(null);
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID.toString());
-            String stringUri = "http://"+userHost+":"+userPort+"/user/getAdminByUUID";
+            String stringUri = "http://" + userHost + ":" + userPort + "/user/getAdminByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetAdminByUUIDResponse> useCaseResponseEntity;
             try {
                 useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetAdminByUUIDResponse.class);
-            }catch (Exception e){
+            } catch (Exception e) {
                 return "";
             }
             Admin admin = useCaseResponseEntity.getBody().getAdmin();
-            if (admin == null){
+            if (admin == null) {
                 return "";
             }
             email = admin.getEmail();
-        } else if (userType == UserType.CUSTOMER){
+        } else if (userType == UserType.CUSTOMER) {
             //Customer customer = customerRepo.findById(request.getUserID()).orElse(null);
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID.toString());
-            String stringUri = "http://"+userHost+":"+userPort+"/user/getCustomerByUUID";
+            String stringUri = "http://" + userHost + ":" + userPort + "/user/getCustomerByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity;
             try {
                 useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetCustomerByUUIDResponse.class);
-            }catch (Exception e){
-            return "";
+            } catch (Exception e) {
+                return "";
             }
             Customer customer = useCaseResponseEntity.getBody().getCustomer();
-            if (customer == null){
+            if (customer == null) {
                 return "";
             }
             email = customer.getEmail();
-        }else if (userType == UserType.DRIVER){
+        } else if (userType == UserType.DRIVER) {
             //Driver driver = driverRepo.findById(request.getUserID()).orElse(null);
 
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID.toString());
-            String stringUri = "http://"+userHost+":"+userPort+"/user/getDriverByUUID";
+            String stringUri = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetDriverByUUIDResponse> useCaseResponseEntity;
             try {
                 useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetDriverByUUIDResponse.class);
-            }catch (Exception e){
+            } catch (Exception e) {
                 return "";
             }
             Driver driver = useCaseResponseEntity.getBody().getDriver();
-            if (driver == null){
+            if (driver == null) {
                 return "";
             }
             email = driver.getEmail();
-        }else if (userType == UserType.SHOPPER) {
+        } else if (userType == UserType.SHOPPER) {
             //Shopper shopper = shopperRepo.findById(request.getUserID()).orElse(null);
             Map<String, Object> parts = new HashMap<String, Object>();
             parts.put("userID", userID.toString());
-            String stringUri = "http://"+userHost+":"+userPort+"/user/getShopperByUUID";
+            String stringUri = "http://" + userHost + ":" + userPort + "/user/getShopperByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetShopperByUUIDResponse> useCaseResponseEntity;
             try {
                 useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
-            } catch (Exception e){
+            } catch (Exception e) {
                 return "";
             }
             Shopper shopper = useCaseResponseEntity.getBody().getShopper();

@@ -26,7 +26,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
+public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${env.SHOPPER_AUTHORITY}")
     private String SHOPPER_AUTHORITY = "ROLE_SHOPPER";
@@ -86,7 +86,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
             new AntPathRequestMatcher("/user/verifyAccount"),
             new AntPathRequestMatcher("/shopping/populateTables"),
             new AntPathRequestMatcher("/user/getCustomerByEmail"),
-            new AntPathRequestMatcher("/user/getShopperByEmail")
+            new AntPathRequestMatcher("/user/getShopperByEmail"),
+            new AntPathRequestMatcher("/user/getDriverByEmail"),
+            new AntPathRequestMatcher("/user/getDriverByUUID"),
+            //remove later
+            new AntPathRequestMatcher("/user/itemNotAvailable"),
+            new AntPathRequestMatcher("/user/getOrdersWithProblems"),
+            new AntPathRequestMatcher("/user/driverSetRating")
     );
 
     @Override

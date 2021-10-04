@@ -23,10 +23,10 @@ public class RecommendationListener implements MessageListener {
     public void onMessage(Message message) {
         AddRecommendationRequest addRecommendationRequest = null;
         RemoveRecommendationRequest removeRecommendationRequest = null;
-        try{
+        try {
             ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(message.getBody()));
             Object o = in.readObject();
-            if (o instanceof AddRecommendationRequest){
+            if (o instanceof AddRecommendationRequest) {
                 addRecommendationRequest = (AddRecommendationRequest) o;
                 recommendationService.addRecommendation(addRecommendationRequest);
             } else if (o instanceof RemoveRecommendationRequest) {

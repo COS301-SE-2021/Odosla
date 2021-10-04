@@ -11,7 +11,7 @@ public class GetOrdersResponse {
     private final List<Order> orders;
     private final boolean success;
     private final String message;
-    @JsonFormat(pattern="E MMM dd HH:mm:ss z yyyy")
+    @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     private final Date timestamp;
 
     public GetOrdersResponse() {
