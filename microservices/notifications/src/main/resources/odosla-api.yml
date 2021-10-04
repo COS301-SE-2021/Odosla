@@ -142,7 +142,7 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        responseMessage:
+        message:
           type: string
-        isSuccess:
+        success:
           type: boolean

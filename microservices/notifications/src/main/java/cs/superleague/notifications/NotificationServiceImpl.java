@@ -299,7 +299,6 @@ public class NotificationServiceImpl implements NotificationService {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
 
-        System.out.println("hello");
 
         if (request == null) {
             throw new InvalidRequestException("Null request object.");

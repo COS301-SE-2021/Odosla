@@ -134,16 +134,16 @@ public class NotificationController implements NotificationApi {
             SendPDFEmailRequest request = new SendPDFEmailRequest(body.getEmail(), body.getPDF());
             SendPDFEmailResponse sendPDFEmailResponse = notificationService.sendPDFEmail(request);
             try {
-                response.setIsSuccess(sendPDFEmailResponse.isSuccess());
-                response.setResponseMessage(sendPDFEmailResponse.getMessage());
+                response.setSuccess(sendPDFEmailResponse.isSuccess());
+                response.setMessage(sendPDFEmailResponse.getMessage());
             } catch (Exception e) {
-                response.setIsSuccess(false);
-                response.setResponseMessage(e.getMessage());
+                response.setSuccess(false);
+                response.setMessage(e.getMessage());
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            response.setIsSuccess(false);
-            response.setResponseMessage(e.getMessage());
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
             e.printStackTrace();
         }
         return new ResponseEntity<>(response, httpStatus);
