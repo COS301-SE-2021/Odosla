@@ -1,10 +1,12 @@
 package cs.superleague.recommendation;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import cs.superleague.notifications.responses.SendPDFEmailResponse;
 import cs.superleague.payment.dataclass.CartItem;
 import cs.superleague.payment.dataclass.Order;
-import cs.superleague.payment.responses.GetAllCartItemsResponse;
 import cs.superleague.payment.responses.GetOrderByUUIDResponse;
-import cs.superleague.payment.responses.GetOrderResponse;
 import cs.superleague.recommendation.dataclass.Recommendation;
 import cs.superleague.recommendation.exceptions.InvalidRequestException;
 import cs.superleague.recommendation.exceptions.RecommendationRepoException;
@@ -13,10 +15,10 @@ import cs.superleague.recommendation.requests.AddRecommendationRequest;
 import cs.superleague.recommendation.requests.GetCartRecommendationRequest;
 import cs.superleague.recommendation.requests.GetOrderRecommendationRequest;
 import cs.superleague.recommendation.requests.RemoveRecommendationRequest;
+import cs.superleague.recommendation.responses.GenerateRecommendationTablePDFResponse;
 import cs.superleague.shopping.exceptions.ItemDoesNotExistException;
 import cs.superleague.recommendation.requests.*;
 import cs.superleague.recommendation.responses.GenerateRecommendationTableResponse;
-import cs.superleague.shopping.responses.GetAllItemsResponse;
 import cs.superleague.recommendation.responses.GetCartRecommendationResponse;
 import cs.superleague.recommendation.responses.GetOrderRecommendationResponse;
 import cs.superleague.shopping.dataclass.Item;
@@ -24,14 +26,16 @@ import cs.superleague.shopping.responses.GetItemsByIDResponse;
 import cs.superleague.shopping.responses.GetItemsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.List;
 
 @Service("recommendationServiceImpl")
 public class RecommendationServiceImpl implements RecommendationService {
@@ -43,6 +47,10 @@ public class RecommendationServiceImpl implements RecommendationService {
     private String shoppingHost;
     @Value("${shoppingPort}")
     private String shoppingPort;
+    @Value("${notificationsHost}")
+    private String notificationHost;
+    @Value("${notificationsPort}")
+    private String notificationPort;
 
     private final RecommendationRepo recommendationRepo;
     private final RestTemplate restTemplate;
@@ -299,17 +307,28 @@ public class RecommendationServiceImpl implements RecommendationService {
 
             if(recommendations!=null){
 
+                List<String> uniqueProductIDs = new ArrayList<>();
+
                 for(int k = 0; k < recommendations.size(); k++)
                 {
                     if(k == 0){
                         sizeOfTable++;
                         orderIDs.add(recommendations.get(k).getOrderID());
+                        uniqueProductIDs.add(recommendations.get(k).getProductID());
                     }
                     else{
                         boolean found = false;
+                        boolean foundProduct = false;
                         for (UUID orderID : orderIDs) {
                             if (orderID.equals(recommendations.get(k).getOrderID())) {
                                 found = true;
+                                break;
+                            }
+                        }
+
+                        for (String prodID : uniqueProductIDs) {
+                            if (prodID.equals(recommendations.get(k).getProductID())) {
+                                foundProduct = true;
                                 break;
                             }
                         }
@@ -318,39 +337,58 @@ public class RecommendationServiceImpl implements RecommendationService {
                             sizeOfTable++;
                             orderIDs.add(recommendations.get(k).getOrderID());
                         }
+                        if(!foundProduct){
+                            uniqueProductIDs.add(recommendations.get(k).getProductID());
+                        }
                     }
                 }
 
-                for(int i = 0; i < sizeOfTable; i++)  {
+                for(int i = 0; i < sizeOfTable + 1; i++)  {
                     recommendationTable.add(new ArrayList<String>());
                 }
 
-                for(int k = 0; k < sizeOfTable; k++){
-                    List<Recommendation> orderIDRecommendations = recommendationRepo.findRecommendationsByOrderID(orderIDs.get(k));
-                    List<String> productIDs = new ArrayList<>();
+                Map<String, Object> parts = new HashMap<>();
+                parts.put("itemIDs", uniqueProductIDs);
+                String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItemsByID";
+                URI uri = new URI(stringUri);
+                ResponseEntity<GetItemsByIDResponse> responseEntity = restTemplate.postForEntity(
+                        uri, parts, GetItemsByIDResponse.class);
 
-                    for (Recommendation orderIDRecommendation : orderIDRecommendations) {
-                        productIDs.add(orderIDRecommendation.getProductID());
-                    }
+                List<Item> items = null;
+                if (responseEntity.getBody() != null) {
+                    items = responseEntity.getBody().getItems();
+                }
+                recommendationTable.get(0).add("");
+                for (Item value : items) {
+                    recommendationTable.get(0).add(value.getName());
+                }
 
-                    Map<String, Object> parts = new HashMap<>();
-                    parts.put("itemIDs", productIDs);
-                    String stringUri = "http://" + shoppingHost + ":" + shoppingPort + "/shopping/getItemsByID";
-                    URI uri = new URI(stringUri);
-                    ResponseEntity<GetItemsByIDResponse> responseEntity = restTemplate.postForEntity(
-                            uri, parts, GetItemsByIDResponse.class);
+                for(int i = 1; i < sizeOfTable + 1; i++)  {
+                    recommendationTable.get(i).add(orderIDs.get(i - 1).toString());
+                }
 
-                    List<Item> items = null;
-                    if (responseEntity.getBody() != null) {
-                        items = responseEntity.getBody().getItems();
-                    }
+                for(int k = 1; k < sizeOfTable + 1; k++){
 
-                    if (items != null){
-                        for (Item item : items) {
-                            recommendationTable.get(k).add(item.getName());
+                    parts = new HashMap<>();
+                    parts.put("orderID", orderIDs.get(k - 1));
+                    stringUri = "http://" + paymentHost + ":" + paymentPort + "/payment/getOrderByUUID";
+                    uri = new URI(stringUri);
+                    ResponseEntity<GetOrderByUUIDResponse> response = restTemplate.postForEntity(
+                            uri, parts, GetOrderByUUIDResponse.class);
+
+                    List<CartItem> itemList = response.getBody().getOrder().getCartItems();
+
+
+                    for (int i = 0; i < items.size(); i++) {
+                        for (int j = 0; j < itemList.size(); j++) {
+
+                            if (itemList.get(j).getProductID().equals(items.get(i).getProductID())) {
+                                recommendationTable.get(k).add("1");
+                            }else{
+                                recommendationTable.get(k).add("0");
+                            }
                         }
                     }
-
                 }
 
                 return new GenerateRecommendationTableResponse(true, "Table created successfully", recommendationTable);
@@ -360,6 +398,67 @@ public class RecommendationServiceImpl implements RecommendationService {
             }
 
         }
+    }
+
+    @Override
+    public GenerateRecommendationTablePDFResponse generateRecommendationTablePDF(
+            GenerateRecommendationTablePDFRequest request) throws InvalidRequestException, URISyntaxException, DocumentException {
+
+        if(request == null){
+            throw new InvalidRequestException("GenerateRecommendationTablePDF Request object is null");
+        }
+
+        if(request.getEmail() == null){
+            throw new InvalidRequestException("Email in GenerateRecommendationTablePDF Request object is null");
+        }
+
+        PdfPTable table = null;
+        PdfPTable table2 = null;
+        Document document = new Document();
+        List<List<String>> recommendationTable;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
+
+        GenerateRecommendationTableResponse response = generateRecommendationTable(new
+                GenerateRecommendationTableRequest());
+
+        recommendationTable = response.getRecommendationTable();
+
+        document.open();
+        Paragraph title = new Paragraph("Odosla - Recommendation Table", FontFactory.getFont(FontFactory.TIMES, 40, Font.BOLD));
+        document.add(title);
+        document.add(new Paragraph(" "));
+
+        table = new PdfPTable(recommendationTable.get(0).size());
+
+        for (int i = 0; i < recommendationTable.size(); i++) {
+            for (int j = 0; j < recommendationTable.get(0).size(); j++) {
+                table.addCell(recommendationTable.get(i).get(j));
+            }
+        }
+
+        document.add(table);
+        document.close();
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("email", request.getEmail());
+        properties.put("PDF", byteArrayOutputStream.toByteArray());
+
+        ResponseEntity<SendPDFEmailResponse> responseEntity =
+                restTemplate.postForEntity("http://" + notificationHost + ":" + notificationPort +
+                        "/notification/sendPDFEmail", properties, SendPDFEmailResponse.class);
+
+        if(responseEntity == null || responseEntity.getBody() == null){
+            return new GenerateRecommendationTablePDFResponse(false, "Error sending email - Notification Error");
+        }
+
+        System.out.println(responseEntity.getBody().getMessage());
+
+        if(!responseEntity.getBody().isSuccess()){
+            return new GenerateRecommendationTablePDFResponse(false, "Could not send email");
+        }
+
+        return new GenerateRecommendationTablePDFResponse(true, "Email with PDF successfully sent");
     }
 
 }
