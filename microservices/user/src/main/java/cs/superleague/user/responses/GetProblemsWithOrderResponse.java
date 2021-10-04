@@ -1,32 +1,34 @@
 package cs.superleague.user.responses;
 
+import cs.superleague.payment.dataclass.CartItem;
+
 public class GetProblemsWithOrderResponse {
-    private String currentProductBarcode;
-    private String alternativeProductBarcode;
+    private CartItem currentProductWithProblem;
+    private CartItem alternativeProduct;
     private boolean problem;
     private String message;
 
-    public GetProblemsWithOrderResponse(String currentProductBarcode, String alternativeProductBarcode, boolean problem, String message) {
-        this.currentProductBarcode = currentProductBarcode;
-        this.alternativeProductBarcode = alternativeProductBarcode;
+    public GetProblemsWithOrderResponse(CartItem currentProductWithProblem, CartItem alternativeProduct, boolean problem, String message) {
+        this.currentProductWithProblem = currentProductWithProblem;
+        this.alternativeProduct = alternativeProduct;
         this.problem = problem;
         this.message = message;
     }
 
-    public String getCurrentProductBarcode() {
-        return currentProductBarcode;
+    public CartItem getCurrentProductWithProblem() {
+        return currentProductWithProblem;
     }
 
-    public void setCurrentProductBarcode(String currentProductBarcode) {
-        this.currentProductBarcode = currentProductBarcode;
+    public void setCurrentProductWithProblem(CartItem currentProductWithProblem) {
+        this.currentProductWithProblem = currentProductWithProblem;
     }
 
-    public String getAlternativeProductBarcode() {
-        return alternativeProductBarcode;
+    public CartItem getAlternativeProduct() {
+        return alternativeProduct;
     }
 
-    public void setAlternativeProductBarcode(String alternativeProductBarcode) {
-        this.alternativeProductBarcode = alternativeProductBarcode;
+    public void setAlternativeProduct(CartItem alternativeProduct) {
+        this.alternativeProduct = alternativeProduct;
     }
 
     public boolean isProblem() {

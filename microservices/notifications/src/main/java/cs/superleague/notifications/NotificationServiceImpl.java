@@ -292,6 +292,39 @@ public class NotificationServiceImpl implements NotificationService {
         return response;
     }
 
+    @Override
+    public SendPDFEmailResponse sendPDFEmail(SendPDFEmailRequest request) throws InvalidRequestException {
+
+        String email = request.getEmail();
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+
+
+        if (request == null) {
+            throw new InvalidRequestException("Null request object.");
+        }
+
+        if (request.getPDF() == null || request.getEmail() == null) {
+            throw new InvalidRequestException("Null parameters.");
+        }
+
+        Matcher matcher = pattern.matcher(email);
+        SendPDFEmailResponse response;
+
+        if (!matcher.matches()) {
+            throw new InvalidRequestException("Invalid recipient email address.");
+        }
+
+        try {
+            sendEmailWithPDF(email, "Recommendation Table", "Recommendation Table", request.getPDF());
+            response = new SendPDFEmailResponse(true, "Email sent successfully");
+        } catch (Exception e) {
+            response = new SendPDFEmailResponse(false, e.getMessage());
+        }
+
+        return response;
+    }
+
     public void sendEmail(String email, String Subject, String Body) {
 
         SimpleMailMessage msg = new SimpleMailMessage();

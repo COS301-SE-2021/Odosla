@@ -207,6 +207,72 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/payment_GetOrderByUUIDResponse"
+
+  /payment/fixOrderProblem:
+    post:
+      summary: Endpoint for fixing the order problem
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: fixOrderProblem
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_FixOrderProblemRequest"
+      responses:
+        "200":
+          description: Returns the order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_FixOrderProblemResponse"
+
+  /payment/getStatusOfMultipleOrders:
+    post:
+      summary: Endpoint for getting the status of an order
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: getStatusOfMultipleOrders
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_GetStatusOfMultipleOrdersRequest"
+      responses:
+        "200":
+          description: Returns the status of an order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_GetStatusOfMultipleOrdersResponse"
+
+  /payment/reviewPayment:
+    post:
+      summary: Endpoint for getting a review of an order being placed
+      tags:
+        - "payment"
+      description: Refer to summary
+      operationId: reviewPayment
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/payment_ReviewPaymentRequest"
+      responses:
+        "200":
+          description: Returns the status of an order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/payment_ReviewPaymentResponse"
 components:
 
   schemas:
@@ -237,6 +303,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     OrderObject:
       description: "Generic schema for an Order"
@@ -247,6 +315,8 @@ components:
         userID:
           type: string
         storeID:
+          type: string
+        driverID:
           type: string
         shopperID:
           type: string
@@ -313,7 +383,11 @@ components:
             $ref: "#/components/schemas/ItemObject"
         discount:
           type: number
-        storeID:
+        storeIDOne:
+          type: string
+        storeIDTwo:
+          type: string
+        storeIDThree:
           type: string
         orderType:
           type: string
@@ -328,7 +402,11 @@ components:
       description: This object is expected as output
       type: object
       properties:
-        order:
+        orderOne:
+          $ref: "#/components/schemas/OrderObject"
+        orderTwo:
+          $ref: "#/components/schemas/OrderObject"
+        orderThree:
           $ref: "#/components/schemas/OrderObject"
         message:
           type: string
@@ -336,6 +414,8 @@ components:
         success:
           type: boolean
         timestamp:
+          type: string
+        deliveryID:
           type: string
 
     payment_GetStatusRequest:
@@ -512,3 +592,91 @@ components:
           type: string
         message:
           type: string
+
+    payment_FixOrderProblemRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItem:
+          $ref: "#/components/schemas/CartItemObject"
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    payment_FixOrderProblemResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
+        message:
+          type: string
+
+    payment_GetStatusOfMultipleOrdersRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        deliveryID:
+          type: string
+
+    payment_GetStatusOfMultipleOrdersResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        status:
+          type: string
+        success:
+          type: boolean
+        message:
+          type: string
+        timestamp:
+            type: string
+
+    payment_ReviewPaymentRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        listOfItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemObject"
+        discount:
+          type: number
+        storeIDOne:
+          type: string
+        storeIDTwo:
+          type: string
+        storeIDThree:
+          type: string
+        orderType:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+        address:
+          type: string
+
+    payment_ReviewPaymentResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        costOfDelivery:
+          type: number
+        costOfOrderOne:
+          type: number
+        costOfOrderTwo:
+          type: number
+        costOfOrderThree:
+          type: number
+        packingCostOfOrderOne:
+          type: number
+        packingCostOfOrderTwo:
+          type: number
+        packingCostOfOrderThree:
+          type: number
+        totalCost:
+          type: number

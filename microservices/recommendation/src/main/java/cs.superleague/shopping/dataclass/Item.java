@@ -1,23 +1,19 @@
 package cs.superleague.shopping.dataclass;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
 @Table
-public class Item {
+public class Item implements Serializable {
 
     @Id
-    @JsonProperty("productId")
     private String productID;
     private String name;
     private String barcode;
-
-    @JsonProperty("storeId")
     private UUID storeID;
     private double price;
     private int quantity;
@@ -26,6 +22,7 @@ public class Item {
     private String brand;
     private String size;
     private String itemType;
+    private Boolean soldOut;
 
     public Item() {
     }
@@ -141,5 +138,13 @@ public class Item {
 
     public void setItemType(String itemType) {
         this.itemType = itemType;
+    }
+
+    public boolean isSoldOut() {
+        return soldOut;
+    }
+
+    public void setSoldOut(boolean soldOut) {
+        this.soldOut = soldOut;
     }
 }

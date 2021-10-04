@@ -276,6 +276,137 @@ paths:
               schema:
                 $ref: "#/components/schemas/shopping_GetProductByBarcodeResponse"
 
+  /shopping/priceCheck:
+    post:
+      summary: Endpoint price Check
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: priceCheck
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PriceCheckRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PriceCheckResponse"
+
+  /shopping/priceCheckAllAvailableStores:
+    post:
+      summary: Endpoint price Check
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: priceCheckAllAvailableStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PriceCheckAllAvailableStoresRequest"
+      responses:
+        "200":
+          description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PriceCheckAllAvailableStoresResponse"
+
+  /shopping/getCloseEnoughStores:
+    post:
+      summary: Endpoint for getting close enough stores for added order
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: getCloseEnoughStores
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_GetCloseEnoughStoresRequest"
+      responses:
+        "200":
+          description: Returns close enough stores for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_GetCloseEnoughStoresResponse"
+
+  /shopping/itemIsInStock:
+    post:
+      summary: Endpoint for setting an item to in stock
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: itemIsInStock
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_ItemIsInStockRequest"
+      responses:
+        "200":
+          description: Returns close enough stores for delivery
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_ItemIsInStockResponse"
+
+  /shopping/calculateOverallDistance:
+    post:
+      summary: Endpoint for calculating the overall distance.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: calculateOverallDistance
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_CalculateOverallDistanceRequest"
+      responses:
+        "200":
+          description: Returns upon success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_CalculateOverallDistanceResponse"
+
+  /shopping/priceCheckWithDelivery:
+    post:
+      summary: Endpoint for price checking items with delivery cost included.
+      tags:
+        - "Shopping"
+      description: Refer to summary
+      operationId: priceCheckWithDelivery
+      requestBody:
+        description: The input body required by this request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/shopping_PriceCheckWithDeliveryRequest"
+      responses:
+        "200":
+          description: Returns the new order if it's better or now
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/shopping_PriceCheckWithDeliveryResponse"
 
 components:
 
@@ -307,6 +438,8 @@ components:
           type: string
         itemType:
           type: string
+        soldOut:
+          type: boolean
 
     shopping_GetItemsRequest:
       description: This object is expected as input
@@ -726,3 +859,157 @@ components:
           type: string
         product:
           $ref: "#/components/schemas/ItemObject"
+
+    shopping_PriceCheckRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    shopping_PriceCheckResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        success:
+          type: boolean
+        message:
+          type: string
+
+    shopping_PriceCheckAllAvailableStoresRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+
+    shopping_PriceCheckAllAvailableStoresResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        success:
+          type: boolean
+        message:
+          type: string
+
+    shopping_GetCloseEnoughStoresRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        storeID:
+          type: string
+        customersAddress:
+          type: string
+        customersLongitude:
+          type: number
+        customersLatitude:
+          type: number
+
+    shopping_GetCloseEnoughStoresResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: "#/components/schemas/StoreObject"
+        additionalDeliveryCosts:
+          type: array
+          items:
+            type: number
+        message:
+          type: string
+
+    shopping_ItemIsInStockRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        barcode:
+          type: string
+        storeID:
+          type: string
+        outOfStock:
+          type: boolean
+
+    shopping_ItemIsInStockResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+
+    shopping_CalculateOverallDistanceRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        store1ID:
+          type: string
+        store2ID:
+          type: string
+        store3ID:
+          type: string
+        customerLocation:
+          $ref: "#/components/schemas/GeoPointObject"
+
+    shopping_CalculateOverallDistanceResponse:
+      description: This object is returned as output
+      type: object
+      properties:
+        message:
+          type: string
+        success:
+          type: boolean
+        distance:
+          type: number
+
+    shopping_PriceCheckWithDeliveryRequest:
+      description: This object is expected as input
+      type: object
+      properties:
+        cartItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        storeIDOne:
+          type: string
+        storeIDTwo:
+          type: string
+        storeIDThree:
+          type: string
+        address:
+          type: string
+        longitude:
+          type: number
+        latitude:
+          type: number
+
+    shopping_PriceCheckWithDeliveryResponse:
+      description: This object is expected as output
+      type: object
+      properties:
+        cheaperItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemObject"
+        storeOneID:
+          type: string
+        storeTwoID:
+          type: string
+        storeThreeID:
+          type: string
+        newOrder:
+          type: boolean

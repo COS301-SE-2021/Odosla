@@ -1,6 +1,8 @@
 package cs.superleague.shopping;
 
 import cs.superleague.integration.security.CurrentUser;
+import cs.superleague.payment.dataclass.CartItem;
+import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderStatus;
 import cs.superleague.payment.requests.SaveOrderToRepoRequest;
@@ -1458,7 +1460,7 @@ public class ShoppingServiceImpl implements ShoppingService {
         SaveOrderToRepoRequest saveOrderToRepoRequest = new SaveOrderToRepoRequest(updatedOrder);
         rabbit.convertAndSend("PaymentEXCHANGE", "RK_SaveOrderToRepo", saveOrderToRepoRequest);
 
-        Store store = null;
+        Store store;
         try {
             store = storeRepo.findById(request.getOrder().getStoreID()).orElse(null);
         } catch (Exception e) {
@@ -1511,8 +1513,632 @@ public class ShoppingServiceImpl implements ShoppingService {
         if (product == null) {
             throw new ItemDoesNotExistException("The item requested does not exist in the database.");
         }
-        GetProductByBarcodeResponse response = new GetProductByBarcodeResponse(true, "The item related to the barcode and store has been returned.", product);
+        return new GetProductByBarcodeResponse(true, "The item related to the barcode and store has been returned.", product);
+    }
+
+    @Override
+    public PriceCheckResponse priceCheck(PriceCheckRequest request) throws InvalidRequestException {
+        double moneySaved = 0.0;
+        List<Item> items;
+        List<Item> cheaperItems = new ArrayList<>();
+        List<CartItem> requestCartItems = new ArrayList<>();
+        String message = "Price check successfully completed";
+
+        if (request == null) {
+            throw new InvalidRequestException("Request object can't be null - can't perform a price check");
+        }
+
+        if (request.getCartItems() == null) {
+            throw new InvalidRequestException("CartItem list in parameter request can't be null - can't perform" +
+                    " a price check");
+        }
+
+        if (request.getCartItems().size() == 0) {
+            message = "No items in CartItem List, could not perform a price check.";
+            return new PriceCheckResponse(requestCartItems, message, false);
+        }
+
+        items = itemRepo.findAll();
+        UUID firstStoreIDFound = null;
+        UUID secondStoreIDFound = null;
+        UUID thirdStoreIDFound = null;
+
+        // stores all the cheaper items in a new list
+        for (Item item : items) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (item.getBarcode().equals(cartItem.getBarcode()) &&
+                        item.getPrice() < cartItem.getPrice()) {
+                    cheaperItems.add(item);
+                    moneySaved = moneySaved + (cartItem.getPrice() - item.getPrice());
+                }
+            }
+        }
+
+        // removes duplicate items with higher prices
+        List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
+        for (Item item : cheaperItemsCopy) {
+            cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
+                    i.getPrice() > item.getPrice());
+        }
+
+        requestCartItems.addAll(request.getCartItems());
+
+        // removes expensive items from the cart items list
+        for (Item item : cheaperItems) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (cartItem.getBarcode().equals(item.getBarcode())) {
+                    requestCartItems.remove(cartItem);
+                }
+            }
+        }
+
+        // inserts cheaper cart items in cartItem List
+        for (Item item : cheaperItems) {
+            requestCartItems.add(createCartItem(item));
+        }
+
+        return new PriceCheckResponse(requestCartItems, message, true);
+    }
+
+    @Override
+    public PriceCheckAllAvailableStoresResponse priceCheckAllAvailableStores(PriceCheckAllAvailableStoresRequest request) throws InvalidRequestException {
+
+        Store store;
+        UUID storeID;
+        double distance;
+        List<Item> items;
+        GeoPoint storeLocation;
+        List<Item> cheaperItems = new ArrayList<>();
+        List<CartItem> requestCartItems = new ArrayList<>();
+        String message = "Price check available stores successfully completed";
+
+        if (request == null) {
+            throw new InvalidRequestException("Request object can't be null - can't perform a price check");
+        }
+
+        if (request.getCartItems() == null) {
+            throw new InvalidRequestException("CartItem list in parameter request can't be null - can't perform" +
+                    " a price check");
+        }
+
+        if (request.getCartItems().size() == 0) {
+            message = "No items in CartItem List, could not perform a price check.";
+            return new PriceCheckAllAvailableStoresResponse(requestCartItems, message, false);
+        }
+
+        storeID = request.getCartItems().get(0).getStoreID();
+        store = storeRepo.findById(storeID).orElse(null);
+
+        if (store == null) {
+            throw new InvalidRequestException("CartItems do not contain a valid storeID, can't perform a " +
+                    "price Check");
+        }
+
+        storeLocation = store.getStoreLocation();
+
+        items = itemRepo.findAll();
+
+        // stores all the cheaper items from close by stores in a new list
+        for (Item item : items) {
+            storeID = item.getStoreID();
+            store = storeRepo.findById(storeID).orElse(null);
+
+            //disregards an item that may not have storeid
+            if (store == null) {
+                continue;
+            } else {
+
+                distance = getDistance(storeLocation, store.getStoreLocation());
+
+                if (distance < 10) {
+                    for (CartItem cartItem : request.getCartItems()) {
+                        if (item.getBarcode().equals(cartItem.getBarcode()) &&
+                                item.getPrice() < cartItem.getPrice()) {
+                            cheaperItems.add(item);
+                        }
+                    }
+                }
+            }
+        }
+
+        // removes duplicate items with higher prices
+        List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
+        for (Item item : cheaperItemsCopy) {
+            cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
+                    i.getPrice() > item.getPrice());
+        }
+
+        requestCartItems.addAll(request.getCartItems());
+
+        // removes expensive items from the cart items list
+        for (Item item : cheaperItems) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (cartItem.getBarcode().equals(item.getBarcode())) {
+                    requestCartItems.remove(cartItem);
+                }
+            }
+        }
+
+        // inserts cheaper cart items in cartItem List
+        for (Item item : cheaperItems) {
+            requestCartItems.add(createCartItem(item));
+        }
+
+        return new PriceCheckAllAvailableStoresResponse(requestCartItems, message, true);
+    }
+
+    // Helper
+    private double getDistance(GeoPoint point1, GeoPoint point2) {
+        double theta = point1.getLongitude() - point2.getLongitude();
+        double distance = Math.sin(Math.toRadians(point1.getLatitude())) * Math.sin(Math.toRadians(point2.getLatitude())) + Math.cos(Math.toRadians(point1.getLatitude())) * Math.cos(Math.toRadians(point2.getLatitude())) * Math.cos(Math.toRadians(theta));
+        distance = Math.acos(distance);
+        distance = Math.toDegrees(distance);
+        distance = distance * 60 * 1.1515 * 1.609344;
+        return distance;
+    }
+
+    private CartItem createCartItem(Item item) {
+        CartItem newCartItem = new CartItem();
+
+        newCartItem.setCartItemNo(UUID.randomUUID());
+        newCartItem.setBarcode(item.getBarcode());
+        newCartItem.setBrand(item.getBrand());
+        newCartItem.setItemType(item.getItemType());
+        newCartItem.setName(item.getName());
+        newCartItem.setDescription(item.getDescription());
+        newCartItem.setImageUrl(item.getImageUrl());
+        newCartItem.setPrice(item.getPrice());
+        newCartItem.setProductID(item.getProductID());
+        newCartItem.setQuantity(item.getQuantity());
+        newCartItem.setSize(item.getSize());
+        newCartItem.setStoreID(item.getStoreID());
+        newCartItem.setTotalCost(item.getPrice() * item.getQuantity());
+
+        return newCartItem;
+    }
+
+    @Override
+    public GetCloseEnoughStoresResponse getCloseEnoughStores(GetCloseEnoughStoresRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        if (request == null) {
+            throw new InvalidRequestException("Null request object.");
+        }
+        if (request.getStoreID() == null || request.getCustomerLocation() == null) {
+            throw new InvalidRequestException("Null parameters cannot find nearby stores.");
+        }
+        Store mainOrderStore = storeRepo.findById(request.getStoreID()).orElse(null);
+        if (mainOrderStore == null) {
+            throw new StoreDoesNotExistException("Store with the inputted storeID does not exist.");
+        }
+        List<Store> storeList = storeRepo.findAll();
+        if (storeList == null) {
+            throw new StoreDoesNotExistException("No stores found in the repository.");
+        }
+        List<Store> storesInRange = new ArrayList<>();
+        for (Store store : storeList) {
+            if (getDistance(store.getStoreLocation(), mainOrderStore.getStoreLocation()) < 10) {
+                storesInRange.add(store);
+            }
+        }
+        if (storesInRange.size() == 0) {
+            GetCloseEnoughStoresResponse response = new GetCloseEnoughStoresResponse(null, null, "No stores within range of the selected store");
+            return response;
+        }
+        double currentRouteDistance = getDistance(mainOrderStore.getStoreLocation(), request.getCustomerLocation());
+        List<Double> additionalCost = new ArrayList<>();
+        for (Store store : storesInRange) {
+            double newDistanceForStore = getDistance(mainOrderStore.getStoreLocation(), store.getStoreLocation());
+            newDistanceForStore = newDistanceForStore + getDistance(store.getStoreLocation(), request.getCustomerLocation());
+            double addedDistance = newDistanceForStore - currentRouteDistance;
+            double addedCost = getAddedCostOfDistance(addedDistance);
+            additionalCost.add(storesInRange.indexOf(store), addedCost);
+        }
+        GetCloseEnoughStoresResponse response = new GetCloseEnoughStoresResponse(storesInRange, additionalCost, "Returned the stores that can be added to the order.");
         return response;
+    }
+
+    @Override
+    public ItemIsInStockResponse itemIsInStock(ItemIsInStockRequest request) throws InvalidRequestException {
+
+        List<Item> items;
+        boolean success = false;
+        String message = "Item updated to";
+
+        if (request == null) {
+            throw new InvalidRequestException("Null ItemIsInStock request object");
+        }
+
+        if (request.getBarcode() == null) {
+            throw new InvalidRequestException("Barcode in request object is null");
+        }
+
+        if (request.getStoreID() == null) {
+            throw new InvalidRequestException("StoreID in request object is null");
+        }
+
+        items = itemRepo.findAll();
+
+        if (items == null || items.size() == 0) {
+            message = "There are no items in the database";
+            return new ItemIsInStockResponse(message, success);
+        }
+
+        for (Item item : items) {
+            if (item.getBarcode().equals(request.getBarcode()) && item.getStoreID()
+                    .equals(request.getStoreID())) {
+
+                if(request.isOutOfStock()){
+                    message = message + " out of stock";
+                    item.setSoldOut(true);
+                }else {
+                    message = message + " in stock";
+                    item.setSoldOut(false);
+                }
+
+                itemRepo.save(item);
+                success = true;
+                break;
+            }
+        }
+
+        if (!success) {
+            message = "Item with given barcode and storeID could not be found";
+            return new ItemIsInStockResponse(message, false);
+        }
+
+        return new ItemIsInStockResponse(message, true);
+    }
+
+    @Override
+    public CalculateOverallDistanceResponse calculateOverallDistance(CalculateOverallDistanceRequest request) throws InvalidRequestException {
+
+        Store store;
+        double distance = 0;
+        List<Store> stores = new ArrayList<>();
+        String message = "Overall distance successfully calculated";
+
+        if(request == null){
+            throw new InvalidRequestException("OverallDistance request object is null");
+        }
+
+        if(request.getStore1ID() == null){
+            throw new InvalidRequestException("Store1 ID in OverallDistance request object is null");
+        }
+
+        if(request.getCustomerLocation() == null){
+            throw new InvalidRequestException("GeoPoint in OverallDistance request object is null");
+        }
+
+        store = storeRepo.findById(request.getStore1ID()).orElse(null);
+
+        if(store == null){
+            message = "Store1 ID does not exist in the database";
+            return new CalculateOverallDistanceResponse(0, message, false);
+        }
+
+        stores.add(store);
+
+        if(request.getStore2ID() != null){
+            store = storeRepo.findById(request.getStore2ID()).orElse(null);
+
+            if(store != null){
+                stores.add(store);
+            }
+        }
+
+        if(request.getStore3ID() != null){
+            store = storeRepo.findById(request.getStore3ID()).orElse(null);
+
+            if(store != null){
+                stores.add(store);
+            }
+        }
+
+        for(int i = 0; i < stores.size(); i++){
+            // calculates the geopoint
+            if(i == stores.size() - 1){
+                distance += getDistance(stores.get(i).getStoreLocation(), request.getCustomerLocation());
+            }else if(i < stores.size()){
+                distance += getDistance(stores.get(i).getStoreLocation(), stores.get(i + 1).getStoreLocation());
+            }
+        }
+
+        distance *= 2;
+
+        return new CalculateOverallDistanceResponse(distance, message, true);
+    }
+
+    @Override
+    public PriceCheckWithDeliveryResponse priceCheckWithDelivery(PriceCheckWithDeliveryRequest request) throws InvalidRequestException, StoreDoesNotExistException {
+        double moneySaved = 0.0;
+        List<Item> items;
+        List<Item> cheaperItems = new ArrayList<>();
+        List<CartItem> requestCartItems = new ArrayList<>();
+        String message = "Price check successfully completed";
+
+        if (request == null) {
+            throw new InvalidRequestException("Request object can't be null - can't perform a price check");
+        }
+
+        if (request.getCartItems() == null) {
+            throw new InvalidRequestException("CartItem list in parameter request can't be null - can't perform" +
+                    " a price check");
+        }
+
+        if (request.getCartItems().size() == 0) {
+            message = "No items in CartItem List, could not perform a price check.";
+            return new PriceCheckWithDeliveryResponse(requestCartItems, request.getStoreIDOne(), request.getStoreIDTwo(), request.getStoreIDThree(), false);
+        }
+
+        items = itemRepo.findAll();
+        UUID firstStoreIDFound = request.getStoreIDOne();
+        UUID secondStoreIDFound = request.getStoreIDTwo();
+        UUID thirdStoreIDFound = request.getStoreIDThree();
+        int storeOneNumberOfItems = 0;
+        int storeTwoNumberOfItems = 0;
+        int storeThreeNumberOfItems = 0;
+
+        // stores all the cheaper items in a new list
+        for (Item item : items) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (item.getBarcode().equals(cartItem.getBarcode()) &&
+                        item.getPrice() < cartItem.getPrice()) {
+                    item.setQuantity(cartItem.getQuantity());
+                    cheaperItems.add(item);
+                    moneySaved = moneySaved + ((cartItem.getPrice() - item.getPrice()) * cartItem.getQuantity());
+                    if (firstStoreIDFound.compareTo(cartItem.getStoreID()) == 0){
+                        storeOneNumberOfItems = storeOneNumberOfItems + cartItem.getQuantity();
+                    } else if (secondStoreIDFound.compareTo(cartItem.getStoreID()) == 0){
+                        storeTwoNumberOfItems = storeTwoNumberOfItems + cartItem.getQuantity();
+                    } else {
+                        storeThreeNumberOfItems = storeThreeNumberOfItems + cartItem.getQuantity();
+                    }
+                }
+            }
+        }
+        double currentDeliveryCost = 0.0;
+        double currentPackingCost = 0.0;
+        GeoPoint customersLocation = new GeoPoint(request.getLatitude(), request.getLongitude(), request.getAddress());
+        if (secondStoreIDFound == null){
+            Store storeOne = storeRepo.findById(firstStoreIDFound).orElse(null);
+            if (storeOne == null){
+                throw new StoreDoesNotExistException("Store not found in database.");
+            }
+            double distance = getDistance(customersLocation, storeOne.getStoreLocation());
+            currentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
+            double packingCostForOrderOne = Math.ceil(storeOneNumberOfItems / 4.0);
+            packingCostForOrderOne = packingCostForOrderOne * 0.75;
+            currentPackingCost = packingCostForOrderOne;
+        } else {
+            if (thirdStoreIDFound == null){
+                Store storeOne = storeRepo.findById(firstStoreIDFound).orElse(null);
+                Store storeTwo = storeRepo.findById(secondStoreIDFound).orElse(null);
+                if (storeOne == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                if (storeTwo == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                double distance = getDistance(storeOne.getStoreLocation(), storeTwo.getStoreLocation());
+                distance = distance + getDistance(storeTwo.getStoreLocation(), customersLocation);
+                currentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
+                double packingCostForOrderOne = Math.ceil(storeOneNumberOfItems / 4.0);
+                packingCostForOrderOne = packingCostForOrderOne * 0.75;
+                double packingCostForOrderTwo = Math.ceil(storeTwoNumberOfItems / 4.0);
+                packingCostForOrderTwo = packingCostForOrderTwo * 0.75;
+                currentPackingCost = packingCostForOrderOne + packingCostForOrderTwo;
+            } else {
+                Store storeOne = storeRepo.findById(firstStoreIDFound).orElse(null);
+                Store storeTwo = storeRepo.findById(secondStoreIDFound).orElse(null);
+                Store storeThree = storeRepo.findById(thirdStoreIDFound).orElse(null);
+                if (storeOne == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                if (storeTwo == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                if (storeThree == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                double distance = getDistance(storeOne.getStoreLocation(), storeTwo.getStoreLocation());
+                distance = distance + getDistance(storeTwo.getStoreLocation(), storeThree.getStoreLocation());
+                distance = distance + getDistance(storeThree.getStoreLocation(), customersLocation);
+                currentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
+                double packingCostForOrderOne = Math.ceil(storeOneNumberOfItems / 4.0);
+                packingCostForOrderOne = packingCostForOrderOne * 0.75;
+                double packingCostForOrderTwo = Math.ceil(storeTwoNumberOfItems / 4.0);
+                packingCostForOrderTwo = packingCostForOrderTwo * 0.75;
+                double packingCostForOrderThree = Math.ceil(storeThreeNumberOfItems / 4.0);
+                packingCostForOrderThree = packingCostForOrderThree * 0.75;
+                currentPackingCost = packingCostForOrderOne + packingCostForOrderTwo + packingCostForOrderThree;
+            }
+        }
+        double totalCostOfCurrentCart = currentDeliveryCost + currentPackingCost;
+
+        // removes duplicate items with higher prices
+        List<Item> cheaperItemsCopy = new ArrayList<>(cheaperItems);
+        for (Item item : cheaperItemsCopy) {
+            cheaperItems.removeIf(i -> item.getBarcode().equals(i.getBarcode()) &&
+                    i.getPrice() > item.getPrice());
+        }
+
+        requestCartItems.addAll(request.getCartItems());
+
+        // removes expensive items from the cart items list
+        for (Item item : cheaperItems) {
+            for (CartItem cartItem : request.getCartItems()) {
+                if (cartItem.getBarcode().equals(item.getBarcode())) {
+                    requestCartItems.remove(cartItem);
+                }
+            }
+        }
+
+        // inserts cheaper cart items in cartItem List
+        for (Item item : cheaperItems) {
+            requestCartItems.add(createCartItem(item));
+        }
+        if (storeOneNumberOfItems >= storeThreeNumberOfItems) {
+            if (storeOneNumberOfItems >= storeTwoNumberOfItems) {
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(firstStoreIDFound) == 0) {
+                            System.out.println("Trying to change item over" + item.getName());
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            } else if (storeTwoNumberOfItems >= storeOneNumberOfItems) {
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(secondStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            }
+        } else {
+            if (storeTwoNumberOfItems >= storeThreeNumberOfItems){
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(secondStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            } else {
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(thirdStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            }
+        }
+
+        UUID newStoreOneID = null;
+        UUID newStoreTwoID = null;
+        UUID newStoreThreeID = null;
+
+        int newStoreOneNumberOfItems = 0;
+        int newStoreTwoNumberOfItems = 0;
+        int newStoreThreeNumberOfItems = 0;
+
+        for (CartItem item : requestCartItems){
+            if (newStoreOneID == null){
+                newStoreOneID = item.getStoreID();
+                newStoreOneNumberOfItems = newStoreOneNumberOfItems + item.getQuantity();
+            } else if (newStoreTwoID == null){
+                if (item.getStoreID().compareTo(newStoreOneID) != 0){
+                    newStoreTwoID = item.getStoreID();
+                    newStoreTwoNumberOfItems = newStoreTwoNumberOfItems + item.getQuantity();
+                }
+            } else {
+                if (newStoreThreeID == null) {
+                    if ((item.getStoreID().compareTo(newStoreOneID) != 0) || (item.getStoreID().compareTo(newStoreTwoID) != 0)) {
+                        newStoreThreeID = item.getStoreID();
+                        newStoreThreeNumberOfItems = newStoreThreeNumberOfItems + item.getQuantity();
+                    }
+                } else {
+                    if (item.getStoreID().compareTo(newStoreOneID) != 0 && item.getStoreID().compareTo(newStoreTwoID) != 0 && item.getStoreID().compareTo(newStoreThreeID) != 0){
+                        System.out.println("No cheaper orders can be made, too many different stores in order.");
+                        return new PriceCheckWithDeliveryResponse(request.getCartItems(), request.getStoreIDOne(), request.getStoreIDTwo(), request.getStoreIDThree(), false);
+                    } else {
+                        if (newStoreOneID.compareTo(item.getStoreID()) == 0){
+                            newStoreOneNumberOfItems = newStoreOneNumberOfItems + item.getQuantity();
+                        } else if (newStoreTwoID.compareTo(item.getStoreID()) == 0){
+                            newStoreTwoNumberOfItems = newStoreTwoNumberOfItems + item.getQuantity();
+                        } else {
+                            newStoreThreeNumberOfItems = newStoreThreeNumberOfItems + item.getQuantity();
+                        }
+                    }
+                }
+            }
+        }
+        if (newStoreOneNumberOfItems == 0){
+            newStoreOneID = newStoreTwoID;
+            newStoreTwoID = newStoreThreeID;
+            newStoreThreeID = null;
+            newStoreOneNumberOfItems = newStoreTwoNumberOfItems;
+            newStoreTwoNumberOfItems = newStoreThreeNumberOfItems;
+            newStoreThreeNumberOfItems = 0;
+        }
+        if (newStoreTwoNumberOfItems == 0){
+            newStoreTwoID = newStoreThreeID;
+            newStoreThreeID = null;
+            newStoreTwoNumberOfItems = newStoreThreeNumberOfItems;
+            newStoreThreeNumberOfItems = 0;
+        }
+        if (newStoreThreeNumberOfItems == 0){
+            newStoreThreeID = null;
+        }
+        double newCurrentDeliveryCost = 0.0;
+        double newCurrentPackingCost = 0.0;
+        if (newStoreTwoID == null){
+            Store storeOne = storeRepo.findById(newStoreOneID).orElse(null);
+            if (storeOne == null){
+                throw new StoreDoesNotExistException("Store not found in database.");
+            }
+            double distance = getDistance(customersLocation, storeOne.getStoreLocation());
+            newCurrentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
+            double packingCostForOrderOne = Math.ceil(newStoreOneNumberOfItems / 4.0);
+            packingCostForOrderOne = packingCostForOrderOne * 0.75;
+            newCurrentPackingCost = packingCostForOrderOne;
+        } else {
+            if (newStoreThreeID == null){
+                Store storeOne = storeRepo.findById(newStoreOneID).orElse(null);
+                Store storeTwo = storeRepo.findById(newStoreTwoID).orElse(null);
+                if (storeOne == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                if (storeTwo == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                double distance = getDistance(storeOne.getStoreLocation(), storeTwo.getStoreLocation());
+                distance = distance + getDistance(storeTwo.getStoreLocation(), customersLocation);
+                newCurrentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
+                double packingCostForOrderOne = Math.ceil(newStoreOneNumberOfItems / 4.0);
+                packingCostForOrderOne = packingCostForOrderOne * 0.75;
+                double packingCostForOrderTwo = Math.ceil(newStoreTwoNumberOfItems / 4.0);
+                packingCostForOrderTwo = packingCostForOrderTwo * 0.75;
+                newCurrentPackingCost = packingCostForOrderOne + packingCostForOrderTwo;
+            } else {
+                Store storeOne = storeRepo.findById(newStoreOneID).orElse(null);
+                Store storeTwo = storeRepo.findById(newStoreTwoID).orElse(null);
+                Store storeThree = storeRepo.findById(newStoreThreeID).orElse(null);
+                if (storeOne == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                if (storeTwo == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                if (storeThree == null){
+                    throw new StoreDoesNotExistException("Store not found in database.");
+                }
+                double distance = getDistance(storeOne.getStoreLocation(), storeTwo.getStoreLocation());
+                distance = distance + getDistance(storeTwo.getStoreLocation(), storeThree.getStoreLocation());
+                distance = distance + getDistance(storeThree.getStoreLocation(), customersLocation);
+                newCurrentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
+                double packingCostForOrderOne = Math.ceil(newStoreOneNumberOfItems / 4.0);
+                packingCostForOrderOne = packingCostForOrderOne * 0.75;
+                double packingCostForOrderTwo = Math.ceil(newStoreTwoNumberOfItems / 4.0);
+                packingCostForOrderTwo = packingCostForOrderTwo * 0.75;
+                double packingCostForOrderThree = Math.ceil(newStoreThreeNumberOfItems / 4.0);
+                packingCostForOrderThree = packingCostForOrderThree * 0.75;
+                newCurrentPackingCost = packingCostForOrderOne + packingCostForOrderTwo + packingCostForOrderThree;
+            }
+        }
+        double newTotalCostOfCurrentCart = newCurrentDeliveryCost + newCurrentPackingCost - moneySaved;
+        if (newTotalCostOfCurrentCart < totalCostOfCurrentCart){
+            return new PriceCheckWithDeliveryResponse(requestCartItems, firstStoreIDFound, secondStoreIDFound, thirdStoreIDFound, true);
+        } else {
+            System.out.println("Tried to calculate, could not find a cheaper option." + newStoreOneID + " ++ " + newStoreTwoID + " ++ " + newStoreThreeID);
+            return new PriceCheckWithDeliveryResponse(request.getCartItems(), request.getStoreIDOne(), request.getStoreIDTwo(), request.getStoreIDThree(), false);
+        }
+    }
+
+    public double getAddedCostOfDistance(double addedDistance) {
+        double addedCost = addedDistance * 2.0;
+        return addedCost;
     }
 
 }

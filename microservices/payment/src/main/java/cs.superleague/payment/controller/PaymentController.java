@@ -8,11 +8,11 @@ import cs.superleague.payment.dataclass.GeoPoint;
 import cs.superleague.payment.dataclass.Order;
 import cs.superleague.payment.dataclass.OrderType;
 import cs.superleague.payment.exceptions.InvalidRequestException;
+import cs.superleague.payment.repos.CartItemRepo;
 import cs.superleague.payment.repos.OrderRepo;
 import cs.superleague.payment.requests.*;
 import cs.superleague.payment.responses.*;
 import cs.superleague.shopping.dataclass.Item;
-import cs.superleague.shopping.responses.GetStoreByUUIDResponse;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -28,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,15 +49,18 @@ public class PaymentController implements PaymentApi {
 
     HttpServletRequest httpServletRequest;
 
+    CartItemRepo cartItemRepo;
+
     @Autowired
     public PaymentController(PaymentServiceImpl paymentService, OrderRepo orderRepo,
                              RabbitTemplate rabbitTemplate, RestTemplate restTemplate,
-                             HttpServletRequest httpServletRequest) {
+                             HttpServletRequest httpServletRequest, CartItemRepo cartItemRepo) {
         this.paymentService = paymentService;
         this.orderRepo = orderRepo;
         this.rabbitTemplate = rabbitTemplate;
         this.restTemplate = restTemplate;
         this.httpServletRequest = httpServletRequest;
+        this.cartItemRepo = cartItemRepo;
     }
 
     @Override
@@ -145,6 +149,91 @@ public class PaymentController implements PaymentApi {
     }
 
     @Override
+    public ResponseEntity<PaymentGetStatusOfMultipleOrdersResponse> getStatusOfMultipleOrders(PaymentGetStatusOfMultipleOrdersRequest body) {
+        PaymentGetStatusOfMultipleOrdersResponse response = new PaymentGetStatusOfMultipleOrdersResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+        try {
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            GetStatusOfMultipleOrdersRequest getStatusRequest = new GetStatusOfMultipleOrdersRequest(UUID.fromString(body.getDeliveryID()));
+            GetStatusOfMultipleOrdersResponse getStatusResponse = paymentService.getStatusOfMultipleOrders(getStatusRequest);
+            try {
+                response.setMessage(getStatusResponse.getMessage());
+                response.setStatus(getStatusResponse.getStatus());
+                response.setSuccess(getStatusResponse.isSuccess());
+                response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getStatusResponse.getTimestamp()));
+            } catch (Exception e) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentReviewPaymentResponse> reviewPayment(PaymentReviewPaymentRequest body) {
+        PaymentReviewPaymentResponse response = new PaymentReviewPaymentResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        OrderType orderType = null;
+        if (body.getOrderType().equals("DELIVERY")) {
+            orderType = OrderType.DELIVERY;
+        } else if (body.getOrderType().equals("COLLECTION")) {
+            orderType = OrderType.COLLECTION;
+        }
+
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
+            UUID storeOneID = null;
+            if (body.getStoreIDOne() != ""){
+                storeOneID = UUID.fromString(body.getStoreIDOne());
+            }
+            UUID storeTwoID = null;
+            if (body.getStoreIDTwo() != ""){
+                storeTwoID = UUID.fromString(body.getStoreIDTwo());
+            }
+            UUID storeThreeID = null;
+            if (body.getStoreIDThree() != ""){
+                storeThreeID = UUID.fromString(body.getStoreIDThree());
+            }
+            ReviewPaymentRequest reviewPaymentRequest = new ReviewPaymentRequest(
+                    assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
+                    storeOneID, storeTwoID, storeThreeID, orderType, body.getLongitude().doubleValue(),
+                    body.getLatitude().doubleValue(), body.getAddress());
+            ReviewPaymentResponse reviewPaymentResponse = paymentService.reviewPayment(reviewPaymentRequest);
+            try {
+                response.setCostOfDelivery(BigDecimal.valueOf(reviewPaymentResponse.getCostOfDelivery()));
+                response.setCostOfOrderOne(BigDecimal.valueOf(reviewPaymentResponse.getCostOfOrderOne()));
+                response.setCostOfOrderTwo(BigDecimal.valueOf(reviewPaymentResponse.getCostOfOrderTwo()));
+                response.setCostOfOrderThree(BigDecimal.valueOf(reviewPaymentResponse.getCostOfOrderThree()));
+                response.setPackingCostOfOrderOne(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderOne()));
+                response.setPackingCostOfOrderTwo(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderTwo()));
+                response.setPackingCostOfOrderThree(BigDecimal.valueOf(reviewPaymentResponse.getPackingCostOfOrderThree()));
+                response.setTotalCost(BigDecimal.valueOf(reviewPaymentResponse.getTotalCost()));
+            } catch (Exception e) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
     public ResponseEntity<PaymentSubmitOrderResponse> submitOrder(PaymentSubmitOrderRequest body) {
 
         PaymentSubmitOrderResponse response = new PaymentSubmitOrderResponse();
@@ -168,17 +257,36 @@ public class PaymentController implements PaymentApi {
             List<CartItemObject> cartItemObjects = convertCartItems(body.getListOfItems());
             System.out.println("BEFORE THE CALL");
             System.out.println("Cart items list size : " + cartItemObjects.size());
+            UUID storeOneID = null;
+            if (body.getStoreIDOne() != ""){
+                storeOneID = UUID.fromString(body.getStoreIDOne());
+            }
+            UUID storeTwoID = null;
+            if (body.getStoreIDTwo() != ""){
+                storeTwoID = UUID.fromString(body.getStoreIDTwo());
+            }
+            UUID storeThreeID = null;
+            if (body.getStoreIDThree() != ""){
+                storeThreeID = UUID.fromString(body.getStoreIDThree());
+            }
             SubmitOrderRequest submitOrderRequest = new SubmitOrderRequest(
                     assignCartItems(cartItemObjects), body.getDiscount().doubleValue(),
-                    UUID.fromString(body.getStoreID()), orderType, body.getLongitude().doubleValue(),
+                    storeOneID, storeTwoID, storeThreeID, orderType, body.getLongitude().doubleValue(),
                     body.getLatitude().doubleValue(), body.getAddress());
             SubmitOrderResponse submitOrderResponse = paymentService.submitOrder(submitOrderRequest);
             System.out.println("AFTER THE CALL");
             try {
                 response.setMessage(submitOrderResponse.getMessage());
-                response.setOrder(populateOrder(submitOrderResponse.getOrder()));
-                response.setSuccess(submitOrderResponse.getsuccess());
+                response.setOrderOne(populateOrder(submitOrderResponse.getOrderOne()));
+                if (submitOrderResponse.getOrderTwo() != null){
+                    response.setOrderTwo(populateOrder(submitOrderResponse.getOrderTwo()));
+                }
+                if (submitOrderResponse.getOrderThree() != null){
+                    response.setOrderThree(populateOrder(submitOrderResponse.getOrderThree()));
+                }
+                response.setSuccess(submitOrderResponse.isSuccess());
                 response.setTimestamp(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(submitOrderResponse.getTimestamp()));
+                response.setDeliveryID(submitOrderResponse.getDeliveryID().toString());
             } catch (Exception e) {
 
             }
@@ -264,6 +372,18 @@ public class PaymentController implements PaymentApi {
 
     @Override
     public ResponseEntity<PaymentGetOrdersResponse> getOrders(PaymentGetOrdersRequest body) {
+//        Order orderToSave = new Order();
+//        orderToSave.setOrderID(UUID.fromString("ddcf088b-ed95-44d4-912e-3348e91491a6"));
+//        CartItem cartItem = new CartItem();
+//        cartItem.setProductID("012345");
+//        cartItem.setBarcode("012345");
+//        cartItem.setCartItemNo(UUID.randomUUID());
+//        cartItem.setOrderID(UUID.fromString("ddcf088b-ed95-44d4-912e-3348e91491a6"));
+//        List<CartItem> carts = new ArrayList<>();
+//        carts.add(cartItem);
+//        orderToSave.setCartItems(carts);
+//        orderRepo.save(orderToSave);
+//        cartItemRepo.save(cartItem);
         PaymentGetOrdersResponse response = new PaymentGetOrdersResponse();
         HttpStatus httpStatus = HttpStatus.OK;
         try {
@@ -386,6 +506,8 @@ public class PaymentController implements PaymentApi {
             orderObject.setDeliveryAddress(populateGeoPointObject(order.getDeliveryAddress()));
         if (order.getStoreAddress() != null)
             orderObject.setStoreAddress(populateGeoPointObject(order.getStoreAddress()));
+        if (order.getDriverID() != null)
+            orderObject.setDriverID(order.getDriverID().toString());
         orderObject.setRequiresPharmacy(order.isRequiresPharmacy());
         return orderObject;
     }
@@ -409,7 +531,8 @@ public class PaymentController implements PaymentApi {
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreID(UUID.fromString(i.getStoreID()));
+            if (i.getStoreID() != null)
+                item.setStoreID(UUID.fromString(i.getStoreID()));
             if (i.getPrice() != null)
                 price = i.getPrice().doubleValue();
             item.setPrice(price);
@@ -432,7 +555,6 @@ public class PaymentController implements PaymentApi {
             return null;
         }
 
-        System.out.println("length of itemobjectlist: " + itemObjectList.size());
 
         for (ItemObject i : itemObjectList) {
             CartItemObject item = new CartItemObject();
@@ -467,14 +589,16 @@ public class PaymentController implements PaymentApi {
             item.setBarcode(i.getBarcode());
             item.setQuantity(i.getQuantity());
             item.setName(i.getName());
-            item.setStoreID(i.getStoreID().toString());
+            if (i.getStoreID() != null)
+                item.setStoreID(i.getStoreID().toString());
             item.setPrice(BigDecimal.valueOf(i.getPrice()));
             item.setImageUrl(i.getImageUrl());
             item.setBrand(i.getBrand());
             item.setSize(i.getSize());
             item.setItemType(i.getItemType());
             item.setDescription(i.getDescription());
-
+            if (i.getOrderID() != null)
+                item.setOrderID(i.getOrderID().toString());
             responseBody.add(item);
 
         }
@@ -527,11 +651,96 @@ public class PaymentController implements PaymentApi {
         try {
 
             response.setOrder(populateOrder(getOrderByUUIDResponse.getOrder()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<PaymentFixOrderProblemResponse> fixOrderProblem(PaymentFixOrderProblemRequest body) {
+
+        //creating response object and default return status:
+        PaymentFixOrderProblemResponse response = new PaymentFixOrderProblemResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        FixOrderProblemResponse fixOrderProblemResponse = null;
+        try {
+
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+            FixOrderProblemRequest request = new FixOrderProblemRequest(
+                    populateCartItem(body.getCartItem()), assignCartItems(body.getCartItems()));
+
+            fixOrderProblemResponse = paymentService.fixOrderProblem(request);
+        } catch (InvalidRequestException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+        try {
+
+            assert fixOrderProblemResponse != null;
+            response.setMessage(fixOrderProblemResponse.getMessage());
+            response.setSuccess(fixOrderProblemResponse.isSuccess());
+            response.setTimestamp(fixOrderProblemResponse.getTimestamp().toString());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return new ResponseEntity<>(response, httpStatus);
+    }
+
+    private List<CartItem> populateCartItemList(List<CartItemObject> responseItems) throws NullPointerException {
+
+        List<CartItem> responseBody = new ArrayList<>();
+
+        for (CartItemObject i : responseItems) {
+
+            CartItem item = new CartItem();
+
+            item.setProductID(i.getProductID());
+            item.setBarcode(i.getBarcode());
+            item.setQuantity(i.getQuantity());
+            item.setName(i.getName());
+            item.setPrice(i.getPrice().doubleValue());
+            item.setImageUrl(i.getImageUrl());
+            item.setBrand(i.getBrand());
+            item.setSize(i.getSize());
+            item.setItemType(i.getItemType());
+            item.setDescription(i.getDescription());
+
+            responseBody.add(item);
+
+        }
+
+        return responseBody;
+    }
+
+    private CartItem populateCartItem(CartItemObject responseItems) throws NullPointerException {
+
+        CartItem item = new CartItem();
+
+        if (responseItems.getCartItemNo() != null) {
+            item.setCartItemNo(UUID.fromString(responseItems.getCartItemNo()));
+        }
+
+        item.setOrderID(UUID.fromString(responseItems.getOrderID()));
+        item.setProductID(responseItems.getProductID());
+        item.setBarcode(responseItems.getBarcode());
+        item.setQuantity(responseItems.getQuantity());
+        item.setName(responseItems.getName());
+        item.setPrice(responseItems.getPrice().doubleValue());
+        item.setImageUrl(responseItems.getImageUrl());
+        item.setBrand(responseItems.getBrand());
+        item.setSize(responseItems.getSize());
+        item.setItemType(responseItems.getItemType());
+        item.setDescription(responseItems.getDescription());
+
+        return item;
     }
 }
