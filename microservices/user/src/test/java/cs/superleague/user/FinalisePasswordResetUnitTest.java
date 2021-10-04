@@ -150,7 +150,6 @@ public class FinalisePasswordResetUnitTest {
     void UnitTest_testingEmailParameterNotFound(){
 
         request = new FinalisePasswordResetRequest("null@nully.com", "CUSTOMER", "null", "nulL^666");
-//        when(customerRepo.findById(Mockito.any())).thenReturn(null);
 
 
         try{
