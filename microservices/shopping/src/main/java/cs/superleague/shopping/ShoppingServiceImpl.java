@@ -1981,6 +1981,7 @@ public class ShoppingServiceImpl implements ShoppingService {
                 for (Item item : items) {
                     for (CartItem cartItem : requestCartItems) {
                         if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(firstStoreIDFound) == 0) {
+                            System.out.println("Trying to change item over" + item.getName());
                             requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
                         }
                     }
