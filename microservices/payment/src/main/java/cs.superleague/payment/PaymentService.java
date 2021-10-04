@@ -58,4 +58,6 @@ public interface PaymentService {
     FixOrderProblemResponse fixOrderProblem(FixOrderProblemRequest request) throws InvalidRequestException, URISyntaxException;
 
     GetStatusOfMultipleOrdersResponse getStatusOfMultipleOrders(GetStatusOfMultipleOrdersRequest request) throws InvalidRequestException, URISyntaxException;
+
+    ReviewPaymentResponse reviewPayment(ReviewPaymentRequest request) throws InvalidRequestException, URISyntaxException;
 }

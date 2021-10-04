@@ -18,8 +18,6 @@ import cs.superleague.shopping.repos.StoreRepo;
 import cs.superleague.shopping.requests.*;
 import cs.superleague.shopping.responses.*;
 import cs.superleague.user.dataclass.Shopper;
-import cs.superleague.user.exceptions.UserDoesNotExistException;
-import cs.superleague.user.exceptions.UserException;
 import org.apache.http.Header;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -106,13 +104,7 @@ public class ShoppingController implements ShoppingApi {
                 e.printStackTrace();
             }
 
-        } catch (cs.superleague.user.exceptions.InvalidRequestException e) {
-            e.printStackTrace();
-        } catch (UserDoesNotExistException e) {
-            e.printStackTrace();
         } catch (StoreDoesNotExistException e) {
-            e.printStackTrace();
-        } catch (UserException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -762,6 +754,12 @@ public class ShoppingController implements ShoppingApi {
         HttpStatus httpStatus = HttpStatus.OK;
 
         try {
+            Header header = new BasicHeader("Authorization", httpServletRequest.getHeader("Authorization"));
+            List<Header> headers = new ArrayList<>();
+            headers.add(header);
+            CloseableHttpClient httpClient = HttpClients.custom().setDefaultHeaders(headers).build();
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+            System.out.println("hello");
             GeoPoint customersLocation = new GeoPoint();
             customersLocation.setAddress(body.getCustomersAddress());
             customersLocation.setLongitude(body.getCustomersLongitude().doubleValue());
@@ -774,13 +772,12 @@ public class ShoppingController implements ShoppingApi {
                 response.setStores(populateStores(getCloseEnoughStoresResponse.getCloseStores()));
                 response.setMessage(getCloseEnoughStoresResponse.getMessage());
                 response.setAdditionalDeliveryCosts(populateDoubles(getCloseEnoughStoresResponse.getAdditionalDeliveryCosts()));
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         } catch (InvalidRequestException | StoreDoesNotExistException e) {
-
+            e.printStackTrace();
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -888,6 +885,55 @@ public class ShoppingController implements ShoppingApi {
 
         } catch (InvalidRequestException e) {
             e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, httpStatus);
+    }
+
+    @Override
+    public ResponseEntity<ShoppingPriceCheckWithDeliveryResponse> priceCheckWithDelivery(ShoppingPriceCheckWithDeliveryRequest body) {
+        //creating response object and default return status:
+        ShoppingPriceCheckWithDeliveryResponse response = new ShoppingPriceCheckWithDeliveryResponse();
+        HttpStatus httpStatus = HttpStatus.OK;
+
+        try {
+            UUID storeIDOne = null;
+            UUID storeIDTwo = null;
+            UUID storeIDThree = null;
+            if (body.getStoreIDOne() != ""){
+                storeIDOne = UUID.fromString(body.getStoreIDOne());
+            }
+            if (body.getStoreIDTwo() != ""){
+                storeIDTwo = UUID.fromString(body.getStoreIDTwo());
+            }
+            if (body.getStoreIDThree() != ""){
+                storeIDThree = UUID.fromString(body.getStoreIDThree());
+            }
+            PriceCheckWithDeliveryRequest req = new PriceCheckWithDeliveryRequest(populateCartItemList(body.getCartItems()), storeIDOne, storeIDTwo, storeIDThree, body.getAddress(), body.getLongitude().doubleValue(), body.getLatitude().doubleValue());
+            PriceCheckWithDeliveryResponse priceCheckWithDeliveryResponse = shoppingService.priceCheckWithDelivery(req);
+
+            try {
+                if (priceCheckWithDeliveryResponse.getCheaperItems() != null){
+                    response.setCheaperItems(populateCartItems(priceCheckWithDeliveryResponse.getCheaperItems()));
+                }
+                response.setNewOrder(priceCheckWithDeliveryResponse.isNewOrder());
+                if (priceCheckWithDeliveryResponse.getStoreOneID() != null) {
+                    response.setStoreOneID(priceCheckWithDeliveryResponse.getStoreOneID().toString());
+                }
+                if (priceCheckWithDeliveryResponse.getStoreTwoID() != null) {
+                    response.setStoreTwoID(priceCheckWithDeliveryResponse.getStoreTwoID().toString());
+                }
+                if (priceCheckWithDeliveryResponse.getStoreThreeID() != null) {
+                    response.setStoreThreeID(priceCheckWithDeliveryResponse.getStoreThreeID().toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.setNewOrder(false);
+            }
+
+        } catch (InvalidRequestException | StoreDoesNotExistException e) {
+            e.printStackTrace();
+            response.setNewOrder(false);
         }
 
         return new ResponseEntity<>(response, httpStatus);
@@ -1045,8 +1091,8 @@ public class ShoppingController implements ShoppingApi {
         return responseBody;
     }
 
-    public List<Number> populateDoubles(List<Double> doubles) {
-        List<Number> numbers = new ArrayList<>();
+    public List<BigDecimal> populateDoubles(List<Double> doubles) {
+        List<BigDecimal> numbers = new ArrayList<>();
         for (double dbl : doubles) {
             numbers.add(BigDecimal.valueOf(dbl));
         }
