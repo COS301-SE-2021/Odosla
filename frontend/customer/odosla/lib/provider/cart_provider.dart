@@ -4,7 +4,9 @@ import 'package:odosla/services/api_service.dart';
 
 class CartProvider with ChangeNotifier {
   Map<String, CartItem> _items = {};
+  List<CartItem> _cheaperItems = <CartItem>[];
   double _total = 0.0;
+  double _cheaperTotal = 0.0;
   String currStore = "";
   bool _activeOrder = false;
   String _activeOrderID = "";
@@ -13,6 +15,9 @@ class CartProvider with ChangeNotifier {
   String _storeIDOne = "";
   String _storeIDTwo = "";
   String _storeIDThree = "";
+  String _cheaperStoreIDOne = "";
+  String _cheaperStoreIDTwo = "";
+  String _cheaperStoreIDThree = "";
   ApiService api = ApiService();
 
   String get storeIDOne => _storeIDOne;
@@ -44,6 +49,13 @@ class CartProvider with ChangeNotifier {
 
   Map<String, CartItem> get items => _items;
 
+  List<CartItem> get cheaperItems => _cheaperItems;
+
+  set cheaperItems(List<CartItem> value) {
+    _cheaperItems = value;
+    calcTotalC();
+  }
+
   set items(Map<String, CartItem> value) {
     _items = value;
   }
@@ -53,6 +65,17 @@ class CartProvider with ChangeNotifier {
     if (_storeIDTwo == "") return false;
     if (_storeIDOne == "") return false;
     return true;
+  }
+
+  void setCheaperAsList() {
+    _storeIDOne = _cheaperStoreIDOne;
+    _storeIDTwo = _cheaperStoreIDTwo;
+    _storeIDThree = _cheaperStoreIDThree;
+    _total = _cheaperTotal;
+    clearItems();
+    for (var i in _cheaperItems){
+      addItem(i, i.quantity);
+    }
   }
 
   void addItem(CartItem item, int q) {
@@ -171,11 +194,14 @@ class CartProvider with ChangeNotifier {
   }
 
   String get store => currStore;
+
   set store(String storeID) {
     currStore = storeID;
   }
 
   double get total => _total;
+
+  double get cheaperTotal => _cheaperTotal;
 
   void calcTotal() {
     double temp = 0.0;
@@ -183,6 +209,16 @@ class CartProvider with ChangeNotifier {
       temp += i.price * i.quantity;
     }
     _total = temp;
+
+    notifyListeners();
+  }
+
+  void calcTotalC() {
+    double temp = 0.0;
+    for (var i in _cheaperItems) {
+      temp += i.price * i.quantity;
+    }
+    _cheaperTotal = temp;
 
     notifyListeners();
   }
@@ -205,6 +241,27 @@ class CartProvider with ChangeNotifier {
 
   set storeIDOne(String value) {
     _storeIDOne = value;
+    notifyListeners();
+  }
+
+  String get cheaperStoreIDOne => _cheaperStoreIDOne;
+
+  String get cheaperStoreIDTwo => _cheaperStoreIDTwo;
+
+  String get cheaperStoreIDThree => _cheaperStoreIDThree;
+
+  set cheaperStoreIDThree(String value) {
+    _cheaperStoreIDThree = value;
+    notifyListeners();
+  }
+
+  set cheaperStoreIDTwo(String value) {
+    _cheaperStoreIDTwo = value;
+    notifyListeners();
+  }
+
+  set cheaperStoreIDOne(String value) {
+    _cheaperStoreIDOne = value;
     notifyListeners();
   }
 }

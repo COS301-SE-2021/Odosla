@@ -661,18 +661,30 @@ class ApiService {
     }
   }
 
-  Future<List<CartItem>> priceCheckNearby(List<CartItem> items, BuildContext context) async {
+  List<CartItem> cartItemsFromJsonThree(Map<String, dynamic> j) {
+    List<CartItem> list;
+
+    //Iterable i = json.decode(j['items']);
+    debugPrint("x-1");
+    list = (json.decode(json.encode(j['cheaperItems'])) as List)
+        .map((i) => CartItem.fromJsonTwo(i))
+        .toList();
+    debugPrint("x-2");
+
+    return list;
+  }
+
+  Future<List<CartItem>> priceCheckWithDelivery(List<CartItem> items, BuildContext context) async {
     debugPrint(items.toString());
     final storeID = items.first.storeID;
     String pi = items.first.id;
-    List<dynamic> itemsList = itemListToJson(items);
+    List<dynamic> itemsList = itemListToJsonTwo(items);
     UserService _userService = GetIt.I.get();
     debugPrint('_-_ s1 ' +
         Provider.of<CartProvider>(context, listen: false).storeIDOne);
     debugPrint(itemsList.toString());
-    print(Provider.of<StatusProvider>(context, listen: false).jwt);
     final response =
-    await http.post(Uri.parse(paymentEndpoint + '/shopping/priceCheckAllAvailableStores'),
+    await http.post(Uri.parse(shoppingEndpoint + 'shopping/priceCheckWithDelivery'),
         headers: {
           "Authorization":
           Provider.of<StatusProvider>(context, listen: false).jwt,
@@ -681,21 +693,39 @@ class ApiService {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
         },
-        body: jsonEncode({
-          "cartItems": itemsList, //get address
+        body: jsonEncode({ //getCurrentUser
+          "cartItems": itemsList,
+          "storeIDOne":
+          Provider.of<CartProvider>(context, listen: false).storeIDOne,
+          "storeIDTwo":
+          Provider.of<CartProvider>(context, listen: false).storeIDTwo,
+          "storeIDThree": Provider.of<CartProvider>(context, listen: false)
+              .storeIDThree,
+          "latitude": -25.763428, //get lat
+          "longitude": 28.260879, //get long
+          "address": "23 Sigard Street, Pretoria" //get address
         }));
-
-    print("RESPONSE for all stores: ");
+    print("RESPONSEE:::");
     print(response.body);
     if (response.statusCode == 200) {
-      debugPrint("price check");
       Map<String, dynamic> map = jsonDecode(response.body);
-      return items;
+      List<CartItem> list = cartItemsFromJsonThree(map);
+      Provider.of<CartProvider>(context, listen: false).cheaperItems=list;
+      Provider.of<CartProvider>(context, listen: false).cheaperStoreIDOne=map["storeOneID"];
+      if(map["storeTwoID"]!=null) {
+        Provider
+            .of<CartProvider>(context, listen: false)
+            .cheaperStoreIDTwo = map["storeTwoID"];
+      }
+      if(map["storeThreeID"]!=null) {
+        Provider
+            .of<CartProvider>(context, listen: false)
+            .cheaperStoreIDThree = map["storeThreeID"];
+      }
+      return list;
     } else {
-      List<Store> list = List.empty();
-      debugPrint("error " + response.statusCode.toString());
-      debugPrint(response.body.toString());
+      List<CartItem> list = List.empty();
+      return list;
     }
-    return items;
   }
 }

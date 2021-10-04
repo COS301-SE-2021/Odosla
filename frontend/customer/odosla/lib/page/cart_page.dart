@@ -25,7 +25,64 @@ class _CartPage extends State<CartPage> {
       new GlobalKey<SliderMenuContainerState>();
   late String title;
 
+  bool _cheaperList = false;
   UserService _userService = GetIt.I.get();
+
+  Widget _popUpPriceCheck(BuildContext context) {
+    ApiService apiService = ApiService();
+    return new AlertDialog(
+      title: Column(
+        children: [
+          const Text(
+            'PRICE CHECK',
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+      content: new Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text("Find the cheapest alternative for your shopping cart",
+              textAlign: TextAlign.center),
+        ],
+      ),
+      actionsPadding: EdgeInsets.only(right: 30),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: () async {
+            await apiService
+                .priceCheckWithDelivery(
+                    Provider.of<CartProvider>(context, listen: false)
+                        .items
+                        .values
+                        .toList(),
+                    context)
+                .then((value) => {
+                      if (value.isNotEmpty)
+                        {
+                          print("OKAYYYYYYYYYYYYYYYYYY"),
+                          setState(() {
+                            _cheaperList = true;
+                          }),
+                          Navigator.pop(context, false)
+                        }
+                    });
+          },
+          child: const Text('PRICE CHECK'),
+        ),
+        new FlatButton(
+          onPressed: () async {
+            Navigator.pop(context, false);
+          },
+          child: Icon(
+            Icons.cancel_rounded,
+            color: Colors.red,
+          ),
+        )
+      ],
+    );
+  }
 
   @override
   void initState() {
@@ -120,6 +177,24 @@ class _CartPage extends State<CartPage> {
                     },
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  height: 50,
+                  width: 200,
+                  child: TextButton(
+                    child: Text("Price Check list",
+                        style: TextStyle(fontSize: 22, color: Colors.white)),
+                    onPressed: () => {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            _popUpPriceCheck(context),
+                      )
+                    },
+                  ),
+                ),
                 SizedBox(height: 100),
                 Expanded(child: Container()),
                 Container(
@@ -137,312 +212,418 @@ class _CartPage extends State<CartPage> {
               ],
             ),
           ),
-          sliderMain: buildCartPage(context)),
+          sliderMain: buildCartPage(context, _cheaperList)),
     );
   }
-}
 
-Widget buildCartPage(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.white54,
-    body: Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
-      child: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 5),
-            Container(height: 5, color: Colors.deepOrange),
-            SizedBox(height: 25),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Bounce(
-                duration: Duration(milliseconds: 220),
-                onPressed: () {},
-                child: Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 65,
-                  color: Colors.deepOrange,
-                ),
-              ),
-              Icon(Icons.arrow_back_rounded, size: 35)
-            ]),
-            SizedBox(height: 25),
-            Expanded(child: Container(child: buildCartItems(context))),
-            SizedBox(height: 25),
-            SizedBox(height: 25),
-            Text("Recommended for you", style: TextStyle(fontWeight: FontWeight.w600),),
-            Container(child: buildRecommendationItems(context)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Total',
-                  style: TextStyle(color: Colors.black, fontSize: 18),
-                ),
-                Text(
-                  'R' +
-                      Provider.of<CartProvider>(context)
-                          .total
-                          .toStringAsFixed(2),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+  Widget buildCartPage(BuildContext context, bool cheaperList) {
+    return Scaffold(
+      backgroundColor: Colors.white54,
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+        child: SafeArea(
+          child: Column(
+            children: [
+              SizedBox(height: 5),
+              Container(height: 5, color: Colors.deepOrange),
+              SizedBox(height: 25),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Bounce(
+                  duration: Duration(milliseconds: 220),
+                  onPressed: () {},
+                  child: Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 65,
+                    color: Colors.deepOrange,
                   ),
-                )
-              ],
-            ),
-            SizedBox(height: 25),
-            Container(
-                height: 45,
-                width: double.infinity,
-                child: buildCheckoutButton(context)),
-            SizedBox(height: 80)
-          ],
+                ),
+                cheaperList
+                    ? Text(
+                        "CHEAPER LIST",
+                        style: TextStyle(fontSize: 20),
+                      )
+                    : Container(),
+                Icon(Icons.arrow_back_rounded, size: 35)
+              ]),
+              SizedBox(height: 25),
+              Expanded(
+                  child:
+                      Container(child: buildCartItems(context, cheaperList))),
+              SizedBox(height: 25),
+              SizedBox(height: 25),
+              cheaperList
+                  ? Container()
+                  : Text(
+                      "Recommended for you",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+              cheaperList
+                  ? Container()
+                  : Container(child: buildRecommendationItems(context)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Total',
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                  ),
+                  Text(
+                    'R' +
+                        (cheaperList
+                            ? Provider.of<CartProvider>(context)
+                                .cheaperTotal
+                                .toStringAsFixed(2)
+                            : Provider.of<CartProvider>(context)
+                                .total
+                                .toStringAsFixed(2)),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 25),
+              Container(
+                  height: 45,
+                  width: double.infinity,
+                  child: cheaperList
+                      ? buildCheaperListButton(context)
+                      : buildCheckoutButton(context)),
+              _cheaperList == false ? Container() : SizedBox(height: 15),
+              _cheaperList == false
+                  ? Container()
+                  : GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _cheaperList = false;
+                        });
+                      },
+                      child: Text(
+                        "REVERT BACK TO ORIGINAL",
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            fontStyle: FontStyle.italic),
+                      )),
+              _cheaperList == false
+                  ? SizedBox(height: 80)
+                  : SizedBox(height: 60)
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget buildCartItems(BuildContext context) {
-  final provider = Provider.of<CartProvider>(context);
+  Widget buildCartItems(BuildContext context, bool cheaperList) {
+    final provider = Provider.of<CartProvider>(context);
 
-  if (provider.items.isEmpty) {
-    return Center(
-        child: Text(
-      'Your cart is empty..',
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 20,
+    if (provider.items.isEmpty) {
+      return Center(
+          child: Text(
+        'Your cart is empty..',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+        ),
+      ));
+    } else if (!cheaperList) {
+      return ListView(
+        children: provider.items.values
+            .map(
+              (i) => buildCartItem(i, context),
+            )
+            .toList(),
+      );
+    } else {
+      print("HERE???");
+      return ListView(
+        children: provider.cheaperItems
+            .map(
+              (i) => buildCartItem(i, context),
+            )
+            .toList(),
+      );
+    }
+  }
+
+  Widget buildRecommendationItems(BuildContext context) {
+    ApiService apiService = ApiService();
+    return FutureBuilder(
+      future: apiService.getCartRecommendations(
+          Provider.of<CartProvider>(context, listen: false).ids, context),
+      builder: (BuildContext context, snapshot) {
+        //let's check if we got a response or not
+        debugPrint(snapshot.data.toString() + "__");
+
+        if (snapshot.hasError) {
+          debugPrint("snapshot error: " + snapshot.error.toString());
+        }
+
+        if (snapshot.hasData) {
+          debugPrint("HasData");
+          //Now let's make a list of articles
+          List<CartItem> items = snapshot.data as List<CartItem>;
+          return Container(
+              child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: items
+                      .map((item) => buildRecommendationItem(item, context))
+                      .toList()));
+        }
+        debugPrint("_2");
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildCartItem(CartItem cartItem, BuildContext context) {
+    final provider = Provider.of<CartProvider>(context);
+
+    return ListTile(
+      leading: ElevatedButton(
+        onPressed: () {
+          provider.decrementItem(cartItem);
+        },
+        child: Icon(Icons.remove_circle, color: Colors.deepOrange),
+        style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          padding: EdgeInsets.all(20),
+          primary: Colors.white, // <-- Button color
+          onPrimary: Colors.deepOrange, // <-- Splash color
+        ),
+      ),
+      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Expanded(
+            child: Text(
+          cartItem.title,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        )),
+        Text(
+          'x${cartItem.quantity}',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        )
+      ]),
+      trailing: Text(
+        'R${cartItem.price}',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+        ),
+      ),
+    );
+  }
+
+  Widget buildRecommendationItem(CartItem cartItem, BuildContext context) {
+    return Expanded(
+        child: GestureDetector(
+      onTap: () {
+        Map<String, double> location = {
+          "lat": Provider.of<StoreProvider>(context, listen: false).store.lat,
+          "long": Provider.of<StoreProvider>(context, listen: false).store.long
+        };
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => ItemDetailPage(
+                cartItem,
+                Provider.of<CartProvider>(context, listen: false).currStore,
+                location) //ProductPage(product: product),
+            ));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 80, minHeight: 30),
+              child: Center(child: Image.asset("assets/" + cartItem.imgUrl))),
+          ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 30, minHeight: 20),
+              child: Center(
+                  child: Text(
+                cartItem.title,
+                style: TextStyle(fontWeight: FontWeight.w400),
+              )))
+        ],
       ),
     ));
-  } else
-    return ListView(
-      children: provider.items.values
-          .map(
-            (i) => buildCartItem(i, context),
-          )
-          .toList(),
-    );
-}
+  }
 
-Widget buildRecommendationItems(BuildContext context) {
-  ApiService apiService = ApiService();
-  return FutureBuilder(
-    future: apiService.getCartRecommendations(
-        Provider.of<CartProvider>(context, listen: false).ids, context),
-    builder: (BuildContext context, snapshot) {
-      //let's check if we got a response or not
-      debugPrint(snapshot.data.toString() + "__");
-
-      if (snapshot.hasError) {
-        debugPrint("snapshot error: " + snapshot.error.toString());
-      }
-
-      if (snapshot.hasData) {
-        debugPrint("HasData");
-        //Now let's make a list of articles
-        List<CartItem> items = snapshot.data as List<CartItem>;
-        return Container(
-            child: new Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: items
-                    .map((item) => buildRecommendationItem(item, context))
-                    .toList()));
-      }
-      debugPrint("_2");
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
+  Widget buildCheckoutButton(BuildContext context) {
+    if (!Provider.of<CartProvider>(context).items.isEmpty) {
+      return TextButton(
+        onPressed: () => checkout(context),
+        child: Text(
+          'Checkout',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+        style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all(Colors.deepOrangeAccent)),
       );
-    },
-  );
-}
-
-Widget buildCartItem(CartItem cartItem, BuildContext context) {
-  final provider = Provider.of<CartProvider>(context);
-
-  return ListTile(
-    leading: ElevatedButton(
-      onPressed: () {
-        provider.decrementItem(cartItem);
-      },
-      child: Icon(Icons.remove_circle, color: Colors.deepOrange),
-      style: ElevatedButton.styleFrom(
-        shape: CircleBorder(),
-        padding: EdgeInsets.all(20),
-        primary: Colors.white, // <-- Button color
-        onPrimary: Colors.deepOrange, // <-- Splash color
-      ),
-    ),
-    title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Expanded(
-          child: Text(
-        cartItem.title,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-        ),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 1,
-      )),
-      Text(
-        'x${cartItem.quantity}',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      )
-    ]),
-    trailing: Text(
-      'R${cartItem.price}',
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-      ),
-    ),
-  );
-}
-
-Widget buildRecommendationItem(CartItem cartItem, BuildContext context) {
-  return Expanded(
-      child: GestureDetector(
-    onTap: () {
-      Map<String, double> location = {
-        "lat": Provider.of<StoreProvider>(context,listen: false).store.lat,
-        "long": Provider.of<StoreProvider>(context,listen: false).store.long
-      };
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (BuildContext context) => ItemDetailPage(cartItem,
-              Provider.of<CartProvider>(context,listen: false).currStore, location) //ProductPage(product: product),
-          ));
-    },
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 80, minHeight: 30),
-            child: Center(child: Image.asset("assets/" + cartItem.imgUrl))),
-        ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 30, minHeight: 20),
-            child: Center(
+    } else {
+      return TextButton(
+        onPressed: () => {
+          Alert(
+            context: context,
+            title: "Error:",
+            desc: "Your cart is empty!",
+            buttons: [
+              DialogButton(
+                color: Colors.deepOrange,
                 child: Text(
-              cartItem.title,
-              style: TextStyle(fontWeight: FontWeight.w400),
-            )))
-      ],
-    ),
-  ));
-}
-
-Widget buildCheckoutButton(BuildContext context) {
-  if (!Provider.of<CartProvider>(context).items.isEmpty) {
-    return TextButton(
-      onPressed: () => checkout(context),
-      child: Text(
-        'Checkout',
-        style: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-      ),
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent)),
-    );
-  } else {
-    return TextButton(
-      onPressed: () => {
-        Alert(
-          context: context,
-          title: "Error:",
-          desc: "Your cart is empty!",
-          buttons: [
-            DialogButton(
-              color: Colors.deepOrange,
-              child: Text(
-                "OK",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              onPressed: () => Navigator.pop(context),
-              width: 120,
-            )
-          ],
-        ).show()
-      },
-      child: Text(
-        'Checkout',
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
+                  "OK",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show()
+        },
+        child: Text(
+          'Checkout',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
-      ),
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.deepOrange)),
-    );
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepOrange)),
+      );
+    }
   }
-}
 
-void checkout(BuildContext context) {
-  if (!Provider.of<WalletProvider>(context, listen: false).present) {
-    Alert(
-      context: context,
-      type: AlertType.warning,
-      title: "Error:",
-      desc: "You have not set a payment method. ",
-      buttons: [
-        DialogButton(
-          child: Text(
-            "ADD CARD",
-            style: TextStyle(color: Colors.white, fontSize: 18),
-          ),
-          onPressed: () => {
-            Navigator.pop(context),
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (BuildContext context) => WalletPage()))
-          },
-          color: Color.fromRGBO(0, 179, 134, 1.0),
+  Widget buildCheaperListButton(BuildContext context) {
+    if (!Provider.of<CartProvider>(context).items.isEmpty) {
+      return TextButton(
+        onPressed: () => {
+          Provider.of<CartProvider>(context, listen: false).setCheaperAsList(),
+          setState(() {
+            _cheaperList = false;
+          })
+        },
+        child: Text(
+          'ACCEPT LIST',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        DialogButton(
-          child: Text(
-            "BACK",
-            style: TextStyle(color: Colors.white, fontSize: 18),
+        style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all(Colors.deepOrangeAccent)),
+      );
+    } else {
+      return TextButton(
+        onPressed: () => {
+          Alert(
+            context: context,
+            title: "Error:",
+            desc: "Your cart is empty!",
+            buttons: [
+              DialogButton(
+                color: Colors.deepOrange,
+                child: Text(
+                  "OK",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () => Navigator.pop(context),
+                width: 120,
+              )
+            ],
+          ).show()
+        },
+        child: Text(
+          'Checkout',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
-          onPressed: () => Navigator.pop(context),
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(116, 116, 191, 1.0),
-            Color.fromRGBO(52, 138, 199, 1.0),
-          ]),
-        )
-      ],
-    ).show();
-  } else if (Provider.of<CartProvider>(context, listen: false).activeOrder) {
-    Alert(
-      context: context,
-      title: "Error:",
-      desc: "You already have an active order!",
-      buttons: [
-        DialogButton(
-          color: Colors.deepOrange,
-          child: Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          width: 120,
-        )
-      ],
-    ).show();
-  } else {
-    ApiService api = ApiService();
-    api.submitOrder(
-        Provider.of<CartProvider>(context, listen: false).items.values.toList(),
-        context);
+        ),
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.deepOrange)),
+      );
+    }
   }
-  // Provider.of<StatusProvider>(context, listen: false)
-  //     .startListeningStatus("orderID", context);
+
+  void checkout(BuildContext context) {
+    if (!Provider.of<WalletProvider>(context, listen: false).present) {
+      Alert(
+        context: context,
+        type: AlertType.warning,
+        title: "Error:",
+        desc: "You have not set a payment method. ",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "ADD CARD",
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            onPressed: () => {
+              Navigator.pop(context),
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => WalletPage()))
+            },
+            color: Color.fromRGBO(0, 179, 134, 1.0),
+          ),
+          DialogButton(
+            child: Text(
+              "BACK",
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+            onPressed: () => Navigator.pop(context),
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(116, 116, 191, 1.0),
+              Color.fromRGBO(52, 138, 199, 1.0),
+            ]),
+          )
+        ],
+      ).show();
+    } else if (Provider.of<CartProvider>(context, listen: false).activeOrder) {
+      Alert(
+        context: context,
+        title: "Error:",
+        desc: "You already have an active order!",
+        buttons: [
+          DialogButton(
+            color: Colors.deepOrange,
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
+    } else {
+      ApiService api = ApiService();
+      api.submitOrder(
+          Provider.of<CartProvider>(context, listen: false)
+              .items
+              .values
+              .toList(),
+          context);
+    }
+    // Provider.of<StatusProvider>(context, listen: false)
+    //     .startListeningStatus("orderID", context);
+  }
 }
