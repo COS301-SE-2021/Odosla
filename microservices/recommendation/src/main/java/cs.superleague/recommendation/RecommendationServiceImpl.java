@@ -199,6 +199,7 @@ public class RecommendationServiceImpl implements RecommendationService {
                     finalItemsRecommendation.add(item);
                 }
             }
+            System.out.println("Standard Recommendation");
             GetCartRecommendationResponse response = new GetCartRecommendationResponse(finalItemsRecommendation, true, "The following items are recommended to go with the cart.");
             return response;
         } else {
@@ -246,7 +247,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     // Helper/s
 
     private GetCartRecommendationResponse getRandomRecommendations(String errorMessage, UUID storeOneID, List<String> productIDs) throws URISyntaxException {
-
+        System.out.println("Random Recommendation because " + errorMessage);
         int count = 0;
         int randomInt = 0;
         List<CartItem> allItems;

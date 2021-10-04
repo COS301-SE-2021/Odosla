@@ -1975,6 +1975,43 @@ public class ShoppingServiceImpl implements ShoppingService {
         for (Item item : cheaperItems) {
             requestCartItems.add(createCartItem(item));
         }
+        if (storeOneNumberOfItems > storeThreeNumberOfItems) {
+            if (storeOneNumberOfItems > storeTwoNumberOfItems) {
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(firstStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            } else if (storeTwoNumberOfItems > storeOneNumberOfItems) {
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(secondStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            }
+        } else {
+            if (storeTwoNumberOfItems > storeThreeNumberOfItems){
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(secondStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            } else {
+                for (Item item : items) {
+                    for (CartItem cartItem : requestCartItems) {
+                        if (cartItem.getBarcode().equals(item.getBarcode()) && item.getPrice() <= cartItem.getPrice() && item.getStoreID().compareTo(thirdStoreIDFound) == 0) {
+                            requestCartItems.set(requestCartItems.indexOf(cartItem), createCartItem(item));
+                        }
+                    }
+                }
+            }
+        }
 
         UUID newStoreOneID = null;
         UUID newStoreTwoID = null;
@@ -2015,22 +2052,39 @@ public class ShoppingServiceImpl implements ShoppingService {
                 }
             }
         }
+        if (newStoreOneNumberOfItems == 0){
+            newStoreOneID = newStoreTwoID;
+            newStoreTwoID = newStoreThreeID;
+            newStoreThreeID = null;
+            newStoreOneNumberOfItems = newStoreTwoNumberOfItems;
+            newStoreTwoNumberOfItems = newStoreThreeNumberOfItems;
+            newStoreThreeNumberOfItems = 0;
+        }
+        if (newStoreTwoNumberOfItems == 0){
+            newStoreTwoID = newStoreThreeID;
+            newStoreThreeID = null;
+            newStoreTwoNumberOfItems = newStoreThreeNumberOfItems;
+            newStoreThreeNumberOfItems = 0;
+        }
+        if (newStoreThreeNumberOfItems == 0){
+            newStoreThreeID = null;
+        }
         double newCurrentDeliveryCost = 0.0;
         double newCurrentPackingCost = 0.0;
-        if (secondStoreIDFound == null){
-            Store storeOne = storeRepo.findById(firstStoreIDFound).orElse(null);
+        if (newStoreTwoID == null){
+            Store storeOne = storeRepo.findById(newStoreOneID).orElse(null);
             if (storeOne == null){
                 throw new StoreDoesNotExistException("Store not found in database.");
             }
             double distance = getDistance(customersLocation, storeOne.getStoreLocation());
             newCurrentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
-            double packingCostForOrderOne = Math.ceil(storeOneNumberOfItems / 4.0);
+            double packingCostForOrderOne = Math.ceil(newStoreOneNumberOfItems / 4.0);
             packingCostForOrderOne = packingCostForOrderOne * 0.75;
             newCurrentPackingCost = packingCostForOrderOne;
         } else {
-            if (thirdStoreIDFound == null){
-                Store storeOne = storeRepo.findById(firstStoreIDFound).orElse(null);
-                Store storeTwo = storeRepo.findById(secondStoreIDFound).orElse(null);
+            if (newStoreThreeID == null){
+                Store storeOne = storeRepo.findById(newStoreOneID).orElse(null);
+                Store storeTwo = storeRepo.findById(newStoreTwoID).orElse(null);
                 if (storeOne == null){
                     throw new StoreDoesNotExistException("Store not found in database.");
                 }
@@ -2040,15 +2094,15 @@ public class ShoppingServiceImpl implements ShoppingService {
                 double distance = getDistance(storeOne.getStoreLocation(), storeTwo.getStoreLocation());
                 distance = distance + getDistance(storeTwo.getStoreLocation(), customersLocation);
                 newCurrentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
-                double packingCostForOrderOne = Math.ceil(storeOneNumberOfItems / 4.0);
+                double packingCostForOrderOne = Math.ceil(newStoreOneNumberOfItems / 4.0);
                 packingCostForOrderOne = packingCostForOrderOne * 0.75;
-                double packingCostForOrderTwo = Math.ceil(storeTwoNumberOfItems / 4.0);
+                double packingCostForOrderTwo = Math.ceil(newStoreTwoNumberOfItems / 4.0);
                 packingCostForOrderTwo = packingCostForOrderTwo * 0.75;
                 newCurrentPackingCost = packingCostForOrderOne + packingCostForOrderTwo;
             } else {
-                Store storeOne = storeRepo.findById(firstStoreIDFound).orElse(null);
-                Store storeTwo = storeRepo.findById(secondStoreIDFound).orElse(null);
-                Store storeThree = storeRepo.findById(thirdStoreIDFound).orElse(null);
+                Store storeOne = storeRepo.findById(newStoreOneID).orElse(null);
+                Store storeTwo = storeRepo.findById(newStoreTwoID).orElse(null);
+                Store storeThree = storeRepo.findById(newStoreThreeID).orElse(null);
                 if (storeOne == null){
                     throw new StoreDoesNotExistException("Store not found in database.");
                 }
@@ -2062,20 +2116,20 @@ public class ShoppingServiceImpl implements ShoppingService {
                 distance = distance + getDistance(storeTwo.getStoreLocation(), storeThree.getStoreLocation());
                 distance = distance + getDistance(storeThree.getStoreLocation(), customersLocation);
                 newCurrentDeliveryCost = Math.ceil(distance * 2.0 * 100.0) / 100.0;
-                double packingCostForOrderOne = Math.ceil(storeOneNumberOfItems / 4.0);
+                double packingCostForOrderOne = Math.ceil(newStoreOneNumberOfItems / 4.0);
                 packingCostForOrderOne = packingCostForOrderOne * 0.75;
-                double packingCostForOrderTwo = Math.ceil(storeTwoNumberOfItems / 4.0);
+                double packingCostForOrderTwo = Math.ceil(newStoreTwoNumberOfItems / 4.0);
                 packingCostForOrderTwo = packingCostForOrderTwo * 0.75;
-                double packingCostForOrderThree = Math.ceil(storeThreeNumberOfItems / 4.0);
+                double packingCostForOrderThree = Math.ceil(newStoreThreeNumberOfItems / 4.0);
                 packingCostForOrderThree = packingCostForOrderThree * 0.75;
                 newCurrentPackingCost = packingCostForOrderOne + packingCostForOrderTwo + packingCostForOrderThree;
             }
         }
-        double newTotalCostOfCurrentCart = newCurrentDeliveryCost + newCurrentPackingCost;
+        double newTotalCostOfCurrentCart = newCurrentDeliveryCost + newCurrentPackingCost - moneySaved;
         if (newTotalCostOfCurrentCart < totalCostOfCurrentCart){
             return new PriceCheckWithDeliveryResponse(requestCartItems, firstStoreIDFound, secondStoreIDFound, thirdStoreIDFound, true);
         } else {
-            System.out.println("No cheaper orders can be made, too many different stores in order.");
+            System.out.println("Tried to calculate, could not find a cheaper option." + newStoreOneID + " ++ " + newStoreTwoID + " ++ " + newStoreThreeID);
             return new PriceCheckWithDeliveryResponse(request.getCartItems(), request.getStoreIDOne(), request.getStoreIDTwo(), request.getStoreIDThree(), false);
         }
     }
