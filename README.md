@@ -84,7 +84,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5635AQHn1IQagKUOuQ/profile-framedphoto-shrink_200_200/0/1620256271448?e=1632232800&v=beta&t=ZIbuSEJCwv7TrTJ3lTZ3DQdNpWjMR8UM7sHxvepDefc" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/C5603AQGxAKodEP1LOQ/profile-displayphoto-shrink_200_200/0/1618731986773?e=1639612800&v=beta&t=Hwlj7p9kjlUBPbqpDycfKpZp1EAZBr5j9006v672D_M" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Seamus Brennan </h4>
 <p align="center">I have been coding for many years and have gained a lot of experience in the process. I am always interested in learning new technologies to help solve problems in the most efficient way possible. I have experience in all the technologies listed and this makes me very confident that our final product will be able to meet the requirements and to exceed them.</p>
@@ -93,7 +93,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/C5603AQGxAKodEP1LOQ/profile-displayphoto-shrink_200_200/0/1618731986773?e=1639612800&v=beta&t=Hwlj7p9kjlUBPbqpDycfKpZp1EAZBr5j9006v672D_M" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/D4D35AQG3YGzMMBszgQ/profile-framedphoto-shrink_200_200/0/1631708004314?e=1634126400&v=beta&t=bVnr0l7RuYAPw22ZPam8ReRsajAUX8tG7hSge0GtDAE" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Zivan Haripershad </h4>
 <p align="center">I am a Multimedia student who is very dedicated to my studies and hardworking. My determination to deliver what is required and to the best of my abilities is
