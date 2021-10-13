@@ -49,18 +49,18 @@ public class ShoppingServiceImpl implements ShoppingService {
     private final ItemRepo itemRepo;
     private final CatalogueRepo catalogueRepo;
 
-    @Autowired
-    private RabbitTemplate rabbit;
+    private final RabbitTemplate rabbit;
 
     private final RestTemplate restTemplate;
 
 
     @Autowired
-    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate, CatalogueRepo catalogueRepo) {
+    public ShoppingServiceImpl(StoreRepo storeRepo, ItemRepo itemRepo, RestTemplate restTemplate, CatalogueRepo catalogueRepo, RabbitTemplate rabbit) {
         this.storeRepo = storeRepo;
         this.itemRepo = itemRepo;
         this.restTemplate = restTemplate;
         this.catalogueRepo = catalogueRepo;
+        this.rabbit = rabbit;
     }
 
     /**
@@ -725,7 +725,9 @@ public class ShoppingServiceImpl implements ShoppingService {
             ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
 
             GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
-
+            if (shopperResponse == null){
+                throw new cs.superleague.user.exceptions.InvalidRequestException("User does not exist in database");
+            }
             Boolean notPresent = true;
 
             if (listOfShoppers != null) {
@@ -850,7 +852,9 @@ public class ShoppingServiceImpl implements ShoppingService {
                 ResponseEntity<GetShopperByUUIDResponse> getShopperByUUIDResponseEntity = restTemplate.postForEntity(uri, parts, GetShopperByUUIDResponse.class);
 
                 GetShopperByUUIDResponse shopperResponse = getShopperByUUIDResponseEntity.getBody();
-
+                if (shopperResponse == null || shopperResponse.getShopper() == null){
+                    throw new InvalidRequestException("Shopper does not exist.");
+                }
                 Boolean inList = false;
                 for (Shopper shopper : listOfShoppers) {
                     if (shopper.getShopperID().equals(request.getShopperID())) {

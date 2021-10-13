@@ -2,10 +2,11 @@ package cs.superleague.user.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-public class Category {
+public class Category implements Serializable {
 
     @Id
     private final UUID categoryId;
