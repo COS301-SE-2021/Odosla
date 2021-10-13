@@ -920,6 +920,7 @@ public class DeliveryServiceImpl implements DeliveryService {
             System.out.println("hi");
             return null;
         }
+
         for (Delivery delivery : deliveries) {
             if (delivery.getDeliveryID().compareTo(request.getOrderID()) == 0) {
                 String uriString = "http://" + userHost + ":" + userPort + "/user/getDriverByUUID";

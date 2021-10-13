@@ -5,13 +5,12 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table
-public class GroceryList implements Serializable {
+public class GroceryList {
 
     @Id
     private final UUID groceryListID;

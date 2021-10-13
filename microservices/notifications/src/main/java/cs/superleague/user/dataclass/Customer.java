@@ -6,14 +6,13 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table
-public class Customer extends User implements Serializable {
+public class Customer extends User {
 
     @Id
     private UUID customerID;

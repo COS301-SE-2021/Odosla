@@ -84,20 +84,18 @@ public class ImporterServiceImpl implements ImporterService{
                                 }
 
                                 GetAllItemsResponse getAllItemsResponse = responseEntity.getBody();
-                                if(getAllItemsResponse.getItems() != null){
-                                    List<Item> itemList = getAllItemsResponse.getItems();
-                                    for (Item value : itemList) {
-                                        if (value != null) {
-                                            if (value.getProductID().equals(currentWord)) {
-                                                item = value;
-                                                break;
-                                            }
-                                        }
+                                List<Item> itemList = getAllItemsResponse.getItems();
 
+                                for (Item value : itemList) {
+                                    if (value != null) {
+                                        if (value.getProductID().equals(currentWord)) {
+                                            item = value;
+                                            break;
+                                        }
                                     }
+
                                 }
 
-                                System.out.println(currentWord);
                                 item.setProductID(currentWord);
                                 counter++;
                                 currentWord = "";
@@ -160,10 +158,8 @@ public class ImporterServiceImpl implements ImporterService{
                     }
                     else if (file.charAt(k) == '\n')
                     {
-                        if(storeID == null){
-                            storeID= UUID.fromString(currentWord);
-                        }
-
+                        storeID= UUID.fromString(currentWord);
+                        System.out.println(currentWord);
                         item.setStoreID(UUID.fromString(currentWord));
                         counter = 0;
                         currentWord = "";
@@ -183,7 +179,7 @@ public class ImporterServiceImpl implements ImporterService{
             rabbitTemplate.convertAndSend("ShoppingEXCHANGE", "RK_SaveCatalogueToRepo", saveCatalogueToRepoRequest);
 
             Map<String, Object> parts = new HashMap<>();
-            parts.put("StoreID", storeID);
+            parts.put("storeID", storeID);
             String stringUri = "http://"+shoppingHost+":"+shoppingPort+"/shopping/getStoreByUUID";
             URI uri = new URI(stringUri);
             ResponseEntity<GetStoreByUUIDResponse> responseEntity = restTemplate.postForEntity(
