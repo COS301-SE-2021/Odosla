@@ -5,14 +5,13 @@ import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "shopper")
-public class Shopper extends User implements Serializable {
+public class Shopper extends User {
 
     /* Attributes */
     @Id

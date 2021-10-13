@@ -7,13 +7,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
 @Table(name = "shopper")
-public class Shopper extends User implements Serializable {
+public class Shopper extends User {
 
     /* Attributes */
     @Id

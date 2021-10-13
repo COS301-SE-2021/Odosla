@@ -80,7 +80,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
             new AntPathRequestMatcher("/user/verifyAccount"),
             new AntPathRequestMatcher("/shopping/populateTables"),
             new AntPathRequestMatcher("/importer/itemsCSVImporter"),
-            new AntPathRequestMatcher("/importer/storesCSVImporter"),
             //remove later
             new AntPathRequestMatcher("/notification/sendDirectEmailNotification")
     );

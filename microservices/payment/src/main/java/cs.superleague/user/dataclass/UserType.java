@@ -1,8 +1,6 @@
 package cs.superleague.user.dataclass;
 
-import java.io.Serializable;
-
-public enum UserType implements Serializable {
+public enum UserType {
     SHOPPER,
     DRIVER,
     CUSTOMER,

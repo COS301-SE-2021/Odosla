@@ -4,11 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "geoPointTable")
-public class GeoPoint  implements Serializable {
+public class GeoPoint {
     private Double latitude;
     private Double longitude;
     private String address;

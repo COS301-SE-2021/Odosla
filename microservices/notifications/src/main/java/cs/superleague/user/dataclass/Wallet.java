@@ -2,11 +2,10 @@ package cs.superleague.user.dataclass;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-public class Wallet implements Serializable {
+public class Wallet {
 
     @Id
     private final UUID walletID;

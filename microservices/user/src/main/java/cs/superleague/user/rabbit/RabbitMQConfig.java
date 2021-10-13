@@ -54,10 +54,6 @@ public class RabbitMQConfig {
         return new Queue("Q_RemoveProblemFromRepo", true);
     }
 
-    @Bean
-    Queue SaveCustomerToRepoQueue() {
-        return new Queue("Q_SaveCustomerToRepoTest", true);
-    }
     //
     // BINDING
     //
@@ -91,15 +87,6 @@ public class RabbitMQConfig {
                 .noargs();
     }
 
-    @Bean
-    Binding SaveCustomerToRepoBinding() {
-        return BindingBuilder
-                .bind(SaveDriverToRepoQueue())
-                .to(UserExchange())
-                .with("RK_SaveCustomerToRepoTest")
-                .noargs();
-    }
-
     //
     // FACTORY
     //
@@ -119,7 +106,7 @@ public class RabbitMQConfig {
     MessageListenerContainer messageListenerContainer() {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory());
-        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue(), RemoveProblemFromRepoQueue(), SaveCustomerToRepoQueue());                                               // <------- add all queues to listen to here
+        simpleMessageListenerContainer.setQueues(SaveDriverToRepoQueue(), SaveShopperToRepoQueue(), RemoveProblemFromRepoQueue());                                               // <------- add all queues to listen to here
         simpleMessageListenerContainer.setMessageListener(new UserListener(userService));
         return simpleMessageListenerContainer;
     }

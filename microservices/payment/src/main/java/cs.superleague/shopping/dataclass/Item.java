@@ -22,7 +22,7 @@ public class Item implements Serializable {
     private String brand;
     private String size;
     private String itemType;
-    private Boolean soldOut;
+    private boolean soldOut;
 
     public Item() {
     }

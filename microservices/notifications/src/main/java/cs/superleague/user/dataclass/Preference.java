@@ -6,12 +6,11 @@ import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-public class Preference implements Serializable {
+public class Preference {
 
     @Id
     private final UUID preferenceID;

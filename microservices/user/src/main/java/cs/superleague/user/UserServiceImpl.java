@@ -2299,6 +2299,7 @@ public class UserServiceImpl implements UserService {
         properties.put("Email", request.getEmail());
 
         Customer customer = null;
+
         if (userType.equals("CUSTOMER")) {
 
             try {
@@ -2332,7 +2333,6 @@ public class UserServiceImpl implements UserService {
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }
-            return new ResetPasswordResponse(resetCode, "Password reset instructions sent to email.", true);
 
         } else if (userType.equals("SHOPPER")) {
             Shopper shopper = null;
@@ -2369,8 +2369,6 @@ public class UserServiceImpl implements UserService {
 //            }catch (Exception e){
 //                e.printStackTrace();
 //            }
-            return new ResetPasswordResponse(resetCode, "Password reset instructions sent to email.", true);
-
         } else if (userType.equals("DRIVER")) {
             Driver driver = driverRepo.findDriverByEmail(email);
 
@@ -2402,7 +2400,6 @@ public class UserServiceImpl implements UserService {
             parts.put("message", passwordResetMessage);
             parts.put("properties", properties);
             ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://" + notificationHost + ":" + notificationPort + "/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
-            return new ResetPasswordResponse(resetCode, "Password reset instructions sent to email.", true);
 
         } else if (userType.equals("ADMIN")) {
             Admin admin = adminRepo.findAdminByEmail(email);
@@ -2434,7 +2431,6 @@ public class UserServiceImpl implements UserService {
             parts.put("message", passwordResetMessage);
             parts.put("properties", properties);
             ResponseEntity<SendDirectEmailNotificationResponse> getStoresResponseEntity = restTemplate.postForEntity("http://" + notificationHost + ":" + notificationPort + "/notification/sendDirectEmailNotification", parts, SendDirectEmailNotificationResponse.class);
-            return new ResetPasswordResponse(resetCode, "Password reset instructions sent to email.", true);
 
         }
 
@@ -3253,17 +3249,5 @@ public class UserServiceImpl implements UserService {
         }
 
         ordersWithProblemsRepo.delete(orderWithProblems);
-    }
-
-    @Override
-    public void saveCustomer(SaveCustomerToRepoRequest request) throws InvalidRequestException {
-        if (request == null){
-            throw new InvalidRequestException("Null request object.");
-        }
-        if (request.getCustomer() == null){
-            throw new InvalidRequestException("Null customer in request object");
-        }
-        System.out.println("==============="+request.getCustomer().getAccountType());
-        customerRepo.save(request.getCustomer());
     }
 }
