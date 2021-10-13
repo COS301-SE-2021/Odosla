@@ -143,6 +143,7 @@ public class NotificationServiceImpl implements NotificationService {
                 ResponseEntity<GetCustomerByUUIDResponse> useCaseResponseEntity = restTemplate.postForEntity(uri, parts, GetCustomerByUUIDResponse.class);
                 customer = useCaseResponseEntity.getBody().getCustomer();
             } catch (Exception e) {
+                e.printStackTrace();
                 throw new InvalidRequestException("User does not exist in database.");
             }
             if (customer == null) {

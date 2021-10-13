@@ -4,12 +4,13 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "catalogueTable")
-public class Catalogue {
+public class Catalogue implements Serializable {
     @Id
     private UUID storeID;
 
