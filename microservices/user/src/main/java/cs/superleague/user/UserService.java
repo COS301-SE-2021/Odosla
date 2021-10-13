@@ -105,4 +105,6 @@ public interface UserService {
     GetProblemsWithOrderResponse getProblemsWithOrder(GetProblemsWithOrderRequest request) throws InvalidRequestException, OrderDoesNotExist, URISyntaxException, ItemDoesNotExistException;
 
     void removeProblemFromRepo(RemoveProblemFromRepoRequest request) throws InvalidRequestException;
+
+    void saveCustomer(SaveCustomerToRepoRequest request) throws InvalidRequestException;
 }
