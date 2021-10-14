@@ -93,7 +93,7 @@ people to achieve the goal at hand. I always keep the end goal in mind and ensur
 <hr height="2">
 
 <div align="center">
-<img src="https://media-exp1.licdn.com/dms/image/D4D35AQG3YGzMMBszgQ/profile-framedphoto-shrink_200_200/0/1631708004314?e=1634126400&v=beta&t=bVnr0l7RuYAPw22ZPam8ReRsajAUX8tG7hSge0GtDAE" height="150" border-radius="50%"></img>
+<img src="https://media-exp1.licdn.com/dms/image/D4D35AQG3YGzMMBszgQ/profile-framedphoto-shrink_200_200/0/1631708004314?e=1634288400&v=beta&t=jCi_HvoLD91g8Q6c9z9QfkrawbFkWxUYzmeC6eObJBg" height="150" border-radius="50%"></img>
 </div>
 <h4 align="center"> Zivan Haripershad </h4>
 <p align="center">I am a Multimedia student who is very dedicated to my studies and hardworking. My determination to deliver what is required and to the best of my abilities is
